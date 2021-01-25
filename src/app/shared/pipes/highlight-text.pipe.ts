@@ -18,9 +18,10 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {escapeStringForRegex, removeAccent} from '../utils/string.utils';
+import {escapeStringForRegex} from '../utils/string.utils';
 import {stripTextHtmlTags} from '../utils/data.utils';
 import {escapeHtml} from '../utils/common.utils';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'highlightText',
@@ -34,8 +35,10 @@ export class HighlightTextPipe implements PipeTransform {
       return text;
     }
     const textString = String(text);
-    const pattern = escapeHtml(escapeStringForRegex(removeAccent(stripTextHtmlTags(String(highlightedText), false))));
-    const match = removeAccent(textString).match(new RegExp(pattern, 'i'));
+    const pattern = escapeHtml(
+      escapeStringForRegex(removeAccentFromString(stripTextHtmlTags(String(highlightedText), false)))
+    );
+    const match = removeAccentFromString(textString).match(new RegExp(pattern, 'i'));
     if (!match || (prefixOnly && match.index > 0)) {
       return textString;
     }

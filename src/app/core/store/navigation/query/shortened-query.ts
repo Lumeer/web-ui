@@ -18,8 +18,7 @@
  */
 
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
-import {ConstraintConditionValue} from '../../../model/data/constraint-condition';
-import {AttributeFilter, ConditionType, ConditionValue} from '../../../model/attribute-filter';
+import {AttributeFilter, ConditionType, ConditionValue, ConstraintConditionValue} from '@lumeer/data-filters';
 
 export interface ShortenedQuery {
   s: ShortenedQueryStem[]; // stems

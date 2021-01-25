@@ -21,9 +21,9 @@ import {ElementRef} from '@angular/core';
 
 import {Layout, PlotData} from 'plotly.js';
 import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ValueChange} from '../chart-visualizer';
+import {ConstraintType} from '@lumeer/data-filters';
 
 export type PlotlyChartData = Partial<PlotData>;
 

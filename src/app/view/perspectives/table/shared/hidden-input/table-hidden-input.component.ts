@@ -29,11 +29,11 @@ import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
 import {AppState} from '../../../../../core/store/app.state';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
 import {selectCollectionPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'table-hidden-input',

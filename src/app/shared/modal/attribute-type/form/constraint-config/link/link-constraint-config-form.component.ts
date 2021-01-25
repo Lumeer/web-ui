@@ -19,9 +19,9 @@
 
 import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {LinkConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {LinkConstraintFormControl} from './link-constraint-form-control';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
+import {LinkConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'link-constraint-config-form',

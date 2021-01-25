@@ -19,8 +19,7 @@
 
 import {ChartAxisSettings, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
-import {Constraint} from '../../../../../core/model/constraint';
+import {Constraint, ConstraintType} from '@lumeer/data-filters';
 
 export interface ChartData {
   sets: ChartDataSet[];

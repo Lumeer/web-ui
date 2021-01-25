@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../core/model/constraint';
-import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {
   AggregatedDataItem,
   AggregatedDataValues,
@@ -34,15 +32,20 @@ import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {QueryAttribute, queryAttributePermissions} from '../../../core/model/query-attribute';
 import {deepObjectCopy, objectsByIdMap} from '../common.utils';
-import {SelectConstraint} from '../../../core/model/constraint/select.constraint';
-import {ColorConstraint} from '../../../core/model/constraint/color.constraint';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   findAttributeConstraint,
   isCollectionAttributeEditable,
   isLinkTypeAttributeEditable,
 } from '../../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {
+  ColorConstraint,
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  SelectConstraint,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 
 export interface DataObjectInfo<T> {
   objectDataResources: Record<DataObjectInfoKey, DataResource>;

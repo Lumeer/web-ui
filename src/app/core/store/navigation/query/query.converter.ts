@@ -28,7 +28,7 @@ import {
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
-import {AttributeFilter, ConditionType} from '../../../model/attribute-filter';
+import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {

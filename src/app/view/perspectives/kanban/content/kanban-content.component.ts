@@ -35,7 +35,6 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from '../util/kanban-converter';
@@ -52,6 +51,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {ConstraintData} from '@lumeer/data-filters';
 
 interface Data {
   collections: Collection[];

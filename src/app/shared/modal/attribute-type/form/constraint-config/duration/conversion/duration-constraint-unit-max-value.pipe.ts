@@ -18,8 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DurationUnit} from '../../../../../../../core/model/data/constraint-config';
-import {durationConstraintUnitMaxValue} from '../../../../../../utils/constraint/duration-constraint.utils';
+import {durationConstraintUnitMaxValue, DurationUnit} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'durationConstraintUnitMaxValue',

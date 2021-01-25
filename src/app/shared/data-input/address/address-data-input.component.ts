@@ -33,17 +33,16 @@ import {
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {debounceTime, map, mergeMap} from 'rxjs/operators';
-import {AddressDataValue} from '../../../core/model/data-value/address.data-value';
 import {GeocodingAction} from '../../../core/store/geocoding/geocoding.action';
 import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.state';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {AddressDataValue, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'address-data-input',

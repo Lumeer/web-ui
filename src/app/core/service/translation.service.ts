@@ -19,22 +19,30 @@
 
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DurationUnit} from '../model/data/constraint-config';
-import {Constraint} from '../model/constraint';
-import {ConstraintType} from '../model/data/constraint';
-import {
-  ConstraintConditionValue,
-  DateTimeConstraintConditionValue,
-  UserConstraintConditionValue,
-} from '../model/data/constraint-condition';
 import {objectValues} from '../../shared/utils/common.utils';
-import {ConditionType} from '../model/attribute-filter';
+import {
+  ConditionType,
+  Constraint,
+  ConstraintConditionValue,
+  ConstraintType,
+  DateTimeConstraintConditionValue,
+  DurationUnit,
+  UserConstraintConditionValue,
+} from '@lumeer/data-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TranslationService {
   constructor(private i18n: I18n) {}
+
+  public createCurrencyAbbreviations(): string[] {
+    return this.i18n({id: 'currency.abbreviations', value: 'k|m|b|t'}).split('|');
+  }
+
+  public createCurrencyOrdinals(): string[] {
+    return this.i18n({id: 'currency.ordinals', value: 'st|nd|rd|th'}).split('|');
+  }
 
   public createDurationUnitsMap(): Record<DurationUnit | string, string> {
     return objectValues(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});

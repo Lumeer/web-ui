@@ -19,9 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {isArray, isNotNullOrUndefined} from '../../../../../../../../shared/utils/common.utils';
-import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
-import {UserDataValue} from '../../../../../../../../core/model/data-value/user.data-value';
-import {ConstraintData} from '../../../../../../../../core/model/data/constraint';
+import {ConstraintData, UserConstraint, UserDataValue} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'createCombinedUserValue',

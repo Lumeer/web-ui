@@ -34,18 +34,19 @@ import {
 
 import {QueryItem} from './model/query-item';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
-import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
-import {SelectConstraintConfig, UserConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
-import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ConditionType, ConditionValue} from '../../../../core/model/attribute-filter';
 import {modifyAttributeForQueryFilter} from '../../../utils/attribute.utils';
+import {
+  ConditionType,
+  conditionTypeNumberOfInputs,
+  ConditionValue,
+  ConstraintData,
+  ConstraintType,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'query-item',
@@ -146,7 +147,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
     if (!this.queryItemForm) {
       return;
     }
-    const numInputs = conditionNumInputs(data.condition);
+    const numInputs = conditionTypeNumberOfInputs(data.condition);
     this.queryItem.condition = data.condition;
     this.queryItem.conditionValues = (data.values || []).slice(0, numInputs);
     this.queryItemForm.patchValue({

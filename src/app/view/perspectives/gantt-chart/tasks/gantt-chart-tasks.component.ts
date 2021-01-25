@@ -34,7 +34,6 @@ import * as moment from 'moment';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
@@ -69,16 +68,20 @@ import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
-import {DataValue} from '../../../../core/model/data-value';
 import {
   getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
-import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
-import {durationCountsMapToString} from '../../../../shared/utils/constraint/duration-constraint.utils';
+import {
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  DateTimeConstraint,
+  DurationConstraint,
+  durationCountsMapToString,
+} from '@lumeer/data-filters';
 
 interface Data {
   collections: Collection[];

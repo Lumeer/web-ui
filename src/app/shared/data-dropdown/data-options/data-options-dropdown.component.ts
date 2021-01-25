@@ -38,7 +38,7 @@ import {deepObjectsEquals} from '../../utils/common.utils';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {DropdownOptionDirective} from '../../dropdown/options/dropdown-option.directive';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
-import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-options-dropdown',

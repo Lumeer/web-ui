@@ -24,8 +24,7 @@ import {groupDocumentsByCollection} from '../documents/document.utils';
 import {Query} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
 import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
-import {ConstraintData} from '../../model/data/constraint';
-import {someDocumentMeetFulltexts} from '../documents/documents.filters';
+import {ConstraintData, someDocumentMeetFulltexts} from '@lumeer/data-filters';
 
 export function filterCollectionsByQuery(
   collections: Collection[],

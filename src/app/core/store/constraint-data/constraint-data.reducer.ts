@@ -25,8 +25,8 @@ export function constraintDataReducer(
   action: ConstraintDataAction.All
 ): ConstraintDataState {
   switch (action.type) {
-    case ConstraintDataActionType.INIT_DURATION_UNITS_MAP:
-      return {...state, durationUnitsMap: action.payload.durationUnitsMap};
+    case ConstraintDataActionType.INIT:
+      return {...state, ...action.payload};
     default:
       return state;
   }

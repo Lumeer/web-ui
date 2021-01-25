@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {createSelector} from '@ngrx/store';
+import {filterDocumentsAndLinksByQuery} from '@lumeer/data-filters';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {hasRoleByPermissions, sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
@@ -24,7 +25,6 @@ import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
-import {filterDocumentsAndLinksByQuery} from '../documents/documents.filters';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';

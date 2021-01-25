@@ -17,31 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AddressesMap} from '../../store/geocoding/address';
-import {User} from '../../store/users/user';
-import {DurationUnit} from './constraint-config';
-
-export enum ConstraintType {
-  Unknown = 'None',
-  Text = 'Text',
-  Number = 'Number',
-  Address = 'Address',
-  Boolean = 'Boolean',
-  Action = 'Action',
-  Coordinates = 'Coordinates',
-  DateTime = 'DateTime',
-  Duration = 'Duration',
-  Email = 'Email',
-  Files = 'FileAttachment',
-  Image = 'Image',
-  Link = 'Link',
-  Percentage = 'Percentage',
-  Rating = 'Rating',
-  Select = 'Select',
-  Tag = 'Tag',
-  User = 'User',
-  Color = 'Color',
-}
+import {ConstraintType} from '@lumeer/data-filters';
 
 export const constraintTypesMap = {
   [ConstraintType.Action]: ConstraintType.Action,
@@ -109,12 +85,3 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
       return false;
   }
 }
-
-export interface ConstraintData {
-  addressesMap?: AddressesMap;
-  users?: User[];
-  currentUser?: User;
-  durationUnitsMap?: DurationUnitsMap;
-}
-
-export type DurationUnitsMap = Record<DurationUnit, string>;

@@ -31,11 +31,11 @@ import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
-import {parseLinkValue} from '../../../../core/model/data-value/link.data-value';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+import {parseLinkValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'link-input-dropdown',

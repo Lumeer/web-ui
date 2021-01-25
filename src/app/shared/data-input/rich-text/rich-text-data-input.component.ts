@@ -31,19 +31,17 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {DataValue} from '../../../core/model/data-value';
-import {numberOfPTags, TextDataValue} from '../../../core/model/data-value/text.data-value';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {isNotNullOrUndefined, preventEvent, unescapeHtml} from '../../utils/common.utils';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {DataInputModalService} from '../data-input-modal.service';
+import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -263,4 +261,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       this.saveValue(this.text, DataInputSaveAction.Blur);
     }
   }
+}
+
+function numberOfPTags(value: string): number {
+  const match = value.match(/<p.*?>.+?<\/p>/g);
+  return match ? match.length : 0;
 }

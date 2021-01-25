@@ -20,13 +20,11 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
-import {SelectConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {uniqueValuesValidator} from '../../../../../../core/validators/unique-values-validator';
 import {minimumValuesCountValidator} from '../../../../../../core/validators/mininum-values-count-validator';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {Attribute} from '../../../../../../core/store/collections/collection';
-import {DataValue} from '../../../../../../core/model/data-value';
 import {combineLatest, Observable, of} from 'rxjs';
 import {getAttributesResourceType} from '../../../../../utils/resource.utils';
 import {select, Store} from '@ngrx/store';
@@ -36,6 +34,7 @@ import {selectLinkInstancesByType} from '../../../../../../core/store/link-insta
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {createSuggestionDataValues} from '../../../../../utils/data-resource.utils';
 import {map} from 'rxjs/operators';
+import {DataValue, SelectConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'select-constraint-config-form',

@@ -29,18 +29,16 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
-import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {uniqueValues} from '../../utils/array.utils';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {BehaviorSubject} from 'rxjs';
+import {ConstraintType, SelectConstraintConfig, SelectConstraintOption, SelectDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'select-data-input',

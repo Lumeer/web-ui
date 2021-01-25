@@ -21,11 +21,9 @@ import {Component, ChangeDetectionStrategy, Input, OnInit, OnChanges, SimpleChan
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/collections/collection';
 import {TaskPurposeFormControl} from './task-purpose-form-control';
-import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../../../../shared/utils/form.utils';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {DataValue} from '../../../../../../../core/model/data-value';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {AppState} from '../../../../../../../core/store/app.state';
@@ -35,6 +33,7 @@ import {DocumentsAction} from '../../../../../../../core/store/documents/documen
 import {selectDocumentsByCollectionId} from '../../../../../../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {map, startWith} from 'rxjs/operators';
+import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'collection-purpose-tasks',

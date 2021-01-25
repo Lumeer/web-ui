@@ -23,21 +23,19 @@ import {
   DurationConstraintConversionFormControl,
   DurationConstraintFormControl,
 } from './duration-constraint-form-control';
-import {
-  DurationConstraintConfig,
-  DurationType,
-  DurationUnit,
-} from '../../../../../../core/model/data/constraint-config';
 import {TranslationService} from '../../../../../../core/service/translation.service';
-import {
-  durationConstraintUnitMaxValue,
-  getDefaultDurationUnitConversion,
-  getPreviousDurationUnit,
-} from '../../../../../utils/constraint/duration-constraint.utils';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../utils/common.utils';
+import {
+  DurationConstraintConfig,
+  durationConstraintUnitMaxValue,
+  DurationType,
+  DurationUnit,
+  getDefaultDurationUnitConversion,
+  getPreviousDurationUnit,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'duration-constraint-config-form',

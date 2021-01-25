@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KanbanAttribute, KanbanColumn, KanbanResource, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanColumn, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
-import {Constraint} from '../../../../core/model/constraint';
-import {QueryStem} from '../../../../core/store/navigation/query/query';
+import {Constraint} from '@lumeer/data-filters';
 
 export interface KanbanData {
   columns: KanbanDataColumn[];

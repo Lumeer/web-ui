@@ -25,7 +25,6 @@ import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
-import {ConstraintType} from '../../model/data/constraint';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
@@ -43,6 +42,7 @@ import {
 } from './link-instances.state';
 import {queryWithoutFilters} from '../navigation/query/query.util';
 import {LinkInstanceService, SearchService} from '../../data-service';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Injectable()
 export class LinkInstancesEffects {

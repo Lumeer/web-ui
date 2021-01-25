@@ -20,8 +20,6 @@
 import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 
-import {PercentageConstraint} from '../../../../../core/model/constraint/percentage.constraint';
-import {PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
@@ -42,6 +40,7 @@ import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ChartDataConverter} from './chart-data-converter';
 import {ChartDataSet, ChartPoint} from './chart-data';
+import {PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {

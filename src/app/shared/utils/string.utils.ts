@@ -17,36 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CaseStyle} from '../../core/model/data/constraint-config';
-import * as unorm from 'unorm';
 import {convertBase} from './number.utils';
-
-export function removeAccent(value: string | number, lowerCase = true): string {
-  const stringValue = value || value === 0 ? String(value) : '';
-  return unorm.nfd(lowerCase ? stringValue.toLowerCase() : stringValue).replace(/[\u0300-\u036f]/g, '');
-}
 
 export function escapeStringForRegex(text: string): string {
   return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-}
-
-export function transformTextBasedOnCaseStyle(text: string, caseStyle: CaseStyle | string): string {
-  if (!text) {
-    return '';
-  }
-
-  switch (caseStyle) {
-    case CaseStyle.LowerCase:
-      return text.toLocaleLowerCase();
-    case CaseStyle.UpperCase:
-      return text.toLocaleUpperCase();
-    case CaseStyle.TitleCase:
-      return transformTextToTitleCase(text);
-    case CaseStyle.SentenceCase:
-      return transformTextToSentenceCase(text);
-    default:
-      return text;
-  }
 }
 
 export function transformTextToTitleCase(text: string): string {

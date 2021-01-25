@@ -54,10 +54,10 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ChartDataComponent} from './data/chart-data.component';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformChartConfig} from './visualizer/chart-util';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'chart-perspective',

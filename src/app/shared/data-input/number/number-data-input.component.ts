@@ -29,13 +29,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {NumberDataValue} from '../../../core/model/data-value/number.data-value';
 import {KeyCode} from '../../key-code';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {ConstraintType, NumberDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'number-data-input',

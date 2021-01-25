@@ -31,17 +31,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import {DateTimeDataValue} from '../../../core/model/data-value/datetime.data-value';
 import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'datetime-data-input',

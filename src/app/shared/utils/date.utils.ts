@@ -19,151 +19,16 @@
 
 import * as moment from 'moment';
 import {createDateTimeOptions} from '../date-time/date-time-options';
-import {DurationUnit} from '../../core/model/data/constraint-config';
 import {DurationInputArg2} from 'moment';
-import {sortedDurationUnits} from './constraint/duration-constraint.utils';
-import {Constraint} from '../../core/model/constraint';
-import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
-import {DateTimeConstraint} from '../../core/model/constraint/datetime.constraint';
-import {DurationConstraint} from '../../core/model/constraint/duration.constraint';
-
-export function resetUnusedDatePart(date: Date, format: string): Date {
-  return resetUnusedMomentPart(moment(date), format).toDate();
-}
-
-export function resetUnusedMomentPart(date: moment.Moment, format: string): moment.Moment {
-  if (!date || !format) {
-    return date;
-  }
-
-  const dateTimeOptions = createDateTimeOptions(format);
-
-  let dateCopy = date;
-  if (!dateTimeOptions.year) {
-    dateCopy = resetYear(dateCopy, dateTimeOptions.dayOfWeek);
-  }
-
-  if (!dateTimeOptions.month && !dateTimeOptions.week && !dateTimeOptions.quarter && !dateTimeOptions.dayOfWeek) {
-    dateCopy = resetMonth(dateCopy);
-  }
-
-  if (!dateTimeOptions.day && !dateTimeOptions.week && !dateTimeOptions.dayOfWeek) {
-    dateCopy = resetDay(dateCopy);
-  }
-
-  if (dateTimeOptions.dayOfWeek && !dateTimeOptions.month) {
-    dateCopy = resetDayOfWeek(dateCopy);
-  }
-
-  if (dateTimeOptions.quarter && !dateTimeOptions.month && !dateTimeOptions.day) {
-    dateCopy = resetQuarter(dateCopy);
-  }
-
-  if (dateTimeOptions.week) {
-    dateCopy = resetWeek(date);
-  }
-
-  if (!dateTimeOptions.hours) {
-    dateCopy = resetHours(dateCopy);
-  }
-
-  if (!dateTimeOptions.minutes) {
-    dateCopy = resetMinutes(dateCopy);
-  }
-
-  if (!dateTimeOptions.seconds) {
-    dateCopy = resetSeconds(dateCopy);
-  }
-
-  if (!dateTimeOptions.milliseconds) {
-    dateCopy = resetMilliseconds(dateCopy);
-  }
-
-  return dateCopy;
-}
-
-function resetYear(date: moment.Moment, keepDayOfWeek = false): moment.Moment {
-  if (keepDayOfWeek) {
-    const diffYears = date.year() - 1970;
-    const cloned = date.clone().subtract(diffYears * 52, 'week');
-
-    if (cloned.year() === 1971) {
-      return cloned.subtract(52, 'week');
-    } else if (cloned.year() === 1969) {
-      return cloned.add(52, 'week');
-    }
-
-    return cloned;
-  }
-  return date.clone().year(1970);
-}
-
-function resetMonth(date: moment.Moment): moment.Moment {
-  return date.clone().month(0);
-}
-
-export function resetWeek(date: moment.Moment): moment.Moment {
-  if (date.week() === 1) {
-    return date.clone().day('Thursday');
-  }
-  return date.clone().day('Monday');
-}
-
-function resetDayOfWeek(date: moment.Moment): moment.Moment {
-  return date.clone().week(2);
-}
-
-function resetQuarter(date: moment.Moment): moment.Moment {
-  return date.clone().startOf('quarter');
-}
-
-function resetDay(date: moment.Moment): moment.Moment {
-  return date.clone().date(1);
-}
-
-function resetHours(date: moment.Moment): moment.Moment {
-  return date.clone().hours(0);
-}
-
-function resetMinutes(date: moment.Moment): moment.Moment {
-  return date.clone().minutes(0);
-}
-
-function resetSeconds(date: moment.Moment): moment.Moment {
-  return date.clone().seconds(0);
-}
-
-function resetMilliseconds(date: moment.Moment): moment.Moment {
-  return date.clone().milliseconds(0);
-}
-
-export function getSmallestDateUnit(format: string): moment.unitOfTime.Base {
-  if (/[Sx]/.test(format)) {
-    return 'millisecond';
-  }
-  if (/[sX]/.test(format)) {
-    return 'second';
-  }
-  if (/[m]/.test(format)) {
-    return 'minute';
-  }
-  if (/[H]/.test(format)) {
-    return 'hour';
-  }
-  if (/[dDeE]/.test(format)) {
-    return 'day';
-  }
-  if (/[gGwW]/.test(format)) {
-    return 'week';
-  }
-  if (/[M]/.test(format)) {
-    return 'month';
-  }
-  if (/[QY]/.test(format)) {
-    return 'year';
-  }
-  return undefined;
-}
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraint,
+  DurationConstraint,
+  DurationUnit,
+  sortedDurationUnits,
+} from '@lumeer/data-filters';
 
 const durationUnitToMomentUnitMap: Record<DurationUnit, DurationInputArg2> = {
   [DurationUnit.Weeks]: 'weeks',

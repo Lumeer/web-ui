@@ -18,8 +18,7 @@
  */
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
-import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
-import {ConditionType} from '../../../../core/model/attribute-filter';
+import {ConditionType, conditionTypeNumberOfInputs} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'conditionNumValues',
@@ -27,6 +26,6 @@ import {ConditionType} from '../../../../core/model/attribute-filter';
 @Injectable()
 export class ConditionNumValuesPipe implements PipeTransform {
   public transform(condition: ConditionType): number {
-    return conditionNumInputs(condition);
+    return conditionTypeNumberOfInputs(condition);
   }
 }

@@ -52,7 +52,6 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
@@ -61,6 +60,7 @@ import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'gantt-chart-perspective',

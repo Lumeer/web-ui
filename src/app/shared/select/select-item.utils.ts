@@ -22,7 +22,7 @@ import {SelectItemModel} from './select-item/select-item.model';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {getAttributesResourceType} from '../utils/resource.utils';
-import {ConstraintType} from '../../core/model/data/constraint';
+import {ConstraintType} from '@lumeer/data-filters';
 
 export function collectionSelectItems(collections: Collection[], id?: (Collection) => any): SelectItemModel[] {
   return collections?.map(collection => collectionSelectItem(collection, id)) || [];

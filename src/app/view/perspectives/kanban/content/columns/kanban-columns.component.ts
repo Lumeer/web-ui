@@ -38,10 +38,8 @@ import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {DRAG_DELAY} from '../../../../../core/constants';
-import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {filterDocumentsAndLinksByStem} from '../../../../../core/store/documents/documents.filters';
 import {generateDocumentData, groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
 import {
   getQueryFiltersForCollection,
@@ -53,9 +51,7 @@ import {findAttributeConstraint} from '../../../../../core/store/collections/col
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
-import {Constraint} from '../../../../../core/model/constraint';
 import {generateCorrelationId, getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {groupLinkInstancesByLinkTypes} from '../../../../../core/store/link-instances/link-instance.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
@@ -70,7 +66,14 @@ import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
-import {ConditionType} from '../../../../../core/model/attribute-filter';
+import {
+  ConditionType,
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  filterDocumentsAndLinksByStem,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'kanban-columns',

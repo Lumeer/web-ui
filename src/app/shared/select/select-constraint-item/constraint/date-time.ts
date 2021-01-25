@@ -18,12 +18,10 @@
  */
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../../../core/model/constraint';
-import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
-import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {createDateTimeOptions} from '../../../date-time/date-time-options';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
+import {Constraint, DateTimeConstraint, DateTimeConstraintConfig} from '@lumeer/data-filters';
 
 export enum DateReadableFormatType {
   Yearly = 'yearly',

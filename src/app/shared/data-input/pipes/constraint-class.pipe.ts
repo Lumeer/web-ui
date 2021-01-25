@@ -18,9 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../../core/model/constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
-import {TextConstraint} from '../../../core/model/constraint/text.constraint';
+import {Constraint, ConstraintType, TextConstraint} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'constraintClass',

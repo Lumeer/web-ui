@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../model/constraint';
 import {Resource} from '../../model/resource';
 import {Rule} from '../../model/rule';
+import {Constraint} from '@lumeer/data-filters';
 
 export interface Attribute {
   id?: string;

@@ -19,6 +19,13 @@
 
 import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 
+import {
+  AttributeFilter,
+  ConditionType,
+  conditionTypeNumberOfInputs,
+  ConditionValue,
+  ConstraintType,
+} from '@lumeer/data-filters';
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
@@ -28,7 +35,6 @@ import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/com
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Attribute, Collection} from '../../collections/collection';
 import {AttributesResource, AttributesResourceType} from '../../../model/resource';
-import {ConstraintType} from '../../../model/data/constraint';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 import {Workspace} from '../workspace';
@@ -37,7 +43,6 @@ import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
-import {AttributeFilter, ConditionType, ConditionValue} from '../../../model/attribute-filter';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -106,27 +111,12 @@ export function areConditionValuesDefined(
 ): boolean {
   return (
     condition &&
-    createRange(0, conditionNumInputs(condition)).every(
+    createRange(0, conditionTypeNumberOfInputs(condition)).every(
       index =>
         conditionValues[index] &&
         (conditionValues[index].type || conditionValues[index].value || constraintType === ConstraintType.Boolean)
     )
   );
-}
-
-export function conditionNumInputs(condition: ConditionType): number {
-  switch (condition) {
-    case ConditionType.IsEmpty:
-    case ConditionType.NotEmpty:
-    case ConditionType.Enabled:
-    case ConditionType.Disabled:
-      return 0;
-    case ConditionType.Between:
-    case ConditionType.NotBetween:
-      return 2;
-    default:
-      return 1;
-  }
 }
 
 export function queryIsNotEmpty(query: Query): boolean {

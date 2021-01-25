@@ -31,7 +31,6 @@ import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
@@ -51,6 +50,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'search-documents-content',

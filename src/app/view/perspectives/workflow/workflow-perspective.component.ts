@@ -48,12 +48,12 @@ import {
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'workflow-perspective',

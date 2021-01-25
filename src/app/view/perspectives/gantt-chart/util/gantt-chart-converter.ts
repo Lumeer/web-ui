@@ -17,16 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {GanttOptions, GanttSwimlaneInfo} from '@lumeer/lumeer-gantt/dist/model/options';
-import {GanttSwimlane, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
+import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {environment} from '../../../../../environments/environment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Constraint} from '../../../../core/model/constraint';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {PercentageConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
@@ -54,7 +49,6 @@ import {
 import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {Md5} from '../../../../shared/utils/md5';
 import {canCreateTaskByStemConfig} from './gantt-chart-util';
 import {
@@ -68,8 +62,16 @@ import {
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {fillWithNulls} from '../../../../shared/utils/array.utils';
-import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  PercentageConstraintConfig,
+  SelectConstraint,
+  UnknownConstraint,
+  UserConstraint,
+} from '@lumeer/data-filters';
 
 export interface GanttTaskMetadata {
   nameDataId: string;

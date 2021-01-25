@@ -21,9 +21,6 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {Constraint} from '../../../../../../../core/model/constraint';
-import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {selectCollectionAttributeConstraint} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
@@ -39,6 +36,7 @@ import {
   UserDataInputConfiguration,
 } from '../../../../../../../shared/data-input/data-input-configuration';
 import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
+import {Constraint, ConstraintData, ConstraintType, UnknownConstraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'table-collapsed-cell',

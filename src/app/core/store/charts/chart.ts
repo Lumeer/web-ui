@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../model/constraint';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryAttribute} from '../../model/query-attribute';
 
@@ -51,9 +50,7 @@ export interface ChartAxisConfig {
   settings?: ChartAxisSettings;
 }
 
-export interface ChartAxis extends QueryAttribute {
-  constraint?: Constraint;
-}
+export interface ChartAxis extends QueryAttribute {}
 
 export interface ChartAxisSettings {
   range?: [number, number];

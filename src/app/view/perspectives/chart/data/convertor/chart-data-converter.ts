@@ -19,9 +19,6 @@
 
 import {Injectable} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Constraint} from '../../../../../core/model/constraint';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {
   ChartAxis,
@@ -56,11 +53,18 @@ import {
   DataObjectInfo,
 } from '../../../../../shared/utils/data/data-object-aggregator';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
-import {DurationConstraint} from '../../../../../core/model/constraint/duration.constraint';
 import {createRange} from '../../visualizer/plot-maker/plot-util';
-import {NumberConstraint} from '../../../../../core/model/constraint/number.constraint';
-import {PercentageConstraint} from '../../../../../core/model/constraint/percentage.constraint';
-import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraint,
+  DurationConstraint,
+  NumberConstraint,
+  PercentageConstraint,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {getCurrentLocaleLanguageTag} from '../../../../../core/model/language-tag';
 
 enum DataObjectInfoKeyType {
   X = 'x',
@@ -471,7 +475,7 @@ export class ChartDataConverter {
 
   private constraintAxisConfig(axisConfig: ChartAxisConfig): Constraint {
     if (!isValueAggregation(axisConfig.aggregation)) {
-      return new NumberConstraint({});
+      return new NumberConstraint({locale: getCurrentLocaleLanguageTag()});
     }
 
     return this.constraintForAxis(axisConfig.axis);

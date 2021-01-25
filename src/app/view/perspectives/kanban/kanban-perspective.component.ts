@@ -38,7 +38,6 @@ import {
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -51,6 +50,7 @@ import {
   selectCollectionsPermissions,
   selectLinkTypesPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',

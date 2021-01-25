@@ -17,19 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChildren, QueryList} from '@angular/core';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {InputBoxComponent} from '../../../../../shared/input/input-box/input-box.component';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'collection-attributes-table',
@@ -63,8 +54,6 @@ export class CollectionAttributesTableComponent {
   public readonly constraintType = ConstraintType;
 
   public searchString: string;
-
-  public readonly type = ConstraintType;
 
   public setDefaultAttribute(attribute: Attribute) {
     this.setDefault.emit(attribute);

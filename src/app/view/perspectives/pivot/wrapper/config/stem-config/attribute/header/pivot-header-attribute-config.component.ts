@@ -18,13 +18,13 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Constraint} from '../../../../../../../../core/model/constraint';
 import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
-import {PivotData, PivotStemData} from '../../../../../util/pivot-data';
-import {AttributesResource, AttributesResourceType} from '../../../../../../../../core/model/resource';
+import {PivotStemData} from '../../../../../util/pivot-data';
+import {AttributesResource} from '../../../../../../../../core/model/resource';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
+import {Constraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'pivot-header-attribute-config',

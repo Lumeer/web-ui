@@ -40,10 +40,11 @@ import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {map, tap} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {objectChanged} from '../../utils/common.utils';
 
 @Component({
   selector: 'links-accordeon',
@@ -89,10 +90,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (
-      changes.collection &&
-      (!changes.collection.previousValue || changes.collection.currentValue?.id !== this.collection?.id)
-    ) {
+    if (objectChanged(changes.collection)) {
       this.renewSubscriptions();
     }
   }
@@ -102,19 +100,17 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
       this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
-      tap(([linkTypes]) => {
-        if (linkTypes.length > 0 && !this.openedGroups$.getValue()[linkTypes[0].id]) {
-          this.isOpenChanged(true, linkTypes[0].id);
-        }
-      }),
       map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );
+    this.linkTypes$.pipe(take(1)).subscribe(linkTypes => {
+      if (linkTypes.length > 0 && !this.openedGroups$.getValue()[linkTypes[0].id]) {
+        this.isOpenChanged(true, linkTypes[0].id);
+      }
+    });
   }
 
   public isOpenChanged(state: boolean, index: string) {
-    const opened = {...this.openedGroups$.getValue()};
-    opened[index] = state;
-    this.openedGroups$.next(opened);
+    this.openedGroups$.next({...this.openedGroups$.value, [index]: state});
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {

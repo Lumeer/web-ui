@@ -38,8 +38,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {distinctUntilChanged, first, map, skip, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {UnknownDataValue} from '../../../../../../../core/model/data-value/unknown.data-value';
-import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
@@ -80,10 +78,9 @@ import {
   objectChanged,
   preventEvent,
 } from '../../../../../../../shared/utils/common.utils';
-import {DataValue} from '../../../../../../../core/model/data-value';
-import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
+import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'table-data-cell',

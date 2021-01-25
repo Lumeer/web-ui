@@ -29,11 +29,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {DataValue} from '../../../core/model/data-value';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {DataInputSaveAction} from '../data-input-save-action';
 import {preventEvent} from '../../utils/common.utils';
+import {ConstraintType, DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'boolean-data-input',

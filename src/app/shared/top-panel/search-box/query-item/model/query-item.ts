@@ -18,7 +18,7 @@
  */
 
 import {QueryItemType} from './query-item-type';
-import {ConditionType, ConditionValue} from '../../../../../core/model/attribute-filter';
+import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 export interface QueryItem {
   text: string;

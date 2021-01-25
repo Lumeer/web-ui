@@ -19,10 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
-import {DataValue} from '../../../core/model/data-value';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
-import {Constraint} from '../../../core/model/constraint';
+import {Constraint, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataInputEditInfo',

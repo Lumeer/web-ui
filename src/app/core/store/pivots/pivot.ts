@@ -18,8 +18,6 @@
  */
 
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
-import {Constraint} from '../../model/constraint';
-import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute} from '../../model/query-attribute';
 
@@ -47,9 +45,7 @@ export enum PivotConfigVersion {
   V1 = '1',
 }
 
-export interface PivotAttribute extends QueryAttribute {
-  constraint?: Constraint;
-}
+export interface PivotAttribute extends QueryAttribute {}
 
 export interface PivotRowColumnAttribute extends PivotAttribute {
   showSums?: boolean;

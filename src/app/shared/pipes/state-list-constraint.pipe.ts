@@ -19,21 +19,22 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
-import {Constraint} from '../../core/model/constraint';
 import {DataResource} from '../../core/model/resource';
 import {Attribute} from '../../core/store/collections/collection';
+import {createSuggestionDataValues} from '../utils/data-resource.utils';
 import {
+  BooleanConstraint,
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  SelectConstraint,
   SelectConstraintConfig,
   SelectConstraintOption,
+  UnknownConstraint,
+  UserConstraint,
   UserConstraintConfig,
-} from '../../core/model/data/constraint-config';
-import {SelectConstraint} from '../../core/model/constraint/select.constraint';
-import {createSuggestionDataValues} from '../utils/data-resource.utils';
-import {UserDataValue} from '../../core/model/data-value/user.data-value';
-import {UserConstraint} from '../../core/model/constraint/user.constraint';
-import {BooleanConstraint} from '../../core/model/constraint/boolean.constraint';
+  UserDataValue,
+} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'stateListConstraint',

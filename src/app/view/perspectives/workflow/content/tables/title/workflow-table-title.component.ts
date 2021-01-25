@@ -25,7 +25,7 @@ import {DataInputConfiguration} from '../../../../../../shared/data-input/data-i
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {findResourceByQueryResource} from '../../../../../../core/model/query-attribute';
 import {AttributesResource} from '../../../../../../core/model/resource';
-import {ConstraintType} from '../../../../../../core/model/data/constraint';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'workflow-table-title',

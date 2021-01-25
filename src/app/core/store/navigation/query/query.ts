@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeFilter} from '../../../model/attribute-filter';
+import {AttributeFilter} from '@lumeer/data-filters';
 
 export interface Query {
   stems?: QueryStem[];

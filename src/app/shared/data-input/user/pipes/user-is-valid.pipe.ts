@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
-import {UserConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {UserConstraintConfig} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'userIsValid',

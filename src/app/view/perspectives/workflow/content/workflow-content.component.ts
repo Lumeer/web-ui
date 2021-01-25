@@ -26,9 +26,9 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {checkOrTransformWorkflowConfig} from '../../../../core/store/workflows/workflow.utils';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'workflow-content',

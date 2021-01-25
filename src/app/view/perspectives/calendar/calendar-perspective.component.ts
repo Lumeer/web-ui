@@ -39,7 +39,6 @@ import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {checkOrTransformCalendarConfig} from './util/calendar-util';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -47,6 +46,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'calendar',

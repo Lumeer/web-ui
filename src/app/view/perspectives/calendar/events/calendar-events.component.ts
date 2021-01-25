@@ -36,7 +36,6 @@ import {debounceTime, filter, map} from 'rxjs/operators';
 import {calendarStemConfigIsWritable, checkOrTransformCalendarConfig} from '../util/calendar-util';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy, deepObjectsEquals, objectsByIdMap, toNumber} from '../../../../shared/utils/common.utils';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
@@ -46,12 +45,16 @@ import {CalendarConverter} from '../util/calendar-converter';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-chart';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
-import {DataValue} from '../../../../core/model/data-value';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
-import {durationCountsMapToString} from '../../../../shared/utils/constraint/duration-constraint.utils';
-import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
 import * as moment from 'moment';
+import {
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  DateTimeConstraint,
+  DurationConstraint,
+  durationCountsMapToString,
+} from '@lumeer/data-filters';
 
 interface Data {
   collections: Collection[];
@@ -262,8 +265,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     subtractDay?: boolean
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
-    const constraint =
-      findAttributeConstraint(resource && resource.attributes, model.attributeId) || new DateTimeConstraint(null);
+    const constraint = findAttributeConstraint(resource?.attributes, model.attributeId) || new DateTimeConstraint(null);
     let momentDate = moment(date);
     if (!constraintContainsHoursInConfig(constraint)) {
       momentDate = momentDate.startOf('day');

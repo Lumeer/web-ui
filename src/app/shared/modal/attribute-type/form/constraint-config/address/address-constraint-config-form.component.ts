@@ -24,11 +24,9 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
 import {ADDRESS_DEFAULT_FIELDS, EXAMPLE_ADDRESS} from './address-constraint.constants';
-import {AddressesMap, AddressField} from '../../../../../../core/store/geocoding/address';
-import {AddressConstraintConfig} from '../../../../../../core/model/data/constraint-config';
-import {AddressDataValue} from '../../../../../../core/model/data-value/address.data-value';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {objectValues} from '../../../../../utils/common.utils';
+import {AddressConstraintConfig, AddressDataValue, AddressesMap, AddressField} from '@lumeer/data-filters';
 
 @Component({
   selector: 'address-constraint-config-form',

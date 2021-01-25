@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 import {TranslationService} from '../../../../core/service/translation.service';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ConditionType} from '../../../../core/model/attribute-filter';
+import {ConditionType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'translateCondition',

@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DurationUnit} from '../../../../../../../core/model/data/constraint-config';
+import {DurationUnit} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'durationConstraintUnitEditable',

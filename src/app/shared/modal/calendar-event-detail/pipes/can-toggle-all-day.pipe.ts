@@ -24,10 +24,10 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {uniqueValues} from '../../../utils/array.utils';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {ConstraintType} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {calendarStemConfigIsWritable} from '../../../../view/perspectives/calendar/util/calendar-util';
 import {objectsByIdMap} from '../../../utils/common.utils';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'canToggleAllDay',

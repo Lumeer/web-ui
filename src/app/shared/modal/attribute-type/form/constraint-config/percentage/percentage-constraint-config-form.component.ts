@@ -20,9 +20,9 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {PercentageConstraintFormControl} from './percentage-constraint-form-control';
-import {PercentageConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
+import {PercentageConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'percentage-constraint-config-form',
@@ -50,18 +50,9 @@ export class PercentageConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(
-      PercentageConstraintFormControl.Decimals,
-      new FormControl(this.config && this.config.decimals)
-    );
-    this.form.addControl(
-      PercentageConstraintFormControl.MinValue,
-      new FormControl(this.config && this.config.minValue)
-    );
-    this.form.addControl(
-      PercentageConstraintFormControl.MaxValue,
-      new FormControl(this.config && this.config.maxValue)
-    );
+    this.form.addControl(PercentageConstraintFormControl.Decimals, new FormControl(this.config?.decimals));
+    this.form.addControl(PercentageConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
+    this.form.addControl(PercentageConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue));
     this.form.setValidators(
       minMaxValidator(PercentageConstraintFormControl.MinValue, PercentageConstraintFormControl.MaxValue)
     );

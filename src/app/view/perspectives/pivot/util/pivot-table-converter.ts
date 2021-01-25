@@ -18,7 +18,6 @@
  */
 
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {
@@ -36,10 +35,14 @@ import {
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
-import {Constraint} from '../../../../core/model/constraint';
-import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
+import {
+  Constraint,
+  ConstraintData,
+  NumberConstraint,
+  PercentageConstraint,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {getCurrentLocaleLanguageTag} from '../../../../core/model/language-tag';
 
 interface HeaderGroupInfo {
   background: string;
@@ -699,7 +702,9 @@ function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numVal
 function getValueTypeInfo(values: any[][], type: PivotValueType, rows: number[], columns: number[]): ValueTypeInfo {
   const containsDecimal = containsDecimalValue(values, rows, columns);
   const valueTypeInfo: ValueTypeInfo = {
-    defaultConstraint: containsDecimal ? new NumberConstraint({decimals: 2}) : null,
+    defaultConstraint: containsDecimal
+      ? new NumberConstraint({decimals: 2, locale: getCurrentLocaleLanguageTag()})
+      : null,
   };
 
   if (type === PivotValueType.AllPercentage) {
@@ -920,9 +925,9 @@ function sortPivotDataHeadersRecursive(
 }
 
 function getConstraintForSort(sort: PivotSort, headers: PivotDataHeader[]): Constraint {
-  if (((sort && sort.list && sort.list.values) || []).length > 0) {
+  if ((sort?.list?.values || []).length > 0) {
     // sort is done by values in columns
-    return new NumberConstraint({});
+    return new NumberConstraint({locale: getCurrentLocaleLanguageTag()});
   }
   return ((headers || [])[0] && (headers || [])[0].constraint) || new UnknownConstraint();
 }

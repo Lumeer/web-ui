@@ -52,10 +52,10 @@ import {selectWorkspaceModels} from '../../../core/store/common/common.selectors
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
+import {ConstraintData} from '@lumeer/data-filters';
 
 const allowAutomaticSubmission = true;
 

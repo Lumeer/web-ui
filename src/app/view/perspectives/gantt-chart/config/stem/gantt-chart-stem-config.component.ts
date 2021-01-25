@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Constraint} from '../../../../../core/model/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../../core/store/gantt-charts/gantt-chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -29,6 +28,7 @@ import {SelectItemModel} from '../../../../../shared/select/select-item/select-i
 import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
+import {Constraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'gantt-chart-stem-config',

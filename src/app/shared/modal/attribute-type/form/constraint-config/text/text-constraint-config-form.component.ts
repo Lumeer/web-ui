@@ -19,12 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {CaseStyle, TextConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {TextConstraintFormControl} from './text-constraint-form-control';
+import {CaseStyle, TextConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'text-constraint-config-form',

@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotTableCell} from '../util/pivot-table';
 import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
-import {ConstraintType} from '../../../../core/model/data/constraint';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'pivotCellConfiguration',
@@ -29,7 +29,7 @@ export class PivotCellConfigurationPipe implements PipeTransform {
   public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40}};
 
   public transform(cell: PivotTableCell): DataInputConfiguration {
-    const constraintType = cell && cell.constraint && cell.constraint.type;
+    const constraintType = cell?.constraint?.type;
     if (constraintType === ConstraintType.Boolean) {
       return {...this.configuration, boolean: {additionalLabel: cell.label}};
     }

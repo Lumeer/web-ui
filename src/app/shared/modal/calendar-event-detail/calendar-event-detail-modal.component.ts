@@ -44,13 +44,16 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
 import {toNumber} from '../../utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
-import {durationCountsMapToString} from '../../utils/constraint/duration-constraint.utils';
-import {DurationConstraint} from '../../../core/model/constraint/duration.constraint';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {AttributeFilter} from '../../../core/model/attribute-filter';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {
+  AttributeFilter,
+  ConstraintData,
+  ConstraintType,
+  DurationConstraint,
+  durationCountsMapToString,
+} from '@lumeer/data-filters';
 
 const DEFAULT_EVENT_DURATION = 60;
 

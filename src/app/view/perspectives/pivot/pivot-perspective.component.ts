@@ -51,11 +51,11 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformPivotConfig} from './util/pivot-util';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'pivot-perspective',

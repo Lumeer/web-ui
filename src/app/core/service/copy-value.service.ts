@@ -28,14 +28,17 @@ import {selectLinkInstanceById} from '../store/link-instances/link-instances.sta
 import {selectLinkTypeById} from '../store/link-types/link-types.state';
 import {AttributesResource, DataResource} from '../model/resource';
 import {findAttribute, findAttributeConstraint} from '../store/collections/collection.util';
-import {UnknownConstraint} from '../model/constraint/unknown.constraint';
 import {ClipboardService} from './clipboard.service';
 import {isArray, isNotNullOrUndefined} from '../../shared/utils/common.utils';
-import {DataValue} from '../model/data-value';
-import {ConstraintData, ConstraintType} from '../model/data/constraint';
 import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
-import {Constraint} from '../model/constraint';
-import {UserDataValue} from '../model/data-value/user.data-value';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+  UserDataValue,
+} from '@lumeer/data-filters';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {

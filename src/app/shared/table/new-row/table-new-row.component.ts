@@ -18,14 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../model/table-model';
 import {TableColumn, TableColumnGroup} from '../model/table-column';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {DataInputSaveAction} from '../../data-input/data-input-save-action';
 import {TableNewRow, TableRow} from '../model/table-row';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {MenuItem} from '../../menu/model/menu-item';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'table-new-row',

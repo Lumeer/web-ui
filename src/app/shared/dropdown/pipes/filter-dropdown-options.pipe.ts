@@ -19,17 +19,17 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DropdownOption} from '../options/dropdown-option';
-import {removeAccent} from '../../utils/string.utils';
 import {sortObjectsByScore, unescapeHtml} from '../../utils/common.utils';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterDropdownOptions',
 })
 export class FilterDropdownOptionsPipe implements PipeTransform {
   public transform(options: DropdownOption[], text: string): DropdownOption[] {
-    const filterText = removeAccent(text).trim();
+    const filterText = removeAccentFromString(text).trim();
     const filteredOptionsMap = (options || []).filter(option =>
-      unescapeHtml(removeAccent(option.displayValue || option.value)).includes(filterText)
+      unescapeHtml(removeAccentFromString(option.displayValue || option.value)).includes(filterText)
     );
     return sortObjectsByScore<DropdownOption>(filteredOptionsMap, text, ['displayValue', 'value']);
   }
