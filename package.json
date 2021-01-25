@@ -119,7 +119,7 @@
     "@types/auth0-js": "^9.14.2",
     "@types/big.js": "^6.0.0",
     "@types/geojson": "^7946.0.7",
-    "@types/jasmine": "^3.6.1",
+    "@types/jasmine": "^3.6.3",
     "@types/jasminewd2": "~2.0.8",
     "@types/js-base64": "^3.0.0",
     "@types/jssha": "^2.0.0",
