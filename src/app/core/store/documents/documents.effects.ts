@@ -47,7 +47,6 @@ import {
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
-import {queryWithoutFilters} from '../navigation/query/query.util';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
@@ -61,11 +60,10 @@ export class DocumentsEffects {
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
     filter(
       ([action, queries]) =>
-        action.payload.force ||
-        !queries.find(query => areQueriesEqual(query, queryWithoutFilters(action.payload.query)))
+        action.payload.force || !queries.find(query => areQueriesEqual(query, action.payload.query))
     ),
     mergeMap(([action]) => {
-      const query = queryWithoutFilters(action.payload.query);
+      const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
       const savedQuery = action.payload.silent ? undefined : query;
 

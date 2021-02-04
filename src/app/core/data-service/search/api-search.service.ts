@@ -41,11 +41,26 @@ export class ApiSearchService extends BaseService implements SearchService {
   }
 
   public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
-    return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query);
+    return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query, {
+      params: {l: environment.locale},
+    });
   }
 
   public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
-    return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query);
+    return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query, {
+      params: {l: environment.locale},
+    });
+  }
+
+  public searchDocumentsAndLinks(
+    query: QueryDto,
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+      `${this.searchPath(workspace)}/documentsAndLinks`,
+      query,
+      {params: {l: environment.locale}}
+    );
   }
 
   private searchPath(workspace?: Workspace): string {

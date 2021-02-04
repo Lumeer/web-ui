@@ -170,7 +170,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query: queryWithoutFilters(query)}));
+    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   private subscribeQueryChange() {

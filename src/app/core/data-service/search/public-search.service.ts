@@ -41,11 +41,23 @@ export class PublicSearchService extends BaseService implements SearchService {
   }
 
   public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
-    return this.http.get<LinkInstanceDto[]>(`${this.searchPath(workspace)}/link-instances`);
+    return this.http.get<LinkInstanceDto[]>(`${this.searchPath(workspace)}/link-instances`, {
+      params: {l: environment.locale},
+    });
   }
 
   public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
-    return this.http.get<DocumentDto[]>(`${this.searchPath(workspace)}/documents`);
+    return this.http.get<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, {params: {l: environment.locale}});
+  }
+
+  public searchDocumentsAndLinks(
+    query: QueryDto,
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.http.get<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+      `${this.searchPath(workspace)}/documentsAndLinks`,
+      {params: {l: environment.locale}}
+    );
   }
 
   private searchPath(workspace?: Workspace): string {

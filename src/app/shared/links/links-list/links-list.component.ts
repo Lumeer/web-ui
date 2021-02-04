@@ -24,7 +24,6 @@ import {
   Output,
   EventEmitter,
   SimpleChanges,
-  SimpleChange,
   OnChanges,
   OnInit,
 } from '@angular/core';

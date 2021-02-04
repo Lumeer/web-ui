@@ -56,6 +56,7 @@ import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 
 @Component({
   selector: 'pivot-perspective',
@@ -149,8 +150,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   private subscribeData() {

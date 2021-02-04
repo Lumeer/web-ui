@@ -30,23 +30,17 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
-import {debounceTime, delay, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
+import {debounceTime, delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
+import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
-import {selectQueryDocumentsLoaded} from '../../../../../core/store/documents/documents.state';
-import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
-import {selectQueryLinkInstancesLoaded} from '../../../../../core/store/link-instances/link-instances.state';
-import {selectAllLinkTypes} from '../../../../../core/store/link-types/link-types.state';
-import {getAllCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
-import * as Constants from 'constants';
 import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
+import {selectQueryDataResourcesLoaded} from '../../../../../core/store/data-resources/data-resources.state';
 
 @Component({
   selector: 'table-rows',
@@ -75,9 +69,6 @@ export class TableRowsComponent implements OnChanges {
   public constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.query) {
-      this.retrieveDocuments(this.query);
-    }
     if (changes.cursor || changes.query) {
       this.bindRows(this.cursor, this.query);
     }
@@ -102,9 +93,7 @@ export class TableRowsComponent implements OnChanges {
       switchMap(() =>
         this.store$.pipe(
           delay(1000), // we need to wait while rows are created
-          select(selectQueryDocumentsLoaded(query)),
-          filter(loaded => loaded),
-          mergeMap(() => this.store$.pipe(select(selectQueryLinkInstancesLoaded(query)))),
+          select(selectQueryDataResourcesLoaded(query)),
           filter(loaded => loaded),
           take(1)
         )
@@ -120,19 +109,6 @@ export class TableRowsComponent implements OnChanges {
     if (tableElement) {
       tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     }
-  }
-
-  private retrieveDocuments(query: Query) {
-    this.store$.pipe(select(selectAllLinkTypes), take(1)).subscribe(linkTypes => {
-      this.store$.dispatch(new DocumentsAction.Get({query}));
-      this.store$.dispatch(new LinkInstancesAction.Get({query}));
-      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes)
-        .slice(1)
-        .map(collectionId => ({collectionId}));
-      if (stems.length > 0) {
-        this.store$.dispatch(new DocumentsAction.Get({query: {stems}}));
-      }
-    });
   }
 
   @HostListener('click', ['$event'])

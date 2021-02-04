@@ -47,6 +47,7 @@ import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 
 @Component({
   selector: 'calendar',
@@ -143,8 +144,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   private subscribeData() {

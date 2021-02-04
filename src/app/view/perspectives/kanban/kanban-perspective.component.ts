@@ -51,6 +51,7 @@ import {
   selectLinkTypesPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -142,8 +143,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   private subscribeData() {

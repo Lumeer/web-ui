@@ -61,6 +61,7 @@ import {selectViewSettings} from '../../../core/store/view-settings/view-setting
 import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -162,8 +163,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   private subscribeData() {

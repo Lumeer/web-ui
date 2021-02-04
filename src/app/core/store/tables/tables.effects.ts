@@ -120,13 +120,14 @@ import {
 import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
 import {QueryParam} from '../navigation/query-param';
 import {selectTable} from './tables.state';
-import {AttributesResource, DataResource} from '../../model/resource';
+import {AttributesResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
 import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
+import {DataResourcesAction} from '../data-resources/data-resources.action';
 
 @Injectable()
 export class TablesEffects {
@@ -195,7 +196,7 @@ export class TablesEffects {
       };
       actions.push(new TablesAction.AddTable({table}));
 
-      actions.push(new DocumentsAction.Get({query}), new LinkInstancesAction.Get({query}));
+      actions.push(new DataResourcesAction.Get({query}));
 
       // if the table is embedded, file attachments are not loaded by guard
       if (embedded) {
@@ -254,8 +255,7 @@ export class TablesEffects {
                       parts: [linkTypePart, collectionPart],
                     }),
                     // TODO get data only in guards
-                    new DocumentsAction.Get({query}),
-                    new LinkInstancesAction.Get({query}),
+                    new DataResourcesAction.Get({query}),
                   ];
                 })
               );

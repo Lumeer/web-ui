@@ -102,15 +102,21 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
     ]).pipe(
       map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );
-    this.linkTypes$.pipe(take(1)).subscribe(linkTypes => {
-      if (linkTypes.length > 0 && !this.openedGroups$.getValue()[linkTypes[0].id]) {
-        this.isOpenChanged(true, linkTypes[0].id);
-      }
-    });
+    this.linkTypes$.pipe(take(1)).subscribe(linkTypes => this.initOpenedGroups(linkTypes));
   }
 
-  public isOpenChanged(state: boolean, index: string) {
-    this.openedGroups$.next({...this.openedGroups$.value, [index]: state});
+  private initOpenedGroups(linkTypes: LinkType[]) {
+    const openedGroups = {...this.openedGroups$.value};
+    for (const linkType of linkTypes) {
+      if (!openedGroups[linkType.id]) {
+        openedGroups[linkType.id] = true;
+      }
+    }
+    this.openedGroups$.next(openedGroups);
+  }
+
+  public isOpenChanged(state: boolean, id: string) {
+    this.openedGroups$.next({...this.openedGroups$.value, [id]: state});
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {

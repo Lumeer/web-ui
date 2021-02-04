@@ -174,21 +174,6 @@ function roleWithTransitionRoles(role: string): string[] {
   return [role];
 }
 
-export function mergePermissions(p1: AllowedPermissions, p2: AllowedPermissions): AllowedPermissions {
-  if (!p1 || !p2) {
-    return p1 || p2 || {};
-  }
-
-  return {
-    read: p1.read && p2.read,
-    write: p1.write && p2.write,
-    manage: p1.manage && p2.manage,
-    readWithView: p1.readWithView && p2.readWithView,
-    writeWithView: p1.writeWithView && p2.writeWithView,
-    manageWithView: p1.manageWithView && p2.manageWithView,
-  };
-}
-
 export function getAttributesResourceType(attributesResource: AttributesResource): AttributesResourceType {
   if (<LinkType>attributesResource && (<LinkType>attributesResource).collectionIds) {
     return AttributesResourceType.LinkType;

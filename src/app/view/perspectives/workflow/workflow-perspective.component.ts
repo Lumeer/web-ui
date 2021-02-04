@@ -54,6 +54,8 @@ import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/d
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
+import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
 
 @Component({
   selector: 'workflow-perspective',
@@ -154,18 +156,11 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
-    this.dataLoaded$ = combineLatest([
-      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
-      this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded)),
-    ]).pipe(
-      map(loaded => loaded.every(load => load)),
-      distinctUntilChanged()
-    );
+    this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded), distinctUntilChanged());
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   public onConfigChanged(config: WorkflowConfig) {
