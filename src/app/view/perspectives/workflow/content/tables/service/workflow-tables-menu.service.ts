@@ -256,7 +256,7 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Function:
         return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
       case HeaderMenuId.Rule:
-        return this.i18n({id: 'table.header.menu.editRule', value: 'Edit rule...'});
+        return this.i18n({id: 'table.header.menu.editAutomation', value: 'Edit automation...'});
       case HeaderMenuId.Displayed:
         return this.i18n({id: 'table.header.menu.defaultAttribute', value: 'Set as displayed attribute'});
       case HeaderMenuId.Hide:

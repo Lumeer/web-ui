@@ -369,11 +369,11 @@
           <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="sequence.list.createNew.info" datatype="html">
+      </trans-unit><trans-unit id="sequence.list.createNew.automation.info" datatype="html">
         <source>
-            To create a new sequence, just use its name in the sequence block in a function or a rule.
+            To create a new sequence, just use its name in the sequence block in a function or an automation.
           </source><target state="final">
-            To create a new sequence, just use its name in the sequence block in a function or a rule.
+            To create a new sequence, just use its name in the sequence block in a function or an automation.
           </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
@@ -913,11 +913,11 @@
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collection.settings.records.count" datatype="html">
         <source>Number of records</source><target state="final">Number of records</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.purpose" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.workflow" datatype="html">
         <source>
-          Purpose
+          Workflow
         </source><target state="final">
-          Purpose
+          Workflow
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
@@ -933,14 +933,17 @@
           Attributes
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.automation" datatype="html">
         <source>
-          Rules
+          Automation
         </source><target state="final">
-          Rules
+          Automation
         </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
         <source>
           Users
         </source><target state="final">
@@ -963,14 +966,18 @@
           <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.heading" datatype="html">
-        <source>What best describes your intentions?</source><target state="final">What best describes your intentions?</target>
+      </trans-unit><trans-unit id="collections.tab.workflow.heading" datatype="html">
+        <source>What best describes your intentions with this table?</source><target state="final">What best describes your intentions with this table?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.subHeading" datatype="html">
-        <source>Lumeer provides you most help when he understands what do you plan to store in the table.</source><target state="final">Lumeer provides you most help when he understands what do you plan to store in the table.</target>
+      </trans-unit><trans-unit id="collections.tab.workflow.subHeading" datatype="html">
+        <source>
+      Lumeer provides you most help when he understands what do you plan to store in the table. What is your desired workflow?
+    </source><target state="final">
+      Lumeer provides you most help when he understands what do you plan to store in the table. What is your desired workflow?
+    </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">4</context>
@@ -1627,22 +1634,22 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.description" datatype="html">
         <source>
-      An action button that executes a rule based on specified conditions.
+      An action button that executes an automation based on specified conditions.
     </source><target state="final">
-      An action button that executes a rule based on specified conditions.
+      An action button that executes an automation based on specified conditions.
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.rule.label" datatype="html">
-        <source>Rule</source><target state="final">Rule</target>
+      </trans-unit><trans-unit id="constraint.action.automation.label" datatype="html">
+        <source>Automation</source><target state="final">Automation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.rule.empty" datatype="html">
-        <source>Select rule</source><target state="final">Select rule</target>
+      </trans-unit><trans-unit id="constraint.action.automation.empty" datatype="html">
+        <source>Select automation</source><target state="final">Select automation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">14</context>
@@ -1683,17 +1690,17 @@
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/permissions/action-constraint-permissions-form.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.title" datatype="html">
-        <source>There are no rules yet!</source><target state="final">There are no rules yet!</target>
+      </trans-unit><trans-unit id="constraint.action.empty.automation.title" datatype="html">
+        <source>There are no automations yet!</source><target state="final">There are no automations yet!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.subtitle.norights" datatype="html">
+      </trans-unit><trans-unit id="constraint.action.empty.automation.subtitle.norights" datatype="html">
         <source>I am sorry but you
-    do not have permissions to add rules.
+    do not have permissions to add automations.
   </source><target state="final">I am sorry but you
-    do not have permissions to add rules.
+    do not have permissions to add automations.
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
@@ -1701,16 +1708,16 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.empty.subtitle" datatype="html">
         <source>Navigate to Table settings and create something
-      beautiful! Keep in mind that Automated Link rules cannot be used in an action.
+      beautiful! Keep in mind that Automated Links cannot be used in an action.
     </source><target state="final">Navigate to Table settings and create something
-      beautiful! Keep in mind that Automated Link rules cannot be used in an action.
+      beautiful! Keep in mind that Automated Links cannot be used in an action.
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.button" datatype="html">
-        <source>Add rule</source><target state="final">Add rule</target>
+      </trans-unit><trans-unit id="constraint.action.empty.automation.button" datatype="html">
+        <source>Add automation</source><target state="final">Add automation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">17</context>
@@ -2058,8 +2065,8 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/notification-settings/notification-settings-modal.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Edit Function of</source><target state="final">Edit Function of</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.rule.title" datatype="html">
-        <source>Edit Rule</source><target state="final">Edit Rule</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.automation.title" datatype="html">
+        <source>Edit Automation</source><target state="final">Edit Automation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context>
           <context context-type="linenumber">14</context>
@@ -2508,7 +2515,7 @@
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, rules and functions</source><target state="final"><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, rules and functions</target>
+        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, automations and functions</source><target state="final"><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, automations and functions</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">24</context>
@@ -2518,7 +2525,7 @@
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
-        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</source><target state="final">Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</target>
+        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> automation and function per table.</source><target state="final">Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> automation and function per table.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2564,10 +2571,10 @@
           <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.sequence.info1" datatype="html">
-        <source>The sequences listed here can be used in Table rules and Attribute functions.</source><target state="final">The sequences listed here can be used in Table rules and Attribute functions.</target>
+        <source>The sequences listed here can be used in Table automations and Attribute functions.</source><target state="final">The sequences listed here can be used in Table automations and Attribute functions.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
-        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/rule editor.</source><target state="final">Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/rule editor.</target>
+        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/automation editor.</source><target state="final">Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/automation editor.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="projects.tab.template.isPublic" datatype="html">
         <source>Public access to the project</source><target state="final">Public access to the project</target>
@@ -3114,9 +3121,9 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
-    Add a new rule
+    Add a new automation
   </source><target state="final">
-    Add a new rule
+    Add a new automation
   </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule/add-rule.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.ofType" datatype="html">
@@ -3141,64 +3148,109 @@
         <source>Delete</source><target state="final">Delete</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.name.new" datatype="html">
-        <source>New rule name</source><target state="final">New rule name</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.name.exists" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
+        <source>New automation name</source><target state="final">New automation name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.name.exists" datatype="html">
         <source>
-          Rule name already used.
+          Automation name already used.
         </source><target state="final">
-          Rule name already used.
+          Automation name already used.
         </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
         <source>
           On record
         </source><target state="final">
           On record
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.type" datatype="html">
         <source>
-          Fire rule
+          Fire automation
         </source><target state="final">
-          Fire rule
+          Fire automation
         </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
         <source>Save Changes</source><target state="final">Save Changes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
-        <source>Add Rule</source><target state="final">Add Rule</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
+        <source>Add Automation</source><target state="final">Add Automation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.info" datatype="html">
+        <source>
+    Automatically link records from two tables based on matching column values.
+  </source><target state="final">
+    Automatically link records from two tables based on matching column values.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
       Link record via
     </source><target state="final">
       Link record via
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
         <source>Select a link type</source><target state="final">Select a link type</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
         <source>
       Where
     </source><target state="final">
       Where
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
         <source>
       equals
     </source><target state="final">
       equals
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
-        <source>Edit Rule Code:</source><target state="final">Edit Rule Code:</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.info" datatype="html">
+        <source>
+    Develop any automation from custom blocks. Triggers automatically upon record update or manually via an action button.
+  </source><target state="final">
+    Develop any automation from custom blocks. Triggers automatically upon record update or manually via an action button.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.editAutomation.message" datatype="html">
+        <source>Edit Automation Code:</source><target state="final">Edit Automation Code:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.automations.empty" datatype="html">
+        <source>
+    There are no automations yet. Create some by clicking on the button below!
+  </source><target state="final">
+    There are no automations yet. Create some by clicking on the button below!
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/no-rules/no-rules.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
         <source>
         Dry Run
       </source><target state="final">
@@ -3206,14 +3258,7 @@
       </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
-        <source>
-    There are no rules yet. Create some by clicking on the button below!
-  </source><target state="final">
-    There are no rules yet. Create some by clicking on the button below!
-  </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/no-rules/no-rules.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="search.records.empty.button" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="search.records.empty.button" datatype="html">
         <source>Open as Table</source><target state="final">Open as Table</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
@@ -3259,14 +3304,29 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
         <source>Edit function...</source><target state="final">Edit function...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="table.header.menu.editRule" datatype="html">
-        <source>Edit rule...</source><target state="final">Edit rule...</target>
-        
-        
-        
-        
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="table.header.column.settings" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="table.header.menu.editAutomation" datatype="html">
+        <source>Edit automation...</source><target state="final">Edit automation...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source><target state="final">Column settings...</target>
 
 
@@ -4336,7 +4396,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of rules and functions.</source><target state="final">Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of rules and functions.</target>
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source><target state="final">Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4514,7 +4574,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
-        <source>Show a message to the user. Works only when the rule is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single rule and function sequence execution to prevent interface clogging.</source><target state="final">Show a message to the user. Works only when the rule is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single rule and function sequence execution to prevent interface clogging.</target>
+        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source><target state="final">Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5522,7 +5582,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
-        <source>Zapier Rule</source><target state="final">Zapier Rule</target>
+        <source>Zapier Automation</source><target state="final">Zapier Automation</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
         <source>This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</source><target state="final">This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</target>

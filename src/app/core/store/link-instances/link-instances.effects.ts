@@ -378,7 +378,7 @@ export class LinkInstancesEffects {
     map(() => {
       const message = this.i18n({
         id: 'dataResource.runRule.fail',
-        value: 'Could not run the selected rule',
+        value: 'Could not run the selected automation',
       });
       return new NotificationsAction.Error({message});
     })

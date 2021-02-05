@@ -76,7 +76,7 @@ export class CollectionRulesComponent implements OnInit {
   private getEmptyRule(): AutoLinkRule {
     return {
       id: generateId(),
-      name: 'New Rule Name',
+      name: 'New Automation Name',
       type: RuleType.AutoLink,
       timing: RuleTiming.All,
       configuration: {
