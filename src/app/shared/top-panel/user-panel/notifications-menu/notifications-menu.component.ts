@@ -50,7 +50,6 @@ import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
-import {convertViewCursorToString} from '../../../../core/store/navigation/view-cursor/view-cursor';
 
 @Component({
   selector: 'notifications-menu',
@@ -149,6 +148,8 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       case UserNotificationType.TaskUpdated:
       case UserNotificationType.TaskRemoved:
       case UserNotificationType.TaskUnassigned:
+      case UserNotificationType.TaskCommented:
+      case UserNotificationType.TaskMentioned:
         return this.navigateToTask(notification);
     }
   }

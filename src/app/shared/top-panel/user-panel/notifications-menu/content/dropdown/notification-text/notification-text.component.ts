@@ -51,6 +51,8 @@ export class NotificationTextComponent implements OnChanges {
         case UserNotificationType.TaskUpdated:
         case UserNotificationType.TaskRemoved:
         case UserNotificationType.TaskUnassigned:
+        case UserNotificationType.TaskCommented:
+        case UserNotificationType.TaskMentioned:
           this.taskName = changes.notification.currentValue.taskName;
           this.taskState = changes.notification.currentValue.taskState;
           this.taskDueDate = changes.notification.currentValue.taskDueDate;

@@ -762,7 +762,19 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="userNotifications.taskUnassigned" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.taskCommented" datatype="html">
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskMentioned" datatype="html">
+        <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source><target state="final">You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
         <source>Show only unread</source><target state="final">Show only unread</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="language.czech" datatype="html">
@@ -1402,13 +1414,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.title" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} }</source><target state="final">{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} }</target>
+        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments} }</source><target state="final">{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.description" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {} }</source><target state="final">{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {} }</target>
+        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment} }</source><target state="final">{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">16</context>
@@ -4516,10 +4528,10 @@
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source><target state="final">k|m|b|t</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source><target state="final">st|nd|rd|th</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 
 
 

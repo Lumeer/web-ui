@@ -208,7 +208,21 @@
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> Vám byl odebrán.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.taskCommented" datatype="html">
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source>
+        <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> má nový komentář.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskMentioned" datatype="html">
+        <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
+        <target>Někdo Vás zmínil v komentáři u úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
         <source>Show only unread</source><target>Pouze nepřečtené</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
@@ -405,15 +419,15 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.title" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} }</source>
-        <target>{VAR_SELECT, select, ResourceShared {Sdílení zdroje} DueDateChanged {Změna termínu} TaskAssigned {Přiřazení úkolu} TaskUpdated {Změna úkolu} TaskRemoved {Odstranění úkolu} StateUpdated {Změna stavu} }</target>
+        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments} }</source>
+        <target>{VAR_SELECT, select, ResourceShared {Sdílení zdroje} DueDateChanged {Změna termínu} TaskAssigned {Přiřazení úkolu} TaskUpdated {Změna úkolu} TaskRemoved {Odstranění úkolu} StateUpdated {Změna stavu} Comments {Komentáře} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.description" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {} }</source>
-        <target>{VAR_SELECT, select, ResourceShared {Byla vám nasdílena organizace, projekt, tabulka nebo pohled} DueDateChanged {} TaskAssigned {Byl vám přidělen nebo odebrán úkol} TaskUpdated {Byly změněny detail vašeho úkolu} TaskRemoved {} StateUpdated {} }</target>
+        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment} }</source>
+        <target>{VAR_SELECT, select, ResourceShared {Byla vám nasdílena organizace, projekt, tabulka nebo pohled} DueDateChanged {Termín se blíží nebo se změnil} TaskAssigned {Byl vám přidělen nebo odebrán úkol} TaskUpdated {Byly změněny detail vašeho úkolu} TaskRemoved {Úkol byl smazán} StateUpdated {Komenář u vašeho úkolu, nebo vás někdo zmínil v komentáři} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">16</context>
@@ -5677,10 +5691,10 @@
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source><target>tis.|mil.|mld.|bil.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source><target>.|.|.|.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
         <source>Do you really want to permanently delete this view?</source><target>Chcete skutečně navždy smazat tento pohled?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>

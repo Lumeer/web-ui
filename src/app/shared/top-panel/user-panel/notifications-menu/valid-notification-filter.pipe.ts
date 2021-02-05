@@ -49,6 +49,8 @@ export class ValidNotificationFilterPipe implements PipeTransform {
       case UserNotificationType.StateUpdate:
       case UserNotificationType.TaskRemoved:
       case UserNotificationType.TaskUpdated:
+      case UserNotificationType.TaskCommented:
+      case UserNotificationType.TaskMentioned:
         return !!notification.collectionId && !!notification.projectId && !!notification.organizationId;
       default:
         return false;

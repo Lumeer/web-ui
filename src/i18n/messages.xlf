@@ -2605,6 +2605,18 @@
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskCommented" datatype="html">
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has a new comment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskMentioned" datatype="html">
+        <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
         <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"/>
@@ -2778,13 +2790,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.title" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} }</source>
+        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.description" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {} }</source>
+        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">16</context>
@@ -5246,14 +5258,14 @@
       <trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context>
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context>
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

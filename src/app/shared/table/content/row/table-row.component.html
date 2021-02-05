@@ -40,7 +40,7 @@
              *ngIf="group.column && !dataInputInfo.showDataInput"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
-        <div class="detail-trigger small pl-1 pr-1"
+        <div class="detail-trigger small pl-1 pr-1 cursor-pointer"
              *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
              [class.has-comments]="row.commentsCount"
              (click)="onDetailClick($event)"

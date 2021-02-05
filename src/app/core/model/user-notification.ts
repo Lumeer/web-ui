@@ -33,6 +33,8 @@ export enum UserNotificationType {
   TaskUnassigned = 'TASK_UNASSIGNED',
   BulkAction = 'BULK_ACTION',
   DueDateChanged = 'DUE_DATE_CHANGED',
+  TaskCommented = 'TASK_COMMENTED',
+  TaskMentioned = 'TASK_MENTIONED',
 }
 
 export const UserNotificationTypeMap = {
@@ -49,6 +51,8 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.TaskUnassigned]: UserNotificationType.TaskUnassigned,
   [UserNotificationType.BulkAction]: UserNotificationType.BulkAction,
   [UserNotificationType.DueDateChanged]: UserNotificationType.DueDateChanged,
+  [UserNotificationType.TaskCommented]: UserNotificationType.TaskCommented,
+  [UserNotificationType.TaskMentioned]: UserNotificationType.TaskMentioned,
 };
 
 export enum UserNotificationGroupType {
@@ -58,6 +62,7 @@ export enum UserNotificationGroupType {
   TaskRemoved = 'TaskRemoved',
   DueDateChanged = 'DueDateChanged',
   StateUpdated = 'StateUpdated',
+  Comments = 'Comments',
 }
 
 export const userNotificationGroupTypes: Record<UserNotificationGroupType, UserNotificationType[]> = {
@@ -68,10 +73,15 @@ export const userNotificationGroupTypes: Record<UserNotificationGroupType, UserN
     UserNotificationType.ViewShared,
   ],
   [UserNotificationGroupType.TaskAssigned]: [UserNotificationType.TaskAssigned, UserNotificationType.TaskUnassigned],
-  [UserNotificationGroupType.DueDateChanged]: [UserNotificationType.DueDateSoon, UserNotificationType.PastDueDate],
+  [UserNotificationGroupType.DueDateChanged]: [
+    UserNotificationType.DueDateSoon,
+    UserNotificationType.PastDueDate,
+    UserNotificationType.DueDateChanged,
+  ],
   [UserNotificationGroupType.TaskUpdated]: [UserNotificationType.TaskUpdated],
   [UserNotificationGroupType.TaskRemoved]: [UserNotificationType.TaskRemoved],
   [UserNotificationGroupType.StateUpdated]: [UserNotificationType.StateUpdate],
+  [UserNotificationGroupType.Comments]: [UserNotificationType.TaskCommented, UserNotificationType.TaskMentioned],
 };
 
 interface BasicUserNotification {
@@ -121,6 +131,18 @@ export interface TaskUserNotification extends DocumentUserNotification {
   assignee?: string;
   collectionQuery?: string;
   documentCursor?: string;
+}
+
+export interface CommentUserNotification extends TaskUserNotification {
+  comment?: string;
+}
+
+export interface CommentedUserNotification extends CommentUserNotification {
+  type: UserNotificationType.TaskCommented;
+}
+
+export interface MentionedUserNotification extends CommentUserNotification {
+  type: UserNotificationType.TaskMentioned;
 }
 
 export interface OrganizationSharedUserNotification extends OrganizationUserNotification {
@@ -188,4 +210,6 @@ export type UserNotification =
   | TaskUpdatedUserNotification
   | TaskRemovedUserNotification
   | TaskUnassignedUserNotification
+  | CommentedUserNotification
+  | MentionedUserNotification
   | BulkActionUserNotification;
