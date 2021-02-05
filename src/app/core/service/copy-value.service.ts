@@ -76,7 +76,7 @@ export class CopyValueService {
   ) {
     const constraint = findAttributeConstraint(attributesResource?.attributes, attributeId);
     const value = (constraint || new UnknownConstraint())
-      .createDataValue(dataResource.data[attributeId], constraintData)
+      .createDataValue(dataResource?.data[attributeId], constraintData)
       .editValue();
     this.copy(value);
   }
