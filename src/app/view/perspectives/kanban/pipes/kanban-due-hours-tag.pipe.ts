@@ -37,7 +37,7 @@ export class KanbanDueHoursTagPipe implements PipeTransform {
           color: COLOR_DANGER,
         };
       }
-      if (dueHours < 25) {
+      if (dueHours < 73) {
         return {
           title: this.i18n({id: 'kanban.dueHours.tag.dueSoon', value: 'Due soon'}),
           color: COLOR_WARNING,
