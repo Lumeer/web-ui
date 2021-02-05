@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../core/model/constraint';
-import {constraintIconsMap, ConstraintType} from '../../core/model/data/constraint';
+import {Constraint, ConstraintType} from '@lumeer/data-filters';
+import {constraintIconsMap} from '../../core/model/constraint';
 
 @Pipe({
   name: 'constraintTypeIcon',

@@ -59,6 +59,8 @@ import {TemplateService} from '../../rest/template.service';
 import {ProjectService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {WorkflowsAction} from '../workflows/workflows.action';
+import {DataResourcesAction} from '../data-resources/data-resources.action';
+import {UserPermissionsAction} from '../user-permissions/user-permissions.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -443,6 +445,7 @@ export class ProjectsEffects {
       const actions: Action[] = [
         new CollectionsAction.Clear(),
         new DocumentsAction.Clear(),
+        new DataResourcesAction.Clear(),
         new LinkInstancesAction.Clear(),
         new LinkTypesAction.Clear(),
         new ViewsAction.Clear(),
@@ -454,6 +457,8 @@ export class ProjectsEffects {
         new SearchesAction.Clear(),
         new ChartAction.Clear(),
         new WorkflowsAction.Clear(),
+        new SearchesAction.Clear(),
+        new UserPermissionsAction.Clear(),
       ];
 
       if (nextAction) {

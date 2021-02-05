@@ -19,10 +19,9 @@
 
 import {Attribute} from '../../../core/store/collections/collection';
 import {AttributeSortType} from '../../../core/store/views/view';
-import {Constraint} from '../../../core/model/constraint';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {MenuItem} from '../../menu/model/menu-item';
+import {Constraint, UnknownConstraint} from '@lumeer/data-filters';
 
 export interface TableColumnGroup {
   id: string;

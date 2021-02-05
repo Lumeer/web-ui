@@ -19,14 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Project} from '../../../../core/store/projects/project';
-import {removeAccent} from '../../../utils/string.utils';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterTemplates',
 })
 export class FilterTemplatesPipe implements PipeTransform {
   public transform(templates: Project[], term: string): Project[] {
-    const termWithoutAccent = removeAccent(term, true).trim();
-    return templates.filter(template => removeAccent(template.name, true).trim().includes(termWithoutAccent));
+    const termWithoutAccent = removeAccentFromString(term, true).trim();
+    return templates.filter(template => removeAccentFromString(template.name, true).trim().includes(termWithoutAccent));
   }
 }

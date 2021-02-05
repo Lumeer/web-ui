@@ -28,7 +28,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Constraint} from '../../../../core/model/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -40,7 +39,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
@@ -49,6 +47,7 @@ import {ChartData, ChartSettings} from './convertor/chart-data';
 import {ChartDataConverter} from './convertor/chart-data-converter';
 import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-visualizer';
 import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
+import {Constraint, ConstraintData} from '@lumeer/data-filters';
 
 interface Data {
   collections: Collection[];

@@ -18,15 +18,9 @@
  */
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../../../core/model/constraint';
-import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
-import {
-  DateTimeConstraintConfig,
-  DurationConstraintConfig,
-  DurationUnit,
-} from '../../../../core/model/data/constraint-config';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
+import {Constraint, DurationConstraint, DurationConstraintConfig, DurationUnit} from '@lumeer/data-filters';
 
 const maxDurationUnits = [DurationUnit.Days, DurationUnit.Hours, DurationUnit.Minutes, DurationUnit.Seconds];
 

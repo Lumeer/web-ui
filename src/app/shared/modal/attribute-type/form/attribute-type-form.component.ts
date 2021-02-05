@@ -41,10 +41,8 @@ import {UserConstraintFormControl} from './constraint-config/user/user-constrain
 import {DurationConstraintFormControl} from './constraint-config/duration/duration-constraint-form-control';
 import {Attribute, AttributeFunction} from '../../../../core/store/collections/collection';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {Constraint} from '../../../../core/model/constraint';
 import {createConstraint} from '../../../utils/constraint/create-constraint';
-import {ConstraintType, constraintTypesMap} from '../../../../core/model/data/constraint';
-import {ConstraintConfig, SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {constraintTypesMap} from '../../../../core/model/constraint';
 import {convertToBig} from '../../../utils/data.utils';
 import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
 import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
@@ -56,9 +54,17 @@ import {
   ActionConstraintFormControl,
 } from './constraint-config/action/action-constraint-form-control';
 import {AttributesResource} from '../../../../core/model/resource';
-import {AttributeFilterEquation, EquationOperator} from '../../../../core/model/attribute-filter';
-import {areConditionValuesDefined, conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {areConditionValuesDefined} from '../../../../core/store/navigation/query/query.util';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {
+  AttributeFilterEquation,
+  conditionTypeNumberOfInputs,
+  Constraint,
+  ConstraintConfig,
+  ConstraintType,
+  EquationOperator,
+  SelectConstraintConfig,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'attribute-type-form',
@@ -214,7 +220,7 @@ export class AttributeTypeFormComponent implements OnChanges {
     const equations: AttributeFilterEquation[] = filters
       ?.filter(fil => fil.attribute && areConditionValuesDefined(fil.condition, fil.values, fil.constraintType))
       .map(fil => {
-        const numConditionValues = conditionNumInputs(fil.condition);
+        const numConditionValues = conditionTypeNumberOfInputs(fil.condition);
         const conditionValues = fil.values?.slice(0, numConditionValues) || [];
         return {
           filter: {attributeId: fil.attribute, condition: fil.condition, conditionValues},

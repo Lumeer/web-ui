@@ -69,9 +69,6 @@ import {
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../../../shared/utils/data/data-aggregator';
-import {Constraint} from '../../../../../../core/model/constraint';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
-import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {
   findAttributeByQueryAttribute,
   QueryAttribute,
@@ -113,6 +110,7 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {selectCurrentView} from '../../../../../../core/store/views/views.state';
+import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesDataService {

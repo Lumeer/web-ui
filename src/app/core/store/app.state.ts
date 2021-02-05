@@ -51,6 +51,7 @@ import {initialWorkflowsState, WorkflowsState} from './workflows/workflow.state'
 import {initialResourceCommentsState, ResourceCommentsState} from './resource-comments/resource-comments.state';
 import {initialModalsState, ModalsState} from './modals/modals.state';
 import {initialUserPermissionsState, UserPermissionsState} from './user-permissions/user-permissions.state';
+import {DataResourcesState, initialDataResourcesState} from './data-resources/data-resources.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -60,6 +61,7 @@ export interface AppState {
   groups: GroupsState;
   linkInstances: LinkInstancesState;
   linkTypes: LinkTypesState;
+  dataResources: DataResourcesState;
   maps: MapsState;
   navigation: NavigationState;
   organizations: OrganizationsState;
@@ -97,6 +99,7 @@ export function initialAppState(): AppState {
     groups: initialGroupsState,
     linkInstances: initialLinkInstancesState,
     linkTypes: initialLinkTypesState,
+    dataResources: initialDataResourcesState,
     maps: initialMapsState,
     navigation: initialNavigationState,
     organizations: initialOrganizationsState,

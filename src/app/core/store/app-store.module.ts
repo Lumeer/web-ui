@@ -81,6 +81,8 @@ import {modalsReducer} from './modals/modals.reducer';
 import {ModalsEffects} from './modals/modals.effects';
 import {userPermissionsReducer} from './user-permissions/user-permissions.reducer';
 import {WorkflowsEffects} from './workflows/workflows.effects';
+import {dataResourcesReducer} from './data-resources/data-resources.reducer';
+import {DataResourcesEffects} from './data-resources/data-resources.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -90,6 +92,7 @@ const reducers: ActionReducerMap<AppState> = {
   groups: groupsReducer,
   linkInstances: linkInstancesReducer,
   linkTypes: linkTypesReducer,
+  dataResources: dataResourcesReducer,
   maps: mapsReducer,
   navigation: navigationReducer,
   organizations: organizationsReducer,
@@ -127,6 +130,7 @@ const effects = [
   GroupsEffects,
   LinkInstancesEffects,
   LinkTypesEffects,
+  DataResourcesEffects,
   NavigationEffects,
   NotificationsEffects,
   OrganizationsEffects,

@@ -21,7 +21,6 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
@@ -32,7 +31,6 @@ import {
   DataObjectAttribute,
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
-import {Constraint} from '../../../../core/model/constraint';
 import {isAllDayEvent} from './calendar-util';
 import {
   constraintContainsHoursInConfig,
@@ -43,6 +41,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import * as moment from 'moment';
+import {Constraint, ConstraintData, ConstraintType} from '@lumeer/data-filters';
 
 enum DataObjectInfoKeyType {
   Name = 'name',

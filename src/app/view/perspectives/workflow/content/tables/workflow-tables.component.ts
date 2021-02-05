@@ -44,7 +44,6 @@ import {
   TableCellType,
   TableModel,
 } from '../../../../../shared/table/model/table-model';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
@@ -67,6 +66,7 @@ import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
 import {APP_NAME_SELECTOR} from '../../../../../core/constants';
 import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'workflow-tables',

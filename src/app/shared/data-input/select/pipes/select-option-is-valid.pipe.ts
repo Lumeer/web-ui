@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintConfig, SelectConstraintOption} from '../../../../core/model/data/constraint-config';
+import {SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'selectOptionIsValid',
@@ -29,6 +29,6 @@ export class SelectOptionIsValidPipe implements PipeTransform {
       return false;
     }
 
-    return ((config && config.options) || []).some(definedOption => definedOption.value === option.value);
+    return (config?.options || []).some(definedOption => definedOption.value === option.value);
   }
 }

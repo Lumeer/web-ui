@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../core/model/constraint';
 import {isNotNullOrUndefined} from '../common.utils';
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {Constraint, UnknownConstraint} from '@lumeer/data-filters';
 
 export enum DataAggregationType {
   Sum = 'sum',

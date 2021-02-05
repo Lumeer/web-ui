@@ -24,8 +24,8 @@ import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/
 import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {QueryAttribute} from '../../../core/model/query-attribute';
+import {ConstraintType} from '@lumeer/data-filters';
 
 export function createDefaultTaskPurposeConfig(
   stem: QueryStem,

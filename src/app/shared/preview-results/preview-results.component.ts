@@ -29,7 +29,6 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {ConstraintData} from '../../core/model/data/constraint';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
@@ -41,6 +40,7 @@ import {Query} from '../../core/store/navigation/query/query';
 import {filterStemsForCollection} from '../../core/store/navigation/query/query.util';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'preview-results',

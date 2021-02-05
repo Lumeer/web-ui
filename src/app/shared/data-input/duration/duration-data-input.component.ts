@@ -29,13 +29,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {DurationDataValue} from '../../../core/model/data-value/duration.data-value';
 import {KeyCode} from '../../key-code';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {ConstraintType, DurationDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'duration-data-input',

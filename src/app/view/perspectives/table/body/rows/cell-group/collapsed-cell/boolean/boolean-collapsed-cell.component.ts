@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {BooleanConstraint} from '../../../../../../../../core/model/constraint/boolean.constraint';
+import {BooleanConstraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'boolean-collapsed-cell',

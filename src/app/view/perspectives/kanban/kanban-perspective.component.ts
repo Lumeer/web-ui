@@ -38,7 +38,6 @@ import {
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -51,6 +50,8 @@ import {
   selectCollectionsPermissions,
   selectLinkTypesPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -142,8 +143,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   private subscribeData() {

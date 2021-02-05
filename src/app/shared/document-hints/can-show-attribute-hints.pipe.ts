@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute} from '../../core/store/collections/collection';
+import {ConstraintType} from '@lumeer/data-filters';
 
 const NO_HINTS_CONSTRAINT_TYPES = [
   ConstraintType.Action,

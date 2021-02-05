@@ -19,9 +19,10 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {constraintIconsMap, ConstraintType, isConstraintTypeEnabled} from '../../../../../core/model/data/constraint';
+import {constraintIconsMap, isConstraintTypeEnabled} from '../../../../../core/model/constraint';
 import {SelectItemModel} from '../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../utils/common.utils';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'attribute-type-select',

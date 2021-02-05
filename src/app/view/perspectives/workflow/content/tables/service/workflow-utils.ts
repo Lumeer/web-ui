@@ -32,7 +32,6 @@ import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
@@ -40,6 +39,7 @@ import {resourceAttributeSettings} from '../../../../../../shared/settings/setti
 import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
+import {ConstraintData} from '@lumeer/data-filters';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 

@@ -21,7 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChi
 import {MatMenuTrigger} from '@angular/material/menu';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Attribute} from '../../../../../../core/store/collections/collection';
-import {ConstraintType} from '../../../../../../core/model/data/constraint';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'links-list-header-menu',

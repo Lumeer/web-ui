@@ -44,11 +44,11 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesStateService {

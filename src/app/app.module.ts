@@ -32,7 +32,6 @@ import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {SharedModule} from './shared/shared.module';
 import {ConstraintDataService} from './core/service/constraint-data.service';
-import {CurrencyFormatService} from './core/service/currency-format.service';
 import {PermissionsCheckService} from './core/service/permissions-check.service';
 import {AppIdService} from './core/service/app-id.service';
 
@@ -82,13 +81,6 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
       provide: APP_INITIALIZER,
       useFactory: (ds: ConstraintDataService) => () => ds.init(),
       deps: [ConstraintDataService],
-      multi: true,
-    },
-    CurrencyFormatService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (ds: CurrencyFormatService) => () => ds.init(),
-      deps: [CurrencyFormatService],
       multi: true,
     },
     PermissionsCheckService,

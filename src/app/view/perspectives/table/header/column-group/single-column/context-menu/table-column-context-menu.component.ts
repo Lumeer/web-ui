@@ -19,14 +19,16 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
+
+import {ConstraintType} from '@lumeer/data-filters';
+import {Store} from '@ngrx/store';
+
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {isMacOS} from '../../../../../../../shared/utils/system.utils';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../../../core/store/app.state';
-import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'table-column-context-menu',

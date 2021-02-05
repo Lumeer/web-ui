@@ -28,7 +28,7 @@ import {
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
-import {AttributeFilter, ConditionType} from '../../../model/attribute-filter';
+import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {
@@ -168,30 +168,6 @@ function normalizeFilter<T extends AttributeFilter>(filter: T): T {
   };
 }
 
-const EqVariants = [ConditionType.Equals, '=', '==', 'equals'];
-const NeqVariants = [ConditionType.NotEquals, '!=', '!==', '<>', 'ne', 'nequals'];
-const LtVariants = [ConditionType.LowerThan, '<'];
-const LteVariants = [ConditionType.LowerThanEquals, '<='];
-const GtVariants = [ConditionType.GreaterThan, '>'];
-const GteVariants = [ConditionType.GreaterThanEquals, '>='];
-
 function conditionFromString(condition: string): ConditionType {
-  if (!condition) {
-    return null;
-  }
-  const conditionLowerCase = condition.toLowerCase();
-  if (EqVariants.includes(conditionLowerCase)) {
-    return ConditionType.Equals;
-  } else if (NeqVariants.includes(conditionLowerCase)) {
-    return ConditionType.NotEquals;
-  } else if (LtVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThan;
-  } else if (LteVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThanEquals;
-  } else if (GtVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThan;
-  } else if (GteVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThanEquals;
-  }
   return condition as ConditionType;
 }

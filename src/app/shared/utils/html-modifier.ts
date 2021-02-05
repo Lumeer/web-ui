@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../core/model/data-value';
+import {DataValue} from '@lumeer/data-filters';
 
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {

@@ -40,7 +40,6 @@ import {
   selectTablePart,
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
@@ -50,6 +49,7 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'table-cell-group',

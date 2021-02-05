@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../core/model/constraint';
+import {Constraint} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'constraintTypeIconTitle',

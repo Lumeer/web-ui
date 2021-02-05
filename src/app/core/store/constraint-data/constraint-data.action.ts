@@ -18,18 +18,18 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DurationUnit} from '../../model/data/constraint-config';
+import {ConstraintData} from '@lumeer/data-filters';
 
 export enum ConstraintDataActionType {
-  INIT_DURATION_UNITS_MAP = '[Constraint Data] Init Duration Units Map',
+  INIT = '[Constraint Data] Init',
 }
 
 export namespace ConstraintDataAction {
-  export class InitDurationUnitsMap implements Action {
-    public readonly type = ConstraintDataActionType.INIT_DURATION_UNITS_MAP;
+  export class Init implements Action {
+    public readonly type = ConstraintDataActionType.INIT;
 
-    public constructor(public payload: {durationUnitsMap: Record<DurationUnit, string>}) {}
+    public constructor(public payload: {data: Partial<ConstraintData>}) {}
   }
 
-  export type All = InitDurationUnitsMap;
+  export type All = Init;
 }

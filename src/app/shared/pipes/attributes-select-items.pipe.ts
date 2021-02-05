@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
 import {SelectItemModel} from '../select/select-item/select-item.model';
 import {resourceAttributesSelectItems} from '../select/select-item.utils';
-import {ConstraintType} from '../../core/model/data/constraint';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'attributesSelectItems',

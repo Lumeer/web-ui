@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../../core/model/constraint';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {Constraint, ConstraintData} from '@lumeer/data-filters';
 
 export interface PivotData {
   data: PivotStemData[];

@@ -18,7 +18,6 @@
  */
 
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {ConstraintType} from '../../model/data/constraint';
 import {Attribute, Collection} from '../collections/collection';
 import {MapAttributeModel, MapConfig, MapConfigVersion, MapStemConfig} from './map.model';
 import {Query, QueryStem} from '../navigation/query/query';
@@ -30,6 +29,7 @@ import {
   queryStemAttributesResourcesOrder,
 } from '../navigation/query/query.util';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
+import {ConstraintType} from '@lumeer/data-filters';
 
 export function mapAttributesAreInAllowedRange(model: MapAttributeModel, otherModel: MapAttributeModel): boolean {
   if (!model || !otherModel) {

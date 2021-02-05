@@ -31,7 +31,6 @@ import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
@@ -48,6 +47,7 @@ import {queryWithoutFilters} from '../../../../core/store/navigation/query/query
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 const PAGE_SIZE = 40;
 
@@ -170,7 +170,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query: queryWithoutFilters(query)}));
+    this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 
   private subscribeQueryChange() {

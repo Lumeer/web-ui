@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintOption} from '../../../../core/model/data/constraint-config';
+import {SelectConstraintOption} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'selectOptionsJoined',

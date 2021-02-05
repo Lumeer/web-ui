@@ -22,8 +22,8 @@ import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {PlotlyChartData, PlotMaker} from './plot-maker';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
+import {ConstraintType} from '@lumeer/data-filters';
 
 const MAX_COLUMNS = 3;
 const HORIZONTAL_SPACING = 0.04;

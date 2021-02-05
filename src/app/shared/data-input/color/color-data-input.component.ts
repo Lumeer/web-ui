@@ -29,16 +29,15 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
 import {KeyCode} from '../../key-code';
 import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {COLOR_SUCCESS} from '../../../core/constants';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {ColorDataValue, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'color-data-input',

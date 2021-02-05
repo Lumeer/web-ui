@@ -32,16 +32,14 @@ import {
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
-import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {DataRowComponent} from '../../../../data/data-row-component';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
-import {DataValue} from '../../../../../core/model/data-value';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
+import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-resource-data-row',

@@ -41,7 +41,6 @@ import {
   isLinkTypeAttributeEditable,
 } from '../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -62,6 +61,7 @@ import {selectConstraintData} from '../../../../core/store/constraint-data/const
 import {ViewSettings} from '../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../settings/settings.util';
 import {objectChanged} from '../../../utils/common.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 const columnWidth = 100;
 

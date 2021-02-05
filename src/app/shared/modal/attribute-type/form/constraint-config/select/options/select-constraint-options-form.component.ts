@@ -29,12 +29,12 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {selectDefaultPalette, SelectConstraintOption} from '../../../../../../../core/model/data/constraint-config';
 import {SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../utils/form.utils';
 import {ColorPickerComponent} from '../../../../../../picker/color/color-picker.component';
 import {unescapeHtml} from '../../../../../../utils/common.utils';
-import {DataValue} from '../../../../../../../core/model/data-value';
+import {DataValue, SelectConstraintOption} from '@lumeer/data-filters';
+import {selectDefaultPalette} from '../../../../../../picker/colors';
 
 @Component({
   selector: 'select-constraint-options-form',

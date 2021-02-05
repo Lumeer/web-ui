@@ -18,21 +18,20 @@
  */
 import {Collection} from '../collections/collection';
 import {Query} from '../navigation/query/query';
-import {
-  getQueryFiltersForCollection,
-  getQueryFiltersForLinkType,
-  conditionNumInputs,
-} from '../navigation/query/query.util';
+import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
-import {ConstraintData} from '../../model/data/constraint';
 import {findAttribute} from '../collections/collection.util';
-import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
-import {AttributeFilter} from '../../model/attribute-filter';
-import {Constraint} from '../../model/constraint';
+import {
+  AttributeFilter,
+  conditionTypeNumberOfInputs,
+  Constraint,
+  ConstraintData,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -111,7 +110,7 @@ export function generateDocumentData(
     const attribute = findAttribute(attributesResource.attributes, filter.attributeId);
     const constraint: Constraint = attribute?.constraint || new UnknownConstraint();
     const dataValue = constraint.createDataValue(null, constraintData);
-    const numInputs = conditionNumInputs(filter.condition);
+    const numInputs = conditionTypeNumberOfInputs(filter.condition);
     const allValuesDefined =
       constraint.isDirectlyEditable ||
       createRange(0, numInputs).every(

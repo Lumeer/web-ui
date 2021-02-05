@@ -18,10 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../../core/model/constraint';
-import {DataValue} from '../../../core/model/data-value';
-import {ConstraintData} from '../../../core/model/data/constraint';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataValue',

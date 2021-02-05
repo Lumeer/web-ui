@@ -17,9 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../core/model/constraint';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {Collection} from '../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
@@ -29,6 +26,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {isArray, isNotNullOrUndefined, isNullOrUndefined, objectValues} from '../common.utils';
+import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 

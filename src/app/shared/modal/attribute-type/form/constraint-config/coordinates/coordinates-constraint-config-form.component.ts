@@ -22,12 +22,11 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
-import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {CoordinatesDataValue} from '../../../../../../core/model/data-value/coordinates.data-value';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {objectValues} from '../../../../../utils/common.utils';
+import {CoordinatesConstraintConfig, CoordinatesDataValue, CoordinatesFormat} from '@lumeer/data-filters';
 
 @Component({
   selector: 'coordinates-constraint-config-form',

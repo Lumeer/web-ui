@@ -32,7 +32,7 @@ import {DataAggregationType} from '../../../../shared/utils/data/data-aggregatio
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {environment} from '../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {UnknownConstraint} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},

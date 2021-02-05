@@ -31,7 +31,6 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {ConstraintData} from '../../core/model/data/constraint';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {DataRow, DataRowService} from '../data/data-row.service';
@@ -52,6 +51,7 @@ import {PostItLayoutType} from './post-it-layout-type';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {fromEvent, Subscription} from 'rxjs';
 import {objectChanged} from '../utils/common.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 export interface PostItTag {
   title: string;

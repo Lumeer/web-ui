@@ -31,15 +31,12 @@ import {
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
-import {DataValue} from '../../../../core/model/data-value';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {
   computeElementPositionInParent,
   isNotNullOrUndefined,
   isNullOrUndefinedOrEmpty,
   preventEvent,
 } from '../../../utils/common.utils';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
@@ -49,6 +46,7 @@ import {DocumentHintsComponent} from '../../../document-hints/document-hints.com
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {MenuItem} from '../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
+import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 
 @Component({
   selector: '[table-row]',

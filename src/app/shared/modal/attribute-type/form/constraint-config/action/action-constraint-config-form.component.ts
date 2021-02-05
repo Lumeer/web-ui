@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActionConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
@@ -32,6 +31,7 @@ import {IconColorPickerComponent} from '../../../../../picker/icon-color/icon-co
 import {Role} from '../../../../../../core/model/role';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {ActionConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-config-form',

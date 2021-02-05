@@ -20,8 +20,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
-import {removeAccent} from '../../../utils/string.utils';
 import {sortObjectsByScore} from '../../../utils/common.utils';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'filterUsers',
@@ -29,7 +29,7 @@ import {sortObjectsByScore} from '../../../utils/common.utils';
 export class FilterUsersPipe implements PipeTransform {
   public transform(users: User[], text: string): DropdownOption[] {
     const filteredUsersOptions = (users || [])
-      .filter(user => removeAccent(user.name || user.email).includes(removeAccent(text)))
+      .filter(user => removeAccentFromString(user.name || user.email).includes(removeAccentFromString(text)))
       .map(user => ({
         gravatar: user.email,
         value: user.email || user.name,

@@ -19,18 +19,16 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
-import {NumberConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {NumberConstraintFormControl} from './number-constraint-form-control';
-import {NumberDataValue} from '../../../../../../core/model/data-value/number.data-value';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {NumberConstraint} from '../../../../../../core/model/constraint/number.constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
-import {LanguageTag} from '../../../../../../core/model/data/language-tag';
 import {objectValues} from '../../../../../utils/common.utils';
+import {LanguageTag, NumberConstraint, NumberConstraintConfig, NumberDataValue} from '@lumeer/data-filters';
+import {getCurrentLocaleLanguageTag} from '../../../../../../core/model/language-tag';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -94,6 +92,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
     if (config.negative) {
       exampleValue *= -1;
     }
+    config.locale = getCurrentLocaleLanguageTag();
 
     return new NumberConstraint(config).createDataValue(exampleValue);
   }

@@ -25,7 +25,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {getQueryFiltersForCollection} from '../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
-import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'create-document-modal',

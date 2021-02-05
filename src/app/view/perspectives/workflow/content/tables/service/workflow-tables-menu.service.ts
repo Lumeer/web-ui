@@ -23,8 +23,8 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
-import {ConstraintType} from '../../../../../../core/model/data/constraint';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
+import {ConstraintType} from '@lumeer/data-filters';
 
 export enum HeaderMenuId {
   Edit = 'edit',

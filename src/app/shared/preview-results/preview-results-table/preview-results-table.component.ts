@@ -33,8 +33,8 @@ import {
 } from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
+import {ConstraintData} from '@lumeer/data-filters';
 
 const PAGE_SIZE = 100;
 

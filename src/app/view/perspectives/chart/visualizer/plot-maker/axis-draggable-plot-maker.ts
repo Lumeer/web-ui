@@ -23,9 +23,7 @@ import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
-import {Constraint} from '../../../../../core/model/constraint';
-import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
+import {Constraint, ConstraintType, DateTimeConstraint} from '@lumeer/data-filters';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getTraceIndexForPoint(point: any): number;

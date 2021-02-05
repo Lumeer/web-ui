@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute, AttributeFunction} from '../../core/store/collections/collection';
 import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
+import {objectsByIdMap, objectValues} from './common.utils';
 import {
   ActionConstraintConfig,
+  AttributeFilter,
+  ConstraintType,
+  SelectConstraint,
   SelectConstraintConfig,
+  UserConstraint,
   UserConstraintConfig,
-} from '../../core/model/data/constraint-config';
-import {AttributeFilter} from '../../core/model/attribute-filter';
-import {objectsByIdMap, objectValues} from './common.utils';
-import {SelectConstraint} from '../../core/model/constraint/select.constraint';
-import {UserConstraint} from '../../core/model/constraint/user.constraint';
+} from '@lumeer/data-filters';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 

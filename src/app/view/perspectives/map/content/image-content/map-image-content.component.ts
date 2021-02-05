@@ -36,10 +36,8 @@ import {
   selectMapImageDataLoaded,
   selectMapImageDataLoading,
 } from '../../../../../core/store/maps/maps.state';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {populateCoordinateProperties} from '../map-content.utils';
-import {CoordinatesConstraint} from '../../../../../core/model/constraint/coordinates.constraint';
-import {CoordinatesConstraintConfig} from '../../../../../core/model/data/constraint-config';
+import {ConstraintData, CoordinatesConstraint, CoordinatesConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'map-image-content',

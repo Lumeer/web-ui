@@ -48,16 +48,14 @@ import {Direction} from '../direction';
 import {DropdownPosition} from '../dropdown/dropdown-position';
 import {DropdownComponent} from '../dropdown/dropdown.component';
 import {DocumentHintColumn} from './document-hint-column';
-import {ConstraintData} from '../../core/model/data/constraint';
 import {getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
-import {DataValue} from '../../core/model/data-value';
 import {stripTextHtmlTags} from '../utils/data.utils';
 import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'document-hints',

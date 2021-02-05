@@ -28,12 +28,12 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction} from '../data-input-save-action';
 import {preventEvent} from '../../utils/common.utils';
 import {EmbeddedLinkModalComponent} from '../../modal/embedded-link/embedded-link-modal.component';
 import {DataInputModalService} from '../data-input-modal.service';
+import {formatLinkValue, LinkDataValue, completeLinkValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'link-data-input',

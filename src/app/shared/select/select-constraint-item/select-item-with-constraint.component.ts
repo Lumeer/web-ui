@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Constraint} from '../../../core/model/constraint';
 import {AttributesResource} from '../../../core/model/resource';
+import {Constraint} from '@lumeer/data-filters';
 
 export interface SelectItemWithConstraintId {
   resourceIndex: number;

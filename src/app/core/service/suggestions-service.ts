@@ -25,7 +25,6 @@ import {Attribute, Collection} from '../store/collections/collection';
 import {combineLatest, Observable, of} from 'rxjs';
 import {selectAllViews} from '../store/views/views.state';
 import {map} from 'rxjs/operators';
-import {removeAccent} from '../../shared/utils/string.utils';
 import {sortResourcesLastUsed} from '../../shared/utils/resource.utils';
 import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
 import {LinkType} from '../store/link-types/link.type';
@@ -37,15 +36,12 @@ import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 import {arrayIntersection, createRange, flattenMatrix} from '../../shared/utils/array.utils';
-import {getBaseCollectionIdsFromQuery, conditionNumInputs} from '../store/navigation/query/query.util';
+import {getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
-import {UnknownConstraint} from '../model/constraint/unknown.constraint';
-import {ConstraintType} from '../model/data/constraint';
 import {objectValues} from '../../shared/utils/common.utils';
-import {ConditionType, ConditionValue} from '../model/attribute-filter';
-import {initialConditionType, initialConditionValues} from '../model/data-value/data-value.utils';
+import {initialConditionType, initialConditionValues, removeAccentFromString} from '@lumeer/data-filters';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -144,7 +140,7 @@ export class SuggestionsService {
   constructor(private store$: Store<AppState>) {}
 
   public suggest(text: string, queryItems: QueryItem[]): Observable<QueryItem[]> {
-    const textWithoutAccent = removeAccent(text);
+    const textWithoutAccent = removeAccentFromString(text);
     return this.selectObjectsSorted(text).pipe(
       map(suggestions => this.addScoreByCurrentItems(suggestions, textWithoutAccent, queryItems || [])),
       map(suggestions => this.filterAndSortSuggestions(suggestions)),
@@ -154,7 +150,7 @@ export class SuggestionsService {
   }
 
   private selectObjectsSorted(text: string): Observable<ObjectSuggestion[]> {
-    const textWithoutAccent = removeAccent(text);
+    const textWithoutAccent = removeAccentFromString(text);
     return combineLatest([
       this.selectViewsSuggestions$(textWithoutAccent),
       this.selectCollectionsSuggestions$(textWithoutAccent),
@@ -295,7 +291,7 @@ export class SuggestionsService {
         const sortedByLastUsed = sortResourcesLastUsed<View>(views).slice(0, lastUsedThreshold);
         return views.map(view => {
           let score = 0;
-          const name = removeAccent(view.name);
+          const name = removeAccentFromString(view.name);
           if (text) {
             score += getScoreByMatch(name, text);
           }
@@ -316,7 +312,7 @@ export class SuggestionsService {
         const sortedByLastUsed = sortResourcesLastUsed<Collection>(collections).slice(0, lastUsedThreshold);
         return collections.map(collection => {
           let score = CollectionSuggestionScore.AdditionalPoints;
-          const name = removeAccent(collection.name);
+          const name = removeAccentFromString(collection.name);
           if (text) {
             score += getScoreByMatch(name, text);
           }
@@ -340,7 +336,7 @@ export class SuggestionsService {
 
           const collectionSuggestions = attributes.map(attribute => {
             let score = 0;
-            const name = removeAccent(attribute.name);
+            const name = removeAccentFromString(attribute.name);
             if (text) {
               score += getScoreByMatch(name, text);
             }
@@ -371,7 +367,7 @@ export class SuggestionsService {
 
         return linkTypesWithCollections.map(linkType => {
           let score = 0;
-          const name = removeAccent(linkType.name);
+          const name = removeAccentFromString(linkType.name);
           if (text) {
             score += getScoreByMatch(name, text);
           }
@@ -401,7 +397,7 @@ export class SuggestionsService {
 
           const linkTypeSuggestions = attributes.map(attribute => {
             let score = 0;
-            const name = removeAccent(attribute.name);
+            const name = removeAccentFromString(attribute.name);
             if (text) {
               score += getScoreByMatch(name, text);
             }

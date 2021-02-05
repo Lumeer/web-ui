@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Address, AddressField} from '../../../../../../core/store/geocoding/address';
 import {environment} from '../../../../../../../environments/environment';
 import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
+import {Address, AddressField} from '@lumeer/data-filters';
 
 const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.HouseNumber, AddressField.City, AddressField.Country];
 const ENGLISH_DEFAULT_FIELDS = [

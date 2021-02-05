@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../model/constraint';
-import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryAttribute} from '../../model/query-attribute';
