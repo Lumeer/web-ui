@@ -118,7 +118,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public constructor(
     private changeDetector: ChangeDetectorRef,
     private scrollDispatcher: ScrollDispatcher,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private tableRowNumberService: TableRowNumberService
   ) {}
 
   public ngOnInit() {
@@ -223,6 +224,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     if (!tableId) {
       throw new Error('tableId has not been set');
     }
+    this.tableRowNumberService.setTableId(tableId);
     this.store$.dispatch(new CreateTable({tableId, query, config}));
   }
 

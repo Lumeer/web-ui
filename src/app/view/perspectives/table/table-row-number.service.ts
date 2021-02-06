@@ -19,48 +19,61 @@
 
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
-import {distinctUntilChanged, map} from 'rxjs/operators';
-import {TableBodyCursor} from '../../../core/store/tables/table-cursor';
-import {selectTableLinkedRowsCount} from '../../../core/store/tables/tables.selector';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators';
+import {selectTableRows} from '../../../core/store/tables/tables.selector';
+import {countLinkedRows} from '../../../core/store/tables/table.utils';
+import {TableConfigRow} from '../../../core/store/tables/table.model';
+
+const COMPUTE_BATCH = 100;
 
 /**
  * Optimizes table row number calculation by caching previous results and using them when calculating next row numbers.
  */
 @Injectable()
 export class TableRowNumberService {
-  private observables = new Map<number, Observable<number>>();
+  private subject$ = new BehaviorSubject<number[]>([]);
+  private observable$: Observable<number[]> = this.subject$.asObservable();
+  private rowsSubscription = new Subscription();
+  private rowsComputed = COMPUTE_BATCH;
+  private rows: TableConfigRow[] = [];
+
   private lastTableId: string;
 
   constructor(private store$: Store<{}>) {}
 
-  public observeRowNumber(tableId: string, rowIndex: number): Observable<number> {
-    if (this.lastTableId === tableId && this.observables.has(rowIndex)) {
-      return this.observables.get(rowIndex);
+  public setTableId(tableId: string) {
+    if (this.lastTableId !== tableId) {
+      this.rowsComputed = COMPUTE_BATCH;
+      this.rowsSubscription.unsubscribe();
+      this.rowsSubscription = this.store$.pipe(select(selectTableRows(tableId)), debounceTime(50)).subscribe(rows => {
+        this.rows = rows;
+        this.computeRowsCount(0, this.rowsComputed);
+      });
     }
-    this.lastTableId = tableId;
-
-    const observable = this.createRowObservable(tableId, rowIndex);
-    this.observables.set(rowIndex, observable);
-    return observable;
   }
 
-  private createRowObservable(tableId: string, rowIndex: number): Observable<number> {
-    if (rowIndex <= 0) {
-      return of(1);
+  private computeRowsCount(fromIndex: number, toIndex: number) {
+    if (this.rows.length === 0) {
+      return;
     }
+    const counts = [...this.subject$.value];
+    for (let i = fromIndex; i < toIndex; i++) {
+      const row = this.rows[i];
+      if (row) {
+        counts[i] = countLinkedRows(row) + (counts[i - 1] || 0);
+      }
+    }
+    this.subject$.next(counts);
+  }
 
-    const previousCursor: TableBodyCursor = {
-      tableId,
-      partIndex: 0,
-      rowPath: [rowIndex - 1],
-    };
-    return combineLatest(
-      this.observeRowNumber(tableId, rowIndex - 1),
-      this.store$.pipe(select(selectTableLinkedRowsCount(previousCursor)), distinctUntilChanged())
-    ).pipe(
-      map(([previousRowNumber, previousLinkedRowsCount]) => previousRowNumber + previousLinkedRowsCount),
-      distinctUntilChanged()
-    );
+  public observeRowNumber(rowIndex: number): Observable<number> {
+    if (rowIndex >= this.rowsComputed) {
+      const previousComputed = this.rowsComputed;
+      const computeToIndex = rowIndex + COMPUTE_BATCH;
+      this.computeRowsCount(previousComputed, computeToIndex);
+      this.rowsComputed = computeToIndex;
+    }
+    return this.observable$.pipe(map(array => array[rowIndex] || 0));
   }
 }

@@ -6,6 +6,8 @@
        [ngClass]="!!row?.documentId ? 'text-secondary' : 'text-light'"
        (click)="onNumberClick()"
        class="row-number p-1 text-right cursor-pointer">
-    {{ first.number + rowIndex }}
+    <ng-container *ngIf="first.number">
+      {{ first.number + rowIndex }}
+    </ng-container>
   </div>
 </ng-container>

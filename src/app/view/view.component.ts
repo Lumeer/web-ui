@@ -42,6 +42,7 @@ import {selectCurrentUser} from '../core/store/users/users.state';
 import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
+import {environment} from '../../environments/environment';
 
 @Component({
   templateUrl: './view.component.html',
@@ -73,7 +74,9 @@ export class ViewComponent implements OnInit {
     this.fileAttachmentsService.init();
     this.viewSettingsService.init();
 
-    this.checkEmailVerified();
+    if (environment.auth) {
+      this.checkEmailVerified();
+    }
   }
 
   private checkEmailVerified() {
