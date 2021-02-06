@@ -96,7 +96,7 @@
     "ngx-gravatar": "^10.0.0",
     "ngx-infinite-scroll": "^10.0.0",
     "ngx-quill": "^12.0.1",
-    "ngx-toastr": "^13.1.0",
+    "ngx-toastr": "^13.2.0",
     "plotly.js": "1.54.7",
     "pusher-js": "^7.0.2",
     "quill": "^1.3.7",
