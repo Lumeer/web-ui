@@ -19,13 +19,12 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../app.state';
 import {NotificationsAction, NotificationsActionType} from './notifications.action';
-import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {NotificationButton} from '../../notifications/notification-button';
 
@@ -91,7 +90,7 @@ export class NotificationsEffects {
   );
 
   @Effect({dispatch: false})
-  public notifyForceRefresh$: Observable<Action> = this.actions$.pipe(
+  public notifyForceRefresh$ = this.actions$.pipe(
     ofType<NotificationsAction.ForceRefresh>(NotificationsActionType.FORCE_REFRESH),
     tap(() => {
       const message = this.i18n({
@@ -107,6 +106,19 @@ export class NotificationsEffects {
       };
 
       this.notificationService.confirm(message, '', [button], 'warning');
+    })
+  );
+
+  @Effect({dispatch: false})
+  public existingAttributeWarning$ = this.actions$.pipe(
+    ofType<NotificationsAction.ExistingAttributeWarning>(NotificationsActionType.EXISTING_ATTRIBUTE_WARNING),
+    tap(action => {
+      const message = this.i18n({
+        id: 'warning.attribute.nameExisting',
+        value: `I am sorry, the attribute name '${action.payload.name}' already exists.`,
+      });
+
+      this.notificationService.warning(message);
     })
   );
 

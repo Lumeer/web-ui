@@ -66,7 +66,7 @@ export namespace LinkInstancesAction {
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: {query: Query}) {}
+    public constructor(public payload: {query: Query; force?: boolean}) {}
   }
 
   export class GetSingle implements Action {
