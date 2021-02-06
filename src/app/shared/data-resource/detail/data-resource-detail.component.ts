@@ -32,7 +32,6 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
@@ -63,6 +62,7 @@ import {environment} from '../../../../environments/environment';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {objectChanged} from '../../utils/common.utils';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-resource-detail',

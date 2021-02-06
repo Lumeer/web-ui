@@ -29,18 +29,15 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {DataValue} from '../../../core/model/data-value';
-import {TextDataValue} from '../../../core/model/data-value/text.data-value';
-import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {KeyCode} from '../../key-code';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {ConstraintType, DataValue, TextDataValue, UnknownDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'text-data-input',

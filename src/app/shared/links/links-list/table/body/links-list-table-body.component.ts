@@ -32,7 +32,6 @@ import {
   OnInit,
 } from '@angular/core';
 import {LinkColumn} from '../../model/link-column';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {LinkRow} from '../../model/link-row';
 import {LinksListTableRowComponent} from './row/links-list-table-row.component';
@@ -49,6 +48,7 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {generateCorrelationId} from '../../../../utils/resource.utils';
 import {debounceTime} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: '[links-list-table-body]',

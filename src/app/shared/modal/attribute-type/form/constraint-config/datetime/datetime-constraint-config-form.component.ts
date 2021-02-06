@@ -21,8 +21,6 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {DateTimeConstraintConfig} from '../../../../../../core/model/data/constraint-config';
-import {DateTimeDataValue} from '../../../../../../core/model/data-value/datetime.data-value';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
@@ -31,6 +29,7 @@ import {DatetimeConstraintFormControl} from './datetime-constraint-form-control'
 import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../date-time/date-time-options';
 import {environment} from '../../../../../../../environments/environment';
 import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
+import {DateTimeConstraintConfig, DateTimeDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'datetime-constraint-config-form',

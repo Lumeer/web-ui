@@ -30,7 +30,6 @@ import {
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
@@ -54,6 +53,7 @@ import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {ConstraintData} from '@lumeer/data-filters';
 
 interface Data {
   collections: Collection[];

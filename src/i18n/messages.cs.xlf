@@ -208,7 +208,21 @@
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> Vám byl odebrán.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.taskCommented" datatype="html">
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source>
+        <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> má nový komentář.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskMentioned" datatype="html">
+        <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
+        <target>Někdo Vás zmínil v komentáři u úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
         <source>Show only unread</source><target>Pouze nepřečtené</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
@@ -262,14 +276,17 @@
         </source>
                 <target>Atributy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.automation" datatype="html">
         <source>
-          Rules
+          Automation
         </source><target>
-          Pravidla
+          Automatizace
         </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="collection.config.tab.permissions" datatype="html">
                 <source>
           Users
@@ -405,15 +422,15 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.title" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} }</source>
-        <target>{VAR_SELECT, select, ResourceShared {Sdílení zdroje} DueDateChanged {Změna termínu} TaskAssigned {Přiřazení úkolu} TaskUpdated {Změna úkolu} TaskRemoved {Odstranění úkolu} StateUpdated {Změna stavu} }</target>
+        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments} }</source>
+        <target>{VAR_SELECT, select, ResourceShared {Sdílení zdroje} DueDateChanged {Změna termínu} TaskAssigned {Přiřazení úkolu} TaskUpdated {Změna úkolu} TaskRemoved {Odstranění úkolu} StateUpdated {Změna stavu} Comments {Komentáře} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.description" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {} }</source>
-        <target>{VAR_SELECT, select, ResourceShared {Byla vám nasdílena organizace, projekt, tabulka nebo pohled} DueDateChanged {} TaskAssigned {Byl vám přidělen nebo odebrán úkol} TaskUpdated {Byly změněny detail vašeho úkolu} TaskRemoved {} StateUpdated {} }</target>
+        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment} }</source>
+        <target>{VAR_SELECT, select, ResourceShared {Byla vám nasdílena organizace, projekt, tabulka nebo pohled} DueDateChanged {Termín se blíží nebo se změnil} TaskAssigned {Byl vám přidělen nebo odebrán úkol} TaskUpdated {Byly změněny detail vašeho úkolu} TaskRemoved {Úkol byl smazán} StateUpdated {Komenář u vašeho úkolu, nebo vás někdo zmínil v komentáři} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">16</context>
@@ -632,22 +649,22 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.description" datatype="html">
         <source>
-      An action button that executes a rule based on specified conditions.
+      An action button that executes an automation based on specified conditions.
     </source><target>
-      Akční tlačítko, které spouští pravidla v závislosti na daných podmínkách.
+      Akční tlačítko, které spouští automatizaci v závislosti na daných podmínkách.
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.rule.label" datatype="html">
-        <source>Rule</source><target>Pravidlo</target>
+      </trans-unit><trans-unit id="constraint.action.automation.label" datatype="html">
+        <source>Automation</source><target>Automatizace</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.rule.empty" datatype="html">
-        <source>Select rule</source><target>Vyberte pravidlo</target>
+      </trans-unit><trans-unit id="constraint.action.automation.empty" datatype="html">
+        <source>Select automation</source><target>Vyberte automatizaci</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">14</context>
@@ -688,16 +705,16 @@
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/permissions/action-constraint-permissions-form.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.title" datatype="html">
-        <source>There are no rules yet!</source><target>Ještě nemáte žádná pravidla!</target>
+      </trans-unit><trans-unit id="constraint.action.empty.automation.title" datatype="html">
+        <source>There are no automations yet!</source><target>Nemáte ještě žádné automatizace!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.subtitle.norights" datatype="html">
+      </trans-unit><trans-unit id="constraint.action.empty.automation.subtitle.norights" datatype="html">
         <source>I am sorry but you
-    do not have permissions to add rules.
-  </source><target>Je mi líto, ale nemáte oprávnění přidávat pravidla.
+    do not have permissions to add automations.
+  </source><target>Je mi líto, ale nemáte oprávnění přidávat automatizace.
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
@@ -705,7 +722,7 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.empty.subtitle" datatype="html">
         <source>Navigate to Table settings and create something
-      beautiful! Keep in mind that Automated Link rules cannot be used in an action.
+      beautiful! Keep in mind that Automated Links cannot be used in an action.
     </source><target>Přepněte se do nastavení tabulky a vytvořte něco pěkného! 
     Pamatujte, že Auto Link pravidla nelze použít v akcích.
     </target>
@@ -713,8 +730,8 @@
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.button" datatype="html">
-        <source>Add rule</source><target>Přidat pravidlo</target>
+      </trans-unit><trans-unit id="constraint.action.empty.automation.button" datatype="html">
+        <source>Add automation</source><target>Přidat automatizaci</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">17</context>
@@ -1045,14 +1062,29 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
         <source>Edit function...</source><target>Upravit vzorec...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="table.header.menu.editRule" datatype="html">
-        <source>Edit rule...</source><target>Upravit pravidlo...</target>
-        
-        
-        
-        
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="table.header.column.settings" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="table.header.menu.editAutomation" datatype="html">
+        <source>Edit automation...</source><target>Upravit automatizaci...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source><target>Nastavení sloupce...</target>
 
 
@@ -2281,11 +2313,11 @@
                 <source>Number of records</source>
                 <target>Počet záznamů</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.purpose" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.workflow" datatype="html">
         <source>
-          Purpose
+          Workflow
         </source><target>
-          Účel
+          Pracovní postup
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
@@ -2325,16 +2357,19 @@
           <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.heading" datatype="html">
-        <source>What best describes your intentions?</source>
-        <target>Co nejlépe popisuje Váš záměr?</target>
+      </trans-unit><trans-unit id="collections.tab.workflow.heading" datatype="html">
+        <source>What best describes your intentions with this table?</source>
+        <target>Co nejlépe vystihuje vaše záměry s touto tabulkou?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.subHeading" datatype="html">
-        <source>Lumeer provides you most help when he understands what do you plan to store in the table.</source>
-        <target>Lumeer Vám nejlépe pomáhá, pokud rozumí tomu, co plánujete do této tabulky ukládat.</target>
+      </trans-unit><trans-unit id="collections.tab.workflow.subHeading" datatype="html">
+        <source>
+      Lumeer provides you most help when he understands what do you plan to store in the table. What is your desired workflow?
+    </source><target>
+      Lumeer Vám dokáže nejlépe pomoci, když ví, co zamýšlíte ukládat v této tabulce. Jaký je Váš plánovaný pracovní postup?
+    </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">4</context>
@@ -2901,25 +2936,19 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.state.unlimitedProjects" datatype="html">
-                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, rules and functions</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users, tables, automations and functions</source>
                 <target>
                     <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 
                     Neomezené<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 
-                    projekty, uživatelé a tabulky</target>
+                    projekty, uživatelé, tabulky, automatizace a funkce</target>
 
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
-                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</source>
-                <target>Nyní máte jen <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/>
-
-                    uživatele, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/>
-
-                    projekt, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/>
-
-                    tabulek.</target>
+                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> automation and function per table.</source>
+                <target>Nyní máte jen <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> uživatele, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projekty, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tabulek, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> automatizaci a funkci na tabulku.</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.state.dataLimit" datatype="html">
@@ -2964,10 +2993,10 @@
                 </target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="project.settings.sequence.info1" datatype="html">
-        <source>The sequences listed here can be used in Table rules and Attribute functions.</source><target>Tyto posloupnosti lze použít v Pravidlech tabulek a ve Funkcích atributů.</target>
+        <source>The sequences listed here can be used in Table automations and Attribute functions.</source><target>Tyto posloupnosti lze použít v Automatizacích tabulek a ve Funkcích atributů.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
-        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/rule editor.</source>
+        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/automation editor.</source>
         <target>Použijte blok <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>další číslo<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> z palety <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Pomůcky<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> v editoru funkce nebo pravidla.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="projects.tab.template.isPublic" datatype="html">
@@ -4055,11 +4084,11 @@
           <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="sequence.list.createNew.info" datatype="html">
+      </trans-unit><trans-unit id="sequence.list.createNew.automation.info" datatype="html">
         <source>
-            To create a new sequence, just use its name in the sequence block in a function or a rule.
+            To create a new sequence, just use its name in the sequence block in a function or an automation.
           </source><target>
-            Novou posloupnost vytvoříte tak, že použijete její název v bloku pro posloupnosti v editoru funkce nebo pravidla.
+            Pro vytvoření nové posloupnosti jednoduše použijte její název v bloku ve funkci nebo v automatizaci.
           </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
@@ -5333,7 +5362,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
-    Add a new rule
+    Add a new automation
   </source><target>
     Přidat pravidlo
   </target>
@@ -5360,64 +5389,109 @@
         <source>Delete</source><target>Vymazání</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.name.new" datatype="html">
-        <source>New rule name</source><target>Název nového pravidla</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.name.exists" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
+        <source>New automation name</source><target>Název nové automatizace</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.name.exists" datatype="html">
         <source>
-          Rule name already used.
+          Automation name already used.
         </source><target>
-          Pravidlo s tímto jménem už existuje.
+          Tento název automatizace je již použit.
         </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
         <source>
           On record
         </source><target>
           Spustit nad záznamem při
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.type" datatype="html">
         <source>
-          Fire rule
+          Fire automation
         </source><target>
-          Spustit pravidlo
+          Spustit automatizaci
         </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
         <source>Save Changes</source><target>Uložit změny</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
-        <source>Add Rule</source><target>Přidat pravidlo</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
+        <source>Add Automation</source><target>Přidat automatizaci</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.info" datatype="html">
+        <source>
+    Automatically link records from two tables based on matching column values.
+  </source><target>
+    Automaticky propojí záznamy mezi dvěmi tabulkami na základě stejných hodnot v daných sloupcích.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
       Link record via
     </source><target>
       Spojit záznamy pomocí
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
         <source>Select a link type</source><target>Vyberte typ vazby</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
         <source>
       Where
     </source><target>
       Když
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
         <source>
       equals
     </source><target>
       se rovná
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
-        <source>Edit Rule Code:</source><target>Upravit pravidlo:</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.info" datatype="html">
+        <source>
+    Develop any automation from custom blocks. Triggers automatically upon record update or manually via an action button.
+  </source><target>
+    Postavte si vlastní libovolnou automatizaci pomocí bloků. Spouští se na základě změny záznamu, nebo ručně pomocí akčního tlačítka.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.editAutomation.message" datatype="html">
+        <source>Edit Automation Code:</source><target>Vytvořte kód automatizace:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.automations.empty" datatype="html">
+        <source>
+    There are no automations yet. Create some by clicking on the button below!
+  </source><target>
+    Nemáte ještě žádné automatizace. Vytvořte ji pomocí tlačítka níže!
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/no-rules/no-rules.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
         <source>
         Dry Run
       </source><target>
@@ -5425,14 +5499,7 @@
         </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
-        <source>
-    There are no rules yet. Create some by clicking on the button below!
-  </source><target>
-    Neexistují ještě žádná pravidla. Vytvořte nové pravidlo tlačítkem níže!
-  </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/no-rules/no-rules.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source><target>Pohled se nepodařilo smazat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
@@ -5457,8 +5524,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of rules and functions.</source>
-        <target>Vytvoří nový záznam. Přiřaďte jej do proměnné, abyste mohli nastavit jeho atributy. Je možné vytvořit maximálně <x id="INTERPOLATION" equiv-text="{{limit}}"/> záznamů v rámci jednoho řetězce volání pravidel a funkcí, aby se předešlo neúmyslnému zacyklení.</target>
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
+        <target>Vytvoří nový záznam. Přiřaďte jej do proměnné, abyste mohli nastavit jeho atributy. Je možné vytvořit maximálně <x id="INTERPOLATION" equiv-text="{{limit}}"/> záznamů v rámci jednoho řetězce volání automatizací a funkcí, aby se předešlo neúmyslnému zacyklení.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5662,8 +5729,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
-        <source>Show a message to the user. Works only when the rule is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single rule and function sequence execution to prevent interface clogging.</source>
-        <target>Zobrazí zprávu uživateli. Funguje jen, když je pravidlo spuštěno pomocí akčního tlačítka. Je možné poslat maximálně <x id="INTERPOLATION" equiv-text="{{limit}}"/> zpráv v rámci jednoho řetězce vyvolání pravidel a funkcí. To zabraňuje před zahlcením zprávami.</target>
+        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
+        <target>Zobrazí zprávu uživateli. Funguje jen, když je automatizace spuštěna pomocí akčního tlačítka. Je možné poslat maximálně <x id="INTERPOLATION" equiv-text="{{limit}}"/> zpráv v rámci jednoho řetězce vyvolání automatizací a funkcí. To zabraňuje před zahlcením zprávami.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5677,10 +5744,10 @@
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source><target>tis.|mil.|mld.|bil.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source><target>.|.|.|.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
         <source>Do you really want to permanently delete this view?</source><target>Chcete skutečně navždy smazat tento pohled?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
@@ -5716,8 +5783,8 @@
       Nastavení funkce atributu
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.rule.title" datatype="html">
-        <source>Edit Rule</source><target>Upravit pravidlo</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.automation.title" datatype="html">
+        <source>Edit Automation</source><target>Upravit Automatizaci</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context>
           <context context-type="linenumber">14</context>
@@ -5990,7 +6057,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
-        <source>Zapier Rule</source><target>Pravidlo Zapier</target>
+        <source>Zapier Automation</source><target>Zapier Automatizace</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
         <source>This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</source><target>Toto pravidlo je vytvořené ve službě Zapier. Prosím nastavte jej přímo tam (www.zapier.com).</target>

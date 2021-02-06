@@ -19,13 +19,11 @@
 
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Constraint} from '../../../core/model/constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
-import {DateTimeConstraintConfig, DurationConstraintConfig} from '../../../core/model/data/constraint-config';
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
 import {DateTimeConfigOverrideService} from './constraint/date-time';
 import {DurationConfigOverrideService} from './constraint/duration';
+import {Constraint, ConstraintType, DateTimeConstraintConfig, DurationConstraintConfig} from '@lumeer/data-filters';
 
 @Injectable({
   providedIn: 'root',

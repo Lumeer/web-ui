@@ -29,7 +29,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {UserDataValue} from '../../../core/model/data-value/user.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {User} from '../../../core/store/users/user';
@@ -38,11 +37,11 @@ import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.
 import {USER_AVATAR_SIZE} from '../../../core/constants';
 import {uniqueValues} from '../../utils/array.utils';
 import {isEmailValid} from '../../utils/email.utils';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {BehaviorSubject} from 'rxjs';
+import {ConstraintType, UserDataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'user-data-input',

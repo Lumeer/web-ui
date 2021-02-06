@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Big from 'big.js';
+import {LanguageTag} from '@lumeer/data-filters';
+import {environment} from '../../../environments/environment';
+import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 
-export function compareBigNumbers(first: Big, second: Big): number {
-  if (!first && !second) {
-    return 0;
-  }
-  if (!first || !second) {
-    return first ? 1 : -1;
-  }
+export const localeLanguageTags: Record<string, LanguageTag> = {
+  [LanguageCode.EN]: LanguageTag.USA,
+  [LanguageCode.CZ]: LanguageTag.Czech,
+};
 
-  return first.cmp(second);
+export function getCurrentLocaleLanguageTag(): LanguageTag {
+  return localeLanguageTags[environment.locale];
 }

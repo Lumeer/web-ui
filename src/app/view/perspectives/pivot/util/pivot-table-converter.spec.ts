@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
-import {PercentageConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {PivotTableConverter} from './pivot-table-converter';
 import {PivotData} from './pivot-data';
 import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
+import {PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
 
 describe('Pivot table converter', () => {
   const headerSummaryString = 'H';

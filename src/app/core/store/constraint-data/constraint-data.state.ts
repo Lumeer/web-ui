@@ -18,8 +18,8 @@
  */
 
 import {createSelector} from '@ngrx/store';
+import {DurationUnit} from '@lumeer/data-filters';
 import {AppState} from '../app.state';
-import {DurationUnit} from '../../model/data/constraint-config';
 import {selectAllUsers, selectCurrentUser} from '../users/users.state';
 
 export interface ConstraintDataState {

@@ -869,9 +869,9 @@
           <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="sequence.list.createNew.info" datatype="html">
+      </trans-unit><trans-unit id="sequence.list.createNew.automation.info" datatype="html">
         <source>
-            To create a new sequence, just use its name in the sequence block in a function or a rule.
+            To create a new sequence, just use its name in the sequence block in a function or an automation.
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/sequences/sequence-list/sequence-list.component.html</context>
@@ -1352,8 +1352,8 @@
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-      </trans-unit><trans-unit id="table.header.menu.editRule" datatype="html">
-        <source>Edit rule...</source>
+      </trans-unit><trans-unit id="table.header.menu.editAutomation" datatype="html">
+        <source>Edit automation...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">38</context>
@@ -1908,20 +1908,20 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.description" datatype="html">
         <source>
-      An action button that executes a rule based on specified conditions.
+      An action button that executes an automation based on specified conditions.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.rule.label" datatype="html">
-        <source>Rule</source>
+      </trans-unit><trans-unit id="constraint.action.automation.label" datatype="html">
+        <source>Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.rule.empty" datatype="html">
-        <source>Select rule</source>
+      </trans-unit><trans-unit id="constraint.action.automation.empty" datatype="html">
+        <source>Select automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.html</context>
           <context context-type="linenumber">14</context>
@@ -1962,15 +1962,15 @@
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/permissions/action-constraint-permissions-form.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.title" datatype="html">
-        <source>There are no rules yet!</source>
+      </trans-unit><trans-unit id="constraint.action.empty.automation.title" datatype="html">
+        <source>There are no automations yet!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.subtitle.norights" datatype="html">
+      </trans-unit><trans-unit id="constraint.action.empty.automation.subtitle.norights" datatype="html">
         <source>I am sorry but you
-    do not have permissions to add rules.
+    do not have permissions to add automations.
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
@@ -1978,14 +1978,14 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.empty.subtitle" datatype="html">
         <source>Navigate to Table settings and create something
-      beautiful! Keep in mind that Automated Link rules cannot be used in an action.
+      beautiful! Keep in mind that Automated Links cannot be used in an action.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="constraint.action.empty.button" datatype="html">
-        <source>Add rule</source>
+      </trans-unit><trans-unit id="constraint.action.empty.automation.button" datatype="html">
+        <source>Add automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">17</context>
@@ -2000,8 +2000,8 @@
           <context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.attribute.function.rule.title" datatype="html">
-        <source>Edit Rule</source>
+      </trans-unit><trans-unit id="dialog.attribute.function.automation.title" datatype="html">
+        <source>Edit Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context>
           <context context-type="linenumber">14</context>
@@ -2030,7 +2030,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source>
@@ -2605,6 +2605,18 @@
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskCommented" datatype="html">
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has a new comment.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.taskMentioned" datatype="html">
+        <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
         <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"/>
@@ -2778,13 +2790,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.title" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} }</source>
+        <source>{VAR_SELECT, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="user.notification.settings.description" datatype="html">
-        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {} }</source>
+        <source>{VAR_SELECT, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">16</context>
@@ -2835,9 +2847,9 @@
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.purpose" datatype="html">
+      </trans-unit><trans-unit id="collection.config.tab.workflow" datatype="html">
         <source>
-          Purpose
+          Workflow
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
@@ -2851,9 +2863,9 @@
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+      </trans-unit><trans-unit id="collection.config.tab.automation" datatype="html">
         <source>
-          Rules
+          Automation
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
@@ -3019,7 +3031,7 @@
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
-    Add a new rule
+    Add a new automation
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule/add-rule.component.html</context>
@@ -3073,15 +3085,15 @@
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.name.new" datatype="html">
-        <source>New rule name</source>
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
+        <source>New automation name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.name.exists" datatype="html">
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.name.exists" datatype="html">
         <source>
-          Rule name already used.
+          Automation name already used.
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
@@ -3095,9 +3107,9 @@
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.rule.type" datatype="html">
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.type" datatype="html">
         <source>
-          Fire rule
+          Fire automation
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
@@ -3109,11 +3121,19 @@
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">86</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
-        <source>Add Rule</source>
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
+        <source>Add Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.info" datatype="html">
+        <source>
+    Automatically link records from two tables based on matching column values.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
@@ -3121,13 +3141,13 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
         <source>Select a link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
         <source>
@@ -3135,7 +3155,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
         <source>
@@ -3143,17 +3163,25 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">31</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
-        <source>Edit Rule Code:</source>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.info" datatype="html">
+        <source>
+    Develop any automation from custom blocks. Triggers automatically upon record update or manually via an action button.
+  </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.editAutomation.message" datatype="html">
+        <source>Edit Automation Code:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.automations.empty" datatype="html">
         <source>
-    There are no rules yet. Create some by clicking on the button below!
+    There are no automations yet. Create some by clicking on the button below!
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/no-rules/no-rules.component.html</context>
@@ -3179,14 +3207,16 @@
           <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.heading" datatype="html">
-        <source>What best describes your intentions?</source>
+      </trans-unit><trans-unit id="collections.tab.workflow.heading" datatype="html">
+        <source>What best describes your intentions with this table?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.subHeading" datatype="html">
-        <source>Lumeer provides you most help when he understands what do you plan to store in the table.</source>
+      </trans-unit><trans-unit id="collections.tab.workflow.subHeading" datatype="html">
+        <source>
+      Lumeer provides you most help when he understands what do you plan to store in the table. What is your desired workflow?
+    </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">4</context>
@@ -4685,7 +4715,7 @@
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users, tables, rules and functions</source>
+        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users, tables, automations and functions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">24</context>
@@ -4695,7 +4725,7 @@
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
-        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> rule and function per collection.</source>
+        <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> tables, <x id="INTERPOLATION_3" equiv-text="{{serviceLimits?.rulesPerCollection}}"/>+<x id="INTERPOLATION_4" equiv-text="{{serviceLimits?.functionsPerCollection}}"/> automation and function per table.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.html</context>
           <context context-type="linenumber">25</context>
@@ -4738,13 +4768,13 @@
           <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.sequence.info1" datatype="html">
-        <source>The sequences listed here can be used in Table rules and Attribute functions.</source>
+        <source>The sequences listed here can be used in Table automations and Attribute functions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
-        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> palette in the function/rule editor.</source>
+        <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> palette in the function/automation editor.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5009,7 +5039,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
-        <source>Zapier Rule</source>
+        <source>Zapier Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5246,14 +5276,14 @@
       <trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context>
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/currency-format.service.ts</context>
+          <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5986,7 +6016,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of rules and functions.</source>
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6196,7 +6226,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
-        <source>Show a message to the user. Works only when the rule is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single rule and function sequence execution to prevent interface clogging.</source>
+        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>

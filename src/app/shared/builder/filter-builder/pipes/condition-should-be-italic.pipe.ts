@@ -18,9 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../../../core/model/constraint';
-import {ConstraintType} from '../../../../core/model/data/constraint';
-import {ConditionType} from '../../../../core/model/attribute-filter';
+import {ConditionType, Constraint, ConstraintType} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'conditionShouldBeItalic',

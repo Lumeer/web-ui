@@ -19,6 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {CurrencyData} from '@lumeer/data-filters';
 import {TranslationService} from './translation.service';
 import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
 
@@ -28,7 +29,10 @@ export class ConstraintDataService {
 
   public init(): Promise<boolean> {
     const durationUnitsMap = this.translationService.createDurationUnitsMap();
-    this.store$.dispatch(new ConstraintDataAction.InitDurationUnitsMap({durationUnitsMap}));
+    const abbreviations = this.translationService.createCurrencyAbbreviations();
+    const ordinals = this.translationService.createCurrencyOrdinals();
+    const currencyData: CurrencyData = {abbreviations, ordinals};
+    this.store$.dispatch(new ConstraintDataAction.Init({data: {durationUnitsMap, currencyData}}));
     return Promise.resolve(true);
   }
 }

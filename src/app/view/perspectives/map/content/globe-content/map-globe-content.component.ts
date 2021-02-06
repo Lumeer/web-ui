@@ -42,18 +42,20 @@ import {selectGeocodingQueryCoordinates} from '../../../../../core/store/geocodi
 import {areMapMarkerListsEqual, createMarkerPropertyFromData, populateCoordinateProperties} from '../map-content.utils';
 import {GeocodingAction} from '../../../../../core/store/geocoding/geocoding.action';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
-import {AddressConstraint} from '../../../../../core/model/constraint/address.constraint';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
-import {CoordinatesConstraint} from '../../../../../core/model/constraint/coordinates.constraint';
-import {CoordinatesConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {MapGlobeRenderComponent} from './render/map-globe-render.component';
+import {
+  AddressConstraint,
+  ConstraintData,
+  CoordinatesConstraint,
+  CoordinatesConstraintConfig,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'map-globe-content',

@@ -61,7 +61,7 @@ export class SingleRuleComponent {
   public showZapierWarning(): void {
     const title = this.i18n({
       id: 'collection.config.tab.rules.zapier.warning.title',
-      value: 'Zapier Rule',
+      value: 'Zapier Automation',
     });
     const message = this.i18n({
       id: 'collection.config.tab.rules.zapier.warning.text',

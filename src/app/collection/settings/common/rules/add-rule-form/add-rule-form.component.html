@@ -9,15 +9,15 @@
   <div class="flex-grow-1">
     <form [formGroup]="form" class="">
       <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
-        <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.name.new">New rule name</label>
-        <input type="text" class="form-control ml-3 w-auto" autocomplete="off" id="name" formControlName="name"
+        <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.automation.name.new">New automation name</label>
+        <input type="text" class="form-control ml-3 w-50" autocomplete="off" id="name" formControlName="name"
                aria-errormessage="ruleNameError">
         <small
           *ngIf="name.invalid && name.errors?.usedRuleName"
           id="ruleNameError"
           class="text-danger ml-2"
-          i18n="@@collection.config.tab.rules.name.exists">
-          Rule name already used.
+          i18n="@@collection.config.tab.rules.automation.name.exists">
+          Automation name already used.
         </small>
       </div>
       <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
@@ -43,9 +43,9 @@
           </label>
         </div>
       </div>
-      <div *ngIf="collection" class="form-group d-flex align-items-center justify-content-start flex-wrap">
-        <div class="text-nowrap" i18n="@@collection.config.tab.rules.rule.type">
-          Fire rule
+      <div *ngIf="collection" class="form-group d-flex align-items-center justify-content-start flex-wrap mb-1">
+        <div class="text-nowrap" i18n="@@collection.config.tab.rules.automation.type">
+          Fire automation
         </div>
         <select-item class="d-inline-block ml-3"
                      [items]="typeItems"
@@ -87,7 +87,7 @@
           </ng-container>
           <ng-container *ngIf="!originalRuleName">
             <i class="fas fa-plus"></i>&nbsp;
-            <span class="font-weight-bold" i18n="@@collection.config.tab.rules.rule.add">Add Rule</span>
+            <span class="font-weight-bold" i18n="@@collection.config.tab.rules.automation.add">Add Automation</span>
           </ng-container>
         </button>
       </div>

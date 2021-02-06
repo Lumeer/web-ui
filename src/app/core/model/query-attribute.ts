@@ -18,12 +18,12 @@
  */
 
 import {AttributesResource, AttributesResourceType} from './resource';
-import {Constraint} from './constraint';
 import {AllowedPermissions, mergeAllowedPermissions} from './allowed-permissions';
 import {LinkType} from '../store/link-types/link.type';
 import {Attribute, Collection} from '../store/collections/collection';
 import {findAttribute} from '../store/collections/collection.util';
 import {deepObjectsEquals} from '../../shared/utils/common.utils';
+import {Constraint} from '@lumeer/data-filters';
 
 export interface QueryResource {
   resourceId: string;

@@ -31,13 +31,13 @@ import {SelectItemWithConstraintId} from '../../../../../../shared/select/select
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {Constraint} from '../../../../../../core/model/constraint';
 import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
+import {Constraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'workflow-toolbar',

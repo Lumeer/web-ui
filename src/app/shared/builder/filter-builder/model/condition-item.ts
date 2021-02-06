@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintConditionValue} from '../../../../core/model/data/constraint-condition';
-import {ConditionType} from '../../../../core/model/attribute-filter';
+import {ConditionType, ConstraintConditionValue} from '@lumeer/data-filters';
 
 export interface ConditionItem {
   value: ConditionType;

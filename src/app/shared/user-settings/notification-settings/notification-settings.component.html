@@ -12,8 +12,8 @@
      (click)="switchElement.click()">
   <div class="flex-grow-1 py-2 d-flex flex-column">
     <div
-      i18n="@@user.notification.settings.title">{group, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated}}</div>
-    <div class="text-muted small" i18n="@@user.notification.settings.description">{group, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {}}</div>
+      i18n="@@user.notification.settings.title">{group, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Updates} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated} Comments {Comments}}</div>
+    <div class="text-muted small" i18n="@@user.notification.settings.description">{group, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {Due date approaching or changed} TaskAssigned {Task assigned or unassigned} TaskUpdated {Task details are updated} TaskRemoved {Your task is deleted} StateUpdated {Task state is updated} Comments {Comments on your tasks, or someone mentions you in a comment}}</div>
   </div>
 
   <label class="switch">

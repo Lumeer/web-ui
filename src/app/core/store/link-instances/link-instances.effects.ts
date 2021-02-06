@@ -25,7 +25,6 @@ import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
-import {ConstraintType} from '../../model/data/constraint';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
@@ -41,8 +40,8 @@ import {
   selectLinkInstancesDictionary,
   selectLinkInstancesQueries,
 } from './link-instances.state';
-import {queryWithoutFilters} from '../navigation/query/query.util';
 import {LinkInstanceService, SearchService} from '../../data-service';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -50,11 +49,9 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectLinkInstancesQueries))),
-    filter(
-      ([action, queries]) => !queries.find(query => areQueriesEqual(query, queryWithoutFilters(action.payload.query)))
-    ),
+    filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => {
-      const query = queryWithoutFilters(action.payload.query);
+      const query = action.payload.query;
       return this.searchService.searchLinkInstances(convertQueryModelToDto(query)).pipe(
         map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
         map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query})),
@@ -381,7 +378,7 @@ export class LinkInstancesEffects {
     map(() => {
       const message = this.i18n({
         id: 'dataResource.runRule.fail',
-        value: 'Could not run the selected rule',
+        value: 'Could not run the selected automation',
       });
       return new NotificationsAction.Error({message});
     })

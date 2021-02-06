@@ -19,12 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {ConstraintConfig} from '../../../../../core/model/data/constraint-config';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../utils/form.utils';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {ConstraintConfig, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'constraint-config-form',

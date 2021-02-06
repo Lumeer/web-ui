@@ -18,7 +18,7 @@
  */
 
 import {MapCoordinates} from '../maps/map.model';
-import {Address} from './address';
+import {Address} from '@lumeer/data-filters';
 
 export interface GeoLocation {
   coordinates: MapCoordinates;

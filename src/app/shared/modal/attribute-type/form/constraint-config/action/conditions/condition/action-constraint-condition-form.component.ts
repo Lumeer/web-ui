@@ -32,16 +32,18 @@ import {Attribute} from '../../../../../../../../core/store/collections/collecti
 import {ActionConstraintFiltersFormControl} from '../../action-constraint-form-control';
 import {SelectItem2Model} from '../../../../../../../select/select-item2/select-item2.model';
 import {FilterBuilderComponent} from '../../../../../../../builder/filter-builder/filter-builder.component';
-import {ConditionType, ConditionValue, EquationOperator} from '../../../../../../../../core/model/attribute-filter';
 import {findAttribute} from '../../../../../../../../core/store/collections/collection.util';
-import {
-  initialConditionType,
-  initialConditionValues,
-} from '../../../../../../../../core/model/data-value/data-value.utils';
-import {ConstraintType} from '../../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, startWith} from 'rxjs/operators';
+import {
+  ConditionType,
+  ConditionValue,
+  ConstraintType,
+  EquationOperator,
+  initialConditionType,
+  initialConditionValues,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-condition-form',

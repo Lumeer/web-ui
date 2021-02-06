@@ -28,10 +28,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {DataCursor} from '../data-cursor';
-import {ActionDataValue} from '../../../core/model/data-value/action-data.value';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
-import {ActionConstraintConfig} from '../../../core/model/data/constraint-config';
-import {createDataValuesMap, isActionButtonEnabled} from '../../../core/store/documents/documents.filters';
 import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -53,8 +50,14 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {filterAttributesByFilters} from '../../utils/attribute.utils';
+import {
+  ActionConstraintConfig,
+  ActionDataValue,
+  ConstraintData,
+  createDataValuesMap,
+  isActionButtonEnabled,
+} from '@lumeer/data-filters';
 
 const loadingTime = 2000;
 

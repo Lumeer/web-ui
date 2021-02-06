@@ -32,10 +32,10 @@ import {SelectDataItemModel} from './select-data-item.model';
 import {DataOptionsDropdownComponent} from '../../data-dropdown/data-options/data-options-dropdown.component';
 import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
 import {Observable} from 'rxjs';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'select-data-item',

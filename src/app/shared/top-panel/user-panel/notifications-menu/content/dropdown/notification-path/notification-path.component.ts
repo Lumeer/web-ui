@@ -70,6 +70,8 @@ export class NotificationPathComponent implements OnChanges {
         case UserNotificationType.TaskUpdated:
         case UserNotificationType.TaskRemoved:
         case UserNotificationType.TaskUnassigned:
+        case UserNotificationType.TaskCommented:
+        case UserNotificationType.TaskMentioned:
           this.taskNotification = changes.notification.currentValue;
           break;
       }

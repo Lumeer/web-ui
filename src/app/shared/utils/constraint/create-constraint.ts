@@ -17,23 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../core/model/constraint';
-import {AddressConstraint} from '../../../core/model/constraint/address.constraint';
-import {BooleanConstraint} from '../../../core/model/constraint/boolean.constraint';
-import {ColorConstraint} from '../../../core/model/constraint/color.constraint';
-import {CoordinatesConstraint} from '../../../core/model/constraint/coordinates.constraint';
-import {DateTimeConstraint} from '../../../core/model/constraint/datetime.constraint';
-import {DurationConstraint} from '../../../core/model/constraint/duration.constraint';
-import {FilesConstraint} from '../../../core/model/constraint/files.constraint';
-import {NumberConstraint} from '../../../core/model/constraint/number.constraint';
-import {PercentageConstraint} from '../../../core/model/constraint/percentage.constraint';
-import {SelectConstraint} from '../../../core/model/constraint/select.constraint';
-import {TextConstraint} from '../../../core/model/constraint/text.constraint';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
-import {UserConstraint} from '../../../core/model/constraint/user.constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
-import {LinkConstraint} from '../../../core/model/constraint/link.constraint';
-import {ActionConstraint} from '../../../core/model/constraint/action.constraint';
+import {
+  ActionConstraint,
+  AddressConstraint,
+  BooleanConstraint,
+  ColorConstraint,
+  Constraint,
+  ConstraintType,
+  CoordinatesConstraint,
+  DateTimeConstraint,
+  DurationConstraint,
+  FilesConstraint,
+  LinkConstraint,
+  NumberConstraint,
+  PercentageConstraint,
+  SelectConstraint,
+  TextConstraint,
+  UnknownConstraint,
+  UserConstraint,
+} from '@lumeer/data-filters';
 
 export function createConstraint(type: string, config: any): Constraint {
   switch (type) {

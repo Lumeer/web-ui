@@ -28,11 +28,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {parseDateTimeByConstraint, resetUnusedDatePart} from '../../utils/date.utils';
+import {parseDateTimeByConstraint} from '../../utils/date.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
-import {DateTimeConstraint} from '../../../core/model/constraint/datetime.constraint';
+import {DateTimeConstraint, resetUnusedDatePart} from '@lumeer/data-filters';
 
 @Component({
   selector: 'date-time-input',

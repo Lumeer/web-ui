@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Constraint} from '../../../../../../core/model/constraint';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -30,15 +29,14 @@ import {getAttributesResourceType} from '../../../../../../shared/utils/resource
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
 import {QueryResource} from '../../../../../../core/model/query-attribute';
 import {findAttribute} from '../../../../../../core/store/collections/collection.util';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
 import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
-import {DataValue} from '../../../../../../core/model/data-value';
 import {isArray} from '../../../../../../shared/utils/common.utils';
+import {Constraint, ConstraintData, DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'kanban-stem-config',

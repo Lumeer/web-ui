@@ -28,14 +28,12 @@ import {
   OnInit,
   Output,
   QueryList,
-  SimpleChange,
   SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataRow, DataRowService} from '../../../data/data-row.service';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -54,6 +52,7 @@ import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.s
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-resource-data',

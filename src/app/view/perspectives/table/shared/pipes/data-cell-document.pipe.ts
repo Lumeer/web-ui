@@ -22,8 +22,8 @@ import {generateDocumentDataByQuery} from '../../../../../core/store/documents/d
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataCellDocument',

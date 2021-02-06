@@ -17,9 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../../core/model/constraint';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -50,9 +47,16 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
-import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {DataValue} from '../../../../core/model/data-value';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  NumberConstraint,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {getCurrentLocaleLanguageTag} from '../../../../core/model/language-tag';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -605,7 +609,7 @@ export class PivotDataConverter {
         if (isValueAggregation(pivotAttribute.aggregation)) {
           constraints.push(this.pivotAttributeConstraint(pivotAttribute));
         } else {
-          constraints.push(new NumberConstraint({}));
+          constraints.push(new NumberConstraint({locale: getCurrentLocaleLanguageTag()}));
         }
         const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
         titles.push(title);

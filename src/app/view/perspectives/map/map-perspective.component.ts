@@ -64,13 +64,14 @@ import {Perspective} from '../perspective';
 import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.utils';
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {ConstraintData} from '@lumeer/data-filters';
+import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 
 @Component({
   selector: 'map-perspective',
@@ -126,8 +127,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchData(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   private subscribeToConfig(): Subscription {

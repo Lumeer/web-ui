@@ -34,7 +34,7 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
       {
         id: 'blockly.tooltip.createDocumentBlock2',
         value:
-          'Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to {{limit}} documents can be created within a single sequence of rules and functions.',
+          'Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to {{limit}} documents can be created within a single sequence of automations and functions.',
       },
       {limit: BlocklyUtils.CREATE_DOCUMENTS_LIMIT}
     );

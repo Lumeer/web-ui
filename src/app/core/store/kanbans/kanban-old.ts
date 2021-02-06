@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../model/constraint';
-import {ConstraintType} from '../../model/data/constraint';
+import {Constraint, ConstraintType} from '@lumeer/data-filters';
 
 export interface KanbanConfigV0 {
   columns: KanbanColumnV0[];

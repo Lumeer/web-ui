@@ -18,7 +18,6 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Constraint} from '../../../../../core/model/constraint';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
@@ -27,6 +26,7 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {ChartYAxisType} from '../../data/convertor/chart-data';
 import {deepObjectCopy, objectValues} from '../../../../../shared/utils/common.utils';
+import {Constraint} from '@lumeer/data-filters';
 
 @Component({
   selector: 'chart-y-axis-config',

@@ -32,7 +32,6 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {selectUserById} from '../../../../core/store/users/users.state';
 import {filter, map} from 'rxjs/operators';
 import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/perspective';
@@ -46,6 +45,7 @@ import {Attribute} from '../../../../core/store/collections/collection';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {User} from '../../../../core/store/users/user';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'document-detail-header',

@@ -19,9 +19,8 @@
 
 import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
-import {DataValue} from '../../../../core/model/data-value';
-import {Constraint} from '../../../../core/model/constraint';
 import {QueryStem} from '../../../../core/store/navigation/query/query';
+import {Constraint, DataValue} from '@lumeer/data-filters';
 
 export interface WorkflowTable extends TableModel {
   title?: WorkflowTableTitle;

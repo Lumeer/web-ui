@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
-import {removeAccent} from '../../../../../utils/string.utils';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Component({
   selector: 'templates-select',
@@ -49,7 +49,7 @@ export class TemplatesSelectComponent implements OnChanges {
   }
 
   private createTagImageUrl(): string {
-    const tagWithoutAccent = removeAccent(this.selectedTag).replace(/ /g, '_');
+    const tagWithoutAccent = removeAccentFromString(this.selectedTag).replace(/ /g, '_');
     return `https://www.lumeer.io/wp-content/uploads/lumeer-projects/${tagWithoutAccent}.jpg`;
   }
 }

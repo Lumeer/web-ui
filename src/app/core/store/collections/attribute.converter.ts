@@ -20,17 +20,18 @@
 import {createConstraint} from '../../../shared/utils/constraint/create-constraint';
 import {convertToBig} from '../../../shared/utils/data.utils';
 import {AttributeDto, AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
-import {Constraint} from '../../model/constraint';
-import {ConstraintType} from '../../model/data/constraint';
+import {Attribute, AttributeFunction} from './collection';
 import {
+  Constraint,
   ConstraintConfig,
+  ConstraintType,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
   SelectConstraintConfig,
-  selectDefaultPalette,
-} from '../../model/data/constraint-config';
-import {Attribute, AttributeFunction} from './collection';
-import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {selectDefaultPalette} from '../../../shared/picker/colors';
+import {getCurrentLocaleLanguageTag} from '../../model/language-tag';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {
@@ -87,6 +88,7 @@ function convertNumberConstraintConfigDtoToModel(config: any): NumberConstraintC
     ...config,
     minValue: convertToBig(config.minValue),
     maxValue: convertToBig(config.maxValue),
+    locale: getCurrentLocaleLanguageTag(),
   };
 }
 

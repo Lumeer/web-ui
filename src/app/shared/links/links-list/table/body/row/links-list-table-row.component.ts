@@ -29,7 +29,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {LinkRow} from '../../../model/link-row';
 import {DataRowComponent} from '../../../../../data/data-row-component';
 import {BehaviorSubject, Subscription} from 'rxjs';
@@ -39,9 +38,8 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
-import {DataValue} from '../../../../../../core/model/data-value';
-import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 
 @Component({
   selector: '[links-list-table-row]',

@@ -30,13 +30,12 @@ import {
 import {Attribute} from '../../../core/store/collections/collection';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {Observable} from 'rxjs';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
-import {ConditionType, ConditionValue} from '../../../core/model/attribute-filter';
+import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'filter-builder',

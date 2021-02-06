@@ -20,8 +20,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserConstraintFormControl} from './user-constraint-form-control';
-import {UserConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
+import {UserConstraintConfig} from '@lumeer/data-filters';
 
 @Component({
   selector: 'user-constraint-config-form',

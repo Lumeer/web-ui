@@ -29,7 +29,6 @@ import {
   Output,
 } from '@angular/core';
 import {DRAG_DELAY} from '../../../../../../core/constants';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {DataResource} from '../../../../../../core/model/resource';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
@@ -38,6 +37,7 @@ import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-
 import {ViewSettings} from '../../../../../../core/store/views/view';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, throttleTime} from 'rxjs/operators';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'kanban-column',

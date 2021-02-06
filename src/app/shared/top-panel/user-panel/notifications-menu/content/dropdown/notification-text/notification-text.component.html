@@ -51,4 +51,12 @@
   <ng-container *ngSwitchCase="notificationType.TaskUnassigned">
     <span class="trail" i18n="@@userNotifications.taskUnassigned">The task <em [innerHTML]="taskName"></em> has been unassigned from you.</span>
   </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.TaskCommented">
+    <span class="trail" i18n="@@userNotifications.taskCommented">The task <em [innerHTML]="taskName"></em> has a new comment.</span>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.TaskMentioned">
+    <span class="trail" i18n="@@userNotifications.taskMentioned">You have been mentioned in a comment of the task <em [innerHTML]="taskName"></em>.</span>
+  </ng-container>
 </ng-container>

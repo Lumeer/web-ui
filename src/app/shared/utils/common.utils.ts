@@ -21,7 +21,7 @@ import isEqual from 'lodash/isEqual';
 import escape from 'lodash/escape';
 import unescape from 'lodash/unescape';
 import cloneDeep from 'lodash/cloneDeep';
-import {removeAccent} from './string.utils';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 export function isNullOrUndefined(object: any): object is null | undefined {
   return object === null || object === undefined;
@@ -123,10 +123,10 @@ enum SuggestionScore {
 }
 
 export function sortObjectsByScore<T>(objects: T[], text: string, params: string[]): T[] {
-  const textLowerCase = removeAccent(text || '').trim();
+  const textLowerCase = removeAccentFromString(text || '').trim();
   const valuesArray = (objects || []).reduce<{object: T; score: number}[]>((array, object) => {
     const value = String(getValueFromObjectParams<T>(object, params));
-    const valueLowerCase = removeAccent(value).trim();
+    const valueLowerCase = removeAccentFromString(value).trim();
     if (valueLowerCase === textLowerCase) {
       array.push({object, score: SuggestionScore.FullMatch});
     } else if (valueLowerCase.split(' ').includes(textLowerCase)) {

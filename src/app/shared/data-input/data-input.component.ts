@@ -29,9 +29,6 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import {Constraint} from '../../core/model/constraint';
-import {DataValue} from '../../core/model/data-value';
-import {ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {DataSuggestion} from './data-suggestion';
@@ -39,6 +36,7 @@ import {DataInputConfiguration} from './data-input-configuration';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {KeyCode} from '../key-code';
 import {DataInputSaveAction} from './data-input-save-action';
+import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-input',

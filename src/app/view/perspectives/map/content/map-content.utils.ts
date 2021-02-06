@@ -24,12 +24,10 @@ import {
   MapMarkerData,
   MapMarkerProperties,
 } from '../../../../core/store/maps/map.model';
-import {parseCoordinates} from '../../../../shared/utils/map/coordinates.utils';
 import {DataResource} from '../../../../core/model/resource';
-import {ConstraintData} from '../../../../core/model/data/constraint';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {ConstraintData, parseCoordinates, UnknownConstraint} from '@lumeer/data-filters';
 
 export function populateCoordinateProperties(
   propertiesList: MapMarkerData[],

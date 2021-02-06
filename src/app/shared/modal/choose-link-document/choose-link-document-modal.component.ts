@@ -23,7 +23,6 @@ import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
@@ -34,6 +33,7 @@ import {uniqueValues} from '../../utils/array.utils';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',

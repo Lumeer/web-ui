@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../core/model/constraint';
 import {isNotNullOrUndefined} from '../common.utils';
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {Constraint, UnknownConstraint} from '@lumeer/data-filters';
 
 export enum DataAggregationType {
   Sum = 'sum',
@@ -32,6 +31,8 @@ export enum DataAggregationType {
   Unique = 'unique',
   Median = 'median',
 }
+
+export const defaultDataAggregationType = Object.values(DataAggregationType)[0];
 
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
   return !aggregation || ![DataAggregationType.Count, DataAggregationType.Unique].includes(aggregation);

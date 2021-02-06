@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../../core/model/constraint';
 import {SelectItemModel} from '../../select-item/select-item.model';
+import {Constraint} from '@lumeer/data-filters';
 
 export abstract class ConstraintConfigOverrideService<T> {
   public abstract create(config: T, withDefaultItem: boolean): SelectItemModel[];

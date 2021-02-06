@@ -161,7 +161,7 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save rule'});
+      const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save automation'});
       return new NotificationsAction.Error({message});
     })
   );

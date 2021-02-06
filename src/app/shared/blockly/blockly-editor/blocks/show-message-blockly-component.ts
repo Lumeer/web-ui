@@ -35,7 +35,7 @@ export class ShowMessageBlocklyComponent extends BlocklyComponent {
       {
         id: 'blockly.tooltip.showMessageBlock',
         value:
-          'Show a message to the user. Works only when the rule is initiated via an Action button. At most {{limit}} messages can be shown from a single rule and function sequence execution to prevent interface clogging.',
+          'Show a message to the user. Works only when the automation is initiated via an Action button. At most {{limit}} messages can be shown from a single automation and function sequence execution to prevent interface clogging.',
       },
       {limit: BlocklyUtils.SHOW_MESSAGES_LIMIT}
     );

@@ -19,11 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {
-  AttributeFilter,
-  AttributeFilterEquation,
-  EquationOperator,
-} from '../../../../../../../core/model/attribute-filter';
 import {removeAllFormArrayControls} from '../../../../../../utils/form.utils';
 import {ActionConstraintFiltersFormControl} from '../action-constraint-form-control';
 import {AttributesResource} from '../../../../../../../core/model/resource';
@@ -31,7 +26,7 @@ import {SelectItem2Model} from '../../../../../../select/select-item2/select-ite
 import {resourceAttributesSelectItems} from '../../../../../../select/select-item.utils';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {AttributeFilter, AttributeFilterEquation, ConstraintType, EquationOperator} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-conditions-form',

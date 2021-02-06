@@ -23,8 +23,8 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
-import {ConstraintType} from '../../../../../../core/model/data/constraint';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
+import {ConstraintType} from '@lumeer/data-filters';
 
 export enum HeaderMenuId {
   Edit = 'edit',
@@ -256,7 +256,7 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Function:
         return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
       case HeaderMenuId.Rule:
-        return this.i18n({id: 'table.header.menu.editRule', value: 'Edit rule...'});
+        return this.i18n({id: 'table.header.menu.editAutomation', value: 'Edit automation...'});
       case HeaderMenuId.Displayed:
         return this.i18n({id: 'table.header.menu.defaultAttribute', value: 'Set as displayed attribute'});
       case HeaderMenuId.Hide:

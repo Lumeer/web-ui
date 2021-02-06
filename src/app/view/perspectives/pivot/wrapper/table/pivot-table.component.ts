@@ -22,8 +22,8 @@ import {PivotData} from '../../util/pivot-data';
 import {PivotTable} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'pivot-table',

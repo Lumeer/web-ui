@@ -18,10 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {ConditionType, ConditionValue} from '../../../core/model/attribute-filter';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
-import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'filter-preview',

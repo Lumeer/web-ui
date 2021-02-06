@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {ResourceType} from '../../../../../../core/model/resource-type';
 
 import {Collection} from '../../../../../../core/store/collections/collection';
@@ -26,9 +25,9 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Role} from '../../../../../../core/model/role';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
-import {Constraint} from '../../../../../../core/model/constraint';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {Constraint, ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'search-document-header',

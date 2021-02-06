@@ -68,17 +68,17 @@
            (click)="onAttributeType(attribute)"
            [title]="attribute.constraint | constraintTypeIconTitle">
         </i>
-        <i *ngIf="attribute?.constraint?.type !== type.Action"
+        <i *ngIf="attribute?.constraint?.type !== constraintType.Action"
            class="fa-fw fa-function cursor-pointer mr-2"
            [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'fa text-success' : 'far text-primary'"
            (click)="onAttributeFunction(attribute)"
            title="Edit function..." i18n-title="@@table.header.menu.editFunction">
         </i>
-        <i *ngIf="attribute?.constraint?.type === type.Action"
+        <i *ngIf="attribute?.constraint?.type === constraintType.Action"
            class="fa-fw fa-function cursor-pointer mr-2"
            [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'fa text-success' : 'far text-primary'"
            (click)="onAttributeFunction(attribute)"
-           title="Edit rule..." i18n-title="@@table.header.menu.editRule">
+           title="Edit automation..." i18n-title="@@table.header.menu.editAutomation">
         </i>
         <i class="far fa-fw fa-trash-alt text-danger cursor-pointer mr-1"
            (click)="onDeleteAttribute(attribute)"

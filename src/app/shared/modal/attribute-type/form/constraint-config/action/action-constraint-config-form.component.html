@@ -2,17 +2,17 @@
 
   <div class="d-flex">
     <span class="text-muted" i18n="@@constraint.action.description">
-      An action button that executes a rule based on specified conditions.
+      An action button that executes an automation based on specified conditions.
     </span>
   </div>
 
   <div class="form-group mt-4 mb-0">
-    <label i18n="@@constraint.action.rule.label">Rule</label>
+    <label i18n="@@constraint.action.automation.label">Automation</label>
     <select-item class="w-100 d-block"
                  [selectedId]="ruleControl.value"
                  [removable]="false"
-                 emptyValue="Select rule"
-                 i18n-emptyValue="@@constraint.action.rule.empty"
+                 emptyValue="Select automation"
+                 i18n-emptyValue="@@constraint.action.automation.empty"
                  [items]="ruleSelectItems"
                  (selected)="ruleControl.setValue($event)"
                  buttonClasses="flex-grow-1 text-truncate">

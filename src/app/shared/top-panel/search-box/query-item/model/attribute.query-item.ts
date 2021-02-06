@@ -22,7 +22,7 @@ import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
-import {ConditionType, ConditionValue} from '../../../../../core/model/attribute-filter';
+import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;

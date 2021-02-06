@@ -18,13 +18,11 @@
  */
 
 import {AllowedPermissions} from '../../model/allowed-permissions';
-import {Constraint} from '../../model/constraint';
-import {ConstraintType} from '../../model/data/constraint';
 import {LinkType} from '../link-types/link.type';
 import {Query} from '../navigation/query/query';
 import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
-import {AttributeFilter, ConditionType} from '../../model/attribute-filter';
+import {AttributeFilter, ConditionType, Constraint, ConstraintType} from '@lumeer/data-filters';
 
 export function isCollectionAttributeEditable(
   attributeId: string,

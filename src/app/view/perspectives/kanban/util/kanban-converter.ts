@@ -17,9 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../../../core/model/constraint';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
@@ -43,19 +40,25 @@ import {
   findResourceByQueryResource,
   queryAttributePermissions,
 } from '../../../../core/model/query-attribute';
-import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {DataAggregator, DataAggregatorAttribute} from '../../../../shared/utils/data/data-aggregator';
 import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
 import * as moment from 'moment';
 import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {convertToBig} from '../../../../shared/utils/data.utils';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DateTimeConstraintConfig,
+  SelectConstraint,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 
 interface AggregatedColumnData {
   count: number;

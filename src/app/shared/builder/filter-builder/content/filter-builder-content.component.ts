@@ -29,23 +29,25 @@ import {
 } from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {ConstraintConditionValueItem, ConditionItem} from '../model/condition-item';
-import {DataValue} from '../../../../core/model/data-value';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
-import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {KeyCode} from '../../../key-code';
 import {TranslationService} from '../../../../core/service/translation.service';
-import {Constraint} from '../../../../core/model/constraint';
-import {
-  DateTimeConstraintConditionValue,
-  UserConstraintConditionValue,
-} from '../../../../core/model/data/constraint-condition';
 import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {objectValues} from '../../../utils/common.utils';
-import {ConditionType, ConditionValue} from '../../../../core/model/attribute-filter';
+import {
+  ConditionType,
+  conditionTypeNumberOfInputs,
+  ConditionValue,
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  DateTimeConstraintConditionValue,
+  UnknownConstraint,
+  UserConstraintConditionValue,
+} from '@lumeer/data-filters';
 
 @Component({
   selector: 'filter-builder-content',
@@ -101,7 +103,7 @@ export class FilterBuilderContentComponent implements OnInit {
       this.dataValues = this.createDataValues();
     }
     if (changes.selectedCondition) {
-      this.numInputs = conditionNumInputs(this.selectedCondition);
+      this.numInputs = conditionTypeNumberOfInputs(this.selectedCondition);
       this.ngForIndexes = createRange(0, this.numInputs);
     }
   }

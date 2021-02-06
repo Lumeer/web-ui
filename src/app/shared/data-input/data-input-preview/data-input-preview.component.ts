@@ -18,11 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Constraint} from '../../../core/model/constraint';
-import {DataValue} from '../../../core/model/data-value';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {DataCursor} from '../data-cursor';
 import {CommonDataInputConfiguration, DataInputConfiguration} from '../data-input-configuration';
+import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'data-input-preview',

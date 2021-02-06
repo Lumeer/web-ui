@@ -26,7 +26,6 @@ import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
-import {ConstraintType} from '../../model/data/constraint';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
@@ -48,10 +47,10 @@ import {
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
-import {queryWithoutFilters} from '../navigation/query/query.util';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Injectable()
 export class DocumentsEffects {
@@ -61,11 +60,10 @@ export class DocumentsEffects {
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
     filter(
       ([action, queries]) =>
-        action.payload.force ||
-        !queries.find(query => areQueriesEqual(query, queryWithoutFilters(action.payload.query)))
+        action.payload.force || !queries.find(query => areQueriesEqual(query, action.payload.query))
     ),
     mergeMap(([action]) => {
-      const query = queryWithoutFilters(action.payload.query);
+      const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
       const savedQuery = action.payload.silent ? undefined : query;
 

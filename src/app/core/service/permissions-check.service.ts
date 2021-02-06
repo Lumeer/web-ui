@@ -60,7 +60,7 @@ export class PermissionsCheckService {
 
   private checkWorkspacePermissions(currentUser: User, organization: Organization, project: Project) {
     const isManager = userIsManagerInWorkspace(currentUser, organization, project);
-    const organizationPermissions = userPermissionsInResource(currentUser, project);
+    const organizationPermissions = userPermissionsInResource(currentUser, organization);
     this.store$.dispatch(new UserPermissionsAction.SetOrganizationPermissions({permissions: organizationPermissions}));
 
     const projectPermissions: AllowedPermissions = isManager

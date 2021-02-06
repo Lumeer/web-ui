@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataValue} from '../../../core/model/data-value';
+import {DataValue} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'isDataValueValid',
