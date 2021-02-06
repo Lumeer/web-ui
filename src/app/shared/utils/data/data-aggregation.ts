@@ -32,6 +32,8 @@ export enum DataAggregationType {
   Median = 'median',
 }
 
+export const defaultDataAggregationType = Object.values(DataAggregationType)[0];
+
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
   return !aggregation || ![DataAggregationType.Count, DataAggregationType.Unique].includes(aggregation);
 }

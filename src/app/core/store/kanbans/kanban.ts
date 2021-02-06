@@ -70,6 +70,8 @@ export enum KanbanValueType {
   AllPercentage = 'all',
 }
 
+export const defaultKanbanValueType = Object.values(KanbanValueType)[0];
+
 export interface KanbanAggregation {
   aggregation?: DataAggregationType;
   valueType?: KanbanValueType;

@@ -18,6 +18,8 @@
  */
 
 import {
+  defaultKanbanValueType,
+  KanbanAggregation,
   KanbanAttribute,
   KanbanColumn,
   KanbanConfig,
@@ -40,6 +42,7 @@ import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {createDefaultTaskPurposeConfig} from '../../common/perspective-util';
+import {defaultDataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
@@ -53,7 +56,7 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
   if (
     viewConfig.cardLayout !== currentConfig.cardLayout ||
     viewConfig.columnSize !== currentConfig.columnSize ||
-    viewConfig.aggregation !== currentConfig.aggregation
+    kanbanAggregationChanged(viewConfig.aggregation, currentConfig.aggregation)
   ) {
     return true;
   }
@@ -75,17 +78,29 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
   );
 }
 
+function kanbanAggregationChanged(previous: KanbanAggregation, current: KanbanAggregation): boolean {
+  const previousType = previous?.valueType || defaultKanbanValueType;
+  const currentType = current?.valueType || defaultKanbanValueType;
+
+  const previousAggregation = previous?.aggregation || defaultDataAggregationType;
+  const currentAggregation = current?.aggregation || defaultDataAggregationType;
+
+  return previousType !== currentType || previousAggregation !== currentAggregation;
+}
+
 function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsConfigs: KanbanStemConfig[]): boolean {
-  const normalizedViewStemsConfigs = viewStemsConfigs.map(config => ({
-    ...config,
-    stem: config.stem && normalizeQueryStem(config.stem),
-  }));
-  const normalizedCurrentStemsConfigs = currentStemsConfigs.map(config => ({
-    ...config,
-    stem: config.stem && normalizeQueryStem(config.stem),
-  }));
+  const normalizedViewStemsConfigs = viewStemsConfigs.map(config => normalizeStemConfig(config));
+  const normalizedCurrentStemsConfigs = currentStemsConfigs.map(config => normalizeStemConfig(config));
 
   return !areArraysSame(normalizedViewStemsConfigs, normalizedCurrentStemsConfigs);
+}
+
+function normalizeStemConfig(config: KanbanStemConfig): KanbanStemConfig {
+  return {
+    ...config,
+    stem: config.stem && normalizeQueryStem(config.stem),
+    doneColumnTitles: config.doneColumnTitles || [],
+  };
 }
 
 function kanbanColumnChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
