@@ -89,7 +89,7 @@ describe('Table perspective :: Columns', () => {
 
     // open link creation dialog
     cy.get('[data-test="table-header-add-button"]').click();
-    cy.get('[data-test="table-header-add-collection-option"]').contains('second').click();
+    cy.get('[data-test="table-header-add-collection-option"]').contains('second').click({foce: true});
 
     // rename link and save changes
     cy.waitForModalShown();
