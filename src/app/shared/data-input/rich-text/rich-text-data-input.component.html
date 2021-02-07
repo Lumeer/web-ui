@@ -3,7 +3,7 @@
                  [ngClass]="multilineMode ? 'multiline' : 'single-line'"
                  [content]="value | previewDataValue"
                  [title]="value | formatDataValueTitle"
-                 [class.invalid-value]="!configuration?.skipValidation && !valid">
+                 [class.invalid-value]="!commonConfiguration?.skipValidation && !valid">
 </quill-view-html>
 
 <span *ngIf="!readonly" class="icon-fullscreen"

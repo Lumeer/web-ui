@@ -137,7 +137,20 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
     const options = [...(config?.options || [])];
     const optionsValues = new Set(options.map(option => option.value));
-    options.push(...(this.value?.options || []).filter(option => !optionsValues.has(option.value)));
+    (this.value?.options || []).forEach(option => {
+      if (!optionsValues.has(option.value)) {
+        options.push(option);
+        optionsValues.add(option.value);
+      }
+    });
+
+    const invalidValues = this.value?.constraintData?.invalidValuesMap?.[ConstraintType.Select];
+    invalidValues?.forEach(value => {
+      if (!optionsValues.has(value)) {
+        options.push({value});
+        optionsValues.add(value);
+      }
+    });
     return options.map(option => ({
       ...option,
       value: option.value,
@@ -205,7 +218,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     if (this.selectedOptions$.value.some(o => o.value === option.value)) {
       this.selectedOptions$.next(this.selectedOptions$.value.filter(o => o.value !== option.value));
     } else {
-      const selectOption = (this.value.config.options || []).find(o => o.value === option.value);
+      const selectOption = (this.dropdownOptions || []).find(o => o.value === option.value);
       if (selectOption) {
         const displayValues = this.value.config.displayValues;
         const newOption = displayValues ? selectOption : {...selectOption, displayValue: selectOption.value};

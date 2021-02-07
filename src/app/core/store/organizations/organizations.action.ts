@@ -164,7 +164,7 @@ export namespace OrganizationsAction {
   export class OfferPayment implements Action {
     public readonly type = OrganizationsActionType.OFFER_PAYMENT;
 
-    public constructor(public payload: {organizationCode: string; message?: string}) {}
+    public constructor(public payload: {organizationCode: string; message?: string; title?: string}) {}
   }
 
   export class Delete implements Action {

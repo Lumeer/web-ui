@@ -37,6 +37,8 @@
 <filter-builder *ngIf="!readonly && (queryItem | isAttributeItem)"
                 [attribute]="attribute"
                 [origin]="hostElement"
+                [collectionId]="queryItem | queryItemCollectionId"
+                [linkTypeId]="queryItem | queryItemLinkTypeId"
                 [condition]="conditionControl?.value"
                 [conditionValues]="conditionValuesControl?.value"
                 (valueChange)="onConditionChange($event)"

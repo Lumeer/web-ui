@@ -57,7 +57,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   @HostBinding('class.multiline')
@@ -144,12 +144,12 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private refreshBackgroundClass(value: DataValue) {
-    this.invalidBackground = !this.readonly && value && !value.isValid() && !this.configuration?.skipValidation;
+    this.invalidBackground = !this.readonly && value && !value.isValid() && !this.commonConfiguration?.skipValidation;
   }
 
   private saveValue(value: string, action: DataInputSaveAction) {
     const dataValue = this.value.parseInput(value);
-    if (this.configuration?.skipValidation || dataValue.isValid()) {
+    if (this.commonConfiguration?.skipValidation || dataValue.isValid()) {
       this.save.emit({action, dataValue});
     }
   }
@@ -220,7 +220,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
         event.preventDefault();
 
-        if (!this.configuration?.skipValidation && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -238,7 +238,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   private saveDataValue(dataValue: TextDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {

@@ -64,7 +64,7 @@ import {EmailValidPipe} from './email/email-valid.pipe';
 import {UserByEmailPipe} from './email/user-by-email.pipe';
 import {UniqueEntitiesPipe} from './unique-entities.pipe';
 import {AggregationSelectItemsPipe} from './aggregation-select-items.pipe';
-import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
+import {FindSelectConstraintItemByIdPipe} from './find-select-constraint-item-by-id.pipe';
 import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resources.pipe';
 import {SortPerspectivesPipe} from './sort-perspectives.pipe';
 import {ArrayDifferencePipe} from './array/array-difference.pipe';
@@ -150,7 +150,7 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     UserByEmailPipe,
     UniqueEntitiesPipe,
     AggregationSelectItemsPipe,
-    FindSelectItemByIdPipe,
+    FindSelectConstraintItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
     ConcatPipe,
@@ -234,7 +234,7 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     UserByEmailPipe,
     UniqueEntitiesPipe,
     AggregationSelectItemsPipe,
-    FindSelectItemByIdPipe,
+    FindSelectConstraintItemByIdPipe,
     QueryStemAttributesResourcesPipe,
     ArrayDifferencePipe,
     ConcatPipe,

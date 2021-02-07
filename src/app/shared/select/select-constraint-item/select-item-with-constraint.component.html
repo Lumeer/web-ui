@@ -18,7 +18,7 @@
       *ngIf="data.configItems.length > 1"
       class="d-block mt-1"
       [items]="data.configItems"
-      [selectedId]="(data.configItems | findSelectItemById:selectedConstraint)?.id || data.configItems[0].id"
+      [selectedId]="(data.configItems | findSelectConstraintItemById:selectedConstraint)?.id || data.configItems[0].id"
       [removable]="false"
       placeholderIcon="fas fa-eye"
       [buttonClasses]="buttonClasses"

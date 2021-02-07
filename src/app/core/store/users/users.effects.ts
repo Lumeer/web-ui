@@ -46,6 +46,8 @@ import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {createCallbackActions} from '../store.utils';
+import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
+import {ServiceLevelType} from '../../dto/service-level-type';
 
 @Injectable()
 export class UsersEffects {
@@ -212,16 +214,32 @@ export class UsersEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    map(([action, organizations]) => {
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary), this.store$.select(selectAllServiceLimits)),
+    map(([action, organizations, serviceLimits]) => {
       const organization = organizations[action.payload.organizationId];
+      const limits = serviceLimits.find(limit => limit.organizationId === action.payload.organizationId);
+
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const message = this.i18n({
-          id: 'user.create.serviceLimits',
-          value:
-            'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
-        });
-        return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
+        let message: string;
+        let title: string;
+        if (limits?.serviceLevel === ServiceLevelType.BASIC) {
+          message = this.i18n({
+            id: 'user.create.serviceLimits.basic',
+            value: `You are allowed to invite only ${limits.users} users to your organization. Do you want to upgrade your plan now?`,
+          });
+          title = this.i18n({
+            id: 'user.create.serviceLimits.business.title',
+            value: 'Limits exceeded',
+          });
+        } else {
+          message = this.i18n({
+            id: 'user.create.serviceLimits',
+            value:
+              'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
+          });
+        }
+
+        return new OrganizationsAction.OfferPayment({message, title, organizationCode: organization.code});
       }
       const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
       return new NotificationsAction.Error({message: errorMessage});

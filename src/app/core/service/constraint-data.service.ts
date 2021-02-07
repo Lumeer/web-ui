@@ -18,10 +18,17 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {CurrencyData} from '@lumeer/data-filters';
+import {select, Store} from '@ngrx/store';
+import {ConstraintData, ConstraintType, CurrencyData} from '@lumeer/data-filters';
 import {TranslationService} from './translation.service';
 import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
+import {Attribute} from '../store/collections/collection';
+import {Observable} from 'rxjs';
+import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
+import {map, switchMap} from 'rxjs/operators';
+import {selectDocumentsByCollectionId} from '../store/documents/documents.state';
+import {selectLinkInstancesByType} from '../store/link-instances/link-instances.state';
+import {DataResource} from '../model/resource';
 
 @Injectable()
 export class ConstraintDataService {
@@ -35,4 +42,44 @@ export class ConstraintDataService {
     this.store$.dispatch(new ConstraintDataAction.Init({data: {durationUnitsMap, currencyData}}));
     return Promise.resolve(true);
   }
+
+  public selectWithInvalidValues$(
+    attribute: Attribute,
+    collectionId: string,
+    linkTypeId: string
+  ): Observable<ConstraintData> {
+    const constraintData$ = this.store$.pipe(select(selectConstraintData));
+    if (attribute?.constraint) {
+      if (collectionId) {
+        return constraintData$.pipe(
+          switchMap(constraintData =>
+            this.store$.pipe(
+              select(selectDocumentsByCollectionId(collectionId)),
+              map(documents => mapDataResourcesInvalidValues(constraintData, attribute, documents))
+            )
+          )
+        );
+      } else if (linkTypeId) {
+        return constraintData$.pipe(
+          switchMap(constraintData =>
+            this.store$.pipe(
+              select(selectLinkInstancesByType(linkTypeId)),
+              map(linkInstances => mapDataResourcesInvalidValues(constraintData, attribute, linkInstances))
+            )
+          )
+        );
+      }
+    }
+    return constraintData$;
+  }
+}
+
+function mapDataResourcesInvalidValues(
+  constraintData: ConstraintData,
+  attribute: Attribute,
+  dataResources: DataResource[]
+): ConstraintData {
+  const invalidValues = attribute.constraint?.filterInvalidValues(dataResources, attribute.id, constraintData);
+  const invalidValuesMap = {[attribute.constraint.type]: invalidValues} as Record<ConstraintType, Set<any>>;
+  return {...constraintData, invalidValuesMap};
 }

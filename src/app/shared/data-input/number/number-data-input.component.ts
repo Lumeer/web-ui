@@ -52,7 +52,7 @@ export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
   public value: NumberDataValue;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<NumberDataValue>();
@@ -127,7 +127,7 @@ export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (!this.configuration?.skipValidation && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -145,7 +145,7 @@ export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
 
   private saveDataValue(dataValue: NumberDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {
@@ -175,7 +175,7 @@ export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.numberInput.nativeElement.value);
-      if (this.configuration?.skipValidation || dataValue.isValid()) {
+      if (this.commonConfiguration?.skipValidation || dataValue.isValid()) {
         this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();

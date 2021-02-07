@@ -55,7 +55,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   public value: ColorDataValue;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<ColorDataValue>();
@@ -165,7 +165,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (!this.configuration?.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -181,7 +181,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
 
   private saveDataValue(dataValue: ColorDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {

@@ -18,14 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {deepObjectsEquals} from '../utils/common.utils';
+import {QueryItem} from '../model/query-item';
+import {QueryItemType} from '../model/query-item-type';
+import {AttributeQueryItem} from '../model/attribute.query-item';
+import {CollectionQueryItem} from '../model/collection.query-item';
+import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
+import {LinkQueryItem} from '../model/link.query-item';
 
 @Pipe({
-  name: 'findSelectItemById',
+  name: 'queryItemLinkTypeId',
 })
-export class FindSelectItemByIdPipe implements PipeTransform {
-  public transform(items: SelectItemModel[], id: any): SelectItemModel {
-    return (items || []).find(item => deepObjectsEquals(item.id, id));
+export class QueryItemLinkTypeIdPipe implements PipeTransform {
+  public transform(queryItem: QueryItem): string {
+    if (queryItem?.type === QueryItemType.LinkAttribute) {
+      return (<LinkAttributeQueryItem>queryItem).linkType?.id;
+    } else if (queryItem?.type === QueryItemType.Link) {
+      return (<LinkQueryItem>queryItem).linkType?.id;
+    }
+    return null;
   }
 }

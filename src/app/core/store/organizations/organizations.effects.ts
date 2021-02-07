@@ -323,7 +323,7 @@ export class OrganizationsEffects {
           'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?',
       });
       return new NotificationsAction.Confirm({
-        title,
+        title: action.payload.title || title,
         message: action.payload.message || message,
         action: new RouterAction.Go({
           path: ['/o', action.payload.organizationCode, 'detail'],

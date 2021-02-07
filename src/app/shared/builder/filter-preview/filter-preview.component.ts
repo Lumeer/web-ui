@@ -41,5 +41,8 @@ export class FilterPreviewComponent {
   @Input()
   public conditionValues: ConditionValue[];
 
-  public readonly configuration: DataInputConfiguration = {common: {inline: true}, color: {limitWidth: true}};
+  public readonly configuration: DataInputConfiguration = {
+    common: {inline: true, skipValidation: true},
+    color: {limitWidth: true},
+  };
 }
