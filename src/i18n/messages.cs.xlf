@@ -2498,6 +2498,16 @@
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
+        <source>
+    An automation executed regularly according to the timer settings.
+  </source><target>
+    Automatizace, která se spouští automaticky na základě nastavení časovače.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit>
             <trans-unit id="collection.tab.attributes.attribute.default" datatype="html">
                 <source>Displayed attribute</source>
@@ -5494,7 +5504,7 @@
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
         <source>Edit Rule Code:</source><target>Upravit pravidlo:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
         <source>
         Dry Run
       </source><target>
@@ -5502,7 +5512,7 @@
         </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source><target>Pohled se nepodařilo smazat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
@@ -6063,7 +6073,7 @@
         <source>Zapier Automation</source><target>Zapier Automatizace</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
-        <source>This automation is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</source><target>Tato automatizace je vytvořená ve službě Zapier. Prosím nastavte ji přímo tam (www.zapier.com).</target>
+        <source>This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</source><target>Tato automatizace je vytvořená ve službě Zapier. Prosím nastavte ji přímo tam (www.zapier.com).</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit></body>
     </file>

@@ -2034,7 +2034,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source>
@@ -3345,11 +3345,19 @@
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
+        <source>
+    An automation executed regularly according to the timer settings.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
         <source>Edit Rule Code:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.guide.select" datatype="html">
         <source>1. Select View</source>
