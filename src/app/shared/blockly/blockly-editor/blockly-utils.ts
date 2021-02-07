@@ -470,7 +470,10 @@ export class BlocklyUtils {
     const xmlList = [];
 
     workspace.getAllVariables().forEach(variable => {
-      if (variable.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+      if (
+        variable.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+        variable.type.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+      ) {
         this.ensureVariableTypeBlock(variable.type);
         const blockText =
           '<xml>' +
@@ -560,7 +563,14 @@ export class BlocklyUtils {
 
   public ensureVariableTypeBlock(type: string): void {
     if (!Blockly.Blocks[BlocklyUtils.VARIABLES_GET_PREFIX + type]) {
-      const collection = this.getCollection(type.replace(BlocklyUtils.DOCUMENT_VAR_SUFFIX, ''));
+      const collection = this.getCollection(
+        type.replace(
+          type.indexOf(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX) >= 0
+            ? BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX
+            : BlocklyUtils.DOCUMENT_VAR_SUFFIX,
+          ''
+        )
+      );
 
       const this_ = this;
       Blockly.Blocks[BlocklyUtils.VARIABLES_GET_PREFIX + type] = {

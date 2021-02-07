@@ -17,10 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {QueryDto} from '../dto';
+import {Language, LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
+import {Query} from '../store/navigation/query/query';
+
 export enum RuleType {
   AutoLink = 'AUTO_LINK',
   Blockly = 'BLOCKLY',
   Zapier = 'ZAPIER',
+  Cron = 'CRON',
+  Workflow = 'WORKFLOW',
 }
 
 export enum RuleTiming {
@@ -37,6 +43,8 @@ export const ruleTypeMap = {
   [RuleType.AutoLink]: RuleType.AutoLink,
   [RuleType.Blockly]: RuleType.Blockly,
   [RuleType.Zapier]: RuleType.Zapier,
+  [RuleType.Cron]: RuleType.Cron,
+  [RuleType.Workflow]: RuleType.Workflow,
 };
 
 export const ruleTimingMap = {
@@ -71,27 +79,72 @@ export interface ZapierRule extends BasicRule {
   configuration: ZapierRuleConfiguration;
 }
 
-export type AutoLinkRuleConfiguration = {
+export interface CronRule extends BasicRule {
+  type: RuleType.Cron;
+  configuration: CronRuleConfiguration;
+}
+
+export interface WorkflowRule extends BasicRule {
+  type: RuleType.Workflow;
+  configuarion: WorkflowRuleConfiguration;
+}
+
+export interface AutoLinkRuleConfiguration {
   collection1: string;
   attribute1: string;
   collection2: string;
   attribute2: string;
   linkType: string;
-};
+}
 
-export type BlocklyRuleConfiguration = {
+export interface BlocklyRuleConfiguration {
   blocklyXml: string;
   blocklyJs: string;
   blocklyError: string;
   blocklyResultTimestamp: number;
   blocklyDryRun: boolean;
   blocklyDryRunResult: string;
-};
+}
 
-export type ZapierRuleConfiguration = {
+export interface ZapierRuleConfiguration {
   hookUrl: string;
   id: string;
+}
+
+export enum ChronoUnit {
+  Hours = 'HOURS',
+  Days = 'DAYS',
+  Weeks = 'WEEKS',
+  Months = 'MONTHS',
+  Years = 'YEARS',
+}
+
+export const chronoUnitMap = {
+  [ChronoUnit.Hours]: ChronoUnit.Hours,
+  [ChronoUnit.Days]: ChronoUnit.Days,
+  [ChronoUnit.Weeks]: ChronoUnit.Weeks,
+  [ChronoUnit.Months]: ChronoUnit.Months,
+  [ChronoUnit.Years]: ChronoUnit.Years,
 };
 
-export type Rule = AutoLinkRule | BlocklyRule | ZapierRule;
-export type RuleConfiguration = AutoLinkRuleConfiguration | BlocklyRuleConfiguration | ZapierRuleConfiguration;
+export interface CronRuleConfiguration extends BlocklyRuleConfiguration {
+  since?: Date;
+  until?: Date;
+  when: number;
+  interval: number;
+  dow: number; // days of week - stored as binary number starting with Monday as the least significant bit
+  lastRun?: string;
+  unit: ChronoUnit;
+  executing?: string;
+  query: Query;
+  language: LanguageCode;
+}
+
+export interface WorkflowRuleConfiguration {}
+
+export type Rule = AutoLinkRule | BlocklyRule | ZapierRule | CronRule;
+export type RuleConfiguration =
+  | AutoLinkRuleConfiguration
+  | BlocklyRuleConfiguration
+  | ZapierRuleConfiguration
+  | CronRuleConfiguration;

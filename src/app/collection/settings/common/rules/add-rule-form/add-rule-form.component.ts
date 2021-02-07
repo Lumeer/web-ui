@@ -36,6 +36,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {objectValues} from '../../../../../shared/utils/common.utils';
+import {environment} from '../../../../../../environments/environment';
 
 @Component({
   selector: 'add-rule-form',
@@ -110,18 +111,8 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
         attribute2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute2 : ''],
         linkType: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.linkType : ''],
       }),
-      configBlockly: this.fb.group({
-        blocklyXml: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyXml : ''],
-        blocklyJs: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyJs : ''],
-        blocklyDryRun: [
-          this.rule.type === RuleType.Blockly ? (this.rule.configuration.blocklyDryRun ? true : false) : false,
-        ],
-        blocklyDryRunResult: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyDryRunResult : ''],
-        blocklyError: [this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyError : ''],
-        blocklyResultTimestamp: [
-          this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyResultTimestamp : '',
-        ],
-      }),
+      configBlockly: this.fb.group(this.getBlocklyGroup()),
+      configCron: this.fb.group({...this.getBlocklyGroup(), ...this.getCronGroup()}),
     });
     this.form.setValidators(this.formValidator());
 
@@ -130,11 +121,72 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
         const timingDelete = this.form.get('timingDelete');
         timingDelete.setValue(this.hasDelete(this.rule.timing));
         timingDelete.disable();
+      }
+      if (type === RuleType.Cron) {
+        const timingCreate = this.form.get('timingCreate');
+        timingCreate.setValue(false);
+        timingCreate.disable();
+        const timingUpdate = this.form.get('timingUpdate');
+        timingUpdate.setValue(false);
+        timingUpdate.disable();
+        const timingDelete = this.form.get('timingDelete');
+        timingDelete.setValue(false);
+        timingDelete.disable();
       } else {
         const timingDelete = this.form.get('timingDelete');
         timingDelete.enable();
       }
     });
+  }
+
+  private getBlocklyGroup() {
+    if (this.rule.type === RuleType.Blockly || this.rule.type === RuleType.Cron) {
+      return {
+        blocklyXml: [this.rule.configuration.blocklyXml],
+        blocklyJs: [this.rule.configuration.blocklyJs],
+        blocklyDryRun: [this.rule.configuration.blocklyDryRun],
+        blocklyDryRunResult: [this.rule.configuration.blocklyDryRunResult],
+        blocklyError: [this.rule.configuration.blocklyError],
+        blocklyResultTimestamp: [this.rule.configuration.blocklyResultTimestamp],
+      };
+    } else {
+      return {
+        blocklyXml: [''],
+        blocklyJs: [''],
+        blocklyDryRun: [false],
+        blocklyDryRunResult: [''],
+        blocklyError: [''],
+        blocklyResultTimestamp: [''],
+      };
+    }
+  }
+
+  private getCronGroup() {
+    if (this.rule.type === RuleType.Cron) {
+      return {
+        since: [this.rule.configuration.since],
+        until: [this.rule.configuration.until],
+        when: [this.rule.configuration.when],
+        interval: [this.rule.configuration.interval],
+        dow: [this.rule.configuration.dow],
+        unit: [this.rule.configuration.unit],
+        query: [this.rule.configuration.query],
+        executing: [''],
+        language: environment.locale,
+      };
+    } else {
+      return {
+        since: [null],
+        until: [null],
+        when: [0],
+        interval: [0],
+        dow: [0],
+        unit: [null],
+        query: [{}],
+        executing: [''],
+        language: environment.locale,
+      };
+    }
   }
 
   public ngOnDestroy(): void {
@@ -197,6 +249,10 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     return this.form.get('configBlockly');
   }
 
+  public get configCron(): AbstractControl {
+    return this.form.get('configCron');
+  }
+
   public getRuleConfiguration(ruleType: RuleType): RuleConfiguration {
     switch (ruleType) {
       case RuleType.AutoLink:
@@ -206,6 +262,10 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
       case RuleType.Blockly:
         return {
           ...this.configBlockly.value,
+        };
+      case RuleType.Cron:
+        return {
+          ...this.configCron.value,
         };
     }
   }
@@ -256,13 +316,16 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   private createTypeItems(): SelectItemModel[] {
     return this.types
-      .filter(type => type !== RuleType.Zapier)
+      .filter(
+        type => type !== RuleType.Zapier && type !== RuleType.Workflow && (!this.linkType || type !== RuleType.Cron)
+      )
       .map(type => ({
         id: type,
         value: this.i18n(
           {
             id: 'collection.config.tab.rules.type',
-            value: '{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}',
+            value:
+              '{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow}}',
           },
           {type}
         ),

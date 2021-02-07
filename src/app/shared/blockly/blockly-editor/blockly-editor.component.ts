@@ -214,10 +214,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const vars = dom.getElementsByTagName('variable');
       for (let i = 0; i < vars.length; i++) {
         const varType = vars.item(i).attributes.getNamedItem('type').value;
-        if (varType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+        if (
+          varType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+          varType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+        ) {
           this.blocklyUtils.ensureVariableTypeBlock(varType);
-        }
-        if (varType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
+        } else if (varType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
           this.blocklyUtils.ensureLinkInstanceVariableTypeBlock(varType);
         }
       }
@@ -251,7 +253,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.variables.forEach(variable => {
       if (this.workspace.getVariable(variable.name) == null) {
         if (variable.collectionId) {
-          this.workspace.createVariable(variable.name, variable.collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX, null);
+          this.workspace.createVariable(
+            variable.name,
+            variable.collectionId +
+              (variable.list ? BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX : BlocklyUtils.DOCUMENT_VAR_SUFFIX),
+            null
+          );
         } else if (variable.linkTypeId) {
           this.workspace.createVariable(variable.name, variable.linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX, null);
         }
@@ -374,7 +381,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 {
                   type: 'input_value',
                   name: 'VALUE',
-                  check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables - no fields or objects
+                  check: ['', 'Number', 'String', 'Boolean', 'Colour', '[]'], // only regular variables - no fields or objects
                 },
               ],
               colour: COLOR_DARK,

@@ -20,9 +20,11 @@
 import {Action} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {CommonAction} from './common/common.action';
-import {RuleDto} from '../dto/rule.dto';
-import {Rule, ruleTimingMap, ruleTypeMap} from '../model/rule';
+import {CronRuleConfigurationDto, RuleDto} from '../dto/rule.dto';
+import {chronoUnitMap, CronRuleConfiguration, Rule, ruleTimingMap, RuleType, ruleTypeMap} from '../model/rule';
 import {generateCorrelationId} from '../../shared/utils/resource.utils';
+import {languageCodeMap} from '../../shared/top-panel/user-panel/user-menu/language';
+import {convertQueryDtoToModel, convertQueryModelToDto} from './navigation/query/query.converter';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
@@ -45,10 +47,29 @@ export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
           name: dto[id].name,
           type: ruleTypeMap[dto[id].type],
           timing: ruleTimingMap[dto[id].timing],
-          configuration: dto[id].configuration,
+          configuration:
+            ruleTypeMap[dto[id].type] === RuleType.Cron
+              ? convertCronRuleConfigurationDtoToModel(dto[id].configuration as CronRuleConfigurationDto)
+              : dto[id].configuration,
         } as Rule)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function convertCronRuleConfigurationDtoToModel(dto: CronRuleConfigurationDto): CronRuleConfiguration {
+  return {
+    ...dto, // get blockly config
+    since: dto.since && new Date(dto.since),
+    until: dto.until && new Date(dto.until),
+    when: dto.when,
+    interval: dto.interval,
+    dow: dto.dow, // days of week - stored as binary number starting with Monday as the least significant bit
+    lastRun: dto.lastRun,
+    unit: chronoUnitMap[dto.unit],
+    executing: dto.executing,
+    query: convertQueryDtoToModel(dto.query),
+    language: languageCodeMap[dto.language],
+  };
 }
 
 export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
@@ -61,8 +82,25 @@ export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
       name: rule.name,
       type: rule.type,
       timing: rule.timing,
-      configuration: rule.configuration,
+      configuration:
+        rule.type === RuleType.Cron ? convertCronRuleConfigurationModelToDto(rule.configuration) : rule.configuration,
     };
     return result;
   }, {});
+}
+
+function convertCronRuleConfigurationModelToDto(model: CronRuleConfiguration): CronRuleConfigurationDto {
+  return {
+    ...model, // to convert blockly part
+    since: model.since?.toISOString(),
+    until: model.until?.toISOString(),
+    when: model.when,
+    interval: model.interval,
+    dow: model.dow,
+    lastRun: model.lastRun,
+    unit: model.unit,
+    executing: model.executing,
+    query: convertQueryModelToDto(model.query),
+    language: model.language,
+  };
 }
