@@ -76,6 +76,7 @@ import {NotificationService} from '../notifications/notification.service';
 import {AppIdService} from '../service/app-id.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationButton} from '../notifications/notification-button';
+import {DataResourcesAction} from '../store/data-resources/data-resources.action';
 
 @Injectable({
   providedIn: 'root',
@@ -225,6 +226,9 @@ export class PusherService implements OnDestroy {
       this.store$.dispatch(new CollectionsAction.Get({force: true}));
       this.store$.dispatch(new LinkTypesAction.Get({force: true}));
       this.store$.dispatch(new ViewsAction.Get({force: true}));
+      this.store$.dispatch(new DataResourcesAction.ClearQueries({}));
+      this.store$.dispatch(new DocumentsAction.ClearQueries({}));
+      this.store$.dispatch(new LinkInstancesAction.ClearQueries({}));
     }
   }
 
@@ -399,6 +403,8 @@ export class PusherService implements OnDestroy {
       .subscribe(collection => {
         if (!collection) {
           this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId}]}, silent: true}));
+          this.store$.dispatch(new DataResourcesAction.ClearQueries({collectionId}));
+          this.store$.dispatch(new DocumentsAction.ClearQueries({collectionId}));
         }
       });
   }

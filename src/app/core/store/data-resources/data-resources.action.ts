@@ -25,6 +25,7 @@ export enum DataResourcesActionType {
   GET = '[Data Resources] Get',
   GET_SUCCESS = '[Data Resources] Get :: Success',
 
+  CLEAR_QUERIES = '[Data Resources] Clear Queries',
   CLEAR = '[Data Resources] Clear',
 }
 
@@ -41,9 +42,15 @@ export namespace DataResourcesAction {
     public constructor(public payload: {query: Query}) {}
   }
 
+  export class ClearQueries implements Action {
+    public readonly type = DataResourcesActionType.CLEAR_QUERIES;
+
+    public constructor(public payload: {collectionId?: string}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = DataResourcesActionType.CLEAR;
   }
 
-  export type All = Get | GetSuccess | Clear;
+  export type All = Get | GetSuccess | ClearQueries | Clear;
 }

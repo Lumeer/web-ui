@@ -33,16 +33,16 @@ export const initialDataResourcesState: DataResourcesState = {
 
 export const selectDataResourcesState = (state: AppState) => state.dataResources;
 
-export const selectDataResourcesStateQueries = createSelector(selectDataResourcesState, state => state.queries);
+export const selectDataResourcesQueries = createSelector(selectDataResourcesState, state => state.queries);
 
 export const selectCurrentQueryDataResourcesLoaded = createSelector(
-  selectDataResourcesStateQueries,
+  selectDataResourcesQueries,
   selectQuery,
   (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
 );
 
 export const selectQueryDataResourcesLoaded = (query: Query) =>
   createSelector(
-    selectDataResourcesStateQueries,
+    selectDataResourcesQueries,
     queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
   );
