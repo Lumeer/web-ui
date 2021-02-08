@@ -56,6 +56,7 @@ export enum LinkInstancesActionType {
   DUPLICATE_SUCCESS = '[Link Instances] Duplicate :: Success',
 
   CLEAR = '[Link Instances] Clear',
+  CLEAR_QUERIES = '[Link Instances] Clear Queries',
   CLEAR_BY_LINK_TYPE = '[Link Instances] Clear By Link Type',
 
   RUN_RULE = '[Link Instances] Run Rule',
@@ -66,7 +67,7 @@ export namespace LinkInstancesAction {
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: {query: Query}) {}
+    public constructor(public payload: {query: Query; force?: boolean}) {}
   }
 
   export class GetSingle implements Action {
@@ -249,6 +250,12 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkTypeId: string}) {}
   }
 
+  export class ClearQueries implements Action {
+    public readonly type = LinkInstancesActionType.CLEAR_QUERIES;
+
+    public constructor(public payload: {linkTypeId?: string}) {}
+  }
+
   export class RunRule implements Action {
     public readonly type = LinkInstancesActionType.RUN_RULE;
 
@@ -285,6 +292,7 @@ export namespace LinkInstancesAction {
     | Duplicate
     | DuplicateSuccess
     | Clear
+    | ClearQueries
     | ClearByLinkType
     | RunRule
     | RunRuleFailure;

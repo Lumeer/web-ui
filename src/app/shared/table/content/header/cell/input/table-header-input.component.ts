@@ -37,6 +37,9 @@ import {
 import {KeyCode} from '../../../../../key-code';
 import {preventEvent} from '../../../../../utils/common.utils';
 import {TableColumn} from '../../../../model/table-column';
+import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-header-input',
@@ -78,6 +81,8 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
   private preventSave: boolean;
   private setFocus: boolean;
 
+  constructor(private store$: Store<AppState>) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.edited && this.edited) {
       this.setFocus = true;
@@ -106,6 +111,7 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
       if (this.isNameValid()) {
         this.saveValue();
       } else {
+        this.onInvalidSave(this.currentAttributeName());
         this.textInput.nativeElement.value = this.value;
       }
     }
@@ -146,6 +152,7 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
           event.preventDefault();
         } else {
           preventEvent(event);
+          this.onInvalidSave(this.currentAttributeName());
         }
         return;
       case KeyCode.Escape:
@@ -165,9 +172,17 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
+  private onInvalidSave(name: string) {
+    this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name}));
+  }
+
   private isNameValid(): boolean {
-    const value = this.textInput.nativeElement.value?.trim() || '';
+    const value = this.currentAttributeName();
     return value && !(this.restrictedNames || []).includes(value);
+  }
+
+  private currentAttributeName(): string {
+    return this.textInput.nativeElement.value?.trim() || '';
   }
 
   public preventSaveAndBlur() {

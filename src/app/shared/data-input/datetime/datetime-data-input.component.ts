@@ -55,7 +55,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   public value: DateTimeDataValue;
@@ -157,7 +157,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
 
         event.preventDefault();
 
-        if (!this.configuration.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+        if (!this.commonConfiguration.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -174,7 +174,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
 
   private saveDataValue(dataValue: DateTimeDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {

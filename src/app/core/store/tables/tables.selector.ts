@@ -33,19 +33,19 @@ import {EditedAttribute, selectTable, selectTablesDictionary, selectTablesState}
 export const selectTableById = (tableId: string) =>
   createSelector(selectTablesDictionary, tablesDictionary => tablesDictionary[tableId]);
 
-export const selectTableConfig = createSelector(selectTable, table => table && table.config);
+export const selectTableConfig = createSelector(selectTable, table => table?.config);
 
 export const selectTableConfigById = (tableId: string) =>
-  createSelector(selectTableById(tableId), table => table && table.config);
+  createSelector(selectTableById(tableId), table => table?.config);
 
 export const selectHasNextTableParts = (cursor: TableCursor) =>
   cursor &&
   createSelector(selectTableById(cursor.tableId), table => {
-    return table && table.config && table.config.parts && cursor.partIndex < table.config.parts.length - 1;
+    return table?.config?.parts && cursor.partIndex < table.config.parts.length - 1;
   });
 
 export const selectTableParts = (cursor: TableCursor) =>
-  createSelector(selectTableById(cursor && cursor.tableId), table => table && table.config && table.config.parts);
+  createSelector(selectTableById(cursor && cursor.tableId), table => table?.config?.parts);
 
 export const selectTablePart = (cursor: TableCursor) =>
   createSelector(selectTableParts(cursor), parts => parts && parts[cursor.partIndex]);
@@ -60,9 +60,7 @@ export const selectTablePartLeafColumns = (cursor: TableCursor) =>
   createSelector(selectTablePart(cursor), part => (part ? filterLeafColumns(part.columns) : []));
 
 export const selectTableRows = (tableId: string) =>
-  createSelector(selectTableById(tableId), table => {
-    return (table && table.config && table.config.rows) || [];
-  });
+  createSelector(selectTableById(tableId), table => table?.config?.rows || []);
 
 export const selectTableRow = (cursor: TableBodyCursor) =>
   cursor &&
@@ -74,7 +72,7 @@ export const selectTableRowParentDocumentId = (cursor: TableBodyCursor) =>
   cursor &&
   createSelector(selectTableRow(cursor), selectDocumentsDictionary, (row, documentsMap) => {
     const document = documentsMap[row.documentId];
-    return row.documentId ? document && document.metaData && document.metaData.parentId : row.parentDocumentId;
+    return row.documentId ? document?.metaData?.parentId : row.parentDocumentId;
   });
 
 export const selectTableRowsWithHierarchyLevels = (tableId: string) =>
@@ -114,7 +112,7 @@ export const selectTableRowOutdentable = (cursor: TableBodyCursor) =>
     }
 
     const document = documentsMap[row.documentId];
-    return Boolean((document && document.metaData && document.metaData.parentId) || row.parentDocumentId);
+    return Boolean(document?.metaData?.parentId || row.parentDocumentId);
   });
 
 export const selectTableFirstCollectionId = (tableId: string) =>

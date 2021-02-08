@@ -20,12 +20,13 @@
                       [style.min-width.px]="configuration?.common?.minWidth"
                       [readonly]="true"
                       [value]="dataValue"
-                      [configuration]="commonConfiguration"
+                      [commonConfiguration]="commonConfiguration"
                       class="d-block w-100">
     </color-data-input>
 
     <select-data-input *ngSwitchCase="constraintType.Select"
-                       [configuration]="commonConfiguration"
+                       [configuration]="configuration?.select"
+                       [commonConfiguration]="commonConfiguration"
                        [readonly]="true"
                        [value]="dataValue"
                        class="d-block w-100">
@@ -50,7 +51,7 @@
     <link-data-input *ngSwitchCase="constraintType.Link"
                      [focus]="false"
                      [readonly]="true"
-                     [configuration]="commonConfiguration"
+                     [commonConfiguration]="commonConfiguration"
                      [value]="dataValue">
     </link-data-input>
 

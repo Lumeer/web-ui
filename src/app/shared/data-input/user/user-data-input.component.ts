@@ -140,7 +140,20 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   private bindUsers(): User[] {
     const users = [...(this.value?.constraintData?.users || [])];
     const usersEmails = new Set(users.map(user => user.email));
-    users.push(...(this.value?.users || []).filter(user => !usersEmails.has(user.email)));
+    (this.value?.users || []).forEach(user => {
+      if (!usersEmails.has(user.email)) {
+        users.push(user);
+        usersEmails.add(user.email);
+      }
+    });
+
+    const invalidEmails = this.value?.constraintData?.invalidValuesMap?.[ConstraintType.User];
+    invalidEmails?.forEach(email => {
+      if (!usersEmails.has(email)) {
+        users.push({email});
+        usersEmails.add(email);
+      }
+    });
     return users;
   }
 

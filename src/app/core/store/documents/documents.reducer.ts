@@ -68,6 +68,16 @@ export function documentsReducer(
       return setActionExecutionTime(state, action.payload.documentId, action.payload.attributeId);
     case DocumentsActionType.CLEAR_BY_COLLECTION:
       return clearDocumentsAndQueries(action.payload.collectionId, state);
+    case DocumentsActionType.CLEAR_QUERIES:
+      if (action.payload.collectionId) {
+        return {
+          ...state,
+          queries: state.queries.filter(
+            query => !query.stems?.some(stem => stem.collectionId === action.payload.collectionId)
+          ),
+        };
+      }
+      return {...state, queries: []};
     case DocumentsActionType.CLEAR:
       return initialDocumentsState;
     default:

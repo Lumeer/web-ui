@@ -33,6 +33,16 @@ export function dataResourcesReducer(
         return {...state, queries: [...state.queries, action.payload.query]};
       }
       return state;
+    case DataResourcesActionType.CLEAR_QUERIES:
+      if (action.payload.collectionId) {
+        return {
+          ...state,
+          queries: state.queries.filter(
+            query => !query.stems?.some(stem => stem.collectionId === action.payload.collectionId)
+          ),
+        };
+      }
+      return {...state, queries: []};
     case DataResourcesActionType.CLEAR:
       return initialDataResourcesState;
     default:

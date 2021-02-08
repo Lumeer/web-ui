@@ -72,6 +72,7 @@ export enum DocumentsActionType {
   DELETE_FAILURE = '[Documents] Delete :: Failure',
 
   CLEAR = '[Documents] Clear',
+  CLEAR_QUERIES = '[Documents] Clear Queries',
   CLEAR_BY_COLLECTION = '[Documents] Clear by collection',
 
   RUN_RULE = '[Documents] Run Rule',
@@ -319,6 +320,12 @@ export namespace DocumentsAction {
     public constructor(public payload: {documentId: string; error: any}) {}
   }
 
+  export class ClearQueries implements Action {
+    public readonly type = DocumentsActionType.CLEAR_QUERIES;
+
+    public constructor(public payload: {collectionId?: string}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = DocumentsActionType.CLEAR;
   }
@@ -376,6 +383,7 @@ export namespace DocumentsAction {
     | DeleteFailure
     | DeleteConfirm
     | Clear
+    | ClearQueries
     | ClearByCollection
     | RunRule
     | RunRuleFailure;

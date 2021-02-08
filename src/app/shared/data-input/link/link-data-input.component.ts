@@ -50,7 +50,7 @@ export class LinkDataInputComponent implements OnChanges {
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   public value: LinkDataValue;

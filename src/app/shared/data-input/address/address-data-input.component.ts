@@ -57,7 +57,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   public value: AddressDataValue;
@@ -221,7 +221,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
 
   private saveDataValue(dataValue: AddressDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {

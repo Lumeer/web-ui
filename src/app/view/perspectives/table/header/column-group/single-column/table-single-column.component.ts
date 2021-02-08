@@ -49,7 +49,6 @@ import {Direction} from '../../../../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
 import {
   extractAttributeLastName,
-  extractAttributeParentName,
   filterAttributesByDepth,
   filterOutInvalidAttributeNameCharacters,
 } from '../../../../../../shared/utils/attribute.utils';
@@ -230,84 +229,81 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     } else {
       const previousName = this.lastName$.value;
       this.lastName$.next(this.attribute?.name || previousName);
+      this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name: lastName}));
     }
   }
 
-  private renameAttribute(oldAttribute: Attribute, lastName: string) {
-    const parentName = extractAttributeParentName(oldAttribute.name);
-    const name = parentName ? `${parentName}.${lastName}` : lastName;
-    const attribute = {...oldAttribute, name};
-
+  private renameAttribute(oldAttribute: Attribute, name: string) {
     if (this.collection) {
-      this.renameCollectionAttribute(attribute);
+      this.renameCollectionAttribute(oldAttribute, name);
     }
     if (this.linkType) {
-      this.renameLinkTypeAttribute(attribute);
+      this.renameLinkTypeAttribute(oldAttribute, name);
     }
   }
 
-  private renameCollectionAttribute(attribute: Attribute) {
+  private renameCollectionAttribute(attribute: Attribute, name: string) {
     if (attribute.id) {
-      this.updateCollectionAttribute(attribute);
+      this.renameExistingCollectionAttribute(attribute, name);
     } else {
-      this.renameUninitializedTableColumn(attribute);
-      this.createCollectionAttribute(attribute);
+      this.renameUninitializedTableColumn(name);
+      this.createCollectionAttribute(attribute, name);
     }
   }
 
-  private renameUninitializedTableColumn(attribute: Attribute) {
+  private renameUninitializedTableColumn(name: string) {
     this.store$.dispatch(
       new TablesAction.ReplaceColumns({
         cursor: this.cursor,
         deleteCount: 1,
-        columns: [{...this.column, attributeName: extractAttributeLastName(attribute.name)}],
+        columns: [{...this.column, attributeName: name}],
       })
     );
   }
 
-  private createCollectionAttribute(attribute: Attribute) {
+  private createCollectionAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.collection.id,
-        attributes: [attribute],
+        attributes: [{...attribute, name}],
       })
     );
   }
 
-  private updateCollectionAttribute(attribute: Attribute) {
+  private renameExistingCollectionAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
-      new CollectionsAction.ChangeAttribute({
+      new CollectionsAction.RenameAttribute({
         collectionId: this.collection.id,
         attributeId: attribute.id,
-        attribute,
+        name,
       })
     );
   }
 
-  private renameLinkTypeAttribute(attribute: Attribute) {
+  private renameLinkTypeAttribute(attribute: Attribute, name: string) {
     if (attribute.id) {
-      this.updateLinkTypeAttribute(attribute);
+      this.renameExistingLinkTypeAttribute(attribute, name);
     } else {
-      this.renameUninitializedTableColumn(attribute);
-      this.createLinkTypeAttribute(attribute);
+      this.renameUninitializedTableColumn(name);
+      this.createLinkTypeAttribute(attribute, name);
     }
   }
 
-  private createLinkTypeAttribute(attribute: Attribute) {
+  private createLinkTypeAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
       new LinkTypesAction.CreateAttributes({
         linkTypeId: this.linkType.id,
-        attributes: [attribute],
+        attributes: [{...attribute, name}],
       })
     );
   }
 
-  private updateLinkTypeAttribute(attribute: Attribute) {
+  private renameExistingLinkTypeAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
-      new LinkTypesAction.UpdateAttribute({
+      new LinkTypesAction.RenameAttribute({
         linkTypeId: this.linkType.id,
         attributeId: attribute.id,
-        attribute,
+        name,
       })
     );
   }

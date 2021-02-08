@@ -31,7 +31,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, pipe} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
@@ -91,7 +91,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
       distinctUntilChanged(
         (a: TableBodyCursor, b: TableBodyCursor) => a.rowPath && b.rowPath && a.rowPath[0] === b.rowPath[0]
       ),
-      switchMap(cursor => this.tableRowsService.observeRowNumber(cursor.tableId, cursor.rowPath[0]))
+      switchMap(cursor => this.tableRowsService.observeRowNumber(cursor.rowPath[0]))
     );
   }
 

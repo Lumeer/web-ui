@@ -23,7 +23,7 @@ import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query/query';
 import {isLinkInstanceValid, sortLinkInstances} from './link-instance.utils';
-import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
+import {isQueryLoaded} from '../navigation/query/query.helper';
 import {selectQuery} from '../navigation/navigation.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 
@@ -57,14 +57,8 @@ export const selectLinkInstancesQueries = createSelector(
 export const selectCurrentQueryLinkInstancesLoaded = createSelector(
   selectLinkInstancesQueries,
   selectQuery,
-  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
+  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
 );
-
-export const selectQueryLinkInstancesLoaded = (query: Query) =>
-  createSelector(
-    selectLinkInstancesQueries,
-    queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
-  );
 
 export const selectLinkInstanceById = (id: string) =>
   createSelector(selectLinkInstancesDictionary, linkInstancesMap => linkInstancesMap[id]);

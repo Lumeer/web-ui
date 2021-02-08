@@ -26,6 +26,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
@@ -48,6 +49,7 @@ import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'table-header-add-button',
@@ -64,6 +66,9 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   @Output()
   public addColumn = new EventEmitter();
+
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
 
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
@@ -134,5 +139,10 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   public onAddColumn() {
     this.addColumn.emit();
+  }
+
+  public onClick(event: MouseEvent) {
+    this.contextMenu?.closeMenu();
+    event.stopPropagation();
   }
 }

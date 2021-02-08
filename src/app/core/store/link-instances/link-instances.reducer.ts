@@ -62,6 +62,16 @@ export function linkInstancesReducer(
         linkInstance => linkInstance.linkTypeId === action.payload.linkTypeId,
         state
       );
+    case LinkInstancesActionType.CLEAR_QUERIES:
+      if (action.payload.linkTypeId) {
+        return {
+          ...state,
+          queries: state.queries.filter(
+            query => !query.stems?.some(stem => stem.linkTypeIds?.includes(action.payload.linkTypeId))
+          ),
+        };
+      }
+      return {...state, queries: []};
     case LinkInstancesActionType.CLEAR:
       return initialLinkInstancesState;
     default:

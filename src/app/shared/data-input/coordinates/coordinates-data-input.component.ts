@@ -49,7 +49,7 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   public value: CoordinatesDataValue;
@@ -150,7 +150,7 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
 
   private saveDataValue(dataValue: CoordinatesDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {

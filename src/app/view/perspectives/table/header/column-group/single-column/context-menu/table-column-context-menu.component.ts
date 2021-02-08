@@ -113,4 +113,9 @@ export class TableColumnContextMenuComponent {
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
+
+  public onClick(event: MouseEvent) {
+    this.contextMenu?.closeMenu();
+    event.stopPropagation();
+  }
 }

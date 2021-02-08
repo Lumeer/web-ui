@@ -21,7 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {Query} from '../navigation/query/query';
 import {selectQuery} from '../navigation/navigation.state';
-import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
+import {isQueryLoaded} from '../navigation/query/query.helper';
 
 export interface DataResourcesState {
   queries: Query[];
@@ -33,16 +33,13 @@ export const initialDataResourcesState: DataResourcesState = {
 
 export const selectDataResourcesState = (state: AppState) => state.dataResources;
 
-export const selectDataResourcesStateQueries = createSelector(selectDataResourcesState, state => state.queries);
+export const selectDataResourcesQueries = createSelector(selectDataResourcesState, state => state.queries);
 
 export const selectCurrentQueryDataResourcesLoaded = createSelector(
-  selectDataResourcesStateQueries,
+  selectDataResourcesQueries,
   selectQuery,
-  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
+  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
 );
 
 export const selectQueryDataResourcesLoaded = (query: Query) =>
-  createSelector(
-    selectDataResourcesStateQueries,
-    queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
-  );
+  createSelector(selectDataResourcesQueries, queries => isQueryLoaded(query, queries));

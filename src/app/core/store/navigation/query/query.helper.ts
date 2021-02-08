@@ -20,11 +20,15 @@
 import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../../shared/utils/array.utils';
 import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
 import {Query} from './query';
-import {getBaseCollectionIdsFromQuery, queryWithoutFilters} from './query.util';
+import {getBaseCollectionIdsFromQuery, isQuerySubset, queryWithoutFilters} from './query.util';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 export function areQueriesEqual(first: Query, second: Query): boolean {
   return deepObjectsEquals(normalizeQueryModel(first), normalizeQueryModel(second));
+}
+
+export function isQueryLoaded(query: Query, loadedQueries: Query[]): boolean {
+  return loadedQueries.some(loadedQuery => isQuerySubset(query, loadedQuery));
 }
 
 export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: Query): boolean {

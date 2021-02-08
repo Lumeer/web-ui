@@ -30,7 +30,7 @@ import {hasAttributeType} from '../collections/collection.util';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {areQueriesEqual} from '../navigation/query/query.helper';
+import {isQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
@@ -49,7 +49,7 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectLinkInstancesQueries))),
-    filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
+    filter(([action, queries]) => action.payload.force || !isQueryLoaded(action.payload.query, queries)),
     mergeMap(([action]) => {
       const query = action.payload.query;
       return this.searchService.searchLinkInstances(convertQueryModelToDto(query)).pipe(

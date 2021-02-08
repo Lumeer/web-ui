@@ -28,6 +28,8 @@ import {QueryItemBorderPipe} from './query-item-border';
 import {QueryItemTextPipe} from './query-item-text.pipe';
 import {QueryItemAttributePipe} from './query-item-attribute.pipe';
 import {QueryItemFormPipe} from './query-item-form.pipe';
+import {QueryItemCollectionIdPipe} from './query-item-collection-id.pipe';
+import {QueryItemLinkTypeIdPipe} from './query-item-link-type-id.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -40,6 +42,8 @@ import {QueryItemFormPipe} from './query-item-form.pipe';
     QueryItemTextPipe,
     QueryItemAttributePipe,
     QueryItemFormPipe,
+    QueryItemCollectionIdPipe,
+    QueryItemLinkTypeIdPipe,
   ],
   exports: [
     IsAttributeItemPipe,
@@ -50,6 +54,8 @@ import {QueryItemFormPipe} from './query-item-form.pipe';
     QueryItemTextPipe,
     QueryItemAttributePipe,
     QueryItemFormPipe,
+    QueryItemCollectionIdPipe,
+    QueryItemLinkTypeIdPipe,
   ],
 })
 export class SearchBoxPipesModule {}

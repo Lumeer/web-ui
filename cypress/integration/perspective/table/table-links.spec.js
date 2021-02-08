@@ -47,7 +47,7 @@ describe('Table perspective :: Links', () => {
 
     cy.get('[data-test="table-header-add-button"]').click();
 
-    cy.get('[data-test="table-header-add-collection-option"]').contains('second').click();
+    cy.get('[data-test="table-header-add-collection-option"]').contains('second').click({force: true});
 
     cy.waitForModalShown();
     cy.get('[data-test="link-name-input"]').should('have.value', 'first second');

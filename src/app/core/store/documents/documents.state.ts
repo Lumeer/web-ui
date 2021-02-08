@@ -21,7 +21,7 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {Query} from '../navigation/query/query';
-import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
+import {isQueryLoaded} from '../navigation/query/query.helper';
 import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
 import {selectQuery} from '../navigation/navigation.state';
@@ -52,14 +52,11 @@ export const selectDocumentsQueries = createSelector(selectDocumentsState, docum
 export const selectCurrentQueryDocumentsLoaded = createSelector(
   selectDocumentsQueries,
   selectQuery,
-  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
+  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
 );
 
 export const selectQueryDocumentsLoaded = (query: Query) =>
-  createSelector(
-    selectDocumentsQueries,
-    queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
-  );
+  createSelector(selectDocumentsQueries, queries => isQueryLoaded(query, queries));
 
 export const selectDocumentById = (id: string) =>
   createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);

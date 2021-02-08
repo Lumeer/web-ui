@@ -24,7 +24,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {selectDocumentsQueries} from '../documents/documents.state';
-import {areQueriesEqual} from '../navigation/query/query.helper';
+import {isQueryLoaded} from '../navigation/query/query.helper';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {convertDocumentDtoToModel} from '../documents/document.converter';
 import {SearchService} from '../../data-service';
@@ -32,17 +32,15 @@ import {AppState} from '../app.state';
 import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {convertLinkInstanceDtoToModel} from '../link-instances/link-instance.converter';
+import {selectDataResourcesQueries} from './data-resources.state';
 
 @Injectable()
 export class DataResourcesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
-    filter(
-      ([action, queries]) =>
-        action.payload.force || !queries.find(query => areQueriesEqual(query, action.payload.query))
-    ),
+    withLatestFrom(this.store$.pipe(select(selectDataResourcesQueries))),
+    filter(([action, queries]) => action.payload.force || !isQueryLoaded(action.payload.query, queries)),
     mergeMap(([action]) => {
       const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);

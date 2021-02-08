@@ -35,7 +35,7 @@ import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../l
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {areQueriesEqual} from '../navigation/query/query.helper';
+import {isQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
@@ -58,10 +58,7 @@ export class DocumentsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
-    filter(
-      ([action, queries]) =>
-        action.payload.force || !queries.find(query => areQueriesEqual(query, action.payload.query))
-    ),
+    filter(([action, queries]) => action.payload.force || !isQueryLoaded(action.payload.query, queries)),
     mergeMap(([action]) => {
       const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
