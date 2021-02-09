@@ -64,6 +64,7 @@ function convertCronRuleConfigurationDtoToModel(dto: CronRuleConfigurationDto): 
     when: dto.when,
     interval: dto.interval,
     dow: dto.dow, // days of week - stored as binary number starting with Monday as the least significant bit
+    occurence: dto.occurence,
     lastRun: dto.lastRun,
     unit: chronoUnitMap[dto.unit],
     executing: dto.executing,
@@ -97,6 +98,7 @@ function convertCronRuleConfigurationModelToDto(model: CronRuleConfiguration): C
     when: model.when,
     interval: model.interval,
     dow: model.dow,
+    occurence: model.occurence,
     lastRun: model.lastRun,
     unit: model.unit,
     executing: model.executing,

@@ -33,6 +33,7 @@ export interface CronRuleConfigurationDto extends BlocklyRuleConfiguration {
   when: number;
   interval: number;
   dow: number;
+  occurence?: number;
   lastRun?: string;
   unit: string;
   executing?: string;
