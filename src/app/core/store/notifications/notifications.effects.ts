@@ -113,10 +113,15 @@ export class NotificationsEffects {
   public existingAttributeWarning$ = this.actions$.pipe(
     ofType<NotificationsAction.ExistingAttributeWarning>(NotificationsActionType.EXISTING_ATTRIBUTE_WARNING),
     tap(action => {
-      const message = this.i18n({
-        id: 'warning.attribute.nameExisting',
-        value: `I am sorry, the attribute name '${action.payload.name}' already exists.`,
-      });
+      const message = this.i18n(
+        {
+          id: 'warning.attribute.nameExisting',
+          value: "I am sorry, the attribute name '{{attributeName}}' already exists.",
+        },
+        {
+          attributeName: action.payload.name,
+        }
+      );
 
       this.notificationService.warning(message);
     })

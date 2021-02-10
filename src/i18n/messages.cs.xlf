@@ -2085,7 +2085,13 @@
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
+        <source>Attribute settings...</source><target>Nastavení attributu...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
         <source>Add Link column</source><target>Přidat sloupec mezi tabulky</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
@@ -3749,6 +3755,13 @@
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="warning.attribute.nameExisting" datatype="html">
+        <source>I am sorry, the attribute name '<x id="INTERPOLATION" equiv-text="{{attributeName}}"/>' already exists.</source>
+        <target>Je mi líto, ale atribut '<x id="INTERPOLATION" equiv-text="{{attributeName}}"/>' již existuje.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit>
             <trans-unit id="organization.contact.get.fail" datatype="html">
                 <source>Could not read contact information</source>
@@ -5308,6 +5321,19 @@
         </context-group>
       </trans-unit><trans-unit id="currentUser.patch.fail" datatype="html">
         <source>Could not update user details</source><target>Nepodařilo se uložit nastavení uživatele</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="user.create.serviceLimits.basic" datatype="html">
+        <source>You are allowed to invite only <x id="INTERPOLATION" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</source>
+        <target>Do Vaší organizace je možné pozvat pouze <x id="INTERPOLATION" equiv-text="{{limit}}"/> uživatelů. Chcete upravit nastavení služby?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="user.create.serviceLimits.business.title" datatype="html">
+        <source>Limits exceeded</source><target>Překročení limitů</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>

@@ -223,10 +223,16 @@ export class UsersEffects {
         let message: string;
         let title: string;
         if (limits?.serviceLevel === ServiceLevelType.BASIC) {
-          message = this.i18n({
-            id: 'user.create.serviceLimits.basic',
-            value: `You are allowed to invite only ${limits.users} users to your organization. Do you want to upgrade your plan now?`,
-          });
+          message = this.i18n(
+            {
+              id: 'user.create.serviceLimits.basic',
+              value:
+                'You are allowed to invite only {{limit}} users to your organization. Do you want to upgrade your plan now?',
+            },
+            {
+              limit: limits.users,
+            }
+          );
           title = this.i18n({
             id: 'user.create.serviceLimits.business.title',
             value: 'Limits exceeded',
