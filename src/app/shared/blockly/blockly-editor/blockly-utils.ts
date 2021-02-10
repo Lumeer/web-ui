@@ -441,7 +441,10 @@ export class BlocklyUtils {
     } catch (e) {
       //nps
     }
-    block.moveBy(Blockly.SNAP_RADIUS, Blockly.SNAP_RADIUS);
+
+    if (!block.getParent()) {
+      block.moveBy(Blockly.SNAP_RADIUS, Blockly.SNAP_RADIUS);
+    }
   }
 
   public updateVariableType(workspace, variable, newType): void {
