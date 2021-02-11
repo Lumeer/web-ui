@@ -8,6 +8,13 @@
          i18n="@@search.tab.all">All</a>
     </li>
     <li role="presentation" class="nav-item">
+      <a [routerLink]="searchTab.Tasks"
+         [queryParams]="{q: stringQuery}"
+         [class.active]="isLinkActive(searchTab.Tasks)"
+         class="nav-link"
+         i18n="@@search.tab.tasks">Tasks</a>
+    </li>
+    <li role="presentation" class="nav-item">
       <a [routerLink]="searchTab.Views"
          [queryParams]="{q: stringQuery}"
          [class.active]="isLinkActive(searchTab.Views)"
@@ -20,13 +27,6 @@
          [class.active]="isLinkActive(searchTab.Collections)"
          class="nav-link"
          i18n="@@search.tab.collections">Tables</a>
-    </li>
-    <li role="presentation" class="nav-item">
-      <a [routerLink]="searchTab.Records"
-         [queryParams]="{q: stringQuery}"
-         [class.active]="isLinkActive(searchTab.Records)"
-         class="nav-link"
-         i18n="@@search.tab.documents">Records</a>
     </li>
   </ul>
   <router-outlet></router-outlet>

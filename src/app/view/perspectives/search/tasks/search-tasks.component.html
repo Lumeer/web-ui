@@ -1,0 +1,16 @@
+<search-tasks-content class="d-block" *ngIf="loaded$ | async"
+                      [constraintData]="constraintData$ | async"
+                      [query]="query$ | async"
+                      [config]="documentsConfig$ | async"
+                      [maxDocuments]="maxLines"
+                      [collections]="collections$ | async"
+                      [workspace]="workspace$ | async"
+                      [documents]="documents$ | async"
+                      (configChange)="configChange($event)"
+                      infiniteScroll
+                      [infiniteScrollDisabled]="maxLines > 0"
+                      [infiniteScrollDistance]="2"
+                      [infiniteScrollContainer]="'.search-perspective'"
+                      [fromRoot]="true"
+                      (scrolled)="onFetchNextPage()">
+</search-tasks-content>

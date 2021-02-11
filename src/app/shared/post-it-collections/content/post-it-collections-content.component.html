@@ -35,9 +35,8 @@
       <div class="layout-item"
            *ngIf="maxCollections > 0 && maxCollections < allCollections.length"
            (click)="onShowAllClicked()">
-        <div class="see-all d-flex h-100 align-items-center justify-content-center cursor-pointer clickable text-center"
-             i18n="@@search.result.more" [style.font-size.%]="150">
-          See more
+        <div class="d-flex h-100 clickable align-items-center justify-content-center cursor-pointer text-center">
+          <see-more-button></see-more-button>
         </div>
       </div>
 

@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {Component, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
 
-@Pipe({
-  name: 'filterWritableCollections',
+@Component({
+  selector: 'see-more-button',
+  templateUrl: './see-more-button.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterWritableCollectionsPipe implements PipeTransform {
-  public transform(collections: Collection[], permissions: Record<string, AllowedPermissions>): Collection[] {
-    return (collections || []).filter(collection => permissions?.[collection.id]?.writeWithView);
-  }
+export class SeeMoreButtonComponent {
+  @Output()
+  public clicked = new EventEmitter();
 }

@@ -22,8 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
-import {catchError, filter, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {selectDocumentsQueries} from '../documents/documents.state';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {isQueryLoaded} from '../navigation/query/query.helper';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {convertDocumentDtoToModel} from '../documents/document.converter';
@@ -32,7 +31,11 @@ import {AppState} from '../app.state';
 import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {convertLinkInstanceDtoToModel} from '../link-instances/link-instance.converter';
-import {selectDataResourcesQueries} from './data-resources.state';
+import {selectDataResourcesQueries, selectTasksQueries} from './data-resources.state';
+import {NotificationsAction} from '../notifications/notifications.action';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {selectTasksCollectionsByReadPermission} from '../common/permissions.selectors';
+import {checkTasksCollectionsQuery} from '../navigation/query/query.util';
 
 @Injectable()
 export class DataResourcesEffects {
@@ -61,5 +64,53 @@ export class DataResourcesEffects {
     })
   );
 
-  constructor(private actions$: Actions, private searchService: SearchService, private store$: Store<AppState>) {}
+  @Effect()
+  public getTasks$: Observable<Action> = this.actions$.pipe(
+    ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
+    withLatestFrom(
+      this.store$.pipe(select(selectTasksQueries)),
+      this.store$.pipe(select(selectTasksCollectionsByReadPermission))
+    ),
+    filter(
+      ([action, queries, tasksCollections]) =>
+        action.payload.force ||
+        !isQueryLoaded(checkTasksCollectionsQuery(tasksCollections, action.payload.query), queries)
+    ),
+    mergeMap(([action, , tasksCollections]) => {
+      const query = action.payload.query;
+      const loadQuery = checkTasksCollectionsQuery(tasksCollections, query);
+      const queryDto = convertQueryModelToDto(loadQuery);
+      const savedQuery = action.payload.silent ? undefined : loadQuery;
+
+      return this.searchService.searchTaskDocumentsAndLinks(queryDto, action.payload.workspace).pipe(
+        mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
+          const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
+          const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+          return [
+            new DocumentsAction.GetSuccess({documents}),
+            new LinkInstancesAction.GetSuccess({linkInstances}),
+            new DataResourcesAction.GetTasksSuccess({query: savedQuery}),
+          ];
+        }),
+        catchError(error => of(new DataResourcesAction.GetTasksFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public getTasksFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DataResourcesAction.GetTasksFailure>(DataResourcesActionType.GET_TASKS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'tasks.get.fail', value: 'Could not get tasks'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  constructor(
+    private actions$: Actions,
+    private searchService: SearchService,
+    private store$: Store<AppState>,
+    private i18n: I18n
+  ) {}
 }

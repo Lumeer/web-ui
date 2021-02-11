@@ -30,6 +30,7 @@ import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {Query} from '../navigation/query/query';
 import {
+  checkTasksCollectionsQuery,
   getAllCollectionIdsFromQuery,
   getAllLinkTypeIdsFromQuery,
   queryWithoutLinks,
@@ -49,7 +50,7 @@ import {
   selectResourcesPermissions,
   selectViewsPermissions,
 } from '../user-permissions/user-permissions.state';
-
+import {CollectionPurposeType} from '../collections/collection';
 const selectCollectionsByPermission = (role: Role) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
     collections.filter(collection => hasRoleByPermissions(role, permissions[collection.id]))
@@ -64,6 +65,34 @@ export const selectCollectionsByQuery = createSelector(
   selectAllDocuments,
   selectAllLinkTypes,
   selectViewQuery,
+  selectConstraintData,
+  (collections, documents, linkTypes, query, constraintData) =>
+    filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
+);
+
+const selectCollectionsByPurposeAndPermission = (purpose: CollectionPurposeType, role: Role) =>
+  createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
+    collections.filter(
+      collection => collection.purpose?.type === purpose && hasRoleByPermissions(role, permissions[collection.id])
+    )
+  );
+
+export const selectTasksCollectionsByReadPermission = selectCollectionsByPurposeAndPermission(
+  CollectionPurposeType.Tasks,
+  Role.Read
+);
+
+export const selectTasksQuery = createSelector(
+  selectViewQuery,
+  selectTasksCollectionsByReadPermission,
+  (query, collections) => checkTasksCollectionsQuery(collections, query)
+);
+
+export const selectTasksCollectionsByQuery = createSelector(
+  selectTasksCollectionsByReadPermission,
+  selectAllDocuments,
+  selectAllLinkTypes,
+  selectTasksQuery,
   selectConstraintData,
   (collections, documents, linkTypes, query, constraintData) =>
     filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
@@ -112,8 +141,8 @@ export const selectDocumentsByReadPermission = createSelector(
   selectAllDocuments,
   selectCollectionsByReadPermission,
   (documents, collections) => {
-    const allowedCollectionIds = collections.map(collection => collection.id);
-    return documents.filter(document => allowedCollectionIds.includes(document.collectionId));
+    const allowedCollectionIds = new Set(collections.map(collection => collection.id));
+    return documents.filter(document => allowedCollectionIds.has(document.collectionId));
   }
 );
 
@@ -199,6 +228,46 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, i
       };
     }
   );
+
+export const selectTaskDocuments = createSelector(
+  selectAllDocuments,
+  selectTasksCollectionsByReadPermission,
+  (documents, collections) => {
+    const allowedCollectionIds = new Set(collections.map(collection => collection.id));
+    return documents.filter(document => allowedCollectionIds.has(document.collectionId));
+  }
+);
+
+export const selectTasksDocumentsByQuery = createSelector(
+  selectTaskDocuments,
+  selectTasksCollectionsByQuery,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
+  selectTasksQuery,
+  selectViewSettings,
+  selectResourcesPermissions,
+  selectConstraintData,
+  (
+    documents,
+    collections,
+    linkTypes,
+    linkInstances,
+    query,
+    viewSettings,
+    permissions,
+    constraintData
+  ): DocumentModel[] =>
+    filterDocumentsAndLinksByQuery(
+      documents,
+      collections,
+      linkTypes,
+      linkInstances,
+      query,
+      permissions.collections,
+      permissions.linkTypes,
+      constraintData
+    ).documents
+);
 
 export const selectDocumentsAndLinksByQuerySorted = selectDocumentsAndLinksByCustomQuerySorted();
 
@@ -301,8 +370,8 @@ export const selectLinkTypesInQuery = createSelector(
   selectLinkTypesByReadPermission,
   selectViewQuery,
   (linkTypes, query) => {
-    const linkTypesIdsInQuery = getAllLinkTypeIdsFromQuery(query);
-    return linkTypes.filter(linkType => linkTypesIdsInQuery.includes(linkType.id));
+    const linkTypesIdsInQuery = new Set(getAllLinkTypeIdsFromQuery(query));
+    return linkTypes.filter(linkType => linkTypesIdsInQuery.has(linkType.id));
   }
 );
 

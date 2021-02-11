@@ -60,6 +60,16 @@ export class PublicSearchService extends BaseService implements SearchService {
     );
   }
 
+  public searchTaskDocumentsAndLinks(
+    query: QueryDto,
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.http.get<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+      `${this.searchPath(workspace)}/tasks`,
+      {params: {l: environment.locale}}
+    );
+  }
+
   private searchPath(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);

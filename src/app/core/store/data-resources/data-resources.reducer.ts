@@ -33,6 +33,13 @@ export function dataResourcesReducer(
         return {...state, queries: [...state.queries, action.payload.query]};
       }
       return state;
+    case DataResourcesActionType.GET_TASKS_SUCCESS:
+      const shouldAddTaskQuery =
+        action.payload.query && !state.queries.some(query => areQueriesEqual(query, action.payload.query));
+      if (shouldAddTaskQuery) {
+        return {...state, tasksQueries: [...state.queries, action.payload.query]};
+      }
+      return state;
     case DataResourcesActionType.CLEAR_QUERIES:
       if (action.payload.collectionId) {
         return {
@@ -40,9 +47,12 @@ export function dataResourcesReducer(
           queries: state.queries.filter(
             query => !query.stems?.some(stem => stem.collectionId === action.payload.collectionId)
           ),
+          tasksQueries: state.queries.filter(
+            query => !query.stems?.some(stem => stem.collectionId === action.payload.collectionId)
+          ),
         };
       }
-      return {...state, queries: []};
+      return {...state, queries: [], tasksQueries: []};
     case DataResourcesActionType.CLEAR:
       return initialDataResourcesState;
     default:

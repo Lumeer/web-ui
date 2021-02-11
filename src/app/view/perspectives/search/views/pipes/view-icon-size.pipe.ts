@@ -17,12 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum TaskPurposeFormControl {
-  Assignee = 'assignee',
-  DueDate = 'dueDate',
-  Observers = 'observers',
-  State = 'state',
-  StateList = 'stateList',
-  Priority = 'priority',
-  Tags = 'tags',
+import {Pipe, PipeTransform} from '@angular/core';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
+
+@Pipe({
+  name: 'viewIconSize',
+})
+export class ViewIconSizePipe implements PipeTransform {
+  public transform(viewSize: SizeType): string {
+    return viewSize === SizeType.XL || viewSize === SizeType.L ? 'fa-3x' : viewSize === SizeType.M ? 'fa-2x' : '';
+  }
 }

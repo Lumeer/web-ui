@@ -33,4 +33,9 @@ export abstract class SearchService {
     query: QueryDto,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>;
+
+  public abstract searchTaskDocumentsAndLinks(
+    query: QueryDto,
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>;
 }

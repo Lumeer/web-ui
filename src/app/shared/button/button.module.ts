@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum TaskPurposeFormControl {
-  Assignee = 'assignee',
-  DueDate = 'dueDate',
-  Observers = 'observers',
-  State = 'state',
-  StateList = 'stateList',
-  Priority = 'priority',
-  Tags = 'tags',
-}
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SeeMoreButtonComponent} from './see-more/see-more-button.component';
+
+@NgModule({
+  declarations: [SeeMoreButtonComponent],
+  imports: [CommonModule],
+  exports: [SeeMoreButtonComponent],
+})
+export class ButtonModule {}

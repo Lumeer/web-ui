@@ -17,12 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum TaskPurposeFormControl {
-  Assignee = 'assignee',
-  DueDate = 'dueDate',
-  Observers = 'observers',
-  State = 'state',
-  StateList = 'stateList',
-  Priority = 'priority',
-  Tags = 'tags',
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+
+@Pipe({
+  name: 'filterWritableTasksCollections',
+})
+export class FilterWritableTasksCollectionsPipe implements PipeTransform {
+  public transform(collections: Collection[], permissions: Record<string, AllowedPermissions>): Collection[] {
+    return (collections || []).filter(
+      collection =>
+        collection.purpose?.type === CollectionPurposeType.Tasks && permissions?.[collection.id]?.writeWithView
+    );
+  }
 }

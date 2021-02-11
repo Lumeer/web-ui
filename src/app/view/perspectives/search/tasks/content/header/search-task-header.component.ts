@@ -30,12 +30,12 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
 
 @Component({
-  selector: 'search-document-header',
-  templateUrl: './search-document-header.component.html',
-  styleUrls: ['./search-document-header.component.scss'],
+  selector: 'search-task-header',
+  templateUrl: './search-task-header.component.html',
+  styleUrls: ['./search-task-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchDocumentHeaderComponent implements OnChanges {
+export class SearchTaskHeaderComponent implements OnChanges {
   @Input()
   public collection: Collection;
 

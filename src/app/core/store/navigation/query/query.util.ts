@@ -25,6 +25,7 @@ import {
   conditionTypeNumberOfInputs,
   ConditionValue,
   ConstraintType,
+  UserConstraintConditionValue,
 } from '@lumeer/data-filters';
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
@@ -33,7 +34,7 @@ import {LinkType} from '../../link-types/link.type';
 import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
-import {Attribute, Collection} from '../../collections/collection';
+import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
 import {AttributesResource, AttributesResourceType} from '../../../model/resource';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
@@ -215,7 +216,7 @@ export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]
 }
 
 export function getBaseCollectionIdsFromQuery(query: Query): string[] {
-  return (query && query.stems && query.stems.map(stem => stem.collectionId)) || [];
+  return query?.stems?.map(stem => stem.collectionId) || [];
 }
 
 export function isQuerySubset(superset: Query, subset: Query): boolean {
@@ -241,6 +242,39 @@ export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boole
     isQueryFiltersSubset(superset.filters || [], subset.filters || []) &&
     isQueryLinkFiltersSubset(superset.linkFilters || [], subset.linkFilters || [])
   );
+}
+
+export function checkTasksCollectionsQuery(collections: Collection[], query: Query): Query {
+  if (queryIsEmptyExceptPagination(query)) {
+    return tasksCollectionsQuery(collections);
+  }
+  return query;
+}
+
+export function tasksCollectionsQuery(collections: Collection[]): Query {
+  const stems = collections.map(collection => tasksCollectionQueryStem(collection)).filter(stem => !!stem);
+  return {stems};
+}
+
+export function tasksCollectionQueryStem(collection: Collection): QueryStem {
+  if (collection.purpose?.type === CollectionPurposeType.Tasks) {
+    const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
+    const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
+    if (assigneeAttribute) {
+      return {
+        collectionId: collection.id,
+        filters: [
+          {
+            attributeId: assigneeAttribute.id,
+            condition: ConditionType.In,
+            collectionId: collection.id,
+            conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+          },
+        ],
+      };
+    }
+  }
+  return null;
 }
 
 function isQueryFiltersSubset(superset: CollectionAttributeFilter[], subset: CollectionAttributeFilter[]): boolean {

@@ -82,6 +82,14 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
     return this.form.get(TaskPurposeFormControl.Observers);
   }
 
+  public get priorityControl(): AbstractControl {
+    return this.form.get(TaskPurposeFormControl.Priority);
+  }
+
+  public get tagsControl(): AbstractControl {
+    return this.form.get(TaskPurposeFormControl.Tags);
+  }
+
   public ngOnInit() {
     this.resetForm();
     this.createForm();
@@ -112,6 +120,8 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
         this.stateListControl?.patchValue(metaData.finalStatesList, {emitEvent: false});
       }
       this.observersControl?.patchValue(metaData.observersAttributeId, {emitEvent: false});
+      this.tagsControl?.patchValue(metaData.tagsAttributeId, {emitEvent: false});
+      this.priorityControl?.patchValue(metaData.priorityAttributeId, {emitEvent: false});
     }
   }
 
@@ -139,6 +149,12 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
 
     const observerAttribute = findAttribute(this.collection?.attributes, metaData?.observersAttributeId);
     this.form.addControl(TaskPurposeFormControl.Observers, new FormControl(observerAttribute?.id));
+
+    const priorityAttribute = findAttribute(this.collection?.attributes, metaData?.priorityAttributeId);
+    this.form.addControl(TaskPurposeFormControl.Priority, new FormControl(priorityAttribute?.id));
+
+    const tagsAttribute = findAttribute(this.collection?.attributes, metaData?.tagsAttributeId);
+    this.form.addControl(TaskPurposeFormControl.Tags, new FormControl(tagsAttribute?.id));
   }
 
   public onStateListSave(dataValue: DataValue) {

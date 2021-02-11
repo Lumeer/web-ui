@@ -21,26 +21,28 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {SharedModule} from '../../../../shared/shared.module';
-import {SearchDocumentsComponent} from './search-documents.component';
-import {EmptyDocumentsComponent} from './content/empty-documents/empty-documents.component';
-import {SearchDocumentHeaderComponent} from './content/header/search-document-header.component';
+import {SearchTasksComponent} from './search-tasks.component';
+import {EmptyTasksComponent} from './content/empty-documents/empty-tasks.component';
+import {SearchTaskHeaderComponent} from './content/header/search-task-header.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {DataValueEntriesPipe} from './pipes/data-value-entries.pipe';
-import {SearchDocumentsContentComponent} from './content/search-documents-content.component';
-import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
+import {SearchTasksContentComponent} from './content/search-tasks-content.component';
+import {FilterWritableTasksCollectionsPipe} from './pipes/filter-writable-tasks-collections.pipe';
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
+import {SearchTasksToolbarComponent} from './content/toolbar/search-tasks-toolbar.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DataInputModule],
   declarations: [
-    SearchDocumentsComponent,
-    EmptyDocumentsComponent,
-    SearchDocumentHeaderComponent,
+    SearchTasksComponent,
+    EmptyTasksComponent,
+    SearchTaskHeaderComponent,
     IsDocumentOpenedPipe,
     DataValueEntriesPipe,
-    SearchDocumentsContentComponent,
-    FilterWritableCollectionsPipe,
+    SearchTasksContentComponent,
+    FilterWritableTasksCollectionsPipe,
+    SearchTasksToolbarComponent,
   ],
-  exports: [SearchDocumentsComponent],
+  exports: [SearchTasksComponent],
 })
-export class SearchDocumentsModule {}
+export class SearchTasksModule {}

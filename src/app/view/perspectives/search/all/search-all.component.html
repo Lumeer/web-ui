@@ -5,7 +5,15 @@
 
     <ng-container *ngIf="data.hasCollection || data.hasView || data.hasDocument; else noData">
 
+      <ng-container *ngIf="data.hasDocument">
+        <div class="h3 ml-3 my-2" i18n="@@search.all.tasks">
+          Tasks
+        </div>
+        <search-tasks [maxLines]="5"></search-tasks>
+      </ng-container>
+
       <div *ngIf="!data.hasAnyView || data.hasView">
+        <hr *ngIf="data.hasDocument">
         <div class="h3 ml-3 my-2" i18n="@@search.all.views" data-tour="search-views-label">
           Views
         </div>
@@ -26,19 +34,11 @@
 
 
       <ng-container *ngIf="data.hasCollection">
-        <hr *ngIf="data.hasView">
+        <hr *ngIf="data.hasView || data.hasDocument">
         <div class="h3 ml-3 my-2" i18n="@@search.all.collections">
           Tables
         </div>
         <post-it-collections [maxShown]="5"></post-it-collections>
-      </ng-container>
-
-      <ng-container *ngIf="data.hasDocument">
-        <hr *ngIf="data.hasView || data.hasCollection">
-        <div class="h3 ml-3 my-2" i18n="@@search.all.records">
-          Records
-        </div>
-        <search-documents [maxLines]="5"></search-documents>
       </ng-container>
 
     </ng-container>

@@ -28,11 +28,11 @@ import {select, Store} from '@ngrx/store';
 import {selectAllDocuments} from '../../../../../../core/store/documents/documents.state';
 
 @Component({
-  selector: 'empty-documents',
-  templateUrl: './empty-documents.component.html',
+  selector: 'empty-tasks',
+  templateUrl: './empty-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyDocumentsComponent implements OnInit {
+export class EmptyTasksComponent implements OnInit {
   @Input()
   public query: Query;
 

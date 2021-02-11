@@ -27,6 +27,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import {Router} from '@angular/router';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
@@ -35,15 +36,12 @@ import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {PerspectiveService} from '../../../../../core/service/perspective.service';
-import {Router} from '@angular/router';
 import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
-import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-document/create-document-modal.component';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
-import {ModalService} from '../../../../../shared/modal/modal.service';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
@@ -51,15 +49,16 @@ import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {ModalService} from '../../../../../shared/modal/modal.service';
 
 @Component({
-  selector: 'search-documents-content',
-  templateUrl: './search-documents-content.component.html',
-  styleUrls: ['./search-documents-content.component.scss'],
+  selector: 'search-tasks-content',
+  templateUrl: './search-tasks-content.component.html',
+  styleUrls: ['./search-tasks-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class SearchDocumentsContentComponent implements OnInit, OnChanges {
+export class SearchTasksContentComponent implements OnInit, OnChanges {
   @Input()
   public documents: DocumentModel[];
 
@@ -116,9 +115,7 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   }
 
   public onDetailClick(document: DocumentModel) {
-    const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
-    const cursor = collection && document && {collectionId: collection.id, documentId: document.id};
-    this.perspectiveService.switchPerspective(Perspective.Detail, cursor);
+    this.modalService.showDocumentDetail(document.id);
   }
 
   public switchPerspectiveToTable() {
@@ -146,7 +143,7 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   }
 
   public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Records], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Tasks], {
       queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
     });
   }
@@ -161,14 +158,5 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
 
   public ngOnDestroy() {
     this.toggleService.onDestroy();
-  }
-
-  public onAdd(collections: Collection[]) {
-    if (collections.length) {
-      const initialState = {collections, query: this.query, constraintData: this.constraintData};
-      const config = {initialState, keyboard: false};
-      config['backdrop'] = 'static';
-      this.modalService.show(CreateDocumentModalComponent, config);
-    }
   }
 }

@@ -11,7 +11,8 @@
                           (versionClick)="selectTab(detailTabType.Activity)">
   </document-detail-header>
 
-  <detail-tabs [showLinks]="resourceType === collectionResourceType"
+  <detail-tabs *ngIf="dataResource?.id"
+               [showLinks]="resourceType === collectionResourceType"
                [activeTab]="data.selectedTab"
                [commentsCount]="data.commentsCount"
                [linksCount]="linksCount$ | async"
