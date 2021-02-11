@@ -1313,7 +1313,7 @@
           <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.changeType" datatype="html">
-        <source>Attribute type...</source>
+        <source>Attribute settings...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">16</context>
