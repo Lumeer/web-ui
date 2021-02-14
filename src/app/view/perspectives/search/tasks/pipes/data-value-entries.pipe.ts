@@ -24,6 +24,7 @@ import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {TaskAttributes} from '../model/task-attributes';
 
 @Pipe({
   name: 'dataValueEntries',
@@ -31,28 +32,30 @@ import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/
 export class DataValueEntriesPipe implements PipeTransform {
   public transform(
     document: DocumentModel,
-    collections: Collection[],
+    collection: Collection,
+    taskAttributes: TaskAttributes,
     constraintData: ConstraintData,
     config: SearchDocumentsConfig
   ): {label?: string; attributeId: string; isDefault?: boolean; dataValue: DataValue; constraint: Constraint}[] {
-    const collection = (collections || []).find(coll => coll.id === document.collectionId);
     const expanded = config && (config.size === SizeType.XL || (config.expandedIds || []).includes(document.id));
     const defaultAttributeId = getDefaultAttributeId(collection);
-    return (collection.attributes || []).reduce((array, attribute) => {
-      const constraint: Constraint = attribute.constraint || new UnknownConstraint();
-      const dataValue = constraint.createDataValue(document.data[attribute.id], constraintData);
-      if (expanded || constraint.isDirectlyEditable || !!dataValue.format()) {
-        const label = expanded ? attribute.name : null;
-        array.push({
-          label,
-          dataValue,
-          attributeId: attribute.id,
-          constraint,
-          isDefault: defaultAttributeId === attribute.id,
-        });
-      }
+    return (collection.attributes || [])
+      .filter(attribute => !taskAttributes?.usedAttributes?.has(attribute.id))
+      .reduce((array, attribute) => {
+        const constraint: Constraint = attribute.constraint || new UnknownConstraint();
+        const dataValue = constraint.createDataValue(document.data[attribute.id], constraintData);
+        if (expanded || constraint.isDirectlyEditable || !!dataValue.format()) {
+          const label = expanded ? attribute.name : null;
+          array.push({
+            label,
+            dataValue,
+            attributeId: attribute.id,
+            constraint,
+            isDefault: defaultAttributeId === attribute.id,
+          });
+        }
 
-      return array;
-    }, []);
+        return array;
+      }, []);
   }
 }

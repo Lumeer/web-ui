@@ -229,7 +229,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     } else {
       const previousName = this.lastName$.value;
       this.lastName$.next(this.attribute?.name || previousName);
-      this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name: lastName}));
+      if (lastName !== previousName) {
+        this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name: lastName}));
+      }
     }
   }
 

@@ -30,6 +30,7 @@ import {SearchTasksContentComponent} from './content/search-tasks-content.compon
 import {FilterWritableTasksCollectionsPipe} from './pipes/filter-writable-tasks-collections.pipe';
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
 import {SearchTasksToolbarComponent} from './content/toolbar/search-tasks-toolbar.component';
+import {CollectionsTaskAttributesPipe} from './pipes/collections-task-attributes.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DataInputModule],
@@ -42,6 +43,7 @@ import {SearchTasksToolbarComponent} from './content/toolbar/search-tasks-toolba
     SearchTasksContentComponent,
     FilterWritableTasksCollectionsPipe,
     SearchTasksToolbarComponent,
+    CollectionsTaskAttributesPipe,
   ],
   exports: [SearchTasksComponent],
 })

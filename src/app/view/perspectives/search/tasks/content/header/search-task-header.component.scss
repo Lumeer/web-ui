@@ -1,33 +1,31 @@
 :host {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
 
   .bigger-icon {
     font-size: 200%;
     margin-top: 0.25em;
     margin-right: 0.5rem;
   }
-}
 
-:host:hover {
-  .hiding-icon {
-    opacity: 1;
+  .chevron {
+    grid-row: 1 / 4;
+  }
+
+  .collection-icon {
+    grid-row: 1 / 4;
   }
 }
 
-.hiding-icon {
-  opacity: 0;
-}
-
-.always-visible {
-  opacity: 1 !important;
+.first-line-element {
+  line-height: 1.4rem;
 }
 
 .data-input-preview {
   line-height: 1.4rem;
 
   &.small-size {
-    max-height: 1.4rem;
+    max-height: 2.8rem;
   }
 
   &:not(.small-size) {

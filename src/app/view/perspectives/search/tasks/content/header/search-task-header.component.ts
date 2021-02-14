@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ResourceType} from '../../../../../../core/model/resource-type';
 
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Role} from '../../../../../../core/model/role';
-import {findAttributeConstraint, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {Constraint, ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData} from '@lumeer/data-filters';
+import {TaskAttributes} from '../../model/task-attributes';
 
 @Component({
   selector: 'search-task-header',
@@ -35,7 +35,7 @@ import {Constraint, ConstraintData} from '@lumeer/data-filters';
   styleUrls: ['./search-task-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTaskHeaderComponent implements OnChanges {
+export class SearchTaskHeaderComponent {
   @Input()
   public collection: Collection;
 
@@ -54,6 +54,12 @@ export class SearchTaskHeaderComponent implements OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
+  @Input()
+  public attributes: TaskAttributes;
+
+  @Input()
+  public hideIcons: boolean;
+
   @Output()
   public detail = new EventEmitter();
 
@@ -64,19 +70,6 @@ export class SearchTaskHeaderComponent implements OnChanges {
   public readonly sizeType = SizeType;
   public readonly readRole = Role.Read;
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
-
-  public defaultAttributeId: string;
-  public defaultConstraint: Constraint;
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.defaultAttributeId = getDefaultAttributeId(this.collection);
-      this.defaultConstraint = findAttributeConstraint(
-        this.collection && this.collection.attributes,
-        this.defaultAttributeId
-      );
-    }
-  }
 
   public onDetail() {
     this.detail.emit();

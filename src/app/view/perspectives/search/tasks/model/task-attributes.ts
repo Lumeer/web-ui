@@ -17,19 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
-import {SizeType} from '../../../../../shared/slider/size/size-type';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
-@Pipe({
-  name: 'isDocumentOpened',
-})
-export class IsDocumentOpenedPipe implements PipeTransform {
-  public transform(document: DocumentModel, config: SearchDocumentsConfig): boolean {
-    if (config?.size === SizeType.XL) {
-      return true;
-    }
-    return config?.expandedIds?.includes(document.id);
-  }
+export interface TaskAttributes {
+  title?: Attribute;
+  assignee?: Attribute;
+  dueDate?: Attribute;
+  tags?: Attribute;
+  priority?: Attribute;
+  usedAttributes?: Set<string>;
 }

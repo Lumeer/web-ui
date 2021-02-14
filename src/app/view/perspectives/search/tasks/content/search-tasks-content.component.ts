@@ -50,6 +50,7 @@ import {select, Store} from '@ngrx/store';
 import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {ModalService} from '../../../../../shared/modal/modal.service';
+import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'search-tasks-content',
@@ -92,6 +93,8 @@ export class SearchTasksContentComponent implements OnInit, OnChanges {
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly sizeType = SizeType;
   public currentSize: SizeType;
+  public truncateContent: boolean;
+  public collectionsMap: Record<string, Collection>;
 
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
@@ -112,6 +115,12 @@ export class SearchTasksContentComponent implements OnInit, OnChanges {
     if (changes.config) {
       this.currentSize = this.config?.size || defaultSizeType;
     }
+    if (changes.collections) {
+      this.collectionsMap = objectsByIdMap(this.collections);
+    }
+    if (changes.documents || changes.maxDocuments) {
+      this.truncateContent = this.maxDocuments > 0 && this.maxDocuments < this.documents?.length;
+    }
   }
 
   public onDetailClick(document: DocumentModel) {
@@ -124,6 +133,10 @@ export class SearchTasksContentComponent implements OnInit, OnChanges {
 
   public trackByDocument(index: number, document: DocumentModel): string {
     return document.id;
+  }
+
+  public trackByEntry(index: number, entry: {attributeId: string}): string {
+    return entry.attributeId;
   }
 
   public onSizeChange(size: SizeType) {

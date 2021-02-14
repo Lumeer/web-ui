@@ -1,38 +1,77 @@
-<div>
-  <i class="fa fa-fw text-primary clickable"
-     [ngClass]="isOpened ? 'fa-caret-down':'fa-caret-right'"
-     aria-hidden="true"></i>
-</div>
+<i class="fa fa-fw text-primary clickable chevron first-line-element"
+   [ngClass]="isOpened ? 'fa-caret-down' : 'fa-caret-right'"
+   aria-hidden="true">
+</i>
 
-<div>
-  <i class="{{collection?.icon}} fa-fw"
-     [class.bigger-icon]="size !== sizeType.S || isOpened"
-     [style.color]="collection?.color"
-     *ngIf="collection" aria-hidden="true"></i>
-</div>
+<i class="{{collection?.icon}} fa-fw collection-icon mr-2 first-line-element"
+   [title]="collection?.name"
+   [class.bigger-icon]="size == sizeType.M || size === sizeType.L || isOpened"
+   [style.color]="collection?.color" aria-hidden="true">
+</i>
 
-<div class="ml-1 flex-grow-1">
-  <div class="d-flex flex-row">
-    <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
-    <data-input-preview class="ml-3 data-input-preview text-truncate"
+<div class="d-flex flex-row first-line-element align-items-center">
+  <span class="mr-3 align-self-start" *ngIf="collection && (size === sizeType.L || size === sizeType.XL || isOpened)"
+        [style.color]="collection?.color">{{collection?.name}}</span>
+  <ng-container
+    *ngIf="(document.data && document.data[attributes.title.id]) | dataValue:attributes?.title?.constraint: constraintData as titleDataValue">
+    <data-input-preview class="data-input-preview text-truncate font-weight-bold"
+                        *ngIf="titleDataValue | formatDataValue; else emptyTitle"
                         [class.small-size]="size === sizeType.S || size === sizeType.M"
-                        [constraint]="defaultConstraint"
-                        [cursor]="document | dataCursor:defaultAttributeId"
+                        [constraint]="attributes.title.constraint"
+                        [cursor]="document | dataCursor:attributes.title.id"
                         [configuration]="configuration"
-                        [dataValue]="(defaultAttributeId && document?.data && document?.data[defaultAttributeId]) | dataValue:defaultConstraint: constraintData">
+                        [dataValue]="titleDataValue">
     </data-input-preview>
-    <div class="ml-auto text-nowrap" *ngIf="permissions?.read">
-      <span class="clickable ml-2 hiding-icon"
+  </ng-container>
+
+  <div class="d-flex align-items-center flex-nowrap ml-auto">
+    <data-input-preview class=" data-input-preview text-truncate"
+                        *ngIf="attributes?.priority && document?.data"
+                        [constraint]="attributes.priority.constraint"
+                        [cursor]="document | dataCursor:attributes.priority.id"
+                        [configuration]="configuration"
+                        [dataValue]="document.data[attributes.priority.id] | dataValue:attributes.priority.constraint: constraintData">
+    </data-input-preview>
+    <ng-container *ngIf="permissions?.read && !hideIcons">
+      <span class="clickable ml-2"
             (click)="$event.stopPropagation(); onToggleFavorite()"
             title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
-            [class.always-visible]="document.favorite"
             i18n-title="@@document.favorite">
-        <i class="fa-star text-warning" [ngClass]="document.favorite ? 'fas' : 'far'" aria-hidden="true"></i>
+        <i class="fa-star text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
       </span>
       <span class="clickable ml-2"
             (click)="onDetail()"><i class="fas fa-file-search" aria-hidden="true"></i>
       </span>
-    </div>
+    </ng-container>
   </div>
-  <ng-content></ng-content>
 </div>
+
+<div class="d-flex flex-row flex-wrap pt-2 text-truncate" [class.pb-2]="size !== sizeType.S">
+  <data-input-preview class="data-input-preview text-truncate mr-3 py-1"
+                      *ngIf="attributes?.assignee?.id && document?.data"
+                      [constraint]="attributes.assignee.constraint"
+                      [cursor]="document | dataCursor:attributes?.assignee?.id"
+                      [configuration]="configuration"
+                      [dataValue]="document.data[attributes.assignee.id] | dataValue:attributes.assignee.constraint: constraintData">
+  </data-input-preview>
+  <data-input-preview class="data-input-preview text-truncate mr-3 py-1"
+                      *ngIf="attributes?.dueDate?.id && document?.data"
+                      [constraint]="attributes.dueDate.constraint"
+                      [cursor]="document | dataCursor:attributes.dueDate.id"
+                      [configuration]="configuration"
+                      [dataValue]="document.data[attributes.dueDate.id] | dataValue:attributes.dueDate.constraint: constraintData">
+  </data-input-preview>
+  <data-input-preview class="data-input-preview text-truncate ml-auto py-1"
+                      *ngIf="attributes?.tags?.id && document?.data"
+                      [constraint]="attributes.tags.constraint"
+                      [cursor]="document | dataCursor:attributes.tags.id"
+                      [configuration]="configuration"
+                      [dataValue]="document.data[attributes.tags.id] | dataValue:attributes.tags.constraint: constraintData">
+  </data-input-preview>
+</div>
+
+<ng-template #emptyTitle>
+  <div class="text-muted font-italic" i18n="@@tasks.empty.title">Empty title</div>
+</ng-template>
+
+<ng-content></ng-content>
