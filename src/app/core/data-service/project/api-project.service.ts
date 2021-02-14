@@ -69,6 +69,14 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     );
   }
 
+  public createSampleData(organizationId: string, projectId: string, type: string): Observable<any> {
+    return this.httpClient.post(
+      `${this.baseApiPrefix(organizationId)}/${projectId}/sample/${type}`,
+      {},
+      {params: {l: environment.locale}}
+    );
+  }
+
   public copyProject(
     organizationId: string,
     projectId: string,

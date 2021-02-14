@@ -22,7 +22,7 @@ import {CommonModule} from '@angular/common';
 
 import {SharedModule} from '../../../../shared/shared.module';
 import {SearchTasksComponent} from './search-tasks.component';
-import {EmptyTasksComponent} from './content/empty-documents/empty-tasks.component';
+import {EmptyTasksComponent} from './content/empty/empty-tasks.component';
 import {SearchTaskHeaderComponent} from './content/header/search-task-header.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {DataValueEntriesPipe} from './pipes/data-value-entries.pipe';
@@ -31,6 +31,10 @@ import {FilterWritableTasksCollectionsPipe} from './pipes/filter-writable-tasks-
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
 import {SearchTasksToolbarComponent} from './content/toolbar/search-tasks-toolbar.component';
 import {CollectionsTaskAttributesPipe} from './pipes/collections-task-attributes.pipe';
+import {EmptyTasksQueryComponent} from './content/empty/query/empty-tasks-query.component';
+import {EmptyTasksSearchComponent} from './content/empty/search/empty-tasks-search.component';
+import {EmptyTasksCollectionsComponent} from './content/empty/collections/empty-tasks-collections.component';
+import {EmptyTasksCollectionsWithoutRightsComponent} from './content/empty/collections-without-rights/empty-tasks-collections-without-rights.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DataInputModule],
@@ -44,6 +48,10 @@ import {CollectionsTaskAttributesPipe} from './pipes/collections-task-attributes
     FilterWritableTasksCollectionsPipe,
     SearchTasksToolbarComponent,
     CollectionsTaskAttributesPipe,
+    EmptyTasksQueryComponent,
+    EmptyTasksSearchComponent,
+    EmptyTasksCollectionsComponent,
+    EmptyTasksCollectionsWithoutRightsComponent,
   ],
   exports: [SearchTasksComponent],
 })

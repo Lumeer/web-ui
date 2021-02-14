@@ -43,6 +43,10 @@ export const initialDocumentsState: DocumentsState = documentsAdapter.getInitial
 export const selectDocumentsState = (state: AppState) => state.documents;
 
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
+export const selectAllDocumentsCount = createSelector(
+  selectDocumentsState,
+  documentsAdapter.getSelectors().selectTotal
+);
 export const selectDocumentsDictionary = createSelector(
   selectDocumentsState,
   documentsAdapter.getSelectors().selectEntities

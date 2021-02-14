@@ -34,7 +34,7 @@ import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../.
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
-import {sortDocumentsByFavoriteAndLastUsed} from '../../../../core/store/documents/document.utils';
+import {sortDocumentsByFavoriteAndLastUsed, sortDocumentsTasks} from '../../../../core/store/documents/document.utils';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -102,7 +102,7 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
     const pageObservable = this.page$.asObservable();
     return this.store$.pipe(
       select(selectTasksDocumentsByQuery),
-      map(documents => sortDocumentsByFavoriteAndLastUsed(documents)),
+      mergeMap(documents => this.collections$.pipe(map(collections => sortDocumentsTasks(documents, collections)))),
       mergeMap(documents =>
         pageObservable.pipe(
           map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1))),

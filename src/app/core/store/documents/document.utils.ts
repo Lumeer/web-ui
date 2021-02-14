@@ -22,7 +22,7 @@ import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navig
 import {DocumentModel} from './document.model';
 import {findAttribute} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {
@@ -30,6 +30,9 @@ import {
   conditionTypeNumberOfInputs,
   Constraint,
   ConstraintData,
+  ConstraintType,
+  DataValue,
+  DateTimeConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 
@@ -42,20 +45,89 @@ export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc
 
 export function sortDocumentsByFavoriteAndLastUsed(documents: DocumentModel[]): DocumentModel[] {
   return [...documents].sort((a, b) => {
-    const aLastUsed = a.updateDate || a.creationDate;
-    const bLastUsed = b.updateDate || b.creationDate;
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      if (aLastUsed && bLastUsed) {
-        return bLastUsed.getTime() - aLastUsed.getTime();
-      } else if (aLastUsed && !bLastUsed) {
-        return -1;
-      } else if (bLastUsed && !aLastUsed) {
-        return 1;
+      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
+      if (isNotNullOrUndefined(datesCompare)) {
+        return datesCompare;
       }
       return b.id.localeCompare(a.id);
     }
     return a.favorite ? -1 : 1;
   });
+}
+
+function compareDocumentsDates(date1: Date, date2: Date): number {
+  if (date1 && date2) {
+    return date2.getTime() - date1.getTime();
+  } else if (date1 && !date2) {
+    return -1;
+  } else if (date2 && !date1) {
+    return 1;
+  }
+  return null;
+}
+
+export function sortDocumentsTasks(documents: DocumentModel[], collections: Collection[]): DocumentModel[] {
+  const collectionsMap = objectsByIdMap(collections);
+  return [...documents].sort((a, b) => {
+    if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
+      const dueDateCompare = compareDataValues(
+        getDocumentDueDateDataValue(a, collectionsMap),
+        getDocumentDueDateDataValue(b, collectionsMap)
+      );
+      if (isNotNullOrUndefined(dueDateCompare)) {
+        return dueDateCompare;
+      }
+
+      const priorityCompare = compareDataValues(
+        getDocumentPriorityDataValue(a, collectionsMap),
+        getDocumentPriorityDataValue(b, collectionsMap)
+      );
+      if (isNotNullOrUndefined(priorityCompare)) {
+        return priorityCompare;
+      }
+
+      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
+      if (isNotNullOrUndefined(datesCompare)) {
+        return datesCompare;
+      }
+      return b.id.localeCompare(a.id);
+    }
+    return a.favorite ? -1 : 1;
+  });
+}
+
+export function getDocumentDueDateDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>
+): DataValue {
+  const collection = collectionsMap?.[document.collectionId];
+  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.dueDateAttributeId);
+  if (attribute?.constraint?.type === ConstraintType.DateTime) {
+    const constraint = <DateTimeConstraint>attribute.constraint;
+    return constraint.createDataValue(document?.data?.[attribute.id]);
+  }
+  return null;
+}
+
+export function getDocumentPriorityDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>
+): DataValue {
+  const collection = collectionsMap?.[document.collectionId];
+  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.priorityAttributeId);
+  return attribute?.constraint?.createDataValue(document?.data?.[attribute.id]);
+}
+
+function compareDataValues(dv1: DataValue, dv2: DataValue): number {
+  if (dv1 && dv2) {
+    return dv1.compareTo(dv2) * -1;
+  } else if (dv1 && !dv2) {
+    return -1;
+  } else if (dv2 && !dv1) {
+    return 1;
+  }
+  return null;
 }
 
 export function mergeDocuments(documentsA: DocumentModel[], documentsB: DocumentModel[]): DocumentModel[] {

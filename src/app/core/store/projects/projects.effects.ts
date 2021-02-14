@@ -61,6 +61,7 @@ import {OrganizationsAction} from '../organizations/organizations.action';
 import {WorkflowsAction} from '../workflows/workflows.action';
 import {DataResourcesAction} from '../data-resources/data-resources.action';
 import {UserPermissionsAction} from '../user-permissions/user-permissions.action';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
 
 @Injectable()
 export class ProjectsEffects {
@@ -386,6 +387,19 @@ export class ProjectsEffects {
         value: 'Could not add template to project',
       });
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public createSampleData$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.CreateSampleData>(ProjectsActionType.CREATE_SAMPLE_DATA),
+    withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+    mergeMap(([action, workspaceIds]) => {
+      const {type, errorMessage, onError} = action.payload;
+      return this.projectService.createSampleData(workspaceIds?.organizationId, workspaceIds?.projectId, type).pipe(
+        mergeMap(() => EMPTY),
+        catchError(() => of(new NotificationsAction.Error({message: errorMessage}), ...createCallbackActions(onError)))
+      );
     })
   );
 

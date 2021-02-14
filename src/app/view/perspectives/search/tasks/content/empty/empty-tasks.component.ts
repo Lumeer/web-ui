@@ -25,7 +25,9 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectAllDocuments} from '../../../../../../core/store/documents/documents.state';
+import {selectAllDocuments, selectAllDocumentsCount} from '../../../../../../core/store/documents/documents.state';
+import {selectProjectPermissions} from '../../../../../../core/store/user-permissions/user-permissions.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'empty-tasks',
@@ -42,12 +44,17 @@ export class EmptyTasksComponent implements OnInit {
   @Output()
   public tablePerspective = new EventEmitter();
 
-  public allDocuments$: Observable<DocumentModel[]>;
+  public documentsCount$: Observable<number>;
+  public hasWritePermission$: Observable<boolean>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.allDocuments$ = this.store$.pipe(select(selectAllDocuments));
+    this.documentsCount$ = this.store$.pipe(select(selectAllDocumentsCount));
+    this.hasWritePermission$ = this.store$.pipe(
+      select(selectProjectPermissions),
+      map(permissions => permissions?.write)
+    );
   }
 
   public onSwitchToTablePerspective() {
