@@ -12,12 +12,11 @@
 .detail {
   &.card {
     border: $card-border-width solid transparent;
+    box-shadow: $shadow-light;
 
     &:hover {
       border: $card-border-width solid $card-border-color;
       box-shadow: $shadow-default;
-      -webkit-box-shadow: $shadow-default;
-      -moz-box-shadow: $shadow-default;
     }
 
     .title {

@@ -9,7 +9,7 @@
   <div class="pt-2 pb-5" *ngIf="documents?.length; else noDocuments">
 
     <search-task-header
-      class="detail card px-2 py-3 mb-1 position-relative"
+      class="detail card px-1 py-2 mb-3 position-relative"
       *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index"
       [size]="currentSize"
       [document]="document"
@@ -41,7 +41,7 @@
         </ng-container>
       </div>
 
-      <div *ngIf="truncateContent" class="document-background"
+      <div *ngIf="truncateContent && index >= maxDocuments - 2" class="document-background"
            [class.last]="index === maxDocuments - 1"
            [class.second-last]="index === maxDocuments - 2"></div>
 

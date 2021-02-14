@@ -40,13 +40,13 @@
         <i class="fa-star text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
       </span>
       <span class="clickable ml-2"
-            (click)="onDetail()"><i class="fas fa-file-search" aria-hidden="true"></i>
+            (click)="$event.stopPropagation(); onDetail()"><i class="fas fa-file-search" aria-hidden="true"></i>
       </span>
     </ng-container>
   </div>
 </div>
 
-<div class="d-flex flex-row flex-wrap pt-2 text-truncate" [class.pb-2]="size !== sizeType.S">
+<div class="d-flex flex-row flex-wrap text-truncate second-line" [class.pb-2]="size !== sizeType.S">
   <data-input-preview class="data-input-preview text-truncate mr-3 py-1"
                       *ngIf="attributes?.assignee?.id && document?.data"
                       [constraint]="attributes.assignee.constraint"
