@@ -69,7 +69,10 @@ export class SearchTaskHeaderComponent {
   public readonly collectionType = ResourceType.Collection;
   public readonly sizeType = SizeType;
   public readonly readRole = Role.Read;
-  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
+  public readonly configuration: DataInputConfiguration = {
+    color: {limitWidth: true},
+    user: {allowCenterOnlyIcon: true},
+  };
 
   public onDetail() {
     this.detail.emit();

@@ -6,54 +6,61 @@
                         (sizeChange)="onSizeChange($event)">
   </search-tasks-toolbar>
 
-  <div class="pt-2 pb-5" *ngIf="documents?.length; else noDocuments">
+  <div class="mt-4 pt-2 pb-5" *ngIf="documents?.length; else noDocuments">
 
-    <search-task-header
-      class="detail card px-1 py-2 mb-3 position-relative"
-      *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index"
-      [size]="currentSize"
-      [document]="document"
-      [permissions]="data.permissions && data.permissions[document.collectionId]"
-      [isOpened]="document | isDocumentOpened:config"
-      [collection]="collectionsMap[document.collectionId]"
-      [attributes]="data.taskAttributes[document.collectionId]"
-      [constraintData]="constraintData"
-      [hideIcons]="truncateContent && index >= maxDocuments - 2"
-      (toggleFavorite)="onFavoriteToggle(document)"
-      (click)="toggleDocument(document)"
-      (detail)="onDetailClick(document)">
+    <div class="card">
 
-      <div class="d-flex flex-row flex-wrap align-items-center"
-           *ngIf="currentSize !== sizeType.S || (document | isDocumentOpened:config)">
-        <ng-container
-          *ngFor="let entry of document | dataValueEntries:collectionsMap[document.collectionId]:data.taskAttributes[document.collectionId]:constraintData:config; let first = first;trackBy: trackByEntry">
-          <span class="mt-1" *ngIf="!first">,&nbsp;</span>
-          <span *ngIf="entry.label"
-                class="text-attribute text-nowrap mt-1"
-                [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
-          <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
-                              [class.small-size]="currentSize === sizeType.M"
-                              [dataValue]="entry.dataValue"
-                              [cursor]="document | dataCursor:entry.attributeId"
-                              [configuration]="configuration"
-                              [constraint]="entry.constraint">
-          </data-input-preview>
-        </ng-container>
+      <search-task-header
+        class="detail px-1 py-2 position-relative"
+        *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let lst = last"
+        [class.border-bottom]="!lst"
+        [size]="currentSize"
+        [document]="document"
+        [permissions]="data.permissions && data.permissions[document.collectionId]"
+        [isOpened]="document | isDocumentOpened:config"
+        [collection]="collectionsMap[document.collectionId]"
+        [attributes]="data.taskAttributes[document.collectionId]"
+        [constraintData]="constraintData"
+        [hideIcons]="truncateContent && index >= maxDocuments - 2"
+        (toggleFavorite)="onFavoriteToggle(document)"
+        (click)="toggleDocument(document)"
+        (detail)="onDetailClick(document)">
+
+        <div class="d-flex flex-row flex-wrap align-items-center"
+             *ngIf="currentSize !== sizeType.S || (document | isDocumentOpened:config)">
+          <ng-container
+            *ngFor="let entry of document | dataValueEntries:collectionsMap[document.collectionId]:data.taskAttributes[document.collectionId]:constraintData:config; let first = first;trackBy: trackByEntry">
+            <span class="mt-1" *ngIf="!first">,&nbsp;</span>
+            <span *ngIf="entry.label"
+                  class="text-attribute text-nowrap mt-1"
+                  [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
+            <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
+                                [class.small-size]="currentSize === sizeType.M"
+                                [dataValue]="entry.dataValue"
+                                [cursor]="document | dataCursor:entry.attributeId"
+                                [configuration]="configuration"
+                                [constraint]="entry.constraint">
+            </data-input-preview>
+          </ng-container>
+        </div>
+
+        <div *ngIf="truncateContent && index >= maxDocuments - 2" class="document-background"
+             [class.last]="index === maxDocuments - 1"
+             [class.second-last]="index === maxDocuments - 2"></div>
+
+      </search-task-header>
+
+
+      <div class="d-flex flex-nowrap align-items-center" *ngIf="truncateContent">
+        <i class="fa fa-fw fa-none" aria-hidden="true"></i>
+        <i class="fa fa-fw fa-none align-self-center mr-3"
+           [class.bigger-icon]="currentSize == sizeType.M || currentSize === sizeType.L" aria-hidden="true">
+        </i>
+        <see-more-button (clicked)="onShowAll()"></see-more-button>
       </div>
 
-      <div *ngIf="truncateContent && index >= maxDocuments - 2" class="document-background"
-           [class.last]="index === maxDocuments - 1"
-           [class.second-last]="index === maxDocuments - 2"></div>
-
-    </search-task-header>
-
-    <div class="d-flex flex-nowrap align-items-center" *ngIf="truncateContent">
-      <i class="fa fa-fw fa-none" aria-hidden="true"></i>
-      <i class="fa fa-fw fa-none align-self-center mr-3"
-         [class.bigger-icon]="currentSize == sizeType.M || currentSize === sizeType.L" aria-hidden="true">
-      </i>
-      <see-more-button (clicked)="onShowAll()"></see-more-button>
     </div>
+
   </div>
 </ng-container>
 
