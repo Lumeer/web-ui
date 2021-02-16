@@ -29,7 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Router} from '@angular/router';
-import {defaultSizeType, SearchViewsConfig} from '../../../../../core/store/searches/search';
+import {checkSizeType, SearchViewsConfig} from '../../../../../core/store/searches/search';
 import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {Query} from '../../../../../core/store/navigation/query/query';
@@ -76,8 +76,7 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
   @Output()
   public deleteView = new EventEmitter<View>();
 
-  public readonly defaultSizeType = defaultSizeType;
-
+  public currentSize: SizeType;
   public truncateContent: boolean;
 
   constructor(private router: Router, private toggleService: ViewFavoriteToggleService) {}
@@ -87,6 +86,9 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.config) {
+      this.currentSize = checkSizeType(this.config?.size);
+    }
     if (changes.views || changes.maxViews) {
       this.truncateContent = this.maxViews > 0 && this.maxViews < this.views?.length;
     }

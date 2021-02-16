@@ -18,19 +18,19 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
-  OnInit,
+  Input,
   OnChanges,
+  OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {checkSizeType, defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
@@ -113,7 +113,7 @@ export class SearchTasksContentComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
-      this.currentSize = this.config?.size || defaultSizeType;
+      this.currentSize = checkSizeType(this.config?.size);
     }
     if (changes.collections) {
       this.collectionsMap = objectsByIdMap(this.collections);

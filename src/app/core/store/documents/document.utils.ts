@@ -46,7 +46,7 @@ export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc
 export function sortDocumentsByFavoriteAndLastUsed(documents: DocumentModel[]): DocumentModel[] {
   return [...documents].sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
+      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate, true);
       if (isNotNullOrUndefined(datesCompare)) {
         return datesCompare;
       }
@@ -56,13 +56,14 @@ export function sortDocumentsByFavoriteAndLastUsed(documents: DocumentModel[]): 
   });
 }
 
-function compareDocumentsDates(date1: Date, date2: Date): number {
+function compareDocumentsDates(date1: Date, date2: Date, sortDesc?: boolean): number {
+  const multiplier = sortDesc ? -1 : 1;
   if (date1 && date2) {
-    return date2.getTime() - date1.getTime();
+    return (date1.getTime() - date2.getTime()) * multiplier;
   } else if (date1 && !date2) {
-    return -1;
+    return multiplier;
   } else if (date2 && !date1) {
-    return 1;
+    return -multiplier;
   }
   return null;
 }
@@ -91,7 +92,7 @@ export function sortDocumentsTasks(documents: DocumentModel[], collections: Coll
       if (isNotNullOrUndefined(datesCompare)) {
         return datesCompare;
       }
-      return b.id.localeCompare(a.id);
+      return a.id.localeCompare(b.id);
     }
     return a.favorite ? -1 : 1;
   });
@@ -121,11 +122,11 @@ export function getDocumentPriorityDataValue(
 
 function compareDataValues(dv1: DataValue, dv2: DataValue): number {
   if (dv1 && dv2) {
-    return dv1.compareTo(dv2) * -1;
+    return dv1.compareTo(dv2);
   } else if (dv1 && !dv2) {
-    return -1;
-  } else if (dv2 && !dv1) {
     return 1;
+  } else if (dv2 && !dv1) {
+    return -1;
   }
   return null;
 }

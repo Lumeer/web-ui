@@ -28,25 +28,20 @@
   transition: box-shadow $animation-duration;
 }
 
+.border-bottom {
+  border-bottom-color: $table-border-color !important;
+}
+
 i.align-sub:before {
   vertical-align: sub;
 }
 
 .data-input-preview {
   line-height: 1.4rem;
-
-  &.small-size {
-    max-height: 2.8rem;
-  }
-
-  &:not(.small-size) {
-    max-height: 4.2rem;
-  }
 }
 
 .bigger-icon {
-  font-size: 200%;
-  margin-right: 0.5rem;
+  font-size: 150%;
 }
 
 .document-background {

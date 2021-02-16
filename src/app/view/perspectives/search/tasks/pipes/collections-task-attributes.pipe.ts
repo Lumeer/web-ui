@@ -36,6 +36,7 @@ export class CollectionsTaskAttributesPipe implements PipeTransform {
           dueDate: findAttribute(collection.attributes, collection.purpose.metaData.dueDateAttributeId),
           priority: findAttribute(collection.attributes, collection.purpose.metaData.priorityAttributeId),
           tags: findAttribute(collection.attributes, collection.purpose.metaData.tagsAttributeId),
+          state: findAttribute(collection.attributes, collection.purpose.metaData.stateAttributeId),
         };
         const usedAttributes = [
           taskAttributes.title?.id,
@@ -43,6 +44,7 @@ export class CollectionsTaskAttributesPipe implements PipeTransform {
           taskAttributes.dueDate?.id,
           taskAttributes.priority?.id,
           taskAttributes.tags?.id,
+          taskAttributes.state?.id,
         ].filter(attributeId => !!attributeId);
 
         taskAttributes.usedAttributes = new Set(usedAttributes);

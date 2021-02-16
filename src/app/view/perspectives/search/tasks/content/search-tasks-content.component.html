@@ -12,8 +12,9 @@
 
       <search-task-header
         class="detail px-1 py-2 position-relative"
-        *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let lst = last"
-        [class.border-bottom]="!lst"
+        *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let last = last"
+        [class.border-bottom]="truncateContent || !last"
+        [class.light]="truncateContent && last"
         [size]="currentSize"
         [document]="document"
         [permissions]="data.permissions && data.permissions[document.collectionId]"
@@ -21,13 +22,12 @@
         [collection]="collectionsMap[document.collectionId]"
         [attributes]="data.taskAttributes[document.collectionId]"
         [constraintData]="constraintData"
-        [hideIcons]="truncateContent && index >= maxDocuments - 2"
         (toggleFavorite)="onFavoriteToggle(document)"
         (click)="toggleDocument(document)"
         (detail)="onDetailClick(document)">
 
         <div class="d-flex flex-row flex-wrap align-items-center"
-             *ngIf="currentSize !== sizeType.S || (document | isDocumentOpened:config)">
+             *ngIf="currentSize === sizeType.L || (document | isDocumentOpened:config)">
           <ng-container
             *ngFor="let entry of document | dataValueEntries:collectionsMap[document.collectionId]:data.taskAttributes[document.collectionId]:constraintData:config; let first = first;trackBy: trackByEntry">
             <span class="mt-1" *ngIf="!first">,&nbsp;</span>
@@ -35,7 +35,6 @@
                   class="text-attribute text-nowrap mt-1"
                   [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
             <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
-                                [class.small-size]="currentSize === sizeType.M"
                                 [dataValue]="entry.dataValue"
                                 [cursor]="document | dataCursor:entry.attributeId"
                                 [configuration]="configuration"
@@ -51,10 +50,12 @@
       </search-task-header>
 
 
-      <div class="d-flex flex-nowrap align-items-center" *ngIf="truncateContent">
-        <i class="fa fa-fw fa-none" aria-hidden="true"></i>
-        <i class="fa fa-fw fa-none align-self-center mr-3"
-           [class.bigger-icon]="currentSize == sizeType.M || currentSize === sizeType.L" aria-hidden="true">
+      <div class="d-flex flex-nowrap align-items-center p-1" *ngIf="truncateContent">
+        <i *ngIf="currentSize !== sizeType.L" class="fa fa-fw fa-none" aria-hidden="true"></i>
+        <i class="fa fa-fw fa-none align-self-center mr-2"
+           [class.ml-2]="currentSize === sizeType.L"
+           [ngClass]="currentSize === sizeType.M || currentSize === sizeType.L ? 'fa-2x' : 'bigger-icon'"
+           aria-hidden="true">
         </i>
         <see-more-button (clicked)="onShowAll()"></see-more-button>
       </div>

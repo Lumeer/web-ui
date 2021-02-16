@@ -39,7 +39,6 @@ export class SizeSliderComponent {
     {id: SizeType.S, title: 'S'},
     {id: SizeType.M, title: 'M'},
     {id: SizeType.L, title: 'L'},
-    {id: SizeType.XL, title: 'XL'},
   ];
 
   public onNewItem(item: SliderItem) {

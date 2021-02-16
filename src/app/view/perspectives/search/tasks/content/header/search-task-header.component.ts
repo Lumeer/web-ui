@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ResourceType} from '../../../../../../core/model/resource-type';
 
 import {Collection} from '../../../../../../core/store/collections/collection';
@@ -35,7 +35,7 @@ import {TaskAttributes} from '../../model/task-attributes';
   styleUrls: ['./search-task-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTaskHeaderComponent {
+export class SearchTaskHeaderComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
@@ -57,9 +57,6 @@ export class SearchTaskHeaderComponent {
   @Input()
   public attributes: TaskAttributes;
 
-  @Input()
-  public hideIcons: boolean;
-
   @Output()
   public detail = new EventEmitter();
 
@@ -71,8 +68,20 @@ export class SearchTaskHeaderComponent {
   public readonly readRole = Role.Read;
   public readonly configuration: DataInputConfiguration = {
     color: {limitWidth: true},
-    user: {allowCenterOnlyIcon: true},
+    user: {allowCenterOnlyIcon: true, onlyIcon: true},
   };
+
+  public small: boolean;
+  public medium: boolean;
+  public large: boolean;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.size || changes.isOpened) {
+      this.small = this.size === SizeType.S;
+      this.medium = this.size === SizeType.M;
+      this.large = this.size === SizeType.L || this.size === SizeType.XL || this.isOpened;
+    }
+  }
 
   public onDetail() {
     this.detail.emit();

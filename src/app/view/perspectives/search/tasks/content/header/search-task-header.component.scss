@@ -1,12 +1,9 @@
 :host {
   display: grid;
   grid-template-columns: auto auto 1fr;
-  align-items: center;
 
   .bigger-icon {
-    font-size: 200%;
-    margin-top: 0.25em;
-    margin-right: 0.5rem;
+    font-size: 150%;
   }
 
   .chevron {
@@ -22,18 +19,6 @@
   line-height: 1.4rem;
 }
 
-.second-line {
-  zoom: 0.8;
-}
-
 .data-input-preview {
   line-height: 1.4rem;
-
-  &.small-size {
-    max-height: 2.8rem;
-  }
-
-  &:not(.small-size) {
-    max-height: 4.2rem;
-  }
 }

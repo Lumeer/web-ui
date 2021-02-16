@@ -93,6 +93,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public users: User[];
   public selectedUsers$ = new BehaviorSubject<User[]>([]);
   public multi: boolean;
+  public onlyIcon: boolean;
 
   private setFocus: boolean;
   private preventSave: boolean;
@@ -112,6 +113,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.users = this.bindUsers();
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
+    }
+    if (changes.value || changes.configuration) {
+      this.onlyIcon = this.configuration?.onlyIcon || this.value?.config?.onlyIcon;
     }
   }
 

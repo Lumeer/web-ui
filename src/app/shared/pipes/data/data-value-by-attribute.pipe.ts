@@ -17,14 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../../../core/store/collections/collection';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {DataResource} from '../../../core/model/resource';
+import {Attribute} from '../../../core/store/collections/collection';
 
-export interface TaskAttributes {
-  title?: Attribute;
-  assignee?: Attribute;
-  dueDate?: Attribute;
-  tags?: Attribute;
-  state?: Attribute;
-  priority?: Attribute;
-  usedAttributes?: Set<string>;
+@Pipe({
+  name: 'dataValueByAttribute',
+})
+export class DataValueByAttributePipe implements PipeTransform {
+  public transform(dataResource: DataResource, attribute: Attribute, constraintData?: ConstraintData): DataValue {
+    if (!dataResource.data || !attribute?.id) {
+      return null;
+    }
+    return (attribute.constraint || new UnknownConstraint()).createDataValue(
+      dataResource.data[attribute.id],
+      constraintData
+    );
+  }
 }

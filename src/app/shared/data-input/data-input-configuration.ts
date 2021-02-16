@@ -50,6 +50,7 @@ export interface ActionDataInputConfiguration {
 
 export interface UserDataInputConfiguration {
   allowCenterOnlyIcon?: boolean;
+  onlyIcon?: boolean;
 }
 
 export interface SelectDataInputConfiguration {
