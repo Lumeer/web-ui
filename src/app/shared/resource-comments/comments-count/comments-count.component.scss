@@ -1,0 +1,23 @@
+@import 'src/styles/variables';
+
+:host {
+  width: 20px;
+}
+
+span.comments-count {
+  font-size: 0.6rem;
+  padding: 0 3px;
+  color: white;
+  background-color: $success;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 0.9rem;
+  min-width: 0.9rem;
+  text-align: center;
+}
+
+.fa-stack-1x.fa-comment {
+  width: 0;
+}

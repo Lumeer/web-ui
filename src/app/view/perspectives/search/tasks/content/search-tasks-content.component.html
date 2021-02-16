@@ -10,7 +10,7 @@
 
     <div class="card">
 
-      <search-task-header
+      <search-task-wrapper
         class="detail px-1 py-2 position-relative"
         *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let last = last"
         [class.border-bottom]="truncateContent || !last"
@@ -47,7 +47,7 @@
              [class.last]="index === maxDocuments - 1"
              [class.second-last]="index === maxDocuments - 2"></div>
 
-      </search-task-header>
+      </search-task-wrapper>
 
 
       <div class="d-flex flex-nowrap align-items-center p-1" *ngIf="truncateContent">
@@ -68,7 +68,7 @@
 <ng-template #noDocuments>
   <empty-tasks
     (tablePerspective)="switchPerspectiveToTable()"
-    [collections]="collections"
+    [collections]="allTasksCollections$ | async"
     [query]="query">
   </empty-tasks>
 </ng-template>

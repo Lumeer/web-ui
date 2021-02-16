@@ -17,15 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {ConstraintData} from '@lumeer/data-filters';
+import {TaskAttributes} from '../../../model/task-attributes';
 
-@Pipe({
-  name: 'isDocumentOpened',
+@Component({
+  selector: 'search-task-second-line',
+  templateUrl: './search-task-second-line.component.html',
+  styleUrls: ['./search-task-second-line.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-row flex-nowrap text-truncate'},
 })
-export class IsDocumentOpenedPipe implements PipeTransform {
-  public transform(document: DocumentModel, config: SearchDocumentsConfig): boolean {
-    return config?.expandedIds?.includes(document.id);
-  }
+export class SearchTaskSecondLineComponent {
+  @Input()
+  public document: DocumentModel;
+
+  @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
+  public attributes: TaskAttributes;
 }

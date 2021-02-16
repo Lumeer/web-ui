@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
-@Pipe({
-  name: 'isDocumentOpened',
+@Component({
+  selector: 'comments-count',
+  templateUrl: './comments-count.component.html',
+  styleUrls: ['./comments-count.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'fa-stack'},
 })
-export class IsDocumentOpenedPipe implements PipeTransform {
-  public transform(document: DocumentModel, config: SearchDocumentsConfig): boolean {
-    return config?.expandedIds?.includes(document.id);
-  }
+export class CommentsCountComponent {
+  @Input()
+  public count: number;
 }

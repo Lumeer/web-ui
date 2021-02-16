@@ -37,7 +37,8 @@ export class DataValueEntriesPipe implements PipeTransform {
     constraintData: ConstraintData,
     config: SearchDocumentsConfig
   ): {label?: string; attributeId: string; isDefault?: boolean; dataValue: DataValue; constraint: Constraint}[] {
-    const expanded = config && (config.size === SizeType.XL || (config.expandedIds || []).includes(document.id));
+    const expanded =
+      config?.size === SizeType.L || config?.size === SizeType.XL || (config?.expandedIds || []).includes(document.id);
     const defaultAttributeId = getDefaultAttributeId(collection);
     return (collection.attributes || [])
       .filter(attribute => !taskAttributes?.usedAttributes?.has(attribute.id))

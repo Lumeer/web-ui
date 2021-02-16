@@ -20,8 +20,15 @@
 import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../../shared/utils/array.utils';
 import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
 import {Query} from './query';
-import {getBaseCollectionIdsFromQuery, isQuerySubset, queryWithoutFilters} from './query.util';
+import {
+  checkTasksCollectionsQuery,
+  getBaseCollectionIdsFromQuery,
+  isQuerySubset,
+  queryIsEmptyExceptPagination,
+  queryWithoutFilters,
+} from './query.util';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {Collection} from '../../collections/collection';
 
 export function areQueriesEqual(first: Query, second: Query): boolean {
   return deepObjectsEquals(normalizeQueryModel(first), normalizeQueryModel(second));
@@ -29,6 +36,21 @@ export function areQueriesEqual(first: Query, second: Query): boolean {
 
 export function isQueryLoaded(query: Query, loadedQueries: Query[]): boolean {
   return loadedQueries.some(loadedQuery => isQuerySubset(query, loadedQuery));
+}
+
+export function isTaskQueryLoaded(query: Query, collections: Collection[], loadedQueries: Query[]): boolean {
+  const taskQuery = checkTasksCollectionsQuery(collections, query);
+  const isEmpty = queryIsEmptyExceptPagination(query);
+  return loadedQueries.some(loadedQuery => {
+    if (isEmpty && areQueriesEqual(loadedQuery, taskQuery)) {
+      return true;
+    }
+    if (queryIsEmptyExceptPagination(loadedQuery) !== isEmpty) {
+      return false;
+    }
+
+    return isQuerySubset(taskQuery, loadedQuery);
+  });
 }
 
 export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: Query): boolean {

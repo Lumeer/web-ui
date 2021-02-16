@@ -37,7 +37,7 @@ export function dataResourcesReducer(
       const shouldAddTaskQuery =
         action.payload.query && !state.queries.some(query => areQueriesEqual(query, action.payload.query));
       if (shouldAddTaskQuery) {
-        return {...state, tasksQueries: [...state.queries, action.payload.query]};
+        return {...state, tasksQueries: [...state.tasksQueries, action.payload.query]};
       }
       return state;
     case DataResourcesActionType.CLEAR_QUERIES:

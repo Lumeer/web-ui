@@ -36,7 +36,8 @@ export interface CommonDataInputConfiguration {
 }
 
 export interface ColorDataInputConfiguration {
-  limitWidth: boolean;
+  limitWidth?: boolean;
+  compactMode?: boolean;
 }
 
 export interface BooleanDataInputConfiguration {

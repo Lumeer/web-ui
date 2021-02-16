@@ -23,7 +23,7 @@ import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../../../shared/shared.module';
 import {SearchTasksComponent} from './search-tasks.component';
 import {EmptyTasksComponent} from './content/empty/empty-tasks.component';
-import {SearchTaskHeaderComponent} from './content/header/search-task-header.component';
+import {SearchTaskWrapperComponent} from './content/wrapper/search-task-wrapper.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
 import {DataValueEntriesPipe} from './pipes/data-value-entries.pipe';
 import {SearchTasksContentComponent} from './content/search-tasks-content.component';
@@ -35,13 +35,15 @@ import {EmptyTasksQueryComponent} from './content/empty/query/empty-tasks-query.
 import {EmptyTasksSearchComponent} from './content/empty/search/empty-tasks-search.component';
 import {EmptyTasksCollectionsComponent} from './content/empty/collections/empty-tasks-collections.component';
 import {EmptyTasksCollectionsWithoutRightsComponent} from './content/empty/collections-without-rights/empty-tasks-collections-without-rights.component';
+import {SearchTaskFirstLineComponent} from './content/wrapper/first-line/search-task-first-line.component';
+import {SearchTaskSecondLineComponent} from './content/wrapper/second-line/search-task-second-line.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule, DataInputModule],
   declarations: [
     SearchTasksComponent,
     EmptyTasksComponent,
-    SearchTaskHeaderComponent,
+    SearchTaskWrapperComponent,
     IsDocumentOpenedPipe,
     DataValueEntriesPipe,
     SearchTasksContentComponent,
@@ -52,6 +54,8 @@ import {EmptyTasksCollectionsWithoutRightsComponent} from './content/empty/colle
     EmptyTasksSearchComponent,
     EmptyTasksCollectionsComponent,
     EmptyTasksCollectionsWithoutRightsComponent,
+    SearchTaskFirstLineComponent,
+    SearchTaskSecondLineComponent,
   ],
   exports: [SearchTasksComponent],
 })

@@ -23,7 +23,7 @@ import {Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {isQueryLoaded} from '../navigation/query/query.helper';
+import {isQueryLoaded, isTaskQueryLoaded} from '../navigation/query/query.helper';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {convertDocumentDtoToModel} from '../documents/document.converter';
 import {SearchService} from '../../data-service';
@@ -73,8 +73,7 @@ export class DataResourcesEffects {
     ),
     filter(
       ([action, queries, tasksCollections]) =>
-        action.payload.force ||
-        !isQueryLoaded(checkTasksCollectionsQuery(tasksCollections, action.payload.query), queries)
+        action.payload.force || !isTaskQueryLoaded(action.payload.query, tasksCollections, queries)
     ),
     mergeMap(([action, , tasksCollections]) => {
       const query = action.payload.query;

@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, map, mergeMap, pairwise, startWith, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -34,7 +34,7 @@ import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../.
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
-import {sortDocumentsByFavoriteAndLastUsed, sortDocumentsTasks} from '../../../../core/store/documents/document.utils';
+import {sortDocumentsTasks} from '../../../../core/store/documents/document.utils';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -102,37 +102,9 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
     const pageObservable = this.page$.asObservable();
     return this.store$.pipe(
       select(selectTasksDocumentsByQuery),
-      mergeMap(documents => this.collections$.pipe(map(collections => sortDocumentsTasks(documents, collections)))),
-      mergeMap(documents =>
-        pageObservable.pipe(
-          map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1))),
-          map(sortedDocuments => this.mapNewDocuments(sortedDocuments))
-        )
-      )
+      switchMap(documents => this.collections$.pipe(map(collections => sortDocumentsTasks(documents, collections)))),
+      switchMap(documents => pageObservable.pipe(map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1)))))
     );
-  }
-
-  private mapNewDocuments(documents: DocumentModel[]): DocumentModel[] {
-    const documentsMap = documents.reduce((acc, doc) => {
-      acc[doc.correlationId || doc.id] = doc;
-      return acc;
-    }, {});
-
-    const orderedDocuments = this.documentsOrder.reduce((acc, key) => {
-      const doc = documentsMap[key];
-      if (doc) {
-        acc.push(doc);
-        delete documentsMap[key];
-      }
-      return acc;
-    }, []);
-
-    for (const [key, value] of Object.entries(documentsMap)) {
-      orderedDocuments.push(value);
-      this.documentsOrder.push(key);
-    }
-
-    return orderedDocuments;
   }
 
   public configChange(documentsConfig: SearchDocumentsConfig) {

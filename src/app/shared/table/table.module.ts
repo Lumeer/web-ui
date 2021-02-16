@@ -50,6 +50,7 @@ import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 import {DirectivesModule} from '../directives/directives.module';
 import {MenuModule} from '../menu/menu.module';
+import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import {MenuModule} from '../menu/menu.module';
     MatMenuModule,
     DocumentHintsModule,
     MenuModule,
+    ResourceCommentsModule,
   ],
   exports: [TableComponent],
 })

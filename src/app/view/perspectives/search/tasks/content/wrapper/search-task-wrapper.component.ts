@@ -30,12 +30,12 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {TaskAttributes} from '../../model/task-attributes';
 
 @Component({
-  selector: 'search-task-header',
-  templateUrl: './search-task-header.component.html',
-  styleUrls: ['./search-task-header.component.scss'],
+  selector: 'search-task-wrapper',
+  templateUrl: './search-task-wrapper.component.html',
+  styleUrls: ['./search-task-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTaskHeaderComponent implements OnChanges {
+export class SearchTaskWrapperComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
@@ -66,10 +66,6 @@ export class SearchTaskHeaderComponent implements OnChanges {
   public readonly collectionType = ResourceType.Collection;
   public readonly sizeType = SizeType;
   public readonly readRole = Role.Read;
-  public readonly configuration: DataInputConfiguration = {
-    color: {limitWidth: true},
-    user: {allowCenterOnlyIcon: true, onlyIcon: true},
-  };
 
   public small: boolean;
   public medium: boolean;
