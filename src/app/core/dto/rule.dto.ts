@@ -17,9 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {QueryDto} from './query.dto';
+import {BlocklyRuleConfiguration} from '../model/rule';
+
 export interface RuleDto {
   name: string;
   type: string;
   timing: string;
   configuration: Record<string, any>;
+}
+
+export interface CronRuleConfigurationDto extends BlocklyRuleConfiguration {
+  since?: string;
+  until?: string;
+  when: number;
+  interval: number;
+  dow: number;
+  occurence?: number;
+  lastRun?: string;
+  unit: string;
+  executing?: string;
+  query: QueryDto;
+  language?: string;
 }

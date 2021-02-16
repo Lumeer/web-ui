@@ -93,7 +93,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit><trans-unit id="button.select" datatype="html">
         <source>
@@ -2032,6 +2032,10 @@
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
       </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source>
         <context-group purpose="location">
@@ -3044,7 +3048,7 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.type" datatype="html">
-        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} }</source>
+        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">8</context>
@@ -3119,13 +3123,13 @@
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
         <source>Add Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.info" datatype="html">
         <source>
@@ -3340,6 +3344,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
+        <source>
+    An automation executed regularly according to the timer settings.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
+        <source>Edit Rule Code:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.guide.select" datatype="html">
         <source>1. Select View</source>
