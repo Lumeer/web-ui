@@ -21,4 +21,5 @@ export interface RuleVariable {
   name: string;
   collectionId?: string;
   linkTypeId?: string;
+  list?: boolean;
 }

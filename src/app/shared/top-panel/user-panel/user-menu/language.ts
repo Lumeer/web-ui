@@ -29,6 +29,13 @@ export enum LanguageCode {
   EN = 'en',
 }
 
+export const languageCodeMap = {
+  [LanguageCode.CZ]: LanguageCode.CZ,
+  [LanguageCode.EN]: LanguageCode.EN,
+  [LanguageCode.CZ.toUpperCase()]: LanguageCode.CZ,
+  [LanguageCode.EN.toUpperCase()]: LanguageCode.EN,
+};
+
 export const availableLanguages: Language[] = [
   {code: LanguageCode.CZ, name: 'Čeština', englishName: 'Czech', icon: 'flag-icon-cz'},
   {code: LanguageCode.EN, name: 'English', englishName: 'English', icon: 'flag-icon-gb'},

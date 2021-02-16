@@ -49,6 +49,7 @@ import {CollectionPurposeSelectComponent} from './settings/tab/purpose/content/s
 import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/form/collection-purpose-form.component';
 import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
 import {DataInputModule} from '../shared/data-input/data-input.module';
+import {CronFormComponent} from './settings/common/rules/add-rule-form/cron-form/cron-form.component';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule],
@@ -78,6 +79,7 @@ import {DataInputModule} from '../shared/data-input/data-input.module';
     CollectionPurposeSelectComponent,
     CollectionPurposeFormComponent,
     CollectionPurposeTasksComponent,
+    CronFormComponent,
   ],
   providers: [CollectionSettingsGuard],
 })

@@ -20,7 +20,7 @@
           Automation name already used.
         </small>
       </div>
-      <div class="form-group d-flex align-items-center justify-content-start flex-wrap">
+      <div *ngIf="typeControl.value !== ruleType.Cron" class="form-group d-flex align-items-center justify-content-start flex-wrap">
         <div class="text-nowrap" i18n="@@collection.config.tab.rules.onRecord">
           On record
         </div>
@@ -69,6 +69,12 @@
           [collection]="collection"
           [linkType]="linkType">
         </blockly-form>
+        <cron-form
+          *ngSwitchCase="ruleType.Cron"
+          [form]="configCron"
+          [collection]="collection"
+          [linkType]="linkType">
+        </cron-form>
       </div>
 
       <div class="d-flex justify-content-end align-items-center flex-wrap">
