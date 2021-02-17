@@ -1,16 +1,18 @@
-<document-detail-modal [collection]="collection$ | async"
-                       [document]="document$ | async"
-                       [toolbarRef]="toolbar">
-</document-detail-modal>
+<ng-container *ngIf="{collections: collections$ | async} as data">
+  <document-detail-modal [collection]="data.collections | collectionById:(collectionId$ | async)"
+                         [document]="document$ | async"
+                         [toolbarRef]="toolbar">
+  </document-detail-modal>
 
-<ng-template #toolbar>
+  <ng-template #toolbar>
 
-  <select-item class="d-inline-block mb-3"
-               [items]="collections | collectionsSelectItems"
-               [removable]="false"
-               [fitParent]="false"
-               [selectedId]="selectedId$ | async"
-               (selected)="onSelect($event)">
-  </select-item>
+    <select-item class="d-inline-block mb-3"
+                 [items]="data.collections | collectionsSelectItems"
+                 [removable]="false"
+                 [fitParent]="false"
+                 [selectedId]="collectionId$ | async"
+                 (selected)="onSelect($event)">
+    </select-item>
 
-</ng-template>
+  </ng-template>
+</ng-container>

@@ -60,16 +60,16 @@
         <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
       </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source><target>{VAR_PLURAL, plural, =2 {oba} =3 {všechny} =4 {všechny} other {všech} }</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source><target>{VAR_PLURAL, plural, =2 {komentáře} =3 {komentáře} =4 {komentáře} other {komentářů} }</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</source><target>Přehled aktivit je dostupný jen v <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise verzi<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Prosím <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>kontaktujte podporu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target>Pouze správce organizace nebo projektu může pozvat kolegy. Prosím požádejte je.</target>
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
@@ -319,22 +319,24 @@
                 <source>All</source>
                 <target>Vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="search.tab.tasks" datatype="html">
+        <source>Tasks</source><target>Úkoly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="search.tab.collections" datatype="html">
                 <source>Tables</source>
                 <target>Tabulky</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
-            <trans-unit id="search.tab.documents" datatype="html">
-                <source>Records</source>
-                <target>Záznamy</target>
-
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
+            
             <trans-unit id="search.tab.views" datatype="html">
                 <source>Views</source>
                 <target>Pohledy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="collections.empty.subtitle.norights" datatype="html">
         <source>I am sorry but you do not have permissions to add tables.
   </source><target>Je mi líto, ale nemáte oprávnění přidávat tabulky.</target>
 
@@ -1729,6 +1731,12 @@
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="tasks.get.fail" datatype="html">
+        <source>Could not get tasks</source><target>Nepodařilo se mi načíst úkoly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/data-resources/data-resources.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit>
             <trans-unit id="documents.get.fail" datatype="html">
                 <source>Could not get records</source>
@@ -2503,6 +2511,58 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.priority.label" datatype="html">
+        <source>
+      Priority
+    </source><target>
+      Priorita
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.priority.select" datatype="html">
+        <source>Select priority attribute</source><target>Atribut s prioritou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.priority.help" datatype="html">
+        <source>
+        Which attribute specifies the task priority?
+      </source><target>
+        Který atribut určuje prioritu?
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.tags.label" datatype="html">
+        <source>
+      Tags
+    </source><target>
+      Značky
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.tags.select" datatype="html">
+        <source>Select tags attribute</source><target>Atribut se značkami</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.tags.help" datatype="html">
+        <source>
+        Tags, labels, hashtags... Simply anything you use to categorize the tasks.
+      </source><target>
+        Značky, štítky, hashtagy... Jednoduše cokoliv, co používáte ke kategorizaci úkolů.
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
             <trans-unit id="collection.tab.attributes.attribute.default" datatype="html">
@@ -3361,6 +3421,16 @@
           <context context-type="sourcefile">app/view/perspectives/calendar/config/calendar-config.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
+      </trans-unit><trans-unit id="search.all.tasks" datatype="html">
+        <source>
+          Tasks
+        </source><target>
+          Úkoly
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
         <source>Scroll to Today
   </source><target>Posunout na dnešek
@@ -3497,13 +3567,7 @@
 
 
 
-            <trans-unit id="search.all.records" datatype="html">
-                <source>
-          Records
-        </source>
-                <target>Záznamy</target>
-
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="data.loading" datatype="html">
+            <trans-unit id="data.loading" datatype="html">
         <source>Loading data</source><target>Načítám údaje</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
@@ -3513,7 +3577,7 @@
         </source>
                 <target>Pohledy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
             <trans-unit id="table.body.row.add.above" datatype="html">
                 <source>Add row above</source>
                 <target>Přidat řádek nad</target>
@@ -4044,12 +4108,10 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit>
 
             <trans-unit id="search.result.more" datatype="html">
-                <source>
-          See more
-        </source>
+                <source>See More</source>
                 <target>Zobrazit vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/post-it-collections-content.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/search-views-content.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/button/see-more/see-more-button.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Record</source>
                 <target>Smazat záznam</target>
@@ -4420,7 +4482,7 @@
                 <source>1. Select View</source>
                 <target>1. Zvolte pohled</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
             <trans-unit id="view.perspective.guide.title" datatype="html">
                 <source>2. Set Title</source>
                 <target>2. Zadejte název</target>
@@ -4432,7 +4494,7 @@
         </source>
                 <target>Tabulky</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.defaultAttribute" datatype="html">
                 <source>Set as displayed attribute</source>
                 <target>Nastavit jako hlavní atribut</target>
@@ -5029,6 +5091,12 @@
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="tasks.sample.data.failure" datatype="html">
+        <source>Could not add task table to project</source><target>Nepodařilo se mi do projektu přidat tabulku s úkoly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
         <source>Summary</source><target>Souhrn</target>
 
@@ -5160,7 +5228,7 @@
                 <source>Create New Record</source>
                 <target>Vytvořit nový záznam</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</source><target>{VAR_PLURAL, plural, =0 {žádné karty} =1 {1 karta} =2 {2 karty} =3 {3 karty} =4 {4 karty} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> karet} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
@@ -5242,17 +5310,17 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>Your first task is to create a view!</source><target>Nemáte ještě žádné pohledy!</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
         <source>Views are the most important part of Lumeer that boosts your productivity and saves your time.</source><target>Něco vyhledejte, zvolte si pohled, pojmenujte a uložte si výslednou stránku.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="search.views.empty.createTable1" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="search.views.empty.createTable1" datatype="html">
         <source>Create and open a Table. Switch the Perspective</source>
         <target>Vytvořte a otevřete tabulku. Přepněte perspektivu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="search.views.empty.createTable2" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="search.views.empty.createTable2" datatype="html">
         <source>and save the View</source><target>a uložte nový pohled</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="@@files.input.button.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="@@files.input.button.empty" datatype="html">
         <source>File input is empty</source><target>Jméno souboru je prázdné</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/import-button/post-it-collection-import-button.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="view.changes.not.saved" datatype="html">
@@ -5344,16 +5412,65 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle.singleCollection" datatype="html">
         <source>Let's add some Records into</source><target>Přidejte nějaké záznamy do</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="search.records.empty.button" datatype="html">
-        <source>Open as Table</source><target>Otevřít tabulku</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
-        <source>Open table</source><target>Zobrazit tabulku</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
+        <source>Empty title</source><target>Prázdný popis</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
+        <source>Create New Task</source><target>Vytvořit nový úkol</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.query.title" datatype="html">
+        <source>All your tasks are done!</source><target>Všechny Vaše úkoly jsou hotové!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/query/empty-tasks-query.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.query.message" datatype="html">
+        <source>Great job! Keep it up.</source><target>Skvělá práce! Jen tak dál.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/query/empty-tasks-query.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.collections.title" datatype="html">
+        <source>No tasks table</source><target>Žádná tabulka s úkoly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.collections.message" datatype="html">
+        <source>Don't worry, you can create task table anytime clicking button below.</source><target>Žádné obavy, tabulku na úkoly snadno vytvoříte pomocí tlačítka níže.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="asks.empty.collections.button" datatype="html">
+        <source>Create Task Table</source><target>Vytvořit tabulku s úkoly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
+        <source>No tasks table</source><target>Žádná tabulka s úkoly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.permissions.message" datatype="html">
+        <source>I am sorry but you do not have permissions to add tables. Contact the project manager.</source><target>Je mi líto, ale nemáte právo přidávat tabulky. Kontaktujte správce projektu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">

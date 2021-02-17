@@ -34,7 +34,7 @@ import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {COLOR_SUCCESS} from '../../../core/constants';
-import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {ColorDataInputConfiguration, CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ColorDataValue, ConstraintType} from '@lumeer/data-filters';
@@ -43,6 +43,7 @@ import {ColorDataValue, ConstraintType} from '@lumeer/data-filters';
   selector: 'color-data-input',
   templateUrl: './color-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./color-data-input.component.scss'],
 })
 export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
@@ -56,6 +57,9 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
 
   @Input()
   public commonConfiguration: CommonDataInputConfiguration;
+
+  @Input()
+  public configuration: ColorDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<ColorDataValue>();

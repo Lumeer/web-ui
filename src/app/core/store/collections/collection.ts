@@ -87,4 +87,6 @@ export interface TaskPurposeMetadata {
   stateAttributeId?: string;
   finalStatesList?: string[];
   observersAttributeId?: string;
+  tagsAttributeId?: string;
+  priorityAttributeId?: string;
 }

@@ -3,19 +3,19 @@
   <div class="card p-2 mb-2 view flex-row align-items-center view-hover"
        [class.mb-2]="viewSize !== sizeType.S"
        [class.mb-1]="viewSize === sizeType.S"
-       [class.pb-3]="viewSize == sizeType.XL"
+       [class.pb-3]="viewSize == sizeType.L"
        (click)="!$event.defaultPrevented && onClicked()">
 
     <div class="mr-3">
       <i
-        [ngClass]="(viewSize === sizeType.XL || viewSize  === sizeType.L) ? 'fa-3x' : (viewSize === sizeType.M ? 'fa-2x' : '')"
+        [ngClass]="viewSize | viewIconSize"
         class="fa-fw {{getIconForPerspective(view.perspective)}} align-self-center"
-        [ngStyle]="viewSize === sizeType.XL ? {} : {color: queryItems | queryColor}"
+        [ngStyle]="viewSize === sizeType.L ? {} : {color: queryItems | queryColor}"
         aria-hidden="true">
       </i>
     </div>
 
-    <div class="flex-column flex-grow-1 text-truncate" [class.align-self-center]="viewSize !== sizeType.XL">
+    <div class="flex-column flex-grow-1 text-truncate" [class.align-self-center]="viewSize !== sizeType.L">
       <div class="d-flex flex-row align-items-center">
           <span class="text-truncate font-weight-bold flex-grow-1 mr-2"
                 [class.title]="viewSize !== sizeType.S">
@@ -26,7 +26,7 @@
           </span>
 
         <i class="fa-star mr-2 text-warning cursor-pointer hiding-icon"
-           *ngIf="permissions.read"
+           *ngIf="permissions?.read"
            (click)="$event.preventDefault(); onFavoriteToggle()"
            [class.always-visible]="view.favorite"
            title="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
@@ -35,7 +35,7 @@
            aria-hidden="true">
         </i>
 
-        <ng-container *ngIf="permissions.manage">
+        <ng-container *ngIf="permissions?.manage">
           <i class="fas fa-fw fa-share-alt mr-2 text-success cursor-pointer"
              (click)="$event.preventDefault(); onShareClick()"
              title="Share" i18n-title="@@button.share"
@@ -50,7 +50,7 @@
 
       </div>
 
-      <div class="d-flex flex-wrap" *ngIf="viewSize === sizeType.XL">
+      <div class="d-flex flex-wrap" *ngIf="viewSize === sizeType.L">
         <query-item *ngFor="let queryItem of queryItems; trackBy:trackByQueryItem; let isLast = last"
                     [queryItem]="queryItem"
                     [queryItemForm]="queryItem | queryItemForm"

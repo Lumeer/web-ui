@@ -1,21 +1,29 @@
 <div *ngIf="views?.length; else noViews"
-     class="mt-2 mb-5">
-  <size-slider class="d-flex justify-content-end mb-2"
-               [defaultSize]="config?.size || defaultSizeType" (newSize)="onSizeChange($event)">
+     class="pt-2 pb-5 position-relative">
+  <size-slider class="d-flex justify-content-end mb-4"
+               [defaultSize]="currentSize" (newSize)="onSizeChange($event)">
   </size-slider>
-  <view-detail *ngFor="let view of (maxViews > 0 ? (views | slice:0:maxViews) : views); trackBy:trackByView"
-               [view]="view"
-               [queryData]="queryData"
-               [viewSize]="config?.size || defaultSizeType"
-               [permissions]="permissions && permissions[view.id]"
-               (delete)="onDeleteView(view)"
-               (clicked)="showView(view)"
-               (favoriteToggle)="onFavoriteToggle(view)">
-  </view-detail>
-  <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
-       *ngIf="maxViews > 0 && maxViews < views?.length"
-       (click)="onShowAll()">
-    <span class="see-more" i18n="@@search.result.more">See more</span>
+  <div
+    *ngFor="let view of (truncateContent ? (views | slice:0:maxViews) : views); trackBy:trackByView; let index = index"
+    class="position-relative">
+    <view-detail [view]="view"
+                 [queryData]="queryData"
+                 [viewSize]="currentSize"
+                 [permissions]="truncateContent && index >= maxViews - 2 ? null : permissions && permissions[view.id]"
+                 (delete)="onDeleteView(view)"
+                 (clicked)="showView(view)"
+                 (favoriteToggle)="onFavoriteToggle(view)">
+    </view-detail>
+    <div *ngIf="truncateContent && index >= maxViews - 2"
+         class="view-background"
+         [class.last]="index === maxViews - 1"
+         [class.second-last]="index === maxViews - 2"></div>
+  </div>
+  <div *ngIf="truncateContent" class="d-flex p-2">
+    <i [ngClass]="currentSize | viewIconSize"
+       class="fa-fw fa-none align-self-center mr-3" aria-hidden="true">
+    </i>
+    <see-more-button (clicked)="onShowAll()"></see-more-button>
   </div>
 </div>
 

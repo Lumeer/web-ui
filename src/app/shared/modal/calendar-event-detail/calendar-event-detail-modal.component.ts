@@ -250,10 +250,10 @@ export class CalendarEventDetailModalComponent implements OnInit {
       if (startProperty) {
         if (allDay) {
           const start = this.currentDataResource?.data?.[startProperty.attributeId];
-          newStart = start && this.cleanDateWhenAllDay(start);
+          newStart = start && this.cleanDateWhenAllDay(start, startProperty);
           data[startProperty.attributeId] = newStart;
         } else if (endProperty ? isAllDayEvent(this.start, end) : isAllDayEventSingle(this.start)) {
-          const cleaned = this.cleanDateWhenAllDay(this.start);
+          const cleaned = this.cleanDateWhenAllDay(this.start, startProperty);
           cleaned.setHours(9);
           newStart = cleaned;
           data[startProperty.attributeId] = cleaned;
@@ -264,14 +264,14 @@ export class CalendarEventDetailModalComponent implements OnInit {
       }
 
       if (endProperty) {
-        const start = this.currentDataResource?.data?.[endProperty.attributeId];
+        const currentEnd = this.currentDataResource?.data?.[endProperty.attributeId];
         if (allDay) {
           if (this.end) {
-            data[endProperty.attributeId] = this.cleanDateWhenAllDay(this.end);
+            data[endProperty.attributeId] = this.cleanDateWhenAllDay(this.end, endProperty);
           } else {
-            data[endProperty.attributeId] = start && this.cleanDateWhenAllDay(start);
+            data[endProperty.attributeId] = currentEnd && this.cleanDateWhenAllDay(currentEnd, endProperty);
           }
-        } else if (isAllDayEvent(this.start, end)) {
+        } else if (isAllDayEvent(this.start, currentEnd)) {
           data[endProperty.attributeId] = moment(newStart).add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
         } else if (this.end) {
           data[endProperty.attributeId] = this.end;
@@ -332,7 +332,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
     this.stemIndex$.next(index);
   }
 
-  private cleanDateWhenAllDay(date: any): Date {
+  private cleanDateWhenAllDay(date: any, property: CalendarBar): Date {
     return moment(date).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
   }
 }

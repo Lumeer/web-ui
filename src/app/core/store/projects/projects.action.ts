@@ -22,6 +22,7 @@ import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
 import {Workspace} from '../navigation/workspace';
 import {NavigationExtras} from '@angular/router';
+import {SampleDataType} from '../../model/sample-data-type';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -53,6 +54,8 @@ export enum ProjectsActionType {
 
   APPLY_TEMPLATE = '[Projects] Apply Template',
   APPLY_TEMPLATE_FAILURE = '[Projects] Apply Template :: Failure',
+
+  CREATE_SAMPLE_DATA = '[Projects] Create Sample Data',
 
   COPY = '[Projects] Copy',
   COPY_FAILURE = '[Projects] Copy :: Failure',
@@ -170,6 +173,12 @@ export namespace ProjectsAction {
     public readonly type = ProjectsActionType.APPLY_TEMPLATE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
+  }
+
+  export class CreateSampleData implements Action {
+    public readonly type = ProjectsActionType.CREATE_SAMPLE_DATA;
+
+    public constructor(public payload: {type: SampleDataType; errorMessage: string; onError?: () => void}) {}
   }
 
   export class Copy implements Action {

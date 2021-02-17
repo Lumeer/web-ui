@@ -23,4 +23,6 @@ export enum TaskPurposeFormControl {
   Observers = 'observers',
   State = 'state',
   StateList = 'stateList',
+  Priority = 'priority',
+  Tags = 'tags',
 }

@@ -11,7 +11,8 @@
                           (versionClick)="selectTab(detailTabType.Activity)">
   </document-detail-header>
 
-  <detail-tabs [showLinks]="resourceType === collectionResourceType"
+  <detail-tabs *ngIf="dataResource?.id"
+               [showLinks]="resourceType === collectionResourceType"
                [activeTab]="data.selectedTab"
                [commentsCount]="data.commentsCount"
                [linksCount]="linksCount$ | async"
@@ -57,7 +58,7 @@
 
   <ng-container *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
     <div>
-      <links-toolbar [collection]="resource"></links-toolbar>
+      <links-toolbar class="d-block w-100 text-right" [collection]="resource"></links-toolbar>
       <links-accordeon class="d-block"
                   *ngIf="resource && dataResource?.id"
                   [document]="dataResource"

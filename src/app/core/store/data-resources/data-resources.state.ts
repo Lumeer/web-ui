@@ -22,22 +22,33 @@ import {AppState} from '../app.state';
 import {Query} from '../navigation/query/query';
 import {selectQuery} from '../navigation/navigation.state';
 import {isQueryLoaded} from '../navigation/query/query.helper';
+import {selectTasksQuery} from '../common/permissions.selectors';
 
 export interface DataResourcesState {
   queries: Query[];
+  tasksQueries: Query[];
 }
 
 export const initialDataResourcesState: DataResourcesState = {
   queries: [],
+  tasksQueries: [],
 };
 
 export const selectDataResourcesState = (state: AppState) => state.dataResources;
 
 export const selectDataResourcesQueries = createSelector(selectDataResourcesState, state => state.queries);
 
+export const selectTasksQueries = createSelector(selectDataResourcesState, state => state.tasksQueries);
+
 export const selectCurrentQueryDataResourcesLoaded = createSelector(
   selectDataResourcesQueries,
   selectQuery,
+  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
+);
+
+export const selectCurrentQueryTasksLoaded = createSelector(
+  selectTasksQueries,
+  selectTasksQuery,
   (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
 );
 

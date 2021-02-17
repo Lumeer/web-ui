@@ -82,6 +82,10 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return of(template);
   }
 
+  public createSampleData(organizationId: string, projectId: string, type: string): Observable<any> {
+    return of(type);
+  }
+
   public copyProject(
     organizationId: string,
     projectId: string,

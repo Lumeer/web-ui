@@ -34,6 +34,7 @@ import {EmptyCollectionsComponent} from './content/empty-collections/empty-colle
 import {PostItCollectionsContentComponent} from './content/post-it-collections-content.component';
 import {PresenterModule} from '../presenter/presenter.module';
 import {DirectivesModule} from '../directives/directives.module';
+import {ButtonModule} from '../button/button.module';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import {DirectivesModule} from '../directives/directives.module';
     RouterModule,
     PipesModule,
     WarningMessageModule,
+    ButtonModule,
   ],
   declarations: [
     PostItCollectionsComponent,

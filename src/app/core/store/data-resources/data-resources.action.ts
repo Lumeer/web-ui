@@ -25,6 +25,10 @@ export enum DataResourcesActionType {
   GET = '[Data Resources] Get',
   GET_SUCCESS = '[Data Resources] Get :: Success',
 
+  GET_TASKS = '[Data Resources] Get Tasks',
+  GET_TASKS_SUCCESS = '[Data Resources] Get Tasks :: Success',
+  GET_TASKS_FAILURE = '[Data Resources] Get Tasks :: Failure',
+
   CLEAR_QUERIES = '[Data Resources] Clear Queries',
   CLEAR = '[Data Resources] Clear',
 }
@@ -42,6 +46,24 @@ export namespace DataResourcesAction {
     public constructor(public payload: {query: Query}) {}
   }
 
+  export class GetTasks implements Action {
+    public readonly type = DataResourcesActionType.GET_TASKS;
+
+    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+  }
+
+  export class GetTasksSuccess implements Action {
+    public readonly type = DataResourcesActionType.GET_TASKS_SUCCESS;
+
+    public constructor(public payload: {query: Query}) {}
+  }
+
+  export class GetTasksFailure implements Action {
+    public readonly type = DataResourcesActionType.GET_TASKS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class ClearQueries implements Action {
     public readonly type = DataResourcesActionType.CLEAR_QUERIES;
 
@@ -52,5 +74,5 @@ export namespace DataResourcesAction {
     public readonly type = DataResourcesActionType.CLEAR;
   }
 
-  export type All = Get | GetSuccess | ClearQueries | Clear;
+  export type All = Get | GetSuccess | GetTasks | GetTasksSuccess | ClearQueries | Clear;
 }

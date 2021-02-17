@@ -17,9 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, OnDestroy} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnInit,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {Router} from '@angular/router';
-import {defaultSizeType, SearchViewsConfig} from '../../../../../core/store/searches/search';
+import {checkSizeType, SearchViewsConfig} from '../../../../../core/store/searches/search';
 import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {Query} from '../../../../../core/store/navigation/query/query';
@@ -38,7 +48,7 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ViewFavoriteToggleService],
 })
-export class SearchViewsContentComponent implements OnInit, OnDestroy {
+export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public config: SearchViewsConfig;
 
@@ -66,12 +76,22 @@ export class SearchViewsContentComponent implements OnInit, OnDestroy {
   @Output()
   public deleteView = new EventEmitter<View>();
 
-  public readonly defaultSizeType = defaultSizeType;
+  public currentSize: SizeType;
+  public truncateContent: boolean;
 
   constructor(private router: Router, private toggleService: ViewFavoriteToggleService) {}
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.config) {
+      this.currentSize = checkSizeType(this.config?.size);
+    }
+    if (changes.views || changes.maxViews) {
+      this.truncateContent = this.maxViews > 0 && this.maxViews < this.views?.length;
+    }
   }
 
   public onSizeChange(size: SizeType) {

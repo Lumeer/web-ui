@@ -23,7 +23,7 @@ import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.m
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
-import {SearchDocumentsModule} from './documents/search-documents.module';
+import {SearchTasksModule} from './tasks/search-tasks.module';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {EmptyViewsComponent} from './views/content/empty-views/empty-views.component';
@@ -32,6 +32,7 @@ import {ViewDetailComponent} from './views/content/view-detail/view-detail.compo
 import {SearchViewsContentComponent} from './views/content/search-views-content.component';
 import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
 import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
+import {ViewIconSizePipe} from './views/pipes/view-icon-size.pipe';
 
 @NgModule({
   imports: [
@@ -40,7 +41,7 @@ import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guar
     SearchBoxModule,
     WarningMessageModule,
     SearchPerspectiveRoutingModule,
-    SearchDocumentsModule,
+    SearchTasksModule,
     CreateDocumentModalModule,
   ],
   declarations: [
@@ -51,6 +52,7 @@ import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guar
     EmptyViewsComponent,
     ViewDetailComponent,
     SearchViewsContentComponent,
+    ViewIconSizePipe,
   ],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],

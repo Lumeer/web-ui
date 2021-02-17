@@ -430,25 +430,25 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source>
@@ -925,6 +925,12 @@
           <context context-type="sourcefile">app/shared/resource-comments/comments-panel.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
+      </trans-unit><trans-unit id="search.result.more" datatype="html">
+        <source>See More</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/button/see-more/see-more-button.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit><trans-unit id="resource.settings.back" datatype="html">
         <source>Back to App</source>
         <context-group purpose="location">
@@ -1195,22 +1201,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/content/empty-collections/empty-collections.component.html</context>
           <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.result.more" datatype="html">
-        <source>
-          See more
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/post-it-collections/content/post-it-collections-content.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/content/search-views-content.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context>
-          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit><trans-unit id="files.dropdown.button.delete" datatype="html">
         <source>Delete file</source>
@@ -3341,6 +3331,50 @@
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.priority.label" datatype="html">
+        <source>
+      Priority
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.priority.select" datatype="html">
+        <source>Select priority attribute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.priority.help" datatype="html">
+        <source>
+        Which attribute specifies the task priority?
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.tags.label" datatype="html">
+        <source>
+      Tags
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.tags.select" datatype="html">
+        <source>Select tags attribute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.tags.help" datatype="html">
+        <source>
+        Tags, labels, hashtags... Simply anything you use to categorize the tasks.
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">135</context>
+        </context-group>
       </trans-unit><trans-unit id="view.perspective.guide.select" datatype="html">
         <source>1. Select View</source>
         <context-group purpose="location">
@@ -3349,7 +3383,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="view.perspective.guide.title" datatype="html">
         <source>2. Set Title</source>
@@ -3441,14 +3475,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
           <context context-type="linenumber">5</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context>
-          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</source>
@@ -3855,19 +3881,27 @@
           <context context-type="sourcefile">app/view/perspectives/calendar/config/calendar-config.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
+      </trans-unit><trans-unit id="search.all.tasks" datatype="html">
+        <source>
+          Tasks
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
       </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
           Views
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>Your first task is to create a view!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context>
@@ -3877,7 +3911,7 @@
         <source>Views are the most important part of Lumeer that boosts your productivity and saves your time.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context>
@@ -3887,25 +3921,17 @@
         <source>Create and open a Table. Switch the Perspective</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="search.views.empty.createTable2" datatype="html">
         <source>and save the View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.collections" datatype="html">
         <source>
           Tables
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.all.records" datatype="html">
-        <source>
-          Records
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
@@ -3923,20 +3949,20 @@
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="search.tab.views" datatype="html">
-        <source>Views</source>
+      </trans-unit><trans-unit id="search.tab.tasks" datatype="html">
+        <source>Tasks</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-      </trans-unit><trans-unit id="search.tab.collections" datatype="html">
-        <source>Tables</source>
+      </trans-unit><trans-unit id="search.tab.views" datatype="html">
+        <source>Views</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-      </trans-unit><trans-unit id="search.tab.documents" datatype="html">
-        <source>Records</source>
+      </trans-unit><trans-unit id="search.tab.collections" datatype="html">
+        <source>Tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context>
           <context context-type="linenumber">29</context>
@@ -3947,23 +3973,69 @@
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-      </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
-        <source>Open as Table</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
-        <source>Open table</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
       </trans-unit><trans-unit id="document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.title" datatype="html">
+        <source>Empty title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+      </trans-unit><trans-unit id="create.new.task" datatype="html">
+        <source>Create New Task</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.query.title" datatype="html">
+        <source>All your tasks are done!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/query/empty-tasks-query.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.query.message" datatype="html">
+        <source>Great job! Keep it up.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/query/empty-tasks-query.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.collections.title" datatype="html">
+        <source>No tasks table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.collections.message" datatype="html">
+        <source>Don&apos;t worry, you can create task table anytime clicking button below.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="asks.empty.collections.button" datatype="html">
+        <source>Create Task Table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
+        <source>No tasks table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.permissions.message" datatype="html">
+        <source>I am sorry but you do not have permissions to add tables. Contact the project manager.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source>
@@ -5460,6 +5532,13 @@
         <source>Could not run the selected rule for the whole table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.get.fail" datatype="html">
+        <source>Could not get tasks</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/data-resources/data-resources.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -7248,6 +7327,13 @@
         <source>Summary of</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.sample.data.failure" datatype="html">
+        <source>Could not add task table to project</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

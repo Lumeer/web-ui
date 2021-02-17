@@ -1,0 +1,75 @@
+<div class="collection-name order-1">
+  <span *ngIf="collection && large" class="mr-3"
+        [style.color]="collection?.color">{{collection?.name}}</span>
+</div>
+<ng-container *ngIf="document | dataValueByAttribute:attributes?.title: constraintData as titleDataValue">
+  <data-input-preview class="data-input-preview text-truncate font-weight-bold flex-grow-1 order-2 title"
+                      *ngIf="titleDataValue | formatDataValue; else emptyTitle"
+                      [constraint]="attributes.title.constraint"
+                      [cursor]="document | dataCursor:attributes.title.id"
+                      [configuration]="configuration"
+                      [dataValue]="titleDataValue">
+  </data-input-preview>
+</ng-container>
+
+<div
+  class="task-info order-4 order-md-3 d-flex align-items-center flex-row flex-md-nowrap flex-wrap justify-content-start justify-content-md-end"
+  [class.from-start]="collection && large">
+  <ng-container *ngIf="document | dataValueByAttribute:attributes?.assignee: constraintData as assigneeDataValue">
+    <data-input-preview class="data-input-preview text-truncate ml-0 ml-md-3 py-1"
+                        *ngIf="assigneeDataValue | formatDataValue; else emptyTitle"
+                        [constraint]="attributes.assignee.constraint"
+                        [cursor]="document | dataCursor:attributes?.assignee?.id"
+                        [configuration]="assigneeConfiguration"
+                        [dataValue]="assigneeDataValue">
+    </data-input-preview>
+  </ng-container>
+
+  <ng-container *ngIf="document | dataValueByAttribute:attributes?.dueDate: constraintData as dueDateDataValue">
+    <data-input-preview class="data-input-preview text-truncate ml-3 py-1"
+                        *ngIf="dueDateDataValue | formatDataValue"
+                        [constraint]="attributes.dueDate.constraint"
+                        [cursor]="document | dataCursor:attributes.dueDate.id"
+                        [configuration]="configuration"
+                        [dataValue]="dueDateDataValue">
+    </data-input-preview>
+  </ng-container>
+
+  <ng-container *ngIf="document | dataValueByAttribute:attributes?.state: constraintData as stateDataValue">
+    <data-input-preview class="data-input-preview text-truncate ml-3 py-1"
+                        *ngIf="stateDataValue | formatDataValue"
+                        [constraint]="attributes.state.constraint"
+                        [cursor]="document | dataCursor:attributes.state.id"
+                        [configuration]="stateConfiguration"
+                        [dataValue]="stateDataValue">
+    </data-input-preview>
+  </ng-container>
+
+  <ng-container
+    *ngIf="document | dataValueByAttribute:attributes?.priority: constraintData as priorityDataValue">
+    <data-input-preview class="data-input-preview text-truncate ml-3"
+                        *ngIf="priorityDataValue | formatDataValue"
+                        [constraint]="attributes.priority.constraint"
+                        [cursor]="document | dataCursor:attributes.priority.id"
+                        [configuration]="configuration"
+                        [dataValue]="priorityDataValue">
+    </data-input-preview>
+  </ng-container>
+
+</div>
+
+<div class="order-3 order-md-4 d-flex justify-content-end">
+  <span *ngIf="permissions?.read" class="clickable ml-3"
+        (click)="$event.stopPropagation(); toggleFavorite.emit()"
+        title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+        i18n-title="@@document.favorite">
+      <i class="fa-star text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
+  </span>
+  <span *ngIf="permissions?.read" class="clickable mx-2"
+        (click)="$event.stopPropagation(); detail.emit()"><i class="far fa-file-search" aria-hidden="true"></i>
+  </span>
+</div>
+
+<ng-template #emptyTitle>
+  <div class="text-muted font-italic title" i18n="@@tasks.empty.title">Empty title</div>
+</ng-template>

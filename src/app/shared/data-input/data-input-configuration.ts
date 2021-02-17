@@ -36,7 +36,8 @@ export interface CommonDataInputConfiguration {
 }
 
 export interface ColorDataInputConfiguration {
-  limitWidth: boolean;
+  limitWidth?: boolean;
+  compactMode?: boolean;
 }
 
 export interface BooleanDataInputConfiguration {
@@ -50,6 +51,7 @@ export interface ActionDataInputConfiguration {
 
 export interface UserDataInputConfiguration {
   allowCenterOnlyIcon?: boolean;
+  onlyIcon?: boolean;
 }
 
 export interface SelectDataInputConfiguration {

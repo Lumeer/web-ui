@@ -101,6 +101,7 @@
                     [readonly]="readonly"
                     [value]="dataValue"
                     [commonConfiguration]="configuration?.common"
+                    [configuration]="configuration?.color"
                     (valueChange)="onValueChange($event)"
                     (keydown)="onDataKeyDown($event)"
                     (save)="onSaveValueWithAction($event)"

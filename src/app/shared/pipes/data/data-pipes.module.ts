@@ -27,6 +27,7 @@ import {PreviewDataValuePipe} from './preview-data-value.pipe';
 import {FormatDataValueForEditPipe} from './format-data-value-for-edit.pipe';
 import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
 import {DataInputEditInfoPipe} from './data-input-edit-info.pipe';
+import {DataValueByAttributePipe} from './data-value-by-attribute.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -39,6 +40,7 @@ import {DataInputEditInfoPipe} from './data-input-edit-info.pipe';
     FormatDataValueForEditPipe,
     FormatDataValueTitlePipe,
     DataInputEditInfoPipe,
+    DataValueByAttributePipe,
   ],
   exports: [
     DataValuePipe,
@@ -49,6 +51,7 @@ import {DataInputEditInfoPipe} from './data-input-edit-info.pipe';
     FormatDataValueForEditPipe,
     FormatDataValueTitlePipe,
     DataInputEditInfoPipe,
+    DataValueByAttributePipe,
   ],
 })
 export class DataPipesModule {}
