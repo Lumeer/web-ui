@@ -77,6 +77,7 @@ import {AppIdService} from '../service/app-id.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationButton} from '../notifications/notification-button';
 import {DataResourcesAction} from '../store/data-resources/data-resources.action';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -98,6 +99,7 @@ export class PusherService implements OnDestroy {
     private projectService: ProjectService,
     private notificationService: NotificationService,
     private appId: AppIdService,
+    private router: Router,
     private i18n: I18n
   ) {
     this.userNotificationTitle = {
@@ -390,6 +392,13 @@ export class PusherService implements OnDestroy {
           })
         );
       }
+    });
+
+    this.channel.bind('Print', data => {
+      const a = document.createElement('a');
+      a.href = `/print/${data.organizationCode}/${data.projectCode}/${data.resourceType}/${data.resourceId}/${data.documentId}/${data.attributeId}`;
+      a.target = '_blank';
+      a.click();
     });
   }
 

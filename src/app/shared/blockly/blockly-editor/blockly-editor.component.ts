@@ -374,7 +374,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 {
                   type: 'input_value',
                   name: 'VALUE',
-                  check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables - no fields or objects
+                  check: ['', 'Number', 'String', 'Boolean', 'Colour', 'Array'], // only regular variables - no fields or objects
                 },
               ],
               colour: COLOR_DARK,
@@ -431,7 +431,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 {
                   type: 'input_value',
                   name: 'VALUE',
-                  check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables - no fields or objects
+                  check: ['', 'Number', 'String', 'Boolean', 'Colour', 'Array'], // only regular variables - no fields or objects
                 },
               ],
               colour: COLOR_DARK,
