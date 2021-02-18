@@ -47,7 +47,7 @@ export class PrintAttributeBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.PRINT_ATTRIBUTE,
-          message0: 'print %1 of %2', //'%{BKY_BLOCK_PRINT_ATTRIBUTE}', // print %1 of %2
+          message0: '%{BKY_BLOCK_PRINT_ATTRIBUTE}', // print %1 of %2
           args0: [
             {
               type: 'field_dropdown',
