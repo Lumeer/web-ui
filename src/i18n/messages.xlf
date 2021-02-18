@@ -3973,18 +3973,6 @@
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-      </trans-unit><trans-unit id="document.favorite" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-      </trans-unit><trans-unit id="tasks.empty.title" datatype="html">
-        <source>Empty title</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
       </trans-unit><trans-unit id="create.new.task" datatype="html">
         <source>Create New Task</source>
         <context-group purpose="location">
@@ -4014,13 +4002,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.collections.message" datatype="html">
-        <source>Don&apos;t worry, you can create task table anytime clicking button below.</source>
+        <source>Don&apos;t worry, you can easily create a tasks table now. Click on the button below.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="asks.empty.collections.button" datatype="html">
-        <source>Create Task Table</source>
+        <source>Create Tasks Table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">9</context>
@@ -4036,6 +4024,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.favorite" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.title" datatype="html">
+        <source>Empty title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source>
@@ -6283,6 +6283,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.printAttributeBlock" datatype="html">
+        <source>Prints the value of an attribute in the given record or link.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.sequenceBlock" datatype="html">
         <source>Gets another value from the given sequence aligned to the given number of digits.</source>
         <context-group purpose="location">
@@ -6336,6 +6343,13 @@
         <source>success,info,warning,error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.stringReplaceBlock" datatype="html">
+        <source>Replaces a regular expression pattern in a given string.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/string-replace-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

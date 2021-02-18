@@ -3315,10 +3315,10 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target state="final">Empty title</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
         <source>Create New Task</source><target state="final">Create New Task</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
@@ -3347,13 +3347,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.collections.message" datatype="html">
-        <source>Don't worry, you can create task table anytime clicking button below.</source><target state="final">Don't worry, you can create task table anytime clicking button below.</target>
+        <source>Don't worry, you can easily create a tasks table now. Click on the button below.</source><target state="final">Don't worry, you can easily create a tasks table now. Click on the button below.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="asks.empty.collections.button" datatype="html">
-        <source>Create Task Table</source><target state="final">Create Task Table</target>
+        <source>Create Tasks Table</source><target state="final">Create Tasks Table</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">9</context>
@@ -4664,6 +4664,12 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/parse-date-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.printAttributeBlock" datatype="html">
+        <source>Prints the value of an attribute in the given record or link.</source><target state="final">Prints the value of an attribute in the given record or link.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.sequenceBlock" datatype="html">
         <source>Gets another value from the given sequence aligned to the given number of digits.</source><target state="final">Gets another value from the given sequence aligned to the given number of digits.</target>
         <context-group purpose="location">
@@ -4710,6 +4716,12 @@
         <source>success,info,warning,error</source><target state="final">success,info,warning,error</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.stringReplaceBlock" datatype="html">
+        <source>Replaces a regular expression pattern in a given string.</source><target state="final">Replaces a regular expression pattern in a given string.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/string-replace-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">

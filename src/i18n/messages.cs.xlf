@@ -5415,10 +5415,10 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target>Prázdný popis</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/header/search-task-header.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
         <source>Create New Task</source><target>Vytvořit nový úkol</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
@@ -5447,13 +5447,14 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.collections.message" datatype="html">
-        <source>Don't worry, you can create task table anytime clicking button below.</source><target>Žádné obavy, tabulku na úkoly snadno vytvoříte pomocí tlačítka níže.</target>
+        <source>Don't worry, you can easily create a tasks table now. Click on the button below.</source>
+        <target>Žádné obavy, tabulku na úkoly snadno vytvoříte pomocí tlačítka níže.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="asks.empty.collections.button" datatype="html">
-        <source>Create Task Table</source><target>Vytvořit tabulku s úkoly</target>
+        <source>Create Tasks Table</source><target>Vytvořit tabulku s úkoly</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">9</context>
@@ -5830,6 +5831,13 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/parse-date-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.printAttributeBlock" datatype="html">
+        <source>Prints the value of an attribute in the given record or link.</source>
+        <target>Vytiskne hodnotu atributu daného záznamu nebo vazby.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.sequenceBlock" datatype="html">
         <source>Gets another value from the given sequence aligned to the given number of digits.</source>
         <target>Vrátí další hodnotu ze sekvence zarovnanou na daný počet číslic.</target>
@@ -5882,6 +5890,13 @@
         <source>success,info,warning,error</source><target>potvrzovací,informativní,upozorňovací,chybovou</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.stringReplaceBlock" datatype="html">
+        <source>Replaces a regular expression pattern in a given string.</source>
+        <target>Nahradí regulární výraz v daném řetězci.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/string-replace-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
