@@ -85,6 +85,7 @@ export class BlocklyUtils {
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
+  public static readonly STRING_REPLACE = 'string_replace';
   public static readonly CREATE_DOCUMENTS_LIMIT = 25;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
 
