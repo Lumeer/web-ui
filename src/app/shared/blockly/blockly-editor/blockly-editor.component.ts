@@ -70,6 +70,7 @@ import {IsNotEmptyBlocklyComponent} from './blocks/is-not-empty-blockly-componen
 import {IsoToDateBlocklyComponent} from './blocks/iso-to-date-blockly-component';
 import {ShiftDateOfBlocklyComponent} from './blocks/shift-date-of-blockly-component';
 import {IsoToMsBlocklyComponent} from './blocks/iso-to-ms-blockly-component';
+import {PrintAttributeBlocklyComponent} from './blocks/print-attribute-blockly-component';
 
 declare var Blockly: any;
 
@@ -166,6 +167,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new IsoToDateBlocklyComponent(this.blocklyUtils, this.i18n),
       new IsoToMsBlocklyComponent(this.blocklyUtils, this.i18n),
       new ShiftDateOfBlocklyComponent(this.blocklyUtils, this.i18n),
+      new PrintAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
@@ -530,6 +532,23 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             }
           }
 
+          if (block.type === BlocklyUtils.PRINT_ATTRIBUTE) {
+            const link = block.getInput('DOCUMENT');
+
+            if (link.connection && link.connection.targetConnection) {
+              const linkedBlock = link.connection.targetConnection.getSourceBlock();
+              const blockOutputType = this.blocklyUtils.getOutputConnectionCheck(linkedBlock);
+
+              if (
+                linkedBlock &&
+                (blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+                  blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+              ) {
+                this.blocklyUtils.setterAndGetterOutputType(block, linkedBlock);
+              }
+            }
+          }
+
           if (block.type === BlocklyUtils.GET_LINK_DOCUMENT) {
             const link = block.getInput('LINK');
 
@@ -660,6 +679,25 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
 
+      // populate attributes in print block
+      if (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE) {
+        if (
+          blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX) ||
+          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)
+        ) {
+          this.blocklyUtils.setterAndGetterOutputType(parentBlock, block);
+        } else {
+          const link = parentBlock.getInput('DOCUMENT');
+          if (
+            link.connection &&
+            link.connection.targetConnection &&
+            link.connection.targetConnection.getSourceBlock().id === block.id
+          ) {
+            this.blocklyUtils.tryDisconnect(parentBlock, link.connection);
+          }
+        }
+      }
+
       // populate collections in getter of linked document from link instance
       if (parentBlock.type === BlocklyUtils.GET_LINK_DOCUMENT) {
         if (blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
@@ -711,7 +749,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 parentBlock.getInput('DOCUMENT').connection.targetConnection === null)) ||
             (parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE &&
               (isNullOrUndefined(parentBlock.getInput('LINK').connection) ||
-                parentBlock.getInput('LINK').connection.targetConnection === null))
+                parentBlock.getInput('LINK').connection.targetConnection === null)) ||
+            (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE &&
+              (isNullOrUndefined(parentBlock.getInput('DOCUMENT').connection) ||
+                parentBlock.getInput('DOCUMENT').connection.targetConnection === null))
           ) {
             this.blocklyUtils.resetOptions(parentBlock, 'ATTR');
           }

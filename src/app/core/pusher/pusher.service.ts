@@ -78,6 +78,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationButton} from '../notifications/notification-button';
 import {DataResourcesAction} from '../store/data-resources/data-resources.action';
 import {Router} from '@angular/router';
+import {LocationStrategy} from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -100,6 +101,7 @@ export class PusherService implements OnDestroy {
     private notificationService: NotificationService,
     private appId: AppIdService,
     private router: Router,
+    private locationStrategy: LocationStrategy,
     private i18n: I18n
   ) {
     this.userNotificationTitle = {
@@ -162,6 +164,7 @@ export class PusherService implements OnDestroy {
     this.bindUserMessageEvents();
     this.bindTemplateEvents();
     this.bindResourceCommentEvents();
+    this.bindPrintEvents();
   }
 
   private bindOrganizationEvents() {
@@ -393,10 +396,16 @@ export class PusherService implements OnDestroy {
         );
       }
     });
+  }
 
-    this.channel.bind('Print', data => {
+  private bindPrintEvents() {
+    this.channel.bind('PrintRequest', data => {
       const a = document.createElement('a');
-      a.href = `/print/${data.organizationCode}/${data.projectCode}/${data.resourceType}/${data.resourceId}/${data.documentId}/${data.attributeId}`;
+      a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+        data.object.projectCode
+      }/${data.object.type.toLowerCase()}/${data.object.resourceId}/${data.object.documentId}/${
+        data.object.attributeId
+      }`;
       a.target = '_blank';
       a.click();
     });
