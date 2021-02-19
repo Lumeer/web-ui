@@ -84,6 +84,8 @@ export class BlocklyUtils {
   public static readonly CREATE_DOCUMENT = 'create_document';
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
+  public static readonly PRINT_ATTRIBUTE = 'print_attribute';
+  public static readonly STRING_REPLACE = 'string_replace';
   public static readonly CREATE_DOCUMENTS_LIMIT = 25;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
 
@@ -195,6 +197,23 @@ export class BlocklyUtils {
         }
       }
 
+      // print attribute
+      if (block.type === BlocklyUtils.PRINT_ATTRIBUTE) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType = this.getOutputConnectionCheck(child);
+
+          if (
+            childOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+            childOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)
+          ) {
+            const value = block.getField('ATTR').getValue();
+            this.setterAndGetterOutputType(block, child, true);
+            block.getField('ATTR').setValue(value);
+          }
+        }
+      }
+
       // link instance getters and setters
       if (block.type === BlocklyUtils.GET_LINK_ATTRIBUTE || block.type === BlocklyUtils.SET_LINK_ATTRIBUTE) {
         if (children && children.length > 0) {
@@ -295,10 +314,18 @@ export class BlocklyUtils {
 
     let attributes: Attribute[];
     let defaultAttributeId = '';
-    if (parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE || parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE) {
+    if (
+      parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
+      parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE ||
+      (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+    ) {
       const linkType = this.getLinkType(blockOutputType.split('_')[0]);
       attributes = linkType.attributes;
-    } else {
+    } else if (
+      parentBlock.type === BlocklyUtils.GET_ATTRIBUTE ||
+      parentBlock.type === BlocklyUtils.SET_ATTRIBUTE ||
+      (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
+    ) {
       const collection = this.getCollection(blockOutputType.split('_')[0]);
       attributes = collection.attributes;
       defaultAttributeId = collection.defaultAttributeId;

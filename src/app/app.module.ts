@@ -34,6 +34,7 @@ import {SharedModule} from './shared/shared.module';
 import {ConstraintDataService} from './core/service/constraint-data.service';
 import {PermissionsCheckService} from './core/service/permissions-check.service';
 import {AppIdService} from './core/service/app-id.service';
+import {PrintModule} from './print/print.module';
 
 declare const require; // Use the require method provided by webpack
 
@@ -56,6 +57,7 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     CoreModule,
     CollectionModule,
     SharedModule,
+    PrintModule,
     ViewModule,
     WorkspaceModule,
     AppRoutingModule, // needs to be declared after all other routing modules
