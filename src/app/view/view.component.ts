@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
@@ -43,6 +43,9 @@ import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 import {environment} from '../../environments/environment';
+import {selectCurrentQueryDocumentsLoaded} from '../core/store/documents/documents.state';
+
+declare var NProgress: any;
 
 @Component({
   templateUrl: './view.component.html',
@@ -50,13 +53,16 @@ import {environment} from '../../environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FileAttachmentsService, ViewSettingsService],
 })
-export class ViewComponent implements OnInit {
+export class ViewComponent implements OnInit, OnDestroy {
   @ViewChild(ViewControlsComponent)
   public viewControlsComponent: ViewControlsComponent;
 
   public view$: Observable<View>;
   public viewsExist$: Observable<boolean>;
   public user: Subscription;
+
+  private progressShown = false;
+  private progressSubscription: Subscription;
 
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
@@ -66,6 +72,10 @@ export class ViewComponent implements OnInit {
     private store$: Store<AppState>,
     private modalService: ModalService
   ) {}
+
+  public ngOnDestroy(): void {
+    this.progressSubscription.unsubscribe();
+  }
 
   public ngOnInit() {
     this.view$ = this.bindView();
@@ -77,6 +87,19 @@ export class ViewComponent implements OnInit {
     if (environment.auth) {
       this.checkEmailVerified();
     }
+
+    NProgress.configure({showSpinner: false});
+
+    this.progressSubscription = this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)).subscribe(loaded => {
+      if (!loaded && !this.progressShown) {
+        this.progressShown = true;
+        NProgress.start();
+      }
+      if (loaded && this.progressShown) {
+        this.progressShown = false;
+        NProgress.done();
+      }
+    });
   }
 
   private checkEmailVerified() {
