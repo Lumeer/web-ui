@@ -1,4 +1,4 @@
-<empty-state icon="far fa-user-plus">
+<empty-state [compact]="compact" icon="far fa-user-plus">
   <h3 i18n="@@tasks.empty.collections.title">No tasks table</h3>
   <div i18n="@@tasks.empty.collections.message">Don't worry, you can easily create a tasks table now. Click on the button below.</div>
 
@@ -6,6 +6,6 @@
           class="btn btn-sm btn-primary mt-3"
           (click)="onCreate()">
     <span *ngIf="creatingData$ | async" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
-    <span class="font-weight-bold" i18n="@@asks.empty.collections.button">Create Tasks Table</span>
+    <span class="font-weight-bold" i18n="@@tasks.empty.collections.button">Create Tasks Table</span>
   </button>
 </empty-state>

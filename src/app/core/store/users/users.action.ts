@@ -47,6 +47,7 @@ export enum UsersActionType {
   INVITE = '[Users] Invite',
   INVITE_SUCCESS = '[Users] Invite :: Success',
   INVITE_FAILURE = '[Users] Invite :: Failure',
+  INVITATION_EXCEEDED = '[Users] Invitation Exceeded',
 
   UPDATE = '[Users] Update',
   UPDATE_SUCCESS = '[Users] Update :: Success',
@@ -182,6 +183,12 @@ export namespace UsersAction {
     public readonly type = UsersActionType.INVITE_FAILURE;
 
     public constructor(public payload: {error: any; organizationId: string; projectId: string}) {}
+  }
+
+  export class InvitationExceeded implements Action {
+    public readonly type = UsersActionType.INVITATION_EXCEEDED;
+
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class Update implements Action {

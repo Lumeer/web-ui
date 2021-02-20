@@ -88,6 +88,9 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   @Input()
   public query: Query;
 
+  @Input()
+  public showAddTaskTable: boolean;
+
   @Output()
   public delete = new EventEmitter<Collection>();
 

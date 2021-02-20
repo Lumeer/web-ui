@@ -1,19 +1,19 @@
 <div class="mt-3 mb-5" *ngIf="dataLoaded$ | async; else loading">
 
   <ng-container
-    *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasDocument: hasDocument$ | async} as data">
+    *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasTaskCollection: hasTaskCollection$ | async, showTaskTab: showTaskTab$ | async } as data">
 
-    <ng-container *ngIf="data.hasCollection || data.hasView || data.hasDocument; else noData">
+    <ng-container *ngIf="data.hasCollection || data.hasView || data.showTaskTab; else noData">
 
-      <ng-container *ngIf="data.hasDocument">
+      <ng-container *ngIf="data.showTaskTab">
         <div class="h3 ml-3 my-2" i18n="@@search.all.tasks">
           Tasks
         </div>
-        <search-tasks [maxLines]="7"></search-tasks>
+        <search-tasks [maxLines]="7" [compactEmptyPages]="true"></search-tasks>
       </ng-container>
 
       <div *ngIf="!data.hasAnyView || data.hasView">
-        <hr *ngIf="data.hasDocument">
+        <hr *ngIf="data.showTaskTab">
         <div class="h3 ml-3 my-2" i18n="@@search.all.views" data-tour="search-views-label">
           Views
         </div>
@@ -34,11 +34,13 @@
 
 
       <ng-container *ngIf="data.hasCollection">
-        <hr *ngIf="data.hasView || data.hasDocument">
+        <hr *ngIf="data.hasView || data.showTaskTab">
         <div class="h3 ml-3 my-2" i18n="@@search.all.collections">
           Tables
         </div>
-        <post-it-collections [maxShown]="5"></post-it-collections>
+        <post-it-collections [maxShown]="5"
+                             [showAddTaskTable]="!data.showTaskTab && !data.hasTaskCollection">
+        </post-it-collections>
       </ng-container>
 
     </ng-container>

@@ -6,6 +6,7 @@
                       [collections]="collections$ | async"
                       [workspace]="workspace$ | async"
                       [documents]="documents$ | async"
+                      [compactEmptyPages]="compactEmptyPages"
                       (configChange)="configChange($event)"
                       infiniteScroll
                       [infiniteScrollDisabled]="maxLines > 0"

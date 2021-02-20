@@ -17,9 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../../shared/utils/array.utils';
-import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
-import {Query} from './query';
+import {
+  containsSameElements,
+  deepArrayEquals,
+  getArrayDifference,
+  isArraySubset,
+} from '../../../../shared/utils/array.utils';
+import {convertQueryModelToString, normalizeQueryModel, normalizeQueryStem} from './query.converter';
+import {Query, QueryStem} from './query';
 import {
   checkTasksCollectionsQuery,
   getBaseCollectionIdsFromQuery,
@@ -27,11 +32,32 @@ import {
   queryIsEmptyExceptPagination,
   queryWithoutFilters,
 } from './query.util';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {Collection} from '../../collections/collection';
 
 export function areQueriesEqual(first: Query, second: Query): boolean {
-  return deepObjectsEquals(normalizeQueryModel(first), normalizeQueryModel(second));
+  const firstNormalized = normalizeQueryModel(first);
+  const secondNormalized = normalizeQueryModel(second);
+
+  return (
+    firstNormalized.page === secondNormalized.page &&
+    firstNormalized.pageSize === secondNormalized.pageSize &&
+    containsSameElements(firstNormalized.fulltexts, secondNormalized.fulltexts) &&
+    firstNormalized.stems.length === secondNormalized.stems.length &&
+    firstNormalized.stems.every(stem => secondNormalized.stems.some(otherStem => areQueryStemsEqual(stem, otherStem)))
+  );
+}
+
+export function areQueryStemsEqual(first: QueryStem, second: QueryStem): boolean {
+  const firstNormalized = normalizeQueryStem(first);
+  const secondNormalized = normalizeQueryStem(second);
+
+  return (
+    firstNormalized.collectionId === secondNormalized.collectionId &&
+    containsSameElements(firstNormalized.filters, secondNormalized.filters) &&
+    containsSameElements(firstNormalized.linkFilters, secondNormalized.linkFilters) &&
+    containsSameElements(firstNormalized.documentIds, secondNormalized.documentIds) &&
+    containsSameElements(firstNormalized.linkTypeIds, secondNormalized.linkTypeIds)
+  );
 }
 
 export function isQueryLoaded(query: Query, loadedQueries: Query[]): boolean {

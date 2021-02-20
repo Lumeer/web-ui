@@ -57,6 +57,9 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
   @Input()
   public maxLines: number = -1;
 
+  @Input()
+  public compactEmptyPages: boolean;
+
   public constraintData$: Observable<ConstraintData>;
   public documentsConfig$: Observable<SearchDocumentsConfig>;
   public documents$: Observable<DocumentModel[]>;

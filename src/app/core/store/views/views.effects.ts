@@ -63,6 +63,9 @@ import {KanbansAction} from '../kanbans/kanbans.action';
 import {ChartAction} from '../charts/charts.action';
 import {ViewService, UserService} from '../../data-service';
 import {WorkflowsAction} from '../workflows/workflows.action';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {HttpErrorResponse} from '@angular/common/http';
+import {UsersAction} from '../users/users.action';
 
 @Injectable()
 export class ViewsEffects {
@@ -331,9 +334,15 @@ export class ViewsEffects {
             ...createCallbackActions(action.payload.onSuccess)
           )
         ),
-        catchError(error =>
-          of(new ViewsAction.SetPermissionsFailure({error}), ...createCallbackActions(action.payload.onFailure))
-        )
+        catchError(error => {
+          if (error instanceof HttpErrorResponse && Number(error.status) === 402) {
+            return of(
+              new ViewsAction.SetPermissionsFailure({error}),
+              ...createCallbackActions(action.payload.onInviteFailure)
+            );
+          }
+          return of(new ViewsAction.SetPermissionsFailure({error}), ...createCallbackActions(action.payload.onFailure));
+        })
       );
     })
   );
@@ -363,7 +372,11 @@ export class ViewsEffects {
   public setPermissionFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.SetPermissionsFailure>(ViewsActionType.SET_PERMISSIONS_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
+    map(([action, organization]) => {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
+        return new UsersAction.InvitationExceeded({organizationId: organization.id});
+      }
       const message = this.i18n({id: 'view.change.permission.fail', value: 'Could not change the view permissions'});
       return new NotificationsAction.Error({message});
     })

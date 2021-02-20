@@ -59,13 +59,13 @@
         Zobrazit <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
         <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source><target>{VAR_PLURAL, plural, =2 {oba} =3 {všechny} =4 {všechny} other {všech} }</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source><target>{VAR_PLURAL, plural, =2 {komentáře} =3 {komentáře} =4 {komentáře} other {komentářů} }</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</source><target>Přehled aktivit je dostupný jen v <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise verzi<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Prosím <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>kontaktujte podporu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
 
@@ -82,10 +82,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="inviteUser.hint.content" datatype="html">
         <source>Invite your colleagues using this button.</source><target>Pozvěte svoje spolupracovníky pomocí tohoto tlačítka.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="b23496c0dd5ab3e99af27accd883244aff78fb5d" datatype="html">
         <source>You are all alone here</source><target>Nikdo jiný tu není</target>
-        
+
         <note priority="1" from="description">@inviteUser.hint.title</note>
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
         <source>Add</source><target>Přidat</target>
@@ -160,14 +160,14 @@
       </trans-unit><trans-unit id="userNotifications.dueDateSoon" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
         <target>Úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se blíží termín dokončení – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</target>
-        
-      
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
-      
+
       <trans-unit id="userNotifications.pastDueDate" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> je již po termínu dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="userNotifications.dueDateChangedPrefix" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a changed due date</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> má změněný termín dokončení</target>
@@ -178,8 +178,8 @@
       </trans-unit><trans-unit id="userNotifications.dueDateChangedMiddle" datatype="html">
         <source> – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/></source>
         <target> – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/></target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="userNotifications.dueDateChangedNoDate" datatype="html">
         <source> – no due date set</source><target> – termín není nastaven</target>
         <context-group purpose="location">
@@ -195,19 +195,19 @@
       </trans-unit><trans-unit id="userNotifications.stateUpdate" datatype="html">
         <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="START_EMPHASISED_TEXT_1" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
         <target>Stav úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se změnil na <x id="START_EMPHASISED_TEXT_1" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="userNotifications.taskUpdated" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl upraven.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="userNotifications.taskRemoved" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl odstraněn.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="userNotifications.taskUnassigned" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> Vám byl odebrán.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="userNotifications.taskCommented" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source>
         <target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> má nový komentář.</target>
@@ -331,7 +331,7 @@
                 <target>Tabulky</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
-            
+
             <trans-unit id="search.tab.views" datatype="html">
                 <source>Views</source>
                 <target>Pohledy</target>
@@ -452,14 +452,14 @@
   </source><target>
     Format nemůže být prázdný.
   </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="form.date.errors.customInvalid" datatype="html">
         <source>
     I am sorry, but this format is not supported. Please enter valid format.
   </source><target>
     Omlouvám se, ale tento formát není podporovaný. Prosím zadejte platný formát.
   </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
         <source>
         Minimum value
@@ -725,7 +725,7 @@
       </trans-unit><trans-unit id="constraint.action.empty.subtitle" datatype="html">
         <source>Navigate to Table settings and create something
       beautiful! Keep in mind that Automated Links cannot be used in an action.
-    </source><target>Přepněte se do nastavení tabulky a vytvořte něco pěkného! 
+    </source><target>Přepněte se do nastavení tabulky a vytvořte něco pěkného!
     Pamatujte, že Auto Link pravidla nelze použít v akcích.
     </target>
         <context-group purpose="location">
@@ -983,7 +983,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="table.body.row.copy.value" datatype="html">
         <source>Copy value</source><target>Kopírovat hodnotu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="table.body.row.link.above" datatype="html">
         <source>Link new row above</source><target>Připojit nový řádek nad</target>
 
@@ -1127,7 +1127,7 @@
         </context-group>
       </trans-unit><trans-unit id="table.header.add.link.column" datatype="html">
         <source>Add link column</source><target>Přidat sloupec do vazby</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
 
 
@@ -2170,19 +2170,19 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.header.createdOn" datatype="html">
         <source>Created on</source><target>Vytvořeno</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comment-item/comment-item.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.header.createdBy" datatype="html">
         <source>Created by</source><target>Vytvořil(a)</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comment-item/comment-item.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.header.updatedOn" datatype="html">
         <source>Updated on</source><target>Upraveno</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comment-item/comment-item.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.header.updatedBy" datatype="html">
         <source>Updated by</source><target>Upravil(a)</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
         <source>Remove options?</source><target>Odstranit možnosti?</target>
 
@@ -2402,7 +2402,7 @@
         <source>
   This table stores tasks. There are assignees, due dates, and states. Lumeer automatically notifies people about important changes.
 </source><target>
-  Tato tabulka uchovává úkoly. Ty mohou být někomu přiděleny, mají termín a stav. 
+  Tato tabulka uchovává úkoly. Ty mohou být někomu přiděleny, mají termín a stav.
   Lumeer automaticky upozorňuje uživatele na důležité změny úkolů.
 </target>
         <context-group purpose="location">
@@ -2441,10 +2441,10 @@
     </source><target>
       Termín
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
         <source>Select due date attribute</source><target>Atribut s termínem</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.help" datatype="html">
         <source>
         Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
@@ -2461,10 +2461,10 @@
     </source><target>
       Stav
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.select" datatype="html">
         <source>Select state attribute</source><target>Atribut se stavem</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.help" datatype="html">
         <source>
         Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
@@ -2481,7 +2481,7 @@
     </source><target>
       Dokončené stavy
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.stateList.help" datatype="html">
         <source>
         Which states are considered final? That means no further notifications about the task will be sent.
@@ -2498,10 +2498,10 @@
     </source><target>
       Pozorovatel
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.select" datatype="html">
         <source>Select observer attribute</source><target>Atribut s pozorovatelem</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.help" datatype="html">
         <source>
         Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
@@ -3082,7 +3082,7 @@
         </source><target>
           Obrázek, který se použije v okně při vytváření kopie projektu.
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
         <source>
         Allowed Domains
@@ -3096,7 +3096,7 @@
           Seznam webových adres, kde bude možné tento projekt vložit do stránky.
           Např. www.lumeer.io, acme.com. Zadejte * pro povolení všech adres.
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
         <source>Relative Date</source><target>Relativní datum</target>
 
@@ -3110,7 +3110,7 @@
           Posun se určí jako rozdíl dnešního data a toho zde zadaného. Žádný posun se neprovede,
           pokud necháte pole prázdné.
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
         <source>
         Open with view
@@ -3127,7 +3127,7 @@
           Pohled, který se zobrazí, když se projekt načte v okně pro vytváření nového projektu nebo při vložení do webové stránky.
           Pokud zůstane prázdné, použije se domovská obrazovka.
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
         <source>Tags</source><target>Značky</target>
 
@@ -3504,7 +3504,7 @@
   </source><target>
     Žádné komentáře. Napište první!
   </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/comments-panel.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source><target>Zvolte absolutní nebo relativní zobrazení</target>
 
@@ -3569,7 +3569,7 @@
 
             <trans-unit id="data.loading" datatype="html">
         <source>Loading data</source><target>Načítám údaje</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
             <trans-unit id="search.all.views" datatype="html">
                 <source>
@@ -4183,7 +4183,7 @@
         </context-group>
       </trans-unit><trans-unit id="button.edit" datatype="html">
         <source>Edit</source><target>Upravit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/comment-item/comment-item.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
             <trans-unit id="users.header.inviteUser" datatype="html">
                 <source>Invite a colleague or a friend</source>
@@ -4278,21 +4278,21 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="menu.hintsEnable" datatype="html">
         <source>Show Hints</source><target>Zobrazit tipy</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="menu.hintsDisable" datatype="html">
         <source>Hide Hints</source><target>Skrýt tipy</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
         <source>Earn with Lumeer</source><target>Vydělávejte s Lumeerem</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="menu.affiliateProgram" datatype="html">
         <source>Affiliate Program</source><target>Partnerský program</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="menu.getHelp" datatype="html">
         <source>Get Help</source><target>Nápověda</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
         <source>Solutions and Support</source><target>Řešení a Podpora</target>
 
@@ -4606,10 +4606,10 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.title" datatype="html">
         <source>Delete this comment?</source><target>Smazat tento komentář?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
         <source>Do you really want to delete this comment?</source><target>Chcete opravdu smazat tento komentář?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="query.item.deleted.file" datatype="html">
                 <source>Deleted table</source>
@@ -5000,7 +5000,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="kanban.config.collection.summary" datatype="html">
         <source>Summary</source><target>Souhrn</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
         <source>
       Done state
@@ -5164,26 +5164,26 @@
     </source><target>
       Detail
     </target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="document.detail.tabs.links" datatype="html">
         <source>Links</source><target>
       Vazby
     </target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="document.detail.tabs.comments" datatype="html">
         <source>Comments</source><target>Komentáře</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="document.detail.tabs.activity" datatype="html">
         <source>
       Activity
     </source><target>
       Aktivity
     </target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.detail.linkType.add" datatype="html">
         <source>Create New Link</source><target>Vytvořit novou vazbu</target>
         <context-group purpose="location">
@@ -5337,7 +5337,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
         <source>By skipping the Newsletter, you miss a lot of
       valuable information, free ebooks and guides. Are you sure you want to continue?</source><target>Vynecháním odběru novinek přijdete o spoustu cenných informací, elektronických knih a příruček zdarma. Skutečně chcete pokračovat?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target>Přečetl(a) jsem si</target>
 
@@ -5355,7 +5355,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
         <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target>Přihlaste mě prosím k odběru novinek se všemi výhodami!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target>Zasílejte mi informace a materiály zdarma o:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
 
@@ -5364,14 +5364,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
         <source>.</source><target>.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
         <target>zvyšování <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>zisků<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, úspoře <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>času<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, zlepšování <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>komunikace<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efektivity<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> díky odběru novinek.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
         <source>See </source><target>Souhlasím se </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target>Pokračovat</target>
 
@@ -5417,7 +5417,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target>Prázdný popis</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
         <source>Create New Task</source><target>Vytvořit nový úkol</target>
         <context-group purpose="location">
@@ -5453,7 +5453,7 @@
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="asks.empty.collections.button" datatype="html">
+      </trans-unit><trans-unit id="tasks.empty.collections.button" datatype="html">
         <source>Create Tasks Table</source><target>Vytvořit tabulku s úkoly</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
@@ -5677,8 +5677,8 @@
       </trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock" datatype="html">
         <source>Gets a record linked to the given document via the selected link.</source>
         <target>Vytvoří nový záznam. Uložte ho do proměnné, abyste jej mohli dál měnit.</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.isEmpty" datatype="html">
         <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source>
         <target>Vrátí true pokud je vstup null, undefined, prázdný řetězec, prázdné pole, prázdný objekt or nebo pole s jednou prázdnou hodnotou.</target>
@@ -5901,10 +5901,10 @@
         </context-group>
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source><target>tis.|mil.|mld.|bil.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source><target>.|.|.|.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
         <source>Do you really want to permanently delete this view?</source><target>Chcete skutečně navždy smazat tento pohled?</target>
         <context-group purpose="location">

@@ -50,6 +50,9 @@ export class PostItCollectionsComponent implements OnInit {
   @Input()
   public maxShown: number = -1;
 
+  @Input()
+  public showAddTaskTable: boolean;
+
   public collections$: Observable<Collection[]>;
   public projectPermissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;

@@ -214,41 +214,48 @@ export class UsersEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
+    map(action => {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
+        return new UsersAction.InvitationExceeded(action.payload);
+      }
+      const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
+      return new NotificationsAction.Error({message: errorMessage});
+    })
+  );
+
+  @Effect()
+  public invitationExceeded$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.InvitationExceeded>(UsersActionType.INVITATION_EXCEEDED),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary), this.store$.select(selectAllServiceLimits)),
     map(([action, organizations, serviceLimits]) => {
       const organization = organizations[action.payload.organizationId];
       const limits = serviceLimits.find(limit => limit.organizationId === action.payload.organizationId);
-
-      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        let message: string;
-        let title: string;
-        if (limits?.serviceLevel === ServiceLevelType.BASIC) {
-          message = this.i18n(
-            {
-              id: 'user.create.serviceLimits.basic',
-              value:
-                'You are allowed to invite only {{limit}} users to your organization. Do you want to upgrade your plan now?',
-            },
-            {
-              limit: limits.users,
-            }
-          );
-          title = this.i18n({
-            id: 'user.create.serviceLimits.business.title',
-            value: 'Limits exceeded',
-          });
-        } else {
-          message = this.i18n({
-            id: 'user.create.serviceLimits',
+      let message: string;
+      let title: string;
+      if (limits?.serviceLevel === ServiceLevelType.BASIC) {
+        message = this.i18n(
+          {
+            id: 'user.create.serviceLimits.basic',
             value:
-              'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
-          });
-        }
-
-        return new OrganizationsAction.OfferPayment({message, title, organizationCode: organization.code});
+              'You are allowed to invite only {{limit}} users to your organization. Do you want to upgrade your plan now?',
+          },
+          {
+            limit: limits.users,
+          }
+        );
+        title = this.i18n({
+          id: 'user.create.serviceLimits.business.title',
+          value: 'Limits exceeded',
+        });
+      } else {
+        message = this.i18n({
+          id: 'user.create.serviceLimits',
+          value:
+            'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
+        });
       }
-      const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
-      return new NotificationsAction.Error({message: errorMessage});
+
+      return new OrganizationsAction.OfferPayment({message, title, organizationCode: organization.code});
     })
   );
 
@@ -303,7 +310,6 @@ export class UsersEffects {
   @Effect()
   public inviteFailure$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.InviteFailure>(UsersActionType.INVITE_FAILURE),
-    tap(action => console.error(action.payload.error)),
     map(
       action =>
         new UsersAction.CreateFailure({organizationId: action.payload.organizationId, error: action.payload.error})

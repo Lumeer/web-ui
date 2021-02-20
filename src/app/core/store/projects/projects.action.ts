@@ -178,7 +178,9 @@ export namespace ProjectsAction {
   export class CreateSampleData implements Action {
     public readonly type = ProjectsActionType.CREATE_SAMPLE_DATA;
 
-    public constructor(public payload: {type: SampleDataType; errorMessage: string; onError?: () => void}) {}
+    public constructor(
+      public payload: {type: SampleDataType; errorMessage: string; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
   }
 
   export class Copy implements Action {

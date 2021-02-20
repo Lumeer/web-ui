@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {ProjectsAction} from '../../../../../../../core/store/projects/projects.action';
@@ -31,6 +31,9 @@ import {BehaviorSubject} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyTasksCollectionsComponent {
+  @Input()
+  public compact: boolean;
+
   constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public creatingData$ = new BehaviorSubject(false);
@@ -43,7 +46,7 @@ export class EmptyTasksCollectionsComponent {
       new ProjectsAction.CreateSampleData({
         type: SampleDataType.Tasks,
         errorMessage,
-        onError: () => this.creatingData$.next(false),
+        onFailure: () => this.creatingData$.next(false),
       })
     );
   }

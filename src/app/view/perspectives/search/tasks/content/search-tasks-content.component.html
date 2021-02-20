@@ -69,6 +69,7 @@
   <empty-tasks
     (tablePerspective)="switchPerspectiveToTable()"
     [collections]="allTasksCollections$ | async"
+    [compact]="compactEmptyPages"
     [query]="query">
   </empty-tasks>
 </ng-template>

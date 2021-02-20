@@ -1,23 +1,25 @@
 <ng-container *ngIf="!collections?.length; else hasTaskCollection">
 
-  <empty-tasks-collections *ngIf="hasWritePermission$ | async; else noPermissions">
+  <empty-tasks-collections *ngIf="hasWritePermission$ | async; else noPermissions"
+                           [compact]="compact">
   </empty-tasks-collections>
 
   <ng-template #noPermissions>
-    <empty-tasks-collections-without-rights></empty-tasks-collections-without-rights>
+    <empty-tasks-collections-without-rights [compact]="compact">
+    </empty-tasks-collections-without-rights>
   </ng-template>
-
 
 </ng-container>
 
 
 <ng-template #hasTaskCollection>
 
-  <empty-tasks-query *ngIf="query | emptyQuery; else emptySearch">
+  <empty-tasks-query *ngIf="query | emptyQuery; else emptySearch"
+                     [compact]="compact">
   </empty-tasks-query>
 
   <ng-template #emptySearch>
-    <empty-tasks-search></empty-tasks-search>
+    <empty-tasks-search [compact]="compact"></empty-tasks-search>
   </ng-template>
 
 </ng-template>

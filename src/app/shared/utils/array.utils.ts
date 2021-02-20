@@ -61,7 +61,7 @@ export function containsSameElements(array1: any[], array2: any[]): boolean {
 export function arrayIntersection<T>(array1: T[], array2: T[]): T[] {
   const a = array1 || [];
   const b = array2 || [];
-  return a.filter(x => b.includes(x));
+  return a.filter(x => b.some(y => deepObjectsEquals(x, y)));
 }
 
 export function shiftArray<T>(array: T[], fromItem: T): T[] {

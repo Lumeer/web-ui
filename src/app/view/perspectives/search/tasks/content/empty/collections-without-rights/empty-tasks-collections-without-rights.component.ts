@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
 @Component({
   selector: 'empty-tasks-collections-without-rights',
   templateUrl: './empty-tasks-collections-without-rights.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyTasksCollectionsWithoutRightsComponent {}
+export class EmptyTasksCollectionsWithoutRightsComponent {
+  @Input()
+  public compact: boolean;
+}
