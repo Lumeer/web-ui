@@ -88,6 +88,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges {
   @Input()
   public project: Project;
 
+  @Input()
+  public compactEmptyPages: boolean;
+
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 

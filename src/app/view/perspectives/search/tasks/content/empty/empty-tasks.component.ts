@@ -22,10 +22,9 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectAllDocuments, selectAllDocumentsCount} from '../../../../../../core/store/documents/documents.state';
+import {selectAllDocumentsCount} from '../../../../../../core/store/documents/documents.state';
 import {selectProjectPermissions} from '../../../../../../core/store/user-permissions/user-permissions.state';
 import {map} from 'rxjs/operators';
 
@@ -40,6 +39,9 @@ export class EmptyTasksComponent implements OnInit {
 
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public compact: boolean;
 
   @Output()
   public tablePerspective = new EventEmitter();

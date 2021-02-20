@@ -27,4 +27,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 export class EmptyStateComponent {
   @Input()
   public icon: string;
+
+  @Input()
+  public compact: boolean;
 }

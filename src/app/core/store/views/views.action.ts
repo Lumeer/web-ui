@@ -154,6 +154,7 @@ export namespace ViewsAction {
         newUsersRoles: Record<string, string[]>;
         onSuccess?: () => void;
         onFailure?: () => void;
+        onInviteFailure?: () => void;
       }
     ) {}
   }

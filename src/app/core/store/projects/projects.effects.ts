@@ -395,10 +395,12 @@ export class ProjectsEffects {
     ofType<ProjectsAction.CreateSampleData>(ProjectsActionType.CREATE_SAMPLE_DATA),
     withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
     mergeMap(([action, workspaceIds]) => {
-      const {type, errorMessage, onError} = action.payload;
+      const {type, errorMessage, onSuccess, onFailure} = action.payload;
       return this.projectService.createSampleData(workspaceIds?.organizationId, workspaceIds?.projectId, type).pipe(
-        mergeMap(() => EMPTY),
-        catchError(() => of(new NotificationsAction.Error({message: errorMessage}), ...createCallbackActions(onError)))
+        mergeMap(() => createCallbackActions(onSuccess)),
+        catchError(() =>
+          of(new NotificationsAction.Error({message: errorMessage}), ...createCallbackActions(onFailure))
+        )
       );
     })
   );

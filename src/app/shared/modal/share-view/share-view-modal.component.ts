@@ -79,6 +79,7 @@ export class ShareViewModalComponent implements OnInit {
         viewId: this.view.id,
         ...data,
         onSuccess: () => this.hideDialog(),
+        onInviteFailure: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
     );

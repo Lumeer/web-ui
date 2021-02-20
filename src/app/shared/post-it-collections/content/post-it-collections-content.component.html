@@ -4,6 +4,7 @@
     <div class="d-flex mt-2">
       <post-it-collection-add-button class="ml-1"
                                      [disabled]="!projectPermissions?.write"
+                                     [showAddTaskTable]="showAddTaskTable"
                                      (clicked)="createNewCollection()">
       </post-it-collection-add-button>
 
