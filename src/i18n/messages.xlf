@@ -653,7 +653,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source>
@@ -1182,6 +1182,16 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.html</context>
           <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.empty.collections.button" datatype="html">
+        <source>Create Tasks Table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="search.collections.empty.title" datatype="html">
         <source>There are no tables yet!</source>
@@ -3941,7 +3951,7 @@
         <source>Loading data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="search.tab.all" datatype="html">
         <source>All</source>
@@ -3974,7 +3984,7 @@
           <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="create.new.task" datatype="html">
-        <source>Create New Task</source>
+        <source>Add Task</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
           <context context-type="linenumber">11</context>
@@ -4006,12 +4016,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
           <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="tasks.empty.collections.button" datatype="html">
-        <source>Create Tasks Table</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
-          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
         <source>No tasks table</source>
@@ -5999,6 +6003,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="user.create.fail" datatype="html">
+        <source>Could not add the user</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="user.create.serviceLimits.basic" datatype="html">
         <source>You are allowed to invite only <x id="INTERPOLATION" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</source>
         <context-group purpose="location">
@@ -6015,13 +6026,6 @@
       </trans-unit>
       <trans-unit id="user.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="user.create.fail" datatype="html">
-        <source>Could not add the user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -6628,6 +6632,17 @@
         <source>{VAR_SELECT, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/role-title.pipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tasks.sample.data.failure" datatype="html">
+        <source>Could not add task table to project</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -7341,13 +7356,6 @@
         <source>Summary of</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="tasks.sample.data.failure" datatype="html">
-        <source>Could not add task table to project</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

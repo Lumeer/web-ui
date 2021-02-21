@@ -1,9 +1,11 @@
-<div class="d-flex flex-column align-items-center justify-content-center text-center"
+<div class="d-flex align-items-center justify-content-center text-center"
+     [class.flex-column]="!compact"
+     [class.flex-row]="compact"
      [style.min-height.rem]="compact ? null : 20"
      [ngClass]="compact ? 'p-2' : 'p-5'">
 
-  <i class="{{icon}} mb-3" aria-hidden="true" [ngClass]="compact ? 'fa-3x' : 'fa-5x'"></i>
-
-  <ng-content></ng-content>
-
+  <i class="{{icon}}" aria-hidden="true" [ngClass]="compact ? 'fa-3x mx-3' : 'fa-5x mb-3'"></i>
+  <div>
+    <ng-content></ng-content>
+  </div>
 </div>
