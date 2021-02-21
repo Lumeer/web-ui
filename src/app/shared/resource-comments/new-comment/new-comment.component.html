@@ -5,15 +5,20 @@
     <div [class.d-none]="data.editing" class="comment-input" (click)="editComment(true)">
       <p class="text-muted font-italic p-2 cursor-text" i18n="@@document.detail.comments.new.write">Write a new comment...</p>
     </div>
-    <div [class.d-none]="!data.editing"
-         [contentEditable]="true"
-         class="comment-input editable"
-         #commentInput
-         (input)="updateCommentInput(commentInput.innerHTML)"
-         (keydown)="onKeyDown($event)"
-         (blur)="updateCommentInput(commentInput.innerHTML)"
-         (paste)="pastedContent($event)">
-    </div>
+
+    <quill-editor *ngIf="data.editing"
+      [(ngModel)]="commentText"
+      [maxLength]="maxLength"
+      [minLength]="minLength"
+      placeholder=""
+      theme="bubble"
+      [modules]="modules"
+      [formats]="formats"
+      (keydown)="onKeyDown($event)"
+      (onEditorCreated)="focusEditor($event)"
+      (onContentChanged)="contentChanged($event)">
+    </quill-editor>
+
     <div *ngIf="data.editing" class="float-right text-muted small font-italic p-1">
       <progress-circle [tooltip]="(progress | number:'1.0-0') + '%'" [progress]="progress" [radius]="10" [stroke]="2"></progress-circle>
     </div>

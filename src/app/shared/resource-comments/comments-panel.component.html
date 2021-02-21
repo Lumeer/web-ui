@@ -1,6 +1,7 @@
 <ng-container *ngIf="{comments: comments$ | async} as data">
   <new-comment *ngIf="permissions?.readWithView"
                [user]="user$ | async"
+               [users]="users$ | async"
                [initialComment]="initialComment$ | async"
                [startEditing]="startEditing"
                [bottomBorder]="!maxCommentsCount || data.comments?.length > 0"

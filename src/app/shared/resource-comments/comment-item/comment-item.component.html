@@ -54,6 +54,7 @@
   <div class="edit">
     <new-comment *ngIf="editing$ | async"
                  [user]="user"
+                 [users]="users$ | async"
                  [initialComment]="comment"
                  (onNewComment)="onUpdateComment($event)"
                  (onCancel)="cancelEdit()">

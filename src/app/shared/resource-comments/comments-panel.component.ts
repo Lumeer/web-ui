@@ -32,7 +32,7 @@ import {AppState} from '../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {User} from '../../core/store/users/user';
-import {selectCurrentUser} from '../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {ResourceCommentsAction} from '../../core/store/resource-comments/resource-comments.action';
 import {ResourceCommentModel} from '../../core/store/resource-comments/resource-comment.model';
 import {selectResourceCommentsByResource} from '../../core/store/resource-comments/resource-comments.state';
@@ -79,9 +79,12 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
 
   public comments$: Observable<ResourceCommentModel[]>;
 
+  public users$: Observable<User[]>;
+
   public constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public ngOnInit(): void {
+    this.users$ = this.store$.pipe(select(selectAllUsers));
     this.user$ = this.store$.pipe(select(selectCurrentUser));
     if (this.startEditing) {
       this.initialComment$ = this.user$.pipe(
