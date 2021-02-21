@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {User} from '../../../core/store/users/user';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 
 @Component({
   selector: 'comment-item',
@@ -29,7 +32,7 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./comment-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentItemComponent {
+export class CommentItemComponent implements OnInit {
   @Input()
   public user: User;
 
@@ -47,14 +50,20 @@ export class CommentItemComponent {
 
   public editing$ = new BehaviorSubject<boolean>(false);
 
+  public users$: Observable<User[]>;
+
   public createdOnMsg = '';
   public createdByMsg = '';
   public updatedOnMsg = '';
 
-  constructor(private i18n: I18n) {
+  constructor(private i18n: I18n, private store$: Store<AppState>) {
     this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
     this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
     this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
+  }
+
+  public ngOnInit(): void {
+    this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
   public editComment(comment: ResourceCommentModel) {

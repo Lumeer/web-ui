@@ -1,3 +1,61 @@
+@import '../variables';
+
 .ql-bubble .ql-tooltip-editor input[type='text'] {
   color: white !important;
+}
+
+.ql-mention-list-container {
+  width: 270px;
+  border: 1px solid $light;
+  border-radius: $border-radius-base;
+  background-color: $white;
+  box-shadow: $shadow-default; // 2px 12px 0 rgba(30, 30, 30, 0.08);
+  z-index: 9001;
+  overflow: auto;
+}
+
+.ql-mention-loading {
+  line-height: 44px;
+  padding: 0 20px;
+  vertical-align: middle;
+}
+
+.ql-mention-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ql-mention-list-item {
+  cursor: pointer;
+  line-height: 1.2rem;
+  //font-size: 16px;
+  padding: 0.25rem 1rem !important;
+  vertical-align: middle;
+}
+
+.ql-mention-list-item.disabled {
+  cursor: auto;
+}
+
+.ql-mention-list-item.selected {
+  background-color: $dropdown-link-hover-bg;
+  text-decoration: none;
+}
+
+.mention,
+span[data-denotation-char='@'] {
+  height: 1.5rem;
+  width: 4rem;
+  border-radius: $border-radius-large;
+  background-color: lighten($success, 60%);
+  padding: 3px 0;
+  margin-right: 2px;
+  user-select: all;
+}
+
+.mention,
+span[data-denotation-char='@'] > span {
+  margin: 0 3px;
 }

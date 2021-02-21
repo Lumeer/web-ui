@@ -29,6 +29,8 @@ import {NewCommentComponent} from './new-comment/new-comment.component';
 import {CommentsPanelComponent} from './comments-panel.component';
 import {ProgressCircleComponent} from './new-comment/progress-circle/progress-circle.component';
 import {CommentsCountComponent} from './comments-count/comments-count.component';
+import {QuillModule} from 'ngx-quill';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,7 @@ import {CommentsCountComponent} from './comments-count/comments-count.component'
     ProgressCircleComponent,
     CommentsCountComponent,
   ],
-  imports: [CommonModule, GravatarModule, TooltipModule, PipesModule],
+  imports: [CommonModule, GravatarModule, TooltipModule, PipesModule, FormsModule, QuillModule.forRoot()],
   exports: [
     CommentItemComponent,
     UserAvatarComponent,
