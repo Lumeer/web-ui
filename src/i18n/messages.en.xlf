@@ -194,7 +194,7 @@
         <source>Loading...</source><target state="final">Loading...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source><target state="final">Blockly Source Code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
@@ -3102,7 +3102,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="data.loading" datatype="html">
         <source>Loading data</source><target state="final">Loading data</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="search.all.views" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
           Views
         </source><target state="final">
@@ -3319,7 +3319,7 @@
         <source>Empty title</source><target state="final">Empty title</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
-        <source>Create New Task</source><target state="final">Create New Task</target>
+        <source>Add Task</source><target state="final">Add Task</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/toolbar/search-tasks-toolbar.component.html</context>
           <context context-type="linenumber">11</context>
@@ -3354,11 +3354,8 @@
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.collections.button" datatype="html">
         <source>Create Tasks Table</source><target state="final">Create Tasks Table</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
         <source>No tasks table</source><target state="final">No tasks table</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
@@ -5404,11 +5401,8 @@
         </context-group>
       </trans-unit><trans-unit id="tasks.sample.data.failure" datatype="html">
         <source>Could not add task table to project</source><target state="final">Could not add task table to project</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
         <source>Summary</source><target state="final">Summary</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-sort-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value.type" datatype="html">
