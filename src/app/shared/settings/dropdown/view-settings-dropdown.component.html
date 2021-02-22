@@ -1,0 +1,21 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <div class="card p-0" [style.width.px]="280">
+
+    <data-settings [settings]="settings?.data"
+                   (settingsChange)="dataSettingsChange.emit($event)">
+    </data-settings>
+
+    <attributes-settings *ngIf="showAttributes"
+                         [settings]="settings?.attributes"
+                         (settingsChanged)="attributeSettingsChanged.emit($event)">
+    </attributes-settings>
+
+  </div>
+
+</dropdown>

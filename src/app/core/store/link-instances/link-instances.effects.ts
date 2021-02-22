@@ -30,7 +30,7 @@ import {hasAttributeType} from '../collections/collection.util';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {isQueryLoaded} from '../navigation/query/query.helper';
+import {isDataQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
@@ -49,10 +49,10 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectLinkInstancesQueries))),
-    filter(([action, queries]) => action.payload.force || !isQueryLoaded(action.payload.query, queries)),
+    filter(([action, queries]) => action.payload.force || !isDataQueryLoaded(action.payload.query, queries)),
     mergeMap(([action]) => {
       const query = action.payload.query;
-      return this.searchService.searchLinkInstances(convertQueryModelToDto(query)).pipe(
+      return this.searchService.searchLinkInstances(convertQueryModelToDto(query), query.includeSubItems).pipe(
         map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
         map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query})),
         catchError(error => of(new LinkInstancesAction.GetFailure({error})))

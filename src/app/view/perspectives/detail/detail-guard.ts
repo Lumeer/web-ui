@@ -44,10 +44,10 @@ export class DetailGuard implements Resolve<DocumentModel[]> {
   public constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DocumentModel[]> {
-    const parentRoute = route.parent && route.parent.parent;
+    const parentRoute = route.parent?.parent;
 
-    const organizationCode = parentRoute && parentRoute.paramMap.get('organizationCode');
-    const projectCode = parentRoute && parentRoute.paramMap.get('projectCode');
+    const organizationCode = parentRoute?.paramMap.get('organizationCode');
+    const projectCode = parentRoute?.paramMap.get('projectCode');
 
     if (!organizationCode || !projectCode) {
       return of([]);

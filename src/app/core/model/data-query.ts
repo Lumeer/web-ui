@@ -17,16 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {AttributesSettingsModule} from './attributes/attributes-settings.module';
-import {DataSettingsModule} from './data/data-settings.module';
-import {ViewSettingsDropdownComponent} from './dropdown/view-settings-dropdown.component';
-import {DropdownModule} from '../dropdown/dropdown.module';
+import {Query} from '../store/navigation/query/query';
 
-@NgModule({
-  declarations: [ViewSettingsDropdownComponent],
-  imports: [CommonModule, AttributesSettingsModule, DropdownModule, DataSettingsModule],
-  exports: [AttributesSettingsModule, ViewSettingsDropdownComponent],
-})
-export class SettingsModule {}
+export interface DataQuery extends Query {
+  includeSubItems?: boolean;
+}

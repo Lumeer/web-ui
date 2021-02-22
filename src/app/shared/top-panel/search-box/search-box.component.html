@@ -4,7 +4,7 @@
         [formGroup]="form"
         class="d-flex">
     <ng-container
-      *ngIf="{canManageConfig: canManageConfig$ | async} as data">
+      *ngIf="{canManageConfig: canManageConfig$ | async, query: query$ | async} as data">
       <div *ngIf="constraintData$ | async as constraintData"
            class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
            [style.width.px]="1"
@@ -30,7 +30,8 @@
         </search-input>
       </div>
 
-      <settings-button *ngIf="data.canManageConfig && (perspective$ | async | shouldShowSettings:(query$ | async))"
+      <settings-button *ngIf="data.canManageConfig && data.query?.stems?.length > 0"
+                       [showAttributes]="perspective$ | async | shouldShowSettings:data.query"
                        class="flex-grow-0">
       </settings-button>
 

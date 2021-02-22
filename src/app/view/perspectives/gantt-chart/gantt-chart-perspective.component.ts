@@ -157,7 +157,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query$.next(query);
       this.fetchData(query);
-      this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(query, true)));
+      this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(query)));
     });
     this.subscriptions.add(subscription);
   }

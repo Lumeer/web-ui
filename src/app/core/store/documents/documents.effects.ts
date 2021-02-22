@@ -35,7 +35,7 @@ import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../l
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {isQueryLoaded} from '../navigation/query/query.helper';
+import {isDataQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
@@ -58,13 +58,13 @@ export class DocumentsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
-    filter(([action, queries]) => action.payload.force || !isQueryLoaded(action.payload.query, queries)),
+    filter(([action, queries]) => action.payload.force || !isDataQueryLoaded(action.payload.query, queries)),
     mergeMap(([action]) => {
       const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
       const savedQuery = action.payload.silent ? undefined : query;
 
-      return this.searchService.searchDocuments(queryDto, action.payload.workspace).pipe(
+      return this.searchService.searchDocuments(queryDto, query.includeSubItems, action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
         map(documents => new DocumentsAction.GetSuccess({documents, query: savedQuery})),
         catchError(error => of(new DocumentsAction.GetFailure({error})))

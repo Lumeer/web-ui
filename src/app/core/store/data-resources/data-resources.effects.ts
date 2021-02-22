@@ -23,7 +23,7 @@ import {Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {isQueryLoaded, isTaskQueryLoaded} from '../navigation/query/query.helper';
+import {isDataQueryLoaded, isTaskQueryLoaded} from '../navigation/query/query.helper';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {convertDocumentDtoToModel} from '../documents/document.converter';
 import {SearchService} from '../../data-service';
@@ -43,13 +43,13 @@ export class DataResourcesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectDataResourcesQueries))),
-    filter(([action, queries]) => action.payload.force || !isQueryLoaded(action.payload.query, queries)),
+    filter(([action, queries]) => action.payload.force || !isDataQueryLoaded(action.payload.query, queries)),
     mergeMap(([action]) => {
       const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
       const savedQuery = action.payload.silent ? undefined : query;
 
-      return this.searchService.searchDocumentsAndLinks(queryDto, action.payload.workspace).pipe(
+      return this.searchService.searchDocumentsAndLinks(queryDto, query.includeSubItems, action.payload.workspace).pipe(
         mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
           const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
           const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
@@ -81,18 +81,20 @@ export class DataResourcesEffects {
       const queryDto = convertQueryModelToDto(loadQuery);
       const savedQuery = action.payload.silent ? undefined : loadQuery;
 
-      return this.searchService.searchTaskDocumentsAndLinks(queryDto, action.payload.workspace).pipe(
-        mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
-          const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
-          const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
-          return [
-            new DocumentsAction.GetSuccess({documents}),
-            new LinkInstancesAction.GetSuccess({linkInstances}),
-            new DataResourcesAction.GetTasksSuccess({query: savedQuery}),
-          ];
-        }),
-        catchError(error => of(new DataResourcesAction.GetTasksFailure({error})))
-      );
+      return this.searchService
+        .searchTaskDocumentsAndLinks(queryDto, query.includeSubItems, action.payload.workspace)
+        .pipe(
+          mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
+            const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
+            const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+            return [
+              new DocumentsAction.GetSuccess({documents}),
+              new LinkInstancesAction.GetSuccess({linkInstances}),
+              new DataResourcesAction.GetTasksSuccess({query: savedQuery}),
+            ];
+          }),
+          catchError(error => of(new DataResourcesAction.GetTasksFailure({error})))
+        );
     })
   );
 

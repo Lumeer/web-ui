@@ -44,6 +44,7 @@ import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
+import {DataQuery} from '../../../model/data-query';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -244,7 +245,7 @@ export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boole
   );
 }
 
-export function checkTasksCollectionsQuery(collections: Collection[], query: Query): Query {
+export function checkTasksCollectionsQuery(collections: Collection[], query: DataQuery): DataQuery {
   if (queryIsEmptyExceptPagination(query)) {
     return tasksCollectionsQuery(collections);
   }
@@ -325,10 +326,8 @@ export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTy
   const stemCopy = {...stem, linkTypeIds: stem.linkTypeIds.slice(0, linkIndex)};
   const notRemovedCollectionIds = collectionIdsChainForStem(stemCopy, linkTypes);
 
-  stemCopy.filters =
-    stem.filters && stem.filters.filter(filter => notRemovedCollectionIds.includes(filter.collectionId));
-  stemCopy.linkFilters =
-    stem.linkFilters && stem.linkFilters.filter(filter => stem.linkTypeIds.includes(filter.linkTypeId));
+  stemCopy.filters = stem.filters?.filter(filter => notRemovedCollectionIds.includes(filter.collectionId));
+  stemCopy.linkFilters = stem.linkFilters?.filter(filter => stem.linkTypeIds.includes(filter.linkTypeId));
 
   // TODO filter documents once implemented
 

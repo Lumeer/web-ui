@@ -57,7 +57,7 @@ export interface ShortenedLinkAttributeFilter extends ShortenedAttributeFilter {
 export function shortenQuery(query: Query): ShortenedQuery {
   return (
     query && {
-      s: query.stems && query.stems.map(stem => shortenQueryStem(stem)),
+      s: query.stems?.map(stem => shortenQueryStem(stem)),
       f: query.fulltexts,
       p: query.page,
       l: query.pageSize,
@@ -70,8 +70,8 @@ function shortenQueryStem(stem: QueryStem): ShortenedQueryStem {
     c: stem.collectionId,
     l: stem.linkTypeIds,
     d: stem.documentIds,
-    f: stem.filters && stem.filters.map(filter => shortenCollectionAttributeFilter(filter)),
-    lf: stem.linkFilters && stem.linkFilters.map(filter => shortenLinkAttributeFilter(filter)),
+    f: stem.filters?.map(filter => shortenCollectionAttributeFilter(filter)),
+    lf: stem.linkFilters?.map(filter => shortenLinkAttributeFilter(filter)),
   };
 }
 
@@ -98,7 +98,7 @@ function shortenConditionValue(value: ConditionValue): ShortenedConditionValue {
 export function prolongQuery(query: ShortenedQuery): Query {
   return (
     query && {
-      stems: query.s && query.s.map(stem => prolongQueryStem(stem)),
+      stems: query.s?.map(stem => prolongQueryStem(stem)),
       fulltexts: query.f,
       page: query.p,
       pageSize: query.l,
@@ -111,8 +111,8 @@ function prolongQueryStem(stem: ShortenedQueryStem): QueryStem {
     collectionId: stem.c,
     linkTypeIds: stem.l,
     documentIds: stem.d,
-    filters: stem.f && stem.f.map(filter => prolongCollectionAttributeFilter(filter)),
-    linkFilters: stem.lf && stem.lf.map(filter => prolongLinkAttributeFilter(filter)),
+    filters: stem.f?.map(filter => prolongCollectionAttributeFilter(filter)),
+    linkFilters: stem.lf?.map(filter => prolongLinkAttributeFilter(filter)),
   };
 }
 

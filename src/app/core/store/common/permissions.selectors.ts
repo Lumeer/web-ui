@@ -40,7 +40,7 @@ import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
 import {LinkInstance} from '../link-instances/link.instance';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
-import {selectViewSettings} from '../view-settings/view-settings.state';
+import {selectDataSettingsIncludeSubItems, selectViewSettings} from '../view-settings/view-settings.state';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
@@ -51,6 +51,7 @@ import {
   selectViewsPermissions,
 } from '../user-permissions/user-permissions.state';
 import {CollectionPurposeType} from '../collections/collection';
+
 const selectCollectionsByPermission = (role: Role) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
     collections.filter(collection => hasRoleByPermissions(role, permissions[collection.id]))
@@ -152,18 +153,18 @@ export const selectDocumentsAndLinksByQuery = createSelector(
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectViewQuery,
-  selectViewSettings,
   selectResourcesPermissions,
   selectConstraintData,
+  selectDataSettingsIncludeSubItems,
   (
     documents,
     collections,
     linkTypes,
     linkInstances,
     query,
-    viewSettings,
     permissions,
-    constraintData
+    constraintData,
+    includeChildren
   ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} =>
     filterDocumentsAndLinksByQuery(
       documents,
@@ -173,11 +174,12 @@ export const selectDocumentsAndLinksByQuery = createSelector(
       query,
       permissions.collections,
       permissions.linkTypes,
-      constraintData
+      constraintData,
+      includeChildren
     )
 );
 
-export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, includeChildren?: boolean) =>
+export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query) =>
   createSelector(
     selectDocumentsByReadPermission,
     selectCollectionsByReadPermission,
@@ -206,7 +208,7 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, i
         permissions.collections,
         permissions.linkTypes,
         constraintData,
-        includeChildren
+        viewSettings?.data?.includeSubItems
       );
       const collectionsMap = objectsByIdMap(collections);
       const linkTypesMap = objectsByIdMap(linkTypes);
@@ -244,18 +246,18 @@ export const selectTasksDocumentsByQuery = createSelector(
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectTasksQuery,
-  selectViewSettings,
   selectResourcesPermissions,
   selectConstraintData,
+  selectDataSettingsIncludeSubItems,
   (
     documents,
     collections,
     linkTypes,
     linkInstances,
     query,
-    viewSettings,
     permissions,
-    constraintData
+    constraintData,
+    includeChildren
   ): DocumentModel[] =>
     filterDocumentsAndLinksByQuery(
       documents,
@@ -265,7 +267,8 @@ export const selectTasksDocumentsByQuery = createSelector(
       query,
       permissions.collections,
       permissions.linkTypes,
-      constraintData
+      constraintData,
+      includeChildren
     ).documents
 );
 
@@ -291,34 +294,31 @@ export const selectDocumentsByQuerySorted = createSelector(
     )
 );
 
-export const selectDocumentsByQueryIncludingChildren = createSelector(
-  selectDocumentsByReadPermission,
-  selectCollectionsByReadPermission,
-  selectAllLinkTypes,
-  selectAllLinkInstances,
-  selectViewQuery,
-  selectResourcesPermissions,
-  selectConstraintData,
-  (documents, collections, linkTypes, linkInstances, query, permissions, constraintData): DocumentModel[] =>
-    sortDocumentsByCreationDate(
-      filterDocumentsAndLinksByQuery(
-        documents,
-        collections,
-        linkTypes,
-        linkInstances,
-        query,
-        permissions.collections,
-        permissions.linkTypes,
-        constraintData,
-        true
-      ).documents
-    )
-);
+export const selectDocumentsByQueryAndIdsSortedByCreation = (ids: string[]) =>
+  createSelector(
+    selectDocumentsByReadPermission,
+    selectCollectionsByReadPermission,
+    selectAllLinkTypes,
+    selectAllLinkInstances,
+    selectViewQuery,
+    selectResourcesPermissions,
+    selectConstraintData,
+    (documents, collections, linkTypes, linkInstances, query, permissions, constraintData): DocumentModel[] =>
+      sortDocumentsByCreationDate(
+        filterDocumentsAndLinksByQuery(
+          documents,
+          collections,
+          linkTypes,
+          linkInstances,
+          query,
+          permissions.collections,
+          permissions.linkTypes,
+          constraintData
+        ).documents.filter(doc => ids.includes(doc.id))
+      )
+  );
 
-export const selectDocumentsByQueryIncludingChildrenAndIds = (ids: string[]) =>
-  createSelector(selectDocumentsByQueryIncludingChildren, documents => documents.filter(doc => ids.includes(doc.id)));
-
-export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
+const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean) =>
   createSelector(
     selectDocumentsByReadPermission,
     selectCollectionsByReadPermission,
@@ -326,7 +326,8 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
     selectAllLinkInstances,
     selectResourcesPermissions,
     selectConstraintData,
-    (documents, collections, linkTypes, linkInstances, permissions, constraintData) => {
+    selectDataSettingsIncludeSubItems,
+    (documents, collections, linkTypes, linkInstances, permissions, constraintData, includeChildren) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         collections,
@@ -345,8 +346,8 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
     }
   );
 
-export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
-  createSelector(selectDocumentsAndLinksByCustomQuery(query, desc, includeChildren), data => data.documents);
+export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean) =>
+  createSelector(selectDocumentsAndLinksByCustomQuery(query, desc), data => data.documents);
 
 export const selectLinkTypesByReadPermission = createSelector(
   selectAllLinkTypes,

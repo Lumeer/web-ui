@@ -18,24 +18,30 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, Output, EventEmitter} from '@angular/core';
-import {DropdownPosition} from '../../../dropdown/dropdown-position';
-import {DropdownComponent} from '../../../dropdown/dropdown.component';
-import {AttributesSettings} from '../../../../core/store/views/view';
+import {DropdownPosition} from '../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/views/view';
 
 @Component({
-  selector: 'attributes-settings-dropdown',
-  templateUrl: './attributes-settings-dropdown.component.html',
+  selector: 'view-settings-dropdown',
+  templateUrl: './view-settings-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributesSettingsDropdownComponent {
+export class ViewSettingsDropdownComponent {
   @Input()
   public origin: ElementRef | HTMLElement;
 
   @Input()
-  public settings: AttributesSettings;
+  public settings: ViewSettings;
+
+  @Input()
+  public showAttributes: boolean;
 
   @Output()
-  public settingsChanged = new EventEmitter<AttributesSettings>();
+  public attributeSettingsChanged = new EventEmitter<AttributesSettings>();
+
+  @Output()
+  public dataSettingsChange = new EventEmitter<DataSettings>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;

@@ -47,7 +47,7 @@ import {
   selectDocumentsAndLinksByQuery,
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
-  selectDocumentsByQueryIncludingChildrenAndIds,
+  selectDocumentsByQueryAndIdsSortedByCreation,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -627,7 +627,7 @@ export class TablesEffects {
     switchMap(action =>
       combineLatest([
         this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))),
+        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false))),
         this.store$.pipe(select(selectMoveTableCursorDown)),
         this.store$.pipe(select(selectTableCursor)),
       ]).pipe(
@@ -743,7 +743,7 @@ export class TablesEffects {
                 return ids;
               }, []);
               return this.store$.pipe(
-                select(selectDocumentsByQueryIncludingChildrenAndIds(documentIds)),
+                select(selectDocumentsByQueryAndIdsSortedByCreation(documentIds)),
                 take(1),
                 map(documents =>
                   documents.map(document => {

@@ -19,7 +19,7 @@
 
 import {DataResourcesState, initialDataResourcesState} from './data-resources.state';
 import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
-import {areQueriesEqual} from '../navigation/query/query.helper';
+import {areDataQueriesEqual} from '../navigation/query/query.helper';
 
 export function dataResourcesReducer(
   state: DataResourcesState = initialDataResourcesState,
@@ -28,14 +28,14 @@ export function dataResourcesReducer(
   switch (action.type) {
     case DataResourcesActionType.GET_SUCCESS:
       const shouldAddQuery =
-        action.payload.query && !state.queries.some(query => areQueriesEqual(query, action.payload.query));
+        action.payload.query && !state.queries.some(query => areDataQueriesEqual(query, action.payload.query));
       if (shouldAddQuery) {
         return {...state, queries: [...state.queries, action.payload.query]};
       }
       return state;
     case DataResourcesActionType.GET_TASKS_SUCCESS:
       const shouldAddTaskQuery =
-        action.payload.query && !state.queries.some(query => areQueriesEqual(query, action.payload.query));
+        action.payload.query && !state.queries.some(query => areDataQueriesEqual(query, action.payload.query));
       if (shouldAddTaskQuery) {
         return {...state, tasksQueries: [...state.tasksQueries, action.payload.query]};
       }

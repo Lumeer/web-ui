@@ -17,16 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {AttributesSettingsModule} from './attributes/attributes-settings.module';
-import {DataSettingsModule} from './data/data-settings.module';
-import {ViewSettingsDropdownComponent} from './dropdown/view-settings-dropdown.component';
-import {DropdownModule} from '../dropdown/dropdown.module';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {DataSettings} from '../../../core/store/views/view';
 
-@NgModule({
-  declarations: [ViewSettingsDropdownComponent],
-  imports: [CommonModule, AttributesSettingsModule, DropdownModule, DataSettingsModule],
-  exports: [AttributesSettingsModule, ViewSettingsDropdownComponent],
+@Component({
+  selector: 'data-settings',
+  templateUrl: './data-settings.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SettingsModule {}
+export class DataSettingsComponent {
+  @Input()
+  public settings: DataSettings;
+
+  @Output()
+  public settingsChange = new EventEmitter<DataSettings>();
+
+  public onSubItemsChange(checked: boolean) {
+    const newSettings = {...this.settings, includeSubItems: checked};
+    this.settingsChange.emit(newSettings);
+  }
+}

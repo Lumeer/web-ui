@@ -40,18 +40,23 @@ export class PublicSearchService extends BaseService implements SearchService {
     return of({attributes: [], collections: [], linkAttributes: [], linkTypes: [], views: []});
   }
 
-  public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
+  public searchLinkInstances(
+    query: QueryDto,
+    includeSubItems?: boolean,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto[]> {
     return this.http.get<LinkInstanceDto[]>(`${this.searchPath(workspace)}/link-instances`, {
       params: {l: environment.locale},
     });
   }
 
-  public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
+  public searchDocuments(query: QueryDto, includeSubItems?: boolean, workspace?: Workspace): Observable<DocumentDto[]> {
     return this.http.get<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, {params: {l: environment.locale}});
   }
 
   public searchDocumentsAndLinks(
     query: QueryDto,
+    includeSubItems?: boolean,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.get<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
@@ -62,6 +67,7 @@ export class PublicSearchService extends BaseService implements SearchService {
 
   public searchTaskDocumentsAndLinks(
     query: QueryDto,
+    includeSubItems?: boolean,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.get<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(

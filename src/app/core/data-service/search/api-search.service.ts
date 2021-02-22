@@ -40,37 +40,43 @@ export class ApiSearchService extends BaseService implements SearchService {
     return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 
-  public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
+  public searchLinkInstances(
+    query: QueryDto,
+    includeSubItems: boolean,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto[]> {
     return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query, {
-      params: {l: environment.locale},
+      params: {l: environment.locale, subItems: includeSubItems?.toString()},
     });
   }
 
-  public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
+  public searchDocuments(query: QueryDto, includeSubItems: boolean, workspace?: Workspace): Observable<DocumentDto[]> {
     return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query, {
-      params: {l: environment.locale},
+      params: {l: environment.locale, subItems: includeSubItems?.toString()},
     });
   }
 
   public searchDocumentsAndLinks(
     query: QueryDto,
+    includeSubItems: boolean,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/documentsAndLinks`,
       query,
-      {params: {l: environment.locale}}
+      {params: {l: environment.locale, subItems: includeSubItems?.toString()}}
     );
   }
 
   public searchTaskDocumentsAndLinks(
     query: QueryDto,
+    includeSubItems: boolean,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/tasks`,
       query,
-      {params: {l: environment.locale}}
+      {params: {l: environment.locale, subItems: includeSubItems?.toString()}}
     );
   }
 

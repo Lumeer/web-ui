@@ -21,14 +21,14 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
-import {Query} from '../navigation/query/query';
 import {isLinkInstanceValid, sortLinkInstances} from './link-instance.utils';
-import {isQueryLoaded} from '../navigation/query/query.helper';
+import {isDataQueryLoaded} from '../navigation/query/query.helper';
 import {selectQuery} from '../navigation/navigation.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
+import {DataQuery} from '../../model/data-query';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
-  queries: Query[];
+  queries: DataQuery[];
   actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
@@ -57,7 +57,7 @@ export const selectLinkInstancesQueries = createSelector(
 export const selectCurrentQueryLinkInstancesLoaded = createSelector(
   selectLinkInstancesQueries,
   selectQuery,
-  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
+  (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries)
 );
 
 export const selectLinkInstanceById = (id: string) =>

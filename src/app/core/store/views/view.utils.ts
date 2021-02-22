@@ -32,7 +32,7 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig, ViewSettings} from './view';
+import {DataSettings, PerspectiveConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
@@ -107,12 +107,19 @@ export function viewSettingsChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
-  return viewAttributeSettingsChanged(
-    previousSettings?.attributes,
-    currentSettings?.attributes,
-    collectionsMap,
-    linkTypesMap
+  return (
+    viewDataSettingsChanged(previousSettings?.data, currentSettings?.data) ||
+    viewAttributeSettingsChanged(
+      previousSettings?.attributes,
+      currentSettings?.attributes,
+      collectionsMap,
+      linkTypesMap
+    )
   );
+}
+
+export function viewDataSettingsChanged(previousSettings: DataSettings, currentSettings: DataSettings): boolean {
+  return !!previousSettings?.includeSubItems !== !!currentSettings?.includeSubItems;
 }
 
 export function createSaveViewSettings(
