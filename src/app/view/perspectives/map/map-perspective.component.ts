@@ -49,7 +49,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
 
@@ -59,7 +59,7 @@ import {selectMap} from '../../../core/store/maps/maps.state';
   styleUrls: ['./map-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapPerspectiveComponent extends PerspectiveComponent<MapConfig> implements OnInit, OnDestroy {
+export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig> implements OnInit, OnDestroy {
   @Input()
   public query: Query;
 

@@ -286,6 +286,10 @@ function isQueryLinkFiltersSubset(superset: LinkAttributeFilter[], subset: LinkA
   return subset.every(sub => superset.some(sup => deepObjectsEquals(sub, sup)));
 }
 
+export function queryContainsOnlyFulltexts(query: Query): boolean {
+  return query && queryIsEmpty({...query, fulltexts: []}) && query?.fulltexts?.length > 0;
+}
+
 export function queryWithoutLinks(query: Query): Query {
   if (!query) {
     return query;

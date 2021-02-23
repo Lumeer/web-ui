@@ -37,7 +37,7 @@ import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/work
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
   selector: 'workflow-perspective',
@@ -45,7 +45,9 @@ import {PerspectiveComponent} from '../perspective.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block h-100'},
 })
-export class WorkflowPerspectiveComponent extends PerspectiveComponent<WorkflowConfig> implements OnInit, OnDestroy {
+export class WorkflowPerspectiveComponent
+  extends DataPerspectiveComponent<WorkflowConfig>
+  implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public selectedDocumentId$: Observable<string>;
   public panelWidth$: Observable<number>;

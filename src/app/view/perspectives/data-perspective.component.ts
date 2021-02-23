@@ -48,7 +48,7 @@ import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 @Component({
   template: '',
 })
-export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
+export abstract class DataPerspectiveComponent<T> implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public canManageConfig$: Observable<boolean>;

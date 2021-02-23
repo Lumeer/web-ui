@@ -39,7 +39,7 @@ import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -49,7 +49,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent
-  extends PerspectiveComponent<GanttChartConfig>
+  extends DataPerspectiveComponent<GanttChartConfig>
   implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public sortDefined$: Observable<boolean>;

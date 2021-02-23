@@ -28,7 +28,7 @@ import {PivotConfig} from '../../../core/store/pivots/pivot';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformPivotConfig} from './util/pivot-util';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 import {Observable} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -41,7 +41,7 @@ import {ViewConfig} from '../../../core/store/views/view';
   styleUrls: ['./pivot-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotPerspectiveComponent extends PerspectiveComponent<PivotConfig> implements OnInit, OnDestroy {
+export class PivotPerspectiveComponent extends DataPerspectiveComponent<PivotConfig> implements OnInit, OnDestroy {
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }

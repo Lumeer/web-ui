@@ -34,7 +34,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ChartDataComponent} from './data/chart-data.component';
 import {checkOrTransformChartConfig} from './visualizer/chart-util';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -45,7 +45,7 @@ import {Query} from '../../../core/store/navigation/query/query';
   styleUrls: ['./chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartPerspectiveComponent extends PerspectiveComponent<ChartConfig> implements OnInit, OnDestroy {
+export class ChartPerspectiveComponent extends DataPerspectiveComponent<ChartConfig> implements OnInit, OnDestroy {
   @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 

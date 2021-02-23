@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation, selectSearchTab} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {Query} from '../../../core/store/navigation/query/query';
 import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
@@ -42,17 +41,17 @@ import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
   host: {class: 'search-perspective'},
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public readonly searchTab = SearchTab;
 
-  public stringQuery: string;
+  public stringQuery$: Observable<string>;
 
   private initialSearchTab: SearchTab;
-  private query: Query = {};
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private activatedRoute: ActivatedRoute, private router: Router) {}
+  constructor(private store$: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
     this.initialSearchTab = parseSearchTabFromUrl(this.router.url);
@@ -63,15 +62,10 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
-      this.query = query;
-      this.stringQuery = convertQueryModelToString(query);
-    });
-    this.subscriptions.add(subscription);
-  }
-
-  public isLinkActive(url: string): boolean {
-    return this.activatedRoute.firstChild.snapshot.url.join('/').includes(url);
+    this.stringQuery$ = this.store$.pipe(
+      select(selectViewQuery),
+      map(query => convertQueryModelToString(query))
+    );
   }
 
   private subscribeToConfig() {

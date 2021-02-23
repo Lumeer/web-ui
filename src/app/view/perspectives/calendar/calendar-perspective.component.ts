@@ -37,7 +37,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
   selector: 'calendar',
@@ -45,7 +45,9 @@ import {PerspectiveComponent} from '../perspective.component';
   styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarPerspectiveComponent extends PerspectiveComponent<CalendarConfig> implements OnInit, OnDestroy {
+export class CalendarPerspectiveComponent
+  extends DataPerspectiveComponent<CalendarConfig>
+  implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   constructor(protected store$: Store<AppState>) {

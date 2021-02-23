@@ -38,6 +38,7 @@ import {
 import {
   filterStemsForCollection,
   isNavigatingToOtherWorkspace,
+  queryContainsOnlyFulltexts,
   queryIsEmpty,
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -83,6 +84,8 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     if (selectedCollectionId) {
       const collectionQuery = filterStemsForCollection(selectedCollectionId, query);
       this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+    } else if (queryContainsOnlyFulltexts(query)) {
+      this.store$.dispatch(new DocumentsAction.Get({query}));
     }
   }
 

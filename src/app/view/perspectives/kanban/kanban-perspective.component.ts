@@ -37,7 +37,7 @@ import {
   selectCollectionsPermissions,
   selectLinkTypesPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
-import {PerspectiveComponent} from '../perspective.component';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
@@ -46,7 +46,7 @@ import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/p
   templateUrl: './kanban-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanPerspectiveComponent extends PerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
+export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;

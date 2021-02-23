@@ -24,7 +24,7 @@ import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
-import {sortDocumentsByCreationDate} from '../documents/document.utils';
+import {filterTaskDocuments, sortDocumentsByCreationDate} from '../documents/document.utils';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
@@ -234,10 +234,8 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query) =
 export const selectTaskDocuments = createSelector(
   selectAllDocuments,
   selectTasksCollectionsByReadPermission,
-  (documents, collections) => {
-    const allowedCollectionIds = new Set(collections.map(collection => collection.id));
-    return documents.filter(document => allowedCollectionIds.has(document.collectionId));
-  }
+  selectConstraintData,
+  (documents, collections, constraintData) => filterTaskDocuments(documents, collections, constraintData)
 );
 
 export const selectTasksDocumentsByQuery = createSelector(

@@ -56,6 +56,7 @@ import {
   CoordinatesConstraint,
   CoordinatesConstraintConfig,
 } from '@lumeer/data-filters';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'map-globe-content',
@@ -142,7 +143,9 @@ export class MapGlobeContentComponent implements OnChanges {
   }
 
   private getCoordinates(propertiesList: MapMarkerData[]) {
-    const addresses = propertiesList.map(properties => properties.dataResource.data[properties.attributeId]);
+    const addresses = propertiesList
+      .map(properties => properties.dataResource.data?.[properties.attributeId])
+      .filter(value => isNotNullOrUndefined(value) && String(value).trim().length > 0);
     if (addresses.length === 0) {
       this.loading$.next(false);
       return;
