@@ -30,7 +30,6 @@ import {Project} from '../../../core/store/projects/project';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {convertStringToViewCursor, ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {convertQueryStringToModel} from '../../../core/store/navigation/query/query.converter';
-import {Query} from '../../../core/store/navigation/query/query';
 import {
   selectCollectionsByCustomQuery,
   selectDocumentsByCustomQuery,
@@ -38,6 +37,7 @@ import {
 import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {filterStemsForCollection} from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {DataQuery} from '../../../core/model/data-query';
 
 @Injectable()
 export class DetailGuard implements Resolve<DocumentModel[]> {
@@ -68,7 +68,7 @@ export class DetailGuard implements Resolve<DocumentModel[]> {
     organization: Organization,
     project: Project,
     cursor: ViewCursor,
-    query: Query
+    query: DataQuery
   ): Observable<DocumentModel[]> {
     return this.store$.pipe(
       select(selectCollectionsByCustomQuery(query)),

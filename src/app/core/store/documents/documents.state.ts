@@ -23,7 +23,6 @@ import {AppState} from '../app.state';
 import {isDataQueryLoaded} from '../navigation/query/query.helper';
 import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
-import {selectQuery} from '../navigation/navigation.state';
 import {DataQuery} from '../../model/data-query';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
@@ -52,12 +51,6 @@ export const selectDocumentsDictionary = createSelector(
   documentsAdapter.getSelectors().selectEntities
 );
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-
-export const selectCurrentQueryDocumentsLoaded = createSelector(
-  selectDocumentsQueries,
-  selectQuery,
-  (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries)
-);
 
 export const selectQueryDocumentsLoaded = (query: DataQuery) =>
   createSelector(selectDocumentsQueries, queries => isDataQueryLoaded(query, queries));

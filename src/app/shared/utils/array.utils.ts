@@ -37,6 +37,9 @@ export function getLastFromArray<T>(array: T[]): T {
 }
 
 export function isArraySubset(superset: any[], subset: any[]): boolean {
+  if (subset.length === 0 && superset.length !== 0) {
+    return false;
+  }
   return subset.every(item => superset.includes(item));
 }
 

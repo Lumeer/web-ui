@@ -28,10 +28,10 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
-import {createDefaultSearchConfig, DEFAULT_SEARCH_ID, Search, SearchConfig} from '../../../core/store/searches/search';
+import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
-import {Perspective} from '../perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -117,7 +117,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToDefault(): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
-    const searchId = DEFAULT_SEARCH_ID;
+    const searchId = DEFAULT_PERSPECTIVE_ID;
     return this.store$.pipe(
       select(selectDefaultViewConfig(Perspective.Search, searchId)),
       withLatestFrom(this.store$.pipe(select(selectSearchById(searchId)))),
@@ -159,7 +159,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToSearchTab() {
     const subscription = this.selectCurrentTabWithSearch$().subscribe(({searchTab, search}) => {
       const {id: searchId, config} = search;
-      if (searchId === DEFAULT_SEARCH_ID) {
+      if (searchId === DEFAULT_PERSPECTIVE_ID) {
         const searchConfig: SearchConfig = {...config, searchTab};
         this.store$.dispatch(
           new ViewsAction.SetDefaultConfig({
@@ -187,10 +187,10 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       select(selectSearchTab),
       distinctUntilChanged(),
       withLatestFrom(this.store$.pipe(select(selectSearch))),
-      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_SEARCH_ID)))),
+      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)))),
       filter(([[searchTab, search], defaultConfig]) => {
         const config =
-          defaultConfig?.config?.search && search?.id === DEFAULT_SEARCH_ID
+          defaultConfig?.config?.search && search?.id === DEFAULT_PERSPECTIVE_ID
             ? defaultConfig.config.search
             : search?.config;
         return search && config?.searchTab !== searchTab;

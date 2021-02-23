@@ -19,43 +19,25 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {combineLatest, Observable, of, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
+import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {distinctUntilChanged, map, mergeMap, pairwise, startWith, switchMap, take, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {View, ViewSettings} from '../../../core/store/views/view';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {ViewConfig} from '../../../core/store/views/view';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCurrentView, selectPanelWidth, selectViewQuery} from '../../../core/store/views/views.state';
-import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows/workflow';
-import {
-  selectWorkflowById,
-  selectWorkflowConfig,
-  selectWorkflowSelectedDocumentId,
-} from '../../../core/store/workflows/workflow.state';
+import {selectPanelWidth} from '../../../core/store/views/views.state';
+import {WorkflowConfig} from '../../../core/store/workflows/workflow';
+import {selectWorkflowById, selectWorkflowSelectedDocumentId} from '../../../core/store/workflows/workflow.state';
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
-import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
+import {PerspectiveComponent} from '../perspective.component';
 
 @Component({
   selector: 'workflow-perspective',
@@ -63,113 +45,60 @@ import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-re
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block h-100'},
 })
-export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
-  public collections$: Observable<Collection[]>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
-  public dataLoaded$: Observable<boolean>;
-  public linkTypes$: Observable<LinkType[]>;
-  public canManageConfig$: Observable<boolean>;
+export class WorkflowPerspectiveComponent extends PerspectiveComponent<WorkflowConfig> implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public query$: Observable<Query>;
-  public viewSettings$: Observable<ViewSettings>;
-  public config$: Observable<WorkflowConfig>;
-  public constraintData$: Observable<ConstraintData>;
   public selectedDocumentId$: Observable<string>;
   public panelWidth$: Observable<number>;
 
-  private subscriptions = new Subscription();
-  private workflowId: string;
-
-  constructor(private store$: Store<AppState>) {}
+  constructor(protected store$: Store<AppState>) {
+    super(store$);
+  }
 
   public ngOnInit() {
-    this.initWorkflow();
-    this.subscribeData();
+    super.ngOnInit();
+    this.subscribeAdditionalData();
   }
 
-  private initWorkflow() {
-    const subscription = this.store$
-      .pipe(
-        select(selectCurrentView),
-        startWith(null as View),
-        pairwise(),
-        switchMap(([previousView, view]) =>
-          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
-      )
-      .subscribe(({workflowId, config}: {workflowId?: string; config?: WorkflowConfig}) => {
-        if (workflowId) {
-          this.workflowId = workflowId;
-          this.store$.dispatch(new WorkflowsAction.AddWorkflow({workflow: {id: workflowId, config}}));
-        }
-      });
-    this.subscriptions.add(subscription);
+  public checkOrTransformConfig(
+    config: WorkflowConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): WorkflowConfig {
+    return checkOrTransformWorkflowConfig(config, query, collections, linkTypes);
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{workflowId?: string; config?: WorkflowConfig}> {
-    const workflowId = view.code;
+  public subscribeConfig$(perspectiveId: string): Observable<WorkflowConfig> {
     return this.store$.pipe(
-      select(selectWorkflowById(workflowId)),
-      take(1),
-      mergeMap(workflowEntity => {
-        const workflowConfig = view.config?.workflow;
-        if (preferViewConfigUpdate(previousView?.config?.workflow, view?.config?.workflow, !!workflowEntity)) {
-          return this.checkWorkflowConfig(workflowConfig).pipe(map(config => ({workflowId, config})));
-        }
-        return of({workflowId: workflowId, config: workflowEntity?.config || workflowConfig});
-      })
+      select(selectWorkflowById(perspectiveId)),
+      map(entity => entity?.config)
     );
   }
 
-  private checkWorkflowConfig(config: WorkflowConfig): Observable<WorkflowConfig> {
-    return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => checkOrTransformWorkflowConfig(config, query, collections, linkTypes))
-    );
+  public getConfig(viewConfig: ViewConfig): WorkflowConfig {
+    return viewConfig?.workflow;
   }
 
-  private subscribeToDefault(): Observable<{workflowId?: string; config: WorkflowConfig}> {
-    return this.store$.pipe(
-      select(selectWorkflowById(DEFAULT_WORKFLOW_ID)),
-      take(1),
-      mergeMap(workflow => this.checkWorkflowConfig(workflow?.config)),
-      map(config => ({workflowId: DEFAULT_WORKFLOW_ID, config}))
-    );
+  public configChanged(perspectiveId: string, config: WorkflowConfig) {
+    this.store$.dispatch(new WorkflowsAction.AddWorkflow({workflow: {id: perspectiveId, config}}));
   }
 
-  public subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
+    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+  }
+
+  public subscribeAdditionalData() {
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-    this.query$ = this.store$.pipe(
-      select(selectViewQuery),
-      tap(query => this.fetchData(query))
-    );
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
-    this.config$ = this.store$.pipe(select(selectWorkflowConfig));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
-    this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded), distinctUntilChanged());
-  }
-
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
   public onConfigChanged(config: WorkflowConfig) {
-    if (this.workflowId) {
-      this.store$.dispatch(new WorkflowsAction.SetConfig({workflowId: this.workflowId, config}));
-    }
+    this.store$.dispatch(new WorkflowsAction.SetConfig({workflowId: this.perspectiveId$.value, config}));
   }
 
   public ngOnDestroy() {
+    super.ngOnDestroy();
     this.onCloseSidebar();
   }
 

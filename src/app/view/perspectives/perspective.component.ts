@@ -31,7 +31,7 @@ import {AppState} from '../../core/store/app.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../core/store/views/views.state';
 import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {View, ViewConfig} from '../../core/store/views/view';
+import {DefaultViewConfig, View, ViewConfig, ViewSettings} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {
   selectCanManageViewConfig,
@@ -40,10 +40,10 @@ import {
 } from '../../core/store/common/permissions.selectors';
 import {selectCollectionsPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
-import {selectViewDataQuery} from '../../core/store/view-settings/view-settings.state';
+import {selectViewDataQuery, selectViewSettings} from '../../core/store/view-settings/view-settings.state';
 import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
-
-const DEFAULT_ID = 'default';
+import {selectCurrentQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
+import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 
 @Component({
   template: '',
@@ -55,11 +55,14 @@ export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public constraintData$: Observable<ConstraintData>;
+  public config$: Observable<T>;
+  public dataLoaded$: Observable<boolean>;
+  public viewSettings$: Observable<ViewSettings>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
 
-  public perspectiveId: string;
+  public perspectiveId$ = new BehaviorSubject(DEFAULT_PERSPECTIVE_ID);
 
   protected subscriptions = new Subscription();
 
@@ -75,6 +78,18 @@ export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
   protected abstract configChanged(perspectiveId: string, config: T);
 
   protected abstract getConfig(viewConfig: ViewConfig): T;
+
+  protected getDefaultConfig(): T {
+    return null;
+  }
+
+  protected selectDefaultViewConfig$(): Observable<DefaultViewConfig> {
+    return of(null);
+  }
+
+  protected checkConfigWithDefaultView(config: T, defaultConfig?: DefaultViewConfig): Observable<T> {
+    return of(config);
+  }
 
   protected abstract checkOrTransformConfig(
     config: T,
@@ -102,7 +117,7 @@ export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
       )
       .subscribe(({perspectiveId, config}: {perspectiveId?: string; config?: T}) => {
         if (perspectiveId) {
-          this.perspectiveId = perspectiveId;
+          this.perspectiveId$.next(perspectiveId);
           this.configChanged(perspectiveId, config);
         }
       });
@@ -118,9 +133,12 @@ export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
         if (
           preferViewConfigUpdate(this.getConfig(previousView?.config), this.getConfig(view?.config), !!entityConfig)
         ) {
-          return this.checkPerspectiveConfig(perspectiveConfig).pipe(map(config => ({perspectiveId, config})));
+          return this.checkPerspectiveConfig(perspectiveConfig).pipe(
+            mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig)),
+            map(config => ({perspectiveId, config}))
+          );
         }
-        return of({perspectiveId, config: entityConfig || perspectiveConfig});
+        return of({perspectiveId, config: entityConfig || perspectiveConfig || this.getDefaultConfig()});
       })
     );
   }
@@ -137,12 +155,20 @@ export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
   }
 
   private subscribeToDefault(): Observable<{perspectiveId?: string; config?: T}> {
-    const perspectiveId = DEFAULT_ID;
+    const perspectiveId = DEFAULT_PERSPECTIVE_ID;
     return this.store$.pipe(
       select(selectViewQuery),
-      withLatestFrom(this.subscribeConfig$(perspectiveId)),
-      mergeMap(([, config]) => this.checkPerspectiveConfig(config)),
-      map(config => ({perspectiveId, config}))
+      switchMap(() =>
+        this.selectDefaultViewConfig$().pipe(
+          withLatestFrom(this.subscribeConfig$(perspectiveId)),
+          mergeMap(([defaultView, config]) =>
+            this.checkPerspectiveConfig(config).pipe(
+              mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig, defaultView))
+            )
+          ),
+          map(config => ({perspectiveId, config}))
+        )
+      )
     );
   }
 
@@ -160,11 +186,20 @@ export abstract class PerspectiveComponent<T> implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.documentsAndLinks$ = this.subscribeDocumentsAndLinks$();
+    this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.config$ = this.perspectiveId$
+      .asObservable()
+      .pipe(switchMap(perspectiveId => this.subscribeConfig$(perspectiveId)));
+  }
+
+  public isDefaultPerspective(id: string): boolean {
+    return id === DEFAULT_PERSPECTIVE_ID;
   }
 
   public ngOnDestroy() {

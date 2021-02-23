@@ -20,8 +20,9 @@
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {DEFAULT_SEARCH_ID, Search, SearchConfig} from './search';
+import {Search} from './search';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface SearchesState extends EntityState<Search> {}
 
@@ -38,7 +39,7 @@ export const selectSearchById = id => createSelector(selectSearchesDictionary, s
 
 export const selectSearchId = createSelector(
   selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_SEARCH_ID
+  workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID
 );
 
 export const selectSearch = createSelector(

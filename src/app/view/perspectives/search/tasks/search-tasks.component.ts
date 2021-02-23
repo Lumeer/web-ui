@@ -30,7 +30,7 @@ import {
   selectTasksDocumentsByQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
+import {SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
@@ -40,7 +40,7 @@ import {selectConstraintData} from '../../../../core/store/constraint-data/const
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {queryWithoutFilters} from '../../../../core/store/navigation/query/query.util';
 import {ViewsAction} from '../../../../core/store/views/views.action';
-import {Perspective} from '../../perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
@@ -114,11 +114,11 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
     if (this.searchId) {
       const searchConfig = {...this.config, documents: documentsConfig};
       this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config: searchConfig}));
-      if (this.searchId === DEFAULT_SEARCH_ID) {
+      if (this.searchId === DEFAULT_PERSPECTIVE_ID) {
         this.store$.dispatch(
           new ViewsAction.SetDefaultConfig({
             model: {
-              key: DEFAULT_SEARCH_ID,
+              key: DEFAULT_PERSPECTIVE_ID,
               perspective: Perspective.Search,
               config: {search: searchConfig},
             },

@@ -20,8 +20,6 @@
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {SearchTab} from '../navigation/search-tab';
 
-export const DEFAULT_SEARCH_ID = 'default';
-
 export interface Search {
   id: string;
   config?: SearchConfig;

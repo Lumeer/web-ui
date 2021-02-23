@@ -36,11 +36,11 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {Query} from '../../core/store/navigation/query/query';
 import {filterStemsForCollection} from '../../core/store/navigation/query/query.util';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataQuery} from '../../core/model/data-query';
 
 @Component({
   selector: 'preview-results',
@@ -55,7 +55,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public selectedDocument: DocumentModel;
 
   @Input()
-  public query: Query;
+  public query: DataQuery;
 
   @Output()
   public selectCollection = new EventEmitter<Collection>();

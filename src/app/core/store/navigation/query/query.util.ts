@@ -435,7 +435,7 @@ export function findBestStemConfigIndex(
   return 0;
 }
 
-export function filterStemsForCollection(collectionId: string, query: Query): Query {
+export function filterStemsForCollection(collectionId: string, query: DataQuery): DataQuery {
   if (query && (query.stems || []).length > 0) {
     return {
       ...query,
@@ -443,7 +443,7 @@ export function filterStemsForCollection(collectionId: string, query: Query): Qu
       fulltexts: query.fulltexts,
     };
   } else {
-    return {stems: [{collectionId}], fulltexts: query && query.fulltexts};
+    return {...query, stems: [{collectionId}]};
   }
 }
 

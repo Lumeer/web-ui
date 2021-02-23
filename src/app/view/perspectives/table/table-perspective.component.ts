@@ -49,7 +49,7 @@ import {AppState} from '../../../core/store/app.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query/query.helper';
 import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
-import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
+import {DEFAULT_TABLE_ID, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
@@ -77,6 +77,7 @@ import {selectCanManageViewConfig} from '../../../core/store/common/permissions.
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
+import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -322,7 +323,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     view: View
   ): Observable<{query: Query; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.store$.pipe(
-      select(selectViewQuery),
+      select(selectViewDataQuery),
       switchMap(query => {
         const tableId = view.code;
         return this.store$.pipe(
@@ -355,7 +356,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     forceRefresh?: boolean;
   }> {
     return this.store$.pipe(
-      select(selectViewQuery),
+      select(selectViewDataQuery),
       switchMap(query => {
         const tableId = DEFAULT_TABLE_ID;
         return this.selectCurrentDefaultViewConfig$().pipe(

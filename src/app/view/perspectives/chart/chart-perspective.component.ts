@@ -49,14 +49,8 @@ export class ChartPerspectiveComponent extends PerspectiveComponent<ChartConfig>
   @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 
-  public config$: Observable<ChartConfig>;
-
   constructor(protected store$: Store<AppState>) {
     super(store$);
-  }
-
-  public ngOnInit() {
-    super.ngOnInit();
   }
 
   public subscribeConfig$(perspectiveId: string): Observable<ChartConfig> {
@@ -91,7 +85,7 @@ export class ChartPerspectiveComponent extends PerspectiveComponent<ChartConfig>
   }
 
   public onConfigChanged(config: ChartConfig) {
-    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.perspectiveId, config}));
+    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.perspectiveId$.value, config}));
   }
 
   public patchDocumentData(document: DocumentModel) {

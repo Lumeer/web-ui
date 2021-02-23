@@ -20,8 +20,9 @@
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {DEFAULT_WORKFLOW_ID, Workflow} from './workflow';
+import {Workflow} from './workflow';
 import {selectViewCursor, selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface WorkflowsState extends EntityState<Workflow> {}
 
@@ -42,7 +43,7 @@ export const selectWorkflowSelectedDocumentId = createSelector(selectViewCursor,
 
 export const selectWorkflowId = createSelector(
   selectWorkspace,
-  workspace => workspace?.viewCode || DEFAULT_WORKFLOW_ID
+  workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID
 );
 
 export const selectWorkflow = createSelector(selectWorkflowsDictionary, selectWorkflowId, (map, id) => map[id]);
