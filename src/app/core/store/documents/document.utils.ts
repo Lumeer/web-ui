@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Attribute, Collection} from '../collections/collection';
+import {Collection} from '../collections/collection';
 import {Query} from '../navigation/query/query';
 import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
@@ -33,8 +33,6 @@ import {
   ConstraintType,
   DataValue,
   DateTimeConstraint,
-  SelectConstraint,
-  SelectConstraintOption,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 
@@ -78,7 +76,7 @@ export function sortDocumentsTasks(documents: DocumentModel[], collections: Coll
         getDocumentDueDateDataValue(a, collectionsMap),
         getDocumentDueDateDataValue(b, collectionsMap)
       );
-      if (isNotNullOrUndefined(dueDateCompare)) {
+      if (dueDateCompare) {
         return dueDateCompare;
       }
 
@@ -86,12 +84,12 @@ export function sortDocumentsTasks(documents: DocumentModel[], collections: Coll
         getDocumentPriorityDataValue(a, collectionsMap),
         getDocumentPriorityDataValue(b, collectionsMap)
       );
-      if (isNotNullOrUndefined(priorityCompare)) {
+      if (priorityCompare) {
         return priorityCompare;
       }
 
       const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
-      if (isNotNullOrUndefined(datesCompare)) {
+      if (datesCompare) {
         return datesCompare;
       }
       return a.id.localeCompare(b.id);
