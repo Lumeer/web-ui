@@ -225,10 +225,6 @@ export class TablesEffects {
                     action.payload.config
                   );
 
-                  const query: Query = {
-                    stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
-                  };
-
                   const removeColumnActions = isTablePartEmpty(table.config.parts[lastPartIndex])
                     ? []
                     : [new TablesAction.RemoveEmptyColumns({cursor: {tableId: table.id, partIndex: lastPartIndex}})];

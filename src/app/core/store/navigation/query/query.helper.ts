@@ -94,14 +94,18 @@ export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: 
 
 export function hasQueryNewLink(oldQuery: Query, newQuery: Query) {
   if (
-    ((oldQuery && oldQuery.stems) || []).length !== ((newQuery && newQuery.stems) || []).length ||
+    (oldQuery?.stems || []).length !== (newQuery?.stems || []).length ||
     !deepArrayEquals(getBaseCollectionIdsFromQuery(oldQuery), getBaseCollectionIdsFromQuery(newQuery))
   ) {
     return false;
   }
 
-  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
-  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+  const newQueryLinkTypeIds = newQuery?.stems?.[0].linkTypeIds || [];
+  const oldQueryLinkTypeIds = oldQuery?.stems?.[0].linkTypeIds || [];
+
+  if (newQueryLinkTypeIds.length === 1 && oldQueryLinkTypeIds.length === 0) {
+    return true;
+  }
 
   return (
     newQueryLinkTypeIds.length > oldQueryLinkTypeIds.length && isArraySubset(newQueryLinkTypeIds, oldQueryLinkTypeIds)
