@@ -21,8 +21,8 @@
                 [class.title]="viewSize !== sizeType.S">
             {{view.name}}
             <i *ngIf="data.containsDeleted" class="fa fa-exclamation-triangle text-warning ml-1"
-               title="View is not valid because some of the items are deleted"
-               i18n="@@view.detail.warning.deleted"></i>
+               title="View is not valid because some of the resources were deleted"
+               i18n-title="@@view.detail.warning.deleted"></i>
           </span>
 
         <i class="fa-star mr-2 text-warning cursor-pointer hiding-icon"
