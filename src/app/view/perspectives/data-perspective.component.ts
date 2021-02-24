@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
@@ -45,9 +45,7 @@ import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
 import {selectCurrentQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 
-@Component({
-  template: '',
-})
+@Injectable()
 export abstract class DataPerspectiveComponent<T> implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;

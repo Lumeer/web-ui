@@ -1504,11 +1504,8 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.card.layout" datatype="html">
         <source>Card layout</source><target>Formát karet</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
         <source>Cards</source><target>Karty</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
@@ -6059,6 +6056,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.settings.includeChildren" datatype="html">
+        <source>Include sub-items</source><target>Včetně podpoložek</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/settings/data/data-settings.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.settings.includeChildren.help" datatype="html">
+        <source>If turned on, sub-items are always visible no matter of defined filters.</source><target>Pokud se zapne, budou podřízené položky vždy viditelné bez ohledu na nastavení filtrů.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/settings/data/data-settings.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="attribute.settings.sort.toggle" datatype="html">
         <source>Toggle sort</source><target>Přepnout seřazení</target>
