@@ -889,6 +889,18 @@
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
+      </trans-unit><trans-unit id="view.settings.includeChildren" datatype="html">
+        <source>Include sub-items</source><target state="final">Include sub-items</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/settings/data/data-settings.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.settings.includeChildren.help" datatype="html">
+        <source>If turned on, sub-items are always visible no matter of defined filters.</source><target state="final">If turned on, sub-items are always visible no matter of defined filters.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/settings/data/data-settings.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
       </trans-unit><trans-unit id="attribute.settings.sort.toggle" datatype="html">
         <source>Toggle sort</source><target state="final">Toggle sort</target>
         <context-group purpose="location">
@@ -3538,11 +3550,8 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.card.layout" datatype="html">
         <source>Card layout</source><target state="final">Card layout</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
         <source>Cards</source><target state="final">Cards</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
