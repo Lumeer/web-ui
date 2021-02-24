@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query/query';
 import {Workspace} from '../navigation/workspace';
+import {DataQuery} from '../../model/data-query';
 
 export enum DataResourcesActionType {
   GET = '[Data Resources] Get',
@@ -37,25 +37,25 @@ export namespace DataResourcesAction {
   export class Get implements Action {
     public readonly type = DataResourcesActionType.GET;
 
-    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: {query: DataQuery; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = DataResourcesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {query: Query}) {}
+    public constructor(public payload: {query: DataQuery}) {}
   }
 
   export class GetTasks implements Action {
     public readonly type = DataResourcesActionType.GET_TASKS;
 
-    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: {query: DataQuery; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
   }
 
   export class GetTasksSuccess implements Action {
     public readonly type = DataResourcesActionType.GET_TASKS_SUCCESS;
 
-    public constructor(public payload: {query: Query}) {}
+    public constructor(public payload: {query: DataQuery}) {}
   }
 
   export class GetTasksFailure implements Action {

@@ -32,7 +32,7 @@ import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {
-    stems: dto.stems && dto.stems.map(stem => convertQueryStemDtoToModel(stem)),
+    stems: dto.stems?.map(stem => convertQueryStemDtoToModel(stem)),
     fulltexts: dto.fulltexts,
     page: dto.page,
     pageSize: dto.pageSize,
@@ -41,7 +41,7 @@ export function convertQueryDtoToModel(dto: QueryDto): Query {
 
 export function convertQueryModelToDto(model: Query): QueryDto {
   return {
-    stems: model.stems && model.stems.map(stem => convertQueryStemModelToDto(stem)),
+    stems: model.stems?.map(stem => convertQueryStemModelToDto(stem)),
     fulltexts: model.fulltexts,
     page: model.page,
     pageSize: model.pageSize,
@@ -53,8 +53,8 @@ function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
     collectionId: dto.collectionId,
     documentIds: dto.documentIds,
     linkTypeIds: dto.linkTypeIds,
-    filters: dto.filters && dto.filters.map(filter => convertCollectionAttributeFilterDtoToModel(filter)),
-    linkFilters: dto.linkFilters && dto.linkFilters.map(filter => convertLinkAttributeFilterDtoToModel(filter)),
+    filters: dto.filters?.map(filter => convertCollectionAttributeFilterDtoToModel(filter)),
+    linkFilters: dto.linkFilters?.map(filter => convertLinkAttributeFilterDtoToModel(filter)),
   };
 }
 
@@ -63,8 +63,8 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
     collectionId: model.collectionId,
     documentIds: model.documentIds,
     linkTypeIds: model.linkTypeIds,
-    filters: model.filters && model.filters.map(filter => convertCollectionAttributeFilterModelToDto(filter)),
-    linkFilters: model.linkFilters && model.linkFilters.map(filter => convertLinkAttributeFilterModelToDto(filter)),
+    filters: model.filters?.map(filter => convertCollectionAttributeFilterModelToDto(filter)),
+    linkFilters: model.linkFilters?.map(filter => convertLinkAttributeFilterModelToDto(filter)),
   };
 }
 
@@ -143,10 +143,10 @@ function parseStringQuery(stringQuery: string): ShortenedQuery {
 
 export function normalizeQueryModel(query: Query): Query {
   return {
-    stems: ((query && query.stems) || []).map(stem => normalizeQueryStem(stem)),
-    fulltexts: (query && query.fulltexts) || [],
-    page: isNullOrUndefined(query && query.page) ? null : query.page,
-    pageSize: isNullOrUndefined(query && query.pageSize) ? null : query.pageSize,
+    stems: (query?.stems || []).map(stem => normalizeQueryStem(stem)),
+    fulltexts: query?.fulltexts || [],
+    page: isNullOrUndefined(query?.page) ? null : query.page,
+    pageSize: isNullOrUndefined(query?.pageSize) ? null : query.pageSize,
   };
 }
 

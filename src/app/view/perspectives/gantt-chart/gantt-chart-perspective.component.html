@@ -23,7 +23,7 @@
                        [style.width.px]="1"
                        [canManageConfig]="data.canManageConfig"
                        [collections]="data.collections"
-                       [ganttChartId]="ganttChartId"
+                       [ganttChartId]="perspectiveId$ | async"
                        [permissions]="permissions$ | async"
                        [documents]="data.documentsAndLinks.documents"
                        [linkTypes]="data.linkTypes"

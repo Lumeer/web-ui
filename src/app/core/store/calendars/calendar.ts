@@ -19,9 +19,6 @@
 
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute} from '../../model/query-attribute';
-import {MimeType} from '../../model/mime-type';
-
-export const DEFAULT_CALENDAR_ID = 'default';
 
 export interface Calendar {
   id: string;

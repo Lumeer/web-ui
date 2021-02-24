@@ -22,8 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {MapImageData, MapImageLoadResult, MapModel} from './map.model';
 import {selectWorkspace} from '../navigation/navigation.state';
-
-export const DEFAULT_MAP_ID = 'default';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface MapsState extends EntityState<MapModel> {
   imagesCache: Record<string, MapImageData>;
@@ -44,10 +43,7 @@ export const selectMapsState = (state: AppState) => state.maps;
 export const selectMapsDictionary = createSelector(selectMapsState, mapsAdapter.getSelectors().selectEntities);
 export const selectMapById = (mapId: string) => createSelector(selectMapsDictionary, maps => maps[mapId]);
 
-export const selectMapId = createSelector(
-  selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_MAP_ID
-);
+export const selectMapId = createSelector(selectWorkspace, workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID);
 
 export const selectMap = createSelector(selectMapsDictionary, selectMapId, (maps, mapId) => maps[mapId]);
 

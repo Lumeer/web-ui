@@ -38,16 +38,12 @@ import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
 import {CollectionsAction} from '../collections/collections.action';
-import {
-  selectCollectionById,
-  selectCollectionsDictionary,
-  selectCollectionsLoaded,
-} from '../collections/collections.state';
+import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
 import {
   selectDocumentsAndLinksByQuery,
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
-  selectDocumentsByQueryIncludingChildrenAndIds,
+  selectDocumentsByQueryAndIdsSortedByCreation,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -61,7 +57,7 @@ import {
 } from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
-import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
+import {selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectViewCode, selectViewCursor} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
@@ -127,7 +123,6 @@ import {selectCollectionPermissions} from '../user-permissions/user-permissions.
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
-import {DataResourcesAction} from '../data-resources/data-resources.action';
 
 @Injectable()
 export class TablesEffects {
@@ -136,16 +131,8 @@ export class TablesEffects {
     ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
     filter(action => isSingleCollectionQuery(action.payload.query)),
     withLatestFrom(
-      this.store$.pipe(
-        select(selectCollectionsLoaded),
-        filter(loaded => loaded),
-        mergeMap(() => this.store$.select(selectCollectionsDictionary))
-      ),
-      this.store$.pipe(
-        select(selectLinkTypesLoaded),
-        filter(loaded => loaded),
-        mergeMap(() => this.store$.select(selectLinkTypesDictionary))
-      ),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+      this.store$.pipe(select(selectLinkTypesDictionary)),
       this.store$.pipe(select(selectDocumentsByQuery)),
       this.store$.pipe(select(selectViewCode))
     ),
@@ -183,7 +170,7 @@ export class TablesEffects {
 
       const documentIds = (documents || []).map(document => document.id);
       const rows = filterTableRowsByDepth(
-        (config && config.rows) || [createEmptyTableRow()],
+        config?.rows || [createEmptyTableRow()],
         Math.round(parts.length / 2),
         documentIds
       );
@@ -195,8 +182,6 @@ export class TablesEffects {
         config: {parts, rows},
       };
       actions.push(new TablesAction.AddTable({table}));
-
-      actions.push(new DataResourcesAction.Get({query}));
 
       // if the table is embedded, file attachments are not loaded by guard
       if (embedded) {
@@ -240,10 +225,6 @@ export class TablesEffects {
                     action.payload.config
                   );
 
-                  const query: Query = {
-                    stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
-                  };
-
                   const removeColumnActions = isTablePartEmpty(table.config.parts[lastPartIndex])
                     ? []
                     : [new TablesAction.RemoveEmptyColumns({cursor: {tableId: table.id, partIndex: lastPartIndex}})];
@@ -254,8 +235,6 @@ export class TablesEffects {
                       tableId: table.id,
                       parts: [linkTypePart, collectionPart],
                     }),
-                    // TODO get data only in guards
-                    new DataResourcesAction.Get({query}),
                   ];
                 })
               );
@@ -627,7 +606,7 @@ export class TablesEffects {
     switchMap(action =>
       combineLatest([
         this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))),
+        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false))),
         this.store$.pipe(select(selectMoveTableCursorDown)),
         this.store$.pipe(select(selectTableCursor)),
       ]).pipe(
@@ -743,7 +722,7 @@ export class TablesEffects {
                 return ids;
               }, []);
               return this.store$.pipe(
-                select(selectDocumentsByQueryIncludingChildrenAndIds(documentIds)),
+                select(selectDocumentsByQueryAndIdsSortedByCreation(documentIds)),
                 take(1),
                 map(documents =>
                   documents.map(document => {

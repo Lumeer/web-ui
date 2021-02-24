@@ -33,6 +33,11 @@ import {
   queryWithoutFilters,
 } from './query.util';
 import {Collection} from '../../collections/collection';
+import {DataQuery} from '../../../model/data-query';
+
+export function areDataQueriesEqual(first: DataQuery, second: DataQuery): boolean {
+  return !!first?.includeSubItems === !!second?.includeSubItems && areQueriesEqual(first, second);
+}
 
 export function areQueriesEqual(first: Query, second: Query): boolean {
   const firstNormalized = normalizeQueryModel(first);
@@ -60,22 +65,24 @@ export function areQueryStemsEqual(first: QueryStem, second: QueryStem): boolean
   );
 }
 
-export function isQueryLoaded(query: Query, loadedQueries: Query[]): boolean {
-  return loadedQueries.some(loadedQuery => isQuerySubset(query, loadedQuery));
+export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[]): boolean {
+  return loadedQueries.some(
+    loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(query, loadedQuery)
+  );
 }
 
-export function isTaskQueryLoaded(query: Query, collections: Collection[], loadedQueries: Query[]): boolean {
+export function isTaskQueryLoaded(query: DataQuery, collections: Collection[], loadedQueries: DataQuery[]): boolean {
   const taskQuery = checkTasksCollectionsQuery(collections, query);
   const isEmpty = queryIsEmptyExceptPagination(query);
   return loadedQueries.some(loadedQuery => {
-    if (isEmpty && areQueriesEqual(loadedQuery, taskQuery)) {
+    if (isEmpty && areDataQueriesEqual(loadedQuery, taskQuery)) {
       return true;
     }
     if (queryIsEmptyExceptPagination(loadedQuery) !== isEmpty) {
       return false;
     }
 
-    return isQuerySubset(taskQuery, loadedQuery);
+    return !!taskQuery?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(taskQuery, loadedQuery);
   });
 }
 
@@ -87,14 +94,18 @@ export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: 
 
 export function hasQueryNewLink(oldQuery: Query, newQuery: Query) {
   if (
-    ((oldQuery && oldQuery.stems) || []).length !== ((newQuery && newQuery.stems) || []).length ||
+    (oldQuery?.stems || []).length !== (newQuery?.stems || []).length ||
     !deepArrayEquals(getBaseCollectionIdsFromQuery(oldQuery), getBaseCollectionIdsFromQuery(newQuery))
   ) {
     return false;
   }
 
-  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
-  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+  const newQueryLinkTypeIds = newQuery?.stems?.[0].linkTypeIds || [];
+  const oldQueryLinkTypeIds = oldQuery?.stems?.[0].linkTypeIds || [];
+
+  if (newQueryLinkTypeIds.length === 1 && oldQueryLinkTypeIds.length === 0) {
+    return true;
+  }
 
   return (
     newQueryLinkTypeIds.length > oldQueryLinkTypeIds.length && isArraySubset(newQueryLinkTypeIds, oldQueryLinkTypeIds)

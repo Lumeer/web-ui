@@ -49,7 +49,7 @@ import {AppState} from '../../../core/store/app.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query/query.helper';
 import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
-import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
+import {DEFAULT_TABLE_ID, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
@@ -77,6 +77,8 @@ import {selectCanManageViewConfig} from '../../../core/store/common/permissions.
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
+import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
+import {DataQuery} from '../../../core/model/data-query';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -278,7 +280,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private waitForDataLoaded$(query?: Query): Observable<boolean> {
+  private waitForDataLoaded$(query?: DataQuery): Observable<boolean> {
     if (query) {
       this.fetchData(query);
     }
@@ -289,7 +291,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private fetchData(query: Query) {
+  private fetchData(query: DataQuery) {
     this.store$.dispatch(new DataResourcesAction.Get({query}));
   }
 
@@ -320,9 +322,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTableWithView(
     previousView: View,
     view: View
-  ): Observable<{query: Query; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
+  ): Observable<{query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.store$.pipe(
-      select(selectViewQuery),
+      select(selectViewDataQuery),
       switchMap(query => {
         const tableId = view.code;
         return this.store$.pipe(
@@ -349,13 +351,13 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initTableDefaultView(): Observable<{
-    query: Query;
+    query: DataQuery;
     config: TableConfig;
     tableId: string;
     forceRefresh?: boolean;
   }> {
     return this.store$.pipe(
-      select(selectViewQuery),
+      select(selectViewDataQuery),
       switchMap(query => {
         const tableId = DEFAULT_TABLE_ID;
         return this.selectCurrentDefaultViewConfig$().pipe(
@@ -414,7 +416,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     return this.table$.value && hasQueryNewLink(this.query, query);
   }
 
-  private addTablePart(query: Query, tableId: string) {
+  private addTablePart(query: DataQuery, tableId: string) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
     const subscription = this.waitForDataLoaded$(query).subscribe(() => {
       this.store$.dispatch(new TablesAction.CreatePart({tableId, linkTypeId, last: true}));
@@ -422,7 +424,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private refreshTable(query: Query, tableId: string, config: TableConfig) {
+  private refreshTable(query: DataQuery, tableId: string, config: TableConfig) {
     if (queryIsEmpty(query) && tableId === DEFAULT_TABLE_ID) {
       this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
     } else {

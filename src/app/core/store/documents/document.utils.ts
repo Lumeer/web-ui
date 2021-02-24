@@ -20,9 +20,9 @@ import {Collection} from '../collections/collection';
 import {Query} from '../navigation/query/query';
 import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
-import {findAttribute} from '../collections/collection.util';
+import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
-import {isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
+import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {
@@ -76,7 +76,7 @@ export function sortDocumentsTasks(documents: DocumentModel[], collections: Coll
         getDocumentDueDateDataValue(a, collectionsMap),
         getDocumentDueDateDataValue(b, collectionsMap)
       );
-      if (isNotNullOrUndefined(dueDateCompare)) {
+      if (dueDateCompare) {
         return dueDateCompare;
       }
 
@@ -84,12 +84,12 @@ export function sortDocumentsTasks(documents: DocumentModel[], collections: Coll
         getDocumentPriorityDataValue(a, collectionsMap),
         getDocumentPriorityDataValue(b, collectionsMap)
       );
-      if (isNotNullOrUndefined(priorityCompare)) {
+      if (priorityCompare) {
         return priorityCompare;
       }
 
       const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
-      if (isNotNullOrUndefined(datesCompare)) {
+      if (datesCompare) {
         return datesCompare;
       }
       return a.id.localeCompare(b.id);
@@ -239,4 +239,52 @@ export function calculateDocumentHierarchyLevel(
   const document = documentsMap[documentId];
   const parentDocumentId = document && document.metaData && document.metaData.parentId;
   return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
+}
+
+export function filterTaskDocuments(
+  documents: DocumentModel[],
+  collections: Collection[],
+  constraintData: ConstraintData
+): DocumentModel[] {
+  const tasks = [];
+  const collectionsMap = objectsByIdMap(collections);
+  const collectionsTasksDataMap = getCollectionTaskDataMap(collections);
+  for (const document of documents) {
+    const collection = collectionsMap[document.collectionId];
+    const tasksData = collection && collectionsTasksDataMap[collection.id];
+    if (collection && tasksData) {
+      const rawValue = document?.data[collection?.purpose?.metaData?.stateAttributeId];
+      const dataValue = tasksData.stateConstraint.createDataValue(rawValue, constraintData);
+      if (!dataValueHasValue(dataValue, tasksData.doneStates)) {
+        tasks.push(document);
+      }
+    }
+  }
+  return tasks;
+}
+
+function dataValueHasValue(dataValue: DataValue, set: Set<string>): boolean {
+  const serialized = dataValue.serialize();
+  if (isArray(serialized)) {
+    return (<any>serialized).some(value => set.has(value));
+  }
+  return set.has(serialized);
+}
+
+function getCollectionTaskDataMap(
+  collections: Collection[]
+): Record<string, {stateConstraint: Constraint; doneStates: Set<string>}> {
+  return collections.reduce((map, collection) => {
+    const stateConstraint =
+      findAttributeConstraint(collection.attributes, collection.purpose?.metaData?.stateAttributeId) ||
+      new UnknownConstraint();
+    const doneStates = collection.purpose?.metaData?.finalStatesList;
+    map[collection.id] = {
+      stateConstraint,
+      doneStates: isNotNullOrUndefined(doneStates)
+        ? new Set(isArray(doneStates) ? doneStates : [doneStates])
+        : new Set(),
+    };
+    return map;
+  }, {});
 }

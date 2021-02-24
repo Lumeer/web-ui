@@ -36,9 +36,9 @@ import {DirectivesModule} from '../../directives/directives.module';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {SettingsButtonComponent} from './settings-button/settings-button.component';
-import {AttributesSettingsModule} from '../../settings/attributes/attributes-settings.module';
 import {ShouldShowSettingsPipe} from './settings-button/should-show-settings.pipe';
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
+import {SettingsModule} from '../../settings/settings.module';
 
 @NgModule({
   imports: [
@@ -49,7 +49,7 @@ import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.m
     PresenterModule,
     PipesModule,
     SearchBoxPipesModule,
-    AttributesSettingsModule,
+    SettingsModule,
     DataInputModule,
     DirectivesModule,
     DropdownModule,

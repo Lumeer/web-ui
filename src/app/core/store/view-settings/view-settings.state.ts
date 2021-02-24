@@ -24,6 +24,7 @@ import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {createSaveViewSettings, viewSettingsChanged} from '../views/view.utils';
 import {selectCurrentView, selectViewQuery} from '../views/views.state';
 import {AppState} from '../app.state';
+import {DataQuery} from '../../model/data-query';
 
 export interface ViewSettingsState extends ViewSettings {}
 
@@ -38,6 +39,17 @@ export const selectViewSettingsChanged = createSelector(
   selectLinkTypesDictionary,
   (view, settings, collectionsMap, linkTypesMap) =>
     view && viewSettingsChanged(view.settings, settings, collectionsMap, linkTypesMap)
+);
+
+export const selectDataSettingsIncludeSubItems = createSelector(
+  selectViewSettings,
+  settings => settings?.data?.includeSubItems
+);
+
+export const selectViewDataQuery = createSelector(
+  selectDataSettingsIncludeSubItems,
+  selectViewQuery,
+  (includeSubItems, viewQuery) => viewQuery && {...viewQuery, includeSubItems}
 );
 
 export const selectSaveViewSettings = createSelector(

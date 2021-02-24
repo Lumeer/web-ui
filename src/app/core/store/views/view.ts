@@ -83,6 +83,11 @@ export interface DefaultViewConfig {
 
 export interface ViewSettings {
   attributes?: AttributesSettings;
+  data?: DataSettings;
+}
+
+export interface DataSettings {
+  includeSubItems?: boolean;
 }
 
 export interface AttributesSettings {

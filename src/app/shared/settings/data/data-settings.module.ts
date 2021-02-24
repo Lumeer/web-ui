@@ -17,35 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {SizeType} from './size-type';
-import {SliderItem} from '../values/slider-item';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DataSettingsComponent} from './data-settings.component';
 
-@Component({
-  selector: 'size-slider',
-  templateUrl: './size-slider.component.html',
+@NgModule({
+  declarations: [DataSettingsComponent],
+  exports: [DataSettingsComponent],
+  imports: [CommonModule],
 })
-export class SizeSliderComponent {
-  @Input()
-  public disabled: boolean;
-
-  @Input()
-  public defaultSize: SizeType;
-
-  @Input()
-  public numItems = 3;
-
-  @Output()
-  public newSize: EventEmitter<SizeType> = new EventEmitter();
-
-  public items: SliderItem[] = [
-    {id: SizeType.S, title: 'S'},
-    {id: SizeType.M, title: 'M'},
-    {id: SizeType.L, title: 'L'},
-    {id: SizeType.XL, title: 'XL'},
-  ];
-
-  public onNewItem(item: SliderItem) {
-    this.newSize.emit(item.id);
-  }
-}
+export class DataSettingsModule {}

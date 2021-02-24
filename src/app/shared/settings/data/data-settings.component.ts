@@ -17,35 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {SizeType} from './size-type';
-import {SliderItem} from '../values/slider-item';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {DataSettings} from '../../../core/store/views/view';
 
 @Component({
-  selector: 'size-slider',
-  templateUrl: './size-slider.component.html',
+  selector: 'data-settings',
+  templateUrl: './data-settings.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SizeSliderComponent {
+export class DataSettingsComponent {
   @Input()
-  public disabled: boolean;
-
-  @Input()
-  public defaultSize: SizeType;
-
-  @Input()
-  public numItems = 3;
+  public settings: DataSettings;
 
   @Output()
-  public newSize: EventEmitter<SizeType> = new EventEmitter();
+  public settingsChange = new EventEmitter<DataSettings>();
 
-  public items: SliderItem[] = [
-    {id: SizeType.S, title: 'S'},
-    {id: SizeType.M, title: 'M'},
-    {id: SizeType.L, title: 'L'},
-    {id: SizeType.XL, title: 'XL'},
-  ];
-
-  public onNewItem(item: SliderItem) {
-    this.newSize.emit(item.id);
+  public onSubItemsChange(checked: boolean) {
+    const newSettings = {...this.settings, includeSubItems: checked};
+    this.settingsChange.emit(newSettings);
   }
 }

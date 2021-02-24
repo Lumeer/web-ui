@@ -19,35 +19,25 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
+import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
+import {map} from 'rxjs/operators';
+import {ViewConfig} from '../../../core/store/views/view';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
-import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
-import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars/calendar';
+import {selectCalendarById} from '../../../core/store/calendars/calendars.state';
+import {CalendarConfig} from '../../../core/store/calendars/calendar';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformCalendarConfig} from './util/calendar-util';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
   selector: 'calendar',
@@ -55,144 +45,61 @@ import {DataResourcesAction} from '../../../core/store/data-resources/data-resou
   styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
-  public collections$: Observable<Collection[]>;
-  public documents$: Observable<DocumentModel[]>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
-  public linkTypes$: Observable<LinkType[]>;
-  public config$: Observable<CalendarConfig>;
-  public canManageConfig$: Observable<boolean>;
+export class CalendarPerspectiveComponent
+  extends DataPerspectiveComponent<CalendarConfig>
+  implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public constraintData$: Observable<ConstraintData>;
 
-  public sidebarOpened$ = new BehaviorSubject(false);
-  public query$ = new BehaviorSubject<Query>(null);
-
-  private calendarId: string;
-  private subscriptions = new Subscription();
-
-  constructor(private store$: Store<AppState>) {}
+  constructor(protected store$: Store<AppState>) {
+    super(store$);
+  }
 
   public ngOnInit() {
-    this.initCalendar();
-    this.subscribeToQuery();
-    this.subscribeData();
-    this.setupSidebar();
+    super.ngOnInit();
+    this.subscribeAdditionalData();
   }
 
-  private initCalendar() {
-    const subscription = this.store$
-      .pipe(
-        select(selectCurrentView),
-        startWith(null as View),
-        pairwise(),
-        switchMap(([previousView, view]) =>
-          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
-      )
-      .subscribe(({calendarId, config}: {calendarId?: string; config?: CalendarConfig}) => {
-        if (calendarId) {
-          this.calendarId = calendarId;
-          this.store$.dispatch(new CalendarsAction.AddCalendar({calendar: {id: calendarId, config}}));
-        }
-      });
-    this.subscriptions.add(subscription);
+  public checkOrTransformConfig(
+    config: CalendarConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): CalendarConfig {
+    return checkOrTransformCalendarConfig(config, query, collections, linkTypes);
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{calendarId?: string; config?: CalendarConfig}> {
-    const calendarId = view.code;
+  public configChanged(perspectiveId: string, config: CalendarConfig) {
+    this.store$.dispatch(new CalendarsAction.AddCalendar({calendar: {id: perspectiveId, config}}));
+  }
+
+  public getConfig(viewConfig: ViewConfig): CalendarConfig {
+    return viewConfig?.calendar;
+  }
+
+  public subscribeConfig$(perspectiveId: string): Observable<CalendarConfig> {
     return this.store$.pipe(
-      select(selectCalendarById(calendarId)),
-      take(1),
-      mergeMap(calendarEntity => {
-        const calendarConfig = view.config && view.config.calendar;
-        if (preferViewConfigUpdate(previousView?.config?.calendar, view?.config?.calendar, !!calendarEntity)) {
-          return this.checkCalendarConfig(calendarConfig).pipe(map(config => ({calendarId, config})));
-        }
-        return of({calendarId, config: calendarEntity?.config || calendarConfig});
-      })
+      select(selectCalendarById(perspectiveId)),
+      map(entity => entity?.config)
     );
   }
 
-  private checkCalendarConfig(config: CalendarConfig): Observable<CalendarConfig> {
-    return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => checkOrTransformCalendarConfig(config, query, collections, linkTypes))
-    );
+  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
+    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
   }
 
-  private subscribeToDefault(): Observable<{calendarId?: string; config?: CalendarConfig}> {
-    const calendarId = DEFAULT_CALENDAR_ID;
-    return this.store$.pipe(
-      select(selectViewQuery),
-      withLatestFrom(this.store$.pipe(select(selectCalendarById(calendarId)))),
-      mergeMap(([, calendar]) => this.checkCalendarConfig(calendar?.config)),
-      map(config => ({calendarId, config}))
-    );
-  }
-
-  private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
-      this.query$.next(query);
-      this.fetchData(query);
-    });
-    this.subscriptions.add(subscription);
-  }
-
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
-  }
-
-  private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.config$ = this.store$.pipe(select(selectCalendarConfig));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+  private subscribeAdditionalData() {
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public onConfigChanged(config: CalendarConfig) {
-    if (this.calendarId) {
-      this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: this.calendarId, config}));
-    }
+    this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: this.perspectiveId$.value, config}));
   }
 
   public patchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 
-  public ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
-  public onSidebarToggle() {
-    const opened = !this.sidebarOpened$.getValue();
-    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
-    this.sidebarOpened$.next(opened);
-  }
-
   public patchLinkInstanceData(linkInstance: LinkInstance) {
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
-  }
-
-  private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
-      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
-  }
-
-  private openOrCloseSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
-      this.sidebarOpened$.next(true);
-    }
   }
 }

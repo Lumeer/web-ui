@@ -20,8 +20,6 @@
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryAttribute} from '../../model/query-attribute';
 
-export const DEFAULT_CHART_ID = 'default';
-
 export interface Chart {
   id: string;
   config?: ChartConfig;

@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query/query';
 import {LinkInstance} from './link.instance';
+import {DataQuery} from '../../model/data-query';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',
@@ -67,7 +67,7 @@ export namespace LinkInstancesAction {
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: {query: Query; force?: boolean}) {}
+    public constructor(public payload: {query: DataQuery; force?: boolean}) {}
   }
 
   export class GetSingle implements Action {
@@ -85,7 +85,7 @@ export namespace LinkInstancesAction {
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {linkInstances: LinkInstance[]; query?: Query}) {}
+    public constructor(public payload: {linkInstances: LinkInstance[]; query?: DataQuery}) {}
   }
 
   export class GetFailure implements Action {

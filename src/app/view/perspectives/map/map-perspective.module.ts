@@ -37,6 +37,7 @@ import {MapImageContentComponent} from './content/image-content/map-image-conten
 import {MapImageRenderComponent} from './content/image-content/render/map-image-render.component';
 import {ImageInputComponent} from './panel/image-input/image-input.component';
 import {InvalidImageMapComponent} from './content/image-content/invalid-image/invalid-image-map.component';
+import {MapModelFromConfigPipe} from './pipes/map-model-from-config.pipe';
 
 @NgModule({
   imports: [SharedModule, ModalModule, MapPerspectiveRoutingModule],
@@ -57,6 +58,7 @@ import {InvalidImageMapComponent} from './content/image-content/invalid-image/in
     MapImageRenderComponent,
     ImageInputComponent,
     InvalidImageMapComponent,
+    MapModelFromConfigPipe,
   ],
   exports: [MapPerspectiveComponent],
 })

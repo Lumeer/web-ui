@@ -20,15 +20,14 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {Query} from '../navigation/query/query';
-import {isQueryLoaded} from '../navigation/query/query.helper';
+import {isDataQueryLoaded} from '../navigation/query/query.helper';
 import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
-import {selectQuery} from '../navigation/navigation.state';
+import {DataQuery} from '../../model/data-query';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId
-  queries: Query[];
+  queries: DataQuery[];
   actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
@@ -53,14 +52,8 @@ export const selectDocumentsDictionary = createSelector(
 );
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
 
-export const selectCurrentQueryDocumentsLoaded = createSelector(
-  selectDocumentsQueries,
-  selectQuery,
-  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
-);
-
-export const selectQueryDocumentsLoaded = (query: Query) =>
-  createSelector(selectDocumentsQueries, queries => isQueryLoaded(query, queries));
+export const selectQueryDocumentsLoaded = (query: DataQuery) =>
+  createSelector(selectDocumentsQueries, queries => isDataQueryLoaded(query, queries));
 
 export const selectDocumentById = (id: string) =>
   createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);

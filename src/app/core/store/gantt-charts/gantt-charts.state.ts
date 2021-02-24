@@ -19,9 +19,10 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {GanttChart, DEFAULT_GANTT_CHART_ID} from './gantt-chart';
+import {GanttChart} from './gantt-chart';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface GanttChartsState extends EntityState<GanttChart> {}
 
@@ -38,7 +39,7 @@ export const selectGanttChartById = id => createSelector(selectGanttChartsDictio
 
 export const selectGanttChartId = createSelector(
   selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_GANTT_CHART_ID
+  workspace => (workspace && workspace.viewCode) || DEFAULT_PERSPECTIVE_ID
 );
 
 export const selectGanttChart = createSelector(selectGanttChartsDictionary, selectGanttChartId, (map, id) => map[id]);

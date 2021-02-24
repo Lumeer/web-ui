@@ -18,10 +18,10 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query/query';
 import {Workspace} from '../navigation/workspace';
 import {DocumentMetaData, DocumentModel} from './document.model';
 import {LinkInstance} from '../link-instances/link.instance';
+import {DataQuery} from '../../model/data-query';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -83,7 +83,7 @@ export namespace DocumentsAction {
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: {query: DataQuery; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
   }
 
   export class GetSingle implements Action {
@@ -101,7 +101,7 @@ export namespace DocumentsAction {
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {documents: DocumentModel[]; query?: Query}) {}
+    public constructor(public payload: {documents: DocumentModel[]; query?: DataQuery}) {}
   }
 
   export class GetFailure implements Action {

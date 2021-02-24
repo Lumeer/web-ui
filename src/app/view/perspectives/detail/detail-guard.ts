@@ -30,7 +30,6 @@ import {Project} from '../../../core/store/projects/project';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {convertStringToViewCursor, ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {convertQueryStringToModel} from '../../../core/store/navigation/query/query.converter';
-import {Query} from '../../../core/store/navigation/query/query';
 import {
   selectCollectionsByCustomQuery,
   selectDocumentsByCustomQuery,
@@ -38,16 +37,17 @@ import {
 import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {filterStemsForCollection} from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {DataQuery} from '../../../core/model/data-query';
 
 @Injectable()
 export class DetailGuard implements Resolve<DocumentModel[]> {
   public constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DocumentModel[]> {
-    const parentRoute = route.parent && route.parent.parent;
+    const parentRoute = route.parent?.parent;
 
-    const organizationCode = parentRoute && parentRoute.paramMap.get('organizationCode');
-    const projectCode = parentRoute && parentRoute.paramMap.get('projectCode');
+    const organizationCode = parentRoute?.paramMap.get('organizationCode');
+    const projectCode = parentRoute?.paramMap.get('projectCode');
 
     if (!organizationCode || !projectCode) {
       return of([]);
@@ -68,7 +68,7 @@ export class DetailGuard implements Resolve<DocumentModel[]> {
     organization: Organization,
     project: Project,
     cursor: ViewCursor,
-    query: Query
+    query: DataQuery
   ): Observable<DocumentModel[]> {
     return this.store$.pipe(
       select(selectCollectionsByCustomQuery(query)),

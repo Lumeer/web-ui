@@ -18,45 +18,22 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {View} from '../../../core/store/views/view';
-import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {
-  distinctUntilChanged,
-  map,
-  mergeMap,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  withLatestFrom,
-} from 'rxjs/operators';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
-import {selectPivotById, selectPivotConfig, selectPivotId} from '../../../core/store/pivots/pivots.state';
-import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
+import {map} from 'rxjs/operators';
+import {selectPivotById} from '../../../core/store/pivots/pivots.state';
+import {PivotConfig} from '../../../core/store/pivots/pivot';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformPivotConfig} from './util/pivot-util';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
+import {DataPerspectiveComponent} from '../data-perspective.component';
+import {Observable} from 'rxjs';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
+import {ViewConfig} from '../../../core/store/views/view';
 
 @Component({
   selector: 'pivot-perspective',
@@ -64,138 +41,40 @@ import {DataResourcesAction} from '../../../core/store/data-resources/data-resou
   styleUrls: ['./pivot-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotPerspectiveComponent implements OnInit, OnDestroy {
-  public config$: Observable<PivotConfig>;
-  public canManageConfig$: Observable<boolean>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
-  public dataLoaded$: Observable<boolean>;
-  public collections$: Observable<Collection[]>;
-  public linkTypes$: Observable<LinkType[]>;
-  public query$ = new BehaviorSubject<Query>(null);
-  public constraintData$: Observable<ConstraintData>;
-
-  public sidebarOpened$ = new BehaviorSubject(false);
-
-  private subscriptions = new Subscription();
-
-  constructor(private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.initPivot();
-    this.subscribeToQuery();
-    this.subscribeData();
-    this.setupSidebar();
+export class PivotPerspectiveComponent extends DataPerspectiveComponent<PivotConfig> implements OnInit, OnDestroy {
+  constructor(protected store$: Store<AppState>) {
+    super(store$);
   }
 
-  private initPivot() {
-    const subscription = this.store$
-      .pipe(
-        select(selectCurrentView),
-        startWith(null as View),
-        pairwise(),
-        switchMap(([previousView, view]) =>
-          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
-      )
-      .subscribe(({pivotId, config}: {pivotId?: string; config?: PivotConfig}) => {
-        if (pivotId) {
-          this.store$.dispatch(new PivotsAction.AddPivot({pivot: {id: pivotId, config}}));
-        }
-      });
-    this.subscriptions.add(subscription);
+  public checkOrTransformConfig(
+    config: PivotConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): PivotConfig {
+    return checkOrTransformPivotConfig(config, query, collections, linkTypes);
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{pivotId?: string; config?: PivotConfig}> {
-    const pivotId = view.code;
+  public subscribeConfig$(perspectiveId: string): Observable<PivotConfig> {
     return this.store$.pipe(
-      select(selectPivotById(pivotId)),
-      take(1),
-      mergeMap(pivotEntity => {
-        const pivotConfig = view.config && view.config.pivot;
-        if (preferViewConfigUpdate(previousView?.config?.pivot, view?.config?.pivot, !!pivotEntity)) {
-          return this.checkPivotConfig(pivotConfig).pipe(map(config => ({pivotId, config})));
-        }
-        return of({pivotId, config: (pivotEntity && pivotEntity.config) || pivotConfig});
-      })
+      select(selectPivotById(perspectiveId)),
+      map(entity => entity?.config)
     );
   }
 
-  private checkPivotConfig(config: PivotConfig): Observable<PivotConfig> {
-    return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => checkOrTransformPivotConfig(config, query, collections, linkTypes))
-    );
-  }
-
-  private subscribeToDefault(): Observable<{pivotId?: string; config?: PivotConfig}> {
-    const pivotId = DEFAULT_PIVOT_ID;
-    return this.store$.pipe(
-      select(selectViewQuery),
-      withLatestFrom(this.store$.pipe(select(selectPivotById(pivotId)))),
-      mergeMap(([, pivot]) => this.checkPivotConfig(pivot && pivot.config)),
-      map(config => ({pivotId, config}))
-    );
-  }
-
-  private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
-      this.query$.next(query);
-      this.fetchData(query);
-    });
-    this.subscriptions.add(subscription);
-  }
-
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
-  }
-
-  private subscribeData() {
-    this.config$ = this.store$.pipe(select(selectPivotConfig));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.dataLoaded$ = combineLatest([
-      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
-      this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded)),
-    ]).pipe(
-      map(loaded => loaded.every(load => load)),
-      distinctUntilChanged()
-    );
+  public configChanged(perspectiveId: string, config: PivotConfig) {
+    this.store$.dispatch(new PivotsAction.AddPivot({pivot: {id: perspectiveId, config}}));
   }
 
   public onConfigChange(config: PivotConfig) {
-    this.store$
-      .pipe(select(selectPivotId), take(1))
-      .subscribe(pivotId => this.store$.dispatch(new PivotsAction.SetConfig({pivotId, config})));
+    this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.perspectiveId$.value, config}));
   }
 
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
+    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
   }
 
-  public onSidebarToggle() {
-    const opened = !this.sidebarOpened$.getValue();
-    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
-    this.sidebarOpened$.next(opened);
-  }
-
-  private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
-      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
-  }
-
-  private openOrCloseSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
-      this.sidebarOpened$.next(true);
-    }
+  public getConfig(viewConfig: ViewConfig): PivotConfig {
+    return viewConfig?.pivot;
   }
 }

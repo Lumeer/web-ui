@@ -38,12 +38,14 @@ import {
 import {
   filterStemsForCollection,
   isNavigatingToOtherWorkspace,
+  queryContainsOnlyFulltexts,
   queryIsEmpty,
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
+import {DataQuery} from '../../../core/model/data-query';
 
 @Component({
   selector: 'detail-perspective',
@@ -69,10 +71,22 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
-      select(selectViewQuery),
-      tap(query => (this.query = query))
+      select(selectViewDataQuery),
+      tap(query => this.onQueryChanged(query))
     );
     this.initSelection();
+  }
+
+  private onQueryChanged(query: DataQuery) {
+    this.query = query;
+
+    const selectedCollectionId = this.selected$.value.collection?.id;
+    if (selectedCollectionId) {
+      const collectionQuery = filterStemsForCollection(selectedCollectionId, query);
+      this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+    } else if (queryContainsOnlyFulltexts(query)) {
+      this.store$.dispatch(new DocumentsAction.Get({query}));
+    }
   }
 
   private initSelection() {
@@ -87,7 +101,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
             (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) ||
             (collections && collections[0]);
           if (selectedCollection) {
-            const collectionQuery = filterStemsForCollection(selectedCollection.id, navigation && navigation.query);
+            const collectionQuery = filterStemsForCollection(selectedCollection.id, navigation?.query);
             this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
             return this.store$.pipe(
               select(selectDocumentsByCustomQuery(collectionQuery)),
@@ -148,8 +162,8 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   public selectCollection(collection: Collection) {
     const subscription = this.store$
       .pipe(
-        select(selectViewQuery),
-        mergeMap(query => {
+        select(selectViewDataQuery),
+        switchMap(query => {
           const collectionQuery = filterStemsForCollection(collection.id, query);
           return this.store$.pipe(
             select(selectQueryDocumentsLoaded(collectionQuery)),
