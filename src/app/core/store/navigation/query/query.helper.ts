@@ -34,7 +34,6 @@ import {
 } from './query.util';
 import {Collection} from '../../collections/collection';
 import {DataQuery} from '../../../model/data-query';
-import {environment} from '../../../../../environments/environment';
 
 export function areDataQueriesEqual(first: DataQuery, second: DataQuery): boolean {
   return !!first?.includeSubItems === !!second?.includeSubItems && areQueriesEqual(first, second);
