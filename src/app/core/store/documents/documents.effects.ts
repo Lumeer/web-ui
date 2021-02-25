@@ -35,7 +35,7 @@ import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../l
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {isDataQueryLoaded} from '../navigation/query/query.helper';
+import {checkLoadedDataQuery, isDataQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
@@ -51,6 +51,7 @@ import {CollectionService, DocumentService, LinkInstanceService, SearchService} 
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class DocumentsEffects {
@@ -58,11 +59,14 @@ export class DocumentsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
-    filter(([action, queries]) => action.payload.force || !isDataQueryLoaded(action.payload.query, queries)),
+    filter(
+      ([action, queries]) =>
+        action.payload.force || !isDataQueryLoaded(action.payload.query, queries, environment.publicView)
+    ),
     mergeMap(([action]) => {
       const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
-      const savedQuery = action.payload.silent ? undefined : query;
+      const savedQuery = checkLoadedDataQuery(query, environment.publicView, action.payload.silent);
 
       return this.searchService.searchDocuments(queryDto, query.includeSubItems, action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),

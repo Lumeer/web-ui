@@ -34,6 +34,7 @@ import {
 } from './query.util';
 import {Collection} from '../../collections/collection';
 import {DataQuery} from '../../../model/data-query';
+import {environment} from '../../../../../environments/environment';
 
 export function areDataQueriesEqual(first: DataQuery, second: DataQuery): boolean {
   return !!first?.includeSubItems === !!second?.includeSubItems && areQueriesEqual(first, second);
@@ -65,9 +66,17 @@ export function areQueryStemsEqual(first: QueryStem, second: QueryStem): boolean
   );
 }
 
-export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[]): boolean {
+export function checkLoadedDataQuery(query: DataQuery, publicView?: boolean, silent?: boolean): Query {
+  if (publicView) {
+    return {};
+  }
+  return silent ? undefined : query;
+}
+
+export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView?: boolean): boolean {
+  const savedQuery = checkLoadedDataQuery(query, publicView);
   return loadedQueries.some(
-    loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(query, loadedQuery)
+    loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)
   );
 }
 

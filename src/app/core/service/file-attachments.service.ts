@@ -23,6 +23,8 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
 import {selectViewQuery} from '../store/views/views.state';
+import {filter} from 'rxjs/operators';
+import {queryIsEmpty, queryIsNotEmpty} from '../store/navigation/query/query.util';
 
 @Injectable()
 export class FileAttachmentsService implements OnDestroy {
@@ -36,7 +38,10 @@ export class FileAttachmentsService implements OnDestroy {
 
   private subscribeToQuery(): Subscription {
     return this.store$
-      .pipe(select(selectViewQuery))
+      .pipe(
+        select(selectViewQuery),
+        filter(query => queryIsNotEmpty(query))
+      )
       .subscribe(query => this.store$.dispatch(new FileAttachmentsAction.GetByQuery({query})));
   }
 
