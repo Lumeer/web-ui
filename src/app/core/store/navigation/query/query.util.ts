@@ -122,12 +122,7 @@ export function areConditionValuesDefined(
 }
 
 export function queryIsNotEmpty(query: Query): boolean {
-  return (
-    (query.stems && query.stems.length > 0) ||
-    (query.fulltexts && query.fulltexts.length > 0) ||
-    !isNullOrUndefined(query.page) ||
-    !!query.pageSize
-  );
+  return queryIsNotEmptyExceptPagination(query) || !isNullOrUndefined(query.page) || !!query.pageSize;
 }
 
 export function queryIsEmpty(query: Query): boolean {
@@ -135,7 +130,7 @@ export function queryIsEmpty(query: Query): boolean {
 }
 
 export function queryIsNotEmptyExceptPagination(query: Query): boolean {
-  return (query.stems && query.stems.length > 0) || (query.fulltexts && query.fulltexts.length > 0);
+  return (query?.stems || []).length > 0 || (query?.fulltexts || []).length > 0;
 }
 
 export function queryIsEmptyExceptPagination(query: Query): boolean {
@@ -143,11 +138,11 @@ export function queryIsEmptyExceptPagination(query: Query): boolean {
 }
 
 export function isSingleCollectionQuery(query: Query): boolean {
-  return query && query.stems && query.stems.length === 1;
+  return query?.stems && query.stems.length === 1;
 }
 
 export function isAnyCollectionQuery(query: Query): boolean {
-  return query && query.stems && query.stems.length > 0;
+  return query?.stems && query.stems.length > 0;
 }
 
 export function queryItemsColor(queryItems: QueryItem[]): string {

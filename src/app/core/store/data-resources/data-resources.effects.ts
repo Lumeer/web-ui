@@ -23,7 +23,7 @@ import {Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {isDataQueryLoaded, isTaskQueryLoaded} from '../navigation/query/query.helper';
+import {checkLoadedDataQuery, isDataQueryLoaded, isTaskQueryLoaded} from '../navigation/query/query.helper';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {convertDocumentDtoToModel} from '../documents/document.converter';
 import {SearchService} from '../../data-service';
@@ -36,6 +36,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectTasksCollectionsByReadPermission} from '../common/permissions.selectors';
 import {checkTasksCollectionsQuery} from '../navigation/query/query.util';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
 export class DataResourcesEffects {
@@ -43,11 +44,14 @@ export class DataResourcesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectDataResourcesQueries))),
-    filter(([action, queries]) => action.payload.force || !isDataQueryLoaded(action.payload.query, queries)),
+    filter(
+      ([action, queries]) =>
+        action.payload.force || !isDataQueryLoaded(action.payload.query, queries, environment.publicView)
+    ),
     mergeMap(([action]) => {
       const query = action.payload.query;
       const queryDto = convertQueryModelToDto(query);
-      const savedQuery = action.payload.silent ? undefined : query;
+      const savedQuery = checkLoadedDataQuery(query, environment.publicView, action.payload.silent);
 
       return this.searchService.searchDocumentsAndLinks(queryDto, query.includeSubItems, action.payload.workspace).pipe(
         mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {

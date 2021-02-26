@@ -19,6 +19,7 @@
 
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
 import {fileAttachmentsAdapter, FileAttachmentsState, initialFileAttachmentsState} from './file-attachments.state';
+import {FileApiPath} from '../../data-service/attachments/attachments.service';
 
 export function fileAttachmentsReducer(
   state: FileAttachmentsState = initialFileAttachmentsState,
@@ -26,7 +27,10 @@ export function fileAttachmentsReducer(
 ): FileAttachmentsState {
   switch (action.type) {
     case FileAttachmentsActionType.GET_SUCCESS:
-      return fileAttachmentsAdapter.upsertMany(action.payload.fileAttachments, state);
+      return fileAttachmentsAdapter.upsertMany(
+        action.payload.fileAttachments,
+        addLoadedResources(state, action.payload.path)
+      );
     case FileAttachmentsActionType.SET_UPLOADING:
       return fileAttachmentsAdapter.updateOne(
         {
@@ -44,4 +48,15 @@ export function fileAttachmentsReducer(
     default:
       return state;
   }
+}
+
+function addLoadedResources(state: FileAttachmentsState, path: FileApiPath): FileAttachmentsState {
+  if (path.collectionId && !path.documentId && !path.attributeId) {
+    return {...state, loadedCollections: [...(state.loadedCollections || []), path.collectionId]};
+  }
+  if (path.linkTypeId && !path.linkInstanceId && !path.attributeId) {
+    return {...state, loadedLinkTypes: [...(state.loadedLinkTypes || []), path.linkTypeId]};
+  }
+
+  return state;
 }
