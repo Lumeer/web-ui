@@ -40,7 +40,7 @@ export interface SearchViewsConfig {
   size: SizeType;
 }
 
-export const defaultSizeType = SizeType.M;
+export const defaultSizeType = SizeType.S;
 
 export function checkSizeType(sizeType: SizeType): SizeType {
   return sizeType === SizeType.XL ? SizeType.L : sizeType || defaultSizeType;

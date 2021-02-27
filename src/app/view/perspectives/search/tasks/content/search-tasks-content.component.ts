@@ -30,7 +30,7 @@ import {
 import {Router} from '@angular/router';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {checkSizeType, defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {checkSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
