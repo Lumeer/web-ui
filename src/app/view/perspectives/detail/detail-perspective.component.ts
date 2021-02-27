@@ -80,11 +80,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   private onQueryChanged(query: DataQuery) {
     this.query = query;
 
-    const selectedCollectionId = this.selected$.value.collection?.id;
-    if (selectedCollectionId) {
-      const collectionQuery = filterStemsForCollection(selectedCollectionId, query);
-      this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
-    } else if (queryContainsOnlyFulltexts(query)) {
+    if (queryContainsOnlyFulltexts(query)) {
       this.store$.dispatch(new DocumentsAction.Get({query}));
     }
   }
@@ -213,7 +209,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
     const cursor: ViewCursor = {
       collectionId: selectedCollection.id,
-      documentId: selectedDocument && selectedDocument.id,
+      documentId: selectedDocument?.id,
     };
 
     if (query) {
