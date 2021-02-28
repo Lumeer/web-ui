@@ -24,6 +24,7 @@ import {Constraint} from '@lumeer/data-filters';
 export interface Attribute {
   id?: string;
   name: string;
+  description?: string;
 
   constraint?: Constraint;
   function?: AttributeFunction;

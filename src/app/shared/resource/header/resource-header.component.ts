@@ -163,13 +163,6 @@ export class ResourceHeaderComponent {
     });
   }
 
-  public getDescriptionPlaceholder(): string {
-    return this.i18n({
-      id: 'resource.description',
-      value: 'Fill in description',
-    });
-  }
-
   public getFilter(): RegExp {
     if (this.hasVisibleCode()) {
       return /[^_0-9A-Za-z]/g;

@@ -41,6 +41,9 @@ export class LinksListHeaderMenuComponent {
   @Output()
   public attributeFunction = new EventEmitter();
 
+  @Output()
+  public attributeDescription = new EventEmitter();
+
   @ViewChild(MatMenuTrigger)
   public contextMenu: MatMenuTrigger;
 

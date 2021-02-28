@@ -24,5 +24,12 @@
             i18n="@@table.header.menu.editFunction">Edit function...</span>
       <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editAutomation">Edit automation...</span>
     </button>
+    <button
+      mat-menu-item
+      [disabled]="!permissions?.manageWithView"
+      (click)="attributeDescription.emit()">
+      <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>&nbsp;
+      <span i18n="@@table.header.menu.editDescription">Edit description</span>
+    </button>
   </ng-template>
 </mat-menu>

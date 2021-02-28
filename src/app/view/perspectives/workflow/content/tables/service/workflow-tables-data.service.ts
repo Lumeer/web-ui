@@ -915,6 +915,10 @@ export class WorkflowTablesDataService {
     this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 
+  public showAttributeDescription(column: TableColumn) {
+    this.modalService.showAttributeDescription(column.attribute.id, column.collectionId, column.linkTypeId);
+  }
+
   public showAttributeFunction(column: TableColumn) {
     this.modalService.showAttributeFunction(column.attribute.id, column.collectionId, column.linkTypeId);
   }

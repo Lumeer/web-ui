@@ -53,6 +53,7 @@ import {OrganizationsAction} from '../../core/store/organizations/organizations.
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
+import {AttributeDescriptionModalComponent} from './attribute-description/attribute-description-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -158,6 +159,11 @@ export class ModalService {
   private addModalRef(modalRef: BsModalRef): BsModalRef {
     this.store$.dispatch(new ModalsAction.Add({modalId: modalRef.id}));
     return modalRef;
+  }
+
+  public showAttributeDescription(attributeId: string, collectionId: string, linkTypeId?: string) {
+    const initialState = {attributeId, collectionId, linkTypeId};
+    return this.showStaticDialog(initialState, AttributeDescriptionModalComponent);
   }
 
   public showAttributeFunction(attributeId: string, collectionId: string, linkTypeId?: string) {

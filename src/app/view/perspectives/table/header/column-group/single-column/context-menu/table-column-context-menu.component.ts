@@ -78,6 +78,9 @@ export class TableColumnContextMenuComponent {
   @Output()
   public functionEdit = new EventEmitter();
 
+  @Output()
+  public descriptionEdit = new EventEmitter();
+
   @ViewChild(MatMenuTrigger)
   public contextMenu: MatMenuTrigger;
 

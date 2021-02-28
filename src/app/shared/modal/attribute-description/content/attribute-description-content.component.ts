@@ -17,24 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AttributeDto {
-  id?: string;
-  name: string;
-  constraint?: ConstraintDto;
-  description?: string;
-  function?: AttributeFunctionDto;
-  usageCount?: number;
-}
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
-export interface ConstraintDto {
-  type: string;
-  config: any;
-}
+@Component({
+  selector: 'attribute-description-content',
+  templateUrl: './attribute-description-content.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AttributeDescriptionContentComponent implements OnInit {
+  @Input()
+  public description: string;
 
-export interface AttributeFunctionDto {
-  js?: string;
-  xml?: string;
-  errorReport?: string;
-  timestamp?: number;
-  editable?: boolean;
+  @Output()
+  public descriptionChange = new EventEmitter<string>();
+
+  public currentDescription: string;
+
+  public onSubmit() {
+    this.descriptionChange.emit(this.currentDescription?.trim());
+  }
+
+  public ngOnInit() {
+    this.currentDescription = this.description;
+  }
 }
