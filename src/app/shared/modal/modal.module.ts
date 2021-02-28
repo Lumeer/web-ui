@@ -38,6 +38,7 @@ import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
 import {NotificationSettingsModalModule} from './notification-settings/notification-settings-modal.module';
+import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
 
 @NgModule({
   declarations: [],
@@ -47,6 +48,7 @@ import {NotificationSettingsModalModule} from './notification-settings/notificat
     CreateResourceModalModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
+    AttributeDescriptionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
@@ -68,6 +70,7 @@ import {NotificationSettingsModalModule} from './notification-settings/notificat
     CreateResourceModalModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
+    AttributeDescriptionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,

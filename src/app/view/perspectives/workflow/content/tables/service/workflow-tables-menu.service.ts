@@ -30,6 +30,7 @@ export enum HeaderMenuId {
   Edit = 'edit',
   Type = 'type',
   Function = 'function',
+  Description = 'description',
   Hide = 'hide',
   Copy = 'copy',
   CopyName = 'copyName',
@@ -161,6 +162,13 @@ export class WorkflowTablesMenuService {
           disabled: !permissions?.manageWithView,
           icons: ['fa fa-function'],
           group: 0,
+        },
+        {
+          id: HeaderMenuId.Description,
+          title: this.translateHeaderMenuItem(HeaderMenuId.Description),
+          disabled: !permissions?.manageWithView,
+          icons: ['fa fa-file-edit'],
+          group: 0,
         }
       );
     }
@@ -255,6 +263,8 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.header.menu.changeAttribute', value: 'Attribute settings...'});
       case HeaderMenuId.Function:
         return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
+      case HeaderMenuId.Description:
+        return this.i18n({id: 'table.header.menu.editDescription', value: 'Edit description'});
       case HeaderMenuId.Rule:
         return this.i18n({id: 'table.header.menu.editAutomation', value: 'Edit automation...'});
       case HeaderMenuId.Displayed:

@@ -144,6 +144,9 @@ export class WorkflowTablesService {
       case HeaderMenuId.Type:
         this.dataService.showAttributeType(column);
         break;
+      case HeaderMenuId.Description:
+        this.dataService.showAttributeDescription(column);
+        break;
       case HeaderMenuId.Function:
       case HeaderMenuId.Rule:
         this.dataService.showAttributeFunction(column);

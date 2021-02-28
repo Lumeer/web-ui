@@ -56,6 +56,9 @@ export class LinksListTableHeaderComponent {
   public attributeFunction = new EventEmitter<LinkColumn>();
 
   @Output()
+  public attributeDescription = new EventEmitter<LinkColumn>();
+
+  @Output()
   public attributeType = new EventEmitter<LinkColumn>();
 
   @ViewChildren('tableHeader')
@@ -119,6 +122,13 @@ export class LinksListTableHeaderComponent {
     const column = this.columns[index];
     if (column) {
       this.attributeType.emit(column);
+    }
+  }
+
+  public onAttributeDescription(index: number) {
+    const column = this.columns[index];
+    if (column) {
+      this.attributeDescription.emit(column);
     }
   }
 }

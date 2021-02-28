@@ -1,0 +1,12 @@
+<div class="p-3 bg-success text-white w-100 rounded-top">
+  <h5 class="modal-title break-all">
+    <span i18n="@@dialog.attribute.description.title">Edit Description of</span>
+    <icons-presenter
+      *ngIf="resource | resourceIconsColors as iconColors"
+      class="ml-2"
+      [colors]="iconColors.colors"
+      [icons]="iconColors.icons">
+    </icons-presenter>
+    <span class="ml-1">{{attribute?.name}}</span>
+  </h5>
+</div>

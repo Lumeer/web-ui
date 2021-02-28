@@ -338,17 +338,11 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   public onConfigure() {
-    const collectionId = this.collection && this.collection.id;
-    const linkTypeId = this.linkType && this.linkType.id;
-    this.modalService.showAttributeType(this.attribute.id, collectionId, linkTypeId);
+    this.modalService.showAttributeType(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
 
   public onFunctionEdit() {
-    this.modalService.showAttributeFunction(
-      this.attribute.id,
-      this.collection && this.collection.id,
-      this.linkType && this.linkType.id
-    );
+    this.modalService.showAttributeFunction(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
 
   public onEdit() {
@@ -457,5 +451,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     this.contextMenuComponent?.open(x, y);
 
     preventEvent(event);
+  }
+
+  public onDescriptionEdit() {
+    this.modalService.showAttributeDescription(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
 }

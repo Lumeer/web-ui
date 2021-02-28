@@ -14,7 +14,7 @@
        (contextmenu)="onContextMenu($event)"
        (dblclick)="onDoubleClick()"
        (click)="onClick()"
-       [title]="state.lastName"
+       [title]="attribute?.description || state.lastName"
        class="d-flex table-border-right table-border-bottom h-100 w-100 px-1 cell">
     <table-column-input [default]="state.defaultAttribute"
                         [edited]="state.edited"
@@ -55,6 +55,7 @@
                              (add)="onAdd($event)"
                              (configure)="onConfigure()"
                              (functionEdit)="onFunctionEdit()"
+                             (descriptionEdit)="onDescriptionEdit()"
                              (edit)="onEdit()"
                              (hide)="onHide()"
                              (remove)="onRemove()"

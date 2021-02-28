@@ -72,7 +72,8 @@
     [fontSizeRem]="1"
     [maxLines]="2"
     [title]="resource.description"
-    [placeholder]="getDescriptionPlaceholder()"
+    placeholder="Fill in description"
+    i18n-placeholder="@@resource.description"
     (newValue)="onNewDescription($event)">
   </input-box>
 </div>

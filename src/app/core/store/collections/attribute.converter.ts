@@ -37,6 +37,7 @@ export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: st
   return {
     id: dto.id,
     name: dto.name,
+    description: dto.description,
     constraint: convertAttributeConstraintDtoToModel(dto.constraint),
     function: convertAttributeFunctionDtoToModel(dto.function),
     usageCount: dto.usageCount,
@@ -48,6 +49,7 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
   return {
     id: model.id,
     name: model.name,
+    description: model.description,
     constraint: convertAttributeConstraintModelToDto(model.constraint),
     function: convertAttributeFunctionModelToDto(model.function),
   };

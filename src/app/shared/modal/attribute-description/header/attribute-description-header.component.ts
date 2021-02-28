@@ -17,24 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AttributeDto {
-  id?: string;
-  name: string;
-  constraint?: ConstraintDto;
-  description?: string;
-  function?: AttributeFunctionDto;
-  usageCount?: number;
-}
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {AttributesResource} from '../../../../core/model/resource';
 
-export interface ConstraintDto {
-  type: string;
-  config: any;
-}
+@Component({
+  selector: 'attribute-description-header',
+  templateUrl: './attribute-description-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AttributeDescriptionHeaderComponent {
+  @Input()
+  public resource: AttributesResource;
 
-export interface AttributeFunctionDto {
-  js?: string;
-  xml?: string;
-  errorReport?: string;
-  timestamp?: number;
-  editable?: boolean;
+  @Input()
+  public attribute: Attribute;
 }

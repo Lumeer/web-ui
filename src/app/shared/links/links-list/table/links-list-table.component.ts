@@ -311,4 +311,8 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       })
     );
   }
+
+  public onAttributeDescription(column: LinkColumn) {
+    this.modalService.showAttributeDescription(column.attribute.id, column.collectionId, column.linkTypeId);
+  }
 }
