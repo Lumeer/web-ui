@@ -56,6 +56,10 @@
           <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
@@ -179,6 +183,10 @@
           <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
@@ -211,6 +219,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
           <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/content/empty/attribute-function-empty.component.html</context>
@@ -325,6 +337,16 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
           <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.description" datatype="html">
+        <source>Fill in description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-description/content/attribute-description-content.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
         <source>Import Table
@@ -2042,6 +2064,16 @@
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
+      </trans-unit><trans-unit id="table.header.menu.editDescription" datatype="html">
+        <source>Edit description</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
       </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source>
         <context-group purpose="location">
@@ -2716,6 +2748,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context>
           <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.attribute.description.title" datatype="html">
+        <source>Edit Description of</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-description/header/attribute-description-header.component.html</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="collection.new.dialog.link.label" datatype="html">
         <source>Link</source>
@@ -4243,61 +4281,61 @@
         <source>Copy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.defaultAttribute" datatype="html">
         <source>Set as displayed attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.add.column.next" datatype="html">
         <source>Add column right</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.add.column.previous" datatype="html">
         <source>Add column left</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.split" datatype="html">
         <source>Split column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.hide" datatype="html">
         <source>Hide column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.remove" datatype="html">
         <source>Delete column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit><trans-unit id="resource.attribute.name" datatype="html">
         <source>Copy column name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.copy.values" datatype="html">
         <source>Copy all column values</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.copy.values.unique" datatype="html">
         <source>Copy unique column values</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.add-button" datatype="html">
         <source>Link table</source>
@@ -6705,13 +6743,6 @@
       </trans-unit>
       <trans-unit id="resource.postit.name" datatype="html">
         <source>Fill in name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="resource.description" datatype="html">
-        <source>Fill in description</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
           <context context-type="linenumber">1</context>
