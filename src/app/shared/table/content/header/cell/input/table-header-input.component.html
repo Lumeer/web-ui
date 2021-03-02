@@ -1,6 +1,6 @@
 <input *ngIf="!edited; else editableInput"
        [value]="value"
-       [title]="column.attribute && column.attribute.description ? column.attribute.name + ': ' + column.attribute.description : (column.attribute?.name || column.name)"
+       [title]="column.attribute | attributeTitle : column.name"
        [class.text-default-attribute]="default"
        [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
        class="w-100 p-0"
@@ -10,7 +10,7 @@
   <input #textInput
          [readonly]="!edited"
          [value]="value"
-         [title]="column.attribute && column.attribute.description ? column.attribute.name + ': ' + column.attribute.description : (column.attribute?.name || column.name)"
+         [title]="column.attribute | attributeTitle : column.name"
          [class.text-default-attribute]="default"
          [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
          (blur)="onBlur()"

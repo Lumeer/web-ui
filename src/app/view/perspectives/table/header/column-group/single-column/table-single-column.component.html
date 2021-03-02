@@ -14,7 +14,7 @@
        (contextmenu)="onContextMenu($event)"
        (dblclick)="onDoubleClick()"
        (click)="onClick()"
-       [title]="attribute && attribute.description ? attribute.name + ': ' + attribute.description : state.lastName"
+       [title]="attribute | attributeTitle : state.lastName"
        class="d-flex table-border-right table-border-bottom h-100 w-100 px-1 cell">
     <table-column-input [default]="state.defaultAttribute"
                         [edited]="state.edited"
