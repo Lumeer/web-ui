@@ -30,7 +30,6 @@ import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DataResourceModule} from './data-resource/data-resource.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
-import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
@@ -59,6 +58,7 @@ import {ResourceCommentsModule} from './resource-comments/resource-comments.modu
 import {RedDotModule} from './red-dot/red-dot.module';
 import {MenuModule} from './menu/menu.module';
 import {ButtonModule} from './button/button.module';
+import {LoadingModule} from './loading/loading.module';
 
 @NgModule({
   imports: [
@@ -83,6 +83,7 @@ import {ButtonModule} from './button/button.module';
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
+    LoadingModule,
     BlocklyModule,
     DateTimeModule,
     ModalModule,
@@ -99,7 +100,7 @@ import {ButtonModule} from './button/button.module';
     MenuModule,
     ButtonModule,
   ],
-  declarations: [PerspectiveDirective, ResourceHeaderComponent, LoadingIndicatorComponent, TourComponent],
+  declarations: [PerspectiveDirective, ResourceHeaderComponent, TourComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -124,7 +125,7 @@ import {ButtonModule} from './button/button.module';
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
-    LoadingIndicatorComponent,
+    LoadingModule,
     BlocklyModule,
     DateTimeModule,
     ModalModule,

@@ -26,7 +26,7 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {environment} from '../environments/environment';
@@ -34,7 +34,6 @@ import {AuthService} from './auth/auth.service';
 import {superUserEmails} from './auth/super-user-emails';
 import {ServiceLevelType} from './core/dto/service-level-type';
 import {PusherService} from './core/pusher/pusher.service';
-import {ModuleLazyLoadingService} from './core/service/module-lazy-loading.service';
 import {AppState} from './core/store/app.state';
 import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
 import {selectCurrentUser} from './core/store/users/users.state';
@@ -53,14 +52,12 @@ import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  public lazyLoading$ = new BehaviorSubject(false);
   public showPublicProjectWarning$: Observable<boolean>;
 
   constructor(
     private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
     private authService: AuthService,
     private i18n: I18n,
-    private moduleLazyLoadingService: ModuleLazyLoadingService,
     private router: Router,
     private store$: Store<AppState>,
     private title: Title,
@@ -74,7 +71,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer | Visual, easy project and team management'}));
 
     this.storeReferralCookie();
-    this.moduleLazyLoadingService.init();
     this.initPushNotifications();
     this.handleAuthentication();
     this.startAnalyticsTracking();
@@ -198,17 +194,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     this.initSmartlook();
-    this.subscribeToModuleLazyLoading();
-  }
-
-  private subscribeToModuleLazyLoading(): Subscription {
-    return this.moduleLazyLoadingService
-      .observeLazyLoading()
-      .subscribe(lazyLoading => this.lazyLoading$.next(lazyLoading));
-  }
-
-  public onHideLoadingIndicator() {
-    this.lazyLoading$.next(false);
   }
 
   private initSmartlook() {

@@ -1,0 +1,17 @@
+:host {
+  z-index: 1030;
+  width: 100%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+
+.loading-line-container {
+  width: 100%;
+
+  .loading-bar {
+    height: 2px;
+    transition: width 200ms ease-in-out;
+  }
+}
