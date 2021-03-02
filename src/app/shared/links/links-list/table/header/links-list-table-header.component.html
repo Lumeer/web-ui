@@ -4,7 +4,7 @@
       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
       [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"
-      scope="col" title="{{column.attribute.description || column.attribute.name}}" #tableHeader
+      scope="col" title="{{column.attribute?.description ? column.attribute?.name + ': ' + column.attribute.description : column.attribute?.name}}" #tableHeader
       (contextmenu)="onContextMenu(index, $event)">
     <div class="d-flex flex-nowrap flex-row align-items-center">
       <div class="flex-grow-1 overflow-hidden">{{column.attribute.name}}</div>

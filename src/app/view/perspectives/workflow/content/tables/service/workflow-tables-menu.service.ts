@@ -168,7 +168,7 @@ export class WorkflowTablesMenuService {
           title: this.translateHeaderMenuItem(HeaderMenuId.Description),
           disabled: !permissions?.manageWithView,
           icons: ['fa fa-file-edit'],
-          group: 0,
+          group: 1,
         }
       );
     }
@@ -264,7 +264,7 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Function:
         return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
       case HeaderMenuId.Description:
-        return this.i18n({id: 'table.header.menu.editDescription', value: 'Edit description'});
+        return this.i18n({id: 'table.header.menu.editDescription', value: 'Edit description...'});
       case HeaderMenuId.Rule:
         return this.i18n({id: 'table.header.menu.editAutomation', value: 'Edit automation...'});
       case HeaderMenuId.Displayed:

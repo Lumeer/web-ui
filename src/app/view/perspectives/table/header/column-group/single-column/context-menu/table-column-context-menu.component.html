@@ -52,22 +52,15 @@
             i18n="@@table.header.menu.editFunction">Edit function...</span>
       <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editAutomation">Edit automation...</span>
     </button>
+    <hr class="my-2">
     <button *ngIf="attribute.id"
             mat-menu-item
             [disabled]="!allowedPermissions?.manageWithView"
             (click)="onClick($event); descriptionEdit.emit()">
       <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>
-      <span i18n="@@table.header.menu.editDescription">Edit description</span>
-    </button>
-    <hr class="my-2">
-    <button mat-menu-item class="prevent-click" [matMenuTriggerFor]="copyMenu">
-      <div class="d-flex align-items-baseline">
-        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
-        <span class="flex-grow-1" i18n="@@copy">Copy</span>
-      </div>
+      <span i18n="@@table.header.menu.editDescription">Edit description...</span>
     </button>
     <ng-container *ngIf="attribute.id && !defaultAttribute">
-      <hr class="my-2">
       <button mat-menu-item
               [disabled]="!allowedPermissions?.manageWithView"
               (click)="onClick($event); setDefaultAttribute.emit()">
@@ -77,6 +70,13 @@
         <span i18n="@@table.header.menu.defaultAttribute">Set as displayed attribute</span>
       </button>
     </ng-container>
+    <hr class="my-2">
+    <button mat-menu-item class="prevent-click" [matMenuTriggerFor]="copyMenu">
+      <div class="d-flex align-items-baseline">
+        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <span class="flex-grow-1" i18n="@@copy">Copy</span>
+      </div>
+    </button>
     <hr class="my-2">
     <button (click)="onClick($event); addNextColumn()"
             [disabled]="!allowedPermissions?.manageWithView"
