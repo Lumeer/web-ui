@@ -23,7 +23,6 @@ import {Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {checkLoadedDataQuery, isDataQueryLoaded, isTaskQueryLoaded} from '../navigation/query/query.helper';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {convertDocumentDtoToModel} from '../documents/document.converter';
 import {SearchService} from '../../data-service';
@@ -31,39 +30,50 @@ import {AppState} from '../app.state';
 import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {convertLinkInstanceDtoToModel} from '../link-instances/link-instance.converter';
-import {selectDataResourcesQueries, selectTasksQueries} from './data-resources.state';
+import {
+  selectDataResourcesLoadingQueries,
+  selectDataResourcesQueries,
+  selectTasksLoadingQueries,
+  selectTasksQueries,
+} from './data-resources.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {selectTasksCollectionsByReadPermission} from '../common/permissions.selectors';
-import {checkTasksCollectionsQuery} from '../navigation/query/query.util';
-import {environment} from '../../../../environments/environment';
+import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 
 @Injectable()
 export class DataResourcesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectDataResourcesQueries))),
-    filter(
-      ([action, queries]) =>
-        action.payload.force || !isDataQueryLoaded(action.payload.query, queries, environment.publicView)
+    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(
+      this.store$.pipe(select(selectDataResourcesQueries)),
+      this.store$.pipe(select(selectDataResourcesLoadingQueries))
     ),
-    mergeMap(([action]) => {
-      const query = action.payload.query;
+    filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+    map(([payload, ,]) => payload),
+    tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingQuery({query: payload.query}))),
+    mergeMap(payload => {
+      const query = payload.query;
       const queryDto = convertQueryModelToDto(query);
-      const savedQuery = checkLoadedDataQuery(query, environment.publicView, action.payload.silent);
 
-      return this.searchService.searchDocumentsAndLinks(queryDto, query.includeSubItems, action.payload.workspace).pipe(
+      return this.searchService.searchDocumentsAndLinks(queryDto, query.includeSubItems, payload.workspace).pipe(
         mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
           const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
           const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
           return [
-            new DocumentsAction.GetSuccess({documents, query: savedQuery}),
-            new LinkInstancesAction.GetSuccess({linkInstances, query: savedQuery}),
-            new DataResourcesAction.GetSuccess({query: savedQuery}),
+            new DocumentsAction.GetSuccess({documents, query}),
+            new LinkInstancesAction.GetSuccess({linkInstances, query}),
+            new DataResourcesAction.GetSuccess({query}),
           ];
         }),
-        catchError(error => of(new DocumentsAction.GetFailure({error}), new LinkInstancesAction.GetFailure({error})))
+        catchError(error =>
+          of(
+            new DataResourcesAction.GetFailure({error, query}),
+            new DocumentsAction.GetFailure({error}),
+            new LinkInstancesAction.GetFailure({error})
+          )
+        )
       );
     })
   );
@@ -71,34 +81,27 @@ export class DataResourcesEffects {
   @Effect()
   public getTasks$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
-    withLatestFrom(
-      this.store$.pipe(select(selectTasksQueries)),
-      this.store$.pipe(select(selectTasksCollectionsByReadPermission))
-    ),
-    filter(
-      ([action, queries, tasksCollections]) =>
-        action.payload.force || !isTaskQueryLoaded(action.payload.query, tasksCollections, queries)
-    ),
-    mergeMap(([action, , tasksCollections]) => {
-      const query = action.payload.query;
-      const loadQuery = checkTasksCollectionsQuery(tasksCollections, query);
-      const queryDto = convertQueryModelToDto(loadQuery);
-      const savedQuery = action.payload.silent ? undefined : loadQuery;
+    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(this.store$.pipe(select(selectTasksQueries)), this.store$.pipe(select(selectTasksLoadingQueries))),
+    filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+    map(([payload, ,]) => payload),
+    tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingTasksQuery({query: payload.query}))),
+    mergeMap(payload => {
+      const query = payload.query;
+      const queryDto = convertQueryModelToDto(query);
 
-      return this.searchService
-        .searchTaskDocumentsAndLinks(queryDto, query.includeSubItems, action.payload.workspace)
-        .pipe(
-          mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
-            const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
-            const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
-            return [
-              new DocumentsAction.GetSuccess({documents}),
-              new LinkInstancesAction.GetSuccess({linkInstances}),
-              new DataResourcesAction.GetTasksSuccess({query: savedQuery}),
-            ];
-          }),
-          catchError(error => of(new DataResourcesAction.GetTasksFailure({error})))
-        );
+      return this.searchService.searchTaskDocumentsAndLinks(queryDto, query.includeSubItems, payload.workspace).pipe(
+        mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
+          const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
+          const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+          return [
+            new DocumentsAction.GetSuccess({documents}),
+            new LinkInstancesAction.GetSuccess({linkInstances}),
+            new DataResourcesAction.GetTasksSuccess({query}),
+          ];
+        }),
+        catchError(error => of(new DataResourcesAction.GetTasksFailure({error, query})))
+      );
     })
   );
 

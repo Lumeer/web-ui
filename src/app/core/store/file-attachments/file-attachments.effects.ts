@@ -26,7 +26,7 @@ import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {selectCollectionsByCustomQuery} from '../common/permissions.selectors';
 import {getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
-import {createCallbackActions, emitErrorActions} from '../store.utils';
+import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
 import {AttachmentsService} from '../../data-service';

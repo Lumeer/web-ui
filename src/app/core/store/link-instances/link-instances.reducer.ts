@@ -20,6 +20,7 @@
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
+import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -27,7 +28,16 @@ export function linkInstancesReducer(
 ): LinkInstancesState {
   switch (action.type) {
     case LinkInstancesActionType.GET_SUCCESS:
-      return addLinkInstances(state, action);
+      const getSuccessState = {
+        ...state,
+        queries: addDataQueryUnique(state.queries, action.payload.query),
+        loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query),
+      };
+      return addLinkInstances(getSuccessState, action);
+    case LinkInstancesActionType.GET_FAILURE:
+      return {...state, loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query)};
+    case LinkInstancesActionType.SET_LOADING_QUERY:
+      return {...state, loadingQueries: addDataQueryUnique(state.loadingQueries, action.payload.query)};
     case LinkInstancesActionType.CREATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.CREATE_MULTIPLE_SUCCESS:
@@ -107,7 +117,6 @@ function updateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstanc
 }
 
 function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction.GetSuccess): LinkInstancesState {
-  const newState = action.payload.query ? {...state, queries: state.queries.concat(action.payload.query)} : state;
   const filteredLinkInstances = action.payload.linkInstances.filter(linkInstance => {
     const oldLinkInstance = state.entities[linkInstance.id];
     return !oldLinkInstance || isLinkInstanceNewer(linkInstance, oldLinkInstance);
@@ -124,7 +133,7 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
     return result;
   }, []);
 
-  return linkInstancesAdapter.upsertMany([...filteredLinkInstances, ...changedTransientProperties], newState);
+  return linkInstancesAdapter.upsertMany([...filteredLinkInstances, ...changedTransientProperties], state);
 }
 
 function isTransientModified(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {

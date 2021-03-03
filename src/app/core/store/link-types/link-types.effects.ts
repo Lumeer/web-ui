@@ -28,7 +28,7 @@ import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {createCallbackActions, emitErrorActions} from '../store.utils';
+import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypeAttributeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from './link-types.state';

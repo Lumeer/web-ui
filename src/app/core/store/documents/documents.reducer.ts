@@ -22,6 +22,7 @@ import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
 import {getBaseCollectionIdsFromQuery} from '../navigation/query/query.util';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,
@@ -29,7 +30,16 @@ export function documentsReducer(
 ): DocumentsState {
   switch (action.type) {
     case DocumentsActionType.GET_SUCCESS:
-      return addDocuments(state, action);
+      const getSuccessState = {
+        ...state,
+        queries: addDataQueryUnique(state.queries, action.payload.query),
+        loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query),
+      };
+      return addDocuments(getSuccessState, action);
+    case DocumentsActionType.GET_FAILURE:
+      return {...state, loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query)};
+    case DocumentsActionType.SET_LOADING_QUERY:
+      return {...state, loadingQueries: addDataQueryUnique(state.loadingQueries, action.payload.query)};
     case DocumentsActionType.CREATE:
       return onCreateDocument(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
@@ -176,11 +186,6 @@ function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateDat
 }
 
 function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess): DocumentsState {
-  const queriesState = {
-    ...state,
-    queries: action.payload.query ? state.queries.concat(action.payload.query) : state.queries,
-  };
-
   const filteredDocuments = action.payload.documents.filter(document => {
     const oldDocument = state.entities[document.id];
     return !oldDocument || isDocumentNewer(document, oldDocument);
@@ -197,7 +202,7 @@ function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess)
     return result;
   }, []);
 
-  return documentsAdapter.upsertMany([...filteredDocuments, ...changedTransientProperties], queriesState);
+  return documentsAdapter.upsertMany([...filteredDocuments, ...changedTransientProperties], state);
 }
 
 function isTransientModified(document: DocumentModel, oldDocument: DocumentModel): boolean {

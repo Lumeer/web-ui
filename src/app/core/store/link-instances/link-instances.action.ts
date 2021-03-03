@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {LinkInstance} from './link.instance';
 import {DataQuery} from '../../model/data-query';
+import {DataQueryPayload} from '../utils/data-query-payload';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',
@@ -59,6 +60,8 @@ export enum LinkInstancesActionType {
   CLEAR_QUERIES = '[Link Instances] Clear Queries',
   CLEAR_BY_LINK_TYPE = '[Link Instances] Clear By Link Type',
 
+  SET_LOADING_QUERY = '[Link Instances] Set Loading Query',
+
   RUN_RULE = '[Link Instances] Run Rule',
   RUN_RULE_FAILURE = '[Link Instances] Run Rule :: Failure',
 }
@@ -67,7 +70,7 @@ export namespace LinkInstancesAction {
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: {query: DataQuery; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: DataQueryPayload) {}
   }
 
   export class GetSingle implements Action {
@@ -91,7 +94,7 @@ export namespace LinkInstancesAction {
   export class GetFailure implements Action {
     public readonly type = LinkInstancesActionType.GET_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; query?: DataQuery}) {}
   }
 
   export class Create implements Action {
@@ -256,6 +259,12 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkTypeId?: string}) {}
   }
 
+  export class SetLoadingQuery implements Action {
+    public readonly type = LinkInstancesActionType.SET_LOADING_QUERY;
+
+    public constructor(public payload: {query: DataQuery}) {}
+  }
+
   export class RunRule implements Action {
     public readonly type = LinkInstancesActionType.RUN_RULE;
 
@@ -294,6 +303,7 @@ export namespace LinkInstancesAction {
     | Clear
     | ClearQueries
     | ClearByLinkType
+    | SetLoadingQuery
     | RunRule
     | RunRuleFailure;
 }

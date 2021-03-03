@@ -25,15 +25,22 @@ import {
 } from '../../../../shared/utils/array.utils';
 import {convertQueryModelToString, normalizeQueryModel, normalizeQueryStem} from './query.converter';
 import {Query, QueryStem} from './query';
-import {
-  checkTasksCollectionsQuery,
-  getBaseCollectionIdsFromQuery,
-  isQuerySubset,
-  queryIsEmptyExceptPagination,
-  queryWithoutFilters,
-} from './query.util';
-import {Collection} from '../../collections/collection';
+import {getBaseCollectionIdsFromQuery, queryWithoutFilters} from './query.util';
 import {DataQuery} from '../../../model/data-query';
+
+export function addDataQueryUnique(queries: DataQuery[], newQuery: DataQuery): DataQuery[] {
+  if (!newQuery || queries.some(query => areDataQueriesEqual(query, newQuery))) {
+    return queries;
+  }
+  return [...queries, newQuery];
+}
+
+export function removeDataQuery(queries: DataQuery[], queryToRemove: DataQuery): DataQuery[] {
+  if (!queryToRemove) {
+    return queries;
+  }
+  return queries.filter(query => !areDataQueriesEqual(query, queryToRemove));
+}
 
 export function areDataQueriesEqual(first: DataQuery, second: DataQuery): boolean {
   return !!first?.includeSubItems === !!second?.includeSubItems && areQueriesEqual(first, second);
@@ -63,35 +70,6 @@ export function areQueryStemsEqual(first: QueryStem, second: QueryStem): boolean
     containsSameElements(firstNormalized.documentIds, secondNormalized.documentIds) &&
     containsSameElements(firstNormalized.linkTypeIds, secondNormalized.linkTypeIds)
   );
-}
-
-export function checkLoadedDataQuery(query: DataQuery, publicView?: boolean, silent?: boolean): Query {
-  if (publicView) {
-    return {};
-  }
-  return silent ? undefined : query;
-}
-
-export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView?: boolean): boolean {
-  const savedQuery = checkLoadedDataQuery(query, publicView);
-  return loadedQueries.some(
-    loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)
-  );
-}
-
-export function isTaskQueryLoaded(query: DataQuery, collections: Collection[], loadedQueries: DataQuery[]): boolean {
-  const taskQuery = checkTasksCollectionsQuery(collections, query);
-  const isEmpty = queryIsEmptyExceptPagination(query);
-  return loadedQueries.some(loadedQuery => {
-    if (isEmpty && areDataQueriesEqual(loadedQuery, taskQuery)) {
-      return true;
-    }
-    if (queryIsEmptyExceptPagination(loadedQuery) !== isEmpty) {
-      return false;
-    }
-
-    return !!taskQuery?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(taskQuery, loadedQuery);
-  });
 }
 
 export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: Query): boolean {

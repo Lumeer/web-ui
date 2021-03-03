@@ -47,7 +47,7 @@ import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} fro
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
-import {createCallbackActions} from '../store.utils';
+import {createCallbackActions} from '../utils/store.utils';
 import {KanbansAction} from '../kanbans/kanbans.action';
 import {MapsAction} from '../maps/maps.action';
 import {PivotsAction} from '../pivots/pivots.action';

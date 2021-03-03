@@ -22,6 +22,7 @@ import {Workspace} from '../navigation/workspace';
 import {DocumentMetaData, DocumentModel} from './document.model';
 import {LinkInstance} from '../link-instances/link.instance';
 import {DataQuery} from '../../model/data-query';
+import {DataQueryPayload} from '../utils/data-query-payload';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -71,6 +72,8 @@ export enum DocumentsActionType {
   DELETE_SUCCESS = '[Documents] Delete :: Success',
   DELETE_FAILURE = '[Documents] Delete :: Failure',
 
+  SET_LOADING_QUERY = '[Documents] Set Loading Query',
+
   CLEAR = '[Documents] Clear',
   CLEAR_QUERIES = '[Documents] Clear Queries',
   CLEAR_BY_COLLECTION = '[Documents] Clear by collection',
@@ -83,7 +86,7 @@ export namespace DocumentsAction {
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: {query: DataQuery; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: DataQueryPayload) {}
   }
 
   export class GetSingle implements Action {
@@ -107,7 +110,7 @@ export namespace DocumentsAction {
   export class GetFailure implements Action {
     public readonly type = DocumentsActionType.GET_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; query?: DataQuery}) {}
   }
 
   export class Create implements Action {
@@ -336,6 +339,12 @@ export namespace DocumentsAction {
     public constructor(public payload: {collectionId: string}) {}
   }
 
+  export class SetLoadingQuery implements Action {
+    public readonly type = DocumentsActionType.SET_LOADING_QUERY;
+
+    public constructor(public payload: {query: DataQuery}) {}
+  }
+
   export class RunRule implements Action {
     public readonly type = DocumentsActionType.RUN_RULE;
 
@@ -385,6 +394,7 @@ export namespace DocumentsAction {
     | Clear
     | ClearQueries
     | ClearByCollection
+    | SetLoadingQuery
     | RunRule
     | RunRuleFailure;
 }

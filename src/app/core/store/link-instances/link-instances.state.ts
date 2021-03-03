@@ -27,6 +27,7 @@ import {DataQuery} from '../../model/data-query';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: DataQuery[];
+  loadingQueries: DataQuery[];
   actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
@@ -34,6 +35,7 @@ export const linkInstancesAdapter = createEntityAdapter<LinkInstance>();
 
 export const initialLinkInstancesState: LinkInstancesState = linkInstancesAdapter.getInitialState({
   queries: [],
+  loadingQueries: [],
   actionExecutedTimes: {},
 });
 
@@ -50,6 +52,11 @@ export const selectLinkInstancesDictionary = createSelector(
 export const selectLinkInstancesQueries = createSelector(
   selectLinkInstancesState,
   linkInstancesState => linkInstancesState.queries
+);
+
+export const selectLinkInstancesLoadingQueries = createSelector(
+  selectLinkInstancesState,
+  linkInstancesState => linkInstancesState.loadingQueries
 );
 
 export const selectLinkInstanceById = (id: string) =>

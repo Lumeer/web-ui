@@ -28,7 +28,7 @@ import {
   CollectionPurposeType,
   ImportedCollection,
 } from './collection';
-import {convertRulesFromDto, convertRulesToDto} from '../store.utils';
+import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 export function convertCollectionDtoToModel(

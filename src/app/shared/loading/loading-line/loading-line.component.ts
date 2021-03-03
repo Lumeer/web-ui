@@ -19,10 +19,17 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, AfterViewInit} from '@angular/core';
 import {Observable, of, timer, combineLatest, BehaviorSubject} from 'rxjs';
-import {DataLoadedService} from '../../../core/service/data-loaded.service';
 import {distinctUntilChanged, map, skipUntil, switchMap, take, tap} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {ModuleLazyLoadingService} from '../../../core/service/module-lazy-loading.service';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectDocumentsLoadingQueries} from '../../../core/store/documents/documents.state';
+import {selectLinkInstancesLoadingQueries} from '../../../core/store/link-instances/link-instances.state';
+import {
+  selectDataResourcesLoadingQueries,
+  selectTasksLoadingQueries,
+} from '../../../core/store/data-resources/data-resources.state';
 
 const timerInterval = 1000;
 const minimumIncrease = 1;
@@ -34,7 +41,6 @@ const maximumWidth = 97;
   templateUrl: './loading-line.component.html',
   styleUrls: ['./loading-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DataLoadedService],
 })
 export class LoadingLineComponent implements OnInit, AfterViewInit {
   public width$: Observable<number>;
@@ -42,10 +48,7 @@ export class LoadingLineComponent implements OnInit, AfterViewInit {
 
   public currentWidth: number;
 
-  constructor(
-    private dataLoadedService: DataLoadedService,
-    private moduleLazyLoadingService: ModuleLazyLoadingService
-  ) {}
+  constructor(private store$: Store<AppState>, private moduleLazyLoadingService: ModuleLazyLoadingService) {}
 
   public ngOnInit() {
     this.moduleLazyLoadingService.init();
@@ -67,16 +70,26 @@ export class LoadingLineComponent implements OnInit, AfterViewInit {
   }
 
   private isLoaded$(): Observable<boolean> {
-    return combineLatest([
-      this.moduleLazyLoadingService.observeLazyLoading().pipe(
-        skipUntil(this.viewInitiated$),
-        map(loading => !loading)
-      ),
-      this.dataLoadedService.isLoaded$(),
-    ]).pipe(
+    return combineLatest([this.lazyLoaded$(), this.dataLoaded$()]).pipe(
       map(loaded => loaded.every(l => l)),
       distinctUntilChanged()
     );
+  }
+
+  private lazyLoaded$(): Observable<boolean> {
+    return this.moduleLazyLoadingService.observeLazyLoading().pipe(
+      skipUntil(this.viewInitiated$),
+      map(loading => !loading)
+    );
+  }
+
+  private dataLoaded$(): Observable<boolean> {
+    return combineLatest([
+      this.store$.pipe(select(selectDocumentsLoadingQueries)),
+      this.store$.pipe(select(selectLinkInstancesLoadingQueries)),
+      this.store$.pipe(select(selectDataResourcesLoadingQueries)),
+      this.store$.pipe(select(selectTasksLoadingQueries)),
+    ]).pipe(map(loadedMatrix => loadedMatrix.every(queries => queries.length === 0)));
   }
 
   private isShowingProgress(): boolean {
