@@ -237,7 +237,7 @@ export function calculateDocumentHierarchyLevel(
   }
 
   const document = documentsMap[documentId];
-  const parentDocumentId = document && document.metaData && document.metaData.parentId;
+  const parentDocumentId = document?.metaData?.parentId;
   return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
 }
 

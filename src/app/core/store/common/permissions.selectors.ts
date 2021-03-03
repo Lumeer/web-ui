@@ -24,7 +24,7 @@ import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
-import {filterTaskDocuments, sortDocumentsByCreationDate} from '../documents/document.utils';
+import {filterTaskDocuments, sortDocumentsByCreationDate, sortDocumentsTasks} from '../documents/document.utils';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
@@ -33,7 +33,9 @@ import {
   checkTasksCollectionsQuery,
   getAllCollectionIdsFromQuery,
   getAllLinkTypeIdsFromQuery,
+  queryIsEmpty,
   queryWithoutLinks,
+  tasksCollectionsQuery,
 } from '../navigation/query/query.util';
 import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
@@ -231,15 +233,8 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query) =
     }
   );
 
-export const selectTaskDocuments = createSelector(
-  selectAllDocuments,
-  selectTasksCollectionsByReadPermission,
-  selectConstraintData,
-  (documents, collections, constraintData) => filterTaskDocuments(documents, collections, constraintData)
-);
-
 export const selectTasksDocumentsByQuery = createSelector(
-  selectTaskDocuments,
+  selectAllDocuments,
   selectTasksCollectionsByQuery,
   selectAllLinkTypes,
   selectAllLinkInstances,
@@ -256,18 +251,29 @@ export const selectTasksDocumentsByQuery = createSelector(
     permissions,
     constraintData,
     includeChildren
-  ): DocumentModel[] =>
-    filterDocumentsAndLinksByQuery(
-      documents,
+  ): DocumentModel[] => {
+    let tasksDocuments = documents;
+    let tasksQuery = query;
+
+    if (queryIsEmpty(query)) {
+      tasksDocuments = filterTaskDocuments(documents, collections, constraintData);
+      tasksQuery = tasksCollectionsQuery(collections);
+    }
+
+    const filteredTasks = filterDocumentsAndLinksByQuery(
+      tasksDocuments,
       collections,
       linkTypes,
       linkInstances,
-      query,
+      tasksQuery,
       permissions.collections,
       permissions.linkTypes,
       constraintData,
       includeChildren
-    ).documents
+    ).documents;
+
+    return sortDocumentsTasks(filteredTasks, collections);
+  }
 );
 
 export const selectDocumentsAndLinksByQuerySorted = selectDocumentsAndLinksByCustomQuerySorted();
