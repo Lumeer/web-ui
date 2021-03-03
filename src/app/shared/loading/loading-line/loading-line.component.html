@@ -1,0 +1,7 @@
+<ng-container *ngIf="{width: width$ | async} as data">
+  <div class="loading-line-container" *ngIf="data.width">
+    <div class="loading-bar bg-success"
+         [ngStyle]="{'width': data.width + '%'}">
+    </div>
+  </div>
+</ng-container>

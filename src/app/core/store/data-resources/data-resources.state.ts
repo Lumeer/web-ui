@@ -19,26 +19,37 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {isDataQueryLoaded} from '../navigation/query/query.helper';
 import {selectTasksQuery} from '../common/permissions.selectors';
 import {DataQuery} from '../../model/data-query';
 import {selectViewDataQuery} from '../view-settings/view-settings.state';
+import {isDataQueryLoaded} from '../utils/data-query-payload';
 
 export interface DataResourcesState {
   queries: DataQuery[];
   tasksQueries: DataQuery[];
+  loadingQueries: DataQuery[];
+  loadingTasksQueries: DataQuery[];
 }
 
 export const initialDataResourcesState: DataResourcesState = {
   queries: [],
   tasksQueries: [],
+  loadingQueries: [],
+  loadingTasksQueries: [],
 };
 
 export const selectDataResourcesState = (state: AppState) => state.dataResources;
 
 export const selectDataResourcesQueries = createSelector(selectDataResourcesState, state => state.queries);
 
+export const selectDataResourcesLoadingQueries = createSelector(
+  selectDataResourcesState,
+  state => state.loadingQueries
+);
+
 export const selectTasksQueries = createSelector(selectDataResourcesState, state => state.tasksQueries);
+
+export const selectTasksLoadingQueries = createSelector(selectDataResourcesState, state => state.loadingTasksQueries);
 
 export const selectCurrentQueryDataResourcesLoaded = createSelector(
   selectDataResourcesQueries,

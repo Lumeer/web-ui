@@ -45,7 +45,7 @@ import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
-import {createCallbackActions} from '../store.utils';
+import {createCallbackActions} from '../utils/store.utils';
 import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from '../../dto/service-level-type';
 

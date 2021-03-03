@@ -164,7 +164,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
       );
       this.store$
         .pipe(select(selectLinkTypesByCollectionId(this.resource.id)), take(1))
-        .subscribe(linkTypes => linkTypes.forEach(linkType => this.readLinkTypeData(linkType)));
+        .subscribe(linkTypes => this.readLinkTypesData(linkTypes));
     } else if (this.resourceType === AttributesResourceType.LinkType) {
       this.commentsCount$ = this.store$.pipe(
         select(selectLinkInstanceById(this.dataResource.id)),
@@ -175,12 +175,24 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     }
   }
 
-  private readLinkTypeData(linkType: LinkType) {
-    const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
-    const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
-    this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery}));
-    const query: Query = {stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]};
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+  private readLinkTypesData(linkTypes: LinkType[]) {
+    const loadingCollections = new Set();
+    const loadingLinkTypes = new Set();
+    linkTypes.forEach(linkType => {
+      const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
+
+      if (!loadingCollections.has(otherCollectionId)) {
+        loadingCollections.add(otherCollectionId);
+        const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
+        this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery}));
+      }
+
+      if (!loadingLinkTypes.has(linkType.id)) {
+        loadingLinkTypes.add(linkType.id);
+        const query: Query = {stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]};
+        this.store$.dispatch(new LinkInstancesAction.Get({query}));
+      }
+    });
   }
 
   public onRemove() {

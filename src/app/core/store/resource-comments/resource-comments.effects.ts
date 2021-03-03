@@ -28,7 +28,7 @@ import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {ResourceCommentsAction, ResourceCommentsActionType} from './resource-comments.action';
 import {convertResourceCommentDtoToModel, convertResourceCommentModelToDto} from './resource-comment.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {createCallbackActions} from '../store.utils';
+import {createCallbackActions} from '../utils/store.utils';
 import {DocumentsAction} from '../documents/documents.action';
 import {ResourceType} from '../../model/resource-type';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';

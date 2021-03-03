@@ -19,10 +19,10 @@
 
 import {Action} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import {CommonAction} from './common/common.action';
-import {RuleDto} from '../dto/rule.dto';
-import {Rule, ruleTimingMap, ruleTypeMap} from '../model/rule';
-import {generateCorrelationId} from '../../shared/utils/resource.utils';
+import {CommonAction} from '../common/common.action';
+import {RuleDto} from '../../dto/rule.dto';
+import {Rule, ruleTimingMap, ruleTypeMap} from '../../model/rule';
+import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];

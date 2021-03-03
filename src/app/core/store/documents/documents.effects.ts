@@ -35,15 +35,15 @@ import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../l
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkInstance} from '../link-instances/link.instance';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {checkLoadedDataQuery, isDataQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {createCallbackActions, emitErrorActions} from '../store.utils';
+import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {
   selectDocumentById,
   selectDocumentsDictionary,
+  selectDocumentsLoadingQueries,
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
@@ -51,27 +51,29 @@ import {CollectionService, DocumentService, LinkInstanceService, SearchService} 
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
-import {environment} from '../../../../environments/environment';
+import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 
 @Injectable()
 export class DocumentsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
-    filter(
-      ([action, queries]) =>
-        action.payload.force || !isDataQueryLoaded(action.payload.query, queries, environment.publicView)
+    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(
+      this.store$.pipe(select(selectDocumentsQueries)),
+      this.store$.pipe(select(selectDocumentsLoadingQueries))
     ),
-    mergeMap(([action]) => {
-      const query = action.payload.query;
+    filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+    map(([payload, ,]) => payload),
+    tap(payload => this.store$.dispatch(new DocumentsAction.SetLoadingQuery({query: payload.query}))),
+    mergeMap(payload => {
+      const query = payload.query;
       const queryDto = convertQueryModelToDto(query);
-      const savedQuery = checkLoadedDataQuery(query, environment.publicView, action.payload.silent);
 
-      return this.searchService.searchDocuments(queryDto, query.includeSubItems, action.payload.workspace).pipe(
+      return this.searchService.searchDocuments(queryDto, query.includeSubItems, payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
-        map(documents => new DocumentsAction.GetSuccess({documents, query: savedQuery})),
-        catchError(error => of(new DocumentsAction.GetFailure({error})))
+        map(documents => new DocumentsAction.GetSuccess({documents, query})),
+        catchError(error => of(new DocumentsAction.GetFailure({error, query})))
       );
     })
   );

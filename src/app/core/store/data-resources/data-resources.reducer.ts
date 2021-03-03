@@ -19,7 +19,7 @@
 
 import {DataResourcesState, initialDataResourcesState} from './data-resources.state';
 import {DataResourcesAction, DataResourcesActionType} from './data-resources.action';
-import {areDataQueriesEqual} from '../navigation/query/query.helper';
+import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
 
 export function dataResourcesReducer(
   state: DataResourcesState = initialDataResourcesState,
@@ -27,19 +27,25 @@ export function dataResourcesReducer(
 ): DataResourcesState {
   switch (action.type) {
     case DataResourcesActionType.GET_SUCCESS:
-      const shouldAddQuery =
-        action.payload.query && !state.queries.some(query => areDataQueriesEqual(query, action.payload.query));
-      if (shouldAddQuery) {
-        return {...state, queries: [...state.queries, action.payload.query]};
-      }
-      return state;
+      return {
+        ...state,
+        queries: addDataQueryUnique(state.queries, action.payload.query),
+        loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query),
+      };
+    case DataResourcesActionType.GET_FAILURE:
+      return {...state, loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query)};
+    case DataResourcesActionType.SET_LOADING_QUERY:
+      return {...state, loadingQueries: addDataQueryUnique(state.loadingQueries, action.payload.query)};
     case DataResourcesActionType.GET_TASKS_SUCCESS:
-      const shouldAddTaskQuery =
-        action.payload.query && !state.queries.some(query => areDataQueriesEqual(query, action.payload.query));
-      if (shouldAddTaskQuery) {
-        return {...state, tasksQueries: [...state.tasksQueries, action.payload.query]};
-      }
-      return state;
+      return {
+        ...state,
+        tasksQueries: addDataQueryUnique(state.tasksQueries, action.payload.query),
+        loadingTasksQueries: removeDataQuery(state.loadingTasksQueries, action.payload.query),
+      };
+    case DataResourcesActionType.GET_TASKS_FAILURE:
+      return {...state, loadingTasksQueries: removeDataQuery(state.loadingTasksQueries, action.payload.query)};
+    case DataResourcesActionType.SET_LOADING_TASKS_QUERY:
+      return {...state, loadingTasksQueries: addDataQueryUnique(state.loadingTasksQueries, action.payload.query)};
     case DataResourcesActionType.CLEAR_QUERIES:
       if (action.payload.collectionId) {
         return {

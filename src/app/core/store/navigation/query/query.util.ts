@@ -262,7 +262,7 @@ export function tasksCollectionQueryStem(collection: Collection): QueryStem {
         filters: [
           {
             attributeId: assigneeAttribute.id,
-            condition: ConditionType.In,
+            condition: ConditionType.HasSome,
             collectionId: collection.id,
             conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
           },

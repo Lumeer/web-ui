@@ -1,6 +1,4 @@
-<loading-indicator *ngIf="lazyLoading$ | async"
-                   (hide)="onHideLoadingIndicator()">
-</loading-indicator>
+<loading-line></loading-line>
 
 <public-project-message *ngIf="showPublicProjectWarning$ | async"></public-project-message>
 

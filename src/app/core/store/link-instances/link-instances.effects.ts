@@ -30,39 +30,41 @@ import {hasAttributeType} from '../collections/collection.util';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
-import {checkLoadedDataQuery, isDataQueryLoaded} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {createCallbackActions, emitErrorActions} from '../store.utils';
+import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {
   selectLinkInstanceById,
   selectLinkInstancesDictionary,
+  selectLinkInstancesLoadingQueries,
   selectLinkInstancesQueries,
 } from './link-instances.state';
 import {LinkInstanceService, SearchService} from '../../data-service';
 import {ConstraintType} from '@lumeer/data-filters';
-import {environment} from '../../../../environments/environment';
+import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 
 @Injectable()
 export class LinkInstancesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectLinkInstancesQueries))),
-    filter(
-      ([action, queries]) =>
-        action.payload.force || !isDataQueryLoaded(action.payload.query, queries, environment.publicView)
+    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(
+      this.store$.pipe(select(selectLinkInstancesQueries)),
+      this.store$.pipe(select(selectLinkInstancesLoadingQueries))
     ),
-    mergeMap(([action]) => {
-      const query = action.payload.query;
+    filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+    map(([payload, ,]) => payload),
+    tap(payload => this.store$.dispatch(new LinkInstancesAction.SetLoadingQuery({query: payload.query}))),
+    mergeMap(payload => {
+      const query = payload.query;
       const queryDto = convertQueryModelToDto(query);
-      const savedQuery = checkLoadedDataQuery(query, environment.publicView, action.payload.silent);
 
       return this.searchService.searchLinkInstances(queryDto, query.includeSubItems).pipe(
         map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
-        map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query: savedQuery})),
-        catchError(error => of(new LinkInstancesAction.GetFailure({error})))
+        map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query})),
+        catchError(error => of(new LinkInstancesAction.GetFailure({error, query})))
       );
     })
   );

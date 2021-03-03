@@ -57,7 +57,7 @@ import {
 import mixpanel from 'mixpanel-browser';
 import {CollectionService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
-import {createCallbackActions} from '../store.utils';
+import {createCallbackActions} from '../utils/store.utils';
 
 @Injectable()
 export class CollectionsEffects {

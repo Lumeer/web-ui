@@ -22,7 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
-import {createCallbackActions, emitErrorActions} from '../store.utils';
+import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {GeocodingAction, GeocodingActionType} from './geocoding.action';
 import {selectGeocodingQueryCoordinates, selectLocationByCoordinates, selectLocationsByQuery} from './geocoding.state';
 import {GeocodingConverter} from './geocoding.converter';

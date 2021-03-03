@@ -51,7 +51,7 @@ import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {User} from '../users/user';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {convertUserModelToDto} from '../users/user.converter';
-import {createCallbackActions} from '../store.utils';
+import {createCallbackActions} from '../utils/store.utils';
 import {mapPositionPathParams} from '../navigation/query/query.util';
 import {SearchesAction} from '../searches/searches.action';
 import {TablesAction} from '../tables/tables.action';

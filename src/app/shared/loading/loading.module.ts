@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {generateCorrelationId} from '../../shared/utils/resource.utils';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {LoadingLineComponent} from './loading-line/loading-line.component';
 
-export class CorrelationIdGenerator {
-  /**
-   * @deprecated use function below instead
-   */
-  public static generate(): string {
-    return generateCorrelationId();
-  }
-}
+@NgModule({
+  declarations: [LoadingLineComponent],
+  imports: [CommonModule],
+  exports: [LoadingLineComponent],
+})
+export class LoadingModule {}

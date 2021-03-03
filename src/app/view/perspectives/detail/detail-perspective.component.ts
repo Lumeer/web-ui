@@ -94,8 +94,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(([collections, navigation, cursor]) => {
           const selectedCollection =
-            (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) ||
-            (collections && collections[0]);
+            (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) || collections?.[0];
           if (selectedCollection) {
             const collectionQuery = filterStemsForCollection(selectedCollection.id, navigation?.query);
             this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
@@ -103,8 +102,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
               select(selectDocumentsByCustomQuery(collectionQuery)),
               map(documents => {
                 const document =
-                  (cursor && (documents || []).find(doc => doc.id === cursor.documentId)) ||
-                  (documents && documents[0]);
+                  (cursor && (documents || []).find(doc => doc.id === cursor.documentId)) || documents?.[0];
                 return {collection: selectedCollection, document, navigation};
               })
             );
@@ -172,7 +170,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
             mergeMap(() =>
               this.store$.pipe(
                 select(selectDocumentsByCustomQuery(collectionQuery)),
-                map(documents => documents && documents[0])
+                map(documents => documents?.[0])
               )
             )
           );
