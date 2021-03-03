@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {EMPTY, Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -33,8 +33,8 @@ import {selectUserNotificationsLoaded} from './user-notifications.state';
 
 @Injectable()
 export class UserNotificationsEffects {
-  @Effect()
-  public getUserNotifications$: Observable<Action> = this.actions$.pipe(
+
+  public getUserNotifications$ = createEffect(() => this.actions$.pipe(
     ofType<UserNotificationsAction.Get>(UserNotificationsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectUserNotificationsLoaded))),
     filter(([, loaded]) => !loaded),
@@ -49,20 +49,20 @@ export class UserNotificationsEffects {
         catchError(error => of(new UserNotificationsAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UserNotificationsAction.GetFailure>(UserNotificationsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'userNotifications.get.fail', value: 'Could not read notifications'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<UserNotificationsAction.Update>(UserNotificationsActionType.UPDATE),
     mergeMap(action => {
       const userNotificationDto = UserNotificationConverter.toDto(action.payload.userNotification);
@@ -75,20 +75,20 @@ export class UserNotificationsEffects {
           catchError(error => of(new UserNotificationsAction.UpdateFailure({error})))
         );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UserNotificationsAction.UpdateFailure>(UserNotificationsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'userNotifications.update.fail', value: 'Could not update notification state'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<UserNotificationsAction.Delete>(UserNotificationsActionType.DELETE),
     mergeMap(action => {
       if (action.payload.userNotification.deleting !== true) {
@@ -102,17 +102,17 @@ export class UserNotificationsEffects {
         return EMPTY;
       }
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UserNotificationsAction.DeleteFailure>(UserNotificationsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'userNotification.delete.fail', value: 'Could not delete notification'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private i18n: I18n,

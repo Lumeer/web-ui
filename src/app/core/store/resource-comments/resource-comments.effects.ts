@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '../app.state';
@@ -35,8 +35,8 @@ import {LinkInstancesAction} from '../link-instances/link-instances.action';
 
 @Injectable()
 export class ResourceCommentsEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.Get>(ResourceCommentsActionType.GET),
     mergeMap(action => {
       const {resourceType, resourceId, pageStart, pageLength} = action.payload;
@@ -46,20 +46,20 @@ export class ResourceCommentsEffects {
         catchError(error => of(new ResourceCommentsAction.GetFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.GetFailure>(ResourceCommentsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'resourceComments.get.fail', value: 'Could not read comments'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.Create>(ResourceCommentsActionType.CREATE),
     mergeMap(action => {
       const {correlationId} = action.payload.comment;
@@ -80,10 +80,10 @@ export class ResourceCommentsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public createSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.CreateSuccess>(ResourceCommentsActionType.CREATE_SUCCESS),
     map(action => {
       if (action.payload.comment.resourceType === ResourceType.Document) {
@@ -92,20 +92,20 @@ export class ResourceCommentsEffects {
         return new LinkInstancesAction.GetByIds({linkInstancesIds: [action.payload.comment.resourceId]});
       }
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.CreateFailure>(ResourceCommentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(action => {
       const errorMessage = this.i18n({id: 'resourceComment.create.fail', value: 'Could not save the comment'});
       return new NotificationsAction.Error({message: errorMessage});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.Update>(ResourceCommentsActionType.UPDATE),
     mergeMap(action => {
       return this.resourceCommentService.updateComment(convertResourceCommentModelToDto(action.payload.comment)).pipe(
@@ -116,20 +116,20 @@ export class ResourceCommentsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.UpdateFailure>(ResourceCommentsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'resourceComment.update.fail', value: 'Could not update the comment'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.Delete>(ResourceCommentsActionType.DELETE),
     mergeMap(action => {
       return this.resourceCommentService.removeComment(convertResourceCommentModelToDto(action.payload.comment)).pipe(
@@ -148,10 +148,10 @@ export class ResourceCommentsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public deleteSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.DeleteSuccess>(ResourceCommentsActionType.DELETE_SUCCESS),
     map(action => {
       if (action.payload.comment.resourceType === ResourceType.Document) {
@@ -160,17 +160,17 @@ export class ResourceCommentsEffects {
         return new LinkInstancesAction.GetByIds({linkInstancesIds: [action.payload.comment.resourceId]});
       }
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ResourceCommentsAction.DeleteFailure>(ResourceCommentsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'resourceComment.delete.fail', value: 'Could not delete the comment'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -33,8 +33,8 @@ import {SequenceService} from '../../rest/sequence.service';
 
 @Injectable()
 export class SequencesEffects {
-  @Effect()
-  public getSequences$: Observable<Action> = this.actions$.pipe(
+
+  public getSequences$ = createEffect(() => this.actions$.pipe(
     ofType<SequencesAction.Get>(SequencesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectSequencesLoaded))),
     filter(([action, loaded]) => !loaded),
@@ -49,20 +49,20 @@ export class SequencesEffects {
         catchError(error => of(new SequencesAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<SequencesAction.GetFailure>(SequencesActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'sequences.get.fail', value: 'Could not read sequences'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<SequencesAction.Update>(SequencesActionType.UPDATE),
     mergeMap(action => {
       const sequenceDto = SequenceConverter.toDto(action.payload.sequence);
@@ -73,20 +73,20 @@ export class SequencesEffects {
         catchError(error => of(new SequencesAction.UpdateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<SequencesAction.UpdateFailure>(SequencesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'sequences.update.fail', value: 'Could not update sequence'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<SequencesAction.Delete>(SequencesActionType.DELETE),
     mergeMap(action => {
       return this.sequenceService.removeSequence(action.payload.sequence.id).pipe(
@@ -94,17 +94,17 @@ export class SequencesEffects {
         catchError(error => of(new SequencesAction.DeleteFailure({error, id: action.payload.sequence.id})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<SequencesAction.DeleteFailure>(SequencesActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'sequence.delete.fail', value: 'Could not delete sequence'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private i18n: I18n,

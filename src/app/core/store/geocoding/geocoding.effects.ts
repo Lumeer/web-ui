@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
@@ -30,8 +30,8 @@ import {GeocodingService} from '../../data-service';
 
 @Injectable()
 export class GeocodingEffects {
-  @Effect()
-  public getCoordinates$: Observable<Action> = this.actions$.pipe(
+
+  public getCoordinates$ = createEffect(() => this.actions$.pipe(
     ofType<GeocodingAction.GetCoordinates>(GeocodingActionType.GET_COORDINATES),
     mergeMap(action => {
       const {queries, onSuccess, onFailure} = action.payload;
@@ -54,10 +54,10 @@ export class GeocodingEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getLocation$: Observable<Action> = this.actions$.pipe(
+
+  public getLocation$ = createEffect(() => this.actions$.pipe(
     ofType<GeocodingAction.GetLocation>(GeocodingActionType.GET_LOCATION),
     mergeMap(action => {
       const {coordinates, onSuccess, onFailure} = action.payload;
@@ -82,10 +82,10 @@ export class GeocodingEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getLocations$: Observable<Action> = this.actions$.pipe(
+
+  public getLocations$ = createEffect(() => this.actions$.pipe(
     ofType<GeocodingAction.GetLocations>(GeocodingActionType.GET_LOCATIONS),
     mergeMap(action => {
       const {query} = action.payload;
@@ -108,7 +108,7 @@ export class GeocodingEffects {
         })
       );
     })
-  );
+  ));
 
   constructor(private actions$: Actions, private geocodingApiService: GeocodingService, private store$: Store<{}>) {}
 }

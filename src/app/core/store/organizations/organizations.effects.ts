@@ -21,7 +21,7 @@ import {EMPTY, Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -32,7 +32,7 @@ import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
-import {OrganizationDto} from '../../dto';
+import {OrganizationDto, PermissionDto} from '../../dto';
 import {PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
@@ -45,8 +45,8 @@ import {ChooseOrganizationModalComponent} from '../../../shared/modal/choose-org
 
 @Injectable()
 export class OrganizationsEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.Get>(OrganizationsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsLoaded))),
     filter(([, loaded]) => !loaded),
@@ -57,10 +57,10 @@ export class OrganizationsEffects {
         catchError(error => of(new OrganizationsAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getSingle$: Observable<Action> = this.actions$.pipe(
+
+  public getSingle$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.GetSingle>(OrganizationsActionType.GET_SINGLE),
     mergeMap(action =>
       this.organizationService.getOrganization(action.payload.organizationId).pipe(
@@ -69,20 +69,20 @@ export class OrganizationsEffects {
         catchError(error => of(new OrganizationsAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organizations.get.fail', value: 'Could not get organizations'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public getCodes$: Observable<Action> = this.actions$.pipe(
+
+  public getCodes$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
     filter(([, codes]) => isNullOrUndefined(codes)),
@@ -92,16 +92,16 @@ export class OrganizationsEffects {
         catchError(error => of(new OrganizationsAction.GetCodesFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public getCodesFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getCodesFailure$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE),
     tap((action: OrganizationsAction.GetCodesFailure) => console.error(action.payload.error))
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.Create>(OrganizationsActionType.CREATE),
     mergeMap(action => {
       const {organization, onSuccess, onFailure} = action.payload;
@@ -130,10 +130,10 @@ export class OrganizationsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public createSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.CreateSuccess>(OrganizationsActionType.CREATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
     map(([action, codes]) => {
@@ -143,20 +143,20 @@ export class OrganizationsEffects {
       }
       return new OrganizationsAction.GetCodesSuccess({organizationCodes: newCodes});
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.create.fail', value: 'Could not create the organization'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.Update>(OrganizationsActionType.UPDATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationEntities]) => {
@@ -174,10 +174,10 @@ export class OrganizationsEffects {
         catchError(error => of(new OrganizationsAction.UpdateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public updateSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.UpdateSuccess>(OrganizationsActionType.UPDATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
     mergeMap(([action, codes]) => {
@@ -203,20 +203,20 @@ export class OrganizationsEffects {
       }
       return actions;
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.update.fail', value: 'Could not update the organization'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.Delete>(OrganizationsActionType.DELETE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationEntities]) => {
@@ -227,10 +227,10 @@ export class OrganizationsEffects {
         catchError(error => of(new OrganizationsAction.DeleteFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public deleteSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.DeleteSuccess>(OrganizationsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
@@ -249,26 +249,26 @@ export class OrganizationsEffects {
 
       return actions;
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.delete.fail', value: 'Could not delete the organization'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public changePermission$ = this.actions$.pipe(
+
+  public changePermission$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
     mergeMap(action => {
       const workspace = action.payload.workspace;
       const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
 
-      let observable;
+      let observable: Observable<PermissionDto>;
       if (action.payload.type === PermissionType.Users) {
         observable = this.organizationService.updateUserPermission(dtos, workspace);
       } else {
@@ -288,10 +288,10 @@ export class OrganizationsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public changePermissionFailure$: Observable<Action> = this.actions$.pipe(
+
+  public changePermissionFailure$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.ChangePermissionFailure>(OrganizationsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -301,19 +301,19 @@ export class OrganizationsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public choose$: Observable<Action> = this.actions$.pipe(
+
+  public choose$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.Choose>(OrganizationsActionType.CHOOSE),
     tap((action: OrganizationsAction.Choose) => {
       const modalRef = this.modalService.showStaticDialog(action.payload, ChooseOrganizationModalComponent);
       modalRef.content.onClose$ = action.payload.onClose$;
     })
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public offerPayment$: Observable<Action> = this.actions$.pipe(
+
+  public offerPayment$ = createEffect(() => this.actions$.pipe(
     ofType<OrganizationsAction.OfferPayment>(OrganizationsActionType.OFFER_PAYMENT),
     map(action => {
       const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
@@ -333,7 +333,7 @@ export class OrganizationsEffects {
         yesFirst: false,
       });
     })
-  );
+  ));
 
   constructor(
     private i18n: I18n,

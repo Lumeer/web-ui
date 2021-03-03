@@ -20,7 +20,7 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, from, Observable, of} from 'rxjs';
@@ -51,8 +51,8 @@ import {ServiceLevelType} from '../../dto/service-level-type';
 
 @Injectable()
 export class UsersEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.Get>(UsersActionType.GET),
     withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
     filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
@@ -67,20 +67,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'users.get.fail', value: 'Could not get users'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public getCurrentUser$: Observable<Action> = this.actions$.pipe(
+
+  public getCurrentUser$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.GetCurrentUser>(UsersActionType.GET_CURRENT_USER),
     tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
     mergeMap(action =>
@@ -106,10 +106,10 @@ export class UsersEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public resendVerificationEmail$: Observable<Action> = this.actions$.pipe(
+
+  public resendVerificationEmail$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.ResendVerificationEmail>(UsersActionType.RESEND_VERIFICATION_EMAIL),
     mergeMap(action =>
       this.userService.resendVerificationEmail().pipe(
@@ -133,10 +133,10 @@ export class UsersEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getCurrentUserWithLastLogin$: Observable<Action> = this.actions$.pipe(
+
+  public getCurrentUserWithLastLogin$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.GetCurrentUserWithLastLogin>(UsersActionType.GET_CURRENT_USER_WITH_LAST_LOGIN),
     tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
     mergeMap(() =>
@@ -149,10 +149,10 @@ export class UsersEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public patchCurrentUser$: Observable<Action> = this.actions$.pipe(
+
+  public patchCurrentUser$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.PatchCurrentUser>(UsersActionType.PATCH_CURRENT_USER),
     mergeMap(action => {
       const dto = convertUserModelToDto(action.payload.user);
@@ -175,10 +175,10 @@ export class UsersEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.Create>(UsersActionType.CREATE),
     mergeMap(action => {
       const userDto = convertUserModelToDto(action.payload.user);
@@ -189,10 +189,10 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.CreateFailure({error, organizationId: action.payload.organizationId})))
       );
     })
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public createSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public createSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
     tap((action: UsersAction.CreateSuccess) => {
       if (environment.analytics) {
@@ -208,10 +208,10 @@ export class UsersEffects {
         }
       }
     })
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(action => {
@@ -221,10 +221,10 @@ export class UsersEffects {
       const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
       return new NotificationsAction.Error({message: errorMessage});
     })
-  );
+  ));
 
-  @Effect()
-  public invitationExceeded$: Observable<Action> = this.actions$.pipe(
+
+  public invitationExceeded$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.InvitationExceeded>(UsersActionType.INVITATION_EXCEEDED),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary), this.store$.select(selectAllServiceLimits)),
     map(([action, organizations, serviceLimits]) => {
@@ -257,10 +257,10 @@ export class UsersEffects {
 
       return new OrganizationsAction.OfferPayment({message, title, organizationCode: organization.code});
     })
-  );
+  ));
 
-  @Effect()
-  public invite$: Observable<Action> = this.actions$.pipe(
+
+  public invite$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.InviteUsers>(UsersActionType.INVITE),
     mergeMap(action => {
       const usersDto = action.payload.users.map(user => convertUserModelToDto(user));
@@ -286,10 +286,10 @@ export class UsersEffects {
           )
         );
     })
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public inviteSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public inviteSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.InviteSuccess>(UsersActionType.INVITE_SUCCESS),
     tap((action: UsersAction.InviteSuccess) => {
       if (environment.analytics) {
@@ -305,19 +305,19 @@ export class UsersEffects {
         }
       }
     })
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public inviteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public inviteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.InviteFailure>(UsersActionType.INVITE_FAILURE),
     map(
       action =>
         new UsersAction.CreateFailure({organizationId: action.payload.organizationId, error: action.payload.error})
     )
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.Update>(UsersActionType.UPDATE),
     mergeMap(action => {
       const userDto = convertUserModelToDto(action.payload.user);
@@ -328,20 +328,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.UpdateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.update.fail', value: 'Could not update the user'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.Delete>(UsersActionType.DELETE),
     mergeMap(action =>
       this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
@@ -349,20 +349,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.DeleteFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.delete.fail', value: 'Could not delete the user'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public saveDefaultWorkspace$ = this.actions$.pipe(
+
+  public saveDefaultWorkspace$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.SaveDefaultWorkspace>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
     concatMap(action => {
       const defaultWorkspaceDto = convertDefaultWorkspaceModelToDto(action.payload.defaultWorkspace);
@@ -378,20 +378,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public saveDefaultWorkspaceFailure$: Observable<Action> = this.actions$.pipe(
+
+  public saveDefaultWorkspaceFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.SaveDefaultWorkspaceFailure>(UsersActionType.SAVE_DEFAULT_WORKSPACE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.defaultWorkspace.save.fail', value: 'Could not save the default workspace'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public referrals$: Observable<Action> = this.actions$.pipe(
+
+  public referrals$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.Referrals>(UsersActionType.REFERRALS),
     mergeMap(action => {
       return this.userService.getUserReferrals().pipe(
@@ -399,20 +399,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.ReferralsFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public referralsFailure$: Observable<Action> = this.actions$.pipe(
+
+  public referralsFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.ReferralsFailure>(UsersActionType.REFERRALS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.referrals.fail', value: 'Could not get your referrals at the moment'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public getHints$: Observable<Action> = this.actions$.pipe(
+
+  public getHints$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.GetHints>(UsersActionType.GET_HINTS),
     mergeMap(() => {
       return this.userService.getHints().pipe(
@@ -421,20 +421,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.GetHintsFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getHintsFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getHintsFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.GetHintsFailure>(UsersActionType.GET_HINTS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public updateNotifications$: Observable<Action> = this.actions$.pipe(
+
+  public updateNotifications$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.UpdateNotifications>(UsersActionType.UPDATE_NOTIFICATIONS),
     mergeMap(action => {
       const {notifications, onSuccess, onFailure} = action.payload;
@@ -446,10 +446,10 @@ export class UsersEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateNotificationsFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateNotificationsFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.UpdateNotificationsFailure>(UsersActionType.UPDATE_NOTIFICATIONS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -459,10 +459,10 @@ export class UsersEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public updateHints$: Observable<Action> = this.actions$.pipe(
+
+  public updateHints$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.UpdateHints>(UsersActionType.UPDATE_HINTS),
     withLatestFrom(this.store$.select(selectCurrentUser)),
     mergeMap(([action, user]) => {
@@ -472,20 +472,20 @@ export class UsersEffects {
         catchError(error => of(new UsersAction.UpdateHintsFailure({error, originalHints: {...user.hints}})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateHintsFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateHintsFailure$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.UpdateHintsFailure>(UsersActionType.UPDATE_HINTS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.update.fail', value: 'Could not update the user'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public setHint$: Observable<Action> = this.actions$.pipe(
+
+  public setHint$ = createEffect(() => this.actions$.pipe(
     ofType<UsersAction.SetHint>(UsersActionType.SET_HINT),
     withLatestFrom(this.store$.select(selectCurrentUser)),
     mergeMap(([action, user]) => {
@@ -495,7 +495,7 @@ export class UsersEffects {
         return EMPTY;
       }
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

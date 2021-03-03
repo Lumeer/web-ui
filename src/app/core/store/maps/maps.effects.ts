@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {ContentService} from '../../rest/content.service';
 import {EMPTY, Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
@@ -33,8 +33,8 @@ import DOMPurify from 'dompurify';
 
 @Injectable()
 export class MapsEffects {
-  @Effect()
-  public downloadImageData$: Observable<Action> = this.actions$.pipe(
+
+  public downloadImageData$ = createEffect(() => this.actions$.pipe(
     ofType<MapsAction.DownloadImageData>(MapsActionType.DOWNLOAD_IMAGE_DATA),
     withLatestFrom(this.store$.pipe(select(selectMapsState))),
     mergeMap(([action, mapState]) => {
@@ -86,7 +86,7 @@ export class MapsEffects {
         catchError(() => of(...imageLoadedActions(url, MapImageLoadResult.FetchFailure)))
       );
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

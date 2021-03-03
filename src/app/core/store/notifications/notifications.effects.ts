@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {tap} from 'rxjs/operators';
@@ -30,8 +30,8 @@ import {NotificationButton} from '../../notifications/notification-button';
 
 @Injectable()
 export class NotificationsEffects {
-  @Effect({dispatch: false})
-  public confirm$ = this.actions$.pipe(
+  
+  public confirm$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.Confirm>(NotificationsActionType.CONFIRM),
     tap(action => {
       const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
@@ -49,10 +49,10 @@ export class NotificationsEffects {
       }
       this.notificationService.confirm(action.payload.message, action.payload.title, buttons, action.payload.type);
     })
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public info$ = this.actions$.pipe(
+  
+  public info$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.Info>(NotificationsActionType.INFO),
     tap(action => {
       const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
@@ -60,37 +60,37 @@ export class NotificationsEffects {
       const buttons: NotificationButton[] = [{text: okButtonText, bold: true}];
       this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
     })
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public error$ = this.actions$.pipe(
+  
+  public error$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.Error>(NotificationsActionType.ERROR),
     tap(action => this.notificationService.error(action.payload.message))
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public success$ = this.actions$.pipe(
+  
+  public success$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.Success>(NotificationsActionType.SUCCESS),
     tap(action => this.notificationService.success(action.payload.message))
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public warning$ = this.actions$.pipe(
+  
+  public warning$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.Warning>(NotificationsActionType.WARNING),
     tap(action => this.notificationService.warning(action.payload.message))
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public hint$ = this.actions$.pipe(
+  
+  public hint$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.Hint>(NotificationsActionType.HINT),
     tap(action => {
       const lumeerAdvice = this.i18n({id: 'lumeer.advice', value: "Lumeer's Advice"});
       this.notificationService.hint(action.payload.message, lumeerAdvice, action.payload.buttons);
     })
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public notifyForceRefresh$ = this.actions$.pipe(
+  
+  public notifyForceRefresh$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.ForceRefresh>(NotificationsActionType.FORCE_REFRESH),
     tap(() => {
       const message = this.i18n({
@@ -107,10 +107,10 @@ export class NotificationsEffects {
 
       this.notificationService.confirm(message, '', [button], 'warning');
     })
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public existingAttributeWarning$ = this.actions$.pipe(
+  
+  public existingAttributeWarning$ = createEffect(() => this.actions$.pipe(
     ofType<NotificationsAction.ExistingAttributeWarning>(NotificationsActionType.EXISTING_ATTRIBUTE_WARNING),
     tap(action => {
       const message = this.i18n(
@@ -125,7 +125,7 @@ export class NotificationsEffects {
 
       this.notificationService.warning(message);
     })
-  );
+  ), {dispatch: false});
 
   constructor(
     private actions$: Actions,

@@ -19,7 +19,7 @@
 
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
@@ -30,8 +30,8 @@ import {GroupsAction, GroupsActionType} from './groups.action';
 
 @Injectable()
 export class GroupsEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.Get>(GroupsActionType.GET),
     mergeMap(() =>
       this.groupService.getGroups().pipe(
@@ -40,20 +40,20 @@ export class GroupsEffects {
         catchError(error => of(new GroupsAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'groups.get.fail', value: 'Could not get groups'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.Create>(GroupsActionType.CREATE),
     mergeMap(action => {
       const groupDto = GroupConverter.toDto(action.payload.group);
@@ -64,20 +64,20 @@ export class GroupsEffects {
         catchError(error => of(new GroupsAction.CreateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'group.create.fail', value: 'Could not create the group'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.Update>(GroupsActionType.UPDATE),
     mergeMap(action => {
       const groupDto = GroupConverter.toDto(action.payload.group);
@@ -88,20 +88,20 @@ export class GroupsEffects {
         catchError(error => of(new GroupsAction.UpdateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'group.update.fail', value: 'Could not update the group'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
     mergeMap(action =>
       this.groupService.deleteGroup(action.payload.groupId).pipe(
@@ -109,17 +109,17 @@ export class GroupsEffects {
         catchError(error => of(new GroupsAction.DeleteFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'group.delete.fail', value: 'Could not delete the group'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(private actions$: Actions, private groupService: GroupService, private i18n: I18n) {}
 }

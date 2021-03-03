@@ -56,7 +56,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'top'}), StoreRouterConnectingModule.forRoot()],
+  imports: [RouterModule.forRoot(appRoutes, { scrollPositionRestoration: 'top', relativeLinkResolution: 'legacy' }), StoreRouterConnectingModule.forRoot()],
   exports: [RouterModule],
   providers: [
     {

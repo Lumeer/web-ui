@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
@@ -36,8 +36,8 @@ import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class PaymentsEffects {
-  @Effect()
-  public getPayments$: Observable<Action> = this.actions$.pipe(
+
+  public getPayments$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.GetPayments>(PaymentsActionType.GET_PAYMENTS),
     mergeMap(action => {
       return this.organizationService.getPayments().pipe(
@@ -46,10 +46,10 @@ export class PaymentsEffects {
         catchError(error => of(new PaymentsAction.GetPaymentsFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getPaymentsFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getPaymentsFailure$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.GetPaymentsFailure>(PaymentsActionType.GET_PAYMENTS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -59,10 +59,10 @@ export class PaymentsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public getPaymentSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public getPaymentSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
     tap((action: PaymentsAction.GetPaymentSuccess) => {
       if (environment.analytics && action.payload.payment.state === 'PAID') {
@@ -97,10 +97,10 @@ export class PaymentsEffects {
         }
       }
     })
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public getPayment$: Observable<Action> = this.actions$.pipe(
+
+  public getPayment$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.GetPayment>(PaymentsActionType.GET_PAYMENT),
     mergeMap(action => {
       return this.organizationService.getPayment(action.payload.paymentId).pipe(
@@ -116,10 +116,10 @@ export class PaymentsEffects {
         catchError(error => of(new PaymentsAction.GetPaymentFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getPaymentFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getPaymentFailure$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.GetPaymentFailure>(PaymentsActionType.GET_PAYMENT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -129,10 +129,10 @@ export class PaymentsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public createPayment$: Observable<Action> = this.actions$.pipe(
+
+  public createPayment$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
     mergeMap(action => {
       const returnUrl = action.payload.returnUrl || window.location.href;
@@ -142,10 +142,10 @@ export class PaymentsEffects {
         catchError(error => of(new PaymentsAction.CreatePaymentFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createPaymentFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createPaymentFailure$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.CreatePaymentFailure>(PaymentsActionType.CREATE_PAYMENT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -155,10 +155,10 @@ export class PaymentsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public createPaymentSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public createPaymentSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
     tap((action: PaymentsAction.CreatePaymentSuccess) => {
       if (environment.analytics) {
@@ -180,7 +180,7 @@ export class PaymentsEffects {
         }
       }
     })
-  );
+  ), {dispatch: false});
 
   private getPrice(payment: Payment): number {
     let price = payment.amount;

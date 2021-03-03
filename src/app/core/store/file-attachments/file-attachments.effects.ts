@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
@@ -35,8 +35,8 @@ import {selectLoadedFileAttachmentsCollections, selectLoadedFileAttachmentsLinkT
 
 @Injectable()
 export class FileAttachmentsEffects {
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<FileAttachmentsAction.Create>(FileAttachmentsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
     mergeMap(([action, workspace]) => {
@@ -52,10 +52,10 @@ export class FileAttachmentsEffects {
         catchError(error => emitErrorActions(error, action.payload.onFailure))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public remove$: Observable<Action> = this.actions$.pipe(
+
+  public remove$ = createEffect(() => this.actions$.pipe(
     ofType<FileAttachmentsAction.Remove>(FileAttachmentsActionType.REMOVE),
     withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
     mergeMap(([action, workspace]) => {
@@ -65,10 +65,10 @@ export class FileAttachmentsEffects {
         catchError(error => emitErrorActions(error, onFailure))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<FileAttachmentsAction.Get>(FileAttachmentsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
     mergeMap(([action, workspace]) => {
@@ -83,10 +83,10 @@ export class FileAttachmentsEffects {
         catchError(error => emitErrorActions(error, action.payload.onFailure))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getByQuery$: Observable<Action> = this.actions$.pipe(
+
+  public getByQuery$ = createEffect(() => this.actions$.pipe(
     ofType<FileAttachmentsAction.GetByQuery>(FileAttachmentsActionType.GET_BY_QUERY),
     mergeMap(action => {
       const {query} = action.payload;
@@ -113,7 +113,7 @@ export class FileAttachmentsEffects {
         })
       );
     })
-  );
+  ));
 
   private getDocumentFiles(path: FileApiPath): Observable<FileAttachmentDto[]> {
     if (path.collectionId && path.documentId && path.attributeId) {

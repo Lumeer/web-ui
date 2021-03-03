@@ -20,7 +20,7 @@
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {AppState} from '../../app.state';
@@ -32,8 +32,8 @@ import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class ServiceLimitsEffects {
-  @Effect()
-  public getAll$: Observable<Action> = this.actions$.pipe(
+
+  public getAll$ = createEffect(() => this.actions$.pipe(
     ofType<ServiceLimitsAction.GetAll>(ServiceLimitsActionType.GET_ALL),
     mergeMap(() => {
       return this.organizationService.getAllServiceLimits().pipe(
@@ -47,10 +47,10 @@ export class ServiceLimitsEffects {
         catchError(error => of(new ServiceLimitsAction.GetAllFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getAllFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getAllFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ServiceLimitsAction.GetAllFailure>(ServiceLimitsActionType.GET_ALL_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -60,10 +60,10 @@ export class ServiceLimitsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public getServiceLimits$: Observable<Action> = this.actions$.pipe(
+
+  public getServiceLimits$ = createEffect(() => this.actions$.pipe(
     ofType<ServiceLimitsAction.GetServiceLimits>(ServiceLimitsActionType.GET_SERVICE_LIMITS),
     mergeMap(action => {
       return this.organizationService.getServiceLimits(action.payload.organizationId).pipe(
@@ -72,10 +72,10 @@ export class ServiceLimitsEffects {
         catchError(error => of(new ServiceLimitsAction.GetServiceLimitsFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getServiceLimitsFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getServiceLimitsFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ServiceLimitsAction.GetServiceLimitsFailure>(ServiceLimitsActionType.GET_SERVICE_LIMITS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -85,7 +85,7 @@ export class ServiceLimitsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private i18n: I18n,

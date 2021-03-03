@@ -19,7 +19,7 @@
 
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
@@ -56,8 +56,8 @@ import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-
 
 @Injectable()
 export class DocumentsEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(
       this.store$.pipe(select(selectCollectionsPermissions)),
@@ -83,10 +83,10 @@ export class DocumentsEffects {
         catchError(error => of(new DocumentsAction.GetFailure({error, query})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getSingle$: Observable<Action> = this.actions$.pipe(
+
+  public getSingle$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.GetSingle>(DocumentsActionType.GET_SINGLE),
     mergeMap(action =>
       this.documentService.getDocument(action.payload.collectionId, action.payload.documentId).pipe(
@@ -95,10 +95,10 @@ export class DocumentsEffects {
         catchError(() => EMPTY)
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getByIds$: Observable<Action> = this.actions$.pipe(
+
+  public getByIds$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.GetByIds>(DocumentsActionType.GET_BY_IDS),
     mergeMap(action =>
       this.documentService.getDocuments(action.payload.documentsIds).pipe(
@@ -107,20 +107,20 @@ export class DocumentsEffects {
         catchError(() => EMPTY)
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'documents.get.fail', value: 'Could not get records'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.Create>(DocumentsActionType.CREATE),
     mergeMap(action => {
       const {correlationId} = action.payload.document;
@@ -156,10 +156,10 @@ export class DocumentsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createWithLink$: Observable<Action> = this.actions$.pipe(
+
+  public createWithLink$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.CreateWithLink>(DocumentsActionType.CREATE_WITH_LINK),
     mergeMap(action => {
       const {
@@ -193,10 +193,10 @@ export class DocumentsEffects {
         catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.CreateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public createSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.CreateSuccess>(DocumentsActionType.CREATE_SUCCESS),
     mergeMap(action => {
       const {collectionId, id: documentId} = action.payload.document;
@@ -210,10 +210,10 @@ export class DocumentsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
@@ -229,10 +229,10 @@ export class DocumentsEffects {
       const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});
       return new NotificationsAction.Error({message: errorMessage});
     })
-  );
+  ));
 
-  @Effect()
-  public createChain$: Observable<Action> = this.actions$.pipe(
+
+  public createChain$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.CreateChain>(DocumentsActionType.CREATE_CHAIN),
     mergeMap(action => {
       const {documents, linkInstances, failureMessage} = action.payload;
@@ -251,10 +251,10 @@ export class DocumentsEffects {
         catchError(() => of(new NotificationsAction.Error({message: failureMessage})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public patch$: Observable<Action> = this.actions$.pipe(
+
+  public patch$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.Patch>(DocumentsActionType.PATCH),
     mergeMap(action => {
       const {collectionId, documentId} = action.payload;
@@ -271,10 +271,10 @@ export class DocumentsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public duplicate$: Observable<Action> = this.actions$.pipe(
+
+  public duplicate$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.Duplicate>(DocumentsActionType.DUPLICATE),
     mergeMap(action => {
       const {collectionId, documentIds, correlationId, onSuccess, onFailure} = action.payload;
@@ -287,10 +287,10 @@ export class DocumentsEffects {
         catchError(error => emitErrorActions(error, onFailure))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public duplicateSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public duplicateSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.DuplicateSuccess>(DocumentsActionType.DUPLICATE_SUCCESS),
     mergeMap(action => {
       const {documents} = action.payload;
@@ -305,16 +305,16 @@ export class DocumentsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public addFavorite$ = this.actions$.pipe(
+
+  public addFavorite$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
     mergeMap(action =>
       this.documentService
         .addFavorite(action.payload.collectionId, action.payload.documentId, action.payload.workspace)
         .pipe(
-          mergeMap(() => of()),
+          mergeMap(() => EMPTY),
           catchError(error =>
             of(
               new DocumentsAction.AddFavoriteFailure({
@@ -325,26 +325,26 @@ export class DocumentsEffects {
           )
         )
     )
-  );
+  ));
 
-  @Effect()
-  public addFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public addFavoriteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.AddFavoriteFailure>(DocumentsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.add.favorite.fail', value: 'Could not add the record to favorites'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public removeFavorite$ = this.actions$.pipe(
+
+  public removeFavorite$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
     mergeMap(action =>
       this.documentService
         .removeFavorite(action.payload.collectionId, action.payload.documentId, action.payload.workspace)
         .pipe(
-          mergeMap(() => of()),
+          mergeMap(() => EMPTY),
           catchError(error =>
             of(
               new DocumentsAction.RemoveFavoriteFailure({
@@ -355,10 +355,10 @@ export class DocumentsEffects {
           )
         )
     )
-  );
+  ));
 
-  @Effect()
-  public removeFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public removeFavoriteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.RemoveFavoriteFailure>(DocumentsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -368,20 +368,20 @@ export class DocumentsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.update.fail', value: 'Could not update the record'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public updateSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.UpdateSuccess>(DocumentsActionType.UPDATE_SUCCESS),
     mergeMap(action => {
       const {document, originalDocument} = action.payload;
@@ -396,20 +396,20 @@ export class DocumentsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateData$: Observable<Action> = this.actions$.pipe(
+
+  public updateData$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
     withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
     mergeMap(([action, documents]) => {
       const originalDocument = documents[action.payload.document.id];
       return of(new DocumentsAction.UpdateDataInternal({...action.payload, originalDocument}));
     })
-  );
+  ));
 
-  @Effect()
-  public updateDataInternal$: Observable<Action> = this.actions$.pipe(
+
+  public updateDataInternal$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.UpdateDataInternal>(DocumentsActionType.UPDATE_DATA_INTERNAL),
     mergeMap(action => {
       const originalDocument = action.payload.originalDocument;
@@ -420,20 +420,20 @@ export class DocumentsEffects {
         catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public patchData$: Observable<Action> = this.actions$.pipe(
+
+  public patchData$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
     withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
     mergeMap(([action, documents]) => {
       const originalDocument = documents[action.payload.document.id];
       return of(new DocumentsAction.PatchDataInternal({...action.payload, originalDocument}));
     })
-  );
+  ));
 
-  @Effect()
-  public checkDataHint$: Observable<Action> = this.actions$.pipe(
+
+  public checkDataHint$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.CheckDataHint>(DocumentsActionType.CHECK_DATA_HINT),
     withLatestFrom(
       this.store$.pipe(select(selectDocumentsDictionary)),
@@ -454,10 +454,10 @@ export class DocumentsEffects {
 
       return EMPTY;
     })
-  );
+  ));
 
-  @Effect()
-  public patchDataInternal$: Observable<Action> = this.actions$.pipe(
+
+  public patchDataInternal$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.PatchDataInternal>(DocumentsActionType.PATCH_DATA_INTERNAL),
     mergeMap(action => {
       const originalDocument = action.payload.originalDocument;
@@ -471,10 +471,10 @@ export class DocumentsEffects {
         catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public patchDataPending$: Observable<Action> = this.actions$.pipe(
+
+  public patchDataPending$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.PatchDataPending>(DocumentsActionType.PATCH_DATA_PENDING),
     mergeMap(action => {
       const {collectionId, correlationId, documentId: id} = action.payload;
@@ -485,10 +485,10 @@ export class DocumentsEffects {
         map(data => new DocumentsAction.PatchData({document: {collectionId, correlationId, id, data}}))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public patchMetaData$: Observable<Action> = this.actions$.pipe(
+
+  public patchMetaData$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.PatchMetaData>(DocumentsActionType.PATCH_META_DATA),
     mergeMap(action => {
       const {collectionId, documentId, metaData} = action.payload;
@@ -512,10 +512,10 @@ export class DocumentsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateMetaData$: Observable<Action> = this.actions$.pipe(
+
+  public updateMetaData$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.UpdateMetaData>(DocumentsActionType.UPDATE_META_DATA),
     mergeMap(action => {
       const {document} = action.payload;
@@ -537,10 +537,10 @@ export class DocumentsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE),
     mergeMap(action => {
       return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
@@ -557,10 +557,10 @@ export class DocumentsEffects {
         catchError(error => of(new DocumentsAction.DeleteFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public deleteConfirm$: Observable<Action> = this.actions$.pipe(
+
+  public deleteConfirm$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM),
     map((action: DocumentsAction.DeleteConfirm) => {
       const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete record'});
@@ -576,20 +576,20 @@ export class DocumentsEffects {
         type: 'danger',
       });
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.delete.fail', value: 'Could not delete the record'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public runRule$: Observable<Action> = this.actions$.pipe(
+
+  public runRule$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.RunRule>(DocumentsActionType.RUN_RULE),
     mergeMap(action => {
       const {collectionId, documentId, attributeId} = action.payload;
@@ -599,10 +599,10 @@ export class DocumentsEffects {
         catchError(error => of(new DocumentsAction.RunRuleFailure({...action.payload, error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public runRuleFailure$: Observable<Action> = this.actions$.pipe(
+
+  public runRuleFailure$ = createEffect(() => this.actions$.pipe(
     ofType<DocumentsAction.RunRuleFailure>(DocumentsActionType.RUN_RULE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -612,7 +612,7 @@ export class DocumentsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

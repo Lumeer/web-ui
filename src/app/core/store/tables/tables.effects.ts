@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {
@@ -127,8 +127,8 @@ import {objectsByIdMap} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class TablesEffects {
-  @Effect()
-  public createTable$: Observable<Action> = this.actions$.pipe(
+
+  public createTable$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
     filter(action => isSingleCollectionQuery(action.payload.query)),
     withLatestFrom(
@@ -191,16 +191,16 @@ export class TablesEffects {
 
       return actions;
     })
-  );
+  ));
 
-  @Effect()
-  public destroyTable$: Observable<Action> = this.actions$.pipe(
+
+  public destroyTable$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
     map(action => new TablesAction.RemoveTable({tableId: action.payload.tableId}))
-  );
+  ));
 
-  @Effect()
-  public createPart$: Observable<Action> = this.actions$.pipe(
+
+  public createPart$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.CreatePart>(TablesActionType.CREATE_PART),
     mergeMap(action =>
       this.store$.select(selectTableById(action.payload.tableId)).pipe(
@@ -244,10 +244,10 @@ export class TablesEffects {
         )
       )
     )
-  );
+  ));
 
-  @Effect()
-  public switchParts$: Observable<Action> = this.actions$.pipe(
+
+  public switchParts$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.SwitchParts>(TablesActionType.SWITCH_PARTS),
     mergeMap(action => this.getLatestTable(action)),
     filter(({action, table}) => table.config.parts.length === 3),
@@ -282,10 +282,10 @@ export class TablesEffects {
         }),
       ];
     })
-  );
+  ));
 
-  @Effect()
-  public removePart$: Observable<Action> = this.actions$.pipe(
+
+  public removePart$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.RemovePart>(TablesActionType.REMOVE_PART),
     mergeMap(action => this.getLatestTable(action)),
     withLatestFrom(this.store$.select(selectViewQuery)),
@@ -310,10 +310,10 @@ export class TablesEffects {
         },
       });
     })
-  );
+  ));
 
-  @Effect()
-  public addColumn$: Observable<Action> = this.actions$.pipe(
+
+  public addColumn$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.AddColumn>(TablesActionType.ADD_COLUMN),
     mergeMap(action => this.getLatestTable(action)),
     mergeMap(({action, table}) =>
@@ -328,7 +328,7 @@ export class TablesEffects {
         )
       )
     )
-  );
+  ));
 
   private createNewEmptyColumn(table: TableModel, cursor: TableCursor): Observable<TableConfigColumn> {
     const part = table.config.parts[cursor.partIndex];
@@ -361,8 +361,8 @@ export class TablesEffects {
     }
   }
 
-  @Effect()
-  public splitColumn$: Observable<Action> = this.actions$.pipe(
+
+  public splitColumn$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.SplitColumn>(TablesActionType.SPLIT_COLUMN),
     mergeMap(action =>
       this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
@@ -402,10 +402,10 @@ export class TablesEffects {
 
       return [firstChildAttributeAction, new TablesAction.SetCursor({cursor: null})];
     })
-  );
+  ));
 
-  @Effect()
-  public hideColumn$: Observable<Action> = this.actions$.pipe(
+
+  public hideColumn$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.HideColumn>(TablesActionType.HIDE_COLUMN),
     mergeMap(action => this.getLatestTable(action)),
     mergeMap(({action, table}) => {
@@ -469,10 +469,10 @@ export class TablesEffects {
 
       return actions;
     })
-  );
+  ));
 
-  @Effect()
-  public showColumns$: Observable<Action> = this.actions$.pipe(
+
+  public showColumns$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.ShowColumns>(TablesActionType.SHOW_COLUMNS),
     mergeMap(action => this.getLatestTable(action)),
     mergeMap(({action, table}) => {
@@ -509,10 +509,10 @@ export class TablesEffects {
         columns,
       });
     })
-  );
+  ));
 
-  @Effect()
-  public removeColumn$: Observable<Action> = this.actions$.pipe(
+
+  public removeColumn$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.RemoveColumn>(TablesActionType.REMOVE_COLUMN),
     mergeMap(action =>
       this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
@@ -534,10 +534,10 @@ export class TablesEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public resizeColumn$: Observable<Action> = this.actions$.pipe(
+
+  public resizeColumn$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
     mergeMap(action => this.getLatestTable(action)),
     map(({action, table}) => {
@@ -552,10 +552,10 @@ export class TablesEffects {
         columns: [resizedColumn],
       });
     })
-  );
+  ));
 
-  @Effect()
-  public syncColumns$: Observable<Action> = this.actions$.pipe(
+
+  public syncColumns$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.SyncColumns>(TablesActionType.SYNC_COLUMNS),
     mergeMap(action => {
       const {cursor} = action.payload;
@@ -591,7 +591,7 @@ export class TablesEffects {
         )
       );
     })
-  );
+  ));
 
   private selectResource$(part: TableConfigPart): Observable<AttributesResource> {
     if (part.collectionId) {
@@ -600,8 +600,8 @@ export class TablesEffects {
     return this.store$.pipe(select(selectLinkTypeById(part.linkTypeId)));
   }
 
-  @Effect()
-  public syncPrimaryRows$: Observable<Action> = this.actions$.pipe(
+
+  public syncPrimaryRows$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
     debounceTime(100), // otherwise unwanted parallel syncing occurs
     switchMap(action =>
@@ -689,10 +689,10 @@ export class TablesEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public syncLinkedRows$: Observable<Action> = this.actions$.pipe(
+
+  public syncLinkedRows$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
     mergeMap(action => {
       const {cursor} = action.payload;
@@ -811,10 +811,10 @@ export class TablesEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public cloneRow$: Observable<Action> = this.actions$.pipe(
+
+  public cloneRow$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.CloneRow>(TablesActionType.CLONE_ROW),
     mergeMap(action => {
       const {cursor} = action.payload;
@@ -881,10 +881,10 @@ export class TablesEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public indentRow$: Observable<Action> = this.actions$.pipe(
+
+  public indentRow$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.IndentRow>(TablesActionType.INDENT_ROW),
     map(action => action.payload.cursor),
     filter(cursor => cursor.partIndex === 0 && cursor.rowPath[0] > 0),
@@ -917,10 +917,10 @@ export class TablesEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public outdentRow$: Observable<Action> = this.actions$.pipe(
+
+  public outdentRow$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.OutdentRow>(TablesActionType.OUTDENT_ROW),
     map(action => action.payload.cursor),
     filter(cursor => cursor.partIndex === 0),
@@ -956,10 +956,10 @@ export class TablesEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  public copyValue$: Observable<Action> = this.actions$.pipe(
+
+  public copyValue$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.CopyValue>(TablesActionType.COPY_VALUE),
     mergeMap(action =>
       combineLatest([
@@ -992,10 +992,10 @@ export class TablesEffects {
         })
       )
     )
-  );
+  ), {dispatch: false});
 
-  @Effect({dispatch: false})
-  public copyRowValues$: Observable<Action> = this.actions$.pipe(
+
+  public copyRowValues$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.CopyRowValues>(TablesActionType.COPY_ROW_VALUES),
     mergeMap(action =>
       combineLatest([
@@ -1039,10 +1039,10 @@ export class TablesEffects {
         })
       )
     )
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public moveRowUp$: Observable<Action> = this.actions$.pipe(
+
+  public moveRowUp$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.MoveRowUp>(TablesActionType.MOVE_ROW_UP),
     mergeMap(action => {
       const {cursor} = action.payload;
@@ -1101,10 +1101,10 @@ export class TablesEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public moveRowDown$: Observable<Action> = this.actions$.pipe(
+
+  public moveRowDown$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.MoveRowDown>(TablesActionType.MOVE_ROW_DOWN),
     mergeMap(action => {
       const {cursor} = action.payload;
@@ -1188,10 +1188,10 @@ export class TablesEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public setCursor$: Observable<Action> = this.actions$.pipe(
+
+  public setCursor$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
     mergeMap(action => {
       const {cursor} = action.payload;
@@ -1201,10 +1201,10 @@ export class TablesEffects {
         map(table => new NavigationAction.SetViewCursor({cursor: createViewCursorFromTableCursor(cursor, table)}))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public moveCursor$: Observable<Action> = this.actions$.pipe(
+
+  public moveCursor$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
     withLatestFrom(this.store$.select(selectTableCursor).pipe(filter(cursor => !!cursor))),
     concatMap(([action, cursor]) =>
@@ -1221,10 +1221,10 @@ export class TablesEffects {
         return [];
       }
     })
-  );
+  ));
 
-  @Effect()
-  public useViewCursor$: Observable<Action> = this.actions$.pipe(
+
+  public useViewCursor$ = createEffect(() => this.actions$.pipe(
     ofType<TablesAction.UseViewCursor>(TablesActionType.USE_VIEW_CURSOR),
     withLatestFrom(
       this.store$.pipe(select(selectViewCursor)),
@@ -1239,7 +1239,7 @@ export class TablesEffects {
       const cursor = createTableCursorFromViewCursor(viewCursor, table);
       return cursor ? [new TablesAction.SetCursor({cursor})] : [];
     })
-  );
+  ));
 
   public constructor(
     private actions$: Actions,

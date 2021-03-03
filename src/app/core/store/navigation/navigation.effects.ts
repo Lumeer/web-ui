@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
@@ -37,8 +37,8 @@ import {selectViewQuery} from '../views/views.state';
 
 @Injectable()
 export class NavigationEffects {
-  @Effect()
-  public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
+
+  public addLinkToQuery$ = createEffect(() => this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
     withLatestFrom(this.store$.pipe(select(selectViewQuery))),
     map(([action, query]) => {
@@ -48,10 +48,10 @@ export class NavigationEffects {
 
       return newQueryAction({...query, stems: [newStem]});
     })
-  );
+  ));
 
-  @Effect()
-  public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
+
+  public addCollectionToQuery$ = createEffect(() => this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
     withLatestFrom(this.store$.pipe(select(selectViewQuery))),
     map(([action, query]) => {
@@ -60,10 +60,10 @@ export class NavigationEffects {
 
       return newQueryAction({...query, stems});
     })
-  );
+  ));
 
-  @Effect()
-  public navigateToPreviousUrl$: Observable<Action> = this.actions$.pipe(
+
+  public navigateToPreviousUrl$ = createEffect(() => this.actions$.pipe(
     ofType<NavigationAction.NavigateToPreviousUrl>(NavigationActionType.NAVIGATE_TO_PREVIOUS_URL),
     filter(action => !!action.payload.organizationCode && !!action.payload.projectCode),
     map(action => {
@@ -79,16 +79,16 @@ export class NavigationEffects {
       const queryParams = this.router.parseUrl(previousUrl).queryParams;
       return new RouterAction.Go({path: [url], queryParams});
     })
-  );
+  ));
 
-  @Effect()
-  public setQuery$: Observable<Action> = this.actions$.pipe(
+
+  public setQuery$ = createEffect(() => this.actions$.pipe(
     ofType<NavigationAction.SetQuery>(NavigationActionType.SET_QUERY),
     map(action => newQueryAction(action.payload.query))
-  );
+  ));
 
-  @Effect()
-  public setViewCursor$: Observable<Action> = this.actions$.pipe(
+
+  public setViewCursor$ = createEffect(() => this.actions$.pipe(
     ofType<NavigationAction.SetViewCursor>(NavigationActionType.SET_VIEW_CURSOR),
     withLatestFrom(this.moduleLazyLoadingService.observeLazyLoading()),
     // otherwise it fails to redirect to lazy loaded module when cursor is being changed at the same time
@@ -106,10 +106,10 @@ export class NavigationEffects {
           },
         })
     )
-  );
+  ));
 
-  @Effect()
-  public removeViewFromUrl$: Observable<Action> = this.actions$.pipe(
+
+  public removeViewFromUrl$ = createEffect(() => this.actions$.pipe(
     ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
     filter(([, navigation]) => !!navigation.workspace && !!navigation.perspective),
@@ -133,7 +133,7 @@ export class NavigationEffects {
       const extras: NavigationExtras = {queryParams, queryParamsHandling: 'merge'};
       return new RouterAction.Go({path, extras});
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

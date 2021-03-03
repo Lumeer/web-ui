@@ -20,14 +20,14 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
-import {EMPTY, from, Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
-import {CollectionDto} from '../../dto';
+import {CollectionDto, PermissionDto} from '../../dto';
 import {ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -61,8 +61,8 @@ import {createCallbackActions} from '../utils/store.utils';
 
 @Injectable()
 export class CollectionsEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.Get>(CollectionsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectCollectionsLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
@@ -74,10 +74,10 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.GetFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getSingle$: Observable<Action> = this.actions$.pipe(
+
+  public getSingle$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.GetSingle>(CollectionsActionType.GET_SINGLE),
     mergeMap(action => {
       return this.collectionService.getCollection(action.payload.collectionId).pipe(
@@ -86,20 +86,20 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.GetFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collections.get.fail', value: 'Could not get tables'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.Create>(CollectionsActionType.CREATE),
     mergeMap(action => {
       const {collection, callback} = action.payload;
@@ -138,10 +138,10 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.CreateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
@@ -157,10 +157,10 @@ export class CollectionsEffects {
       const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create table'});
       return new NotificationsAction.Error({message: errorMessage});
     })
-  );
+  ));
 
-  @Effect()
-  public import$: Observable<Action> = this.actions$.pipe(
+
+  public import$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT),
     mergeMap(action => {
       const dto = convertImportedCollectionModelToDto(action.payload.importedCollection);
@@ -179,10 +179,10 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.ImportFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public importFailure$: Observable<Action> = this.actions$.pipe(
+
+  public importFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE),
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
@@ -198,10 +198,10 @@ export class CollectionsEffects {
       const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import table'});
       return new NotificationsAction.Error({message: errorMessage});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.Update>(CollectionsActionType.UPDATE),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
     mergeMap(([action, collections]) => {
@@ -215,20 +215,20 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.UpdateFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.update.fail', value: 'Could not update table'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public upsertRule$: Observable<Action> = this.actions$.pipe(
+
+  public upsertRule$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.UpsertRule>(CollectionsActionType.UPSERT_RULE),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
     mergeMap(([action, collections]) => {
@@ -255,20 +255,20 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.UpsertRuleFailure({error}), ...createCallbackActions(onFailure)))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public upsertRuleFailure$: Observable<Action> = this.actions$.pipe(
+
+  public upsertRuleFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save rule'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public updatePurpose$: Observable<Action> = this.actions$.pipe(
+
+  public updatePurpose$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.UpdatePurpose>(CollectionsActionType.UPDATE_PURPOSE),
     mergeMap(action => {
       const purposeDto = convertCollectionPurposeModelToDto(action.payload.purpose);
@@ -278,20 +278,20 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.UpdatePurposeFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updatePurposeFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updatePurposeFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.UpdatePurposeFailure>(CollectionsActionType.UPDATE_PURPOSE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.update.purpose.fail', value: 'Could not update table purpose'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE),
     mergeMap(action =>
       this.collectionService.removeCollection(action.payload.collectionId).pipe(
@@ -308,10 +308,10 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.DeleteFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public deleteSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
     mergeMap(([action, navigation]) => {
@@ -325,33 +325,33 @@ export class CollectionsEffects {
 
       return actions;
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.delete.fail', value: 'Could not delete table'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public addFavorite$ = this.actions$.pipe(
+
+  public addFavorite$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
     mergeMap(action =>
       this.collectionService.addFavorite(action.payload.collectionId).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error =>
           of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error}))
         )
       )
     )
-  );
+  ));
 
-  @Effect()
-  public addFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public addFavoriteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -361,23 +361,23 @@ export class CollectionsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public removeFavorite$ = this.actions$.pipe(
+
+  public removeFavorite$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
     mergeMap(action =>
       this.collectionService.removeFavorite(action.payload.collectionId).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error =>
           of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error}))
         )
       )
     )
-  );
+  ));
 
-  @Effect()
-  public removeFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public removeFavoriteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -387,10 +387,10 @@ export class CollectionsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public renameAttribute$ = this.actions$.pipe(
+
+  public renameAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RenameAttribute>(CollectionsActionType.RENAME_ATTRIBUTE),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
     tap(([action]) => this.store$.dispatch(new CollectionsAction.RenameAttributeSuccess(action.payload))),
@@ -401,16 +401,16 @@ export class CollectionsEffects {
       const oldName = attribute?.name;
       const attributeDto = convertAttributeModelToDto({...attribute, name});
       return this.collectionService.updateAttribute(collectionId, attributeId, attributeDto).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error =>
           of(new CollectionsAction.RenameAttributeFailure({error, collectionId, attributeId, oldName}))
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public setDefaultAttribute$ = this.actions$.pipe(
+
+  public setDefaultAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.SetDefaultAttribute>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE),
     tap(action => this.store$.dispatch(new CollectionsAction.SetDefaultAttributeSuccess(action.payload))),
     withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
@@ -419,16 +419,16 @@ export class CollectionsEffects {
       const collection = collections[collectionId];
       const oldDefaultAttributeId = collection.defaultAttributeId;
       return this.collectionService.setDefaultAttribute(collectionId, attributeId).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error =>
           of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId}))
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public setDefaultAttributeFailure$: Observable<Action> = this.actions$.pipe(
+
+  public setDefaultAttributeFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.SetDefaultAttributeFailure>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -438,10 +438,10 @@ export class CollectionsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public createAttributes$: Observable<Action> = this.actions$.pipe(
+
+  public createAttributes$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.CreateAttributes>(CollectionsActionType.CREATE_ATTRIBUTES),
     mergeMap(action => {
       const attributesDto = action.payload.attributes.map(attr => convertAttributeModelToDto(attr));
@@ -478,20 +478,20 @@ export class CollectionsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createAttributesFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createAttributesFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.CreateAttributesFailure>(CollectionsActionType.CREATE_ATTRIBUTES_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.create.attributes.fail', value: 'Could not create attributes'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public changeAttribute$: Observable<Action> = this.actions$.pipe(
+
+  public changeAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.ChangeAttribute>(CollectionsActionType.CHANGE_ATTRIBUTE),
     mergeMap(action => {
       const {attributeId, collectionId, onSuccess, onFailure} = action.payload;
@@ -516,24 +516,24 @@ export class CollectionsEffects {
           if (onFailure) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
           }
-          return from(actions);
+          return of(...actions);
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public changeAttributeFailure$: Observable<Action> = this.actions$.pipe(
+
+  public changeAttributeFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.change.attribute.fail', value: 'Could not change the attribute'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public removeAttribute$: Observable<Action> = this.actions$.pipe(
+
+  public removeAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE),
     mergeMap(action => {
       const {collectionId, attributeId} = action.payload;
@@ -558,31 +558,32 @@ export class CollectionsEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public removeAttributeFailure$: Observable<Action> = this.actions$.pipe(
+
+  public removeAttributeFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RemoveAttributeFailure>(CollectionsActionType.REMOVE_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Could not delete the attribute'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public changePermission$ = this.actions$.pipe(
+
+  public changePermission$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
     mergeMap(action => {
       const workspace = action.payload.workspace;
       const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
 
-      let observable;
+      let observable: Observable<PermissionDto>;
       if (action.payload.type === PermissionType.Users) {
         observable = this.collectionService.updateUserPermission(dtos, workspace);
       } else {
         observable = this.collectionService.updateGroupPermission(dtos, workspace);
       }
+
       return observable.pipe(
         mergeMap(() => EMPTY),
         catchError(error => {
@@ -596,10 +597,10 @@ export class CollectionsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public changePermissionFailure$: Observable<Action> = this.actions$.pipe(
+
+  public changePermissionFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -609,10 +610,10 @@ export class CollectionsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public runRule$: Observable<Action> = this.actions$.pipe(
+
+  public runRule$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RunRule>(CollectionsActionType.RUN_RULE),
     mergeMap(action => {
       const {collectionId, ruleId} = action.payload;
@@ -622,10 +623,10 @@ export class CollectionsEffects {
         catchError(error => of(new CollectionsAction.RunRuleFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public runRuleFailure$: Observable<Action> = this.actions$.pipe(
+
+  public runRuleFailure$ = createEffect(() => this.actions$.pipe(
     ofType<CollectionsAction.RunRuleFailure>(CollectionsActionType.RUN_RULE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -635,7 +636,7 @@ export class CollectionsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

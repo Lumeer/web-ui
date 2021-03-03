@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {EMPTY, Observable, of} from 'rxjs';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {delay, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
@@ -33,8 +33,8 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class WorkflowsEffects {
-  @Effect()
-  public setOpenedDocument$: Observable<Action> = this.actions$.pipe(
+
+  public setOpenedDocument$ = createEffect(() => this.actions$.pipe(
     ofType<WorkflowsAction.SetOpenedDocument>(WorkflowsActionType.SET_OPENED_DOCUMENT),
     map(
       action =>
@@ -50,10 +50,10 @@ export class WorkflowsEffects {
           },
         })
     )
-  );
+  ));
 
-  @Effect()
-  public setSelectedCell$: Observable<Action> = this.actions$.pipe(
+
+  public setSelectedCell$ = createEffect(() => this.actions$.pipe(
     ofType<WorkflowsAction.SetSelectedCell>(WorkflowsActionType.SET_SELECTED_CELL),
     withLatestFrom(this.store$.pipe(select(selectViewCursor))),
     mergeMap(([action, viewCursor]) => {
@@ -66,10 +66,10 @@ export class WorkflowsEffects {
 
       return EMPTY;
     })
-  );
+  ));
 
-  @Effect()
-  public resetOpenedDocument$: Observable<Action> = this.actions$.pipe(
+
+  public resetOpenedDocument$ = createEffect(() => this.actions$.pipe(
     ofType<WorkflowsAction.ResetOpenedDocument>(WorkflowsActionType.RESET_OPENED_DOCUMENT),
     delay(100),
     withLatestFrom(this.store$.pipe(select(selectWorkflowSelectedDocumentId))),
@@ -82,7 +82,7 @@ export class WorkflowsEffects {
 
       return EMPTY;
     })
-  );
+  ));
 
   constructor(private actions$: Actions, private store$: Store<AppState>) {}
 }

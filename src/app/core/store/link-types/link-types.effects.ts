@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
@@ -39,8 +39,8 @@ import {selectViewQuery} from '../views/views.state';
 
 @Injectable()
 export class LinkTypesEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.Get>(LinkTypesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectLinkTypesLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
@@ -52,10 +52,10 @@ export class LinkTypesEffects {
         catchError(error => of(new LinkTypesAction.GetFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getSingle$: Observable<Action> = this.actions$.pipe(
+
+  public getSingle$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.GetSingle>(LinkTypesActionType.GET_SINGLE),
     mergeMap(action => {
       return this.linkTypeService.getLinkType(action.payload.linkTypeId).pipe(
@@ -64,20 +64,20 @@ export class LinkTypesEffects {
         catchError(error => of(new LinkTypesAction.GetFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.types.get.fail', value: 'Could not get link types'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.Create>(LinkTypesActionType.CREATE),
     mergeMap(action => {
       const linkTypeDto = convertLinkTypeModelToDto(action.payload.linkType);
@@ -93,20 +93,20 @@ export class LinkTypesEffects {
         )
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.type.create.fail', value: 'Could not create the link type'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.Update>(LinkTypesActionType.UPDATE),
     tap(action => this.store$.dispatch(new LinkTypesAction.UpdateInternal({linkType: action.payload.linkType}))),
     mergeMap(action => {
@@ -117,20 +117,20 @@ export class LinkTypesEffects {
         catchError(error => of(new LinkTypesAction.UpdateFailure({error, linkType: action.payload.linkType})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.type.update.fail', value: 'Could not update the link type'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public upsertRule$: Observable<Action> = this.actions$.pipe(
+
+  public upsertRule$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.UpsertRule>(LinkTypesActionType.UPSERT_RULE),
     withLatestFrom(this.store$.pipe(select(selectLinkTypesDictionary))),
     mergeMap(([action, linkTypesMap]) => {
@@ -154,20 +154,20 @@ export class LinkTypesEffects {
         catchError(error => of(new LinkTypesAction.UpsertRuleFailure({error}), ...createCallbackActions(onFailure)))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public upsertRuleFailure$: Observable<Action> = this.actions$.pipe(
+
+  public upsertRuleFailure$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save automation'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.Delete>(LinkTypesActionType.DELETE),
     mergeMap(action =>
       this.linkTypeService.deleteLinkType(action.payload.linkTypeId).pipe(
@@ -175,10 +175,10 @@ export class LinkTypesEffects {
         catchError(error => of(new LinkTypesAction.DeleteFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public deleteSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.DeleteSuccess>(LinkInstancesActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectViewQuery))),
     mergeMap(([action]) => {
@@ -187,20 +187,20 @@ export class LinkTypesEffects {
 
       return actions;
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.type.delete.fail', value: 'Could not delete the link type'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public createAttributes$: Observable<Action> = this.actions$.pipe(
+
+  public createAttributes$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.CreateAttributes>(LinkTypesActionType.CREATE_ATTRIBUTES),
     mergeMap(action => {
       const attributesDto = action.payload.attributes.map(attr => convertAttributeModelToDto(attr));
@@ -224,10 +224,10 @@ export class LinkTypesEffects {
         catchError(error => emitErrorActions(error, onFailure))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateAttribute$: Observable<Action> = this.actions$.pipe(
+
+  public updateAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.UpdateAttribute>(LinkTypesActionType.UPDATE_ATTRIBUTE),
     mergeMap(action => {
       const {attributeId, linkTypeId, onSuccess, onFailure} = action.payload;
@@ -242,10 +242,10 @@ export class LinkTypesEffects {
         catchError(error => emitErrorActions(error, onFailure))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public renameAttribute$ = this.actions$.pipe(
+
+  public renameAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.RenameAttribute>(LinkTypesActionType.RENAME_ATTRIBUTE),
     withLatestFrom(this.store$.pipe(select(selectLinkTypesDictionary))),
     tap(([action]) => this.store$.dispatch(new LinkTypesAction.RenameAttributeSuccess(action.payload))),
@@ -256,14 +256,14 @@ export class LinkTypesEffects {
       const oldName = attribute?.name;
       const attributeDto = convertAttributeModelToDto({...attribute, name});
       return this.linkTypeService.updateAttribute(linkTypeId, attributeId, attributeDto).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error => of(new LinkTypesAction.RenameAttributeFailure({error, linkTypeId, attributeId, oldName})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public deleteAttribute$: Observable<Action> = this.actions$.pipe(
+
+  public deleteAttribute$ = createEffect(() => this.actions$.pipe(
     ofType<LinkTypesAction.DeleteAttribute>(LinkTypesActionType.DELETE_ATTRIBUTE),
     mergeMap(action => {
       const {linkTypeId, attributeId, onSuccess, onFailure} = action.payload;
@@ -281,7 +281,7 @@ export class LinkTypesEffects {
         })
       );
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

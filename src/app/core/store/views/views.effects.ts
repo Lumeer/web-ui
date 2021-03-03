@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of, pipe} from 'rxjs';
@@ -69,8 +69,8 @@ import {UsersAction} from '../users/users.action';
 
 @Injectable()
 export class ViewsEffects {
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
+
+  public get$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.Get>(ViewsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectViewsLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
@@ -82,10 +82,10 @@ export class ViewsEffects {
         catchError(error => of(new ViewsAction.GetFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public getOne$: Observable<Action> = this.actions$.pipe(
+
+  public getOne$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.GetOne>(ViewsActionType.GET_BY_CODE),
     mergeMap(action =>
       this.viewService.getView(action.payload.viewId).pipe(
@@ -94,20 +94,20 @@ export class ViewsEffects {
         catchError(error => of(new ViewsAction.GetFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.GetFailure>(ViewsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'views.get.fail', value: 'Could not get views'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
+
+  public create$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.Create>(ViewsActionType.CREATE),
     mergeMap(action => {
       const viewDto = convertViewModelToDto(action.payload.view);
@@ -131,10 +131,10 @@ export class ViewsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public createSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public createSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation)), this.store$.pipe(select(selectViewsDictionary))),
     map(([action, navigation, views]) => {
@@ -172,20 +172,20 @@ export class ViewsEffects {
         nextActions: action.payload.nextActions,
       });
     })
-  );
+  ));
 
-  @Effect()
-  public createFailure$: Observable<Action> = this.actions$.pipe(
+
+  public createFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.CreateFailure>(ViewsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'view.create.fail', value: 'Could not create the view'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
+
+  public update$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.Update>(ViewsActionType.UPDATE),
     mergeMap(action => {
       const viewDto = convertViewModelToDto(action.payload.view);
@@ -209,10 +209,10 @@ export class ViewsEffects {
         })
       );
     })
-  );
+  ));
 
-  @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.pipe(
+
+  public updateSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
     mergeMap(([action, navigation]) => {
@@ -223,20 +223,20 @@ export class ViewsEffects {
       }
       return [];
     })
-  );
+  ));
 
-  @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.pipe(
+
+  public updateFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'view.update.fail', value: 'Could not update the view'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public resetViewConfig$: Observable<Action> = this.actions$.pipe(
+
+  public resetViewConfig$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.ResetViewConfig>(ViewsActionType.RESET_VIEW_CONFIG),
     withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
     filter(([action, viewsMap]) => !!viewsMap[action.payload.viewId]),
@@ -275,10 +275,10 @@ export class ViewsEffects {
           return EMPTY;
       }
     })
-  );
+  ));
 
-  @Effect()
-  public delete$: Observable<Action> = this.actions$.pipe(
+
+  public delete$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.Delete>(ViewsActionType.DELETE),
     withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
     filter(([action, viewsMap]) => !!viewsMap[action.payload.viewId]),
@@ -289,10 +289,10 @@ export class ViewsEffects {
         catchError(error => of(new ViewsAction.DeleteFailure({error})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public deleteSuccess$ = this.actions$.pipe(
+
+  public deleteSuccess$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.DeleteSuccess>(ViewsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
     mergeMap(([action, navigation]) => {
@@ -302,20 +302,20 @@ export class ViewsEffects {
       }
       return [];
     })
-  );
+  ));
 
-  @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public deleteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.DeleteFailure>(ViewsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'view.delete.fail', value: 'Could not delete the view'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public setUserPermission$ = this.actions$.pipe(
+
+  public setUserPermission$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.SetUserPermissions>(ViewsActionType.SET_USER_PERMISSIONS),
     concatMap(action => {
       const {permissions, viewId, newUsers, newUsersRoles} = action.payload;
@@ -345,7 +345,7 @@ export class ViewsEffects {
         })
       );
     })
-  );
+  ));
 
   private addUserToWorkspace(newUsers: User[], newUsersRoles: Record<string, string[]>): Observable<Permission[]> {
     if (newUsers.length === 0) {
@@ -368,8 +368,8 @@ export class ViewsEffects {
     );
   }
 
-  @Effect()
-  public setPermissionFailure$: Observable<Action> = this.actions$.pipe(
+
+  public setPermissionFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.SetPermissionsFailure>(ViewsActionType.SET_PERMISSIONS_FAILURE),
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
@@ -380,14 +380,14 @@ export class ViewsEffects {
       const message = this.i18n({id: 'view.change.permission.fail', value: 'Could not change the view permissions'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public addFavorite$ = this.actions$.pipe(
+
+  public addFavorite$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.AddFavorite>(ViewsActionType.ADD_FAVORITE),
     mergeMap(action =>
       this.viewService.addFavorite(action.payload.viewId, action.payload.workspace).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error =>
           of(
             new ViewsAction.AddFavoriteFailure({
@@ -398,24 +398,24 @@ export class ViewsEffects {
         )
       )
     )
-  );
+  ));
 
-  @Effect()
-  public addFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public addFavoriteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.AddFavoriteFailure>(ViewsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'view.add.favorite.fail', value: 'Could not add the view to favorites'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public removeFavorite$ = this.actions$.pipe(
+
+  public removeFavorite$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.RemoveFavorite>(ViewsActionType.REMOVE_FAVORITE),
     mergeMap(action =>
       this.viewService.removeFavorite(action.payload.viewId, action.payload.workspace).pipe(
-        mergeMap(() => of()),
+        mergeMap(() => EMPTY),
         catchError(error =>
           of(
             new ViewsAction.RemoveFavoriteFailure({
@@ -426,10 +426,10 @@ export class ViewsEffects {
         )
       )
     )
-  );
+  ));
 
-  @Effect()
-  public removeFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+
+  public removeFavoriteFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.RemoveFavoriteFailure>(ViewsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
@@ -439,10 +439,10 @@ export class ViewsEffects {
       });
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect({dispatch: false})
-  public setDefaultConfig$: Observable<Action> = this.actions$.pipe(
+
+  public setDefaultConfig$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.SetDefaultConfig>(ViewsActionType.SET_DEFAULT_CONFIG),
     map(action => ({...action.payload.model, updatedAt: new Date()})),
     tap(model => this.store$.dispatch(new ViewsAction.SetDefaultConfigSuccess({model}))),
@@ -459,10 +459,10 @@ export class ViewsEffects {
           catchError(() => EMPTY)
         );
     })
-  );
+  ), {dispatch: false});
 
-  @Effect()
-  public getDefaultConfigs$: Observable<Action> = this.actions$.pipe(
+
+  public getDefaultConfigs$ = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.GetDefaultConfigs>(ViewsActionType.GET_DEFAULT_CONFIGS),
     mergeMap(action => {
       return this.viewService.getDefaultConfigs(action.payload.workspace).pipe(
@@ -471,10 +471,10 @@ export class ViewsEffects {
         catchError(() => of(new ViewsAction.GetDefaultConfigsSuccess({configs: []})))
       );
     })
-  );
+  ));
 
-  @Effect()
-  public resetDefaultConfigBySnapshot: Observable<Action> = this.actions$.pipe(
+
+  public resetDefaultConfigBySnapshot = createEffect(() => this.actions$.pipe(
     ofType<ViewsAction.ResetDefaultConfigBySnapshot>(ViewsActionType.RESET_DEFAULT_CONFIG_BY_SNAPSHOT),
     withLatestFrom(this.store$.pipe(select(selectViewsState))),
     mergeMap(([action, viewsState]) => {
@@ -488,7 +488,7 @@ export class ViewsEffects {
         new ViewsAction.SetDefaultConfigSnapshot({}),
       ];
     })
-  );
+  ));
 
   constructor(
     private actions$: Actions,

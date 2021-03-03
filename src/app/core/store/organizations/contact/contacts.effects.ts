@@ -20,7 +20,7 @@
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {ContactConverter} from './contact.converter';
@@ -32,8 +32,8 @@ import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class ContactsEffects {
-  @Effect()
-  public getContact$: Observable<Action> = this.actions$.pipe(
+
+  public getContact$ = createEffect(() => this.actions$.pipe(
     ofType<ContactsAction.GetContact>(ContactsActionType.GET_CONTACT),
     mergeMap(action =>
       this.organizationService.getOrganizationContact(action.payload.organizationId).pipe(
@@ -41,20 +41,20 @@ export class ContactsEffects {
         catchError(error => of(new ContactsAction.GetContactFailure({error})))
       )
     )
-  );
+  ));
 
-  @Effect()
-  public getContactFailure$: Observable<Action> = this.actions$.pipe(
+
+  public getContactFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ContactsAction.GetContactFailure>(ContactsActionType.GET_CONTACT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.contact.get.fail', value: 'Could not read contact information'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
-  @Effect()
-  public setContact$: Observable<Action> = this.actions$.pipe(
+
+  public setContact$ = createEffect(() => this.actions$.pipe(
     ofType<ContactsAction.SetContact>(ContactsActionType.SET_CONTACT),
     mergeMap(action =>
       this.organizationService
@@ -64,17 +64,17 @@ export class ContactsEffects {
           catchError(error => of(new ContactsAction.SetContactFailure({error})))
         )
     )
-  );
+  ));
 
-  @Effect()
-  public setContactFailure$: Observable<Action> = this.actions$.pipe(
+
+  public setContactFailure$ = createEffect(() => this.actions$.pipe(
     ofType<ContactsAction.GetContactFailure>(ContactsActionType.SET_CONTACT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.contact.set.fail', value: 'Could not save contact information'});
       return new NotificationsAction.Error({message});
     })
-  );
+  ));
 
   constructor(
     private i18n: I18n,

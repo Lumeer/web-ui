@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {map, take, tap} from 'rxjs/operators';
 import {ModalsAction, ModalsActionType} from './modals.action';
@@ -30,8 +30,8 @@ import {BsModalService} from 'ngx-bootstrap/modal';
 
 @Injectable()
 export class ModalsEffects {
-  @Effect()
-  public hide$: Observable<Action> = this.actions$.pipe(
+
+  public hide$ = createEffect(() => this.actions$.pipe(
     ofType<ModalsAction.Hide>(ModalsActionType.HIDE),
     tap(() => {
       this.toastrService.toasts.forEach(toast => toast.toastRef.close());
@@ -40,7 +40,7 @@ export class ModalsEffects {
         .subscribe(modalsIds => modalsIds.forEach(modalId => this.modalService.hide(modalId)));
     }),
     map(() => new ModalsAction.Clear())
-  );
+  ));
 
   constructor(
     private actions$: Actions,
