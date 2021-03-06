@@ -6,7 +6,6 @@
 
   <select-item-with-constraint class="d-block w-100 mt-2"
                                [attributesResources]="attributesResources"
-                               [restrictedIds]="yAxisType | axisRestrictedIds:config"
                                placeholderText="Values"
                                i18n-placeholderText="perspective.chart.config.value.placeholder"
                                [buttonClasses]="buttonClasses"
@@ -22,7 +21,6 @@
 
   <select-item-with-constraint class="d-block w-100 mt-2"
                                [attributesResources]="attributesResources"
-                               [restrictedIds]="yAxisType | axisRestrictedIds:config:true"
                                placeholderText="Data set"
                                i18n-placeholderText="perspective.chart.config.dataSet.placeholder"
                                [buttonClasses]="buttonClasses"
