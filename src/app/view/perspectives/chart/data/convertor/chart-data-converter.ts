@@ -136,7 +136,7 @@ export class ChartDataConverter {
 
     this.dataObjectAggregator.updateData(
       collections,
-      this.sortDocuments(documents, config, collections, linkTypes, constraintData),
+      documents,
       linkTypes,
       linkInstances,
       query.stems?.[0],
@@ -144,37 +144,25 @@ export class ChartDataConverter {
       constraintData
     );
   }
+  private sortDataSets(config: ChartConfig, sets: ChartDataSet[], constraintData: ConstraintData): ChartDataSet[] {
+    return sets.map(set => ({...set, points: this.sortPoints(config, set.points, constraintData)}));
+  }
 
-  private sortDocuments(
-    documents: DocumentModel[],
-    config: ChartConfig,
-    collections: Collection[],
-    linkTypes: LinkType[],
-    constraintData: ConstraintData
-  ): DocumentModel[] {
+  private sortPoints(config: ChartConfig, points: ChartPoint[], constraintData: ConstraintData): ChartPoint[] {
     const sort = config.sort;
-    const sortAxis = sort?.axis || config.axes?.x?.axis;
-    if (!sortAxis) {
-      return [...documents];
-    }
-
     const asc = !sort || sort.type === ChartSortType.Ascending;
 
-    const resource =
-      sortAxis.resourceType === AttributesResourceType.Collection
-        ? collections.find(coll => coll.id === sortAxis.resourceId)
-        : linkTypes.find(lt => lt.id === sortAxis.resourceId);
-    const attribute = findAttribute(resource?.attributes, sortAxis.attributeId);
+    const sortAxis = sort?.axis || config.axes?.x?.axis;
+    if (!sortAxis) {
+      return points;
+    }
 
-    const constraint = this.constraintForAttribute(attribute, sortAxis.constraint);
-    return [...documents].sort((a, b) => {
-      if (a.collectionId !== b.collectionId || a.collectionId !== sortAxis.resourceId) {
-        return 0;
-      }
+    const constraint = this.dataObjectAggregator.findAttributeConstraint(sortAxis);
 
+    return (points || []).sort((a,b) => {
       const multiplier = asc ? 1 : -1;
-      const aValue = constraint.createDataValue(a.data[sortAxis.attributeId], constraintData);
-      const bValue = constraint.createDataValue(b.data[sortAxis.attributeId], constraintData);
+      const aValue = constraint.createDataValue(a.x, constraintData);
+      const bValue = constraint.createDataValue(b.x, constraintData);
       return aValue.compareTo(bValue) * multiplier;
     });
   }
@@ -201,7 +189,7 @@ export class ChartDataConverter {
 
     return {
       type,
-      sets: [...(this.y1Sets || []), ...(this.y2Sets || [])],
+      sets: this.sortDataSets(this.currentConfig, [...(this.y1Sets || []), ...(this.y2Sets || [])], this.constraintData),
       xAxisData,
       y1AxisData,
       y2AxisData,
