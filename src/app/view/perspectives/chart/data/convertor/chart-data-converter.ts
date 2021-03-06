@@ -160,7 +160,7 @@ export class ChartDataConverter {
 
     const constraint = this.dataObjectAggregator.findAttributeConstraint(sortAxis);
 
-    return (points || []).sort((a,b) => {
+    return (points || []).sort((a, b) => {
       const multiplier = asc ? 1 : -1;
       const aValue = constraint.createDataValue(a.xSort || a.x, constraintData);
       const bValue = constraint.createDataValue(b.xSort || b.x, constraintData);
@@ -190,7 +190,11 @@ export class ChartDataConverter {
 
     return {
       type,
-      sets: this.sortDataSets(this.currentConfig, [...(this.y1Sets || []), ...(this.y2Sets || [])], this.constraintData),
+      sets: this.sortDataSets(
+        this.currentConfig,
+        [...(this.y1Sets || []), ...(this.y2Sets || [])],
+        this.constraintData
+      ),
       xAxisData,
       y1AxisData,
       y2AxisData,
@@ -381,7 +385,12 @@ export class ChartDataConverter {
     return this.convertAxisWithAggregation(config, yAxisType);
   }
 
-  private convertAxisSimple(yAxisType: ChartYAxisType, xAxis: ChartAxis, yAxis: ChartAxis, sortAxis: ChartAxis): ChartConvertData {
+  private convertAxisSimple(
+    yAxisType: ChartYAxisType,
+    xAxis: ChartAxis,
+    yAxis: ChartAxis,
+    sortAxis: ChartAxis
+  ): ChartConvertData {
     const definedAxis = yAxis || xAxis;
     if (!definedAxis) {
       return {sets: []};
