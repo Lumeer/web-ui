@@ -81,7 +81,6 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private visualize() {
-    console.log(this.chartData);
     if (this.chartVisualizer) {
       this.refreshChart();
     } else {
