@@ -71,8 +71,9 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   }
 
   public runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any> {
-    const options = {headers: {correlation_id: this.appId.getAppId()}};
-    return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {}, options);
+    return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {
+      correlationId: this.appId.getAppId(),
+    });
   }
 
   private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {

@@ -45,13 +45,11 @@ export class PublicSearchService extends BaseService implements SearchService {
     includeSubItems?: boolean,
     workspace?: Workspace
   ): Observable<LinkInstanceDto[]> {
-    return this.http.get<LinkInstanceDto[]>(`${this.searchPath(workspace)}/link-instances`, {
-      params: {l: environment.locale},
-    });
+    return this.http.get<LinkInstanceDto[]>(`${this.searchPath(workspace)}/link-instances`);
   }
 
   public searchDocuments(query: QueryDto, includeSubItems?: boolean, workspace?: Workspace): Observable<DocumentDto[]> {
-    return this.http.get<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, {params: {l: environment.locale}});
+    return this.http.get<DocumentDto[]>(`${this.searchPath(workspace)}/documents`);
   }
 
   public searchDocumentsAndLinks(
@@ -60,8 +58,7 @@ export class PublicSearchService extends BaseService implements SearchService {
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.get<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
-      `${this.searchPath(workspace)}/documentsAndLinks`,
-      {params: {l: environment.locale}}
+      `${this.searchPath(workspace)}/documentsAndLinks`
     );
   }
 
@@ -71,8 +68,7 @@ export class PublicSearchService extends BaseService implements SearchService {
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.get<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
-      `${this.searchPath(workspace)}/tasks`,
-      {params: {l: environment.locale}}
+      `${this.searchPath(workspace)}/tasks`
     );
   }
 

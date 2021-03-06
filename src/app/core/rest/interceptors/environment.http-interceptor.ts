@@ -31,7 +31,7 @@ export class EnvironmentHttpInterceptor implements HttpInterceptor {
     }
 
     const requestClone = request.clone({
-      headers: request.headers.set('X-Lumeer-Locale', environment.locale),
+      setHeaders: {'X-Lumeer-Locale': environment.locale},
     });
 
     return next.handle(requestClone);
