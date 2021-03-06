@@ -220,11 +220,11 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
     return false;
   }
 
-  if (subset?.stems?.length > superset?.stems?.length) {
+  if ((subset?.stems?.length || 0) > (superset?.stems?.length || 0)) {
     return false;
   }
 
-  return subset?.stems?.every(stem => {
+  return (subset?.stems || []).every(stem => {
     const supersetStem = superset?.stems?.find(s => s.collectionId === stem.collectionId);
     return supersetStem && isQueryStemSubset(supersetStem, stem);
   });

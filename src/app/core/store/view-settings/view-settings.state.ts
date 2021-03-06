@@ -24,7 +24,6 @@ import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {createSaveViewSettings, viewSettingsChanged} from '../views/view.utils';
 import {selectCurrentView, selectViewQuery} from '../views/views.state';
 import {AppState} from '../app.state';
-import {DataQuery} from '../../model/data-query';
 
 export interface ViewSettingsState extends ViewSettings {}
 
