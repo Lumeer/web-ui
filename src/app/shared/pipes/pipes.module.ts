@@ -101,6 +101,7 @@ import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
 import {StateListConstraintPipe} from './state-list-constraint.pipe';
 import {TruncatePipe} from './truncate.pipe';
 import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
+import {AttributeTitlePipe} from './attribute-title.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -186,6 +187,7 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     StateListConstraintPipe,
     TruncatePipe,
     AreObjectsEqualPipe,
+    AttributeTitlePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -270,6 +272,7 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     StateListConstraintPipe,
     TruncatePipe,
     AreObjectsEqualPipe,
+    AttributeTitlePipe,
   ],
 })
 export class PipesModule {}
