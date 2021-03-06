@@ -144,6 +144,7 @@ export class ChartDataConverter {
       constraintData
     );
   }
+
   private sortDataSets(config: ChartConfig, sets: ChartDataSet[], constraintData: ConstraintData): ChartDataSet[] {
     return sets.map(set => ({...set, points: this.sortPoints(config, set.points, constraintData)}));
   }
@@ -161,8 +162,8 @@ export class ChartDataConverter {
 
     return (points || []).sort((a,b) => {
       const multiplier = asc ? 1 : -1;
-      const aValue = constraint.createDataValue(a.x, constraintData);
-      const bValue = constraint.createDataValue(b.x, constraintData);
+      const aValue = constraint.createDataValue(a.xSort || a.x, constraintData);
+      const bValue = constraint.createDataValue(b.xSort || b.x, constraintData);
       return aValue.compareTo(bValue) * multiplier;
     });
   }
@@ -374,13 +375,13 @@ export class ChartDataConverter {
     const yAxis = config.axes?.[yAxisType]?.axis;
 
     if (!xAxis || !yAxis) {
-      return this.convertAxisSimple(yAxisType, xAxis, yAxis);
+      return this.convertAxisSimple(yAxisType, xAxis, yAxis, config.sort?.axis);
     }
 
     return this.convertAxisWithAggregation(config, yAxisType);
   }
 
-  private convertAxisSimple(yAxisType: ChartYAxisType, xAxis: ChartAxis, yAxis: ChartAxis): ChartConvertData {
+  private convertAxisSimple(yAxisType: ChartYAxisType, xAxis: ChartAxis, yAxis: ChartAxis, sortAxis: ChartAxis): ChartConvertData {
     const definedAxis = yAxis || xAxis;
     if (!definedAxis) {
       return {sets: []};
@@ -399,6 +400,7 @@ export class ChartDataConverter {
 
     for (const dataObject of dataResources) {
       const value = dataObject.data?.[(xAxis || yAxis)?.attributeId];
+      const xSort = sortAxis && dataObject.data?.[sortAxis.attributeId];
       const values = isArray(value) ? value : [value];
       for (let i = 0; i < values.length; i++) {
         const formattedValue = this.formatChartAxisValue(values[i], definedAxis);
@@ -414,6 +416,7 @@ export class ChartDataConverter {
           id,
           x: xAxis ? formattedValue : null,
           y: yAxis ? formattedValue : null,
+          xSort,
           color: pointColor,
           title: yAxis ? title : null,
           xTitle: xAxis ? title : null,
@@ -533,6 +536,7 @@ export class ChartDataConverter {
     const xAxis = xAxisConfig?.axis;
     const yAxisConfig = config.axes?.[yAxisType];
     const yAxis = yAxisConfig?.axis;
+    const sortAxis = config.sort?.axis;
     const yConstraint = this.constraintAxisConfig(yAxisConfig);
     const xConstraint = this.constraintAxisConfig(xAxisConfig);
     const sizeConstraint = this.constraintForAxis(yAxisConfig?.size);
@@ -588,6 +592,7 @@ export class ChartDataConverter {
 
       const xDataResource = dataObject.objectDataResources[DataObjectInfoKeyType.X];
       const xValue = this.formatChartAxisValue(xDataResource.data?.[xAxis.attributeId], xAxis);
+      const xSort = sortAxis && xDataResource?.data?.[sortAxis.attributeId];
       const xTitle = this.formatPointTitleValue(xDataResource.data?.[xAxis.attributeId], xAxis);
 
       const valueObjects = (dataObject.metaDataResources[DataObjectInfoKeyType.Y] || [])
@@ -617,6 +622,7 @@ export class ChartDataConverter {
         set.points.push({
           id,
           x: xValue,
+          xSort,
           y: yValue,
           color: pointColor,
           title: sizeTitle || title,
