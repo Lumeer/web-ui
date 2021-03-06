@@ -22,6 +22,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
 
+export const correlationIdHeader = 'X-Lumeer-View-Id';
+
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -29,9 +31,9 @@ export class CorrelationIdHttpInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    if (request.body && request.body.correlationId) {
+    if (request.body?.correlationId) {
       const requestClone = request.clone({
-        setHeaders: {correlation_id: request.body.correlationId},
+        setHeaders: {correlationIdHeader: request.body.correlationId},
       });
       return next.handle(requestClone);
     }

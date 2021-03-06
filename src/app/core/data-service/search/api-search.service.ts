@@ -46,13 +46,13 @@ export class ApiSearchService extends BaseService implements SearchService {
     workspace?: Workspace
   ): Observable<LinkInstanceDto[]> {
     return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query, {
-      params: {l: environment.locale, subItems: includeSubItems?.toString()},
+      params: {subItems: includeSubItems?.toString()},
     });
   }
 
   public searchDocuments(query: QueryDto, includeSubItems: boolean, workspace?: Workspace): Observable<DocumentDto[]> {
     return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query, {
-      params: {l: environment.locale, subItems: includeSubItems?.toString()},
+      params: {subItems: includeSubItems?.toString()},
     });
   }
 
@@ -64,7 +64,7 @@ export class ApiSearchService extends BaseService implements SearchService {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/documentsAndLinks`,
       query,
-      {params: {l: environment.locale, subItems: includeSubItems?.toString()}}
+      {params: {subItems: includeSubItems?.toString()}}
     );
   }
 
@@ -76,7 +76,7 @@ export class ApiSearchService extends BaseService implements SearchService {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/tasks`,
       query,
-      {params: {l: environment.locale, subItems: includeSubItems?.toString()}}
+      {params: {subItems: includeSubItems?.toString()}}
     );
   }
 

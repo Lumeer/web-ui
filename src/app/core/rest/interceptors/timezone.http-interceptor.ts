@@ -19,34 +19,22 @@
 
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {first, mergeMap} from 'rxjs/operators';
 import {isBackendUrl} from '../../api/api.utils';
-import {AppState} from '../../store/app.state';
-import {selectWorkspaceWithIds} from '../../store/common/common.selectors';
+import * as moment from 'moment-timezone';
 
 @Injectable()
-export class ViewHttpInterceptor implements HttpInterceptor {
-  public constructor(private store: Store<AppState>) {}
-
+export class TimezoneHttpInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isBackendUrl(request.url)) {
       return next.handle(request);
     }
 
-    return this.store.select(selectWorkspaceWithIds).pipe(
-      first(),
-      mergeMap(workspace => {
-        if (workspace?.viewId) {
-          const viewRequest = request.clone({
-            setHeaders: {'X-Lumeer-View-Id': workspace.viewId},
-          });
-          return next.handle(viewRequest);
-        }
+    const timezone = moment.tz.guess(true);
 
-        return next.handle(request);
-      })
-    );
+    const requestClone = request.clone({
+      setHeaders: {'X-Lumeer-Timezone': timezone},
+    });
+    return next.handle(requestClone);
   }
 }

@@ -30,6 +30,7 @@ import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
 import {AppIdService} from '../../service/app-id.service';
+import {correlationIdHeader} from '../../rest/interceptors/correlation-id.http-interceptor';
 
 @Injectable()
 export class ApiDocumentService extends BaseService implements DocumentService {
@@ -109,7 +110,7 @@ export class ApiDocumentService extends BaseService implements DocumentService {
     documentIds: string[],
     correlationId?: string
   ): Observable<DocumentDto[]> {
-    const options = correlationId ? {headers: {correlation_id: correlationId}} : {};
+    const options = correlationId ? {headers: {[correlationIdHeader]: correlationId}} : {};
     return this.httpClient.post<DocumentDto[]>(`${this.apiPrefix({collectionId})}/duplicate`, documentIds, options);
   }
 
@@ -127,12 +128,9 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   }
 
   public runRule(collectionId: string, documentId: string, attributeId: string): Observable<any> {
-    const options = {headers: {correlation_id: this.appId.getAppId()}};
-    return this.httpClient.post<any>(
-      `${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}`,
-      {},
-      options
-    );
+    return this.httpClient.post<any>(`${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}`, {
+      correlationId: this.appId.getAppId(),
+    });
   }
 
   private apiPrefix(workspace?: Workspace): string {
