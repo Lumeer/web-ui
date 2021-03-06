@@ -60,7 +60,7 @@ export function checkLoadedDataQuery(query: DataQuery, publicView?: boolean, sil
   return silent ? undefined : query;
 }
 
-export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView?: boolean): boolean {
+export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView: boolean): boolean {
   const savedQuery = checkLoadedDataQuery(query, publicView);
   return loadedQueries.some(
     loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)

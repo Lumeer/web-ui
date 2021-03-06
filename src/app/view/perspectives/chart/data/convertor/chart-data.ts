@@ -42,6 +42,7 @@ export interface ChartDataSet {
 export interface ChartPoint {
   id?: string;
   x?: any;
+  xSort: any;
   y?: any;
   size?: number;
   xTitle?: string;
