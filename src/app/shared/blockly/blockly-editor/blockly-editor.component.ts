@@ -75,6 +75,8 @@ import {StringReplaceBlocklyComponent} from './blocks/string-replace-blockly-com
 import {DeleteDocumentBlocklyComponent} from './blocks/delete-document-blockly-component';
 import {LinkDocumentsNoReturnBlocklyComponent} from './blocks/link-documents-no-return-blockly-component';
 import {LinkDocumentsReturnBlocklyComponent} from './blocks/link-documents-return-blockly-component';
+import {View} from '../../../core/store/views/view';
+import {ReadDocumentsBlocklyComponent} from './blocks/read-documents-blockly-component';
 
 declare var Blockly: any;
 
@@ -90,6 +92,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   public linkTypes: LinkType[] = [];
+
+  @Input()
+  public views: View[] = [];
 
   @Input()
   public variables: RuleVariable[] = [];
@@ -125,7 +130,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private workspace: any;
   private initializing = false;
   private destroying = false;
-  private blocklyUtils = new BlocklyUtils(null, [], [], []);
+  private blocklyUtils = new BlocklyUtils(null, [], [], [], []);
 
   constructor(
     private store$: Store<AppState>,
@@ -139,7 +144,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   public ngAfterViewInit(): void {
     const lumeerVar = this.blocklyUtils?.getLumeerVariable() || null;
-    this.blocklyUtils = new BlocklyUtils(this.masterType, this.collections, this.linkTypes, this.variables);
+    this.blocklyUtils = new BlocklyUtils(this.masterType, this.collections, this.linkTypes, this.views, this.variables);
     if (isNotNullOrUndefined(lumeerVar)) {
       this.blocklyUtils.setLumeerVariable(lumeerVar);
     }
@@ -176,6 +181,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new DeleteDocumentBlocklyComponent(this.blocklyUtils, this.i18n),
       new LinkDocumentsNoReturnBlocklyComponent(this.blocklyUtils, this.i18n, this.linkTypes),
       new LinkDocumentsReturnBlocklyComponent(this.blocklyUtils, this.i18n, this.linkTypes),
+      new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.i18n, this.views),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

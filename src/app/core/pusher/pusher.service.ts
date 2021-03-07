@@ -65,7 +65,7 @@ import {selectCurrentUser} from '../store/users/users.state';
 import {View} from '../store/views/view';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
-import {selectViewsDictionary} from '../store/views/views.state';
+import {selectViewByCode, selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {SequenceConverter} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
@@ -79,6 +79,10 @@ import {NotificationButton} from '../notifications/notification-button';
 import {DataResourcesAction} from '../store/data-resources/data-resources.action';
 import {Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
+import {perspectivesMap} from '../../view/perspectives/perspective';
+import {convertQueryModelToString} from '../store/navigation/query/query.converter';
+import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
+import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -165,6 +169,8 @@ export class PusherService implements OnDestroy {
     this.bindTemplateEvents();
     this.bindResourceCommentEvents();
     this.bindPrintEvents();
+    this.bindNavigateEvents();
+    this.bindSendEmailEvents();
   }
 
   private bindOrganizationEvents() {
@@ -406,6 +412,47 @@ export class PusherService implements OnDestroy {
       }/${data.object.type.toLowerCase()}/${data.object.resourceId}/${data.object.documentId}/${
         data.object.attributeId
       }`;
+      a.target = '_blank';
+      a.click();
+    });
+  }
+
+  private bindNavigateEvents() {
+    this.channel.bind('NavigationRequest', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
+          const encodedQuery = convertQueryModelToString(view.query);
+          const encodedCursor = isNotNullOrUndefined(data.object.documentId)
+            ? convertViewCursorToString({
+                collectionId: data.object.collectionId,
+                documentId: data.object.documentId,
+                attributeId: data.object.attributeId,
+                sidebar: data.object.sidebar,
+              })
+            : '';
+
+          const a = document.createElement('a');
+          a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+            data.object.projectCode
+          }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
+
+          if (data.object.newWindow) {
+            a.target = '_blank';
+          }
+
+          a.click();
+        });
+      }
+    });
+  }
+
+  private bindSendEmailEvents() {
+    // SendEmailRequest
+    this.channel.bind('SendEmailRequest', data => {
+      const a = document.createElement('a');
+      a.href = `mailto:${encodeURIComponent(data.object.email)}?subject=${encodeURIComponent(
+        data.object.subject
+      )}&body=${encodeURIComponent(data.object.body)}`;
       a.target = '_blank';
       a.click();
     });
@@ -757,7 +804,7 @@ export class PusherService implements OnDestroy {
   }
 
   private bindUserMessageEvents() {
-    this.channel.bind('UserMessage:create', data => {
+    this.channel.bind('UserMessageRequest:create', data => {
       if (this.isCurrentWorkspace(data)) {
         if (data.correlationId === this.appId.getAppId()) {
           switch (data.object?.type) {

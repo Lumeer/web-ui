@@ -30,6 +30,7 @@ import {AppState} from '../../../core/store/app.state';
 import {
   selectCollectionsByReadPermission,
   selectLinkTypesByCollectionId,
+  selectViewsByRead,
 } from '../../../core/store/common/permissions.selectors';
 import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
@@ -40,6 +41,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../core/model/resource';
 import {attributeHasFunction, attributeRuleFunction, findAttributeRule} from '../../utils/attribute.utils';
 import {BlocklyRule, Rule} from '../../../core/model/rule';
+import {View} from '../../../core/store/views/view';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -64,6 +66,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   public attributeFunction$: Observable<AttributeFunction>;
   public linkTypes$: Observable<LinkType[]>;
   public linkType$: Observable<LinkType>;
+  public views$: Observable<View[]>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -79,7 +82,8 @@ export class AttributeFunctionModalComponent implements OnInit {
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.select(selectCollectionsByReadPermission);
+    this.collections$ = this.store$.pipe(select(selectCollectionsByReadPermission));
+    this.views$ = this.store$.pipe(select(selectViewsByRead));
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(

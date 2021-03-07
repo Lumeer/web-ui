@@ -26,6 +26,7 @@ import {RuleVariable} from '../rule-variable-type';
 import {shadeColor} from '../../utils/html-modifier';
 import {BlocklyComponent} from './blocks/blockly-component';
 import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
+import {View} from '../../../core/store/views/view';
 
 declare var Blockly: any;
 
@@ -85,11 +86,13 @@ export class BlocklyUtils {
   public static readonly DELETE_DOCUMENT = 'delete_document';
   public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
   public static readonly LINK_DOCUMENTS_RETURN = 'link_documents_return';
+  public static readonly READ_DOCUMENTS = 'read_documents';
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
   public static readonly STRING_REPLACE = 'string_replace';
   public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
+  public static readonly MAXIMUM_DOCUMENTS_RETURNED = 1000;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
 
   private components: BlocklyComponent[] = [];
@@ -102,6 +105,7 @@ export class BlocklyUtils {
     private masterType: MasterBlockType,
     private collections: Collection[],
     private linkTypes: LinkType[],
+    private views: View[],
     private variables: RuleVariable[]
   ) {}
 
@@ -150,6 +154,19 @@ export class BlocklyUtils {
     workspace.getAllBlocks(false).forEach(block => {
       const children = block.getChildren(false);
       this.preventDeletionOfInitialVariables(block);
+
+      // set output type of read documents block
+      /*if (block.type === BlocklyUtils.READ_DOCUMENTS) {
+        const viewId = block.getField('VIEW_ID').value_;
+        const view = this.views.find(v => v.id === viewId);
+
+        if (view) {
+          const collectionId = view.query?.stems[0]?.collectionId;
+          if (collectionId) {
+            block.setOutput(true, collectionId + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+          }
+        }
+      }*/
 
       // set output type of link creation block
       if (block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {

@@ -35,6 +35,10 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
 
     linkTypes.forEach(linkType => this.linkTypeOptions.push([linkType.name, linkType.id]));
 
+    if (this.linkTypeOptions.length === 0) {
+      this.linkTypeOptions.push(['?', '']);
+    }
+
     this.tooltip = i18n({
       id: 'blockly.tooltip.linkDocumentsNoReturnBlock',
       value: 'Links two records using the selected link type.',
