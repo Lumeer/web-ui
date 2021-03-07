@@ -76,8 +76,4 @@ export class ForEachDocumentArrayBlocklyComponent extends BlocklyComponent {
     };
     Blockly.JavaScript[BlocklyUtils.FOREACH_DOCUMENT_ARRAY] = Blockly.JavaScript['controls_forEach'];
   }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
-  }
 }

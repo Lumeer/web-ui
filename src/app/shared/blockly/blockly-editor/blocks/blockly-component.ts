@@ -27,7 +27,13 @@ export abstract class BlocklyComponent {
 
   public abstract registerBlock(workspace: any): void;
 
-  public abstract getDocumentVariablesXml(workspace: any): string;
+  public getDocumentVariablesXml(workspace: any): string {
+    return null;
+  }
+
+  public getLinkVariablesXml(workspace: any): string {
+    return null;
+  }
 
   // tslint:disable-next-line:no-empty
   public onWorkspaceChange(workspace, changeEvent) {}

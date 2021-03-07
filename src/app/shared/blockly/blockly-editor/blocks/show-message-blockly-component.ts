@@ -88,8 +88,4 @@ export class ShowMessageBlocklyComponent extends BlocklyComponent {
       return code;
     };
   }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
-  }
 }

@@ -82,11 +82,14 @@ export class BlocklyUtils {
   public static readonly CURRENT_USER = 'current_user';
   public static readonly CURRENT_LOCALE = 'current_locale';
   public static readonly CREATE_DOCUMENT = 'create_document';
+  public static readonly DELETE_DOCUMENT = 'delete_document';
+  public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
+  public static readonly LINK_DOCUMENTS_RETURN = 'link_documents_return';
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
   public static readonly STRING_REPLACE = 'string_replace';
-  public static readonly CREATE_DOCUMENTS_LIMIT = 25;
+  public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
 
   private components: BlocklyComponent[] = [];
@@ -147,6 +150,12 @@ export class BlocklyUtils {
     workspace.getAllBlocks(false).forEach(block => {
       const children = block.getChildren(false);
       this.preventDeletionOfInitialVariables(block);
+
+      // set output type of link creation block
+      if (block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
+        const linkTypeId = block.getField('LINKTYPE').value_;
+        block.setOutput(true, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
+      }
 
       // set output type of all links
       if (block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX)) {
@@ -710,6 +719,16 @@ export class BlocklyUtils {
     xmlList.push(
       Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_DOCUMENT + '"></block></xml>').firstChild
     );
+
+    const xmls = this.components
+      .filter(component => component.getVisibility().includes(this.masterType))
+      .map(component => component.getLinkVariablesXml(workspace))
+      .filter(xml => isNotNullOrUndefined(xml));
+    if (xmls?.length > 0) {
+      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+
+      xmls.forEach(xml => xmlList.push(Blockly.Xml.textToDom(xml).firstChild));
+    }
 
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 

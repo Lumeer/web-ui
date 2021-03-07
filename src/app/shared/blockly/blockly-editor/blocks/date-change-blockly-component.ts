@@ -139,8 +139,4 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
   }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
-  }
 }
