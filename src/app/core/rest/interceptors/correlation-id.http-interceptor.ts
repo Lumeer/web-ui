@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
 
-export const correlationIdHeader = 'X-Lumeer-View-Id';
+export const correlationIdHeader = 'X-Lumeer-Correlation-Id';
 
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
