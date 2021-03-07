@@ -1,0 +1,38 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="hideDialog()"
+  (onSubmit)="onSubmit()"
+  *ngIf="{documents: documents$ | async, selectedLinkTypeId: selectedLinkTypeId$ | async, collection: collection$ | async} as data">
+
+  <span class="title" i18n="@@modal.links.modify.title">Set linked documents</span>
+
+  <div class="body p-3">
+
+    <collection-filters class="p-3" [collection]="data.collection"
+                        (filtersChange)="onFiltersChange($event)">
+    </collection-filters>
+
+    <ng-container *ngIf="data.documents.length; else noData">
+      <preview-results-table class="d-block mt-2"
+                             [documents]="data.documents"
+                             [collection]="data.collection"
+                             [loaded]="true"
+                             [resizeable]="false"
+                             [constraintData]="constraintData$ | async">
+      </preview-results-table>
+    </ng-container>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@modal.links.modify.button">Set</span>
+  </span>
+
+</modal-wrapper>
+
+<ng-template #noData>
+  <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+</ng-template>

@@ -465,7 +465,7 @@ export function calculateColumnsWidth(columns: TableConfigColumn[], showHiddenCo
 }
 
 export function findTableRow(rows: TableConfigRow[], rowPath: number[]): TableConfigRow {
-  if (!rowPath || rowPath.length === 0) {
+  if (!rowPath || !rows || rowPath.length === 0) {
     return null;
   }
 

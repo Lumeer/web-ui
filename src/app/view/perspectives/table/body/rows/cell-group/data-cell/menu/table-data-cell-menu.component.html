@@ -5,7 +5,7 @@
 </div>
 
 <mat-menu #contextMenu="matMenu">
-  <ng-template matMenuContent>
+  <ng-template matMenuContent *ngIf="{numberOfParts: (tableParts$ | async)?.length} as data">
     <button (click)="onClick($event); edit.emit()"
             [disabled]="!allowedPermissions?.writeWithView"
             mat-menu-item>
@@ -103,7 +103,7 @@
           </div>
         </button>
 
-        <ng-container *ngIf="created && (tableParts$ | async)?.length < 4">
+        <ng-container *ngIf="created && data.numberOfParts < 4">
           <hr class="my-2">
           <button (click)="onClick($event); onCloneRow()"
                   mat-menu-item>
@@ -115,6 +115,18 @@
             </div>
           </button>
         </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="created && allowedPermissions?.writeWithView">
+        <hr class="my-2" *ngIf="cursor.partIndex > 0 || !canManageConfig || data.numberOfParts >= 4">
+        <button *ngIf="cursor.partIndex % 2 === 0 && cursor.partIndex + 1 < data.numberOfParts"
+                (click)="onClick($event); onUpdateLinks()"
+                mat-menu-item>
+          <div class="d-flex align-items-baseline">
+            <i class="far fa-fw fa-link mr-1" aria-hidden="true"></i>
+            <span class="flex-grow-1" i18n="@@table.body.row.links.update">Add/Remove links</span>
+          </div>
+        </button>
       </ng-container>
 
       <hr class="my-2">

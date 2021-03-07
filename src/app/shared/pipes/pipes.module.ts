@@ -102,6 +102,7 @@ import {StateListConstraintPipe} from './state-list-constraint.pipe';
 import {TruncatePipe} from './truncate.pipe';
 import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
 import {AttributeTitlePipe} from './attribute-title.pipe';
+import {ModifyAttributeForQueryFilterPipe} from './modify-attribute-for-query-filter.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -188,6 +189,7 @@ import {AttributeTitlePipe} from './attribute-title.pipe';
     TruncatePipe,
     AreObjectsEqualPipe,
     AttributeTitlePipe,
+    ModifyAttributeForQueryFilterPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -273,6 +275,7 @@ import {AttributeTitlePipe} from './attribute-title.pipe';
     TruncatePipe,
     AreObjectsEqualPipe,
     AttributeTitlePipe,
+    ModifyAttributeForQueryFilterPipe,
   ],
 })
 export class PipesModule {}

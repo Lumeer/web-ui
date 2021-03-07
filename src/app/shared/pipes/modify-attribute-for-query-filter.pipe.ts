@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {modifyAttributeForQueryFilter} from '../../../../../../utils/attribute.utils';
+import {Attribute} from '../../core/store/collections/collection';
+import {modifyAttributeForQueryFilter} from '../utils/attribute.utils';
 
 @Pipe({
   name: 'modifyAttributeForQueryFilter',

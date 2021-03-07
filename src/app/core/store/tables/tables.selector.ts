@@ -39,16 +39,15 @@ export const selectTableConfigById = (tableId: string) =>
   createSelector(selectTableById(tableId), table => table?.config);
 
 export const selectHasNextTableParts = (cursor: TableCursor) =>
-  cursor &&
-  createSelector(selectTableById(cursor.tableId), table => {
+  createSelector(selectTableById(cursor?.tableId), table => {
     return table?.config?.parts && cursor.partIndex < table.config.parts.length - 1;
   });
 
 export const selectTableParts = (cursor: TableCursor) =>
-  createSelector(selectTableById(cursor && cursor.tableId), table => table?.config?.parts);
+  createSelector(selectTableById(cursor?.tableId), table => table?.config?.parts);
 
 export const selectTablePart = (cursor: TableCursor) =>
-  createSelector(selectTableParts(cursor), parts => parts && parts[cursor.partIndex]);
+  createSelector(selectTableParts(cursor), parts => parts?.[cursor.partIndex]);
 
 export const selectTableColumn = (cursor: TableCursor) =>
   createSelector(
@@ -63,10 +62,7 @@ export const selectTableRows = (tableId: string) =>
   createSelector(selectTableById(tableId), table => table?.config?.rows || []);
 
 export const selectTableRow = (cursor: TableBodyCursor) =>
-  cursor &&
-  createSelector(selectTableRows(cursor.tableId), rows => {
-    return findTableRow(rows, cursor.rowPath);
-  });
+  createSelector(selectTableRows(cursor?.tableId), rows => findTableRow(rows, cursor?.rowPath));
 
 export const selectTableRowParentDocumentId = (cursor: TableBodyCursor) =>
   cursor &&

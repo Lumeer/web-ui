@@ -1,0 +1,9 @@
+<collection-filter *ngFor="let filter of filters$ | async; trackBy: trackByAttributeFilter; let index = index"
+                   [attributes]="collection.attributes"
+                   [filter]="filter"
+                   [attributeSelectItems]="attributeSelectItems"
+                   (remove)="onFilterDelete(index)"
+                   (filterChange)="onFilterChange(index, $event)">
+</collection-filter>
+
+<button class="btn btn-success" (click)="onNewFilter()">Add filter</button>

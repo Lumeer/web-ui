@@ -39,6 +39,7 @@ import {ChooseOrganizationModalModule} from './choose-organization/choose-organi
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
 import {NotificationSettingsModalModule} from './notification-settings/notification-settings-modal.module';
 import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
+import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
 
 @NgModule({
   declarations: [],
@@ -64,6 +65,7 @@ import {AttributeDescriptionModalModule} from './attribute-description/attribute
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
     NotificationSettingsModalModule,
+    ModifyDocumentLinksModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -86,6 +88,7 @@ import {AttributeDescriptionModalModule} from './attribute-description/attribute
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
     NotificationSettingsModalModule,
+    ModifyDocumentLinksModalModule,
   ],
 })
 export class ModalModule {}
