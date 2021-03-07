@@ -431,16 +431,23 @@ export class PusherService implements OnDestroy {
               })
             : '';
 
-          const a = document.createElement('a');
-          a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
-            data.object.projectCode
-          }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
-
           if (data.object.newWindow) {
-            a.target = '_blank';
-          }
+            const a = document.createElement('a');
+            a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
+              data.object.projectCode
+            }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
 
-          a.click();
+            if (data.object.newWindow) {
+              a.target = '_blank';
+            }
+
+            a.click();
+          } else {
+            this.router.navigate(
+              ['/w', data.object.organizationCode, data.object.projectCode, 'view', {vc: view.code}, view.perspective],
+              {queryParams: {q: encodedQuery, c: encodedCursor}}
+            );
+          }
         });
       }
     });
