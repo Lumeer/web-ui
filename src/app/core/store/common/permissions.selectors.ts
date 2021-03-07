@@ -42,7 +42,11 @@ import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
 import {LinkInstance} from '../link-instances/link.instance';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
-import {selectDataSettingsIncludeSubItems, selectViewSettings} from '../view-settings/view-settings.state';
+import {
+  selectDataSettingsIncludeSubItems,
+  selectViewDataQuery,
+  selectViewSettings,
+} from '../view-settings/view-settings.state';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
@@ -238,22 +242,12 @@ export const selectTasksDocumentsByQuery = createSelector(
   selectTasksCollectionsByQuery,
   selectAllLinkTypes,
   selectAllLinkInstances,
-  selectTasksQuery,
+  selectViewDataQuery,
   selectResourcesPermissions,
   selectConstraintData,
-  selectDataSettingsIncludeSubItems,
-  (
-    documents,
-    collections,
-    linkTypes,
-    linkInstances,
-    query,
-    permissions,
-    constraintData,
-    includeChildren
-  ): DocumentModel[] => {
+  (documents, collections, linkTypes, linkInstances, query, permissions, constraintData): DocumentModel[] => {
     let tasksDocuments = documents;
-    let tasksQuery = query;
+    let tasksQuery: Query = query;
 
     if (queryIsEmpty(query)) {
       tasksDocuments = filterTaskDocuments(documents, collections, constraintData);
@@ -269,7 +263,7 @@ export const selectTasksDocumentsByQuery = createSelector(
       permissions.collections,
       permissions.linkTypes,
       constraintData,
-      includeChildren
+      query?.includeSubItems
     ).documents;
 
     return sortDocumentsTasks(filteredTasks, collections);

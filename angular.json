@@ -72,6 +72,7 @@
               "plotly.js",
               "big.js",
               "file-saver",
+              "moment-timezone",
               "coordinate-parser",
               "util"
             ],
