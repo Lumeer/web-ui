@@ -24,6 +24,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkDocumentsNoReturnBlocklyComponent} from './link-documents-no-return-blockly-component';
 import {BlocklyComponent} from './blockly-component';
 import {View} from '../../../../core/store/views/view';
+import {isNotNullOrUndefined} from '../../../utils/common.utils';
 
 declare var Blockly: any;
 
@@ -100,7 +101,7 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
 
-      if (block.type === BlocklyUtils.READ_DOCUMENTS) {
+      if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.READ_DOCUMENTS) {
         const viewId = block.getField('VIEW_ID').value_;
         const view = this.views.find(v => v.id === viewId);
 

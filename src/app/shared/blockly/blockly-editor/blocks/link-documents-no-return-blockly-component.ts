@@ -166,7 +166,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
 
-      if (block.type === BlocklyUtils.LINK_DOCUMENTS_NO_RETURN) {
+      if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.LINK_DOCUMENTS_NO_RETURN) {
         this.processWorkspaceChange(workspace, changeEvent, block);
       } else {
         const newParent = workspace.getBlockById(changeEvent.newParentId);

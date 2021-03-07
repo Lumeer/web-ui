@@ -86,8 +86,8 @@ export function hasQueryNewLink(oldQuery: Query, newQuery: Query) {
     return false;
   }
 
-  const newQueryLinkTypeIds = newQuery?.stems?.[0].linkTypeIds || [];
-  const oldQueryLinkTypeIds = oldQuery?.stems?.[0].linkTypeIds || [];
+  const newQueryLinkTypeIds = newQuery?.stems?.[0]?.linkTypeIds || [];
+  const oldQueryLinkTypeIds = oldQuery?.stems?.[0]?.linkTypeIds || [];
 
   if (newQueryLinkTypeIds.length === 1 && oldQueryLinkTypeIds.length === 0) {
     return true;

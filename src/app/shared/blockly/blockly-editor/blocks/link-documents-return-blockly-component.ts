@@ -22,6 +22,7 @@ import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkDocumentsNoReturnBlocklyComponent} from './link-documents-no-return-blockly-component';
+import {isNotNullOrUndefined} from '../../../utils/common.utils';
 
 declare var Blockly: any;
 
@@ -100,7 +101,7 @@ export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBl
     ) {
       const block = workspace.getBlockById(changeEvent.blockId);
 
-      if (block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
+      if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
         const linkTypeId = block.getField('LINKTYPE').value_;
         block.setOutput(true, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
       }

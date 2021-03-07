@@ -90,6 +90,8 @@ export class BlocklyUtils {
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
+  public static readonly SEND_EMAIL = 'send_email';
+  public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
   public static readonly STRING_REPLACE = 'string_replace';
   public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
   public static readonly MAXIMUM_DOCUMENTS_RETURNED = 1000;

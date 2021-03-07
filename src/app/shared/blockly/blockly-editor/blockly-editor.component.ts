@@ -77,6 +77,8 @@ import {LinkDocumentsNoReturnBlocklyComponent} from './blocks/link-documents-no-
 import {LinkDocumentsReturnBlocklyComponent} from './blocks/link-documents-return-blockly-component';
 import {View} from '../../../core/store/views/view';
 import {ReadDocumentsBlocklyComponent} from './blocks/read-documents-blockly-component';
+import {SendEmailBlocklyComponent} from './blocks/send-email-blockly-component';
+import {NavigateBlocklyComponent} from './blocks/navigate-blockly-component';
 
 declare var Blockly: any;
 
@@ -182,6 +184,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new LinkDocumentsNoReturnBlocklyComponent(this.blocklyUtils, this.i18n, this.linkTypes),
       new LinkDocumentsReturnBlocklyComponent(this.blocklyUtils, this.i18n, this.linkTypes),
       new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.i18n, this.views),
+      new SendEmailBlocklyComponent(this.blocklyUtils, this.i18n),
+      new NavigateBlocklyComponent(this.blocklyUtils, this.i18n, this.views),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

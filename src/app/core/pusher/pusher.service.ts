@@ -432,7 +432,7 @@ export class PusherService implements OnDestroy {
             : '';
 
           const a = document.createElement('a');
-          a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+          a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
             data.object.projectCode
           }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
 
