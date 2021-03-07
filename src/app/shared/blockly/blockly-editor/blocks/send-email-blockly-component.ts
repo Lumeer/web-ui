@@ -47,7 +47,7 @@ export class SendEmailBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.SEND_EMAIL,
-          message0: 'send email to address %1 with subject %2 and body %3', //'%{BKY_BLOCK_PRINT_ATTRIBUTE}', // print %1 of %2
+          message0: '%{BKY_BLOCK_SEND_EMAIL}', // send email to address %1 with subject %2 and body %3
           args0: [
             {
               type: 'input_value',

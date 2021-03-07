@@ -56,7 +56,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.LINK_DOCUMENTS_NO_RETURN,
-          message0: 'link records via %1 %2 %3', //'%{BKY_BLOCK_CREATE_DOCUMENT}', // create record in %1,
+          message0: '%{BKY_BLOCK_LINK_DOCUMENTS_NO_RETURN}', // link records via %1 %2 %3
           args0: [
             {
               type: 'field_dropdown',

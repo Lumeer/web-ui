@@ -33,7 +33,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context>
@@ -180,7 +180,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context>
@@ -664,10 +664,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
           <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context>
-          <context context-type="linenumber">3</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
@@ -3687,7 +3683,7 @@
         <source>Labels</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">perspective.chart.config.label.placeholder</note>
       </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
@@ -3708,43 +3704,43 @@
         <source>Values</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">perspective.chart.config.value.placeholder</note>
       </trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
         <source>Data set</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <note priority="1" from="description">perspective.chart.config.dataSet.placeholder</note>
       </trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
         <source>Size</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
         <source>Select attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
         <source>Color</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
         <source>Aggregation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <note priority="1" from="description">perspective.chart.config.aggregation.placeholder</note>
       </trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
@@ -6256,6 +6252,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.deleteDocumentBlock" datatype="html">
+        <source>Deletes an existing record. To prevent large damage, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.forEachDocumentBlock" datatype="html">
         <source>Loops over all records in the given list.</source>
         <context-group purpose="location">
@@ -6326,6 +6329,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.linkDocumentsNoReturnBlock" datatype="html">
+        <source>Links two records using the selected link type.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/link-documents-no-return-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.msToDateBlock" datatype="html">
         <source>Converts milliseconds since epoch (Unix time) to an ISO date string suitable for storing in a date/time attributes.</source>
         <context-group purpose="location">
@@ -6340,6 +6350,27 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.navigateBlock" datatype="html">
+        <source>Opens the given view and record. It can open the vie in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.dropdown.window.navigateBlock" datatype="html">
+        <source>the same,a new</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.dropdown.sidebar.navigateBlock" datatype="html">
+        <source>closed,opened</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.parseDateBlock" datatype="html">
         <source>Parses a string date using given format returning milliseconds since epoch (Unix time).</source>
         <context-group purpose="location">
@@ -6351,6 +6382,20 @@
         <source>Prints the value of an attribute in the given record or link.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
+        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
+        <source>Opens a new email using the system default email application.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/send-email-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

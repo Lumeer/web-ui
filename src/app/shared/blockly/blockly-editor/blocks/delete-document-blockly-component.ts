@@ -52,7 +52,7 @@ export class DeleteDocumentBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.DELETE_DOCUMENT,
-          message0: 'delete record %1', //'%{BKY_BLOCK_CREATE_DOCUMENT}', // create record in %1,
+          message0: '%{BKY_BLOCK_DELETE_DOCUMENT}', // delete record %1
           args0: [
             {
               type: 'input_value',

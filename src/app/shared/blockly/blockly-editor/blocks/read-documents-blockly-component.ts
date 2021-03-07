@@ -62,7 +62,7 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.READ_DOCUMENTS,
-          message0: 'read records from %1', //'%{BKY_BLOCK_CREATE_DOCUMENT}', // create record in %1,
+          message0: '%{BKY_BLOCK_READ_DOCUMENTS}', // read records from %1
           args0: [
             {
               type: 'field_dropdown',

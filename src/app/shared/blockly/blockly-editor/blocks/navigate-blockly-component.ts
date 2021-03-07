@@ -43,7 +43,7 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
     this.tooltip = i18n({
       id: 'blockly.tooltip.navigateBlock',
       value:
-        'Opens the given view and record. It can open the vie in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.',
+        'Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.',
     });
 
     this.windowOptions = i18n({id: 'blockly.dropdown.window.navigateBlock', value: 'the same,a new'}).split(',');
@@ -61,7 +61,7 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.NAVIGATE_TO_VIEW,
-          message0: 'navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 and focus on record %7', //'%{BKY_BLOCK_PRINT_ATTRIBUTE}', // print %1 of %2
+          message0: '%{BKY_BLOCK_NAVIGATE_TO_VIEW}', // navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 and focus on record %7
           args0: [
             {
               type: 'field_dropdown',
