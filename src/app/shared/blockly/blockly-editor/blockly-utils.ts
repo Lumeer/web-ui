@@ -61,6 +61,7 @@ export class BlocklyUtils {
   public static readonly GET_LINK_DOCUMENT = 'get_link_document';
   public static readonly VARIABLES_GET_PREFIX = 'variables_get_';
   public static readonly VARIABLES_SET = 'variables_set';
+  public static readonly GET_LINK_DOCUMENT_UNKNOWN = 'link_document_unknown';
   public static readonly UNKNOWN = 'unknown';
   public static readonly STATEMENT_CONTAINER = 'statement_container';
   public static readonly VALUE_CONTAINER = 'value_container';
@@ -158,7 +159,7 @@ export class BlocklyUtils {
       this.preventDeletionOfInitialVariables(block);
 
       // set output type of read documents block
-      /*if (block.type === BlocklyUtils.READ_DOCUMENTS) {
+      if (block.type === BlocklyUtils.READ_DOCUMENTS) {
         const viewId = block.getField('VIEW_ID').value_;
         const view = this.views.find(v => v.id === viewId);
 
@@ -168,7 +169,7 @@ export class BlocklyUtils {
             block.setOutput(true, collectionId + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
           }
         }
-      }*/
+      }
 
       // set output type of link creation block
       if (block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {

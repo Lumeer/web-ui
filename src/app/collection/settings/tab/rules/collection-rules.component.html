@@ -23,8 +23,10 @@
         </add-rule-form>
         <single-rule
           *ngIf="!data.editingRules[rule.id]"
+          [canDuplicate]="data.collection && (data.rulesLimit === -1 || data.rulesLimit > data.collection.rules.length)"
           (onEdit)="onEditStart(rule)"
           (onDelete)="deleteRule(data.collection, rule)"
+          (onDuplicate)="onDuplicateRule($event)"
           [rule]="rule">
         </single-rule>
       </li>

@@ -5395,10 +5395,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle.singleCollection" datatype="html">
         <source>Let's add some Records into</source><target>Přidejte nějaké záznamy do</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target>Prázdný popis</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="create.new.task" datatype="html">
@@ -5451,6 +5448,13 @@
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
+      </trans-unit><trans-unit id="task.pinned" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"/></source>
+        <target><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Odepnout úkol' : 'Připnout úkol nahoru'}}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
 
@@ -5477,14 +5481,14 @@
       Ve verzi zdarma můžete mít jen jedno pravidlo.
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.upgradePlan" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.upgradePlan" datatype="html">
         <source>
       Upgrade to Business Plan!
     </source><target>
       Aktivujte si program Lumeer Business!
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
     Add a new automation
   </source><target>
@@ -5513,7 +5517,25 @@
         <source>Delete</source><target>Vymazání</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.btn.duplicate" datatype="html">
+        <source>Duplicate automation</source><target>Okopírovat automatizaci</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.btn.edit" datatype="html">
+        <source>Edit automation</source><target>Upravit automatizaci</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.btn.delete" datatype="html">
+        <source>Delete automation</source><target>Smazat automatizaci</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
         <source>New automation name</source><target>Název nové automatizace</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
@@ -5822,7 +5844,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.navigateBlock" datatype="html">
-        <source>Opens the given view and record. It can open the vie in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
+        <source>Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
         <target>Otevře daný pohled a záznam. Může otevřít pohled ve stejném nebo novém okně prohlížeče. Kde je to možné (např. Workflow), lze zvolit otevření posranního panelu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
@@ -5862,7 +5884,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
-        <source>Opens a new email using the system default email application.</source><target state="new">Opens a new email using the system default email application.</target>
+        <source>Opens a new email using the system default email application.</source>
+        <target>Otevře nový email pomocí výchozí emailové aplikace.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/send-email-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6205,6 +6228,16 @@
         <target>Opravdu chcete smazat propojení "<x id="INTERPOLATION" equiv-text="{{name}}"/>" a všechna jeho použití?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
+        <source>Copy of</source><target state="new">Copy of</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.newRule.prefix" datatype="html">

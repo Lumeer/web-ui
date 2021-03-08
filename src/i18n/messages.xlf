@@ -3067,11 +3067,11 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.upgradePlan" datatype="html">
         <source>
@@ -3079,11 +3079,11 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/collection-rules.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.add" datatype="html">
         <source>
@@ -3140,6 +3140,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.btn.duplicate" datatype="html">
+        <source>Duplicate automation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.btn.edit" datatype="html">
+        <source>Edit automation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.btn.delete" datatype="html">
+        <source>Delete automation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.automation.name.new" datatype="html">
         <source>New automation name</source>
@@ -4085,8 +4103,8 @@
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections-without-rights/empty-tasks-collections-without-rights.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-      </trans-unit><trans-unit id="document.favorite" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
+      </trans-unit><trans-unit id="task.pinned" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Unpin task from top&apos; : &apos;Pin task to top&apos;}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/tasks/content/wrapper/first-line/search-task-first-line.component.html</context>
           <context context-type="linenumber">64</context>
@@ -5209,6 +5227,17 @@
         <source>Do you really want to delete the link type &quot;<x id="INTERPOLATION" equiv-text="{{name}}"/>&quot; and all its usages?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
+        <source>Copy of</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -6351,7 +6380,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.tooltip.navigateBlock" datatype="html">
-        <source>Opens the given view and record. It can open the vie in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
+        <source>Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
           <context context-type="linenumber">1</context>

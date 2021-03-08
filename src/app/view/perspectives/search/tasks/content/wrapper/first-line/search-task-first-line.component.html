@@ -61,9 +61,9 @@
 <div class="order-3 order-md-4 d-flex justify-content-end">
   <span *ngIf="permissions?.read" class="clickable ml-3"
         (click)="$event.stopPropagation(); toggleFavorite.emit()"
-        title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
-        i18n-title="@@document.favorite">
-      <i class="fa-star text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
+        title="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"
+        i18n-title="@@task.pinned">
+      <i class="fa-thumbtack text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
   </span>
   <span *ngIf="permissions?.read" class="clickable mx-2"
         (click)="$event.stopPropagation(); detail.emit()"><i class="far fa-file-search" aria-hidden="true"></i>
