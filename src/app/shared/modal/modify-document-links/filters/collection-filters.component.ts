@@ -23,7 +23,8 @@ import {CollectionAttributeFilter} from '../../../../core/store/navigation/query
 import {BehaviorSubject} from 'rxjs';
 import {SelectItem2Model} from '../../../select/select-item2/select-item2.model';
 import {resourceAttributesSelectItems} from '../../../select/select-item.utils';
-import {AttributeFilter} from '@lumeer/data-filters';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {areConditionValuesDefined} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'collection-filters',
@@ -47,22 +48,35 @@ export class CollectionFiltersComponent {
     }
   }
 
+  private onFiltersChanged() {
+    const validFilters = this.filterValidFilters();
+    this.filtersChange.emit(validFilters);
+  }
+
+  private filterValidFilters(): CollectionAttributeFilter[] {
+    return this.filters$.value.filter(filter => {
+      const attribute = findAttribute(this.collection.attributes, filter.attributeId);
+      const valuesDefined = attribute && areConditionValuesDefined(filter.condition, filter.conditionValues, attribute?.constraint?.type);
+      return attribute && valuesDefined;
+    });
+  }
+
   public onFilterChange(index: number, filter: CollectionAttributeFilter) {
     const filters = [...this.filters$.value];
     filters[index] = filter;
     this.filters$.next(filters);
-    this.filtersChange.emit(filters);
+    this.onFiltersChanged();
   }
 
   public onFilterDelete(index: number) {
     const filters = [...this.filters$.value];
     filters.splice(index, 1);
     this.filters$.next(filters);
-    this.filtersChange.emit(filters);
+    this.onFiltersChanged();
   }
 
-  public trackByAttributeFilter(index: number, filter: AttributeFilter): string {
-    return filter.attributeId + index;
+  public trackByAttributeFilter(index: number, filter: CollectionAttributeFilter): string {
+    return index.toString();
   }
 
   public onNewFilter() {

@@ -26,13 +26,17 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
-import {filter, map, mergeMap, switchMap} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {CollectionAttributeFilter, Query} from '../../../core/store/navigation/query/query';
 import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -51,32 +55,48 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   public selectedLinkTypeId$ = new BehaviorSubject<string>(null);
   public filtersByLinkType$ = new BehaviorSubject<Record<string, CollectionAttributeFilter[]>>({});
 
+  public removedLinkInstancesIds$ = new BehaviorSubject([]);
+  public selectedDocumentIds$ = new BehaviorSubject([]);
+
+  public linkType$: Observable<LinkType>;
   public collection$: Observable<Collection>;
+  public linkInstances$: Observable<LinkInstance[]>;
   public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
   public query$: Observable<Query>;
 
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.selectedLinkTypeId$.next(this.linkTypeIds[0]);
+    this.linkType$ = this.selectLinkType$();
     this.collection$ = this.selectCollection$();
     this.query$ = this.selectQuery$();
     this.documents$ = this.query$.pipe(
       mergeMap(query => this.store$.pipe(select(selectDocumentsByCustomQuery(query))))
     );
+    this.linkInstances$ = this.selectedLinkTypeId$.pipe(
+      mergeMap(linkTypeId => this.store$.pipe(select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [this.documentId]))))
+    );
+  }
+
+  private selectLinkType$(): Observable<LinkType> {
+    return this.selectedLinkTypeId$.pipe(
+      mergeMap(linkTypeId => this.store$.pipe(select(selectLinkTypeById(linkTypeId)))),
+    );
   }
 
   private selectCollection$(): Observable<Collection> {
-    return this.selectedLinkTypeId$.pipe(
-      mergeMap(linkTypeId => this.store$.pipe(select(selectLinkTypeById(linkTypeId)))),
+    return this.linkType$.pipe(
       filter(linkType => !!linkType),
       switchMap(linkType =>
         this.store$.pipe(select(selectCollectionById(getOtherLinkedCollectionId(linkType, this.collectionId))))
-      )
+      ),
+      tap(collection => this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: collection.id}]}})))
     );
   }
 
@@ -103,5 +123,13 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
     const filtersByLinkType = {...this.filtersByLinkType$.value};
     filtersByLinkType[this.selectedLinkTypeId$.value] = filters;
     this.filtersByLinkType$.next(filtersByLinkType);
+  }
+
+  public onDocumentSelected(documentModel: DocumentModel) {
+
+  }
+
+  public onDocumentUnselected(documentModel: DocumentModel) {
+
   }
 }

@@ -1,5 +1,6 @@
 <ng-container *ngIf="{rows: rows$ | async, loaded: loaded$ | async} as table">
   <cdk-virtual-scroll-viewport [itemSize]="tableRowHeight"
+                               id="table-body"
                                class="flex-grow-1 min-h-100">
     <table-primary-row *cdkVirtualFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex; last as isLast; first as isFirst"
                        [cursor]="cursor | nextRowCursor : rowIndex"

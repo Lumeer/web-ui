@@ -122,7 +122,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     private scrollDispatcher: ScrollDispatcher,
     private store$: Store<AppState>,
     private tableRowNumberService: TableRowNumberService
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.resetDefaultConfigSnapshot();
@@ -322,7 +323,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTableWithView(
     previousView: View,
     view: View
-  ): Observable<{query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
+  ): Observable<{ query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean }> {
     return this.store$.pipe(
       select(selectViewDataQuery),
       switchMap(query => {
@@ -394,7 +395,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private selectCurrentDefaultViewConfig$(): Observable<{key: string; defaultConfig: DefaultViewConfig}> {
+  private selectCurrentDefaultViewConfig$(): Observable<{ key: string; defaultConfig: DefaultViewConfig }> {
     return this.selectTableDefaultConfigId$().pipe(
       switchMap(collectionId =>
         this.store$.pipe(
@@ -438,7 +439,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private subscribeToScrolling(): Subscription {
     return this.scrollDispatcher
       .scrolled()
-      .pipe(filter(scrollable => !!scrollable))
+      .pipe(filter(scrollable => !!scrollable && scrollable.getElementRef().nativeElement.id?.startsWith('table')))
       .subscribe((scrollable: CdkScrollable) => {
         const left = scrollable.measureScrollOffset('left');
         const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(s => s !== scrollable);

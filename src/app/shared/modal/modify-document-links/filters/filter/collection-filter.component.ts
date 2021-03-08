@@ -25,7 +25,7 @@ import {
   Output,
   EventEmitter,
   HostListener,
-  ViewChild,
+  ViewChild, OnInit,
 } from '@angular/core';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {SelectItem2Model} from '../../../../select/select-item2/select-item2.model';
@@ -33,13 +33,15 @@ import {ConditionType, ConditionValue, initialConditionType, initialConditionVal
 import {findAttribute} from '../../../../../core/store/collections/collection.util';
 import {FilterBuilderComponent} from '../../../../builder/filter-builder/filter-builder.component';
 import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'collection-filter',
   templateUrl: './collection-filter.component.html',
+  styleUrls: ['./collection-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionFilterComponent {
+export class CollectionFilterComponent implements OnInit {
   @Input()
   public filter: CollectionAttributeFilter;
 
@@ -58,24 +60,32 @@ export class CollectionFilterComponent {
   @ViewChild(FilterBuilderComponent)
   public filterBuilderComponent: FilterBuilderComponent;
 
-  constructor(public element: ElementRef) {}
+  public filter$ = new BehaviorSubject<CollectionAttributeFilter>(null);
 
-  public onValueChange(data: {condition: ConditionType; values: ConditionValue[]}) {
-    const newFilter = {...this.filter, condition: data.condition, conditionValues: data.values};
+  public ngOnInit() {
+    this.filter$.next(this.filter);
+  }
+
+  constructor(public element: ElementRef) {
+  }
+
+  public onValueChange(data: { condition: ConditionType; values: ConditionValue[] }) {
+    const newFilter = {...this.filter$.value, condition: data.condition, conditionValues: data.values};
+    this.filter$.next(newFilter);
     this.filterChange.emit(newFilter);
   }
 
   public onAttributeSelect(items: SelectItem2Model[]) {
     const attribute = findAttribute(this.attributes, items[0]?.id);
-    if (attribute && this.filter.attributeId !== attribute.id) {
+    if (attribute && this.filter$.value.attributeId !== attribute.id) {
       const condition = initialConditionType(attribute.constraint);
-      const newFilter: CollectionAttributeFilter = {
-        ...this.filter,
+      const newFilter = {
+        ...this.filter$.value,
         attributeId: attribute.id,
         condition,
         conditionValues: initialConditionValues(condition, attribute.constraint),
       };
-      this.filterChange.emit(newFilter);
+      this.filter$.next(newFilter);
 
       setTimeout(() => this.filterBuilderComponent?.toggle());
     }

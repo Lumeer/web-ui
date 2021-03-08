@@ -28,9 +28,13 @@ import {CollectionFiltersComponent} from './filters/collection-filters.component
 import {CollectionFilterComponent} from './filters/filter/collection-filter.component';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
+import {ResultsTableComponent} from './results-table/results-table.component';
+import {DataInputModule} from '../../data-input/data-input.module';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {InputModule} from '../../input/input.module';
 
 @NgModule({
-  declarations: [ModifyDocumentLinksModalComponent, CollectionFiltersComponent, CollectionFilterComponent],
+  declarations: [ModifyDocumentLinksModalComponent, CollectionFiltersComponent, CollectionFilterComponent, ResultsTableComponent],
   imports: [
     CommonModule,
     SelectModule,
@@ -39,6 +43,9 @@ import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.m
     PreviewResultsModule,
     FilterBuilderModule,
     FilterPreviewModule,
+    DataInputModule,
+    ScrollingModule,
+    InputModule,
   ],
   exports: [ModifyDocumentLinksModalComponent],
 })

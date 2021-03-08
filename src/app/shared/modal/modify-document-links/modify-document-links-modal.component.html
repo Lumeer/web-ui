@@ -2,24 +2,28 @@
   [dialogType]="dialogType.Primary"
   (onClose)="hideDialog()"
   (onSubmit)="onSubmit()"
-  *ngIf="{documents: documents$ | async, selectedLinkTypeId: selectedLinkTypeId$ | async, collection: collection$ | async} as data">
+  *ngIf="{documents: documents$ | async, selectedLinkTypeId: selectedLinkTypeId$ | async, collection: collection$ | async, linkType: linkType$ | async} as data">
 
   <span class="title" i18n="@@modal.links.modify.title">Set linked documents</span>
 
   <div class="body p-3">
 
-    <collection-filters class="p-3" [collection]="data.collection"
+    <collection-filters [collection]="data.collection"
                         (filtersChange)="onFiltersChange($event)">
     </collection-filters>
 
     <ng-container *ngIf="data.documents.length; else noData">
-      <preview-results-table class="d-block mt-2"
-                             [documents]="data.documents"
-                             [collection]="data.collection"
-                             [loaded]="true"
-                             [resizeable]="false"
-                             [constraintData]="constraintData$ | async">
-      </preview-results-table>
+      <results-table class="d-block mt-2" *ngIf="{linkInstances: linkInstances$ | async} as resultData"
+                     [style.height.vh]="50"
+                     [mainDocumentId]="documentId"
+                     [documents]="data.documents"
+                     [linkType]="data.linkType"
+                     [collection]="data.collection"
+                     [linkInstances]="resultData.linkInstances"
+                     [constraintData]="constraintData$ | async"
+                     (selectDocument)="onDocumentSelected($event)"
+                     (unselectDocument)="onDocumentUnselected($event)">
+      </results-table>
     </ng-container>
   </div>
 
