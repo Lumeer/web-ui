@@ -48,7 +48,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/notification-settings/notification-settings-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/notification-settings/notification-settings-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
         <source>
         Select
       </source><target state="final">
@@ -194,7 +194,7 @@
         <source>Loading...</source><target state="final">Loading...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source><target state="final">Blockly Source Code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
@@ -2138,7 +2138,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="button.save" datatype="html">
         <source>Save</source><target state="final">Save</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/notification-settings/notification-settings-modal.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/notification-settings/notification-settings-modal.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Edit Function of</source><target state="final">Edit Function of</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.automation.title" datatype="html">
@@ -2813,12 +2813,9 @@
         </context-group>
       </trans-unit><trans-unit id="2af7efecfae8d7fed3b07f718a623eca1ad8163f" datatype="html">
         <source>Labels</source><target state="final">Labels</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
+        
         <note priority="1" from="description">perspective.chart.config.label.placeholder</note>
-      </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
   <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
 </source><target state="final">
@@ -2830,22 +2827,16 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">
         <source>Values</source><target state="final">Values</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
+        
         <note priority="1" from="description">perspective.chart.config.value.placeholder</note>
-      </trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
         <source>Data set</source><target state="final">Data set</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
+        
         <note priority="1" from="description">perspective.chart.config.dataSet.placeholder</note>
-      </trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
         <source>Size</source><target state="final">Size</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source><target state="final">Tasks have long timespan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
@@ -4567,6 +4558,12 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/iso-to-ms-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.linkDocumentsNoReturnBlock" datatype="html">
+        <source>Links two records using the selected link type.</source><target state="final">Links two records using the selected link type.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/link-documents-no-return-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source><target state="final">Gets current date as object for further function calls.</target>
         <context-group purpose="location">
@@ -4627,6 +4624,12 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-to-ms-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.deleteDocumentBlock" datatype="html">
+        <source>Deletes an existing record. To prevent large damage, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source><target state="final">Deletes an existing record. To prevent large damage, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.forEachDocumentBlock" datatype="html">
         <source>Loops over all records in the given list.</source><target state="final">Loops over all records in the given list.</target>
         <context-group purpose="location">
@@ -4669,6 +4672,24 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/ms-to-unit-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.navigateBlock" datatype="html">
+        <source>Opens the given view and record. It can open the vie in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source><target state="final">Opens the given view and record. It can open the vie in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.dropdown.window.navigateBlock" datatype="html">
+        <source>the same,a new</source><target state="final">the same,a new</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.dropdown.sidebar.navigateBlock" datatype="html">
+        <source>closed,opened</source><target state="final">closed,opened</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.parseDateBlock" datatype="html">
         <source>Parses a string date using given format returning milliseconds since epoch (Unix time).</source><target state="final">Parses a string date using given format returning milliseconds since epoch (Unix time).</target>
         <context-group purpose="location">
@@ -4679,6 +4700,18 @@
         <source>Prints the value of an attribute in the given record or link.</source><target state="final">Prints the value of an attribute in the given record or link.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
+        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</source><target state="final">Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
+        <source>Opens a new email using the system default email application.</source><target state="final">Opens a new email using the system default email application.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/send-email-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.sequenceBlock" datatype="html">
@@ -5216,17 +5249,14 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
         <source>Color</source><target state="final">Color</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
         <source>Aggregation</source><target state="final">Aggregation</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
+        
         <note priority="1" from="description">perspective.chart.config.aggregation.placeholder</note>
-      </trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
         <source>Lock axes</source><target state="final">Lock axes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>

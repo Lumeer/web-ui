@@ -73,8 +73,4 @@ export class ForEachLinkArrayBlocklyComponent extends BlocklyComponent {
     };
     Blockly.JavaScript[BlocklyUtils.FOREACH_LINK_ARRAY] = Blockly.JavaScript['controls_forEach'];
   }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
-  }
 }

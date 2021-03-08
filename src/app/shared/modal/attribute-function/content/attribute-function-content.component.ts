@@ -21,6 +21,7 @@ import {FormGroup} from '@angular/forms';
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {Attribute, AttributeFunction, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'attribute-function-content',
@@ -33,6 +34,9 @@ export class AttributeFunctionContentComponent implements OnInit {
 
   @Input()
   public linkTypes: LinkType[];
+
+  @Input()
+  public views: View[];
 
   @Input()
   public collection: Collection;

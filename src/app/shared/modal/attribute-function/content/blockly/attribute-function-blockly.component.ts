@@ -33,6 +33,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {BlocklyDebugDisplay} from '../../../../blockly/blockly-debugger/blockly-debugger.component';
 import {RuleVariable} from '../../../../blockly/rule-variable-type';
 import {attributeHasFunction} from '../../../../utils/attribute.utils';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'attribute-function-blockly',
@@ -45,6 +46,9 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
 
   @Input()
   public linkTypes: LinkType[];
+
+  @Input()
+  public views: View[];
 
   @Input()
   public collection: Collection;

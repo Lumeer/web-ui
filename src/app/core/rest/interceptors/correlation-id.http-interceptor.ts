@@ -33,7 +33,7 @@ export class CorrelationIdHttpInterceptor implements HttpInterceptor {
 
     if (request.body?.correlationId) {
       const requestClone = request.clone({
-        setHeaders: {correlationIdHeader: request.body.correlationId},
+        setHeaders: {[correlationIdHeader]: request.body.correlationId},
       });
       return next.handle(requestClone);
     }

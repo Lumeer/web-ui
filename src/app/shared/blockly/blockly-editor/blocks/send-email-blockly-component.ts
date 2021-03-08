@@ -19,61 +19,75 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_RED} from '../../../../core/constants';
+import {COLOR_CYAN} from '../../../../core/constants';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
-export class ForEachDocumentArrayBlocklyComponent extends BlocklyComponent {
+export class SendEmailBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
     super(blocklyUtils, i18n);
 
     this.tooltip = i18n({
-      id: 'blockly.tooltip.forEachDocumentBlock',
-      value: 'Loops over all records in the given list.',
+      id: 'blockly.tooltip.sendEmailBlock',
+      value: 'Opens a new email using the system default email application.',
     });
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
+    return [MasterBlockType.Function];
   }
 
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.FOREACH_DOCUMENT_ARRAY] = {
+    Blockly.Blocks[BlocklyUtils.SEND_EMAIL] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.FOREACH_DOCUMENT_ARRAY,
-          message0: '%{BKY_BLOCK_FOREACH_DOCUMENT}', // for each record %1 in %2
+          type: BlocklyUtils.SEND_EMAIL,
+          message0: '%{BKY_BLOCK_SEND_EMAIL}', // send email to address %1 with subject %2 and body %3
           args0: [
             {
-              type: 'field_variable',
-              name: 'VAR',
-              variable: null,
+              type: 'input_value',
+              name: 'EMAIL',
+              check: 'String',
+              align: 'RIGHT',
             },
             {
               type: 'input_value',
-              name: 'LIST',
-              check: null,
+              name: 'SUBJECT',
+              check: 'String',
+              align: 'RIGHT',
             },
-          ],
-          message1: '%{BKY_BLOCK_FOREACH_DOCUMENT_DO}', // do this %1
-          args1: [
             {
-              type: 'input_statement',
-              name: 'DO',
+              type: 'input_value',
+              name: 'BODY',
+              check: 'String',
+              align: 'RIGHT',
             },
           ],
           previousStatement: null,
           nextStatement: null,
-          colour: COLOR_RED,
+          colour: COLOR_CYAN,
           tooltip: this_.tooltip,
+          helpUrl: '',
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.FOREACH_DOCUMENT_ARRAY] = Blockly.JavaScript['controls_forEach'];
+    Blockly.JavaScript[BlocklyUtils.SEND_EMAIL] = function (block) {
+      const email = Blockly.JavaScript.valueToCode(block, 'EMAIL', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const subject = Blockly.JavaScript.valueToCode(block, 'SUBJECT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const body = Blockly.JavaScript.valueToCode(block, 'BODY', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+
+      if (!email) {
+        return '';
+      }
+
+      const code = this_.blocklyUtils.getLumeerVariable() + `.sendEmail(${email}, ${subject}, ${body});\n`;
+
+      return code;
+    };
   }
 }

@@ -31,6 +31,7 @@ import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
 import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
+import {ViewsGuard} from '../core/guards/data/views.guard';
 
 const collectionRoutes: Routes = [
   {
@@ -41,6 +42,7 @@ const collectionRoutes: Routes = [
       linkTypes: LinkTypesGuard,
       collections: CollectionsGuard,
       users: UsersGuard,
+      views: ViewsGuard,
     },
     children: [
       {

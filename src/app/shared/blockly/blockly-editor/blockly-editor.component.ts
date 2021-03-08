@@ -72,6 +72,13 @@ import {ShiftDateOfBlocklyComponent} from './blocks/shift-date-of-blockly-compon
 import {IsoToMsBlocklyComponent} from './blocks/iso-to-ms-blockly-component';
 import {PrintAttributeBlocklyComponent} from './blocks/print-attribute-blockly-component';
 import {StringReplaceBlocklyComponent} from './blocks/string-replace-blockly-component';
+import {DeleteDocumentBlocklyComponent} from './blocks/delete-document-blockly-component';
+import {LinkDocumentsNoReturnBlocklyComponent} from './blocks/link-documents-no-return-blockly-component';
+import {LinkDocumentsReturnBlocklyComponent} from './blocks/link-documents-return-blockly-component';
+import {View} from '../../../core/store/views/view';
+import {ReadDocumentsBlocklyComponent} from './blocks/read-documents-blockly-component';
+import {SendEmailBlocklyComponent} from './blocks/send-email-blockly-component';
+import {NavigateBlocklyComponent} from './blocks/navigate-blockly-component';
 
 declare var Blockly: any;
 
@@ -87,6 +94,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   public linkTypes: LinkType[] = [];
+
+  @Input()
+  public views: View[] = [];
 
   @Input()
   public variables: RuleVariable[] = [];
@@ -122,7 +132,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private workspace: any;
   private initializing = false;
   private destroying = false;
-  private blocklyUtils = new BlocklyUtils(null, [], [], []);
+  private blocklyUtils = new BlocklyUtils(null, [], [], [], []);
 
   constructor(
     private store$: Store<AppState>,
@@ -136,7 +146,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   public ngAfterViewInit(): void {
     const lumeerVar = this.blocklyUtils?.getLumeerVariable() || null;
-    this.blocklyUtils = new BlocklyUtils(this.masterType, this.collections, this.linkTypes, this.variables);
+    this.blocklyUtils = new BlocklyUtils(this.masterType, this.collections, this.linkTypes, this.views, this.variables);
     if (isNotNullOrUndefined(lumeerVar)) {
       this.blocklyUtils.setLumeerVariable(lumeerVar);
     }
@@ -170,6 +180,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new ShiftDateOfBlocklyComponent(this.blocklyUtils, this.i18n),
       new PrintAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
       new StringReplaceBlocklyComponent(this.blocklyUtils, this.i18n),
+      new DeleteDocumentBlocklyComponent(this.blocklyUtils, this.i18n),
+      new LinkDocumentsNoReturnBlocklyComponent(this.blocklyUtils, this.i18n, this.linkTypes),
+      new LinkDocumentsReturnBlocklyComponent(this.blocklyUtils, this.i18n, this.linkTypes),
+      new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.i18n, this.views),
+      new SendEmailBlocklyComponent(this.blocklyUtils, this.i18n),
+      new NavigateBlocklyComponent(this.blocklyUtils, this.i18n, this.views),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
@@ -480,24 +496,24 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private onWorkspaceChange(changeEvent): void {
-    const workspace = this.workspace;
+  private onWorkspaceBlockCreate(changeEvent, workspace): void {
+    const mainBlock = workspace.getBlockById(changeEvent.blockId);
 
-    if (changeEvent instanceof Blockly.Events.Create) {
-      const mainBlock = workspace.getBlockById(changeEvent.blockId);
+    // make sure the default blocks do not offer documents etc in variable dropdowns
+    this.blocklyUtils.ensureEmptyTypes(mainBlock);
 
-      // make sure the default blocks do not offer documents etc in variable dropdowns
-      this.blocklyUtils.ensureEmptyTypes(mainBlock);
+    // prevent deletion of the initial variables
+    this.blocklyUtils.preventDeletionOfInitialVariables(mainBlock);
 
-      // prevent deletion of the initial variables
-      this.blocklyUtils.preventDeletionOfInitialVariables(mainBlock);
+    if (mainBlock.type === BlocklyUtils.GET_ATTRIBUTE || mainBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
+      mainBlock.outputConnection.check_ = [BlocklyUtils.UNKNOWN];
+    }
 
-      if (mainBlock.type === BlocklyUtils.GET_ATTRIBUTE || mainBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
-        mainBlock.outputConnection.check_ = [BlocklyUtils.UNKNOWN];
-      }
-
-      if (!this.initializing && changeEvent.ids) {
-        changeEvent.ids.forEach(newBlockId => {
+    if (!this.initializing && changeEvent.ids) {
+      changeEvent.ids
+        .slice()
+        .reverse()
+        .forEach(newBlockId => {
           const block = workspace.getBlockById(newBlockId);
 
           if (block.type === BlocklyUtils.GET_ATTRIBUTE || block.type === BlocklyUtils.SET_ATTRIBUTE) {
@@ -563,8 +579,36 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
               }
             }
           }
+
+          if (block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX)) {
+            const link = block.getInput('DOCUMENT');
+            const linkedBlock = link.connection?.targetConnection?.getSourceBlock();
+
+            if (linkedBlock && linkedBlock.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+              const blockOutputType = this.blocklyUtils.getOutputConnectionCheck(block);
+              const linkParts = this.blocklyUtils.getLinkParts(block.type);
+              const counterpart =
+                linkParts[0] === blockOutputType.replace(BlocklyUtils.DOCUMENT_VAR_SUFFIX, '')
+                  ? linkParts[1]
+                  : linkParts[0];
+              block.setOutput(true, counterpart + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+            }
+          }
         });
-      }
+    }
+  }
+
+  private onWorkspaceChange(changeEvent): void {
+    const workspace = this.workspace;
+
+    // keep for easy debugging
+    /*if (changeEvent instanceof Blockly.Events.Ui) {
+      const block = workspace.getBlockById(changeEvent.blockId);
+      console.log(block);
+    }*/
+
+    if (changeEvent instanceof Blockly.Events.Create) {
+      this.onWorkspaceBlockCreate(changeEvent, workspace);
     }
 
     // change output type in getter of linked document from link instance
@@ -659,7 +703,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           }
         }
       }
-      // populate document attribute names in document attr getter and setter
+      // populate document attribute names in link attr getter and setter
       if (
         parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
         parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE

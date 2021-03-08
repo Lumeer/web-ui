@@ -100,8 +100,4 @@ export class SetAttributeBlocklyComponent extends BlocklyComponent {
       );
     };
   }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
-  }
 }

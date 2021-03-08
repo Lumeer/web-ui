@@ -21,10 +21,11 @@ import {BlocklyComponent} from './blockly-component';
 import {COLOR_GREEN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {isNotNullOrUndefined} from '../../../utils/common.utils';
 
 declare var Blockly: any;
 
-export class CreateDocumentBlocklyComponent extends BlocklyComponent {
+export class DeleteDocumentBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
@@ -32,9 +33,9 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
 
     this.tooltip = i18n(
       {
-        id: 'blockly.tooltip.createDocumentBlock2',
+        id: 'blockly.tooltip.deleteDocumentBlock',
         value:
-          'Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to {{limit}} documents can be created within a single sequence of automations and functions.',
+          'Deletes an existing record. To prevent large damage, only up to {{limit}} documents can be deleted within a single sequence of automations and functions.',
       },
       {limit: BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT}
     );
@@ -47,21 +48,19 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.CREATE_DOCUMENT] = {
+    Blockly.Blocks[BlocklyUtils.DELETE_DOCUMENT] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.CREATE_DOCUMENT,
-          message0: '%{BKY_BLOCK_CREATE_DOCUMENT}', // create record in %1,
+          type: BlocklyUtils.DELETE_DOCUMENT,
+          message0: '%{BKY_BLOCK_DELETE_DOCUMENT}', // delete record %1
           args0: [
             {
-              type: 'field_dropdown',
-              name: 'COLLECTION_ID',
-              options: function () {
-                return (this_.blocklyUtils.getCollections() || []).map(collection => [collection.name, collection.id]);
-              },
+              type: 'input_value',
+              name: 'DOCUMENT',
             },
           ],
-          output: '',
+          previousStatement: null,
+          nextStatement: null,
           colour: COLOR_GREEN,
           tooltip: this_.tooltip,
           helpUrl: '',
@@ -69,35 +68,31 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
       },
     };
 
-    Blockly.JavaScript[BlocklyUtils.CREATE_DOCUMENT] = function (block) {
-      const collectionId = block.getFieldValue('COLLECTION_ID');
+    Blockly.JavaScript[BlocklyUtils.DELETE_DOCUMENT] = function (block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-      const code = this_.blocklyUtils.getLumeerVariable() + ".createDocument('" + collectionId + "')";
-
-      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+      return this_.blocklyUtils.getLumeerVariable() + '.removeDocument(' + argument0 + ')';
     };
   }
 
   public getDocumentVariablesXml(workspace: any): string {
-    return '<xml><block type="' + BlocklyUtils.CREATE_DOCUMENT + '"></block></xml>';
+    return '<xml><block type="' + BlocklyUtils.DELETE_DOCUMENT + '"></block></xml>';
   }
 
   public onWorkspaceChange(workspace, changeEvent) {
     const block = workspace.getBlockById(changeEvent.blockId);
 
-    if (changeEvent instanceof Blockly.Events.Create) {
-      if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
-        block.outputConnection.check_ = this.blocklyUtils.getCollections()[0]?.id + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
-      }
-    } else if (changeEvent instanceof Blockly.Events.Change) {
-      if (
-        block.type === BlocklyUtils.CREATE_DOCUMENT &&
-        changeEvent.element === 'field' &&
-        changeEvent.name === 'COLLECTION_ID'
-      ) {
-        block.outputConnection.check_ = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+    if (changeEvent instanceof Blockly.Events.Move) {
+      const newParentId = changeEvent.newParentId;
 
-        this.blocklyUtils.checkVariablesType(changeEvent, workspace);
+      if (isNotNullOrUndefined(newParentId)) {
+        const parentBlock = workspace.getBlockById(newParentId);
+
+        if (isNotNullOrUndefined(parentBlock) && parentBlock.type === BlocklyUtils.DELETE_DOCUMENT) {
+          if (!block.outputConnection?.check_[0]?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+            this.blocklyUtils.tryDisconnect(block, block.outputConnection);
+          }
+        }
       }
     }
   }
