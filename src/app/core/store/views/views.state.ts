@@ -37,9 +37,8 @@ import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
-import {selectCurrentUser} from '../users/users.state';
-import {userHasManageRoleInResource} from '../../../shared/utils/resource.utils';
 import {isQuerySubset} from '../navigation/query/query.util';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -145,14 +144,15 @@ export const selectViewConfigChanged = createSelector(
 export const selectViewQuery = createSelector(
   selectCurrentView,
   selectQuery,
-  selectCurrentUser,
-  (view, query, currentUser) => {
-    if (!view || userHasManageRoleInResource(currentUser, view) || isQuerySubset(query, view.query)) {
+  selectViewsPermissions,
+  (view, query, permissions) => {
+    if (!view || permissions?.[view.id]?.manageWithView || isQuerySubset(query, view.query)) {
       return query;
     }
     return view.query;
   }
 );
+
 export const selectViewQueryChanged = createSelector(
   selectCurrentView,
   selectViewQuery,
