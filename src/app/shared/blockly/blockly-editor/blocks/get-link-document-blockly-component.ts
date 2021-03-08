@@ -68,7 +68,7 @@ export class GetLinkDocumentBlocklyComponent extends BlocklyComponent {
             },
           ],
           colour: COLOR_PRIMARY,
-          output: BlocklyUtils.UNKNOWN,
+          output: BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN,
           tooltip: this_.tooltip,
         });
       },

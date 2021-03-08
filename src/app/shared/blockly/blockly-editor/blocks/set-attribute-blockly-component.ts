@@ -64,7 +64,11 @@ export class SetAttributeBlocklyComponent extends BlocklyComponent {
             {
               type: 'input_value',
               name: 'DOCUMENT',
-              check: uniqueValues([...coreCollectionVarTypes, ...collectionTypes]),
+              check: uniqueValues([
+                ...coreCollectionVarTypes,
+                ...collectionTypes,
+                BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN,
+              ]),
             },
             {
               type: 'input_value',
