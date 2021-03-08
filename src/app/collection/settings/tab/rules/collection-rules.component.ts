@@ -49,6 +49,7 @@ export class CollectionRulesComponent implements OnInit {
 
   private readonly runRuleTitle: string;
   private readonly runRuleMessage: string;
+  private readonly copyOf: string;
 
   constructor(private store$: Store<AppState>, private i18n: I18n) {
     this.runRuleTitle = this.i18n({id: 'collection.config.tab.rules.run.title', value: 'Run the Rule'});
@@ -56,6 +57,10 @@ export class CollectionRulesComponent implements OnInit {
       id: 'collection.config.tab.rules.run.message',
       value:
         'Do you want to run the rule for all the rows in the table now? Please note that this might take significant time to complete.',
+    });
+    this.copyOf = this.i18n({
+      id: 'collection.config.tab.rules.prefix.copyOf',
+      value: 'Copy of',
     });
   }
 
@@ -71,6 +76,10 @@ export class CollectionRulesComponent implements OnInit {
 
   public onNewRule(): void {
     this.addingRules.push(this.getEmptyRule());
+  }
+
+  public onDuplicateRule(rule: Rule): void {
+    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name});
   }
 
   private getEmptyRule(): AutoLinkRule {

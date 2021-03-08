@@ -52,7 +52,14 @@ export class LinkTypeRulesComponent implements OnInit {
 
   public addingRules: Rule[] = [];
 
-  public constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  private readonly copyOf: string;
+
+  public constructor(private store$: Store<AppState>, private i18n: I18n) {
+    this.copyOf = this.i18n({
+      id: 'collection.config.tab.rules.prefix.copyOf',
+      value: 'Copy of',
+    });
+  }
 
   public ngOnInit(): void {
     this.rulesCountLimit$ = this.store$.pipe(
@@ -68,6 +75,10 @@ export class LinkTypeRulesComponent implements OnInit {
 
   public onNewRule(): void {
     this.addingRules.push(this.getEmptyRule());
+  }
+
+  public onDuplicateRule(rule: Rule): void {
+    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name});
   }
 
   public onCancelNewRule(index: number): void {

@@ -34,11 +34,17 @@ export class SingleRuleComponent {
   @Input()
   public rule: Rule;
 
+  @Input()
+  public canDuplicate: boolean = false;
+
   @Output()
   public onEdit = new EventEmitter<string>();
 
   @Output()
   public onDelete = new EventEmitter<string>();
+
+  @Output()
+  public onDuplicate = new EventEmitter<Rule>();
 
   constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
@@ -55,6 +61,14 @@ export class SingleRuleComponent {
       this.showZapierWarning();
     } else {
       this.onDelete.emit(rule.name);
+    }
+  }
+
+  public fireDuplicate(rule: Rule): void {
+    if (rule.type === RuleType.Zapier) {
+      this.showZapierWarning();
+    } else {
+      this.onDuplicate.emit(rule);
     }
   }
 

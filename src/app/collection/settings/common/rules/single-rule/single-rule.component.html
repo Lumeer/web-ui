@@ -30,10 +30,13 @@
     </span>
   </div>
   <div class="flex-grow-1 text-right">
-    <a (click)="fireEdit(rule)">
+    <a *ngIf="canDuplicate" (click)="fireDuplicate(rule)" title="Duplicate automation" i18n-title="@@collection.config.tab.rules.btn.duplicate">
+      <i class="far fa-clone text-success cursor-pointer"></i>
+    </a>
+    <a class="ml-2-5" (click)="fireEdit(rule)" title="Edit automation" i18n-title="@@collection.config.tab.rules.btn.edit">
       <i class="fas fa-pencil text-success cursor-pointer"></i>
     </a>
-    <a class="ml-3" (click)="fireDelete(rule)">
+    <a class="ml-2-5" (click)="fireDelete(rule)" title="Delete automation" i18n-title="@@collection.config.tab.rules.btn.delete">
       <i class="far fa-trash-alt text-danger cursor-pointer"></i>
     </a>
   </div>
