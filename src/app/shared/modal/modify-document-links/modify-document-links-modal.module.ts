@@ -32,9 +32,19 @@ import {ResultsTableComponent} from './results-table/results-table.component';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {InputModule} from '../../input/input.module';
+import {IsResultRowCheckedPipe} from './results-table/pipes/is-result-row-checked.pipe';
+import {WarningMessageModule} from '../../warning-message/warning-message.module';
+import {CountSelectedLinkedDocumentsPipe} from './pipes/count-selected-linked-documents.pipe';
 
 @NgModule({
-  declarations: [ModifyDocumentLinksModalComponent, CollectionFiltersComponent, CollectionFilterComponent, ResultsTableComponent],
+  declarations: [
+    ModifyDocumentLinksModalComponent,
+    CollectionFiltersComponent,
+    CollectionFilterComponent,
+    ResultsTableComponent,
+    IsResultRowCheckedPipe,
+    CountSelectedLinkedDocumentsPipe,
+  ],
   imports: [
     CommonModule,
     SelectModule,
@@ -46,6 +56,7 @@ import {InputModule} from '../../input/input.module';
     DataInputModule,
     ScrollingModule,
     InputModule,
+    WarningMessageModule,
   ],
   exports: [ModifyDocumentLinksModalComponent],
 })

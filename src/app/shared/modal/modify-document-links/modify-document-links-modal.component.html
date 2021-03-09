@@ -2,7 +2,7 @@
   [dialogType]="dialogType.Primary"
   (onClose)="hideDialog()"
   (onSubmit)="onSubmit()"
-  *ngIf="{documents: documents$ | async, selectedLinkTypeId: selectedLinkTypeId$ | async, collection: collection$ | async, linkType: linkType$ | async} as data">
+  *ngIf="{documents: documents$ | async, linkInstances: linkInstances$ | async, selectedLinkTypeId: selectedLinkTypeId$ | async, collection: collection$ | async, linkType: linkType$ | async} as data">
 
   <span class="title" i18n="@@modal.links.modify.title">Set linked documents</span>
 
@@ -13,16 +13,25 @@
     </collection-filters>
 
     <ng-container *ngIf="data.documents.length; else noData">
-      <results-table class="d-block mt-2" *ngIf="{linkInstances: linkInstances$ | async} as resultData"
+      <ng-container
+        *ngIf="data.documents | countSelectedLinkedDocuments:data.linkInstances:(selectedDocumentIds$ | async):(removedLinkInstancesIds$ | async) as countSelected">
+
+        <div class="mt-3 text-muted" i18n="@@modal.links.modify.selected">
+          {countSelected, plural, =0 {No documents selected} one {1 document selected} few {{{countSelected}} documents selected} other {{{countSelected}} documents selected} }
+        </div>
+      </ng-container>
+      <results-table class="d-block mt-2"
                      [style.height.vh]="50"
                      [mainDocumentId]="documentId"
                      [documents]="data.documents"
                      [linkType]="data.linkType"
                      [collection]="data.collection"
-                     [linkInstances]="resultData.linkInstances"
+                     [linkInstances]="data.linkInstances"
                      [constraintData]="constraintData$ | async"
-                     (selectDocument)="onDocumentSelected($event)"
-                     (unselectDocument)="onDocumentUnselected($event)">
+                     [removedLinkInstancesIds]="removedLinkInstancesIds$ | async"
+                     [selectedDocumentIds]="selectedDocumentIds$ | async"
+                     (selectRow)="onRowSelected($event)"
+                     (unselectRow)="onRowUnselected($event)">
       </results-table>
     </ng-container>
   </div>
@@ -38,5 +47,14 @@
 </modal-wrapper>
 
 <ng-template #noData>
-  <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+  <empty-state *ngIf="query$ | async | emptyQuery; else emptySearch"
+               class="py-4 d-block" [compact]="true" icon="fa fa-file-times">
+    <h4 i18n="@@modal.links.modify.title" class="text-center mt-2">
+      I am sorry but there is nothing to link.
+    </h4>
+  </empty-state>
+</ng-template>
+
+<ng-template #emptySearch>
+  <empty-search class="py-4 d-block" [compact]="true"></empty-search>
 </ng-template>

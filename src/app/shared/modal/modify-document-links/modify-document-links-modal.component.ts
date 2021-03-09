@@ -22,7 +22,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Collection} from '../../../core/store/collections/collection';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
@@ -37,6 +37,11 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
+import {ResultTableRow} from './results-table/results-table.component';
+import {uniqueValues} from '../../utils/array.utils';
+import {getOtherDocumentIdFromLinkInstance} from '../../../core/store/link-instances/link-instance.utils';
+import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {mergeDocuments} from '../../../core/store/documents/document.utils';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -67,8 +72,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {
-  }
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
@@ -76,17 +80,38 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
     this.linkType$ = this.selectLinkType$();
     this.collection$ = this.selectCollection$();
     this.query$ = this.selectQuery$();
-    this.documents$ = this.query$.pipe(
+    this.linkInstances$ = this.selectedLinkTypeId$.pipe(
+      mergeMap(linkTypeId =>
+        this.store$.pipe(select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [this.documentId])))
+      )
+    );
+    const documentsByQuery$ = this.query$.pipe(
       mergeMap(query => this.store$.pipe(select(selectDocumentsByCustomQuery(query))))
     );
-    this.linkInstances$ = this.selectedLinkTypeId$.pipe(
-      mergeMap(linkTypeId => this.store$.pipe(select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [this.documentId]))))
+
+    this.documents$ = combineLatest([this.selectAlwaysVisibleDocuments$(), documentsByQuery$]).pipe(
+      map(([alwaysVisibleDocuments, documentsByQuery]) => mergeDocuments(alwaysVisibleDocuments, documentsByQuery))
+    );
+  }
+
+  private selectAlwaysVisibleDocuments$(): Observable<DocumentModel[]> {
+    return combineLatest([this.linkInstances$, this.removedLinkInstancesIds$, this.selectedDocumentIds$]).pipe(
+      map(([linkInstances, removedLinkInstancesIds, selectedDocumentIds]) => {
+        const selectedLinkInstances = linkInstances.filter(
+          linkInstance => !removedLinkInstancesIds.includes(linkInstance.id)
+        );
+        const documentsIdsByLinks = selectedLinkInstances.map(linkInstance =>
+          getOtherDocumentIdFromLinkInstance(linkInstance, this.documentId)
+        );
+        return uniqueValues([...documentsIdsByLinks, ...selectedDocumentIds]);
+      }),
+      switchMap(documentsIds => this.store$.pipe(select(selectDocumentsByIds(documentsIds))))
     );
   }
 
   private selectLinkType$(): Observable<LinkType> {
     return this.selectedLinkTypeId$.pipe(
-      mergeMap(linkTypeId => this.store$.pipe(select(selectLinkTypeById(linkTypeId)))),
+      switchMap(linkTypeId => this.store$.pipe(select(selectLinkTypeById(linkTypeId))))
     );
   }
 
@@ -96,7 +121,9 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
       switchMap(linkType =>
         this.store$.pipe(select(selectCollectionById(getOtherLinkedCollectionId(linkType, this.collectionId))))
       ),
-      tap(collection => this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: collection.id}]}})))
+      tap(collection =>
+        this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: collection.id}]}}))
+      )
     );
   }
 
@@ -125,11 +152,19 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
     this.filtersByLinkType$.next(filtersByLinkType);
   }
 
-  public onDocumentSelected(documentModel: DocumentModel) {
-
+  public onRowSelected(row: ResultTableRow) {
+    if (row.linkInstance) {
+      this.removedLinkInstancesIds$.next(this.removedLinkInstancesIds$.value.filter(id => row.linkInstance.id !== id));
+    } else {
+      this.selectedDocumentIds$.next([...this.selectedDocumentIds$.value, row.document.id]);
+    }
   }
 
-  public onDocumentUnselected(documentModel: DocumentModel) {
-
+  public onRowUnselected(row: ResultTableRow) {
+    if (row.linkInstance) {
+      this.removedLinkInstancesIds$.next([...this.removedLinkInstancesIds$.value, row.linkInstance.id]);
+    } else {
+      this.selectedDocumentIds$.next(this.selectedDocumentIds$.value.filter(id => row.document.id !== id));
+    }
   }
 }

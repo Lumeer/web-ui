@@ -24,7 +24,8 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges, ViewChild,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {ConstraintData} from '@lumeer/data-filters';
 import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
@@ -35,7 +36,7 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {objectsByIdMap, objectValues} from '../../../utils/common.utils';
 
-export type ResultTableRow = { document: DocumentModel, linkInstance: LinkInstance };
+export type ResultTableRow = {document: DocumentModel; linkInstance: LinkInstance};
 
 @Component({
   selector: 'results-table',
@@ -44,7 +45,6 @@ export type ResultTableRow = { document: DocumentModel, linkInstance: LinkInstan
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultsTableComponent implements OnChanges {
-
   @Input()
   public mainDocumentId: string;
 
@@ -62,6 +62,12 @@ export class ResultsTableComponent implements OnChanges {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public removedLinkInstancesIds: string[];
+
+  @Input()
+  public selectedDocumentIds: string[];
 
   @Output()
   public selectRow = new EventEmitter<ResultTableRow>();
@@ -95,20 +101,34 @@ export class ResultsTableComponent implements OnChanges {
   private createRows(): ResultTableRow[] {
     const rows = [];
     const documentsMap = objectsByIdMap(this.documents);
-    for (const linkInstance of (this.linkInstances || [])) {
+    for (const linkInstance of this.linkInstances || []) {
       const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.mainDocumentId);
       if (documentsMap[otherDocumentId]) {
         rows.push({linkInstance, document: documentsMap[otherDocumentId]});
       }
 
-      delete documentsMap[otherDocumentId];
+      if (!this.selectedDocumentIds?.includes(otherDocumentId)) {
+        delete documentsMap[otherDocumentId];
+      }
     }
 
     return [...rows, ...objectValues(documentsMap).map(document => ({document}))];
   }
 
   public toggleRow(row: ResultTableRow) {
-    // TODO
+    if (row.linkInstance) {
+      if (this.removedLinkInstancesIds?.includes(row.linkInstance.id)) {
+        this.selectRow.emit(row);
+      } else {
+        this.unselectRow.emit(row);
+      }
+    } else {
+      if (this.selectedDocumentIds?.includes(row.document.id)) {
+        this.unselectRow.emit(row);
+      } else {
+        this.selectRow.emit(row);
+      }
+    }
   }
 
   public trackByAttribute(index: number, attribute: Attribute): string {
