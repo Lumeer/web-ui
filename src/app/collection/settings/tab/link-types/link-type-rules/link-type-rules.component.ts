@@ -32,6 +32,7 @@ import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.a
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {containsAttributeWithRule} from '../../../../../shared/utils/attribute.utils';
+import {generateId} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'link-type-rules',
@@ -78,7 +79,7 @@ export class LinkTypeRulesComponent implements OnInit {
   }
 
   public onDuplicateRule(rule: Rule): void {
-    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name});
+    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name, id: generateId()});
   }
 
   public onCancelNewRule(index: number): void {
