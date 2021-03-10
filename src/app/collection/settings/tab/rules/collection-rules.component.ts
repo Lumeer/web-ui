@@ -79,7 +79,7 @@ export class CollectionRulesComponent implements OnInit {
   }
 
   public onDuplicateRule(rule: Rule): void {
-    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name});
+    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name, id: generateId()});
   }
 
   private getEmptyRule(): AutoLinkRule {
