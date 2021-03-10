@@ -22,7 +22,8 @@ import {Workspace} from '../navigation/workspace';
 import {areDataQueriesEqual} from '../navigation/query/query.helper';
 import {environment} from '../../../../environments/environment';
 import {Query} from '../navigation/query/query';
-import {isQuerySubset} from '../navigation/query/query.util';
+import {isQuerySubset, queryWithoutFilters} from '../navigation/query/query.util';
+import {AllowedPermissions} from '../../model/allowed-permissions';
 
 export interface DataQueryPayload {
   query: DataQuery;
@@ -49,11 +50,25 @@ export function shouldLoadByDataQuery(
   return !loadingQueries.some(query => areDataQueriesEqual(query, payload.query));
 }
 
-export function checkLoadedDataQueryPayload(payload: DataQueryPayload): DataQueryPayload {
-  return {...payload, query: checkLoadedDataQuery(payload.query, environment.publicView, payload.silent)};
+export function checkLoadedDataQueryPayload(
+  payload: DataQueryPayload,
+  viewPermissions?: AllowedPermissions
+): DataQueryPayload {
+  return {
+    ...payload,
+    query: checkLoadedDataQuery(payload.query, viewPermissions, environment.publicView, payload.silent),
+  };
 }
 
-export function checkLoadedDataQuery(query: DataQuery, publicView?: boolean, silent?: boolean): Query {
+function checkLoadedDataQuery(
+  query: DataQuery,
+  viewPermissions: AllowedPermissions,
+  publicView?: boolean,
+  silent?: boolean
+): Query {
+  if (viewPermissions && !viewPermissions.manageWithView) {
+    return queryWithoutFilters(query);
+  }
   if (publicView) {
     return {};
   }
@@ -61,7 +76,7 @@ export function checkLoadedDataQuery(query: DataQuery, publicView?: boolean, sil
 }
 
 export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView: boolean): boolean {
-  const savedQuery = checkLoadedDataQuery(query, publicView);
+  const savedQuery = checkLoadedDataQuery(query, null, publicView);
   return loadedQueries.some(
     loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)
   );

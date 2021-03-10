@@ -299,7 +299,7 @@ export function queryWithoutFilters(query: Query): Query {
     return query;
   }
 
-  const stems: QueryStem[] = query.stems && query.stems.map(stem => queryStemWithoutFilters(stem));
+  const stems: QueryStem[] = query.stems?.map(stem => queryStemWithoutFilters(stem));
   return {...query, stems, fulltexts: []};
 }
 

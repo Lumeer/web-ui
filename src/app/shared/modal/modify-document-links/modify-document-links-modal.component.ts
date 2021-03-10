@@ -22,11 +22,11 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Collection} from '../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
-import {filter, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {CollectionAttributeFilter, Query} from '../../../core/store/navigation/query/query';
 import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
@@ -42,6 +42,8 @@ import {uniqueValues} from '../../utils/array.utils';
 import {getOtherDocumentIdFromLinkInstance} from '../../../core/store/link-instances/link-instance.utils';
 import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {mergeDocuments} from '../../../core/store/documents/document.utils';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {generateCorrelationId} from '../../utils/resource.utils';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -59,9 +61,9 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
 
   public selectedLinkTypeId$ = new BehaviorSubject<string>(null);
   public filtersByLinkType$ = new BehaviorSubject<Record<string, CollectionAttributeFilter[]>>({});
-
   public removedLinkInstancesIds$ = new BehaviorSubject([]);
   public selectedDocumentIds$ = new BehaviorSubject([]);
+  public performingAction$ = new BehaviorSubject(false);
 
   public linkType$: Observable<LinkType>;
   public collection$: Observable<Collection>;
@@ -85,17 +87,19 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
         this.store$.pipe(select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [this.documentId])))
       )
     );
-    const documentsByQuery$ = this.query$.pipe(
-      mergeMap(query => this.store$.pipe(select(selectDocumentsByCustomQuery(query))))
-    );
-
-    this.documents$ = combineLatest([this.selectAlwaysVisibleDocuments$(), documentsByQuery$]).pipe(
-      map(([alwaysVisibleDocuments, documentsByQuery]) => mergeDocuments(alwaysVisibleDocuments, documentsByQuery))
+    this.documents$ = this.query$.pipe(
+      mergeMap(query => this.store$.pipe(select(selectDocumentsByCustomQuery(query)))),
+      mergeMap(documentsByQuery =>
+        this.selectAlwaysVisibleDocuments$().pipe(
+          map(alwaysVisibleDocuments => mergeDocuments(alwaysVisibleDocuments, documentsByQuery))
+        )
+      )
     );
   }
 
   private selectAlwaysVisibleDocuments$(): Observable<DocumentModel[]> {
-    return combineLatest([this.linkInstances$, this.removedLinkInstancesIds$, this.selectedDocumentIds$]).pipe(
+    return this.linkInstances$.pipe(
+      withLatestFrom(this.removedLinkInstancesIds$, this.selectedDocumentIds$),
       map(([linkInstances, removedLinkInstancesIds, selectedDocumentIds]) => {
         const selectedLinkInstances = linkInstances.filter(
           linkInstance => !removedLinkInstancesIds.includes(linkInstance.id)
@@ -143,7 +147,26 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.hideDialog();
+    this.performingAction$.next(true);
+
+    const linkTypeId = this.selectedLinkTypeId$.value;
+    const linkInstances: LinkInstance[] = this.selectedDocumentIds$.value.map(otherDocumentId => ({
+      data: {},
+      correlationId: generateCorrelationId(),
+      linkTypeId,
+      documentIds: [this.documentId, otherDocumentId],
+    }));
+
+    this.store$.dispatch(
+      new LinkInstancesAction.SetDocumentLinks({
+        removedLinkInstancesIds: this.removedLinkInstancesIds$.value,
+        documentId: this.documentId,
+        linkInstances,
+        linkTypeId,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
   }
 
   public onFiltersChange(filters: CollectionAttributeFilter[]) {

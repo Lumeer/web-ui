@@ -31,6 +31,7 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
 import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
 import {LinkInstance} from '../../store/link-instances/link.instance';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
 
 @Injectable()
 export class PublicLinkInstanceService extends BaseService implements LinkInstanceService {
@@ -105,6 +106,10 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
         })
       )
     );
+  }
+
+  public setDocumentLinks(linkTypeId: string, dto: DocumentLinksDto): Observable<LinkInstanceDto[]> {
+    return of(dto.createdLinkInstances.map(linkInstance => ({...linkInstance, id: generateId()})));
   }
 
   private convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {

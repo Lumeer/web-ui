@@ -52,13 +52,15 @@ import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
+import {selectCurrentViewPermissions} from '../views/views.state';
 
 @Injectable()
 export class DocumentsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
-    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(this.store$.pipe(select(selectCurrentViewPermissions))),
+    map(([action, viewPermissions]) => checkLoadedDataQueryPayload(action.payload, viewPermissions)),
     withLatestFrom(
       this.store$.pipe(select(selectDocumentsQueries)),
       this.store$.pipe(select(selectDocumentsLoadingQueries))

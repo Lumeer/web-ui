@@ -19,6 +19,7 @@
 
 import {Observable} from 'rxjs';
 import {LinkInstanceDto, LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
 
 export abstract class LinkInstanceService {
   public abstract getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto>;
@@ -34,6 +35,8 @@ export abstract class LinkInstanceService {
   public abstract updateLinkInstanceData(linkInstanceDto: LinkInstanceDto): Observable<LinkInstanceDto>;
 
   public abstract deleteLinkInstance(id: string): Observable<string>;
+
+  public abstract setDocumentLinks(linkTypeId: string, dto: DocumentLinksDto): Observable<LinkInstanceDto[]>;
 
   public abstract duplicateLinkInstances(
     linkInstanceDuplicate: LinkInstanceDuplicateDto

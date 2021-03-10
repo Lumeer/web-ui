@@ -43,13 +43,16 @@ import {
 import {LinkInstanceService, SearchService} from '../../data-service';
 import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
+import {selectCurrentViewPermissions} from '../views/views.state';
 
 @Injectable()
 export class LinkInstancesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
-    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(this.store$.pipe(select(selectCurrentViewPermissions))),
+    map(([action, viewPermissions]) => checkLoadedDataQueryPayload(action.payload, viewPermissions)),
     withLatestFrom(
       this.store$.pipe(select(selectLinkInstancesQueries)),
       this.store$.pipe(select(selectLinkInstancesLoadingQueries))
@@ -364,6 +367,47 @@ export class LinkInstancesEffects {
             : []
         )
       );
+    })
+  );
+
+  @Effect()
+  public setDocumentLinks$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.SetDocumentLinks>(LinkInstancesActionType.SET_DOCUMENT_LINKS),
+    mergeMap(action => {
+      const {linkTypeId, documentId, removedLinkInstancesIds, linkInstances, onSuccess, onFailure} = action.payload;
+
+      const documentLinksDto: DocumentLinksDto = {
+        documentId,
+        removedLinkInstancesIds,
+        createdLinkInstances: linkInstances.map(linkInstance => convertLinkInstanceModelToDto(linkInstance)),
+      };
+
+      return this.linkInstanceService.setDocumentLinks(linkTypeId, documentLinksDto).pipe(
+        map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
+        mergeMap(createdLinkInstances => [
+          new LinkInstancesAction.SetDocumentLinksSuccess({
+            linkInstances: createdLinkInstances,
+            removedLinkInstancesIds,
+          }),
+          ...createCallbackActions(onSuccess),
+        ]),
+        catchError(error =>
+          of(new LinkInstancesAction.SetDocumentLinksFailure({error}), ...createCallbackActions(onFailure))
+        )
+      );
+    })
+  );
+
+  @Effect()
+  public setDocumentLinksFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.SetDocumentLinksFailure>(LinkInstancesActionType.SET_DOCUMENT_LINKS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'link.instance.document.setLinks.failure',
+        value: 'Could not set documents links',
+      });
+      return new NotificationsAction.Error({message});
     })
   );
 

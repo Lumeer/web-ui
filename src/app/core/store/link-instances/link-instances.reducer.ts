@@ -21,6 +21,7 @@ import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.act
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
 import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
+import SetDocumentLinksSuccess = LinkInstancesAction.SetDocumentLinksSuccess;
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -58,6 +59,8 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.DUPLICATE_SUCCESS:
       return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
+    case LinkInstancesActionType.SET_DOCUMENT_LINKS_SUCCESS:
+      return setDocumentLinks(state, action);
     case LinkInstancesActionType.RUN_RULE:
       return setActionExecutionTime(
         state,
@@ -87,6 +90,19 @@ export function linkInstancesReducer(
     default:
       return state;
   }
+}
+
+function setDocumentLinks(state: LinkInstancesState, action: SetDocumentLinksSuccess): LinkInstancesState {
+  let newState = state;
+  if (action.payload.removedLinkInstancesIds?.length) {
+    newState = linkInstancesAdapter.removeMany(action.payload.removedLinkInstancesIds, newState);
+  }
+
+  if (action.payload.linkInstances?.length) {
+    newState = linkInstancesAdapter.upsertMany(action.payload.linkInstances, newState);
+  }
+
+  return newState;
 }
 
 function setActionExecutionTime(

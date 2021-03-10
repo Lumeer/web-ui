@@ -69,6 +69,12 @@ export const selectCurrentView = createSelector(selectViewCode, selectAllViews, 
   viewCode ? views.find(view => view.code === viewCode) : null
 );
 
+export const selectCurrentViewPermissions = createSelector(
+  selectCurrentView,
+  selectViewsPermissions,
+  (currentView, viewsPermissions) => currentView && viewsPermissions?.[currentView.id]
+);
+
 export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 
 export const selectDefaultViewConfigSnapshot = createSelector(selectViewsState, state => state.defaultConfigSnapshot);
