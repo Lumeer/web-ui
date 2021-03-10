@@ -66,7 +66,7 @@ function checkLoadedDataQuery(
   publicView?: boolean,
   silent?: boolean
 ): Query {
-  if (viewPermissions && !viewPermissions.manageWithView) {
+  if (!viewPermissions || viewPermissions.manageWithView) {
     return queryWithoutFilters(query);
   }
   if (publicView) {

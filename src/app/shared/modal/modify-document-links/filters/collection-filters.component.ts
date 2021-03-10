@@ -56,7 +56,8 @@ export class CollectionFiltersComponent {
   private filterValidFilters(): CollectionAttributeFilter[] {
     return this.filters$.value.filter(filter => {
       const attribute = findAttribute(this.collection.attributes, filter.attributeId);
-      const valuesDefined = attribute && areConditionValuesDefined(filter.condition, filter.conditionValues, attribute?.constraint?.type);
+      const valuesDefined =
+        attribute && areConditionValuesDefined(filter.condition, filter.conditionValues, attribute?.constraint?.type);
       return attribute && valuesDefined;
     });
   }

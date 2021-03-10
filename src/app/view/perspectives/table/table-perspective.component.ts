@@ -122,8 +122,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     private scrollDispatcher: ScrollDispatcher,
     private store$: Store<AppState>,
     private tableRowNumberService: TableRowNumberService
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.resetDefaultConfigSnapshot();
@@ -323,7 +322,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTableWithView(
     previousView: View,
     view: View
-  ): Observable<{ query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean }> {
+  ): Observable<{query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.store$.pipe(
       select(selectViewDataQuery),
       switchMap(query => {
@@ -395,7 +394,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private selectCurrentDefaultViewConfig$(): Observable<{ key: string; defaultConfig: DefaultViewConfig }> {
+  private selectCurrentDefaultViewConfig$(): Observable<{key: string; defaultConfig: DefaultViewConfig}> {
     return this.selectTableDefaultConfigId$().pipe(
       switchMap(collectionId =>
         this.store$.pipe(

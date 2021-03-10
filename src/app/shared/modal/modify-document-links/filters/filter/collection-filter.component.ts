@@ -25,7 +25,8 @@ import {
   Output,
   EventEmitter,
   HostListener,
-  ViewChild, OnInit,
+  ViewChild,
+  OnInit,
 } from '@angular/core';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {SelectItem2Model} from '../../../../select/select-item2/select-item2.model';
@@ -66,10 +67,9 @@ export class CollectionFilterComponent implements OnInit {
     this.filter$.next(this.filter);
   }
 
-  constructor(public element: ElementRef) {
-  }
+  constructor(public element: ElementRef) {}
 
-  public onValueChange(data: { condition: ConditionType; values: ConditionValue[] }) {
+  public onValueChange(data: {condition: ConditionType; values: ConditionValue[]}) {
     const newFilter = {...this.filter$.value, condition: data.condition, conditionValues: data.values};
     this.filter$.next(newFilter);
     this.filterChange.emit(newFilter);

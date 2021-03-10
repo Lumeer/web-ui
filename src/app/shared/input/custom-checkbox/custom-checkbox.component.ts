@@ -23,20 +23,18 @@ import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@
   selector: 'custom-checkbox',
   templateUrl: './custom-checkbox.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'custom-control custom-checkbox'}
+  host: {class: 'custom-control custom-checkbox'},
 })
 export class CustomCheckboxComponent {
-
   @Input()
   public checkboxId: string;
 
   @Input()
-  public checked: boolean
+  public checked: boolean;
 
   @Input()
   public title: string;
 
   @Output()
   public checkedChange = new EventEmitter<boolean>();
-
 }

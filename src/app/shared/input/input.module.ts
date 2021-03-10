@@ -25,7 +25,7 @@ import {InputBoxComponent} from './input-box/input-box.component';
 import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
 import {HiddenInputComponent} from './hidden-input/hidden-input.component';
 import {CopyTextBoxComponent} from './copy-text-box/copy-text-box.component';
-import { CustomCheckboxComponent } from './custom-checkbox/custom-checkbox.component';
+import {CustomCheckboxComponent} from './custom-checkbox/custom-checkbox.component';
 
 @NgModule({
   imports: [CommonModule],
