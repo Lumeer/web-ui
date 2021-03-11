@@ -34,7 +34,9 @@
                      [removedLinkInstancesIds]="removedLinkInstancesIds$ | async"
                      [selectedDocumentIds]="selectedDocumentIds$ | async"
                      (selectRow)="onRowSelected($event)"
-                     (unselectRow)="onRowUnselected($event)">
+                     (unselectRow)="onRowUnselected($event)"
+                     (selectAll)="onSelectAll($event)"
+                     (unselectAll)="onUnSelectAll($event)">
       </results-table>
     </ng-container>
   </div>

@@ -44,15 +44,20 @@ import {LinkInstanceService, SearchService} from '../../data-service';
 import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
-import {selectCurrentViewPermissions} from '../views/views.state';
+import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
 
 @Injectable()
 export class LinkInstancesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectCurrentViewPermissions))),
-    map(([action, viewPermissions]) => checkLoadedDataQueryPayload(action.payload, viewPermissions)),
+    withLatestFrom(
+      this.store$.pipe(select(selectCollectionsPermissions)),
+      this.store$.pipe(select(selectLinkTypesPermissions))
+    ),
+    map(([action, collectionsPermissions, linkTypePermissions]) =>
+      checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+    ),
     withLatestFrom(
       this.store$.pipe(select(selectLinkInstancesQueries)),
       this.store$.pipe(select(selectLinkInstancesLoadingQueries))

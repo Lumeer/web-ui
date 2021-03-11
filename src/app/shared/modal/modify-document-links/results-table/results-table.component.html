@@ -5,6 +5,12 @@
       <th class="sticky-header"
           [style.top]="inverseTranslation"
           scope="col">
+        <custom-checkbox class="d-inline-block"
+                         checkboxId="checkAll"
+                         [checked]="isAllChecked"
+                         (checkedChange)="onCheckedAllChange($event)"
+                         (click)="$event.stopPropagation()">
+        </custom-checkbox>
       </th>
       <th class="sticky-header"
           [style.top]="inverseTranslation"

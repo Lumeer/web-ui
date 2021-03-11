@@ -35,6 +35,7 @@ import {Attribute, Collection} from '../../../../core/store/collections/collecti
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {objectsByIdMap, objectValues} from '../../../utils/common.utils';
+import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
 
 export type ResultTableRow = {document: DocumentModel; linkInstance: LinkInstance};
 
@@ -75,6 +76,12 @@ export class ResultsTableComponent implements OnChanges {
   @Output()
   public unselectRow = new EventEmitter<ResultTableRow>();
 
+  @Output()
+  public selectAll = new EventEmitter<{documentsIds: string[]; linkInstancesIds: string[]}>();
+
+  @Output()
+  public unselectAll = new EventEmitter<{documentsIds: string[]; linkInstancesIds: string[]}>();
+
   @ViewChild(CdkVirtualScrollViewport, {static: true})
   public viewPort: CdkVirtualScrollViewport;
 
@@ -91,10 +98,16 @@ export class ResultsTableComponent implements OnChanges {
   }
 
   public rows: ResultTableRow[];
+  public isAllChecked: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.documents || changes.linkInstances) {
       this.rows = this.createRows();
+    }
+    if (changes.documents || changes.linkInstances || changes.removedLinkInstancesIds || changes.selectedDocumentIds) {
+      this.isAllChecked = this.rows.every(row =>
+        isResultRowChecked(row, this.removedLinkInstancesIds, this.selectedDocumentIds)
+      );
     }
   }
 
@@ -144,6 +157,17 @@ export class ResultsTableComponent implements OnChanges {
       this.selectRow.emit(row);
     } else {
       this.unselectRow.emit(row);
+    }
+  }
+
+  public onCheckedAllChange(checked: boolean) {
+    if (checked) {
+      const linkInstancesIds = this.rows.filter(row => !!row.linkInstance).map(row => row.linkInstance.id);
+      const documentsIds = this.rows.filter(row => !row.linkInstance && !!row.document).map(row => row.document.id);
+      this.selectAll.emit({documentsIds, linkInstancesIds});
+    } else {
+      const linkInstancesIds = this.linkInstances.map(linkInstance => linkInstance.id);
+      this.unselectAll.emit({documentsIds: [], linkInstancesIds});
     }
   }
 }

@@ -25,10 +25,18 @@ import {ResultTableRow} from '../results-table.component';
 })
 export class IsResultRowCheckedPipe implements PipeTransform {
   public transform(row: ResultTableRow, removedLinkInstanceIds: string[], selectedDocumentIds: string[]): boolean {
-    if (row.linkInstance) {
-      return !removedLinkInstanceIds?.includes(row.linkInstance.id);
-    } else {
-      return selectedDocumentIds?.includes(row.document.id);
-    }
+    return isResultRowChecked(row, removedLinkInstanceIds, selectedDocumentIds);
+  }
+}
+
+export function isResultRowChecked(
+  row: ResultTableRow,
+  removedLinkInstanceIds: string[],
+  selectedDocumentIds: string[]
+): boolean {
+  if (row.linkInstance) {
+    return !removedLinkInstanceIds?.includes(row.linkInstance.id);
+  } else {
+    return selectedDocumentIds?.includes(row.document.id);
   }
 }

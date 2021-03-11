@@ -39,15 +39,20 @@ import {
 import {NotificationsAction} from '../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
-import {selectCurrentViewPermissions} from '../views/views.state';
+import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
 
 @Injectable()
 export class DataResourcesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectCurrentViewPermissions))),
-    map(([action, viewPermissions]) => checkLoadedDataQueryPayload(action.payload, viewPermissions)),
+    withLatestFrom(
+      this.store$.pipe(select(selectCollectionsPermissions)),
+      this.store$.pipe(select(selectLinkTypesPermissions))
+    ),
+    map(([action, collectionsPermissions, linkTypePermissions]) =>
+      checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+    ),
     withLatestFrom(
       this.store$.pipe(select(selectDataResourcesQueries)),
       this.store$.pipe(select(selectDataResourcesLoadingQueries))
@@ -83,8 +88,7 @@ export class DataResourcesEffects {
   @Effect()
   public getTasks$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
-    withLatestFrom(this.store$.pipe(select(selectCurrentViewPermissions))),
-    map(([action, viewPermissions]) => checkLoadedDataQueryPayload(action.payload)),
+    map(action => checkLoadedDataQueryPayload(action.payload)),
     withLatestFrom(this.store$.pipe(select(selectTasksQueries)), this.store$.pipe(select(selectTasksLoadingQueries))),
     filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
     map(([payload, ,]) => payload),

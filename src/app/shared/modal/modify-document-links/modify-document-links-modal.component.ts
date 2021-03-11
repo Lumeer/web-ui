@@ -190,4 +190,16 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
       this.selectedDocumentIds$.next(this.selectedDocumentIds$.value.filter(id => row.document.id !== id));
     }
   }
+
+  public onSelectAll(data: {documentsIds: string[]; linkInstancesIds: string[]}) {
+    this.selectedDocumentIds$.next(data.documentsIds);
+    this.removedLinkInstancesIds$.next(
+      this.removedLinkInstancesIds$.value.filter(id => !data.linkInstancesIds.includes(id))
+    );
+  }
+
+  public onUnSelectAll(data: {documentsIds: string[]; linkInstancesIds: string[]}) {
+    this.selectedDocumentIds$.next(data.documentsIds);
+    this.removedLinkInstancesIds$.next(data.linkInstancesIds);
+  }
 }
