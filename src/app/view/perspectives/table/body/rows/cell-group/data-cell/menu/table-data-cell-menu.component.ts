@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
-import {first, map, take} from 'rxjs/operators';
+import {first, map, take, tap} from 'rxjs/operators';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../../core/store/app.state';
@@ -91,6 +91,8 @@ export class TableDataCellMenuComponent implements OnChanges {
   public tableRow$: Observable<TableConfigRow>;
   public tableParts$: Observable<TableConfigPart[]>;
 
+  private tableParts: TableConfigPart[];
+
   public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public open(x: number, y: number) {
@@ -110,7 +112,10 @@ export class TableDataCellMenuComponent implements OnChanges {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
       this.tableRow$ = this.store$.pipe(select(selectTableRow(this.cursor)));
-      this.tableParts$ = this.store$.pipe(select(selectTableParts(this.cursor)));
+      this.tableParts$ = this.store$.pipe(
+        select(selectTableParts(this.cursor)),
+        tap(parts => (this.tableParts = parts))
+      );
     }
   }
 
@@ -248,5 +253,12 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public onCopyValue() {
     this.store$.dispatch(new TablesAction.CopyValue({cursor: this.cursor}));
+  }
+
+  public onUpdateLinks() {
+    const linkTypeId = this.tableParts?.[this.cursor.partIndex + 1]?.linkTypeId;
+    if (this.document && linkTypeId) {
+      this.modalService.showModifyDocumentLinks(this.document.id, this.document.collectionId, linkTypeId);
+    }
   }
 }

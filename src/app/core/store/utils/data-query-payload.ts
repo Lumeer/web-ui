@@ -21,8 +21,9 @@ import {DataQuery} from '../../model/data-query';
 import {Workspace} from '../navigation/workspace';
 import {areDataQueriesEqual} from '../navigation/query/query.helper';
 import {environment} from '../../../../environments/environment';
-import {Query} from '../navigation/query/query';
+import {Query, QueryStem} from '../navigation/query/query';
 import {isQuerySubset} from '../navigation/query/query.util';
+import {AllowedPermissions} from '../../model/allowed-permissions';
 
 export interface DataQueryPayload {
   query: DataQuery;
@@ -49,19 +50,70 @@ export function shouldLoadByDataQuery(
   return !loadingQueries.some(query => areDataQueriesEqual(query, payload.query));
 }
 
-export function checkLoadedDataQueryPayload(payload: DataQueryPayload): DataQueryPayload {
-  return {...payload, query: checkLoadedDataQuery(payload.query, environment.publicView, payload.silent)};
+export function checkLoadedDataQueryPayload(
+  payload: DataQueryPayload,
+  collectionsPermissions?: Record<string, AllowedPermissions>,
+  linkTypePermissions?: Record<string, AllowedPermissions>
+): DataQueryPayload {
+  return {
+    ...payload,
+    query: checkLoadedDataQuery(
+      payload.query,
+      collectionsPermissions,
+      linkTypePermissions,
+      environment.publicView,
+      payload.silent
+    ),
+  };
 }
 
-export function checkLoadedDataQuery(query: DataQuery, publicView?: boolean, silent?: boolean): Query {
+function checkLoadedDataQuery(
+  query: DataQuery,
+  collectionsPermissions?: Record<string, AllowedPermissions>,
+  linkTypePermissions?: Record<string, AllowedPermissions>,
+  publicView?: boolean,
+  silent?: boolean
+): Query {
   if (publicView) {
     return {};
   }
-  return silent ? undefined : query;
+  return silent ? undefined : removeUnneededFilters(query, collectionsPermissions, linkTypePermissions);
+}
+
+function removeUnneededFilters(
+  query: Query,
+  collectionsPermissions?: Record<string, AllowedPermissions>,
+  linkTypePermissions?: Record<string, AllowedPermissions>
+): Query {
+  const shouldSkipFulltexts =
+    query?.stems?.length > 0 &&
+    query?.stems.some(
+      stem =>
+        !collectionsPermissions?.[stem.collectionId]?.read ||
+        (stem.linkTypeIds || []).some(linkTypeId => !linkTypePermissions?.[linkTypeId]?.read)
+    );
+
+  return {
+    ...query,
+    stems: query.stems?.map(stem => removeUnneededFiltersFromStem(stem, collectionsPermissions, linkTypePermissions)),
+    fulltexts: shouldSkipFulltexts ? [] : query.fulltexts,
+  };
+}
+
+function removeUnneededFiltersFromStem(
+  stem: QueryStem,
+  collectionsPermissions?: Record<string, AllowedPermissions>,
+  linkTypePermissions?: Record<string, AllowedPermissions>
+): QueryStem {
+  return {
+    ...stem,
+    filters: stem.filters?.filter(filter => !collectionsPermissions?.[filter.collectionId]?.read),
+    linkFilters: stem.linkFilters?.filter(filter => !linkTypePermissions?.[filter.linkTypeId]?.read),
+  };
 }
 
 export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView: boolean): boolean {
-  const savedQuery = checkLoadedDataQuery(query, publicView);
+  const savedQuery = checkLoadedDataQuery(query, {}, {}, publicView);
   return loadedQueries.some(
     loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)
   );

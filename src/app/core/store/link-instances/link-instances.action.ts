@@ -35,6 +35,10 @@ export enum LinkInstancesActionType {
   CREATE_MULTIPLE_SUCCESS = '[Link Instances] Create Multiple :: Success',
   CREATE_FAILURE = '[Link Instances] Create :: Failure',
 
+  SET_DOCUMENT_LINKS = '[Link Instances] Set Document Links',
+  SET_DOCUMENT_LINKS_SUCCESS = '[Link Instances] Set Document Links :: Success',
+  SET_DOCUMENT_LINKS_FAILURE = '[Link Instances] Set Document Links :: Failure',
+
   UPDATE = '[Link Instances] Update',
   UPDATE_INTERNAL = '[Link Instances] Update :: Internal',
 
@@ -184,6 +188,33 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {error: any; originalLinkInstance?: LinkInstance}) {}
   }
 
+  export class SetDocumentLinks implements Action {
+    public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS;
+
+    public constructor(
+      public payload: {
+        linkTypeId: string;
+        documentId: string;
+        linkInstances: LinkInstance[];
+        removedLinkInstancesIds: string[];
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
+  }
+
+  export class SetDocumentLinksSuccess implements Action {
+    public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS_SUCCESS;
+
+    public constructor(public payload: {linkInstances: LinkInstance[]; removedLinkInstancesIds: string[]}) {}
+  }
+
+  export class SetDocumentLinksFailure implements Action {
+    public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class ChangeDocuments implements Action {
     public readonly type = LinkInstancesActionType.CHANGE_DOCUMENTS;
 
@@ -300,6 +331,9 @@ export namespace LinkInstancesAction {
     | DeleteFailure
     | Duplicate
     | DuplicateSuccess
+    | SetDocumentLinks
+    | SetDocumentLinksSuccess
+    | SetDocumentLinksFailure
     | Clear
     | ClearQueries
     | ClearByLinkType

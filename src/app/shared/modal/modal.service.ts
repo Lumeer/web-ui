@@ -54,6 +54,7 @@ import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
 import {AttributeDescriptionModalComponent} from './attribute-description/attribute-description-modal.component';
+import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -78,6 +79,18 @@ export class ModalService {
   ): BsModalRef {
     const config = {initialState: {collectionId, callback}, keyboard: true, class: 'modal-lg'};
     return this.show(ChooseLinkDocumentModalComponent, config);
+  }
+
+  public showModifyDocumentLinks(documentId: string, collectionId: string, linkTypeId: string): BsModalRef {
+    return this.showStaticDialog(
+      {
+        documentId,
+        collectionId,
+        linkTypeIds: [linkTypeId],
+      },
+      ModifyDocumentLinksModalComponent,
+      'modal-xxl'
+    );
   }
 
   public showDocumentDetail(id: string) {

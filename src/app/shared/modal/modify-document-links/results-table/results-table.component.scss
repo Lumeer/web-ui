@@ -1,0 +1,46 @@
+@import '../../../../../styles/variables';
+
+thead {
+  font-size: small;
+  color: $primary;
+  font-style: italic;
+}
+
+tbody {
+  font-size: small;
+}
+
+.sticky-header {
+  position: sticky;
+  top: -1px;
+  background: white;
+  z-index: 2; // otherwise checkboxes in the body are shown over the header when scrolling down
+}
+
+th,
+td {
+  max-width: 8rem;
+  width: 8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+th,
+td > data-input-preview {
+  height: 2em;
+  max-height: 2em;
+}
+
+.clickable-row {
+  cursor: pointer;
+
+  &:hover:not(.active) {
+    background-color: $gray-100;
+  }
+}
+
+tr.active {
+  background-color: $light;
+}

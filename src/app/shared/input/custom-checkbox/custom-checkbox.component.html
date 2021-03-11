@@ -1,0 +1,11 @@
+<input [id]="checkboxId"
+       [attr.checked]="checked"
+       [checked]="checked"
+       type="checkbox"
+       #checkbox
+       (change)="checkedChange.emit($event.target.checked)"
+       class="custom-control-input">
+<label [for]="checkboxId"
+       class="custom-control-label">
+</label>
+<span *ngIf="title" class="user-select-none cursor-pointer" (click)="checkbox.click()">{{title}}</span>

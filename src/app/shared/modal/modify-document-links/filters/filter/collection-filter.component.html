@@ -1,0 +1,33 @@
+<ng-container *ngIf="filter$ | async as filter">
+  <div class="d-flex flex-wrap align-items-center text-truncate">
+
+    <select-item2 class="pl-2 pr-1"
+                  [class.flex-grow-1]="!filter.attributeId"
+                  [removable]="false"
+                  [disabled]="false"
+                  emptyValue="Select attribute"
+                  [items]="attributeSelectItems"
+                  (click)="$event.stopPropagation()"
+                  [selectedPath]="[filter.attributeId]"
+                  (selectPath)="onAttributeSelect($event)">
+    </select-item2>
+
+    <filter-preview *ngIf="filter.attributeId"
+                    class="m-2 flex-grow-1"
+                    [attribute]="attributes | findAttribute:filter.attributeId | modifyAttributeForQueryFilter"
+                    [condition]="filter.condition"
+                    [conditionValues]="filter.conditionValues">
+    </filter-preview>
+
+    <i class="fal fa-times p-2 delete-icon" (click)="onRemove()"></i>
+
+  </div>
+
+  <filter-builder *ngIf="filter.attributeId"
+                  [origin]="element"
+                  [condition]="filter.condition"
+                  [attribute]="attributes | findAttribute:filter.attributeId | modifyAttributeForQueryFilter"
+                  [conditionValues]="filter.conditionValues"
+                  (valueChange)="onValueChange($event)">
+  </filter-builder>
+</ng-container>

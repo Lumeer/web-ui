@@ -18,14 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {modifyAttributeForQueryFilter} from '../../../../../../utils/attribute.utils';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 
 @Pipe({
-  name: 'modifyAttributeForQueryFilter',
+  name: 'countSelectedLinkedDocuments',
 })
-export class ModifyAttributeForQueryFilterPipe implements PipeTransform {
-  public transform(attribute: Attribute): Attribute {
-    return modifyAttributeForQueryFilter(attribute);
+export class CountSelectedLinkedDocumentsPipe implements PipeTransform {
+  public transform(
+    documents: DocumentModel[],
+    linkInstances: LinkInstance[],
+    selectedDocumentsIds: string[],
+    removedLinkInstanceIds: string[]
+  ): number {
+    const selectedLinkInstances = linkInstances.filter(
+      linkInstance => !removedLinkInstanceIds.includes(linkInstance.id)
+    );
+    const selectedDocuments = documents.filter(document => selectedDocumentsIds.includes(document.id));
+    return selectedLinkInstances.length + selectedDocuments.length;
   }
 }

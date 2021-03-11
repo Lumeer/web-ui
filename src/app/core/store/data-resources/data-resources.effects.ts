@@ -39,13 +39,20 @@ import {
 import {NotificationsAction} from '../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
+import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
 
 @Injectable()
 export class DataResourcesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
-    map(action => checkLoadedDataQueryPayload(action.payload)),
+    withLatestFrom(
+      this.store$.pipe(select(selectCollectionsPermissions)),
+      this.store$.pipe(select(selectLinkTypesPermissions))
+    ),
+    map(([action, collectionsPermissions, linkTypePermissions]) =>
+      checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+    ),
     withLatestFrom(
       this.store$.pipe(select(selectDataResourcesQueries)),
       this.store$.pipe(select(selectDataResourcesLoadingQueries))

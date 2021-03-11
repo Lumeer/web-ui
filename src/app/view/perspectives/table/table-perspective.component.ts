@@ -438,7 +438,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private subscribeToScrolling(): Subscription {
     return this.scrollDispatcher
       .scrolled()
-      .pipe(filter(scrollable => !!scrollable))
+      .pipe(filter(scrollable => !!scrollable && scrollable.getElementRef().nativeElement.id?.startsWith('table')))
       .subscribe((scrollable: CdkScrollable) => {
         const left = scrollable.measureScrollOffset('left');
         const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(s => s !== scrollable);

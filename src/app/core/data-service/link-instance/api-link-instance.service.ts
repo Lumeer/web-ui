@@ -31,6 +31,7 @@ import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
 import {AppIdService} from '../../service/app-id.service';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
@@ -74,6 +75,10 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
     return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {
       correlationId: this.appId.getAppId(),
     });
+  }
+
+  public setDocumentLinks(linkTypeId: string, dto: DocumentLinksDto): Observable<LinkInstanceDto[]> {
+    return this.httpClient.post<LinkInstanceDto[]>(`${this.apiPrefix(linkTypeId)}/documentLinks`, dto);
   }
 
   private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {

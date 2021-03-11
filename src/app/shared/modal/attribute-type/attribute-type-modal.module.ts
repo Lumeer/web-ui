@@ -56,7 +56,6 @@ import {ActionConstraintPermissionsFormComponent} from './form/constraint-config
 import {CollectionSettingsPathPipe} from './form/constraint-config/action/pipes/collection-settings-path.pipe';
 import {RouterModule} from '@angular/router';
 import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
-import {ModifyAttributeForQueryFilterPipe} from './form/constraint-config/action/pipes/modify-attribute-for-query-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -84,7 +83,6 @@ import {ModifyAttributeForQueryFilterPipe} from './form/constraint-config/action
     ActionConstraintPermissionsFormComponent,
     CollectionSettingsPathPipe,
     ActionConstraintConfigEmptyComponent,
-    ModifyAttributeForQueryFilterPipe,
   ],
   imports: [
     CommonModule,
