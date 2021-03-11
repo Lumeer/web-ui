@@ -52,14 +52,22 @@ export class StringReplaceBlocklyComponent extends BlocklyComponent {
             {
               type: 'input_value',
               name: 'STR',
+              align: 'RIGHT',
             },
             {
               type: 'input_value',
               name: 'PAT',
+              align: 'RIGHT',
+            },
+            {
+              type: 'input_value',
+              name: 'FLAGS',
+              align: 'RIGHT',
             },
             {
               type: 'input_value',
               name: 'REPL',
+              align: 'RIGHT',
             },
           ],
           output: null,
@@ -72,13 +80,14 @@ export class StringReplaceBlocklyComponent extends BlocklyComponent {
     Blockly.JavaScript[BlocklyUtils.STRING_REPLACE] = function (block) {
       const strArg = Blockly.JavaScript.valueToCode(block, 'STR', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const patArg = Blockly.JavaScript.valueToCode(block, 'PAT', Blockly.JavaScript.ORDER_NONE) || "''";
+      const flagsArg = Blockly.JavaScript.valueToCode(block, 'FLAGS', Blockly.JavaScript.ORDER_NONE) || "''";
       const replArg = Blockly.JavaScript.valueToCode(block, 'REPL', Blockly.JavaScript.ORDER_NONE) || "''";
 
       if (!strArg || !patArg || !replArg) {
         return '';
       }
 
-      const code = `${strArg}.replace(new RegExp(${patArg}), ${replArg})`;
+      const code = `${strArg}.replace(new RegExp(${patArg}, ${flagsArg}), ${replArg})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
