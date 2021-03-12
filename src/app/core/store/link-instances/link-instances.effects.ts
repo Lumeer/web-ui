@@ -410,7 +410,7 @@ export class LinkInstancesEffects {
     map(() => {
       const message = this.i18n({
         id: 'link.instance.document.setLinks.failure',
-        value: 'Could not set documents links',
+        value: 'Could not link records',
       });
       return new NotificationsAction.Error({message});
     })

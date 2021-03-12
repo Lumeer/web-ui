@@ -95,7 +95,7 @@ function removeUnneededFilters(
 
   return {
     ...query,
-    stems: query.stems?.map(stem => removeUnneededFiltersFromStem(stem, collectionsPermissions, linkTypePermissions)),
+    stems: query?.stems?.map(stem => removeUnneededFiltersFromStem(stem, collectionsPermissions, linkTypePermissions)),
     fulltexts: shouldSkipFulltexts ? [] : query.fulltexts,
   };
 }
