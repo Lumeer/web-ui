@@ -60,6 +60,10 @@
           <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
@@ -348,6 +352,58 @@
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
+      </trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
+        <source>No records found.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/results-table/results-table.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/body/links-list-table-body.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="modal.links.modify.title" datatype="html">
+        <source>Select Linked Records</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit><trans-unit id="modal.links.modify.selected" datatype="html">
+        <source>
+            <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="modal.links.modify.filter.title" datatype="html">
+        <source>
+            Use filters to find records to link. Selected records are always visible (no matter of filters).
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.confirm" datatype="html">
+        <source>Confirm</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
         <source>Import Table
   </source>
@@ -477,16 +533,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
           <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
-        <source>No records found.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/links/links-list/table/body/links-list-table-body.component.html</context>
-          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="shared.preview-results.scrollable" datatype="html">
         <source>You can scroll the table...</source>
@@ -1338,7 +1384,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.changeType" datatype="html">
         <source>Attribute settings...</source>
@@ -2857,6 +2903,12 @@
           <context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
+      </trans-unit><trans-unit id="modal.links.modify.filter.add" datatype="html">
+        <source>Add filter</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modify-document-links/filters/collection-filters.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit><trans-unit id="collapsible-sidebar.expand-button" datatype="html">
         <source>Expand</source>
         <context-group purpose="location">
@@ -3765,13 +3817,13 @@
         <source>Lock axes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
         <source>Show range slider</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
         <source>
@@ -4231,11 +4283,17 @@
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
+      </trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
+        <source>Add/Remove links</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
       </trans-unit><trans-unit id="table.body.row.unlink" datatype="html">
         <source>Unlink row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit><trans-unit id="table.row.noResults" datatype="html">
         <source>There are no records to display. Try a different query.
@@ -5770,6 +5828,13 @@
       </trans-unit>
       <trans-unit id="link.instance.delete.fail" datatype="html">
         <source>Could not delete the link</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="link.instance.document.setLinks.failure" datatype="html">
+        <source>Could not link records</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
           <context context-type="linenumber">1</context>

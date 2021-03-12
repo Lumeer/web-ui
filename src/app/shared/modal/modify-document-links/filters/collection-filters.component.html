@@ -1,7 +1,3 @@
-<div class="mb-1" i18n="@@modal.links.modify.filter.title">Use filters to reduce number of documents. Selected documents are always
-  visible no matter of used filters.
-</div>
-
 <collection-filter *ngFor="let filter of filters$ | async; trackBy: trackByAttributeFilter; let index = index"
                    class="form-control cursor-pointer p-0 h-auto d-block mb-1"
                    [attributes]="collection?.attributes"
