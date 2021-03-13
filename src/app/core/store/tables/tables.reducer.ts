@@ -75,6 +75,8 @@ export function tablesReducer(state = initialTablesState, action: TablesAction.A
       return replaceRows(state, action);
     case TablesActionType.REMOVE_ROW:
       return removeRow(state, action);
+    case TablesActionType.REMOVE_ROWS:
+      return removeRows(state, action);
     // case TablesActionType.TOGGLE_CHILD_ROWS:
     //   return toggleChildRows(state, action);
     case TablesActionType.TOGGLE_LINKED_ROWS:
@@ -397,6 +399,24 @@ export function removeRow(state: TablesState, action: TablesAction.RemoveRow): T
   }
 
   const rows = removeLinkedRow(table.config.rows, cursor.rowPath);
+  const config = {...table.config, rows};
+  return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
+}
+
+export function removeRows(state: TablesState, action: TablesAction.RemoveRows): TablesState {
+  const {cursor, lastPathIndexes} = action.payload;
+  const {table} = getTablePart(state, cursor);
+  if (!table) {
+    return state;
+  }
+
+  const removeIndexes = [...lastPathIndexes].sort((a, b) => b - a);
+
+  const rows = removeIndexes.reduce((currentRows, index) => {
+    const cursorByIndex = {...cursor, rowPath: [...cursor.rowPath, index]};
+    return removeLinkedRow(currentRows, cursorByIndex.rowPath);
+  }, table.config.rows);
+
   const config = {...table.config, rows};
   return tablesAdapter.updateOne({id: table.id, changes: {config}}, state);
 }

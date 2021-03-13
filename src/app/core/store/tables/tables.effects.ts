@@ -123,6 +123,7 @@ import {selectCollectionPermissions} from '../user-permissions/user-permissions.
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
+import {objectsByIdMap} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class TablesEffects {
@@ -737,6 +738,7 @@ export class TablesEffects {
                   const linkedRows = findLinkedTableRows(rows, cursor.rowPath);
                   const createdLinkInstances = filterNewlyCreatedLinkInstances(linkedRows, linkInstances);
                   const unknownLinkInstances = filterUnknownLinkInstances(linkedRows, linkInstances);
+                  const documentsMap = objectsByIdMap(documents);
 
                   const actions: Action[] = [];
 
@@ -744,31 +746,26 @@ export class TablesEffects {
                     actions.push(new TablesAction.InitLinkedRows({cursor, linkInstances}));
                   }
 
-                  // documentIds on LinkInstance was updated
-                  const changedRowIndex = linkedRows.findIndex(row => {
+                  linkedRows.forEach((row, index) => {
+                    // documentIds on LinkInstance was updated
                     const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
-                    return linkInstance && !linkInstance.documentIds.includes(row.documentId);
-                  });
-                  if (changedRowIndex >= 0) {
-                    const changedRow = linkedRows[changedRowIndex];
-                    const linkInstance = linkInstances.find(li => li.id === changedRow.linkInstanceId);
-                    if (linkInstance) {
+                    if (linkInstance && !linkInstance.documentIds.includes(row.documentId)) {
                       const otherDocumentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
-                      const newDocument = documents.find(doc => doc.id === otherDocumentId);
+                      const newDocument = otherDocumentId && documentsMap[otherDocumentId];
                       if (newDocument) {
                         actions.push(
                           new TablesAction.ReplaceRows({
                             cursor: {
                               ...cursor,
-                              rowPath: [...cursor.rowPath, changedRowIndex],
+                              rowPath: [...cursor.rowPath, index],
                             },
                             deleteCount: 1,
-                            rows: [{...changedRow, documentId: newDocument.id}],
+                            rows: [{...row, documentId: newDocument.id}],
                           })
                         );
                       }
                     }
-                  }
+                  });
 
                   if (unknownLinkInstances.length > 0) {
                     rowsWithPath.forEach(rowWithPath => {
@@ -792,6 +789,18 @@ export class TablesEffects {
                         );
                       }
                     });
+                  }
+
+                  const removedIndexes = linkedRows.reduce((indexes, row, index) => {
+                    const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
+                    if (!linkInstance) {
+                      indexes.push(index);
+                    }
+                    return indexes;
+                  }, []);
+
+                  if (removedIndexes.length > 0) {
+                    actions.push(new TablesAction.RemoveRows({cursor, lastPathIndexes: removedIndexes}));
                   }
 
                   return actions;
