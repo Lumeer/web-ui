@@ -1,14 +1,15 @@
 <modal-wrapper class="d-block"
                [dialogType]="dialogType.Success"
                [performingAction]="performingAction$ | async"
-               [submitDisabled]="formInvalid$ | async"
+               [submitDisabled]="collections.length < 2 || (formInvalid$ | async)"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()"
-               data-test="create-link-dialog">
+               data-test="create-link-dialog"
+               *ngIf="collections$ | async as collections">
 
   <span class="title" i18n="@@link.new.dialog.title">Create new link</span>
 
-  <div class="body p-3">
+  <div class="body p-3" *ngIf="collections.length === 2; else contentInvalid">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <link-name-input [colors]="collections | colors"
                        [icons]="collections | icons"
@@ -23,3 +24,10 @@
         data-test="create-link-dialog-create-button" i18n="@@button.create">Create</span>
 
 </modal-wrapper>
+
+<ng-template #contentInvalid>
+  <h4 class="text-danger text-center my-5"
+      i18n="@@resource.new.dialog.invalid">I am sorry, something went wrong.
+  </h4>
+</ng-template>
+

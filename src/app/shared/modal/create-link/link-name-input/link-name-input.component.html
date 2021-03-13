@@ -11,7 +11,7 @@
       </div>
     </div>
     <input #linkName
-           [class.is-invalid]="linkNameInput.touched && linkNameInput.invalid"
+           [class.is-invalid]="linkNameInput.invalid"
            formControlName="linkName"
            id="linkName"
            type="text"
@@ -19,13 +19,13 @@
            data-test="link-name-input"
            placeholder="Enter link name..." i18n-placeholder="@@collection.new.dialog.link.name.placeholder">
     <div class="invalid-feedback">
-      <div *ngIf="linkNameInput.errors && linkNameInput.errors.required"
-           i18n="@@validation.link.name.empty">
-        Link name cannot be empty.
+      <div *ngIf="linkNameInput.errors && linkNameInput.errors.notUnique"
+           i18n="@@validation.link.name.existing">
+        Such a Link already exists.
       </div>
-      <div *ngIf="linkNameInput.errors &&linkNameInput.errors.minlength"
+      <div *ngIf="linkNameInput.errors &&linkNameInput.errors.minLength"
            i18n="@@validation.link.name.short">
-        Link name needs to have at least {{linkNameInput.errors.minlength.requiredLength}} characters.
+        Link name needs to have at least 3 characters.
       </div>
     </div>
   </div>
