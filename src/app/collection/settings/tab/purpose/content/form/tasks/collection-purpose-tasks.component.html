@@ -10,8 +10,8 @@
                    emptyValue="Select assignee attribute"
                    i18n-emptyValue="@@collections.tab.purpose.assignee.select"
                    [selectedId]="assigneeControl.value"
-                   (selected)="assigneeControl.patchValue($event)"
-                   (remove)="assigneeControl.patchValue(null)">
+                   (selected)="onSelectValue(assigneeControl, $event)"
+                   (remove)="onSelectValue(assigneeControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.assignee.help">
         Which attribute specifies who the assignee is? Works best with the <em>User</em> attribute type.
@@ -29,8 +29,8 @@
                    emptyValue="Select due date attribute"
                    i18n-emptyValue="@@collections.tab.purpose.dueDate.select"
                    [selectedId]="dueDateControl.value"
-                   (selected)="dueDateControl.patchValue($event)"
-                   (remove)="dueDateControl.patchValue(null)">
+                   (selected)="onSelectValue(dueDateControl, $event)"
+                   (remove)="onSelectValue(dueDateControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.dueDate.help">
         Which attribute specifies the due date of a task? Works only with the <em>Date</em> attribute type.
@@ -49,8 +49,8 @@
                    emptyValue="Select state attribute"
                    i18n-emptyValue="@@collections.tab.purpose.state.select"
                    [selectedId]="stateControl.value"
-                   (selected)="stateControl.patchValue($event); stateListControl.patchValue([]);"
-                   (remove)="stateControl.patchValue(null)">
+                   (selected)="onStateListSelected($event)"
+                   (remove)="onSelectValue(stateControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.state.help">
         Which attribute specifies the state of a task? Works best with the <em>Selection</em> attribute type.
@@ -65,7 +65,7 @@
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <data-input class="py-0 px-1 form-control multiline d-flex align-items-center cursor-pointer"
-                  [dataValue]="stateList$ | async | dataValue:stateConstraintData.constraint:stateConstraintData.constraintData"
+                  [dataValue]="stateList$ | async | stateListDataValue:stateConstraintData.constraint:stateConstraintData.constraintData"
                   [focus]="true"
                   [configuration]="dataInputConfiguration"
                   [readonly]="!(stateListEditing$ | async)"
@@ -91,11 +91,12 @@
                    emptyValue="Select observer attribute"
                    i18n-emptyValue="@@collections.tab.purpose.observer.select"
                    [selectedId]="observersControl.value"
-                   (selected)="observersControl.patchValue($event)"
-                   (remove)="observersControl.patchValue(null)">
+                   (selected)="onSelectValue(observersControl, $event)"
+                   (remove)="onSelectValue(observersControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.observer.help">
-        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <em>User</em> attribute type.
+        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works
+        best with the <em>User</em> attribute type.
       </div>
     </div>
   </div>
@@ -110,8 +111,8 @@
                    emptyValue="Select priority attribute"
                    i18n-emptyValue="@@collections.tab.purpose.priority.select"
                    [selectedId]="priorityControl.value"
-                   (selected)="priorityControl.patchValue($event)"
-                   (remove)="priorityControl.patchValue(null)">
+                   (selected)="onSelectValue(priorityControl, $event)"
+                   (remove)="onSelectValue(priorityControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.priority.help">
         Which attribute specifies the task priority?
@@ -129,8 +130,8 @@
                    emptyValue="Select tags attribute"
                    i18n-emptyValue="@@collections.tab.purpose.tags.select"
                    [selectedId]="tagsControl.value"
-                   (selected)="tagsControl.patchValue($event)"
-                   (remove)="tagsControl.patchValue(null)">
+                   (selected)="onSelectValue(tagsControl, $event)"
+                   (remove)="onSelectValue(tagsControl,null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.tags.help">
         Tags, labels, hashtags... Simply anything you use to categorize the tasks.

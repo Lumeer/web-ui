@@ -27,6 +27,7 @@ import {AttributesResource, AttributesResourceType, DataResourceData} from '../.
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {
   AttributeFilter,
+  ConditionType,
   conditionTypeNumberOfInputs,
   Constraint,
   ConstraintData,
@@ -241,6 +242,12 @@ export function calculateDocumentHierarchyLevel(
   return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
 }
 
+interface CollectionTaskDataMap {
+  stateConstraint: Constraint;
+  doneStates: Set<any>;
+  doneStatesArray: any[];
+}
+
 export function filterTaskDocuments(
   documents: DocumentModel[],
   collections: Collection[],
@@ -254,8 +261,7 @@ export function filterTaskDocuments(
     const tasksData = collection && collectionsTasksDataMap[collection.id];
     if (collection && tasksData) {
       const rawValue = document?.data[collection?.purpose?.metaData?.stateAttributeId];
-      const dataValue = tasksData.stateConstraint.createDataValue(rawValue, constraintData);
-      if (!dataValueHasValue(dataValue, tasksData.doneStates)) {
+      if (isNotDoneState(rawValue, tasksData, constraintData)) {
         tasks.push(document);
       }
     }
@@ -263,27 +269,37 @@ export function filterTaskDocuments(
   return tasks;
 }
 
-function dataValueHasValue(dataValue: DataValue, set: Set<string>): boolean {
+function isNotDoneState(value: any, data: CollectionTaskDataMap, constraintData: ConstraintData): boolean {
+  const dataValue = data.stateConstraint.createDataValue(value, constraintData);
+  if (data.stateConstraint.type === ConstraintType.Boolean) {
+    return data.doneStatesArray.every(doneState =>
+      dataValue.meetCondition(ConditionType.NotEquals, [{value: doneState}])
+    );
+  } else if (data.stateConstraint.type === ConstraintType.User || data.stateConstraint.type === ConstraintType.Select) {
+    return dataValue.meetCondition(ConditionType.HasNoneOf, [{value: data.doneStatesArray}]);
+  }
+  return !dataValueHasValue(dataValue, data.doneStates);
+}
+
+function dataValueHasValue(dataValue: DataValue, set: Set<any>): boolean {
   const serialized = dataValue.serialize();
   if (isArray(serialized)) {
-    return (<any>serialized).some(value => set.has(value));
+    return serialized.some(value => set.has(value));
   }
   return set.has(serialized);
 }
 
-function getCollectionTaskDataMap(
-  collections: Collection[]
-): Record<string, {stateConstraint: Constraint; doneStates: Set<string>}> {
+function getCollectionTaskDataMap(collections: Collection[]): Record<string, CollectionTaskDataMap> {
   return collections.reduce((map, collection) => {
     const stateConstraint =
       findAttributeConstraint(collection.attributes, collection.purpose?.metaData?.stateAttributeId) ||
       new UnknownConstraint();
     const doneStates = collection.purpose?.metaData?.finalStatesList;
+    const doneStatesArray = isNotNullOrUndefined(doneStates) ? (isArray(doneStates) ? doneStates : [doneStates]) : [];
     map[collection.id] = {
       stateConstraint,
-      doneStates: isNotNullOrUndefined(doneStates)
-        ? new Set(isArray(doneStates) ? doneStates : [doneStates])
-        : new Set(),
+      doneStates: new Set(doneStatesArray),
+      doneStatesArray,
     };
     return map;
   }, {});
