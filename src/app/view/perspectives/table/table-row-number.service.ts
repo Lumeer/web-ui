@@ -59,9 +59,11 @@ export class TableRowNumberService {
     }
     const counts = [...this.subject$.value];
     for (let i = fromIndex; i < toIndex; i++) {
-      const row = this.rows[i];
+      const row = this.rows[i - 1];
       if (row) {
         counts[i] = countLinkedRows(row) + (counts[i - 1] || 0);
+      } else {
+        counts[i] = 1;
       }
     }
     this.subject$.next(counts);

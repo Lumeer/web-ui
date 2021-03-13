@@ -1,3 +1,5 @@
+@import '~src/styles/variables';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -6,4 +8,6 @@
 
 .row-number {
   min-width: var(--row-number-column-width);
+  line-height: $table-min-row-height;
+  min-height: $table-min-row-height;
 }
