@@ -13,6 +13,7 @@
                   [dataValue]="keyDataValue"
                   [placeholder]="placeholder"
                   [preventEventBubble]="preventEventBubble"
+                  [editableInReadonly]="!data.readonly"
                   [suggestions]="unusedAttributes | attributesToDataSuggestions"
                   (save)="onNewKey($event)"
                   (dblclick)="onKeyInputDblClick($event)"
