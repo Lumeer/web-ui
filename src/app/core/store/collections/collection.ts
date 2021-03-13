@@ -86,7 +86,7 @@ export interface TaskPurposeMetadata {
   dueDateAttributeId?: string;
   assigneeAttributeId?: string;
   stateAttributeId?: string;
-  finalStatesList?: string[];
+  finalStatesList?: any[];
   observersAttributeId?: string;
   tagsAttributeId?: string;
   priorityAttributeId?: string;

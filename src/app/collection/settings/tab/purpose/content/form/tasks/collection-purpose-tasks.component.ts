@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/collections/collection';
 import {TaskPurposeFormControl} from './task-purpose-form-control';
@@ -28,7 +28,12 @@ import {DataInputConfiguration} from '../../../../../../../shared/data-input/dat
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {isArray, isNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {
+  deepObjectsEquals,
+  isArray,
+  isNullOrUndefined,
+  objectChanged,
+} from '../../../../../../../shared/utils/common.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {selectDocumentsByCollectionId} from '../../../../../../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
@@ -102,7 +107,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
+    if (changes.collection && this.purposeChanged(changes.collection)) {
       this.updateForm();
     }
     if (objectChanged(changes.collection) && this.collection) {
@@ -110,18 +115,32 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
     }
   }
 
+  private purposeChanged(change: SimpleChange): boolean {
+    const previousPurpose = change.previousValue?.purpose;
+    const currentPurpose = change.currentValue?.purpose;
+    return !deepObjectsEquals(previousPurpose, currentPurpose);
+  }
+
   private updateForm() {
     const metaData = <TaskPurposeMetadata>this.collection?.purpose?.metaData;
     if (this.form && metaData) {
-      this.assigneeControl?.patchValue(metaData.assigneeAttributeId, {emitEvent: false});
-      this.dueDateControl?.patchValue(metaData.dueDateAttributeId, {emitEvent: false});
-      this.stateControl?.patchValue(metaData.stateAttributeId, {emitEvent: false});
+      this.patchValue(this.assigneeControl, metaData.assigneeAttributeId);
+      this.patchValue(this.dueDateControl, metaData.dueDateAttributeId);
+      this.patchValue(this.stateControl, metaData.stateAttributeId);
       if (!this.stateListEditing$.value) {
         this.stateListControl?.patchValue(metaData.finalStatesList, {emitEvent: false});
       }
-      this.observersControl?.patchValue(metaData.observersAttributeId, {emitEvent: false});
-      this.tagsControl?.patchValue(metaData.tagsAttributeId, {emitEvent: false});
-      this.priorityControl?.patchValue(metaData.priorityAttributeId, {emitEvent: false});
+      this.patchValue(this.observersControl, metaData.observersAttributeId);
+      this.patchValue(this.tagsControl, metaData.tagsAttributeId);
+      this.patchValue(this.priorityControl, metaData.priorityAttributeId);
+    }
+  }
+
+  private patchValue(control: AbstractControl, value: any) {
+    if (control?.untouched) {
+      control?.patchValue(value, {emitEvent: false});
+    } else {
+      control?.markAsUntouched({onlySelf: true});
     }
   }
 
@@ -157,6 +176,11 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
     this.form.addControl(TaskPurposeFormControl.Tags, new FormControl(tagsAttribute?.id));
   }
 
+  public onSelectValue(control: AbstractControl, value: any) {
+    control?.setValue(value);
+    control?.markAsTouched({onlySelf: true});
+  }
+
   public onStateListSave(dataValue: DataValue) {
     const serializedValue = dataValue.serialize();
     this.stateListControl.patchValue(isArray(serializedValue) ? serializedValue : [serializedValue]);
@@ -177,5 +201,15 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   public setStateListCancel() {
     this.stateListControl.patchValue(this.collection.purpose?.metaData?.finalStatesList);
     this.stateListEditing$.next(false);
+  }
+
+  public onStateListSelected(attributeId: string) {
+    const stateAttribute = findAttribute(this.collection?.attributes, attributeId);
+    this.onSelectValue(this.stateControl, stateAttribute.id);
+    if (stateAttribute?.constraint?.type === ConstraintType.Boolean) {
+      this.onSelectValue(this.stateListControl, [true]);
+    } else {
+      this.onSelectValue(this.stateListControl, []);
+    }
   }
 }
