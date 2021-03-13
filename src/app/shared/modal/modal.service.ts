@@ -34,7 +34,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
-import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
 import {View} from '../../core/store/views/view';
@@ -149,8 +148,8 @@ export class ModalService {
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
   }
 
-  public showCreateLink(collections: Collection[], callback?: (linkType: LinkType) => void): BsModalRef {
-    const initialState = {collections, callback};
+  public showCreateLink(collectionIds: string[], callback?: (linkType: LinkType) => void): BsModalRef {
+    const initialState = {collectionIds, callback};
     return this.showStaticDialog(initialState, CreateLinkModalComponent);
   }
 

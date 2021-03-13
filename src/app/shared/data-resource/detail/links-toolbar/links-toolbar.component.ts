@@ -54,7 +54,7 @@ export class LinksToolbarComponent implements OnInit {
 
   public onUseCollection(collection: Collection) {
     if (this.collection) {
-      this.modalService.showCreateLink([this.collection, collection]);
+      this.modalService.showCreateLink([this.collection?.id, collection.id]);
     }
   }
 }

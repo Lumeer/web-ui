@@ -28,15 +28,12 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
-import {first, map, mergeMap} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
+import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
 import {
-  selectCollectionsByIds,
-  selectCollectionsDictionary,
-} from '../../../../../core/store/collections/collections.state';
-import {
-  selectCollectionsByReadPermission,
   selectCollectionsByWritePermission,
   selectLinkTypesByReadPermission,
 } from '../../../../../core/store/common/permissions.selectors';
@@ -49,7 +46,6 @@ import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
-import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'table-header-add-button',
@@ -120,17 +116,9 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   }
 
   public onUseCollection(collection: Collection) {
-    this.store$
-      .pipe(
-        select(selectTableLastCollectionId(this.cursor.tableId)),
-        mergeMap(lastCollectionId =>
-          this.store$.pipe(select(selectCollectionsByIds([lastCollectionId, collection.id])))
-        ),
-        first()
-      )
-      .subscribe(collections => {
-        this.modalService.showCreateLink(collections, linkType => this.onUseLinkType(linkType));
-      });
+    this.store$.pipe(select(selectTableLastCollectionId(this.cursor.tableId)), first()).subscribe(lastCollectionId => {
+      this.modalService.showCreateLink([collection.id, lastCollectionId], linkType => this.onUseLinkType(linkType));
+    });
   }
 
   public onUseLinkType(linkType: LinkType) {

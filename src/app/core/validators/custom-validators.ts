@@ -24,3 +24,9 @@ export function notEmptyValidator(): ValidatorFn {
     return String(control.value || '').trim() ? null : {notEmpty: true};
   };
 }
+
+export function minLengthValidator(length: number): ValidatorFn {
+  return (control: FormControl): ValidationErrors | null => {
+    return String(control.value || '').trim().length >= length ? null : {minLength: true};
+  };
+}

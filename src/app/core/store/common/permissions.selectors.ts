@@ -18,7 +18,7 @@
  */
 import {createSelector} from '@ngrx/store';
 import {filterDocumentsAndLinksByQuery} from '@lumeer/data-filters';
-import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
+import {containsSameElements, isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {hasRoleByPermissions, sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
@@ -377,6 +377,11 @@ export const selectLinkTypesInQuery = createSelector(
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
   createSelector(selectLinkTypesByReadPermission, linkTypes =>
     linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
+  );
+
+export const selectLinkTypesByCollectionIds = (collectionIds: string[]) =>
+  createSelector(selectLinkTypesByReadPermission, linkTypes =>
+    linkTypes.filter(linkType => containsSameElements(linkType.collectionIds, collectionIds))
   );
 
 export const selectCanManageViewConfig = createSelector(
