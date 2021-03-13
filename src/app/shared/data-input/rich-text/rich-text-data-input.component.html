@@ -3,10 +3,12 @@
                  [ngClass]="multilineMode ? 'multiline' : 'single-line'"
                  [content]="value | previewDataValue"
                  [title]="value | formatDataValueTitle"
+                 (dblclick)="onDoubleClick()"
                  [class.invalid-value]="!commonConfiguration?.skipValidation && !valid">
 </quill-view-html>
 
-<span *ngIf="!readonly" class="icon-fullscreen"
+<span class="icon-fullscreen"
+      [class.always-visible]="!readonly"
       (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
       (click)="openTextEditor($event)">
   <i class="fa fa-expand-alt"></i>

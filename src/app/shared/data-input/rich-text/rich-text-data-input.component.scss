@@ -1,3 +1,5 @@
+@import '~src/styles/variables';
+
 :host {
   display: flex;
   align-items: center;
@@ -6,6 +8,12 @@
   &:not(.multiline)::ng-deep {
     .ql-editor {
       max-height: 200px;
+    }
+  }
+
+  &:hover {
+    .icon-fullscreen {
+      opacity: 1;
     }
   }
 }
@@ -24,7 +32,13 @@
   cursor: pointer;
   background: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
-  z-index: 4;
+  z-index: 104;
+  opacity: 0;
+  transition: opacity $animation-color-duration;
+
+  &.always-visible {
+    opacity: 1 !important;
+  }
 }
 
 .quill-editor.edit {

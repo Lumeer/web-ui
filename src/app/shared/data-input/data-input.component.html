@@ -150,6 +150,7 @@
   <rich-text-data-input *ngSwitchCase="constraintType.Text"
                         [focus]="focus"
                         [readonly]="readonly"
+                        [editableInReadonly]="editableInReadonly"
                         [commonConfiguration]="configuration?.common"
                         [value]="dataValue"
                         (keydown)="onDataKeyDown($event)"

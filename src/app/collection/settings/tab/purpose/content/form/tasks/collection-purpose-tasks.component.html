@@ -69,6 +69,7 @@
                   [focus]="true"
                   [configuration]="dataInputConfiguration"
                   [readonly]="!(stateListEditing$ | async)"
+                  [editableInReadonly]="true"
                   [constraint]="stateConstraintData.constraint"
                   (click)="$event.preventDefault(); setStateListEditing(true)"
                   (valueChange)="onStateListChange($event)"

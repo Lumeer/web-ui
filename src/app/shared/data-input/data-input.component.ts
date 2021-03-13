@@ -72,6 +72,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Input()
   public preventEventBubble: boolean;
 
+  @Input()
+  public editableInReadonly: boolean;
+
   @Output()
   public valueChange = new EventEmitter<DataValue>();
 

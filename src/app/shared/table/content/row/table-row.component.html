@@ -26,6 +26,7 @@
           [constraint]="group.column.attribute?.constraint"
           [cursor]="row | tableRowDataCursor:group.column"
           [style.height.px]="row.height - 1"
+          [editableInReadonly]="group.column?.editable"
           [style.max-height.px]="row.height - 1"
           [dataValue]="(editedValue | isNotNullOrUndefined) && data.editing ? editedValue : data.dataValue"
           [focus]="true"
