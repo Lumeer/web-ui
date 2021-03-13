@@ -117,7 +117,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   public onUseCollection(collection: Collection) {
     this.store$.pipe(select(selectTableLastCollectionId(this.cursor.tableId)), first()).subscribe(lastCollectionId => {
-      this.modalService.showCreateLink([collection.id, lastCollectionId], linkType => this.onUseLinkType(linkType));
+      this.modalService.showCreateLink([lastCollectionId, collection.id], linkType => this.onUseLinkType(linkType));
     });
   }
 
