@@ -287,7 +287,7 @@ describe('Table perspective :: Constraints', () => {
     cy.get('.boolean-input').eq(2).should('not.have.attr', 'checked');
     cy.get('.boolean-input').eq(3).should('not.have.attr', 'checked');
 
-    cy.get('[data-test="table-data-input"] > *').eq(2).click();
+    cy.get('[data-test="table-data-input"] > *').eq(5).click();
     cy.wait('@patchDocumentData').its('status').should('eq', 200);
     cy.get('.boolean-input').eq(2).should('have.attr', 'checked');
 
@@ -402,7 +402,7 @@ describe('Table perspective :: Constraints', () => {
 
     // remove number in the fourth row
 
-    cy.get('.number-input').eq(3).should('have.text', '0').dblclick();
+    cy.get('.number-input').eq(3).should('have.text', '0').dblclick({force: true});
     cy.focused()
       .should('have.class', 'number-input')
       .should('have.value', '0')
