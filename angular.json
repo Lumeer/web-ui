@@ -223,6 +223,7 @@
                   "maximumWarning": "6kb"
                 }
               ],
+              "baseHref": "/ui/",
               "buildOptimizer": false,
               "localize": ["cs"],
               "optimization": false,
@@ -230,6 +231,7 @@
             },
             "en": {
               "aot": true,
+              "baseHref": "/ui/",
               "buildOptimizer": false,
               "localize": ["en"],
               "optimization": false,
