@@ -16,7 +16,7 @@
                   [max]="commonConfiguration?.skipValidation ? null : value?.config?.maxValue"
                   [options]="options"
                   [origin]="element"
-                  [asUtc]="value?.config?.asUtc"
+                  [asUtc]="value?.isUtc"
                   [value]="date"
                   (save)="onSave($event)"
                   (valueChange)="onValueChange($event)"

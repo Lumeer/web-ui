@@ -47,10 +47,10 @@ const allowedCodes = [
 })
 export class IntegerDirective extends DefaultValueAccessor {
   @Input()
-  public minValue;
+  public minValue: number;
 
   @Input()
-  public maxValue;
+  public maxValue: number;
 
   private _sourceRenderer: Renderer2;
   private _sourceElementRef: ElementRef<HTMLInputElement>;

@@ -59,7 +59,7 @@
     "@fullcalendar/list": "^5.4.0",
     "@fullcalendar/resource-timegrid": "^5.4.0",
     "@fullcalendar/timegrid": "^5.4.0",
-    "@lumeer/data-filters": "^0.3.9",
+    "@lumeer/data-filters": "^0.3.12",
     "@lumeer/lumeer-gantt": "^1.0.30",
     "@ngrx/effects": "^10.0.1",
     "@ngrx/entity": "^10.0.1",

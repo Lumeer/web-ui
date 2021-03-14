@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -36,16 +36,15 @@ import {selectSearchConfig, selectSearchId} from '../../../../core/store/searche
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {queryWithoutFilters} from '../../../../core/store/navigation/query/query.util';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
-const PAGE_SIZE = 40;
+const PAGE_SIZE = 50;
 
 @Component({
   selector: 'search-tasks',
@@ -69,7 +68,6 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
 
   private searchId: string;
   private config: SearchConfig;
-  private documentsOrder = [];
   private subscriptions = new Subscription();
   private page$ = new BehaviorSubject<number>(0);
 
@@ -138,22 +136,14 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
   }
 
   private subscribeQueryChange() {
-    const navigationSubscription = this.store$
+    const workspace$ = this.store$.pipe(select(selectWorkspace), distinctUntilChanged());
+
+    const navigationSubscription = workspace$
       .pipe(
-        select(selectViewQuery),
-        filter(query => !!query),
-        distinctUntilChanged((a, b) => deepObjectsEquals(a, b)),
-        startWith(null as Query),
-        pairwise()
+        switchMap(() => this.store$.pipe(select(selectViewQuery))),
+        filter(query => !!query)
       )
-      .subscribe(([previousQuery, query]) => {
-        const queryChangedWithoutFilters = !deepObjectsEquals(
-          queryWithoutFilters(previousQuery),
-          queryWithoutFilters(query)
-        );
-        if (queryChangedWithoutFilters) {
-          this.resetDocumentsOrder();
-        }
+      .subscribe(query => {
         this.resetPage();
         this.fetchTasks(query);
       });
@@ -162,10 +152,6 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
 
   private resetPage() {
     this.page$.next(0);
-  }
-
-  private resetDocumentsOrder() {
-    this.documentsOrder = [];
   }
 
   public ngOnDestroy() {

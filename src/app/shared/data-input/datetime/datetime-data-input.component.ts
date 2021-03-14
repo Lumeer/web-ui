@@ -31,7 +31,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
+import {createDateTimeOptions, DateTimeOptions, hasTimeOption} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
