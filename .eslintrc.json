@@ -1,17 +1,11 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "projects/**/*"
-  ],
+  "ignorePatterns": ["projects/**/*"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
-        "project": [
-          "tsconfig.json"
-        ],
+        "project": ["tsconfig.json"],
         "createDefaultProgram": false
       },
       "extends": [
@@ -22,10 +16,7 @@
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:prettier/recommended"
       ],
-      "plugins": [
-        "eslint-plugin-rxjs",
-        "header"
-      ],
+      "plugins": ["eslint-plugin-rxjs", "header"],
       "rules": {
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/explicit-member-accessibility": "off",
@@ -56,10 +47,7 @@
         "@typescript-eslint/no-var-requires": "off",
         "@angular-eslint/no-input-rename": "off",
         "@typescript-eslint/no-implied-eval": "off",
-        "comma-dangle": [
-          "off",
-          "always-multiline"
-        ],
+        "comma-dangle": ["off", "always-multiline"],
         "no-bitwise": "off",
         "no-debugger": "off",
         "no-empty": "error",
@@ -72,23 +60,13 @@
         "no-extra-boolean-cast": "off",
         "no-multiple-empty-lines": "error",
         "rxjs/no-internal": "error",
-        "header/header": [
-          2,
-          "company-header.js"
-        ]
+        "header/header": [2, "company-header.js"]
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "excludedFiles": [
-        "*inline-template-*.component.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended",
-        "plugin:prettier/recommended"
-      ],
+      "files": ["*.html"],
+      "excludedFiles": ["*inline-template-*.component.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "plugin:prettier/recommended"],
       "rules": {
         "@angular-eslint/template/no-negated-async": "off"
       }
