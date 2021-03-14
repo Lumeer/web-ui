@@ -33,56 +33,59 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class WorkflowsEffects {
-
-  public setOpenedDocument$ = createEffect(() => this.actions$.pipe(
-    ofType<WorkflowsAction.SetOpenedDocument>(WorkflowsActionType.SET_OPENED_DOCUMENT),
-    map(
-      action =>
-        new NavigationAction.SetViewCursor({
-          cursor: {
-            documentId: action.payload.documentId,
-            linkInstanceId: action.payload.cell?.linkId,
-            linkTypeId: action.payload.column?.linkTypeId,
-            collectionId: action.payload.column?.collectionId,
-            attributeId: action.payload.column?.attribute?.id,
-            value: action.payload.column?.tableId || action.payload.cell?.tableId,
-            sidebar: true,
-          },
-        })
+  public setOpenedDocument$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<WorkflowsAction.SetOpenedDocument>(WorkflowsActionType.SET_OPENED_DOCUMENT),
+      map(
+        action =>
+          new NavigationAction.SetViewCursor({
+            cursor: {
+              documentId: action.payload.documentId,
+              linkInstanceId: action.payload.cell?.linkId,
+              linkTypeId: action.payload.column?.linkTypeId,
+              collectionId: action.payload.column?.collectionId,
+              attributeId: action.payload.column?.attribute?.id,
+              value: action.payload.column?.tableId || action.payload.cell?.tableId,
+              sidebar: true,
+            },
+          })
+      )
     )
-  ));
+  );
 
+  public setSelectedCell$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<WorkflowsAction.SetSelectedCell>(WorkflowsActionType.SET_SELECTED_CELL),
+      withLatestFrom(this.store$.pipe(select(selectViewCursor))),
+      mergeMap(([action, viewCursor]) => {
+        const {cell, column} = action.payload;
+        const cursor = workflowCellToViewCursor(cell, column);
+        cursor && (cursor.sidebar = viewCursor?.sidebar);
+        if (cursor && !deepObjectsEquals(cursor, viewCursor)) {
+          return of(new NavigationAction.SetViewCursor({cursor}));
+        }
 
-  public setSelectedCell$ = createEffect(() => this.actions$.pipe(
-    ofType<WorkflowsAction.SetSelectedCell>(WorkflowsActionType.SET_SELECTED_CELL),
-    withLatestFrom(this.store$.pipe(select(selectViewCursor))),
-    mergeMap(([action, viewCursor]) => {
-      const {cell, column} = action.payload;
-      const cursor = workflowCellToViewCursor(cell, column);
-      cursor && (cursor.sidebar = viewCursor?.sidebar);
-      if (cursor && !deepObjectsEquals(cursor, viewCursor)) {
-        return of(new NavigationAction.SetViewCursor({cursor}));
-      }
+        return EMPTY;
+      })
+    )
+  );
 
-      return EMPTY;
-    })
-  ));
+  public resetOpenedDocument$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<WorkflowsAction.ResetOpenedDocument>(WorkflowsActionType.RESET_OPENED_DOCUMENT),
+      delay(100),
+      withLatestFrom(this.store$.pipe(select(selectWorkflowSelectedDocumentId))),
+      withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+      mergeMap(([[, selectedDocumentId], documentsMap]) => {
+        const document = documentsMap[selectedDocumentId];
+        if (document) {
+          return of(new NavigationAction.SetViewCursor({cursor: {}}));
+        }
 
-
-  public resetOpenedDocument$ = createEffect(() => this.actions$.pipe(
-    ofType<WorkflowsAction.ResetOpenedDocument>(WorkflowsActionType.RESET_OPENED_DOCUMENT),
-    delay(100),
-    withLatestFrom(this.store$.pipe(select(selectWorkflowSelectedDocumentId))),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-    mergeMap(([[, selectedDocumentId], documentsMap]) => {
-      const document = documentsMap[selectedDocumentId];
-      if (document) {
-        return of(new NavigationAction.SetViewCursor({cursor: {}}));
-      }
-
-      return EMPTY;
-    })
-  ));
+        return EMPTY;
+      })
+    )
+  );
 
   constructor(private actions$: Actions, private store$: Store<AppState>) {}
 }

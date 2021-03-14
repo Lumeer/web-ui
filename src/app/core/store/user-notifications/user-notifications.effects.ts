@@ -33,86 +33,92 @@ import {selectUserNotificationsLoaded} from './user-notifications.state';
 
 @Injectable()
 export class UserNotificationsEffects {
-
-  public getUserNotifications$ = createEffect(() => this.actions$.pipe(
-    ofType<UserNotificationsAction.Get>(UserNotificationsActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectUserNotificationsLoaded))),
-    filter(([, loaded]) => !loaded),
-    mergeMap(() =>
-      this.userNotificationsService.getNotifications().pipe(
-        map(
-          userNotifications =>
-            new UserNotificationsAction.GetSuccess({
-              userNotifications: UserNotificationConverter.fromDtos(userNotifications),
-            })
-        ),
-        catchError(error => of(new UserNotificationsAction.GetFailure({error})))
+  public getUserNotifications$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UserNotificationsAction.Get>(UserNotificationsActionType.GET),
+      withLatestFrom(this.store$.pipe(select(selectUserNotificationsLoaded))),
+      filter(([, loaded]) => !loaded),
+      mergeMap(() =>
+        this.userNotificationsService.getNotifications().pipe(
+          map(
+            userNotifications =>
+              new UserNotificationsAction.GetSuccess({
+                userNotifications: UserNotificationConverter.fromDtos(userNotifications),
+              })
+          ),
+          catchError(error => of(new UserNotificationsAction.GetFailure({error})))
+        )
       )
     )
-  ));
+  );
 
+  public getFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UserNotificationsAction.GetFailure>(UserNotificationsActionType.GET_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'userNotifications.get.fail', value: 'Could not read notifications'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-  public getFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<UserNotificationsAction.GetFailure>(UserNotificationsActionType.GET_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'userNotifications.get.fail', value: 'Could not read notifications'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public update$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UserNotificationsAction.Update>(UserNotificationsActionType.UPDATE),
+      mergeMap(action => {
+        const userNotificationDto = UserNotificationConverter.toDto(action.payload.userNotification);
 
+        return this.userNotificationsService
+          .updateNotification(action.payload.userNotification.id, userNotificationDto)
+          .pipe(
+            map(dto => UserNotificationConverter.fromDto(dto)),
+            map(userNotification => new UserNotificationsAction.UpdateSuccess({userNotification})),
+            catchError(error => of(new UserNotificationsAction.UpdateFailure({error})))
+          );
+      })
+    )
+  );
 
-  public update$ = createEffect(() => this.actions$.pipe(
-    ofType<UserNotificationsAction.Update>(UserNotificationsActionType.UPDATE),
-    mergeMap(action => {
-      const userNotificationDto = UserNotificationConverter.toDto(action.payload.userNotification);
+  public updateFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UserNotificationsAction.UpdateFailure>(UserNotificationsActionType.UPDATE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'userNotifications.update.fail', value: 'Could not update notification state'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-      return this.userNotificationsService
-        .updateNotification(action.payload.userNotification.id, userNotificationDto)
-        .pipe(
-          map(dto => UserNotificationConverter.fromDto(dto)),
-          map(userNotification => new UserNotificationsAction.UpdateSuccess({userNotification})),
-          catchError(error => of(new UserNotificationsAction.UpdateFailure({error})))
-        );
-    })
-  ));
+  public delete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UserNotificationsAction.Delete>(UserNotificationsActionType.DELETE),
+      mergeMap(action => {
+        if (action.payload.userNotification.deleting !== true) {
+          return this.userNotificationsService.removeNotification(action.payload.userNotification.id).pipe(
+            map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
+            catchError(error =>
+              of(new UserNotificationsAction.DeleteFailure({error, id: action.payload.userNotification.id}))
+            )
+          );
+        } else {
+          return EMPTY;
+        }
+      })
+    )
+  );
 
-
-  public updateFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<UserNotificationsAction.UpdateFailure>(UserNotificationsActionType.UPDATE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'userNotifications.update.fail', value: 'Could not update notification state'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
-
-
-  public delete$ = createEffect(() => this.actions$.pipe(
-    ofType<UserNotificationsAction.Delete>(UserNotificationsActionType.DELETE),
-    mergeMap(action => {
-      if (action.payload.userNotification.deleting !== true) {
-        return this.userNotificationsService.removeNotification(action.payload.userNotification.id).pipe(
-          map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
-          catchError(error =>
-            of(new UserNotificationsAction.DeleteFailure({error, id: action.payload.userNotification.id}))
-          )
-        );
-      } else {
-        return EMPTY;
-      }
-    })
-  ));
-
-
-  public deleteFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<UserNotificationsAction.DeleteFailure>(UserNotificationsActionType.DELETE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'userNotification.delete.fail', value: 'Could not delete notification'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public deleteFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UserNotificationsAction.DeleteFailure>(UserNotificationsActionType.DELETE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'userNotification.delete.fail', value: 'Could not delete notification'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
   constructor(
     private i18n: I18n,

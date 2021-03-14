@@ -32,49 +32,53 @@ import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class ContactsEffects {
-
-  public getContact$ = createEffect(() => this.actions$.pipe(
-    ofType<ContactsAction.GetContact>(ContactsActionType.GET_CONTACT),
-    mergeMap(action =>
-      this.organizationService.getOrganizationContact(action.payload.organizationId).pipe(
-        map(contact => new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(contact)})),
-        catchError(error => of(new ContactsAction.GetContactFailure({error})))
+  public getContact$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ContactsAction.GetContact>(ContactsActionType.GET_CONTACT),
+      mergeMap(action =>
+        this.organizationService.getOrganizationContact(action.payload.organizationId).pipe(
+          map(contact => new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(contact)})),
+          catchError(error => of(new ContactsAction.GetContactFailure({error})))
+        )
       )
     )
-  ));
+  );
 
-
-  public getContactFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<ContactsAction.GetContactFailure>(ContactsActionType.GET_CONTACT_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'organization.contact.get.fail', value: 'Could not read contact information'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
-
-
-  public setContact$ = createEffect(() => this.actions$.pipe(
-    ofType<ContactsAction.SetContact>(ContactsActionType.SET_CONTACT),
-    mergeMap(action =>
-      this.organizationService
-        .setOrganizationContact(action.payload.organizationId, ContactConverter.toDto(action.payload.contact))
-        .pipe(
-          map(contact => new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(contact)})),
-          catchError(error => of(new ContactsAction.SetContactFailure({error})))
-        )
+  public getContactFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ContactsAction.GetContactFailure>(ContactsActionType.GET_CONTACT_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'organization.contact.get.fail', value: 'Could not read contact information'});
+        return new NotificationsAction.Error({message});
+      })
     )
-  ));
+  );
 
+  public setContact$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ContactsAction.SetContact>(ContactsActionType.SET_CONTACT),
+      mergeMap(action =>
+        this.organizationService
+          .setOrganizationContact(action.payload.organizationId, ContactConverter.toDto(action.payload.contact))
+          .pipe(
+            map(contact => new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(contact)})),
+            catchError(error => of(new ContactsAction.SetContactFailure({error})))
+          )
+      )
+    )
+  );
 
-  public setContactFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<ContactsAction.GetContactFailure>(ContactsActionType.SET_CONTACT_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'organization.contact.set.fail', value: 'Could not save contact information'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public setContactFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ContactsAction.GetContactFailure>(ContactsActionType.SET_CONTACT_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'organization.contact.set.fail', value: 'Could not save contact information'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
   constructor(
     private i18n: I18n,

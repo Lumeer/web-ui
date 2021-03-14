@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {InviteUserModalComponent} from './modal/invite-user-modal.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -38,7 +38,7 @@ import {
   styleUrls: ['./invite-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InviteUserComponent {
+export class InviteUserComponent implements OnInit {
   @Input()
   public mobile: boolean;
 

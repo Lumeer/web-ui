@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   CollectionSharedUserNotification,
   ProjectSharedUserNotification,
@@ -35,7 +35,7 @@ import {perspectiveIconsMap} from '../../../../../../../view/perspectives/perspe
   templateUrl: './notification-icon.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationIconComponent {
+export class NotificationIconComponent implements OnChanges {
   @Input()
   public notification: UserNotification;
 

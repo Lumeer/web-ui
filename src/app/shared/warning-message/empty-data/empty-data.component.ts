@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
 import {Query} from '../../../core/store/navigation/query/query';
 import {AppState} from '../../../core/store/app.state';
@@ -38,7 +38,7 @@ import {selectProjectPermissions} from '../../../core/store/user-permissions/use
   templateUrl: './empty-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyDataComponent {
+export class EmptyDataComponent implements OnInit {
   @Input()
   public query: Query;
 

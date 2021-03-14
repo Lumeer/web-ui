@@ -111,11 +111,9 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public createPayment($event) {
-    let validUntil: Date;
-
-    validUntil = new Date(
+    const validUntil: Date = new Date(
       $event.start.getFullYear(),
-      $event.start.getMonth() + $event.months,
+      +$event.start.getMonth() + +$event.months,
       $event.start.getDate(),
       23,
       59,

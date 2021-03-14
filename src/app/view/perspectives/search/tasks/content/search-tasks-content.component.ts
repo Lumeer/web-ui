@@ -23,6 +23,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -60,7 +61,7 @@ import {selectTasksCollectionsByReadPermission} from '../../../../../core/store/
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class SearchTasksContentComponent implements OnInit, OnChanges {
+export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public documents: DocumentModel[];
 

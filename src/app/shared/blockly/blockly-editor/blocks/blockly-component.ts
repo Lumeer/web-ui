@@ -35,6 +35,6 @@ export abstract class BlocklyComponent {
     return null;
   }
 
-  // tslint:disable-next-line:no-empty
+  // eslint-disable-next-line no-empty, @typescript-eslint/no-empty-function
   public onWorkspaceChange(workspace, changeEvent) {}
 }

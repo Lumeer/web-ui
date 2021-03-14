@@ -30,17 +30,18 @@ import {BsModalService} from 'ngx-bootstrap/modal';
 
 @Injectable()
 export class ModalsEffects {
-
-  public hide$ = createEffect(() => this.actions$.pipe(
-    ofType<ModalsAction.Hide>(ModalsActionType.HIDE),
-    tap(() => {
-      this.toastrService.toasts.forEach(toast => toast.toastRef.close());
-      this.store$
-        .pipe(select(selectModalsIds), take(1))
-        .subscribe(modalsIds => modalsIds.forEach(modalId => this.modalService.hide(modalId)));
-    }),
-    map(() => new ModalsAction.Clear())
-  ));
+  public hide$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ModalsAction.Hide>(ModalsActionType.HIDE),
+      tap(() => {
+        this.toastrService.toasts.forEach(toast => toast.toastRef.close());
+        this.store$
+          .pipe(select(selectModalsIds), take(1))
+          .subscribe(modalsIds => modalsIds.forEach(modalId => this.modalService.hide(modalId)));
+      }),
+      map(() => new ModalsAction.Clear())
+    )
+  );
 
   constructor(
     private actions$: Actions,

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, SimpleChanges, OnChanges} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {CollectionAttributeFilter} from '../../../../core/store/navigation/query/query';
 import {BehaviorSubject} from 'rxjs';
@@ -31,7 +31,7 @@ import {areConditionValuesDefined} from '../../../../core/store/navigation/query
   templateUrl: './collection-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionFiltersComponent {
+export class CollectionFiltersComponent implements OnChanges {
   @Input()
   public collection: Collection;
 

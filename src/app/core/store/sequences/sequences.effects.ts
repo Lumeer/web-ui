@@ -33,78 +33,84 @@ import {SequenceService} from '../../rest/sequence.service';
 
 @Injectable()
 export class SequencesEffects {
-
-  public getSequences$ = createEffect(() => this.actions$.pipe(
-    ofType<SequencesAction.Get>(SequencesActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectSequencesLoaded))),
-    filter(([action, loaded]) => !loaded),
-    mergeMap(action =>
-      this.sequenceService.getSequences().pipe(
-        map(
-          sequences =>
-            new SequencesAction.GetSuccess({
-              sequences: SequenceConverter.fromDtos(sequences),
-            })
-        ),
-        catchError(error => of(new SequencesAction.GetFailure({error})))
+  public getSequences$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SequencesAction.Get>(SequencesActionType.GET),
+      withLatestFrom(this.store$.pipe(select(selectSequencesLoaded))),
+      filter(([action, loaded]) => !loaded),
+      mergeMap(action =>
+        this.sequenceService.getSequences().pipe(
+          map(
+            sequences =>
+              new SequencesAction.GetSuccess({
+                sequences: SequenceConverter.fromDtos(sequences),
+              })
+          ),
+          catchError(error => of(new SequencesAction.GetFailure({error})))
+        )
       )
     )
-  ));
+  );
 
+  public getFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SequencesAction.GetFailure>(SequencesActionType.GET_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'sequences.get.fail', value: 'Could not read sequences'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-  public getFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<SequencesAction.GetFailure>(SequencesActionType.GET_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'sequences.get.fail', value: 'Could not read sequences'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public update$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SequencesAction.Update>(SequencesActionType.UPDATE),
+      mergeMap(action => {
+        const sequenceDto = SequenceConverter.toDto(action.payload.sequence);
 
+        return this.sequenceService.updateSequence(sequenceDto).pipe(
+          map(dto => SequenceConverter.fromDto(dto)),
+          map(sequence => new SequencesAction.UpdateSuccess({sequence})),
+          catchError(error => of(new SequencesAction.UpdateFailure({error})))
+        );
+      })
+    )
+  );
 
-  public update$ = createEffect(() => this.actions$.pipe(
-    ofType<SequencesAction.Update>(SequencesActionType.UPDATE),
-    mergeMap(action => {
-      const sequenceDto = SequenceConverter.toDto(action.payload.sequence);
+  public updateFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SequencesAction.UpdateFailure>(SequencesActionType.UPDATE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'sequences.update.fail', value: 'Could not update sequence'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-      return this.sequenceService.updateSequence(sequenceDto).pipe(
-        map(dto => SequenceConverter.fromDto(dto)),
-        map(sequence => new SequencesAction.UpdateSuccess({sequence})),
-        catchError(error => of(new SequencesAction.UpdateFailure({error})))
-      );
-    })
-  ));
+  public delete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SequencesAction.Delete>(SequencesActionType.DELETE),
+      mergeMap(action => {
+        return this.sequenceService.removeSequence(action.payload.sequence.id).pipe(
+          map(notificationId => new SequencesAction.DeleteSuccess({id: notificationId})),
+          catchError(error => of(new SequencesAction.DeleteFailure({error, id: action.payload.sequence.id})))
+        );
+      })
+    )
+  );
 
-
-  public updateFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<SequencesAction.UpdateFailure>(SequencesActionType.UPDATE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'sequences.update.fail', value: 'Could not update sequence'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
-
-
-  public delete$ = createEffect(() => this.actions$.pipe(
-    ofType<SequencesAction.Delete>(SequencesActionType.DELETE),
-    mergeMap(action => {
-      return this.sequenceService.removeSequence(action.payload.sequence.id).pipe(
-        map(notificationId => new SequencesAction.DeleteSuccess({id: notificationId})),
-        catchError(error => of(new SequencesAction.DeleteFailure({error, id: action.payload.sequence.id})))
-      );
-    })
-  ));
-
-
-  public deleteFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<SequencesAction.DeleteFailure>(SequencesActionType.DELETE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'sequence.delete.fail', value: 'Could not delete sequence'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public deleteFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SequencesAction.DeleteFailure>(SequencesActionType.DELETE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'sequence.delete.fail', value: 'Could not delete sequence'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
   constructor(
     private i18n: I18n,

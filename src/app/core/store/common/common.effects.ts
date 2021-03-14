@@ -26,17 +26,23 @@ import {CommonAction, CommonActionType} from './common.action';
 
 @Injectable()
 export class CommonEffects {
+  public executeCallback$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<CommonAction.ExecuteCallback>(CommonActionType.EXECUTE_CALLBACK),
+        tap((action: CommonAction.ExecuteCallback) => action.payload.callback())
+      ),
+    {dispatch: false}
+  );
 
-  public executeCallback$ = createEffect(() => this.actions$.pipe(
-    ofType<CommonAction.ExecuteCallback>(CommonActionType.EXECUTE_CALLBACK),
-    tap((action: CommonAction.ExecuteCallback) => action.payload.callback())
-  ), {dispatch: false});
-
-
-  public handleError$ = createEffect(() => this.actions$.pipe(
-    ofType<CommonAction.HandleError>(CommonActionType.HANDLE_ERROR),
-    tap((action: CommonAction.HandleError) => console.error(action.payload.error)) // TODO maybe send to Sentry as well
-  ), {dispatch: false});
+  public handleError$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<CommonAction.HandleError>(CommonActionType.HANDLE_ERROR),
+        tap((action: CommonAction.HandleError) => console.error(action.payload.error)) // TODO maybe send to Sentry as well
+      ),
+    {dispatch: false}
+  );
 
   constructor(private actions$: Actions) {}
 }

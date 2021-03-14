@@ -43,12 +43,12 @@ export class SelectItemRowComponent implements OnChanges {
   @Output()
   public remove = new EventEmitter();
 
+  public displayValue: string;
+
   public onRemove(event: MouseEvent) {
     preventEvent(event);
     this.remove.emit();
   }
-
-  public displayValue: string;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.item || changes.displayChildren) {

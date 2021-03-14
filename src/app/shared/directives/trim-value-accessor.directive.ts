@@ -22,9 +22,9 @@ import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '
 
 @Directive({
   selector: 'input[trim], textarea[trim], div[trim]',
-  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: TrimValueAccessor, multi: true}],
+  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: TrimValueAccessorDirective, multi: true}],
 })
-export class TrimValueAccessor extends DefaultValueAccessor {
+export class TrimValueAccessorDirective extends DefaultValueAccessor {
   private readonly regex = /\s/g;
 
   private _type: string = 'text';

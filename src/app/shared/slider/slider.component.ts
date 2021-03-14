@@ -25,13 +25,13 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   styleUrls: ['./slider.component.scss'],
 })
 export class SliderComponent implements OnInit {
-  @Input('values')
+  @Input()
   public values: string;
 
-  @Input('default')
+  @Input()
   public defaultValue: number = 0;
 
-  @Output('onSlide')
+  @Output()
   public onSlide = new EventEmitter<{position: number; value: string}>();
 
   public splitValues: string[];

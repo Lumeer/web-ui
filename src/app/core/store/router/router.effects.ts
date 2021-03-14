@@ -27,26 +27,33 @@ import {from} from 'rxjs';
 
 @Injectable()
 export class RouterEffects {
-  
-  public navigate$ = createEffect(() => this.actions$.pipe(
-    ofType<RouterAction.Go>(RouterActionType.GO),
-    map(action => action.payload),
-    mergeMap(({path, queryParams, extras, nextActions}) =>
-      from(this.router.navigate(path, {queryParams, ...extras})).pipe(mergeMap(() => nextActions || []))
+  public navigate$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<RouterAction.Go>(RouterActionType.GO),
+      map(action => action.payload),
+      mergeMap(({path, queryParams, extras, nextActions}) =>
+        from(this.router.navigate(path, {queryParams, ...extras})).pipe(mergeMap(() => nextActions || []))
+      )
     )
-  ));
+  );
 
-  
-  public navigateBack$ = createEffect(() => this.actions$.pipe(
-    ofType(RouterActionType.BACK),
-    tap(() => this.location.back())
-  ), {dispatch: false});
+  public navigateBack$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(RouterActionType.BACK),
+        tap(() => this.location.back())
+      ),
+    {dispatch: false}
+  );
 
-  
-  public navigateForward$ = createEffect(() => this.actions$.pipe(
-    ofType(RouterActionType.FORWARD),
-    tap(() => this.location.forward())
-  ), {dispatch: false});
+  public navigateForward$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(RouterActionType.FORWARD),
+        tap(() => this.location.forward())
+      ),
+    {dispatch: false}
+  );
 
   constructor(private actions$: Actions, private router: Router, private location: Location) {}
 }

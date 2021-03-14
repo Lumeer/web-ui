@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
@@ -35,7 +35,7 @@ import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
   templateUrl: './payments-order.component.html',
   styleUrls: ['./payments-order.component.scss'],
 })
-export class PaymentsOrderComponent implements OnInit {
+export class PaymentsOrderComponent implements OnInit, OnDestroy {
   private static CZK_FULL = 219;
   private static CZK_SALE = 189;
   private static EUR_FULL = 8.39;
@@ -81,6 +81,10 @@ export class PaymentsOrderComponent implements OnInit {
     });
   }
 
+  private static floorDate(d: Date) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  }
+
   public ngOnInit() {
     this.subscribeToStore();
   }
@@ -100,10 +104,6 @@ export class PaymentsOrderComponent implements OnInit {
           this.setStartDate(new Date(serviceLimits.validUntil.getTime() + 1));
         }
       });
-  }
-
-  private static floorDate(d: Date) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
   }
 
   private setStartDate(d: Date) {

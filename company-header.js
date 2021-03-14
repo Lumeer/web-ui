@@ -16,18 +16,3 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {Pipe, PipeTransform} from '@angular/core';
-
-@Pipe({
-  name: 'log',
-})
-export class LogPipe implements PipeTransform {
-  public transform(value: any, label?: string, skip?: boolean): any {
-    if (!skip) {
-      // eslint-disable-next-line no-console
-      label ? console.log(label, value) : console.log(value);
-    }
-    return value;
-  }
-}

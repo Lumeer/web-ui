@@ -18,6 +18,20 @@
  */
 
 export class Md5 {
+  private _dataLength: number;
+  private _bufferLength: number;
+
+  private _state: Int32Array = new Int32Array(4);
+  private _buffer: ArrayBuffer = new ArrayBuffer(68);
+  private readonly _buffer8: Uint8Array;
+  private readonly _buffer32: Uint32Array;
+
+  constructor() {
+    this._buffer8 = new Uint8Array(this._buffer, 0, 68);
+    this._buffer32 = new Uint32Array(this._buffer, 0, 17);
+    this.start();
+  }
+
   // One time hashing functions
   public static hashStr(str: string, raw: boolean = false) {
     return this.onePassHasher.start().appendStr(str).end(raw);
@@ -200,20 +214,6 @@ export class Md5 {
     x[3] = (d + x[3]) | 0;
   }
 
-  private _dataLength: number;
-  private _bufferLength: number;
-
-  private _state: Int32Array = new Int32Array(4);
-  private _buffer: ArrayBuffer = new ArrayBuffer(68);
-  private _buffer8: Uint8Array;
-  private _buffer32: Uint32Array;
-
-  constructor() {
-    this._buffer8 = new Uint8Array(this._buffer, 0, 68);
-    this._buffer32 = new Uint32Array(this._buffer, 0, 17);
-    this.start();
-  }
-
   public start() {
     this._dataLength = 0;
     this._bufferLength = 0;
@@ -344,7 +344,6 @@ export class Md5 {
     const buf8 = this._buffer8;
     const buf32 = this._buffer32;
     const i = (bufLen >> 2) + 1;
-    let dataBitsLen;
 
     this._dataLength += bufLen;
 
@@ -359,7 +358,7 @@ export class Md5 {
 
     // Do the final computation based on the tail and length
     // Beware that the final length may not fit in 32 bits so we take care of that
-    dataBitsLen = this._dataLength * 8;
+    const dataBitsLen = this._dataLength * 8;
     if (dataBitsLen <= 0xffffffff) {
       buf32[14] = dataBitsLen;
     } else {

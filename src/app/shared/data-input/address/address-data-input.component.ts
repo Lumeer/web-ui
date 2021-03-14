@@ -43,6 +43,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {AddressDataValue, ConstraintType} from '@lumeer/data-filters';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'address-data-input',
@@ -86,7 +87,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   private keyDownListener: (event: KeyboardEvent) => void;
   private setFocus: boolean;
 
-  constructor(private store$: Store<{}>, private element: ElementRef) {}
+  constructor(private store$: Store<AppState>, private element: ElementRef) {}
 
   public ngOnInit() {
     this.addressOptions$ = this.bindAddressOptions();

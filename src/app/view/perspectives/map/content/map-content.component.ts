@@ -54,6 +54,7 @@ import {MapGlobeContentComponent} from './globe-content/map-globe-content.compon
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AppState} from '../../../../core/store/app.state';
 
 interface Data {
   collections: Collection[];
@@ -105,7 +106,7 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   private readonly converter = new MapDataConverter();
 
-  constructor(private store$: Store<{}>, private modalService: ModalService) {}
+  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.data$ = this.subscribeToData$();

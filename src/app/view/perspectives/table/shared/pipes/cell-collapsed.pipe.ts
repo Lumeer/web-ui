@@ -24,6 +24,7 @@ import {distinctUntilChanged, map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {selectTableById} from '../../../../../core/store/tables/tables.selector';
 import {isTableRowCollapsed} from '../../../../../core/store/tables/utils/table-row-collapsing.utils';
+import {AppState} from '../../../../../core/store/app.state';
 
 /**
  * Checks if the linked row from the previous table part has collapsed next linked rows (current cell is collapsed).
@@ -32,7 +33,7 @@ import {isTableRowCollapsed} from '../../../../../core/store/tables/utils/table-
   name: 'cellCollapsed',
 })
 export class CellCollapsedPipe implements PipeTransform {
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public transform(cursor: TableBodyCursor): Observable<boolean> {
     return this.store$.pipe(

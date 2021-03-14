@@ -18,7 +18,7 @@
  */
 
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -34,7 +34,7 @@ import {AddressConstraintConfig, AddressDataValue, AddressesMap, AddressField} f
   styleUrls: ['./address-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressConstraintConfigFormComponent {
+export class AddressConstraintConfigFormComponent implements OnChanges {
   public readonly controls = AddressConstraintFormControl;
   public readonly fields = objectValues(AddressField);
 

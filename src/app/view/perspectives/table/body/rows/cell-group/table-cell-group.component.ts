@@ -50,6 +50,7 @@ import {
   selectLinkTypePermissions,
 } from '../../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AppState} from '../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -83,7 +84,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
-  public constructor(private store$: Store<{}>) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));

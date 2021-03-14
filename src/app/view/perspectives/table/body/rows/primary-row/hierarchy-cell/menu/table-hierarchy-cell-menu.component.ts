@@ -32,6 +32,7 @@ import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 import {mergeMap} from 'rxjs/operators';
 import {selectCollectionPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
+import {AppState} from '../../../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
@@ -55,7 +56,7 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   public outdentable$: Observable<boolean>;
   public allowedPermissions$: Observable<AllowedPermissions>;
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public open(x: number, y: number) {
     this.contextMenuPosition = {x, y};

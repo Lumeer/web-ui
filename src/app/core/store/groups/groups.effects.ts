@@ -30,96 +30,104 @@ import {GroupsAction, GroupsActionType} from './groups.action';
 
 @Injectable()
 export class GroupsEffects {
-
-  public get$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.Get>(GroupsActionType.GET),
-    mergeMap(() =>
-      this.groupService.getGroups().pipe(
-        map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
-        map(groups => new GroupsAction.GetSuccess({groups: groups})),
-        catchError(error => of(new GroupsAction.GetFailure({error})))
+  public get$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.Get>(GroupsActionType.GET),
+      mergeMap(() =>
+        this.groupService.getGroups().pipe(
+          map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
+          map(groups => new GroupsAction.GetSuccess({groups: groups})),
+          catchError(error => of(new GroupsAction.GetFailure({error})))
+        )
       )
     )
-  ));
+  );
 
+  public getFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'groups.get.fail', value: 'Could not get groups'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-  public getFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'groups.get.fail', value: 'Could not get groups'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public create$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.Create>(GroupsActionType.CREATE),
+      mergeMap(action => {
+        const groupDto = GroupConverter.toDto(action.payload.group);
 
+        return this.groupService.createGroup(groupDto).pipe(
+          map(dto => GroupConverter.fromDto(dto)),
+          map(group => new GroupsAction.CreateSuccess({group: group})),
+          catchError(error => of(new GroupsAction.CreateFailure({error})))
+        );
+      })
+    )
+  );
 
-  public create$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.Create>(GroupsActionType.CREATE),
-    mergeMap(action => {
-      const groupDto = GroupConverter.toDto(action.payload.group);
+  public createFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'group.create.fail', value: 'Could not create the group'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-      return this.groupService.createGroup(groupDto).pipe(
-        map(dto => GroupConverter.fromDto(dto)),
-        map(group => new GroupsAction.CreateSuccess({group: group})),
-        catchError(error => of(new GroupsAction.CreateFailure({error})))
-      );
-    })
-  ));
+  public update$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.Update>(GroupsActionType.UPDATE),
+      mergeMap(action => {
+        const groupDto = GroupConverter.toDto(action.payload.group);
 
+        return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
+          map(dto => GroupConverter.fromDto(dto)),
+          map(group => new GroupsAction.UpdateSuccess({group: group})),
+          catchError(error => of(new GroupsAction.UpdateFailure({error})))
+        );
+      })
+    )
+  );
 
-  public createFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'group.create.fail', value: 'Could not create the group'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public updateFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'group.update.fail', value: 'Could not update the group'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-
-  public update$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.Update>(GroupsActionType.UPDATE),
-    mergeMap(action => {
-      const groupDto = GroupConverter.toDto(action.payload.group);
-
-      return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
-        map(dto => GroupConverter.fromDto(dto)),
-        map(group => new GroupsAction.UpdateSuccess({group: group})),
-        catchError(error => of(new GroupsAction.UpdateFailure({error})))
-      );
-    })
-  ));
-
-
-  public updateFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'group.update.fail', value: 'Could not update the group'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
-
-
-  public delete$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
-    mergeMap(action =>
-      this.groupService.deleteGroup(action.payload.groupId).pipe(
-        map(() => new GroupsAction.DeleteSuccess(action.payload)),
-        catchError(error => of(new GroupsAction.DeleteFailure({error})))
+  public delete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
+      mergeMap(action =>
+        this.groupService.deleteGroup(action.payload.groupId).pipe(
+          map(() => new GroupsAction.DeleteSuccess(action.payload)),
+          catchError(error => of(new GroupsAction.DeleteFailure({error})))
+        )
       )
     )
-  ));
+  );
 
-
-  public deleteFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'group.delete.fail', value: 'Could not delete the group'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public deleteFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'group.delete.fail', value: 'Could not delete the group'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
   constructor(private actions$: Actions, private groupService: GroupService, private i18n: I18n) {}
 }

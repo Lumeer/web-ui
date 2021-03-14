@@ -43,84 +43,87 @@ import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-
 
 @Injectable()
 export class DataResourcesEffects {
+  public get$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
+      withLatestFrom(
+        this.store$.pipe(select(selectCollectionsPermissions)),
+        this.store$.pipe(select(selectLinkTypesPermissions))
+      ),
+      map(([action, collectionsPermissions, linkTypePermissions]) =>
+        checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+      ),
+      withLatestFrom(
+        this.store$.pipe(select(selectDataResourcesQueries)),
+        this.store$.pipe(select(selectDataResourcesLoadingQueries))
+      ),
+      filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+      map(([payload, ,]) => payload),
+      tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingQuery({query: payload.query}))),
+      mergeMap(payload => {
+        const query = payload.query;
+        const queryDto = convertQueryModelToDto(query);
 
-  public get$ = createEffect(() => this.actions$.pipe(
-    ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
-    withLatestFrom(
-      this.store$.pipe(select(selectCollectionsPermissions)),
-      this.store$.pipe(select(selectLinkTypesPermissions))
-    ),
-    map(([action, collectionsPermissions, linkTypePermissions]) =>
-      checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
-    ),
-    withLatestFrom(
-      this.store$.pipe(select(selectDataResourcesQueries)),
-      this.store$.pipe(select(selectDataResourcesLoadingQueries))
-    ),
-    filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
-    map(([payload, ,]) => payload),
-    tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingQuery({query: payload.query}))),
-    mergeMap(payload => {
-      const query = payload.query;
-      const queryDto = convertQueryModelToDto(query);
-
-      return this.searchService.searchDocumentsAndLinks(queryDto, query.includeSubItems, payload.workspace).pipe(
-        mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
-          const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
-          const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
-          return [
-            new DocumentsAction.GetSuccess({documents, query}),
-            new LinkInstancesAction.GetSuccess({linkInstances, query}),
-            new DataResourcesAction.GetSuccess({query}),
-          ];
-        }),
-        catchError(error =>
-          of(
-            new DataResourcesAction.GetFailure({error, query}),
-            new DocumentsAction.GetFailure({error}),
-            new LinkInstancesAction.GetFailure({error})
+        return this.searchService.searchDocumentsAndLinks(queryDto, query.includeSubItems, payload.workspace).pipe(
+          mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
+            const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
+            const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+            return [
+              new DocumentsAction.GetSuccess({documents, query}),
+              new LinkInstancesAction.GetSuccess({linkInstances, query}),
+              new DataResourcesAction.GetSuccess({query}),
+            ];
+          }),
+          catchError(error =>
+            of(
+              new DataResourcesAction.GetFailure({error, query}),
+              new DocumentsAction.GetFailure({error}),
+              new LinkInstancesAction.GetFailure({error})
+            )
           )
-        )
-      );
-    })
-  ));
+        );
+      })
+    )
+  );
 
+  public getTasks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
+      map(action => checkLoadedDataQueryPayload(action.payload)),
+      withLatestFrom(this.store$.pipe(select(selectTasksQueries)), this.store$.pipe(select(selectTasksLoadingQueries))),
+      filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+      map(([payload, ,]) => payload),
+      tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingTasksQuery({query: payload.query}))),
+      mergeMap(payload => {
+        const query = payload.query;
+        const queryDto = convertQueryModelToDto(query);
 
-  public getTasks$ = createEffect(() => this.actions$.pipe(
-    ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
-    map(action => checkLoadedDataQueryPayload(action.payload)),
-    withLatestFrom(this.store$.pipe(select(selectTasksQueries)), this.store$.pipe(select(selectTasksLoadingQueries))),
-    filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
-    map(([payload, ,]) => payload),
-    tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingTasksQuery({query: payload.query}))),
-    mergeMap(payload => {
-      const query = payload.query;
-      const queryDto = convertQueryModelToDto(query);
+        return this.searchService.searchTaskDocumentsAndLinks(queryDto, query.includeSubItems, payload.workspace).pipe(
+          mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
+            const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
+            const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+            return [
+              new DocumentsAction.GetSuccess({documents}),
+              new LinkInstancesAction.GetSuccess({linkInstances}),
+              new DataResourcesAction.GetTasksSuccess({query}),
+            ];
+          }),
+          catchError(error => of(new DataResourcesAction.GetTasksFailure({error, query})))
+        );
+      })
+    )
+  );
 
-      return this.searchService.searchTaskDocumentsAndLinks(queryDto, query.includeSubItems, payload.workspace).pipe(
-        mergeMap(({documents: documentsDtos, linkInstances: linksDtos}) => {
-          const documents = documentsDtos.map(dto => convertDocumentDtoToModel(dto));
-          const linkInstances = linksDtos.map(dto => convertLinkInstanceDtoToModel(dto));
-          return [
-            new DocumentsAction.GetSuccess({documents}),
-            new LinkInstancesAction.GetSuccess({linkInstances}),
-            new DataResourcesAction.GetTasksSuccess({query}),
-          ];
-        }),
-        catchError(error => of(new DataResourcesAction.GetTasksFailure({error, query})))
-      );
-    })
-  ));
-
-
-  public getTasksFailure$ = createEffect(() => this.actions$.pipe(
-    ofType<DataResourcesAction.GetTasksFailure>(DataResourcesActionType.GET_TASKS_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'tasks.get.fail', value: 'Could not get tasks'});
-      return new NotificationsAction.Error({message});
-    })
-  ));
+  public getTasksFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DataResourcesAction.GetTasksFailure>(DataResourcesActionType.GET_TASKS_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({id: 'tasks.get.fail', value: 'Could not get tasks'});
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
   constructor(
     private actions$: Actions,
