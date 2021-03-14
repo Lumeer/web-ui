@@ -7,7 +7,8 @@
       "i18n": {
         "sourceLocale": "en",
         "locales": {
-          "cs": "src/i18n/messages.cs.xlf"
+          "cs": "src/i18n/messages.cs.xlf",
+          "hu": "src/i18n/messages.hu.xlf"
         }
       },
       "root": "",
@@ -229,6 +230,19 @@
               "optimization": false,
               "sourceMap": true
             },
+            "hu": {
+              "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "buildOptimizer": false,
+              "localize": ["hu"],
+              "optimization": false,
+              "sourceMap": true
+            },
             "en": {
               "aot": true,
               "baseHref": "/ui/",
@@ -254,6 +268,9 @@
           "configurations": {
             "cs": {
               "browserTarget": "lumeer:build:cs"
+            },
+            "hu": {
+              "browserTarget": "lumeer:build:hu"
             },
             "en": {
               "browserTarget": "lumeer:build:en"
