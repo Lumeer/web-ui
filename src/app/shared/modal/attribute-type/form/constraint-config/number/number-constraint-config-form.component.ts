@@ -26,7 +26,7 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
-import {objectValues} from '../../../../../utils/common.utils';
+import {isNumeric, objectValues, toNumber} from '../../../../../utils/common.utils';
 import {LanguageTag, NumberConstraint, NumberConstraintConfig, NumberDataValue} from '@lumeer/data-filters';
 import {getCurrentLocaleLanguageTag} from '../../../../../../core/model/language-tag';
 
@@ -87,12 +87,13 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createNumberDataValue(): NumberDataValue {
-    const config: NumberConstraintConfig = this.form.value;
+    const config: NumberConstraintConfig = {...this.form.value};
     let exampleValue = 123456789.123456789;
     if (config.negative) {
       exampleValue *= -1;
     }
     config.locale = getCurrentLocaleLanguageTag();
+    config.decimals = isNumeric(config.decimals) ? toNumber(config.decimals) : null;
 
     return new NumberConstraint(config).createDataValue(exampleValue);
   }
