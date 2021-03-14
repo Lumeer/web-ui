@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
@@ -37,102 +37,108 @@ import {selectViewQuery} from '../views/views.state';
 
 @Injectable()
 export class NavigationEffects {
-  @Effect()
-  public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectViewQuery))),
-    map(([action, query]) => {
-      const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
-      const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
-      const newStem = {...stem, linkTypeIds};
+  public addLinkToQuery$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
+      withLatestFrom(this.store$.pipe(select(selectViewQuery))),
+      map(([action, query]) => {
+        const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
+        const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
+        const newStem = {...stem, linkTypeIds};
 
-      return newQueryAction({...query, stems: [newStem]});
-    })
-  );
-
-  @Effect()
-  public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectViewQuery))),
-    map(([action, query]) => {
-      const stems = query.stems || [];
-      stems.push({collectionId: action.payload.collectionId});
-
-      return newQueryAction({...query, stems});
-    })
-  );
-
-  @Effect()
-  public navigateToPreviousUrl$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.NavigateToPreviousUrl>(NavigationActionType.NAVIGATE_TO_PREVIOUS_URL),
-    filter(action => !!action.payload.organizationCode && !!action.payload.projectCode),
-    map(action => {
-      const {organizationCode, projectCode, previousUrl} = action.payload;
-
-      if (!previousUrl || previousUrl === '/') {
-        return new RouterAction.Go({
-          path: ['/', 'w', organizationCode, projectCode, 'view', 'search'],
-        });
-      }
-
-      const [url] = previousUrl.split('?', 2);
-      const queryParams = this.router.parseUrl(previousUrl).queryParams;
-      return new RouterAction.Go({path: [url], queryParams});
-    })
-  );
-
-  @Effect()
-  public setQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.SetQuery>(NavigationActionType.SET_QUERY),
-    map(action => newQueryAction(action.payload.query))
-  );
-
-  @Effect()
-  public setViewCursor$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.SetViewCursor>(NavigationActionType.SET_VIEW_CURSOR),
-    withLatestFrom(this.moduleLazyLoadingService.observeLazyLoading()),
-    // otherwise it fails to redirect to lazy loaded module when cursor is being changed at the same time
-    filter(([, lazyLoading]) => !lazyLoading),
-    map(
-      ([action]) =>
-        new RouterAction.Go({
-          path: [],
-          queryParams: {
-            [QueryParam.ViewCursor]: convertViewCursorToString(action.payload.cursor) || null,
-          },
-          extras: {
-            replaceUrl: true,
-            queryParamsHandling: 'merge',
-          },
-        })
+        return newQueryAction({...query, stems: [newStem]});
+      })
     )
   );
 
-  @Effect()
-  public removeViewFromUrl$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
-    withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    filter(([, navigation]) => !!navigation.workspace && !!navigation.perspective),
-    map(([action, navigation]) => {
-      const {organizationCode, projectCode} = navigation.workspace;
-      const {perspective, searchTab} = navigation;
+  public addCollectionToQuery$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
+      withLatestFrom(this.store$.pipe(select(selectViewQuery))),
+      map(([action, query]) => {
+        const stems = query.stems || [];
+        stems.push({collectionId: action.payload.collectionId});
 
-      const path: any[] = ['w', organizationCode, projectCode, 'view', perspective];
-      if (perspective === Perspective.Search && searchTab) {
-        path.push(searchTab);
-      }
+        return newQueryAction({...query, stems});
+      })
+    )
+  );
 
-      const queryParams = {};
-      if (action.payload.setQuery) {
-        queryParams[QueryParam.Query] = convertQueryModelToString(action.payload.setQuery);
-      }
-      if (action.payload.cursor) {
-        queryParams[QueryParam.ViewCursor] = convertViewCursorToString(action.payload.cursor);
-      }
+  public navigateToPreviousUrl$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.NavigateToPreviousUrl>(NavigationActionType.NAVIGATE_TO_PREVIOUS_URL),
+      filter(action => !!action.payload.organizationCode && !!action.payload.projectCode),
+      map(action => {
+        const {organizationCode, projectCode, previousUrl} = action.payload;
 
-      const extras: NavigationExtras = {queryParams, queryParamsHandling: 'merge'};
-      return new RouterAction.Go({path, extras});
-    })
+        if (!previousUrl || previousUrl === '/') {
+          return new RouterAction.Go({
+            path: ['/', 'w', organizationCode, projectCode, 'view', 'search'],
+          });
+        }
+
+        const [url] = previousUrl.split('?', 2);
+        const queryParams = this.router.parseUrl(previousUrl).queryParams;
+        return new RouterAction.Go({path: [url], queryParams});
+      })
+    )
+  );
+
+  public setQuery$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.SetQuery>(NavigationActionType.SET_QUERY),
+      map(action => newQueryAction(action.payload.query))
+    )
+  );
+
+  public setViewCursor$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.SetViewCursor>(NavigationActionType.SET_VIEW_CURSOR),
+      withLatestFrom(this.moduleLazyLoadingService.observeLazyLoading()),
+      // otherwise it fails to redirect to lazy loaded module when cursor is being changed at the same time
+      filter(([, lazyLoading]) => !lazyLoading),
+      map(
+        ([action]) =>
+          new RouterAction.Go({
+            path: [],
+            queryParams: {
+              [QueryParam.ViewCursor]: convertViewCursorToString(action.payload.cursor) || null,
+            },
+            extras: {
+              replaceUrl: true,
+              queryParamsHandling: 'merge',
+            },
+          })
+      )
+    )
+  );
+
+  public removeViewFromUrl$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
+      withLatestFrom(this.store$.pipe(select(selectNavigation))),
+      filter(([, navigation]) => !!navigation.workspace && !!navigation.perspective),
+      map(([action, navigation]) => {
+        const {organizationCode, projectCode} = navigation.workspace;
+        const {perspective, searchTab} = navigation;
+
+        const path: any[] = ['w', organizationCode, projectCode, 'view', perspective];
+        if (perspective === Perspective.Search && searchTab) {
+          path.push(searchTab);
+        }
+
+        const queryParams = {};
+        if (action.payload.setQuery) {
+          queryParams[QueryParam.Query] = convertQueryModelToString(action.payload.setQuery);
+        }
+        if (action.payload.cursor) {
+          queryParams[QueryParam.ViewCursor] = convertViewCursorToString(action.payload.cursor);
+        }
+
+        const extras: NavigationExtras = {queryParams, queryParamsHandling: 'merge'};
+        return new RouterAction.Go({path, extras});
+      })
+    )
   );
 
   constructor(

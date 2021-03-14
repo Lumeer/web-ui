@@ -29,6 +29,7 @@ import {FileApiService} from '../../../../core/service/file-api.service';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {FileAttachmentsAction} from '../../../../core/store/file-attachments/file-attachments.action';
+import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'file-attachment-button',
@@ -46,7 +47,7 @@ export class FileAttachmentButtonComponent {
     private fileApiService: FileApiService,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private store$: Store<{}>
+    private store$: Store<AppState>
   ) {}
 
   public onClick() {

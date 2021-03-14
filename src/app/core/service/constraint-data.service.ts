@@ -29,10 +29,11 @@ import {map, switchMap} from 'rxjs/operators';
 import {selectDocumentsByCollectionId} from '../store/documents/documents.state';
 import {selectLinkInstancesByType} from '../store/link-instances/link-instances.state';
 import {DataResource} from '../model/resource';
+import {AppState} from '../store/app.state';
 
 @Injectable()
 export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {}
+  constructor(private store$: Store<AppState>, private translationService: TranslationService) {}
 
   public init(): Promise<boolean> {
     const durationUnitsMap = this.translationService.createDurationUnitsMap();

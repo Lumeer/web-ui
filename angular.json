@@ -94,7 +94,6 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
@@ -118,7 +117,6 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
@@ -142,7 +140,6 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
@@ -200,7 +197,6 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
@@ -214,6 +210,10 @@
               "showCircularDependencies": true,
               "sourceMap": true,
               "vendorChunk": false
+            },
+            "local": {
+              "progress": true,
+              "baseHref": "/ui/"
             },
             "cs": {
               "aot": true,
@@ -246,11 +246,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "baseHref": "/ui/",
-            "browserTarget": "lumeer:build",
-            "port": 7000,
-            "progress": true,
-            "sourceMap": false
+            "browserTarget": "lumeer:build:local",
+            "port": 7000
           },
           "configurations": {
             "cs": {
@@ -284,11 +281,9 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tslintConfig": "tslint.json",
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }

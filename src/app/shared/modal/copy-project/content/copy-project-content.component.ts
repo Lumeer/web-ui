@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
 import {Project} from '../../../../core/store/projects/project';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {environment} from '../../../../../environments/environment';
@@ -28,7 +28,7 @@ import {environment} from '../../../../../environments/environment';
   styleUrls: ['./copy-project-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CopyProjectContentComponent {
+export class CopyProjectContentComponent implements OnChanges {
   @Input()
   public project: Project;
 

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChange} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange} from '@angular/core';
 
 const DEFAULT_PLACEHOLDER = 'Filter';
 
@@ -26,7 +26,7 @@ const DEFAULT_PLACEHOLDER = 'Filter';
   templateUrl: './filter-box.component.html',
   styleUrls: ['./filter-box.component.scss'],
 })
-export class FilterBoxComponent implements OnInit {
+export class FilterBoxComponent implements OnInit, OnChanges {
   @Input() public value: string;
 
   @Input() public placeholder: string;

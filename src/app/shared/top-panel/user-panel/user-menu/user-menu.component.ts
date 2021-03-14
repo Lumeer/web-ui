@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
@@ -52,7 +52,7 @@ import {NotificationSettingsModalComponent} from '../../../modal/notification-se
   styleUrls: ['./user-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserMenuComponent {
+export class UserMenuComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 

@@ -46,6 +46,7 @@ import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
+import {AppState} from '../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-header-add-button',
@@ -70,7 +71,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   public collection$: Observable<Collection>;
   public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
 
-  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<{}>) {}
+  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {

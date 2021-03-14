@@ -24,6 +24,7 @@ import {debounceTime, map} from 'rxjs/operators';
 import {selectTableRows} from '../../../core/store/tables/tables.selector';
 import {countLinkedRows} from '../../../core/store/tables/table.utils';
 import {TableConfigRow} from '../../../core/store/tables/table.model';
+import {AppState} from '../../../core/store/app.state';
 
 const COMPUTE_BATCH = 100;
 
@@ -40,7 +41,7 @@ export class TableRowNumberService {
 
   private lastTableId: string;
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public setTableId(tableId: string) {
     if (this.lastTableId !== tableId) {

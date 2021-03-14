@@ -23,6 +23,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
   ViewChild,
@@ -65,7 +66,7 @@ import {computeElementPositionInParent, preventEvent} from '../../../../../../sh
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'position-relative'},
 })
-export class TableSingleColumnComponent implements OnInit, OnChanges {
+export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public table: TableModel;
 

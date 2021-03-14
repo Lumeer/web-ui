@@ -43,6 +43,7 @@ import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
 import {KeyCode} from '../../key-code';
 import {preventEvent} from '../../utils/common.utils';
 import {FilesDataValue} from '@lumeer/data-filters';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'files-data-input',
@@ -87,7 +88,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     private fileApiService: FileApiService,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private store$: Store<{}>
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {

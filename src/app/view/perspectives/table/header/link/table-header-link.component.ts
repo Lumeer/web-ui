@@ -28,6 +28,7 @@ import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {selectLinkTypePermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
+import {AppState} from '../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-header-link',
@@ -56,7 +57,7 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
 
   public linkInfoWidth = 0;
 
-  public constructor(private store$: Store<{}>) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {

@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
@@ -36,150 +36,162 @@ import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class PaymentsEffects {
-  @Effect()
-  public getPayments$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.GetPayments>(PaymentsActionType.GET_PAYMENTS),
-    mergeMap(action => {
-      return this.organizationService.getPayments().pipe(
-        map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))),
-        map(payments => new PaymentsAction.GetPaymentsSuccess({payments: payments})),
-        catchError(error => of(new PaymentsAction.GetPaymentsFailure({error})))
-      );
-    })
+  public getPayments$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PaymentsAction.GetPayments>(PaymentsActionType.GET_PAYMENTS),
+      mergeMap(action => {
+        return this.organizationService.getPayments().pipe(
+          map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))),
+          map(payments => new PaymentsAction.GetPaymentsSuccess({payments: payments})),
+          catchError(error => of(new PaymentsAction.GetPaymentsFailure({error})))
+        );
+      })
+    )
   );
 
-  @Effect()
-  public getPaymentsFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.GetPaymentsFailure>(PaymentsActionType.GET_PAYMENTS_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({
-        id: 'organization.payments.get.fail',
-        value: 'Could not read information about your previous service orders',
-      });
-      return new NotificationsAction.Error({message});
-    })
-  );
-
-  @Effect({dispatch: false})
-  public getPaymentSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
-    tap((action: PaymentsAction.GetPaymentSuccess) => {
-      if (environment.analytics && action.payload.payment.state === 'PAID') {
-        this.angulartics2.eventTrack.next({
-          action: 'Payment paid',
-          properties: {
-            category: 'Payments',
-            label: action.payload.payment.currency,
-            value: action.payload.payment.state,
-          },
+  public getPaymentsFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PaymentsAction.GetPaymentsFailure>(PaymentsActionType.GET_PAYMENTS_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({
+          id: 'organization.payments.get.fail',
+          value: 'Could not read information about your previous service orders',
         });
-
-        const price = this.getPrice(action.payload.payment);
-        const ga = (window as any).ga;
-        if (ga) {
-          ga('ecommerce:addTransaction', {
-            id: action.payload.payment.paymentId,
-            affiliation: 'plans',
-            revenue: price,
-            shipping: '0',
-            tax: price * 0.15,
-          });
-          ga('ecommerce:send');
-        }
-
-        if (environment.mixpanelKey) {
-          mixpanel.track('Payment Paid', {
-            CZK: price,
-            users: action.payload.payment.users,
-            validUntil: action.payload.payment.validUntil,
-          });
-        }
-      }
-    })
+        return new NotificationsAction.Error({message});
+      })
+    )
   );
 
-  @Effect()
-  public getPayment$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.GetPayment>(PaymentsActionType.GET_PAYMENT),
-    mergeMap(action => {
-      return this.organizationService.getPayment(action.payload.paymentId).pipe(
-        map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
-        map(payment => ({payment, nextAction: action.payload.nextAction})),
-        mergeMap(({payment, nextAction}) => {
-          const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({payment: payment})];
-          if (nextAction) {
-            actions.push(nextAction);
+  public getPaymentSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
+        tap((action: PaymentsAction.GetPaymentSuccess) => {
+          if (environment.analytics && action.payload.payment.state === 'PAID') {
+            this.angulartics2.eventTrack.next({
+              action: 'Payment paid',
+              properties: {
+                category: 'Payments',
+                label: action.payload.payment.currency,
+                value: action.payload.payment.state,
+              },
+            });
+
+            const price = this.getPrice(action.payload.payment);
+            const ga = (window as any).ga;
+            if (ga) {
+              ga('ecommerce:addTransaction', {
+                id: action.payload.payment.paymentId,
+                affiliation: 'plans',
+                revenue: price,
+                shipping: '0',
+                tax: price * 0.15,
+              });
+              ga('ecommerce:send');
+            }
+
+            if (environment.mixpanelKey) {
+              mixpanel.track('Payment Paid', {
+                CZK: price,
+                users: action.payload.payment.users,
+                validUntil: action.payload.payment.validUntil,
+              });
+            }
           }
-          return actions;
-        }),
-        catchError(error => of(new PaymentsAction.GetPaymentFailure({error})))
-      );
-    })
+        })
+      ),
+    {dispatch: false}
   );
 
-  @Effect()
-  public getPaymentFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.GetPaymentFailure>(PaymentsActionType.GET_PAYMENT_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({
-        id: 'organization.payment.get.fail',
-        value: 'Could not read information about your previous service order',
-      });
-      return new NotificationsAction.Error({message});
-    })
+  public getPayment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PaymentsAction.GetPayment>(PaymentsActionType.GET_PAYMENT),
+      mergeMap(action => {
+        return this.organizationService.getPayment(action.payload.paymentId).pipe(
+          map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
+          map(payment => ({payment, nextAction: action.payload.nextAction})),
+          mergeMap(({payment, nextAction}) => {
+            const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({payment: payment})];
+            if (nextAction) {
+              actions.push(nextAction);
+            }
+            return actions;
+          }),
+          catchError(error => of(new PaymentsAction.GetPaymentFailure({error})))
+        );
+      })
+    )
   );
 
-  @Effect()
-  public createPayment$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
-    mergeMap(action => {
-      const returnUrl = action.payload.returnUrl || window.location.href;
-      return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
-        map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
-        map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),
-        catchError(error => of(new PaymentsAction.CreatePaymentFailure({error})))
-      );
-    })
-  );
-
-  @Effect()
-  public createPaymentFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.CreatePaymentFailure>(PaymentsActionType.CREATE_PAYMENT_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({
-        id: 'organization.payment.create.fail',
-        value: 'Could not create your new service order',
-      });
-      return new NotificationsAction.Error({message});
-    })
-  );
-
-  @Effect({dispatch: false})
-  public createPaymentSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
-    tap((action: PaymentsAction.CreatePaymentSuccess) => {
-      if (environment.analytics) {
-        this.angulartics2.eventTrack.next({
-          action: 'Payment create',
-          properties: {
-            category: 'Payments',
-            label: action.payload.payment.currency,
-            value: action.payload.payment.amount,
-          },
+  public getPaymentFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PaymentsAction.GetPaymentFailure>(PaymentsActionType.GET_PAYMENT_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({
+          id: 'organization.payment.get.fail',
+          value: 'Could not read information about your previous service order',
         });
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
 
-        if (environment.mixpanelKey) {
-          const price = this.getPrice(action.payload.payment);
-          mixpanel.track('Payment Create', {
-            CZK: price,
-            users: action.payload.payment.users,
-          });
-        }
-      }
-    })
+  public createPayment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
+      mergeMap(action => {
+        const returnUrl = action.payload.returnUrl || window.location.href;
+        return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
+          map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
+          map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),
+          catchError(error => of(new PaymentsAction.CreatePaymentFailure({error})))
+        );
+      })
+    )
+  );
+
+  public createPaymentFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PaymentsAction.CreatePaymentFailure>(PaymentsActionType.CREATE_PAYMENT_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = this.i18n({
+          id: 'organization.payment.create.fail',
+          value: 'Could not create your new service order',
+        });
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public createPaymentSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
+        tap((action: PaymentsAction.CreatePaymentSuccess) => {
+          if (environment.analytics) {
+            this.angulartics2.eventTrack.next({
+              action: 'Payment create',
+              properties: {
+                category: 'Payments',
+                label: action.payload.payment.currency,
+                value: action.payload.payment.amount,
+              },
+            });
+
+            if (environment.mixpanelKey) {
+              const price = this.getPrice(action.payload.payment);
+              mixpanel.track('Payment Create', {
+                CZK: price,
+                users: action.payload.payment.users,
+              });
+            }
+          }
+        })
+      ),
+    {dispatch: false}
   );
 
   private getPrice(payment: Payment): number {

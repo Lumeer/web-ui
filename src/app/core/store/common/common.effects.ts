@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -26,16 +26,22 @@ import {CommonAction, CommonActionType} from './common.action';
 
 @Injectable()
 export class CommonEffects {
-  @Effect({dispatch: false})
-  public executeCallback$: Observable<Action> = this.actions$.pipe(
-    ofType<CommonAction.ExecuteCallback>(CommonActionType.EXECUTE_CALLBACK),
-    tap((action: CommonAction.ExecuteCallback) => action.payload.callback())
+  public executeCallback$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<CommonAction.ExecuteCallback>(CommonActionType.EXECUTE_CALLBACK),
+        tap((action: CommonAction.ExecuteCallback) => action.payload.callback())
+      ),
+    {dispatch: false}
   );
 
-  @Effect({dispatch: false})
-  public handleError$: Observable<Action> = this.actions$.pipe(
-    ofType<CommonAction.HandleError>(CommonActionType.HANDLE_ERROR),
-    tap((action: CommonAction.HandleError) => console.error(action.payload.error)) // TODO maybe send to Sentry as well
+  public handleError$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<CommonAction.HandleError>(CommonActionType.HANDLE_ERROR),
+        tap((action: CommonAction.HandleError) => console.error(action.payload.error)) // TODO maybe send to Sentry as well
+      ),
+    {dispatch: false}
   );
 
   constructor(private actions$: Actions) {}

@@ -27,6 +27,7 @@ import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor'
 import {TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
+import {AppState} from '../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-linked-rows',
@@ -55,7 +56,7 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
   private syncSubject$ = new Subject<TableBodyCursor>();
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.linkedRows$ = this.bindLinkedRows();
@@ -111,7 +112,7 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new TablesAction.ToggleLinkedRows({cursor: this.cursor}));
   }
 
-  public trackByLinkInstanceId(index: number, linkedRow: TableConfigRow): string | object {
+  public trackByLinkInstanceId(index: number, linkedRow: TableConfigRow): string {
     return linkedRow.correlationId || linkedRow.linkInstanceId;
   }
 

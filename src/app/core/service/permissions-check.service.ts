@@ -37,12 +37,13 @@ import {selectAllViews, selectCurrentView} from '../store/views/views.state';
 import {selectAllCollections} from '../store/collections/collections.state';
 import {selectAllLinkTypes} from '../store/link-types/link-types.state';
 import {getAllCollectionIdsFromQuery} from '../store/navigation/query/query.util';
+import {AppState} from '../store/app.state';
 
 @Injectable()
 export class PermissionsCheckService {
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public init(): Promise<boolean> {
     combineLatest([

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
@@ -27,88 +27,96 @@ import {GeocodingAction, GeocodingActionType} from './geocoding.action';
 import {selectGeocodingQueryCoordinates, selectLocationByCoordinates, selectLocationsByQuery} from './geocoding.state';
 import {GeocodingConverter} from './geocoding.converter';
 import {GeocodingService} from '../../data-service';
+import {AppState} from '../app.state';
 
 @Injectable()
 export class GeocodingEffects {
-  @Effect()
-  public getCoordinates$: Observable<Action> = this.actions$.pipe(
-    ofType<GeocodingAction.GetCoordinates>(GeocodingActionType.GET_COORDINATES),
-    mergeMap(action => {
-      const {queries, onSuccess, onFailure} = action.payload;
-      return this.store$.pipe(
-        select(selectGeocodingQueryCoordinates),
-        take(1),
-        mergeMap(queryCoordinates => {
-          const missingQueries = queries.filter(query => !queryCoordinates[query]);
-          if (missingQueries.length === 0) {
-            return from(createCallbackActions(onSuccess, queryCoordinates));
-          }
+  public getCoordinates$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GeocodingAction.GetCoordinates>(GeocodingActionType.GET_COORDINATES),
+      mergeMap(action => {
+        const {queries, onSuccess, onFailure} = action.payload;
+        return this.store$.pipe(
+          select(selectGeocodingQueryCoordinates),
+          take(1),
+          mergeMap(queryCoordinates => {
+            const missingQueries = queries.filter(query => !queryCoordinates[query]);
+            if (missingQueries.length === 0) {
+              return from(createCallbackActions(onSuccess, queryCoordinates));
+            }
 
-          return this.geocodingApiService.findCoordinates(missingQueries).pipe(
-            mergeMap(coordinatesMap => [
-              new GeocodingAction.GetCoordinatesSuccess({coordinatesMap}),
-              ...createCallbackActions(onSuccess, coordinatesMap),
-            ]),
-            catchError(error => emitErrorActions(error, onFailure))
-          );
-        })
-      );
-    })
-  );
-
-  @Effect()
-  public getLocation$: Observable<Action> = this.actions$.pipe(
-    ofType<GeocodingAction.GetLocation>(GeocodingActionType.GET_LOCATION),
-    mergeMap(action => {
-      const {coordinates, onSuccess, onFailure} = action.payload;
-      return this.store$.pipe(
-        select(selectLocationByCoordinates(coordinates)),
-        take(1),
-        mergeMap(storedLocation => {
-          if (storedLocation) {
-            return from(createCallbackActions(onSuccess, storedLocation));
-          }
-
-          return this.geocodingApiService.findLocationByCoordinates(coordinates).pipe(
-            mergeMap(location => [
-              new GeocodingAction.GetLocationSuccess({
-                coordinates,
-                location: GeocodingConverter.fromDto(location),
-              }),
-              ...createCallbackActions(onSuccess, location),
-            ]),
-            catchError(error => emitErrorActions(error, onFailure))
-          );
-        })
-      );
-    })
-  );
-
-  @Effect()
-  public getLocations$: Observable<Action> = this.actions$.pipe(
-    ofType<GeocodingAction.GetLocations>(GeocodingActionType.GET_LOCATIONS),
-    mergeMap(action => {
-      const {query} = action.payload;
-      return this.store$.pipe(
-        select(selectLocationsByQuery(query)),
-        take(1),
-        mergeMap(storedLocations => {
-          if (storedLocations) {
-            return from([]);
-          }
-
-          return this.geocodingApiService
-            .findLocations(query)
-            .pipe(
-              map(
-                locations =>
-                  new GeocodingAction.GetLocationsSuccess({query, locations: GeocodingConverter.fromDtos(locations)})
-              )
+            return this.geocodingApiService.findCoordinates(missingQueries).pipe(
+              mergeMap(coordinatesMap => [
+                new GeocodingAction.GetCoordinatesSuccess({coordinatesMap}),
+                ...createCallbackActions(onSuccess, coordinatesMap),
+              ]),
+              catchError(error => emitErrorActions(error, onFailure))
             );
-        })
-      );
-    })
+          })
+        );
+      })
+    )
   );
 
-  constructor(private actions$: Actions, private geocodingApiService: GeocodingService, private store$: Store<{}>) {}
+  public getLocation$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GeocodingAction.GetLocation>(GeocodingActionType.GET_LOCATION),
+      mergeMap(action => {
+        const {coordinates, onSuccess, onFailure} = action.payload;
+        return this.store$.pipe(
+          select(selectLocationByCoordinates(coordinates)),
+          take(1),
+          mergeMap(storedLocation => {
+            if (storedLocation) {
+              return from(createCallbackActions(onSuccess, storedLocation));
+            }
+
+            return this.geocodingApiService.findLocationByCoordinates(coordinates).pipe(
+              mergeMap(location => [
+                new GeocodingAction.GetLocationSuccess({
+                  coordinates,
+                  location: GeocodingConverter.fromDto(location),
+                }),
+                ...createCallbackActions(onSuccess, location),
+              ]),
+              catchError(error => emitErrorActions(error, onFailure))
+            );
+          })
+        );
+      })
+    )
+  );
+
+  public getLocations$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<GeocodingAction.GetLocations>(GeocodingActionType.GET_LOCATIONS),
+      mergeMap(action => {
+        const {query} = action.payload;
+        return this.store$.pipe(
+          select(selectLocationsByQuery(query)),
+          take(1),
+          mergeMap(storedLocations => {
+            if (storedLocations) {
+              return from([]);
+            }
+
+            return this.geocodingApiService
+              .findLocations(query)
+              .pipe(
+                map(
+                  locations =>
+                    new GeocodingAction.GetLocationsSuccess({query, locations: GeocodingConverter.fromDtos(locations)})
+                )
+              );
+          })
+        );
+      })
+    )
+  );
+
+  constructor(
+    private actions$: Actions,
+    private geocodingApiService: GeocodingService,
+    private store$: Store<AppState>
+  ) {}
 }

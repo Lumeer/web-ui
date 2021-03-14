@@ -81,9 +81,6 @@ export class KanbanColumnComponent implements OnInit {
   public createDataResource = new EventEmitter<KanbanCreateResource>();
 
   @Output()
-  public cardMove = new EventEmitter<{}>();
-
-  @Output()
   public removeColumn = new EventEmitter();
 
   @Output()

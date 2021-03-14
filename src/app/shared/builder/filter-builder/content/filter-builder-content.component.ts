@@ -22,6 +22,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   SimpleChanges,
@@ -55,7 +56,7 @@ import {
   styleUrls: ['./filter-builder-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterBuilderContentComponent implements OnInit {
+export class FilterBuilderContentComponent implements OnInit, OnChanges {
   @Input()
   public attribute: Attribute;
 

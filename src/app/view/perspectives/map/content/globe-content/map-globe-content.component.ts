@@ -57,6 +57,7 @@ import {
   CoordinatesConstraintConfig,
 } from '@lumeer/data-filters';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {AppState} from '../../../../../core/store/app.state';
 
 @Component({
   selector: 'map-globe-content',
@@ -98,7 +99,7 @@ export class MapGlobeContentComponent implements OnChanges {
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
 
-  constructor(private store$: Store<{}>, private i18n: I18n, private notificationService: NotificationService) {}
+  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.markerData || changes.constraintData) {

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
@@ -42,7 +42,7 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
   templateUrl: './project-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectSettingsComponent implements OnInit {
+export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectCodes$: Observable<string[]>;
   public project$ = new BehaviorSubject<Project>(null);

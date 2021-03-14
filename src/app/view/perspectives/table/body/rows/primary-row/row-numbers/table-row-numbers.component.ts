@@ -41,6 +41,7 @@ import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/r
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
 import {selectDocumentById} from '../../../../../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../../../../../core/store/collections/collections.state';
+import {AppState} from '../../../../../../../core/store/app.state';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -69,7 +70,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
 
   constructor(
     private element: ElementRef,
-    private store$: Store<{}>,
+    private store$: Store<AppState>,
     private tableRowsService: TableRowNumberService,
     private modalService: ModalService
   ) {}
