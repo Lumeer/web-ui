@@ -33,7 +33,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n, protected linkTypes: LinkType[]) {
     super(blocklyUtils, i18n);
 
-    linkTypes.forEach(linkType => this.linkTypeOptions.push([linkType.name, linkType.id]));
+    linkTypes.forEach(linkType => this.linkTypeOptions.push([linkType.name.replace(/ /g, '\u00A0'), linkType.id]));
 
     if (this.linkTypeOptions.length === 0) {
       this.linkTypeOptions.push(['?', '']);
@@ -133,7 +133,12 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
     const connected = [];
     block.inputList.forEach(input => {
       if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
-        connected.push(input.connection.targetConnection?.check_);
+        const check = input.connection.targetConnection?.check_;
+        if (check instanceof Array) {
+          connected.push(...input.connection.targetConnection?.check_);
+        } else {
+          connected.push(input.connection.targetConnection?.check_);
+        }
       }
     });
 

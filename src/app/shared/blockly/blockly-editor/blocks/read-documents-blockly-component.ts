@@ -35,7 +35,7 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n, protected views: View[]) {
     super(blocklyUtils, i18n);
 
-    views.forEach(view => this.viewOptions.push([view.name, view.id]));
+    views.forEach(view => this.viewOptions.push([view.name.replace(/ /g, '\u00A0'), view.id]));
 
     if (this.viewOptions.length === 0) {
       this.viewOptions.push(['?', '']);
