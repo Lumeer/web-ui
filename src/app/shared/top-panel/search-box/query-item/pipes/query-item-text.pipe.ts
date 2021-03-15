@@ -21,15 +21,12 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DeletedQueryItem} from '../model/deleted.query-item';
 
 @Pipe({
   name: 'queryItemText',
 })
 export class QueryItemTextPipe implements PipeTransform {
-  constructor(private i18n: I18n) {}
-
   public transform(queryItem: QueryItem): string {
     if (queryItem.type === QueryItemType.Deleted) {
       switch ((queryItem as DeletedQueryItem).forType) {
@@ -50,37 +47,22 @@ export class QueryItemTextPipe implements PipeTransform {
   }
 
   private deletedCollectionText(): string {
-    return this.i18n({
-      id: 'query.item.deleted.file',
-      value: 'Deleted table',
-    });
+    return $localize`:@@query.item.deleted.file:Deleted table`;
   }
 
   private deletedLinkText(): string {
-    return this.i18n({
-      id: 'query.item.deleted.link',
-      value: 'Deleted link',
-    });
+    return $localize`:@@query.item.deleted.link:Deleted link`;
   }
 
   private deletedDocumentText(): string {
-    return this.i18n({
-      id: 'query.item.deleted.document',
-      value: 'Deleted record',
-    });
+    return $localize`:@@query.item.deleted.document:Deleted record`;
   }
 
   private deletedAttributeText(): string {
-    return this.i18n({
-      id: 'query.item.deleted.attribute',
-      value: 'Deleted attribute',
-    });
+    return $localize`:@@query.item.deleted.attribute:Deleted attribute`;
   }
 
   private deletedText(): string {
-    return this.i18n({
-      id: 'query.item.deleted.default',
-      value: 'Deleted',
-    });
+    return $localize`:@@query.item.deleted.default:Deleted`;
   }
 }

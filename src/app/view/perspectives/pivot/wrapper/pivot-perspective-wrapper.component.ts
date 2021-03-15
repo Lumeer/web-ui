@@ -43,6 +43,7 @@ import {checkOrTransformPivotConfig} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 interface Data {
   collections: Collection[];
@@ -109,12 +110,8 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   private createValueAggregationTitle(aggregation: DataAggregationType): string {
-    return this.i18n(
-      {
-        id: 'perspective.pivot.data.aggregation',
-        value:
-          '{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@perspective.pivot.data.aggregation:{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}`,
       {aggregation}
     );
   }

@@ -36,7 +36,7 @@ export class PageNotFoundGuard implements CanActivate {
       this.router.navigate(['/']);
     }
 
-    const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
+    const message = $localize`:@@page.not.found:Page not found`;
     this.notificationService.error(message);
 
     console.error(state.url);

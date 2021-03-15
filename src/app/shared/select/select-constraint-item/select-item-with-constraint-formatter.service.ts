@@ -18,7 +18,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Attribute} from '../../../core/store/collections/collection';
 import {SelectItemModel} from '../select-item/select-item.model';
 import {DateTimeConfigOverrideService} from './constraint/date-time';
@@ -32,9 +31,9 @@ export class SelectItemWithConstraintFormatter {
   private readonly dateTimeConfigOverrideService: DateTimeConfigOverrideService;
   private readonly durationConfigOverrideService: DurationConfigOverrideService;
 
-  constructor(private i18n: I18n) {
-    this.dateTimeConfigOverrideService = new DateTimeConfigOverrideService(i18n);
-    this.durationConfigOverrideService = new DurationConfigOverrideService(i18n);
+  constructor() {
+    this.dateTimeConfigOverrideService = new DateTimeConfigOverrideService();
+    this.durationConfigOverrideService = new DurationConfigOverrideService();
   }
 
   public createItems(attribute: Attribute, withDefaultItem = true): SelectItemModel[] {

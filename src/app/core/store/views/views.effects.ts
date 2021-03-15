@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of, pipe} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -103,7 +102,7 @@ export class ViewsEffects {
       ofType<ViewsAction.GetFailure>(ViewsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'views.get.fail', value: 'Could not get views'});
+        const message = $localize`:@@views.get.fail:Could not get views`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -184,7 +183,7 @@ export class ViewsEffects {
       ofType<ViewsAction.CreateFailure>(ViewsActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'view.create.fail', value: 'Could not create the view'});
+        const message = $localize`:@@view.create.fail:Could not create the view`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -238,7 +237,7 @@ export class ViewsEffects {
       ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'view.update.fail', value: 'Could not update the view'});
+        const message = $localize`:@@view.update.fail:Could not update the view`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -321,7 +320,7 @@ export class ViewsEffects {
       ofType<ViewsAction.DeleteFailure>(ViewsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'view.delete.fail', value: 'Could not delete the view'});
+        const message = $localize`:@@view.delete.fail:Could not delete the view`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -394,7 +393,7 @@ export class ViewsEffects {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
           return new UsersAction.InvitationExceeded({organizationId: organization.id});
         }
-        const message = this.i18n({id: 'view.change.permission.fail', value: 'Could not change the view permissions'});
+        const message = $localize`:@@view.change.permission.fail:Could not change the view permissions`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -424,7 +423,7 @@ export class ViewsEffects {
       ofType<ViewsAction.AddFavoriteFailure>(ViewsActionType.ADD_FAVORITE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'view.add.favorite.fail', value: 'Could not add the view to favorites'});
+        const message = $localize`:@@view.add.favorite.fail:Could not add the view to favorites`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -454,10 +453,7 @@ export class ViewsEffects {
       ofType<ViewsAction.RemoveFavoriteFailure>(ViewsActionType.REMOVE_FAVORITE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'view.remove.favorite.fail',
-          value: 'Could not remove the view from favorites',
-        });
+        const message = $localize`:@@view.remove.favorite.fail:Could not remove the view from favorites`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -519,7 +515,6 @@ export class ViewsEffects {
 
   constructor(
     private actions$: Actions,
-    private i18n: I18n,
     private router: Router,
     private store$: Store<AppState>,
     private viewService: ViewService,

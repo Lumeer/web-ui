@@ -27,7 +27,6 @@ import {selectAllOrganizations, selectOrganizationsLoaded} from './store/organiz
 import {OrganizationsAction} from './store/organizations/organizations.action';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {AppState} from './store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from './store/notifications/notifications.action';
 import {TemplateService} from './rest/template.service';
 import {OrganizationService} from './data-service';
@@ -44,8 +43,7 @@ export class RedirectComponent implements OnInit {
     private organizationService: OrganizationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private store$: Store<AppState>,
-    private i18n: I18n
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
@@ -107,21 +105,14 @@ export class RedirectComponent implements OnInit {
   }
 
   private showError() {
-    const message = this.i18n({
-      id: 'template.create.error',
-      value: 'I am sorry, something went wrong.',
-    });
+    const message = $localize`:@@template.create.error:I am sorry, something went wrong.`;
 
     setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
   }
 
   private showErrorNoRights(organizations: Organization[]) {
     if (organizations.length) {
-      const message = this.i18n({
-        id: 'template.create.limitsExceeded',
-        value:
-          'I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?',
-      });
+      const message = $localize`:@@template.create.limitsExceeded:I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?`;
       setTimeout(
         () =>
           this.store$.dispatch(
@@ -133,10 +124,7 @@ export class RedirectComponent implements OnInit {
         1000
       );
     } else {
-      const message = this.i18n({
-        id: 'template.create.empty',
-        value: 'I am sorry, you do not have any organization to create project in.',
-      });
+      const message = $localize`:@@template.create.empty:I am sorry, you do not have any organization to create project in.`;
       setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
     }
   }

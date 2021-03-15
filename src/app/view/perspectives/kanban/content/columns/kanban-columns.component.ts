@@ -61,7 +61,6 @@ import {
   createPossibleLinkingDocuments,
   createPossibleLinkingDocumentsByChains,
 } from '../../../../../shared/utils/data/data-aggregator-util';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
@@ -149,8 +148,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private modalService: ModalService,
-    private toggleService: DocumentFavoriteToggleService,
-    private i18n: I18n
+    private toggleService: DocumentFavoriteToggleService
   ) {}
 
   public ngOnInit() {
@@ -230,10 +228,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const failureMessage = this.i18n({
-      id: 'perspective.kanban.create.card.failure',
-      value: 'Could not create card',
-    });
+    const failureMessage = $localize`:@@perspective.kanban.create.card.failure:Could not create card`;
 
     let lastDataResource: DataResource;
     const reversed = createResource.kanbanAttribute.resourceIndex > kanbanResource.resourceIndex;
@@ -604,10 +599,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
     if (documents.length === 0 || linkInstances.length === 0) {
       return;
     }
-    const failureMessage = this.i18n({
-      id: 'perspective.kanban.create.card.failure',
-      value: 'Could not move card',
-    });
+    const failureMessage = $localize`:@@perspective.kanban.create.card.failure:Could not move card`;
     this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
   }
 

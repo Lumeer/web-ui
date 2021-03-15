@@ -25,7 +25,6 @@ import {Action, select, Store} from '@ngrx/store';
 import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
 import {filter, first, map} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {RouterAction} from '../../../../../core/store/router/router.action';
 import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
@@ -55,11 +54,8 @@ export class LinkTypeRulesComponent implements OnInit {
 
   private readonly copyOf: string;
 
-  public constructor(private store$: Store<AppState>, private i18n: I18n) {
-    this.copyOf = this.i18n({
-      id: 'collection.config.tab.rules.prefix.copyOf',
-      value: 'Copy of',
-    });
+  public constructor(private store$: Store<AppState>) {
+    this.copyOf = $localize`:@@collection.config.tab.rules.prefix.copyOf:Copy of`;
   }
 
   public ngOnInit(): void {
@@ -116,7 +112,7 @@ export class LinkTypeRulesComponent implements OnInit {
 
   private getEmptyRule(): Rule {
     const count = (this.linkType.rules?.length || 0) + 1;
-    const rulePrefix = this.i18n({id: 'collection.config.tab.rules.newRule.prefix', value: 'Rule'});
+    const rulePrefix = $localize`:@@collection.config.tab.rules.newRule.prefix:Rule`;
 
     return {
       name: rulePrefix + ' ' + count,
@@ -152,17 +148,11 @@ export class LinkTypeRulesComponent implements OnInit {
   }
 
   private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
-    const title = this.i18n({id: 'collection.config.tab.rules.remove.title', value: 'Delete this rule?'});
-    let message = this.i18n({
-      id: 'collection.config.tab.rules.remove.message',
-      value: 'Do you really want to delete this rule?',
-    });
+    const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this rule?`;
+    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this rule?'`;
 
     if (isBeingUsed) {
-      const additionalMessage = this.i18n({
-        id: 'collection.config.tab.rules.remove.message.used',
-        value: 'This rule is being used in an action button.',
-      });
+      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This rule is being used in an action button.`;
       message = `${message} ${additionalMessage}`;
     }
 

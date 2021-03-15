@@ -92,17 +92,8 @@ export class CollectionLinkTypesComponent implements OnInit {
   }
 
   private confirmDeletionLinkType(linkType: LinkType) {
-    const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete link type?'});
-    const message = this.i18n(
-      {
-        id: 'collection.tab.linktypes.delete.message',
-        value: 'Do you really want to delete the link type "{{name}}" and all its usages?',
-      },
-      {
-        name: linkType.name,
-      }
-    );
-
+    const title = $localize`:@@collection.tab.linktypes.delete.title:Delete link type?`;
+    const message = $localize`:@@collection.tab.linktypes.delete.message:Do you really want to delete the link type "${linkType.name}:name:" and all its usages?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteLinkType(linkType));
   }
 

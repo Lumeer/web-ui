@@ -18,7 +18,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {objectValues} from '../../shared/utils/common.utils';
 import {
   ConditionType,
@@ -35,8 +34,6 @@ import {parseSelectTranslation} from '../../shared/utils/translation.utils';
   providedIn: 'root',
 })
 export class TranslationService {
-  constructor(private i18n: I18n) {}
-
   public createCurrencyAbbreviations(): string[] {
     return $localize`:@@currency.abbreviations:k|m|b|t`.split('|');
   }

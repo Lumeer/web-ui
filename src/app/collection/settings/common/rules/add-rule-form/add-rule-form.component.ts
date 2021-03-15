@@ -32,10 +32,10 @@ import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, 
 import {Rule, RuleConfiguration, RuleTiming, RuleType, ruleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {objectValues} from '../../../../../shared/utils/common.utils';
+import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
 
 @Component({
   selector: 'add-rule-form',
@@ -77,7 +77,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder, private i18n: I18n) {
+  constructor(private fb: FormBuilder) {
     this.typeItems = this.createTypeItems();
   }
 
@@ -258,12 +258,9 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     return this.types
       .filter(type => type !== RuleType.Zapier)
       .map(type => ({
-        id: type,
-        value: this.i18n(
-          {
-            id: 'collection.config.tab.rules.type',
-            value: '{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}',
-          },
+        id: type, // TODO TRL create some other type
+        value: parseSelectTranslation(
+          $localize`:@@collection.config.tab.rules.type:{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}`,
           {type}
         ),
       }));

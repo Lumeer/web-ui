@@ -18,22 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Pipe({
   name: 'ganttChartModeText',
 })
 export class GanttChartModeTextPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
   public transform(mode: GanttChartMode): string {
-    return this.i18n(
-      {
-        id: 'perspective.gantt.config.mode',
-        value:
-          '{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@perspective.gantt.config.mode:{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}`,
       {mode}
     );
   }

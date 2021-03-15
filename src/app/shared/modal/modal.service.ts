@@ -30,7 +30,6 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {userHasManageRoleInResource} from '../utils/resource.utils';
 import {Organization} from '../../core/store/organizations/organization';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
@@ -61,7 +60,7 @@ type Options = ModalOptions & {initialState: any};
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
+  constructor(private store$: Store<AppState>, private bsModalService: BsModalService) {}
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
@@ -222,20 +221,13 @@ export class ModalService {
   }
 
   private notifyFunctionsLimitWithRedirect(organization: Organization) {
-    const message = this.i18n({
-      id: 'function.create.serviceLimits',
-      value:
-        'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
-    });
+    const message = $localize`:@@function.create.serviceLimits:You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?`;
     this.store$.dispatch(new OrganizationsAction.OfferPayment({message, organizationCode: organization.code}));
   }
 
   private notifyFunctionsLimitWithoutRights() {
-    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-    const message = this.i18n({
-      id: 'function.create.serviceLimits.noRights',
-      value: 'You can have only a single function per table/link type in the Free Plan.',
-    });
+    const title = $localize`:@@serviceLimits.trial:Free Service`;
+    const message = $localize`:@@function.create.serviceLimits.noRights:You can have only a single function per table/link type in the Free Plan.`;
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }
 

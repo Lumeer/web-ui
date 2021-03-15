@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
 import {ServiceLimitsConverter} from './service-limits.converter';
 import {OrganizationService} from '../../../data-service';
@@ -55,10 +54,7 @@ export class ServiceLimitsEffects {
       ofType<ServiceLimitsAction.GetAllFailure>(ServiceLimitsActionType.GET_ALL_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'organization.serviceLimits.getAll.fail',
-          value: 'Could not read information about your service levels and subscriptions',
-        });
+        const message = $localize`:@@organization.serviceLimits.getAll.fail:Could not read information about your service levels and subscriptions`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -82,17 +78,13 @@ export class ServiceLimitsEffects {
       ofType<ServiceLimitsAction.GetServiceLimitsFailure>(ServiceLimitsActionType.GET_SERVICE_LIMITS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'organization.serviceLimits.get.fail',
-          value: 'Could not read information about your service level and subscription',
-        });
+        const message = $localize`:@@organization.serviceLimits.get.fail:Could not read information about your service level and subscription`;
         return new NotificationsAction.Error({message});
       })
     )
   );
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,

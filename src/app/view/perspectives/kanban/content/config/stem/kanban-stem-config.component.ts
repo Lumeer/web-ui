@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../../core/store/kanbans/kanban';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
@@ -74,10 +73,10 @@ export class KanbanStemConfigComponent implements OnChanges {
   public dataResources$: Observable<DataResource[]>;
   public doneTitlesEditing$ = new BehaviorSubject(false);
 
-  constructor(private i18n: I18n, private store$: Store<AppState>) {
-    this.emptyResourceString = i18n({id: 'kanban.config.collection.resource.empty', value: 'Select table or link'});
-    this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
-    this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
+  constructor(private store$: Store<AppState>) {
+    this.emptyResourceString = $localize`:@@kanban.config.collection.resource.empty:Select table or link`;
+    this.emptyValueString = $localize`:@@kanban.config.collection.attribute.empty:Select attribute`;
+    this.dueDateEmptyValueString = $localize`:@@kanban.config.collection.dueDate.empty:Select due date`;
   }
 
   public ngOnChanges(changes: SimpleChanges) {

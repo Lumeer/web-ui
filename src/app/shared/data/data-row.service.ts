@@ -22,7 +22,6 @@ import {Attribute} from '../../core/store/collections/collection';
 import {BehaviorSubject, combineLatest, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
@@ -63,7 +62,7 @@ export class DataRowService {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
+  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -198,11 +197,8 @@ export class DataRowService {
       action = new LinkInstancesAction.UpdateData({linkInstance: {...(<LinkInstance>this.dataResource), data}});
     }
 
-    const message = this.i18n({
-      id: 'dataResource.detail.attribute.remove.confirm',
-      value: 'Are you sure you want to delete this row?',
-    });
-    const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
+    const message = $localize`:@@dataResource.detail.attribute.remove.confirm:Are you sure you want to delete this row?`;
+    const title = $localize`:@@resource.delete.dialog.title:Delete?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.store$.dispatch(action));
   }
 

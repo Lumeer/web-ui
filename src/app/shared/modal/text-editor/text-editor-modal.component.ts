@@ -32,7 +32,6 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Subject} from 'rxjs';
 import {KeyCode} from '../../key-code';
 import {isMacOS} from '../../utils/system.utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {defaultTextEditorOptions} from './text-editor.utils';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {stripTextHtmlTags} from '../../utils/data.utils';
@@ -78,7 +77,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public readonly dialogType = DialogType;
   public insertTextPlaceholder: string;
 
-  constructor(private bsModalRef: BsModalRef, private element: ElementRef<HTMLElement>, private i18n: I18n) {}
+  constructor(private bsModalRef: BsModalRef, private element: ElementRef<HTMLElement>) {}
 
   private hideDialog() {
     this.bsModalRef.hide();
@@ -154,10 +153,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public ngOnInit() {
     this.checkValid(stripTextHtmlTags(this.content));
 
-    this.insertTextPlaceholder = this.i18n({
-      id: 'textEditor.insertTextPlaceholder',
-      value: 'Insert text here...',
-    });
+    this.insertTextPlaceholder = $localize`:@@textEditor.insertTextPlaceholder:Insert text here...`;
   }
 
   public ngAfterViewInit() {

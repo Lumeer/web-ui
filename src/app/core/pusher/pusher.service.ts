@@ -65,7 +65,7 @@ import {selectCurrentUser} from '../store/users/users.state';
 import {View} from '../store/views/view';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
-import {selectViewByCode, selectViewById, selectViewsDictionary} from '../store/views/views.state';
+import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {SequenceConverter} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
@@ -74,12 +74,10 @@ import {convertResourceCommentDtoToModel} from '../store/resource-comments/resou
 import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
 import {NotificationService} from '../notifications/notification.service';
 import {AppIdService} from '../service/app-id.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationButton} from '../notifications/notification-button';
 import {DataResourcesAction} from '../store/data-resources/data-resources.action';
 import {Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
-import {perspectivesMap} from '../../view/perspectives/perspective';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
@@ -105,17 +103,16 @@ export class PusherService implements OnDestroy {
     private notificationService: NotificationService,
     private appId: AppIdService,
     private router: Router,
-    private locationStrategy: LocationStrategy,
-    private i18n: I18n
+    private locationStrategy: LocationStrategy
   ) {
     this.userNotificationTitle = {
-      success: i18n({id: 'rules.blockly.action.message.success', value: 'Success'}),
-      info: i18n({id: 'rules.blockly.action.message.info', value: 'Information'}),
-      warning: i18n({id: 'rules.blockly.action.message.warning', value: 'Warning'}),
-      error: i18n({id: 'rules.blockly.action.message.error', value: 'Error'}),
+      success: $localize`:@@rules.blockly.action.message.success:Success`,
+      info: $localize`:@@rules.blockly.action.message.info:Information`,
+      warning: $localize`:@@rules.blockly.action.message.warning:Warning`,
+      error: $localize`:@@rules.blockly.action.message.error:Error`,
     };
 
-    const okBtn = i18n({id: 'button.ok', value: 'OK'});
+    const okBtn = $localize`:@@button.ok:OK`;
     this.dismissButton = {text: okBtn, bold: true};
   }
 

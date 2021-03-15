@@ -22,7 +22,6 @@ import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
@@ -95,7 +94,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collections.get.fail', value: 'Could not get tables'});
+        const message = $localize`:@@collections.get.fail:Could not get tables`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -151,14 +150,10 @@ export class CollectionsEffects {
       withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
       map(([action, organization]) => {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-          const message = this.i18n({
-            id: 'collection.create.serviceLimits',
-            value:
-              'You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?',
-          });
+          const message = $localize`:@@collection.create.serviceLimits:You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?`;
           return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
         }
-        const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create table'});
+        const errorMessage = $localize`:@@collection.create.fail:Could not create table`;
         return new NotificationsAction.Error({message: errorMessage});
       })
     )
@@ -194,14 +189,10 @@ export class CollectionsEffects {
       withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
       map(([action, organization]) => {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-          const message = this.i18n({
-            id: 'collection.create.serviceLimits',
-            value:
-              'You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?',
-          });
+          const message = $localize`:@@collection.create.serviceLimits::You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?`;
           return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
         }
-        const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import table'});
+        const errorMessage = $localize`:@@collection.import.fail:Could not import table`;
         return new NotificationsAction.Error({message: errorMessage});
       })
     )
@@ -233,7 +224,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collection.update.fail', value: 'Could not update table'});
+        const message = $localize`:@@collection.update.fail:Could not update table`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -275,7 +266,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save rule'});
+        const message = $localize`:@@resource.rule.update.fail:Could not save rule`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -300,7 +291,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.UpdatePurposeFailure>(CollectionsActionType.UPDATE_PURPOSE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collection.update.purpose.fail', value: 'Could not update table purpose'});
+        const message = $localize`:@@collection.update.purpose.fail:Could not update table purpose`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -350,7 +341,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collection.delete.fail', value: 'Could not delete table'});
+        const message = $localize`:@@collection.delete.fail:Could not delete table`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -375,10 +366,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'collection.add.favorite.fail',
-          value: 'Could not add the table to favorites',
-        });
+        const message = $localize`:@@collection.add.favorite.fail:Could not add the table to favorites`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -403,10 +391,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'collection.remove.favorite.fail',
-          value: 'Could not remove the table from favorites',
-        });
+        const message = $localize`:@@collection.remove.favorite.fail:Could not remove the table from favorites`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -457,10 +442,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.SetDefaultAttributeFailure>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'collection.attribute.default.set.fail',
-          value: 'Could not set the displayed attribute id',
-        });
+        const message = $localize`:@@collection.attribute.default.set.fail:Could not set the displayed attribute id`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -512,7 +494,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.CreateAttributesFailure>(CollectionsActionType.CREATE_ATTRIBUTES_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collection.create.attributes.fail', value: 'Could not create attributes'});
+        const message = $localize`:@@collection.create.attributes.fail:Could not create attributes`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -556,7 +538,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collection.change.attribute.fail', value: 'Could not change the attribute'});
+        const message = $localize`:@@collection.change.attribute.fail:Could not change the attribute`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -596,7 +578,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.RemoveAttributeFailure>(CollectionsActionType.REMOVE_ATTRIBUTE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Could not delete the attribute'});
+        const message = $localize`:@@collection.remove.attribute.fail:Could not delete the attribute`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -637,10 +619,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'collection.change.permission.fail',
-          value: 'Could not change the table permissions',
-        });
+        const message = $localize`:@@collection.change.permission.fail:Could not change the table permissions`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -665,10 +644,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.RunRuleFailure>(CollectionsActionType.RUN_RULE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'collection.runRule.fail',
-          value: 'Could not run the selected rule for the whole table',
-        });
+        const message = $localize`:@@collection.runRule.fail:Could not run the selected rule for the whole table`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -678,7 +654,6 @@ export class CollectionsEffects {
     private actions$: Actions,
     private store$: Store<AppState>,
     private collectionService: CollectionService,
-    private i18n: I18n,
     private importService: ImportService,
     private angulartics2: Angulartics2
   ) {}

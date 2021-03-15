@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {User} from '../../../core/store/users/user';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -56,10 +55,10 @@ export class CommentItemComponent implements OnInit {
   public createdByMsg = '';
   public updatedOnMsg = '';
 
-  constructor(private i18n: I18n, private store$: Store<AppState>) {
-    this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
-    this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
-    this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
+  constructor(private store$: Store<AppState>) {
+    this.createdOnMsg = $localize`:@@document.detail.header.createdOn:Created on`;
+    this.createdByMsg = $localize`:@@document.detail.header.createdBy:Created by`;
+    this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
   }
 
   public ngOnInit(): void {

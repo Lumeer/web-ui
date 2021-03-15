@@ -41,7 +41,6 @@ import {safeGetRandomIcon} from '../../picker/icons';
 import * as Colors from '../../picker/colors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject} from 'rxjs';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {animate, style, transition, trigger} from '@angular/animations';
@@ -114,7 +113,6 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   constructor(
     private toggleService: CollectionFavoriteToggleService,
     private notificationService: NotificationService,
-    private i18n: I18n,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
@@ -225,12 +223,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
     const numUncreated = this.allCollections$.getValue().filter(coll => isNullOrUndefined(coll.id)).length;
 
     if (numUncreated % UNCREATED_THRESHOLD === 0) {
-      const message = this.i18n({
-        id: 'collections.postit.empty.info',
-        value:
-          'Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.',
-      });
-
+      const message = $localize`:@@collections.postit.empty.info:Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.`;
       this.notificationService.info(message);
     }
   }

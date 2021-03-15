@@ -1555,10 +1555,10 @@
     </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="constraint.text.caseStyle.value" datatype="html">
-        <source>{VAR_SELECT, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</source><target state="final">{VAR_SELECT, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</target>
+        <source>{caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</source><target state="final">{caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="fc318efb46c7dcc13f574e0c810d9889245b8954" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</source><target state="final">{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.type" datatype="html">
+        <source>{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</source><target state="final">{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -1807,7 +1807,7 @@
       </trans-unit><trans-unit id="constraint.coordinates.description" datatype="html">
         <source>
     Defines the exact position on the surface of the planet Earth.
-  </source><target state="final">constraint.coordinates.precisions.dd
+  </source><target state="final">
     Defines the exact position on the surface of the planet Earth.
   </target>
 
@@ -1819,7 +1819,7 @@
     </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="constraint.coordinates.format.types" datatype="html">
-        <source>{VAR_SELECT, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</source><target state="final">{VAR_SELECT, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</target>
+        <source>{format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</source><target state="final">{VAR_SELECT, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.coordinates.precision.label" datatype="html">
         <source>
@@ -1835,10 +1835,10 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
-        <source>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source><target state="final">{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</target>
+        <source>{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source><target state="final">{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.coordinates.precisions.dms" datatype="html">
-        <source>{VAR_SELECT, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</source><target state="final">{VAR_SELECT, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</target>
+        <source>{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</source><target state="final">{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.address.description" datatype="html">
         <source>
@@ -1894,10 +1894,10 @@
     </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="constraint.duration.type" datatype="html">
-        <source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source><target state="final">{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</target>
+        <source>{type, select, Work {Work} Classic {Normal} Custom {Custom} }</source><target state="final">{type, select, Work {Work} Classic {Normal} Custom {Custom} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.number.currency.select" datatype="html">
-        <source>{VAR_SELECT, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)} }</source><target state="final">{VAR_SELECT, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)} }</target>
+        <source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)} }</source><target state="final">{VAR_SELECT, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2140,7 +2140,7 @@
         <source>1. Select View</source><target state="final">1. Select View</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</source><target state="final">{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</target>
+        <source>{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</source><target state="final">{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/perspective-name.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="view.perspective.guide.title" datatype="html">
@@ -3729,7 +3729,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
-        <source>Do you really want to delete attribute "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</source><target state="final">Do you really want to delete attribute "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</target>
+        <source>Do you really want to delete attribute "<x id="name" equiv-text="{{name}}"/>"?</source><target state="final">Do you really want to delete attribute "<x id="name" equiv-text="{{name}}"/>"?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4236,7 +4236,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="warning.attribute.nameExisting" datatype="html">
-        <source>I am sorry, the attribute name '<x id="INTERPOLATION" equiv-text="{{attributeName}}"/>' already exists.</source><target state="final">I am sorry, the attribute name '<x id="INTERPOLATION" equiv-text="{{attributeName}}"/>' already exists.</target>
+        <source>I am sorry, the attribute name '<x id="attributeName" equiv-text="{{attributeName}}"/>' already exists.</source><target state="final">I am sorry, the attribute name '<x id="attributeName" equiv-text="{{attributeName}}"/>' already exists.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -4464,7 +4464,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="user.create.serviceLimits.basic" datatype="html">
-        <source>You are allowed to invite only <x id="INTERPOLATION" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</source><target state="final">You are allowed to invite only <x id="INTERPOLATION" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</target>
+        <source>You are allowed to invite only <x id="limit" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</source><target state="final">You are allowed to invite only <x id="limit" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -4866,7 +4866,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="equation.operator" datatype="html">
-        <source>{VAR_SELECT, select, and {And} or {Or} }</source><target state="final">{VAR_SELECT, select, and {And} or {Or} }</target>
+        <source>{operator, select, and {And} or {Or} }</source><target state="final">{operator, select, and {And} or {Or} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/conditions/condition/action-constraint-condition-form.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4895,7 +4895,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="file.upload.max.size.error" datatype="html">
-        <source>Cannot process files bigger than <x id="INTERPOLATION" equiv-text="{{size}}"/> MB. Please upload smaller file.</source><target state="final">Cannot process files bigger than <x id="INTERPOLATION" equiv-text="{{size}}"/> MB. Please upload smaller file.</target>
+        <source>Cannot process files bigger than <x id="size" equiv-text="{{size}}"/> MB. Please upload smaller file.</source><target state="final">Cannot process files bigger than <x id="size" equiv-text="{{size}}"/> MB. Please upload smaller file.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4953,20 +4953,20 @@
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.type.icon.title" datatype="html">
-        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</source><target state="final">{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</target>
+        <source>{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</source><target state="final">{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="user.permission.icon" datatype="html">
-        <source>{VAR_SELECT, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source><target state="final">{VAR_SELECT, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</target>
+        <source>{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source><target state="final">{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/role-title.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="@@files.input.button.empty" datatype="html">
+      <trans-unit id="files.input.button.empty" datatype="html">
         <source>File input is empty</source><target state="final">File input is empty</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/import-button/post-it-collection-import-button.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
@@ -4998,13 +4998,13 @@
         <source>Default</source><target state="final">Default</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.format" datatype="html">
-        <source>{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</source><target state="final">{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</target>
+        <source>{format, select, weekly {[W]W YYYY} other {} }</source><target state="final">{format, select, weekly {[W]W YYYY} other {} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.formatType" datatype="html">
-        <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source><target state="final">{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</target>
+        <source>{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source><target state="final">{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.duration.maxUnit" datatype="html">
-        <source>{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source><target state="final">{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</target>
+        <source>{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source><target state="final">{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
           <context context-type="linenumber">1</context>
@@ -5195,7 +5195,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="lumeer.advice.percentage" datatype="html">
-        <source>I suggest to set the column type of <x id="INTERPOLATION" equiv-text="{{attrName}}"/> to percentage. Do you agree?</source><target state="final">I suggest to set the column type of <x id="INTERPOLATION" equiv-text="{{attrName}}"/> to percentage. Do you agree?</target>
+        <source>I suggest to set the column type of <x id="attributeName" equiv-text="{{attrName}}"/> to percentage. Do you agree?</source><target state="final">I suggest to set the column type of <x id="attributeName" equiv-text="{{attrName}}"/> to percentage. Do you agree?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -5236,7 +5236,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.calendar.config.slotDuration.value" datatype="html">
-        <source>{VAR_SELECT, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</source><target state="final">{VAR_SELECT, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</target>
+        <source>{key, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</source><target state="final">{key, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5272,17 +5272,11 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source><target state="final">{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} group {Group} }</target>
+        <source>{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source><target state="final">{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-property-placeholder.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="calendar.value.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...} group {...}}"/></source><target state="final">Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...} group {...}}"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="c1d687e5043c51a7757a457dbdb77acbfbae24ba" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} group {group} }</source><target state="final">{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} group {group} }</target>
+        <source>Select {barProperty, select, name {name} start {start date} end {end date} color {color} group {group} }</source><target state="final">Select {barProperty, select, name {name} start {start date} end {end date} color {color} group {group} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -5310,50 +5304,44 @@
         <source>Show range slider</source><target state="final">Show range slider</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source><target state="final">{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</target>
+        <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source><target state="final">{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="user.permission.humanName" datatype="html">
-        <source>{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source><target state="final">{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</target>
+        <source>{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source><target state="final">{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/role-human-readable.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="chart.type" datatype="html">
-        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source><target state="final">{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</target>
+        <source>{type, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source><target state="final">{type, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.sortType.name" datatype="html">
-        <source>{VAR_SELECT, select, asc {Ascending} desc {Descending} }</source><target state="final">{VAR_SELECT, select, asc {Ascending} desc {Descending} }</target>
+        <source>{type, select, asc {Ascending} desc {Descending} }</source><target state="final">{type, select, asc {Ascending} desc {Descending} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="@@perspective.gantt.create.task.failure" datatype="html">
+      </trans-unit><trans-unit id="perspective.gantt.create.task.failure" datatype="html">
         <source>Could not create task</source><target state="final">Could not create task</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></source><target state="final">Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="8b1b986e9c1817839ecfd715e1658a87e1dccdde" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} }</source><target state="final">{VAR_SELECT, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} }</target>
+        <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} }</source><target state="final">Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source><target state="final">{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</target>
+        <source>{barPlaceholder, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source><target state="final">{barPlaceholder, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</source><target state="final">{VAR_SELECT, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</target>
+        <source>{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</source><target state="final">{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -5413,7 +5401,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.value.type" datatype="html">
-        <source>{VAR_SELECT, select, default {Default} all {% of all columns} }</source><target state="final">{VAR_SELECT, select, default {Default} all {% of all columns} }</target>
+        <source>{type, select, default {Default} all {% of all columns} }</source><target state="final">{type, select, default {Default} all {% of all columns} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-value-type-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -5473,7 +5461,7 @@
           <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</source><target state="final">{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</target>
+        <source>{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</source><target state="final">{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5491,7 +5479,7 @@
         <source>Summary</source><target state="final">Summary</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-sort-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value.type" datatype="html">
-        <source>{VAR_SELECT, select, default {Default} row {% of row} column {% of column} all {% of all values} }</source><target state="final">{VAR_SELECT, select, default {Default} row {% of row} column {% of column} all {% of all values} }</target>
+        <source>{type, select, default {Default} row {% of row} column {% of column} all {% of all values} }</source><target state="final">{type, select, default {Default} row {% of row} column {% of column} all {% of all values} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-value-type-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -5566,13 +5554,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="view.name.exists.message" datatype="html">
-        <source>Do you really want to <x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>?</source><target state="final">Do you really want to <x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="60ab130ceeb91bdfeaa4d635fca0a1e07619372d" datatype="html">
-        <source>{VAR_SELECT, select, 0 {change view name} 1 {create view with the same name} }</source><target state="final">{VAR_SELECT, select, 0 {change view name} 1 {create view with the same name} }</target>
+        <source>Do you really want to {create, select, 0 {change view name} 1 {create view with the same name} }?</source><target state="final">Do you really want to {create, select, 0 {change view name} 1 {create view with the same name} }?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5639,8 +5621,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="organization.payments.paidWarning.text" datatype="html">
-        <source>Your current subscription lasts until <x id="INTERPOLATION" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="INTERPOLATION_1" equiv-text="{{1}}"/>?
- In case you want to add more users, please contact support@lumeer.io.</source><target state="final">Your current subscription lasts until <x id="INTERPOLATION" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="INTERPOLATION_1" equiv-text="{{1}}"/>?
+        <source>Your current subscription lasts until <x id="validUntil" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="start" equiv-text="{{1}}"/>?
+ In case you want to add more users, please contact support@lumeer.io.</source><target state="final">Your current subscription lasts until <x id="validUntil" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="start" equiv-text="{{1}}"/>?
  In case you want to add more users, please contact support@lumeer.io.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
@@ -5759,7 +5741,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.tab.linktypes.delete.message" datatype="html">
-        <source>Do you really want to delete the link type "<x id="INTERPOLATION" equiv-text="{{name}}"/>" and all its usages?</source><target state="final">Do you really want to delete the link type "<x id="INTERPOLATION" equiv-text="{{name}}"/>" and all its usages?</target>
+        <source>Do you really want to delete the link type "<x id="name" equiv-text="{{name}}"/>" and all its usages?</source><target state="final">Do you really want to delete the link type "<x id="name" equiv-text="{{name}}"/>" and all its usages?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5803,8 +5785,8 @@
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="178fe1547e5de6489102db434ecb5e103b1af48c" datatype="html">
-        <source>{VAR_SELECT, select, None {Generic} Tasks {Tasks} }</source><target state="final">{VAR_SELECT, select, None {Generic} Tasks {Tasks} }</target>
+      </trans-unit><trans-unit id="tasks.type" datatype="html">
+        <source>{type, select, None {Generic} Tasks {Tasks} }</source><target state="final">{type, select, None {Generic} Tasks {Tasks} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.ts</context>
           <context context-type="linenumber">1</context>

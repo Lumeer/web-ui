@@ -21,9 +21,8 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../environments/environment';
 import {AppState} from '../../app.state';
@@ -54,10 +53,7 @@ export class PaymentsEffects {
       ofType<PaymentsAction.GetPaymentsFailure>(PaymentsActionType.GET_PAYMENTS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'organization.payments.get.fail',
-          value: 'Could not read information about your previous service orders',
-        });
+        const message = $localize`:@@organization.payments.get.fail:Could not read information about your previous service orders`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -129,10 +125,7 @@ export class PaymentsEffects {
       ofType<PaymentsAction.GetPaymentFailure>(PaymentsActionType.GET_PAYMENT_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'organization.payment.get.fail',
-          value: 'Could not read information about your previous service order',
-        });
+        const message = $localize`:@@organization.payment.get.fail:Could not read information about your previous service order`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -157,10 +150,7 @@ export class PaymentsEffects {
       ofType<PaymentsAction.CreatePaymentFailure>(PaymentsActionType.CREATE_PAYMENT_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'organization.payment.create.fail',
-          value: 'Could not create your new service order',
-        });
+        const message = $localize`:@@organization.payment.create.fail:Could not create your new service order`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -206,7 +196,6 @@ export class PaymentsEffects {
   }
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,

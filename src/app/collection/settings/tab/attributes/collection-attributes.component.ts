@@ -95,13 +95,8 @@ export class CollectionAttributesComponent implements OnInit {
   }
 
   public showAttributeDeleteDialog(attribute: Attribute, onCancel?: () => void) {
-    const title = this.i18n({id: 'collection.tab.attributes.delete.title', value: 'Delete attribute?'});
-    const message = this.i18n(
-      {id: 'collection.tab.attributes.delete.message', value: 'Do you really want to delete attribute "{{name}}"?'},
-      {
-        name: attribute.name,
-      }
-    );
+    const title = $localize`:@@collection.tab.attributes.delete.title:Delete attribute?`;
+    const message = $localize`:@@collection.tab.attributes.delete.message:Do you really want to delete attribute "${attribute.name}:name:"?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteAttribute(attribute), onCancel);
   }
 

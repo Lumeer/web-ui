@@ -18,15 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Role} from '../../core/model/role';
+import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'roleHumanReadable',
 })
 export class RoleHumanReadablePipe implements PipeTransform {
-  constructor(private i18n: I18n) {}
-
   public transform(roles: string[]): string {
     let roleText = Role.Empty;
 
@@ -38,14 +36,9 @@ export class RoleHumanReadablePipe implements PipeTransform {
       roleText = Role.Read;
     }
 
-    return this.i18n(
-      {
-        id: 'user.permission.humanName',
-        value: '{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned}}',
-      },
-      {
-        role: roleText,
-      }
+    return parseSelectTranslation(
+      $localize`:@@user.permission.humanName:{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned}}`,
+      {role: roleText}
     );
   }
 }

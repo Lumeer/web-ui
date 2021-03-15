@@ -21,7 +21,6 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {ChartYAxisType} from '../../data/convertor/chart-data';
@@ -51,8 +50,8 @@ export class ChartYAxisConfigComponent {
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly axisEmptyValue: string;
 
-  constructor(private i18n: I18n) {
-    this.axisEmptyValue = i18n({id: 'perspective.chart.config.axis.empty', value: 'Select axis'});
+  constructor() {
+    this.axisEmptyValue = $localize`:@@perspective.chart.config.axis.empty:Select axis`;
   }
 
   public onAxisSelect(itemId: SelectItemWithConstraintId) {

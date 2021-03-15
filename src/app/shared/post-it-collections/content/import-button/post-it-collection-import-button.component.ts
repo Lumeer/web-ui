@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 export interface CollectionImportData {
   result: string;
@@ -42,8 +41,6 @@ export class PostItCollectionImportButtonComponent {
   @Input()
   public disabled: boolean;
 
-  constructor(private i18n: I18n) {}
-
   public dragging: boolean = false;
 
   public handleDrop(event) {
@@ -63,7 +60,7 @@ export class PostItCollectionImportButtonComponent {
       };
       reader.readAsText(file);
     } else {
-      const message = this.i18n({id: '@@files.input.button.empty', value: 'File input is empty'});
+      const message = $localize`:@@files.input.button.empty:File input is empty`;
       this.error.emit(message);
     }
   }

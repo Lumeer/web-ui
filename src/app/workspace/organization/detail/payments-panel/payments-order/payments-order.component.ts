@@ -18,17 +18,16 @@
  */
 
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {AppState} from '../../../../../core/store/app.state';
 import {DatePipe} from '@angular/common';
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-order',
@@ -74,11 +73,8 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
   public trial: boolean = true; // are we on a trial subscription?
   public serviceLimits: ServiceLimits;
 
-  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {
-    this.discountDescription = this.i18n({
-      id: 'organizations.tab.detail.order.discount',
-      value: 'Special Early Bird Prices!',
-    });
+  constructor(private router: Router, private store: Store<AppState>) {
+    this.discountDescription = $localize`:@@organizations.tab.detail.order.discount:Special Early Bird Prices!`;
   }
 
   private static floorDate(d: Date) {
@@ -92,7 +88,7 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
   private subscribeToStore() {
     this.serviceLimitsSubscription = this.store
       .select(selectServiceLimitsByWorkspace)
-      .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
+      .pipe(filter(serviceLimits => isNotNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => {
         this.serviceLimits = serviceLimits;
         if (serviceLimits.serviceLevel === ServiceLevelType.FREE) {
@@ -118,7 +114,7 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
   }
 
   private isDiscount(): boolean {
-    return this.subscriptionLength.indexOf(this.i18n({id: 'organizations.tab.detail.order.term', value: 'year'})) > 0;
+    return this.subscriptionLength.indexOf($localize`:@@organizations.tab.detail.order.term:year`) > 0;
   }
 
   private calculatePrice() {

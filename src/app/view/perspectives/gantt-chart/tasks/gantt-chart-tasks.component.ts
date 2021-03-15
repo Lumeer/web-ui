@@ -67,7 +67,6 @@ import {
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {
   getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
@@ -178,11 +177,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
-    private modalService: ModalService,
-    private i18n: I18n
+    private modalService: ModalService
   ) {
     this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
-    this.newTaskName = i18n({id: 'gantt.perspective.task.create.title', value: 'New task'});
+    this.newTaskName = $localize`:@@gantt.perspective.task.create.title:New task`;
   }
 
   public ngOnInit() {

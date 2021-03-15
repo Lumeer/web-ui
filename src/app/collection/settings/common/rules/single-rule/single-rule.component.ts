@@ -73,14 +73,8 @@ export class SingleRuleComponent {
   }
 
   public showZapierWarning(): void {
-    const title = this.i18n({
-      id: 'collection.config.tab.rules.zapier.warning.title',
-      value: 'Zapier Automation',
-    });
-    const message = this.i18n({
-      id: 'collection.config.tab.rules.zapier.warning.text',
-      value: 'This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).',
-    });
+    const title = $localize`:@@collection.config.tab.rules.zapier.warning.title:Zapier Automation`;
+    const message = $localize`:@@collection.config.tab.rules.zapier.warning.text:This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).`;
 
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }

@@ -18,29 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Constraint} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'constraintTypeIconTitle',
 })
 export class ConstraintTypeIconTitlePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
   public transform(constraint: Constraint): string {
     if (!constraint) {
       return '';
     }
 
-    return this.i18n(
-      {
-        id: 'constraint.type.icon.title',
-        value:
-          '{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color}}',
-      },
-      {
-        constraintType: constraint.type,
-      }
+    return parseSelectTranslation(
+      $localize`:@@constraint.type.icon.title:{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color}}`,
+      {constraintType: constraint.type}
     );
   }
 }

@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ClipboardService} from '../../../core/service/clipboard.service';
 
 @Component({
@@ -41,13 +40,10 @@ export class CopyTextBoxComponent implements OnInit {
   @ViewChild('copyInputBox')
   private copyInputBoxElement: ElementRef<HTMLInputElement>;
 
-  constructor(private i18n: I18n, private clipboardService: ClipboardService) {}
+  constructor(private clipboardService: ClipboardService) {}
 
   public ngOnInit(): void {
-    this.copiedText = this.i18n({
-      id: 'copyTextBox.clipboard.copied',
-      value: 'Copied!',
-    });
+    this.copiedText = $localize`:@@copyTextBox.clipboard.copied:Copied!`;
   }
 
   public copyValue() {

@@ -33,7 +33,6 @@ import {ActionConstraintFiltersFormControl} from '../../action-constraint-form-c
 import {SelectItem2Model} from '../../../../../../../select/select-item2/select-item2.model';
 import {FilterBuilderComponent} from '../../../../../../../builder/filter-builder/filter-builder.component';
 import {findAttribute} from '../../../../../../../../core/store/collections/collection.util';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, startWith} from 'rxjs/operators';
 import {
@@ -44,6 +43,7 @@ import {
   initialConditionType,
   initialConditionValues,
 } from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../../../../utils/translation.utils';
 
 @Component({
   selector: 'action-constraint-condition-form',
@@ -97,10 +97,10 @@ export class ActionConstraintConditionFormComponent implements OnInit {
 
   public operatorValue$: Observable<EquationOperator>;
 
-  constructor(private i18n: I18n) {
+  constructor() {
     this.operatorSelectItems = [EquationOperator.And, EquationOperator.Or].map(operator => ({
       id: operator,
-      value: i18n({id: 'equation.operator', value: '{operator, select, and {And} or {Or}}'}, {operator}),
+      value: parseSelectTranslation($localize`:@@equation.operator:{operator, select, and {And} or {Or}}`, {operator}),
     }));
   }
 

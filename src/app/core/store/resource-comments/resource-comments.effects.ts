@@ -19,11 +19,10 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Action, Store} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {ResourceCommentService} from '../../data-service/resource-comment/resource-comment.service';
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {ResourceCommentsAction, ResourceCommentsActionType} from './resource-comments.action';
 import {convertResourceCommentDtoToModel, convertResourceCommentModelToDto} from './resource-comment.converter';
@@ -54,7 +53,7 @@ export class ResourceCommentsEffects {
       ofType<ResourceCommentsAction.GetFailure>(ResourceCommentsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'resourceComments.get.fail', value: 'Could not read comments'});
+        const message = $localize`:@@resourceComments.get.fail:Could not read comments`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -103,7 +102,7 @@ export class ResourceCommentsEffects {
       ofType<ResourceCommentsAction.CreateFailure>(ResourceCommentsActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(action => {
-        const errorMessage = this.i18n({id: 'resourceComment.create.fail', value: 'Could not save the comment'});
+        const errorMessage = $localize`:@@resourceComment.create.fail:Could not save the comment`;
         return new NotificationsAction.Error({message: errorMessage});
       })
     )
@@ -129,7 +128,7 @@ export class ResourceCommentsEffects {
       ofType<ResourceCommentsAction.UpdateFailure>(ResourceCommentsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'resourceComment.update.fail', value: 'Could not update the comment'});
+        const message = $localize`:@@resourceComment.update.fail:Could not update the comment`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -176,7 +175,7 @@ export class ResourceCommentsEffects {
       ofType<ResourceCommentsAction.DeleteFailure>(ResourceCommentsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'resourceComment.delete.fail', value: 'Could not delete the comment'});
+        const message = $localize`:@@resourceComment.delete.fail:Could not delete the comment`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -185,7 +184,6 @@ export class ResourceCommentsEffects {
   constructor(
     private actions$: Actions,
     private resourceCommentService: ResourceCommentService,
-    private i18n: I18n,
     private store$: Store<AppState>
   ) {}
 }

@@ -22,7 +22,6 @@ import {Organization} from '../../../../../core/store/organizations/organization
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {isNullOrUndefined} from 'util';
@@ -48,7 +47,7 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   public payments: Payment[];
   private paymentsSubscription: Subscription;
 
-  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
+  constructor(private router: Router, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -98,11 +97,8 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   public addUsers() {
     this.store.dispatch(
       new NotificationsAction.Info({
-        title: this.i18n({id: 'organization.payments.addUsers.title', value: 'Add Users'}),
-        message: this.i18n({
-          id: 'organization.payments.addUsers.info',
-          value: 'To add more users to your organization, please contact support@lumeer.io.',
-        }),
+        title: $localize`:@@organization.payments.addUsers.title:Add Users`,
+        message: $localize`:@@organization.payments.addUsers.info:To add more users to your organization, please contact support@lumeer.io.`,
       })
     );
   }

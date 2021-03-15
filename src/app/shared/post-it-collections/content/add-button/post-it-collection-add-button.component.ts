@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject} from 'rxjs';
 import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 import {SampleDataType} from '../../../../core/model/sample-data-type';
@@ -41,14 +40,14 @@ export class PostItCollectionAddButtonComponent {
   @Output()
   public clicked = new EventEmitter();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  constructor(private store$: Store<AppState>) {}
 
   public creatingData$ = new BehaviorSubject(false);
 
   public onCreate() {
     this.creatingData$.next(true);
 
-    const errorMessage = this.i18n({id: 'tasks.sample.data.failure', value: 'Could not add task table to project'});
+    const errorMessage = $localize`:@@tasks.sample.data.failure:Could not add task table to project`;
     this.store$.dispatch(
       new ProjectsAction.CreateSampleData({
         type: SampleDataType.Tasks,

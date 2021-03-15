@@ -17,11 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {GroupService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -48,7 +46,7 @@ export class GroupsEffects {
       ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'groups.get.fail', value: 'Could not get groups'});
+        const message = $localize`:@@groups.get.fail:Could not get groups`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -74,7 +72,7 @@ export class GroupsEffects {
       ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'group.create.fail', value: 'Could not create the group'});
+        const message = $localize`:@@group.create.fail:Could not create the group`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -100,7 +98,7 @@ export class GroupsEffects {
       ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'group.update.fail', value: 'Could not update the group'});
+        const message = $localize`:@@group.update.fail:Could not update the group`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -123,11 +121,11 @@ export class GroupsEffects {
       ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'group.delete.fail', value: 'Could not delete the group'});
+        const message = $localize`:@@group.delete.fail:Could not delete the group`;
         return new NotificationsAction.Error({message});
       })
     )
   );
 
-  constructor(private actions$: Actions, private groupService: GroupService, private i18n: I18n) {}
+  constructor(private actions$: Actions, private groupService: GroupService) {}
 }

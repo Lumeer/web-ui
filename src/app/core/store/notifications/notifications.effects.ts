@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../app.state';
@@ -35,8 +34,8 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.Confirm>(NotificationsActionType.CONFIRM),
         tap(action => {
-          const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-          const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+          const yesButtonText = $localize`:@@button.yes:Yes`;
+          const noButtonText = $localize`:@@button.no:No`;
           const yesButton = {text: yesButtonText, action: () => this.store$.dispatch(action.payload.action)};
           const noButton = {text: noButtonText};
 
@@ -59,7 +58,7 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.Info>(NotificationsActionType.INFO),
         tap(action => {
-          const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
+          const okButtonText = $localize`:@@button.ok:OK`;
 
           const buttons: NotificationButton[] = [{text: okButtonText, bold: true}];
           this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
@@ -100,7 +99,7 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.Hint>(NotificationsActionType.HINT),
         tap(action => {
-          const lumeerAdvice = this.i18n({id: 'lumeer.advice', value: "Lumeer's Advice"});
+          const lumeerAdvice = $localize`:@@lumeer.advice:Lumeer's Advice`;
           this.notificationService.hint(action.payload.message, lumeerAdvice, action.payload.buttons);
         })
       ),
@@ -112,12 +111,8 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.ForceRefresh>(NotificationsActionType.FORCE_REFRESH),
         tap(() => {
-          const message = this.i18n({
-            id: 'warning.force.refresh',
-            value:
-              'I am sorry, the project has been significantly updated by a different user. Please refresh this page in the browser.',
-          });
-          const refreshButtonText = this.i18n({id: 'refresh', value: 'Refresh'});
+          const message = $localize`:@@warning.force.refresh:I am sorry, the project has been significantly updated by a different user. Please refresh this page in the browser.`;
+          const refreshButtonText = $localize`:@@refresh:Refresh`;
           const button: NotificationButton = {
             text: refreshButtonText,
             bold: true,
@@ -135,15 +130,7 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.ExistingAttributeWarning>(NotificationsActionType.EXISTING_ATTRIBUTE_WARNING),
         tap(action => {
-          const message = this.i18n(
-            {
-              id: 'warning.attribute.nameExisting',
-              value: "I am sorry, the attribute name '{{attributeName}}' already exists.",
-            },
-            {
-              attributeName: action.payload.name,
-            }
-          );
+          const message = $localize`:@@warning.attribute.nameExisting:I am sorry, the attribute name '${action.payload.name}:name:' already exists.`;
 
           this.notificationService.warning(message);
         })
@@ -153,7 +140,6 @@ export class NotificationsEffects {
 
   constructor(
     private actions$: Actions,
-    private i18n: I18n,
     private router: Router,
     private notificationService: NotificationService,
     private store$: Store<AppState>

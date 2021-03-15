@@ -22,8 +22,7 @@ import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {EMPTY, from, Observable, of} from 'rxjs';
+import {EMPTY, from, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../data-service';
 import {AppState} from '../app.state';
@@ -75,7 +74,7 @@ export class UsersEffects {
       ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'users.get.fail', value: 'Could not get users'});
+        const message = $localize`:@@users.get.fail:Could not get users`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -103,7 +102,7 @@ export class UsersEffects {
               action.payload.onFailure();
             }
 
-            const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+            const message = $localize`:@@currentUser.get.fail:Could not get user details`;
             return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
           })
         )
@@ -128,10 +127,7 @@ export class UsersEffects {
               action.payload.onFailure();
             }
 
-            const message = this.i18n({
-              id: 'currentUser.resendVerificationEmail.fail',
-              value: 'Could not request another verification email',
-            });
+            const message = $localize`:@@currentUser.resendVerificationEmail.fail:Could not request another verification email`;
             return from([new NotificationsAction.Error({message})]);
           })
         )
@@ -151,7 +147,7 @@ export class UsersEffects {
             new UsersAction.SetPending({pending: false}),
           ]),
           catchError(() => {
-            const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+            const message = $localize`:@@currentUser.get.fail:Could not get user details`;
             return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
           })
         )
@@ -178,7 +174,7 @@ export class UsersEffects {
               action.payload.onFailure();
             }
 
-            const message = this.i18n({id: 'currentUser.patch.fail', value: 'Could not update user details'});
+            const message = $localize`:@@currentUser.patch.fail:Could not update user details`;
             return of(new NotificationsAction.Error({message}));
           })
         );
@@ -231,7 +227,7 @@ export class UsersEffects {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
           return new UsersAction.InvitationExceeded(action.payload);
         }
-        const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
+        const errorMessage = $localize`:@@user.create.fail:Could not add the user`;
         return new NotificationsAction.Error({message: errorMessage});
       })
     )
@@ -247,26 +243,10 @@ export class UsersEffects {
         let message: string;
         let title: string;
         if (limits?.serviceLevel === ServiceLevelType.BASIC) {
-          message = this.i18n(
-            {
-              id: 'user.create.serviceLimits.basic',
-              value:
-                'You are allowed to invite only {{limit}} users to your organization. Do you want to upgrade your plan now?',
-            },
-            {
-              limit: limits.users,
-            }
-          );
-          title = this.i18n({
-            id: 'user.create.serviceLimits.business.title',
-            value: 'Limits exceeded',
-          });
+          message = $localize`:@@user.create.serviceLimits.basic:You are allowed to invite only ${limits.users}:limit: users to your organization. Do you want to upgrade your plan now?`;
+          title = $localize`:@@user.create.serviceLimits.business.title:Limits exceeded`;
         } else {
-          message = this.i18n({
-            id: 'user.create.serviceLimits',
-            value:
-              'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
-          });
+          message = $localize`:@@user.create.serviceLimits:You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?`;
         }
 
         return new OrganizationsAction.OfferPayment({message, title, organizationCode: organization.code});
@@ -356,7 +336,7 @@ export class UsersEffects {
       ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'user.update.fail', value: 'Could not update the user'});
+        const message = $localize`:@@user.update.fail:Could not update the user`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -379,7 +359,7 @@ export class UsersEffects {
       ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'user.delete.fail', value: 'Could not delete the user'});
+        const message = $localize`:@@user.delete.fail:Could not delete the user`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -410,10 +390,7 @@ export class UsersEffects {
       ofType<UsersAction.SaveDefaultWorkspaceFailure>(UsersActionType.SAVE_DEFAULT_WORKSPACE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'user.defaultWorkspace.save.fail',
-          value: 'Could not save the default workspace',
-        });
+        const message = $localize`:@@user.defaultWorkspace.save.fail:Could not save the default workspace`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -436,7 +413,7 @@ export class UsersEffects {
       ofType<UsersAction.ReferralsFailure>(UsersActionType.REFERRALS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'user.referrals.fail', value: 'Could not get your referrals at the moment'});
+        const message = $localize`:@@user.referrals.fail:Could not get your referrals at the moment`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -460,7 +437,7 @@ export class UsersEffects {
       ofType<UsersAction.GetHintsFailure>(UsersActionType.GET_HINTS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+        const message = $localize`:@@currentUser.get.fail:Could not get user details`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -487,10 +464,7 @@ export class UsersEffects {
       ofType<UsersAction.UpdateNotificationsFailure>(UsersActionType.UPDATE_NOTIFICATIONS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'user.update.notifications.fail',
-          value: 'Could not update notifications settings',
-        });
+        const message = $localize`:@@user.update.notifications.fail:Could not update notifications settings`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -515,7 +489,7 @@ export class UsersEffects {
       ofType<UsersAction.UpdateHintsFailure>(UsersActionType.UPDATE_HINTS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'user.update.fail', value: 'Could not update the user'});
+        const message = $localize`:@@user.update.fail:Could not update the user`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -537,7 +511,6 @@ export class UsersEffects {
 
   constructor(
     private actions$: Actions,
-    private i18n: I18n,
     private store$: Store<AppState>,
     private userService: UserService,
     private angulartics2: Angulartics2

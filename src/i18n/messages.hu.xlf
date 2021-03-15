@@ -2,11 +2,11 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 	<file source-language="en" target-language="hu" datatype="plaintext" original="ng2.template">
 		<body>
-			<trans-unit datatype="html" id="@@files.input.button.empty">
+			<trans-unit datatype="html" id="files.input.button.empty">
 				<source>File input is empty</source>
 				<target>A fájlbemenet üres</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/import-button/post-it-collection-import-button.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
-			<trans-unit datatype="html" id="@@perspective.gantt.create.task.failure">
+			<trans-unit datatype="html" id="perspective.gantt.create.task.failure">
 				<source>Could not create task</source>
 				<target>Nem lehet létrehozni a feladatot</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
@@ -22,9 +22,9 @@
 				<source>Data set</source>
 				<target>Adatkészlet</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">24</context></context-group><note from="description" priority="1">perspective.chart.config.dataSet.placeholder</note></trans-unit>
-			<trans-unit datatype="html" id="178fe1547e5de6489102db434ecb5e103b1af48c">
-				<source>{VAR_SELECT, select, None {Generic} Tasks {Tasks} }</source>
-				<target>{VAR_SELECT, select, None {Általános} Tasks {Feladatok} }</target>
+			<trans-unit datatype="html" id="tasks.type">
+				<source>{type, select, None {Generic} Tasks {Tasks} }</source>
+				<target>{type, select, None {Általános} Tasks {Feladatok} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="2879182b054d70e714df9ad8e6dc901242ac383e">
 				<source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }</source>
@@ -447,17 +447,16 @@
 				<target>{VAR_SELECT, select, name {Név} start {Kezdő dátum} end {Befejező dátum} color {szín} group {csoport} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="calendar.property.placeholder">
-				<source>{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source>
-				<target>{VAR_SELECT, select, name {név} start {név} end {kezdet} end {befejezés} color {szín} group {csoport} }</target>
+				<source>{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source>
+				<target>{barProperty, select, name {név} start {név} end {kezdet} end {befejezés} color {szín} group {csoport} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-property-placeholder.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="calendar.value.placeholder">
-				<source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...} group {...}}"/></source>
-				<target>Válassza ki
-					<x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...} group {...}}"/></target>
+				<source>Select {barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source>
+				<target>Válassza ki {barProperty, select, name {név} start {név} end {kezdet} end {befejezés} color {szín} group {csoport} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="chart.type">
-				<source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source>
-				<target>{VAR_SELECT, select, line {vonal} bar {oszlop} pie {kör} bubble {buborék} }</target>
+				<source>{type, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source>
+				<target>{type, select, line {vonal} bar {oszlop} pie {kör} bubble {buborék} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="choose.organization.confirm">
 				<source>Use organization</source>
@@ -828,9 +827,9 @@
 				<target>A tulajdonság nevének egyedinek kell lennie!</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.attributes.delete.message">
-				<source>Do you really want to delete attribute "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</source>
+				<source>Do you really want to delete attribute "<x id="name" equiv-text="{{name}}"/>"?</source>
 				<target>Biztosan törölni szeretnéd a "
-					<x id="INTERPOLATION" equiv-text="{{name}}"/>
+					<x id="name" equiv-text="{{name}}"/>
 					tulajdonságot?</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.attributes.delete.title">
@@ -844,9 +843,9 @@
 				<target>Nincsenek még tulajdonságok. Hozz létre egyet!</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.linktypes.delete.message">
-				<source>Do you really want to delete the link type "<x id="INTERPOLATION" equiv-text="{{name}}"/>" and all its usages?</source>
+				<source>Do you really want to delete the link type "<x id="name" equiv-text="{{name}}"/>" and all its usages?</source>
 				<target>Biztosan törölni szeretnéd a "
-					<x id="INTERPOLATION" equiv-text="{{name}}"/>
+					<x id="name" equiv-text="{{name}}"/>
 					" hivatkozástípust és annak összes használatát?</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
         <source>Copy of</source><target state="new">Copy of</target>
@@ -1181,8 +1180,8 @@
 				<target>Formátum</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.coordinates.format.types">
-				<source>{VAR_SELECT, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</source>
-				<target>{VAR_SELECT, select, DD {Decimális fok} DMS {Fok, perc, másodperc} }</target>
+				<source>{format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds} }</source>
+				<target>{format, select, DD {Decimális fok} DMS {Fok, perc, másodperc} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.coordinates.precision.label">
 				<source>
@@ -1191,12 +1190,12 @@
 				<target>Pontosság</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.coordinates.precisions.dd">
-				<source>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source>
-				<target>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</target>
+				<source>{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source>
+				<target>{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.coordinates.precisions.dms">
-				<source>{VAR_SELECT, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</source>
-				<target>{VAR_SELECT, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</target>
+				<source>{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</source>
+				<target>{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.dateTime.config.utc">
 				<source>Time is always in UTC</source>
@@ -1234,8 +1233,8 @@
 				<target>Tárolja például egy feladat vagy esemény időtartamát. Az időtartam könnyen írható és olvasható formátumban van megadva (pl. 1h30m = 1 óra és 30 perc). Válthat a munkatípusú időtartam között, ahol minden nap 8 munkaórával rendelkezik, vagy normál időpontban, amikor egy nap nak 24 órája van.</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.duration.type">
-				<source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source>
-				<target>{VAR_SELECT, select, Work {Munka} Classic {Normális} Custom {Egyedi} }</target>
+				<source>{type, select, Work {Work} Classic {Normal} Custom {Custom} }</source>
+				<target>{type, select, Work {Munka} Classic {Normális} Custom {Egyedi} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.duration.type.label">
 				<source>
@@ -1286,8 +1285,8 @@
 				<target>Pénznem</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.number.currency.select">
-				<source>{VAR_SELECT, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)} }</source>
-				<target>{VAR_SELECT, select, en-IN {India - ₹ (INR)} uk-UA {Ukrajna - ₴ (UAH)} tr-TR {Törökország - ₺ (TRY)} en-MT {Málta - € (EUR)} en-IE {Írország - € (EUR)} da-DK {Dánia - kr (DKK)} de-CH {Svájc - CHF} en-NZ {Új Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Svédország - kr (SEK)} nb-NO {Norvégia - kr (NOK)} fi-FI {Finnország - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Spanyolország - € (EUR)} fr-FR {Franciaország - € (EUR)} it-IT {Olaszország - € (EUR)} en-GB {Egyesült Királyság - £ (GBP)} pt-PT {Portugália - € (EUR)} pl-PL {Lengyelország - zł (PLN)} cs-CZ {Csehország - Kč (CZK)} sk-SK {Szlovákia - € (EUR)} hu-HU {Magyarország - Ft (HUF)} de-AT {Ausztria - € (EUR)} de-DE {Németország - € (EUR)} en-US {Amerikai Egyesült Államok - $ (USD)} pt-BR {Brazília - R$ (BRL)} zh-TW {Tajvan - NT$ (TWD)} nl-NL {Hollandia - € (EUR)} zh-CN {Kína - ¥ (CNY)} ru-RU {Oroszország - ₽ (RUB)} ja-JP {Japán - ¥ (JPY)} en-AU {Ausztrália - $ (AUD)} }</target>
+				<source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)} }</source>
+				<target>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukrajna - ₴ (UAH)} tr-TR {Törökország - ₺ (TRY)} en-MT {Málta - € (EUR)} en-IE {Írország - € (EUR)} da-DK {Dánia - kr (DKK)} de-CH {Svájc - CHF} en-NZ {Új Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Svédország - kr (SEK)} nb-NO {Norvégia - kr (NOK)} fi-FI {Finnország - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Spanyolország - € (EUR)} fr-FR {Franciaország - € (EUR)} it-IT {Olaszország - € (EUR)} en-GB {Egyesült Királyság - £ (GBP)} pt-PT {Portugália - € (EUR)} pl-PL {Lengyelország - zł (PLN)} cs-CZ {Csehország - Kč (CZK)} sk-SK {Szlovákia - € (EUR)} hu-HU {Magyarország - Ft (HUF)} de-AT {Ausztria - € (EUR)} de-DE {Németország - € (EUR)} en-US {Amerikai Egyesült Államok - $ (USD)} pt-BR {Brazília - R$ (BRL)} zh-TW {Tajvan - NT$ (TWD)} nl-NL {Hollandia - € (EUR)} zh-CN {Kína - ¥ (CNY)} ru-RU {Oroszország - ₽ (RUB)} ja-JP {Japán - ¥ (JPY)} en-AU {Ausztrália - $ (AUD)} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.number.decimals.description">
 				<source>
@@ -1439,8 +1438,8 @@
 				<target>Eset stílusa</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.text.caseStyle.value">
-				<source>{VAR_SELECT, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</source>
-				<target>{VAR_SELECT, select, None {bármilyen betű} LowerCase {kisbetű} UpperCase {Nagybetű} TitleCase {Szókezdő nagybetűk} SentenceCase {Mondatkezdő nagybetűk} }</target>
+				<source>{caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</source>
+				<target>{caseStyle, select, None {bármilyen betű} LowerCase {kisbetű} UpperCase {Nagybetű} TitleCase {Szókezdő nagybetűk} SentenceCase {Mondatkezdő nagybetűk} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.text.maxLength.label">
 				<source>
@@ -1455,8 +1454,8 @@
 				<target>Minimális hossz</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.type.icon.title">
-				<source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</source>
-				<target>{VAR_SELECT, select, Text {Szöveg} Number {Szám} Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Coordinates {Hely} DateTime {Dátum és idő} Duration {Időtartam} Email {E-mail} Function {Funkció} Image {Kép} Link {Link} Percentage {Százalák} Rating {Értékelés} Select {Kiválasztás} Tag {Címke} User {Felhasználó választás} Color {Szín} }</target>
+				<source>{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</source>
+				<target>{constraintType, select, Text {Szöveg} Number {Szám} Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Coordinates {Hely} DateTime {Dátum és idő} Duration {Időtartam} Email {E-mail} Function {Funkció} Image {Kép} Link {Link} Percentage {Százalák} Rating {Értékelés} Select {Kiválasztás} Tag {Címke} User {Felhasználó választás} Color {Szín} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.user.description">
 				<source>
@@ -1802,12 +1801,12 @@
 				<target>{VAR_SELECT, select, houseNumber {Házszám} street {Utca} postalCode {Irányító szám} city {Város} county {Megye} state {Állam} country {Ország} continent {Kontinens} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="equation.operator">
-				<source>{VAR_SELECT, select, and {And} or {Or} }</source>
-				<target>{VAR_SELECT, select, and {És} or {Vagy} }</target>
+				<source>{operator, select, and {And} or {Or} }</source>
+				<target>{opeator, select, and {És} or {Vagy} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/conditions/condition/action-constraint-condition-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
-			<trans-unit datatype="html" id="fc318efb46c7dcc13f574e0c810d9889245b8954">
-				<source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</source>
-				<target>{VAR_SELECT, select, Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Color {Szín} Coordinates {Koordináták} DateTime {Dátum} FileAttachment {Csatolt fájl} Duration {Időtartam} None {Egyik sem} Number {Szám} Percentage {Százalék} Link {Link} Select {Kiválasztás} Text {Szöveg} User {Felhasználó} }</target>
+			<trans-unit datatype="html" id="constraint.type">
+				<source>{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</source>
+				<target>{type, select, Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Color {Szín} Coordinates {Koordináták} DateTime {Dátum} FileAttachment {Csatolt fájl} Duration {Időtartam} None {Egyik sem} Number {Szám} Percentage {Százalék} Link {Link} Select {Kiválasztás} Text {Szöveg} User {Felhasználó} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="file.attachment.delete.confirm.message">
 				<source>Do you really want to permanently delete this file?</source>
@@ -1842,8 +1841,8 @@
 				<target>Nincs engedélyed a tábla eléréséhez.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="file.upload.max.size.error">
-				<source>Cannot process files bigger than <x id="INTERPOLATION" equiv-text="{{size}}"/> MB. Please upload smaller file.</source>
-				<target><x id="INTERPOLATION" equiv-text="{{size}}"/>
+				<source>Cannot process files bigger than <x id="size" equiv-text="{{size}}"/> MB. Please upload smaller file.</source>
+				<target><x id="size" equiv-text="{{size}}"/>
 					MB-nál nagyobb fájlok nem dolgozhatóak fel. Tölts fel kisebb fájlokat.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="files.dropdown.button.add">
@@ -1899,13 +1898,12 @@
 				<target>Új tevékenység</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="ganttChart.bar.placeholder">
-				<source>{VAR_SELECT, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source>
-				<target>{VAR_SELECT, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
+				<source>{barPlaceholder, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source>
+				<target>{barPlaceholder, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="ganttChart.empty.placeholder">
-				<source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></source>
-				<target>Válassza ki
-					<x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></target>
+				<source>Select {barPlaceholder, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} }</source>
+				<target>Válassza ki {barPlaceholder, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="get.help.button">
 				<source>Get Help</source>
@@ -2228,9 +2226,9 @@
 				<target>Lumeer tanácsa</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="lumeer.advice.percentage">
-				<source>I suggest to set the column type of <x id="INTERPOLATION" equiv-text="{{attrName}}"/> to percentage. Do you agree?</source>
+				<source>I suggest to set the column type of <x id="attributeName" equiv-text="{{attrName}}"/> to percentage. Do you agree?</source>
 				<target>Azt javaslom, hogy állítsd be az oszlop típusát
-					<x id="INTERPOLATION" equiv-text="{{attrName}}"/>
+					<x id="attributeName" equiv-text="{{attrName}}"/>
 					százalékra. Egyetért?</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="map.config.attribute.empty">
@@ -2453,11 +2451,11 @@
 				<target>En</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="organization.payments.paidWarning.text">
-				<source>Your current subscription lasts until <x id="INTERPOLATION" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="INTERPOLATION_1" equiv-text="{{1}}"/>?
+				<source>Your current subscription lasts until <x id="validUntil" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="start" equiv-text="{{1}}"/>?
  In case you want to add more users, please contact support@lumeer.io.</source>
 				<target>
-				A jelenlegi előfizetésed <x id="INTERPOLATION" equiv-text="{{0}}"/>	végéig tart.
-				Biztosan egy korábbi kezdési dátummal <x id="INTERPOLATION_1" equiv-text="{{1}}"/> rendelkező rendeléssel folytatod?
+				A jelenlegi előfizetésed <x id="validUntil" equiv-text="{{0}}"/>	végéig tart.
+				Biztosan egy korábbi kezdési dátummal <x id="start" equiv-text="{{1}}"/> rendelkező rendeléssel folytatod?
 					Ha további felhasználókat szeretnél hozzáadni, kérjük, fordulj a support@lumeer.io -hoz.
 					</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
@@ -2906,8 +2904,8 @@
 					<target>Rés idő</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/calendar/config/calendar-config.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.calendar.config.slotDuration.value">
-					<source>{VAR_SELECT, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</source>
-					<target>{VAR_SELECT, select, Hour {1 óra} Half {30 perc} Quarter {15 perc} Ten {10 perc} Five {5 perc} }</target>
+					<source>{key, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</source>
+					<target>{key, select, Hour {1 óra} Half {30 perc} Quarter {15 perc} Ten {10 perc} Five {5 perc} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.calendar.display.allDay">
 					<source>All day</source>
@@ -2946,8 +2944,8 @@
 					<target>Hét</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.chart.config.aggregation.name">
-					<source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source>
-					<target>{VAR_SELECT, select, sum {Összeg} avg {Átlag} min {Minimum} max {Maximum} count {Számol} unique {Egyedi} median {Medián} }</target>
+					<source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source>
+					<target>{type, select, sum {Összeg} avg {Átlag} min {Minimum} max {Maximum} count {Számol} unique {Egyedi} median {Medián} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.chart.config.axis.color">
 					<source>Color</source>
@@ -2990,8 +2988,8 @@
 					<target>Rendezés</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.chart.config.sortType.name">
-					<source>{VAR_SELECT, select, asc {Ascending} desc {Descending} }</source>
-					<target>{VAR_SELECT, select, asc {Növekvő} desc {Csökkenő} }</target>
+					<source>{type, select, asc {Ascending} desc {Descending} }</source>
+					<target>{type, select, asc {Növekvő} desc {Csökkenő} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.chart.config.sortType.placeholder">
 					<source>Sort order</source>
@@ -3006,8 +3004,8 @@
 					<target>Tevékenységdátumok megjelenítése</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.gantt.config.mode">
-					<source>{VAR_SELECT, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</source>
-					<target>{VAR_SELECT, select, Quarter Day {Negyed nap} Half Day {Fél nap} Day {Day} Week {Hét} Month {Hónap} Year {Év} }</target>
+					<source>{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years} }</source>
+					<target>{mode, select, Quarter Day {Negyed nap} Half Day {Fél nap} Day {Day} Week {Hét} Month {Hónap} Year {Év} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.gantt.config.position.save">
 					<source>Save position to view</source>
@@ -3049,8 +3047,8 @@
 					<target>Oszlop összegzése</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.kanban.config.value.type">
-					<source>{VAR_SELECT, select, default {Default} all {% of all columns} }</source>
-					<target>{VAR_SELECT, select, default {Alapértelmezett} all {%-a az összes oszlopnak} }</target>
+					<source>{type, select, default {Default} all {% of all columns} }</source>
+					<target>{type, select, default {Alapértelmezett} all {%-a az összes oszlopnak} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-value-type-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.kanban.config.valueAbsOrRel">
 					<source>Select absolute or relative display</source>
@@ -3149,8 +3147,8 @@
 					<target>Értékek</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.config.value.type">
-					<source>{VAR_SELECT, select, default {Default} row {% of row} column {% of column} all {% of all values} }</source>
-					<target>{VAR_SELECT, select, default {Alapértelmezett} row {%-a a sornak} column {%-a az oszlopnak} all {% of all {%-a az összes értéknek} }</target>
+					<source>{type, select, default {Default} row {% of row} column {% of column} all {% of all values} }</source>
+					<target>{type, select, default {Alapértelmezett} row {%-a a sornak} column {%-a az oszlopnak} all {% of all {%-a az összes értéknek} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/pipe/pivot-value-type-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.config.valueAbsOrRel">
 					<source>Select absolute or relative display</source>
@@ -3161,8 +3159,8 @@
 					<target>Értékösszesítés kiválasztása</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.data.aggregation">
-					<source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</source>
-					<target>{VAR_SELECT, select, sum {Összege a} min {minimuma a} max {maximuma a} avg {Átlagos} darabszám {Darabszám} egyedi {Egyedi a} mediánja {Medián} }</target>
+					<source>{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</source>
+					<target>{aggregation, select, sum {Összege a} min {minimuma a} max {maximuma a} avg {Átlagos} darabszám {Darabszám} egyedi {Egyedi a} mediánja {Medián} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.table.empty.description">
 					<source>
@@ -3824,16 +3822,16 @@
 					<target>Az első feladat az, hogy hozz létre egy nézetet!</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/empty-views/empty-views.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="select.constraint.items.date.format">
-					<source>{VAR_SELECT, select, weekly {[W]W YYYY} other {} }</source>
-					<target>{VAR_SELECT, select, weekly {[H]H ÉÉÉÉ} other {} }</target>
+					<source>{format, select, weekly {[W]W YYYY} other {} }</source>
+					<target>{format, select, weekly {[H]H ÉÉÉÉ} other {} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="select.constraint.items.date.formatType">
-					<source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
-					<target>{VAR_SELECT, select, yearly {Évek} quarterly {Negyedévek} weekly {Hetek} monthYear {Hónapok és évek} month {Hónapok} dayMonth {Napok és hónapok} day {Napok} dayMonthYear {Napok, hónapok és évek} weekDay {A hét napja} hour {Órák} hourMinutes {Órák és percek} }</target>
+					<source>{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source>
+					<target>{type, select, yearly {Évek} quarterly {Negyedévek} weekly {Hetek} monthYear {Hónapok és évek} month {Hónapok} dayMonth {Napok és hónapok} day {Napok} dayMonthYear {Napok, hónapok és évek} weekDay {A hét napja} hour {Órák} hourMinutes {Órák és percek} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="select.constraint.items.duration.maxUnit">
-					<source>{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source>
-					<target>{VAR_SELECT, select, w {hetek} d {napok} h {órák} m {percek} s {másodpercek} }</target>
+					<source>{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source>
+					<target>{unit, select, w {hetek} d {napok} h {órák} m {percek} s {másodpercek} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="sequence.delete.fail">
 					<source>Could not delete sequence</source>
@@ -4306,9 +4304,9 @@
 					<target>Jelenleg az Ingyenes csomagban vagy, amelyben csak három felhasználót hívhatsz meg a szervezetedhez. Szeretnél most frissíteni az Üzleti verzióra?</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.create.serviceLimits.basic">
-					<source>You are allowed to invite only <x id="INTERPOLATION" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</source>
+					<source>You are allowed to invite only <x id="limit" equiv-text="{{limit}}"/> users to your organization. Do you want to upgrade your plan now?</source>
 					<target>Csak
-						<x id="INTERPOLATION" equiv-text="{{limit}}"/>
+						<x id="limit" equiv-text="{{limit}}"/>
 						felhasználókat hívhatsz meg a szervezetedbe. Frissíted most a csomagodat?</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.create.serviceLimits.business.title">
@@ -4339,12 +4337,12 @@
 					<target>{VAR_SELECT, select, ResourceShared {Forrás megosztva} DueDateChanged {Határidő frissült} TaskAssigned {Feladat hozzárendelve} TaskUpdated {Feladat frissítve} TaskRemoved {Feladat eltávolítva} StateUpdated {Állapot frissítve} Comments {Hozzászólások} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.permission.humanName">
-					<source>{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source>
-					<target>{VAR_SELECT, select, READ {Olvasó} MANAGE {Alkotó} WRITE {Szerző} EMPTY {Nincs szerepkör hozzárendelve} }</target>
+					<source>{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source>
+					<target>{role, select, READ {Olvasó} MANAGE {Alkotó} WRITE {Szerző} EMPTY {Nincs szerepkör hozzárendelve} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/role-human-readable.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.permission.icon">
-					<source>{VAR_SELECT, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source>
-					<target>{VAR_SELECT, select, READ {olvas} MANAGE {kezel} WRITE {ír} CLONE {klónoz} COMMENT {hozzászól} SHARE {megoszt} }</target>
+					<source>{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source>
+					<target>{role, select, READ {olvas} MANAGE {kezel} WRITE {ír} CLONE {klónoz} COMMENT {hozzászól} SHARE {megoszt} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/role-title.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.referrals.fail">
 					<source>Could not get your referrals at the moment</source>
@@ -4658,10 +4656,8 @@
 					<target>A nézet már létezik</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.name.exists.message">
-					<source>Do you really want to <x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>?</source>
-					<target>Tényleg ezt
-						<x id="ICU" equiv-text="{create, select, 0 {...} 1 {...}}"/>
-						akarod?</target>
+					<source>Do you really want to {create, select, 0 {change view name} 1 {create view with the same name} }?</source>
+					<target>Tényleg ezt akarod?</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.not.exist">
 					<source>View does not exist!
@@ -4684,8 +4680,8 @@
 					<target>2. Cím beállítása</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.perspective.name">
-					<source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</source>
-					<target>{VAR_SELECT, select, detail {Részletek} pivot {Pivot} kanban {Kanban} chart {Diagram} ganttChart {Idővonal} calendar {Naptár} map {Térkép} search {Keresés} table {Táblázat} smartdoc {Okos dokumentum} workflow {Munkafolyamat} }</target>
+					<source>{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</source>
+					<target>{perspective, select, detail {Részletek} pivot {Pivot} kanban {Kanban} chart {Diagram} ganttChart {Idővonal} calendar {Naptár} map {Térkép} search {Keresés} table {Táblázat} smartdoc {Okos dokumentum} workflow {Munkafolyamat} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/perspective-name.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.remove.favorite.fail">
 					<source>Could not remove the view from favorites</source>
@@ -4742,10 +4738,8 @@
 					<target>Nem lehet nézeteket szerezni</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="warning.attribute.nameExisting">
-					<source>I am sorry, the attribute name '<x id="INTERPOLATION" equiv-text="{{attributeName}}"/>' already exists.</source>
-					<target>Sajnálom, a '
-						<x id="INTERPOLATION" equiv-text="{{attributeName}}"/>
-						'  tulajdonság neve már létezik.</target>
+					<source>I am sorry, the attribute name '<x id="name" equiv-text="{{attributeName}}"/>' already exists.</source>
+					<target>Sajnálom, a '<x id="name" equiv-text="{{attributeName}}"/>' tulajdonság neve már létezik.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="warning.force.refresh">
 					<source>I am sorry, the project has been significantly updated by a different user. Please refresh this page in the browser.</source>

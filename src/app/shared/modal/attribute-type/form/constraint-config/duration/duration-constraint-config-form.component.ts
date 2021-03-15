@@ -25,7 +25,6 @@ import {
 } from './duration-constraint-form-control';
 import {TranslationService} from '../../../../../../core/service/translation.service';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../utils/common.utils';
 import {
@@ -36,6 +35,7 @@ import {
   getDefaultDurationUnitConversion,
   getPreviousDurationUnit,
 } from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../../utils/translation.utils';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -56,7 +56,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   public readonly exampleString: string;
   public readonly typeItems: SelectItemModel[];
 
-  constructor(private translationService: TranslationService, private i18n: I18n) {
+  constructor(private translationService: TranslationService) {
     this.exampleString = this.generateExampleString();
     this.typeItems = this.createTypeItems();
   }
@@ -140,11 +140,8 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   private createTypeItems(): SelectItemModel[] {
     return this.types.map(type => ({
       id: type,
-      value: this.i18n(
-        {
-          id: 'constraint.duration.type',
-          value: '{type, select, Work {Work} Classic {Normal} Custom {Custom}}',
-        },
+      value: parseSelectTranslation(
+        $localize`:@@constraint.duration.type:{type, select, Work {Work} Classic {Normal} Custom {Custom}}`,
         {type}
       ),
     }));

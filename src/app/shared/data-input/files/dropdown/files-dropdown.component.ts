@@ -106,13 +106,7 @@ export class FilesDropdownComponent implements AfterViewInit {
   private showFileSizeError() {
     const size = environment.maxFileUploadSize.toFixed(0);
     this.fileSizeError$.next(
-      this.i18n(
-        {
-          id: 'file.upload.max.size.error',
-          value: 'Cannot process files bigger than {{size}} MB. Please upload smaller file.',
-        },
-        {size}
-      )
+      $localize`:@@file.upload.max.size.error:Cannot process files bigger than ${size}:size: MB. Please upload smaller file.`
     );
   }
 

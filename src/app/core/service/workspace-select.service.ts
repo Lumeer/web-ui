@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Role} from '../model/role';
@@ -44,12 +43,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class WorkspaceSelectService {
   private currentUser: User;
 
-  constructor(
-    private store$: Store<AppState>,
-    private i18n: I18n,
-    private router: Router,
-    private modalService: ModalService
-  ) {
+  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {
     this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
   }
 
@@ -92,10 +86,7 @@ export class WorkspaceSelectService {
   }
 
   private dispatchErrorCreateProjectNotification() {
-    const message = this.i18n({
-      id: 'projects.notPermissions',
-      value: 'I am sorry, you are not allowed to view or create any project in this organization.',
-    });
+    const message = $localize`:@@projects.notPermissions:I am sorry, you are not allowed to view or create any project in this organization.`;
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 

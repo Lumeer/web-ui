@@ -21,7 +21,6 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../core/store/pivots/pivot';
 import {PivotStemData} from '../../../../../util/pivot-data';
 import {AttributesResource} from '../../../../../../../../core/model/resource';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
 import {Constraint} from '@lumeer/data-filters';
@@ -60,8 +59,8 @@ export class PivotHeaderAttributeConfigComponent {
   public readonly showSumsId = 'pivot-show-sums-' + Math.random().toString(36).substr(2);
   public readonly emptyValueString: string;
 
-  constructor(private i18n: I18n) {
-    this.emptyValueString = i18n({id: 'pivot.config.attribute.empty', value: 'Select attribute'});
+  constructor() {
+    this.emptyValueString = $localize`:@@pivot.config.attribute.empty:Select attribute`;
   }
 
   public onShowSumsChange(checked: boolean) {

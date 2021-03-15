@@ -22,7 +22,6 @@ import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} 
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
@@ -66,7 +65,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   public exampleValue$: Observable<DateTimeDataValue>;
 
-  constructor(private i18n: I18n) {
+  constructor() {
     this.formatItems = this.createFormatItems();
   }
 
@@ -145,7 +144,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   private createFormatItems(): SelectItemModel[] {
     const formatItems = this.formats.map(format => ({id: format, value: format}));
-    const customItem = {id: '', value: this.i18n({id: 'constraint.dateTime.format.custom', value: 'Custom'})};
+    const customItem = {id: '', value: $localize`:@@constraint.dateTime.format.custom:Custom`};
     return [...formatItems, customItem];
   }
 }

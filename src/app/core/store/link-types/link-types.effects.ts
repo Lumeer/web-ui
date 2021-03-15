@@ -20,8 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {EMPTY, Observable, of} from 'rxjs';
+import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeDto} from '../../dto';
 import {AppState} from '../app.state';
@@ -73,7 +72,7 @@ export class LinkTypesEffects {
       ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.types.get.fail', value: 'Could not get link types'});
+        const message = $localize`:@@link.types.get.fail:Could not get link types`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -104,7 +103,7 @@ export class LinkTypesEffects {
       ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.type.create.fail', value: 'Could not create the link type'});
+        const message = $localize`:@@link.type.create.fail:Could not create the link type`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -130,7 +129,7 @@ export class LinkTypesEffects {
       ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.type.update.fail', value: 'Could not update the link type'});
+        const message = $localize`:@@link.type.update.fail:Could not update the link type`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -172,7 +171,7 @@ export class LinkTypesEffects {
       ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save automation'});
+        const message = $localize`:@@resource.rule.update.fail:Could not save automation`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -208,7 +207,7 @@ export class LinkTypesEffects {
       ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.type.delete.fail', value: 'Could not delete the link type'});
+        const message = $localize`:@@link.type.delete.fail:Could not delete the link type`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -302,12 +301,7 @@ export class LinkTypesEffects {
     )
   );
 
-  constructor(
-    private actions$: Actions,
-    private i18n: I18n,
-    private linkTypeService: LinkTypeService,
-    private store$: Store<AppState>
-  ) {}
+  constructor(private actions$: Actions, private linkTypeService: LinkTypeService, private store$: Store<AppState>) {}
 }
 
 function updateCreateAttributesNextAction(action: LinkInstancesAction.All, attributes: Attribute[]): Action {

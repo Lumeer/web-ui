@@ -21,8 +21,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {EMPTY, Observable, of} from 'rxjs';
+import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
@@ -117,7 +116,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'documents.get.fail', value: 'Could not get records'});
+        const message = $localize`:@@documents.get.fail:Could not get records`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -226,14 +225,10 @@ export class DocumentsEffects {
       withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
       map(([action, organization]) => {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-          const message = this.i18n({
-            id: 'document.create.serviceLimits',
-            value:
-              'You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?',
-          });
+          const message = $localize`:@@document.create.serviceLimits:You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?`;
           return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
         }
-        const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});
+        const errorMessage = $localize`:@@document.create.fail:Could not create the record`;
         return new NotificationsAction.Error({message: errorMessage});
       })
     )
@@ -345,7 +340,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.AddFavoriteFailure>(DocumentsActionType.ADD_FAVORITE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'document.add.favorite.fail', value: 'Could not add the record to favorites'});
+        const message = $localize`:@@document.add.favorite.fail:Could not add the record to favorites`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -377,10 +372,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.RemoveFavoriteFailure>(DocumentsActionType.REMOVE_FAVORITE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'document.remove.favorite.fail',
-          value: 'Could not remove the record from favorites',
-        });
+        const message = $localize`:@@document.remove.favorite.fail:Could not remove the record from favorites`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -391,7 +383,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'document.update.fail', value: 'Could not update the record'});
+        const message = $localize`:@@document.update.fail:Could not update the record`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -590,11 +582,8 @@ export class DocumentsEffects {
     this.actions$.pipe(
       ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM),
       map((action: DocumentsAction.DeleteConfirm) => {
-        const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete record'});
-        const message = this.i18n({
-          id: 'document.delete.dialog.message',
-          value: 'Do you really want to delete this record?',
-        });
+        const title = $localize`:@@document.delete.dialog.title:Delete record`;
+        const message = $localize`:@@document.delete.dialog.message:Do you really want to delete this record?`;
 
         return new NotificationsAction.Confirm({
           title,
@@ -611,7 +600,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'document.delete.fail', value: 'Could not delete the record'});
+        const message = $localize`:@@document.delete.fail:Could not delete the record`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -636,10 +625,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.RunRuleFailure>(DocumentsActionType.RUN_RULE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'dataResource.runRule.fail',
-          value: 'Could not run the selected rule',
-        });
+        const message = $localize`:@@dataResource.runRule.fail:Could not run the selected rule`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -650,7 +636,6 @@ export class DocumentsEffects {
     private documentService: DocumentService,
     private linkInstanceService: LinkInstanceService,
     private collectionService: CollectionService,
-    private i18n: I18n,
     private searchService: SearchService,
     private store$: Store<AppState>,
     private userHints: UserHintService

@@ -34,7 +34,6 @@ import {
 } from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {distinctUntilChanged, first, map, skip, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
@@ -169,7 +168,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public constructor(
     private actions$: Actions,
     public element: ElementRef,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
   ) {}
@@ -415,11 +413,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private showUninitializedLinkedRowWarningAndResetValue() {
     this.notificationService.warning(
-      this.i18n({
-        id: 'table.data.cell.linked.row.uninitialized',
-        value:
-          'I cannot link the entered value to anything, you must enter a value to the previous part of the table first.',
-      })
+      $localize`:@@table.data.cell.linked.row.uninitialized:I cannot link the entered value to anything, you must enter a value to the previous part of the table first.`
     );
     this.editedValue = null;
   }

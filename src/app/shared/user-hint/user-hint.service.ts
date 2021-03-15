@@ -50,17 +50,9 @@ export class UserHintService {
   }
 
   private getPercentageHint(collection: Collection, attribute: Attribute): NotificationsAction.Hint {
-    const message = this.i18n(
-      {
-        id: 'lumeer.advice.percentage',
-        value: 'I suggest to set the column type of {{attrName}} to percentage. Do you agree?',
-      },
-      {
-        attrName: attribute.name,
-      }
-    );
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+    const message = $localize`:@@lumeer.advice.percentage:I suggest to set the column type of ${attribute.name}:attributeName: to percentage. Do you agree?`;
+    const yesButtonText = $localize`:@@button.yes:Yes`;
+    const noButtonText = $localize`:@@button.no:No`;
 
     return new NotificationsAction.Hint({
       message,

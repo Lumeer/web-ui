@@ -65,7 +65,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   private tableIdElement: ElementRef<HTMLInputElement>;
 
   constructor(
-    private i18n: I18n,
     private notificationService: NotificationService,
     private router: Router,
     private store$: Store<AppState>
@@ -73,7 +72,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.subscribeToStore();
-    this.tableIdLabel = this.i18n({id: 'collection.settings.tableId', value: 'Table ID:'});
+    this.tableIdLabel = $localize`:@@collection.settings.tableId:Table ID:`;
   }
 
   public ngOnDestroy(): void {
@@ -101,11 +100,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete(): void {
-    const message = this.i18n({
-      id: 'collection.delete.dialog.message',
-      value: 'Do you really want to delete this table?',
-    });
-    const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
+    const message = $localize`:@@collection.delete.dialog.message:Do you really want to delete this table?`;
+    const title = $localize`:@@collection.delete.dialog.title:Delete?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeCollection());
   }
 

@@ -40,7 +40,6 @@ import {selectViewSettings} from '../../../core/store/view-settings/view-setting
 import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -54,7 +53,7 @@ export class GanttChartPerspectiveComponent
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public sortDefined$: Observable<boolean>;
 
-  constructor(protected store$: Store<AppState>, private i18n: I18n) {
+  constructor(protected store$: Store<AppState>) {
     super(store$);
   }
 
@@ -121,7 +120,7 @@ export class GanttChartPerspectiveComponent
   }
 
   public createDocumentsChain(data: {documents: DocumentModel[]; linkInstances: LinkInstance[]}) {
-    const failureMessage = this.i18n({id: '@@perspective.gantt.create.task.failure', value: 'Could not create task'});
+    const failureMessage = $localize`:@@perspective.gantt.create.task.failure:Could not create task`;
     this.store$.dispatch(new DocumentsAction.CreateChain({...data, failureMessage}));
   }
 }

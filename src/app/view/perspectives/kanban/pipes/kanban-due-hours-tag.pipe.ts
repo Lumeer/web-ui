@@ -19,7 +19,6 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {COLOR_DANGER, COLOR_WARNING} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {PostItTag} from '../../../../shared/post-it/post-it.component';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
@@ -27,19 +26,17 @@ import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
   name: 'kanbanDueHoursTag',
 })
 export class KanbanDueHoursTagPipe implements PipeTransform {
-  constructor(private i18n: I18n) {}
-
   public transform(dueHours: number): PostItTag {
     if (isNotNullOrUndefined(dueHours)) {
       if (dueHours < 0) {
         return {
-          title: this.i18n({id: 'kanban.dueHours.tag.pastDue', value: 'Past due'}),
+          title: $localize`:@@kanban.dueHours.tag.pastDue:Past due`,
           color: COLOR_DANGER,
         };
       }
       if (dueHours < 73) {
         return {
-          title: this.i18n({id: 'kanban.dueHours.tag.dueSoon', value: 'Due soon'}),
+          title: $localize`:@@kanban.dueHours.tag.dueSoon:Due soon`,
           color: COLOR_WARNING,
         };
       }
