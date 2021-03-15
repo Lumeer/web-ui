@@ -406,20 +406,22 @@ export class PusherService implements OnDestroy {
 
   private bindPrintEvents() {
     this.channel.bind('PrintRequest', data => {
-      const a = document.createElement('a');
-      a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
-        data.object.projectCode
-      }/${data.object.type.toLowerCase()}/${data.object.resourceId}/${data.object.documentId}/${
-        data.object.attributeId
-      }`;
-      a.target = '_blank';
-      a.click();
+      if (data.correlationId === this.appId.getAppId()) {
+        const a = document.createElement('a');
+        a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+          data.object.projectCode
+        }/${data.object.type.toLowerCase()}/${data.object.resourceId}/${data.object.documentId}/${
+          data.object.attributeId
+        }`;
+        a.target = '_blank';
+        a.click();
+      }
     });
   }
 
   private bindNavigateEvents() {
     this.channel.bind('NavigationRequest', data => {
-      if (this.isCurrentWorkspace(data)) {
+      if (this.isCurrentWorkspace(data) && data.correlationId === this.appId.getAppId()) {
         this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
           const encodedQuery = convertQueryModelToString(view.query);
           const encodedCursor = isNotNullOrUndefined(data.object.documentId)
@@ -456,12 +458,14 @@ export class PusherService implements OnDestroy {
   private bindSendEmailEvents() {
     // SendEmailRequest
     this.channel.bind('SendEmailRequest', data => {
-      const a = document.createElement('a');
-      a.href = `mailto:${encodeURIComponent(data.object.email)}?subject=${encodeURIComponent(
-        data.object.subject
-      )}&body=${encodeURIComponent(data.object.body)}`;
-      a.target = '_blank';
-      a.click();
+      if (data.correlationId === this.appId.getAppId()) {
+        const a = document.createElement('a');
+        a.href = `mailto:${encodeURIComponent(data.object.email)}?subject=${encodeURIComponent(
+          data.object.subject
+        )}&body=${encodeURIComponent(data.object.body)}`;
+        a.target = '_blank';
+        a.click();
+      }
     });
   }
 
