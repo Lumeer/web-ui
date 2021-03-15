@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
 
 @Component({
@@ -66,22 +65,11 @@ export class UserComponent {
   private readonly deleteMsg: string;
   private readonly deleteTitleMsg: string;
 
-  constructor(private i18n: I18n, private notificationService: NotificationService) {
-    this.deleteMsg = this.i18n({
-      id: 'users.user.delete.message',
-      value: 'Do you want to permanently remove this user?',
-    });
-    this.deleteTitleMsg = this.i18n({id: 'users.user.delete.title', value: 'Remove user?'});
-    this.cannotChangeRoleMsg = this.i18n({
-      id: 'users.user.changeRoles',
-      value:
-        'You cannot change these roles. Either you are this user, or you are the last manager here, or you do not have sufficient rights.',
-    });
-    this.inheritedManagerMsg = this.i18n({
-      id: 'users.user.inheritedManager',
-      value:
-        'This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.',
-    });
+  constructor(private notificationService: NotificationService) {
+    this.deleteMsg = $localize`:@@users.user.delete.message:Do you want to permanently remove this user?`;
+    this.deleteTitleMsg = $localize`:@@users.user.delete.title:Remove user?`;
+    this.cannotChangeRoleMsg = $localize`:@@users.user.changeRoles:You cannot change these roles. Either you are this user, or you are the last manager here, or you do not have sufficient rights.`;
+    this.inheritedManagerMsg = $localize`:@@users.user.inheritedManager:This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.`;
   }
 
   public onDelete() {

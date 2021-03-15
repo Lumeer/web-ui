@@ -20,20 +20,16 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_CYAN} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class SendEmailBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.sendEmailBlock',
-      value: 'Opens a new email using the system default email application.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.sendEmailBlock:Opens a new email using the system default email application.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -85,9 +81,7 @@ export class SendEmailBlocklyComponent extends BlocklyComponent {
         return '';
       }
 
-      const code = this_.blocklyUtils.getLumeerVariable() + `.sendEmail(${email}, ${subject}, ${body});\n`;
-
-      return code;
+      return this_.blocklyUtils.getLumeerVariable() + `.sendEmail(${email}, ${subject}, ${body});\n`;
     };
   }
 }

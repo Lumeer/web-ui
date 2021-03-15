@@ -31,7 +31,6 @@ import {KeyCode} from '../../../key-code';
 import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'search-input',
@@ -67,8 +66,8 @@ export class SearchInputComponent {
   public suggesting: boolean;
   public text = '';
 
-  constructor(private i18n: I18n, public hostElement: ElementRef) {
-    this.placeholder = i18n({id: 'search.input.placeholder', value: 'Type anything you search for...'});
+  constructor(public hostElement: ElementRef) {
+    this.placeholder = $localize`:@@search.input.placeholder:Type anything you search for...`;
   }
 
   public onUseSuggestion(suggestion: QueryItem) {

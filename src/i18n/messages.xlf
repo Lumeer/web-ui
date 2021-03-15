@@ -5231,7 +5231,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectFrom" datatype="html">
-        <source>Select from <x id="INTERPOLATION" equiv-text="{{collection}}"/></source>
+        <source>Select from <x id="collection" equiv-text="{{collection}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5475,43 +5475,43 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
-        <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source>
+        <source>{unit, select, w {w} d {d} h {h} m {m} s {s} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
-        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+        <source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.text" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source>
+        <source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.number" datatype="html">
-        <source>{VAR_SELECT, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+        <source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.date" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+        <source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.value.constraint.date" datatype="html">
-        <source>{VAR_SELECT, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source>
+        <source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.value.constraint.user" datatype="html">
-        <source>{VAR_SELECT, select, currentUser {Current User} }</source>
+        <source>{type, select, currentUser {Current User} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -6133,7 +6133,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6199,7 +6199,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.deleteDocumentBlock" datatype="html">
-        <source>Deletes an existing record. To prevent large damage, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
+        <source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6313,7 +6313,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
-        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</source>
+        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="{{limit}}"/> records are returned.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6361,7 +6361,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
-        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
+        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="limit" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>

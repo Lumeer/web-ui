@@ -19,10 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Observable, of} from 'rxjs';
-import {Action, select, Store} from '@ngrx/store';
+import {of} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../app.state';
 import {Router} from '@angular/router';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -37,8 +36,8 @@ export class SequencesEffects {
     this.actions$.pipe(
       ofType<SequencesAction.Get>(SequencesActionType.GET),
       withLatestFrom(this.store$.pipe(select(selectSequencesLoaded))),
-      filter(([action, loaded]) => !loaded),
-      mergeMap(action =>
+      filter(([, loaded]) => !loaded),
+      mergeMap(() =>
         this.sequenceService.getSequences().pipe(
           map(
             sequences =>
@@ -57,7 +56,7 @@ export class SequencesEffects {
       ofType<SequencesAction.GetFailure>(SequencesActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'sequences.get.fail', value: 'Could not read sequences'});
+        const message = $localize`:@@sequences.get.fail:Could not read sequences`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -83,7 +82,7 @@ export class SequencesEffects {
       ofType<SequencesAction.UpdateFailure>(SequencesActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'sequences.update.fail', value: 'Could not update sequence'});
+        const message = $localize`:@@sequences.update.fail:Could not update sequence`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -106,14 +105,13 @@ export class SequencesEffects {
       ofType<SequencesAction.DeleteFailure>(SequencesActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'sequence.delete.fail', value: 'Could not delete sequence'});
+        const message = $localize`:@@sequence.delete.fail:Could not delete sequence`;
         return new NotificationsAction.Error({message});
       })
     )
   );
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,

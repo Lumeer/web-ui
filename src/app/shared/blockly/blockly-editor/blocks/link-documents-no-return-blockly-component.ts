@@ -20,7 +20,6 @@
 import {BlocklyComponent} from './blockly-component';
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 
@@ -30,8 +29,8 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
   protected tooltip: string;
   protected linkTypeOptions = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n, protected linkTypes: LinkType[]) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils, protected linkTypes: LinkType[]) {
+    super(blocklyUtils);
 
     linkTypes.forEach(linkType => this.linkTypeOptions.push([linkType.name, linkType.id]));
 
@@ -39,10 +38,7 @@ export class LinkDocumentsNoReturnBlocklyComponent extends BlocklyComponent {
       this.linkTypeOptions.push(['?', '']);
     }
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.linkDocumentsNoReturnBlock',
-      value: 'Links two records using the selected link type.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.linkDocumentsNoReturnBlock:Links two records using the selected link type.`;
   }
 
   public getVisibility(): MasterBlockType[] {

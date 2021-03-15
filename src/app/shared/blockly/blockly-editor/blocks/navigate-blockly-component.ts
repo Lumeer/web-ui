@@ -20,7 +20,6 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_CYAN} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {View} from '../../../../core/store/views/view';
 
 declare var Blockly: any;
@@ -31,8 +30,8 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
   private windowOptions: string[];
   private sidebarOptions: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n, private views: View[]) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils, private views: View[]) {
+    super(blocklyUtils);
 
     views.forEach(view => this.viewOptions.push([view.name, view.id]));
 
@@ -40,14 +39,10 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
       this.viewOptions.push(['?', '']);
     }
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.navigateBlock',
-      value:
-        'Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.navigateBlock:Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.`;
 
-    this.windowOptions = i18n({id: 'blockly.dropdown.window.navigateBlock', value: 'the same,a new'}).split(',');
-    this.sidebarOptions = i18n({id: 'blockly.dropdown.sidebar.navigateBlock', value: 'closed,opened'}).split(',');
+    this.windowOptions = $localize`:@@blockly.dropdown.window.navigateBlock:the same,a new`.split(',');
+    this.sidebarOptions = $localize`:@@blockly.dropdown.sidebar.navigateBlock:closed,opened`.split(',');
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -120,10 +115,9 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
         return '';
       }
 
-      const code =
-        this_.blocklyUtils.getLumeerVariable() + `.navigate('${viewId}', ${document}, ${sidebar}, ${newWindow});\n`;
-
-      return code;
+      return (
+        this_.blocklyUtils.getLumeerVariable() + `.navigate('${viewId}', ${document}, ${sidebar}, ${newWindow});\n`
+      );
     };
   }
 }

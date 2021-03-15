@@ -141,21 +141,21 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/results-table/results-table.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/body/links-list-table-body.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="modal.links.modify.title" datatype="html">
         <source>Select Linked Records</source><target state="final">Select Linked Records</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="modal.links.modify.selected" datatype="html">
         <source>
             <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
           </source><target state="final">
             <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
           </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</source><target state="final">{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="button.confirm" datatype="html">
         <source>Confirm</source><target state="final">Confirm</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="search.result.empty" datatype="html">
         <source>
     I am sorry but I did not find anything. Please try a more general search.
@@ -1116,7 +1116,7 @@
       </source><target state="final">
         Which states are considered final? That means no further notifications about the task will be sent.
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.label" datatype="html">
         <source>
       Observer
@@ -1135,41 +1135,41 @@
         Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works
         best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.label" datatype="html">
         <source>
       Priority
     </source><target state="final">
       Priority
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.select" datatype="html">
         <source>Select priority attribute</source><target state="final">Select priority attribute</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">112</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.help" datatype="html">
         <source>
         Which attribute specifies the task priority?
       </source><target state="final">
         Which attribute specifies the task priority?
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.label" datatype="html">
         <source>
       Tags
     </source><target state="final">
       Tags
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.select" datatype="html">
         <source>Select tags attribute</source><target state="final">Select tags attribute</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.help" datatype="html">
         <source>
         Tags, labels, hashtags... Simply anything you use to categorize the tasks.
       </source><target state="final">
         Tags, labels, hashtags... Simply anything you use to categorize the tasks.
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">137</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.header" datatype="html">
         <source>Existing attributes</source><target state="final">Existing attributes</target>
 
@@ -1506,10 +1506,10 @@
           </source><target state="final">
             Use filters to find records to link. Selected records are always visible (no matter of filters).
           </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="modal.links.modify.filter.add" datatype="html">
         <source>Add filter</source><target state="final">Add filter</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/filters/collection-filters.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="form.errors.minMaxInvalid" datatype="html">
         <source>
     Minimum must be less or equal than maximum.
@@ -2827,7 +2827,7 @@
         </context-group>
       </trans-unit><trans-unit id="2af7efecfae8d7fed3b07f718a623eca1ad8163f" datatype="html">
         <source>Labels</source><target state="final">Labels</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.label.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
@@ -2841,11 +2841,11 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">
         <source>Values</source><target state="final">Values</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.value.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
         <source>Data set</source><target state="final">Data set</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.dataSet.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
         <source>Size</source><target state="final">Size</target>
@@ -3085,7 +3085,7 @@
         </context-group>
       </trans-unit><trans-unit id="document.detail.comments.posting.user.title" datatype="html">
         <source>Posting as</source><target state="final">Posting as</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="document.detail.comments.empty" datatype="html">
         <source>
     No comments yet. Write the first one!
@@ -3362,8 +3362,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="table.header.menu.editDescription" datatype="html">
         <source>Edit description...</source><target state="final">Edit description...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="tasks.empty.title" datatype="html">
         <source>Empty title</source><target state="final">Empty title</target>
 
@@ -3403,7 +3403,7 @@
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.collections.button" datatype="html">
         <source>Create Tasks Table</source><target state="final">Create Tasks Table</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
         <source>No tasks table</source><target state="final">No tasks table</target>
         <context-group purpose="location">
@@ -3449,7 +3449,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="copy" datatype="html">
         <source>Copy</source><target state="final">Copy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="table.header.menu.changeType" datatype="html">
         <source>Attribute settings...</source><target state="final">Attribute settings...</target>
 
@@ -3506,13 +3506,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="resource.attribute.name" datatype="html">
         <source>Copy column name</source><target state="final">Copy column name</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">134</context></context-group></trans-unit><trans-unit id="table.header.menu.copy.values" datatype="html">
         <source>Copy all column values</source><target state="final">Copy all column values</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="table.header.menu.copy.values.unique" datatype="html">
         <source>Copy unique column values</source><target state="final">Copy unique column values</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">147</context></context-group></trans-unit><trans-unit id="table.header.add.link.column" datatype="html">
         <source>Add link column</source><target state="final">Add link column</target>
 
@@ -3574,7 +3574,7 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.card.layout" datatype="html">
         <source>Card layout</source><target state="final">Card layout</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
         <source>Cards</source><target state="final">Cards</target>
         <context-group purpose="location">
@@ -3857,43 +3857,43 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
-        <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target state="final">{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</target>
+        <source>{unit, select, w {w} d {d} h {h} m {m} s {s} }</source><target state="final">{unit, select, w {w} d {d} h {h} m {m} s {s} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
-        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</target>
+        <source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.text" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source><target state="final">{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</target>
+        <source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source><target state="final">{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.number" datatype="html">
-        <source>{VAR_SELECT, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{VAR_SELECT, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</target>
+        <source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.date" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{VAR_SELECT, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</target>
+        <source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.value.constraint.date" datatype="html">
-        <source>{VAR_SELECT, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source><target state="final">{VAR_SELECT, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</target>
+        <source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source><target state="final">{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.value.constraint.user" datatype="html">
-        <source>{VAR_SELECT, select, currentUser {Current User} }</source><target state="final">{VAR_SELECT, select, currentUser {Current User} }</target>
+        <source>{type, select, currentUser {Current User} }</source><target state="final">{type, select, currentUser {Current User} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -4572,7 +4572,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source><target state="final">Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</target>
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source><target state="final">Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4750,7 +4750,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
-        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</source><target state="final">Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</target>
+        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="{{limit}}"/> records are returned.</source><target state="final">Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4798,7 +4798,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
-        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source><target state="final">Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</target>
+        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="limit" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source><target state="final">Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5301,14 +5301,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
         <source>Aggregation</source><target state="final">Aggregation</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.aggregation.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
         <source>Lock axes</source><target state="final">Lock axes</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
         <source>Show range slider</source><target state="final">Show range slider</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
         <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source><target state="final">{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</target>
 
@@ -5486,7 +5486,7 @@
         </context-group>
       </trans-unit><trans-unit id="tasks.sample.data.failure" datatype="html">
         <source>Could not add task table to project</source><target state="final">Could not add task table to project</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
         <source>Summary</source><target state="final">Summary</target>
 
@@ -5781,7 +5781,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectFrom" datatype="html">
-        <source>Select from <x id="INTERPOLATION" equiv-text="{{collection}}"/></source><target state="final">Select from <x id="INTERPOLATION" equiv-text="{{collection}}"/></target>
+        <source>Select from <x id="collection" equiv-text="{{collection}}"/></source><target state="final">Select from <x id="collection" equiv-text="{{collection}}"/></target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkTypeFirst" datatype="html">

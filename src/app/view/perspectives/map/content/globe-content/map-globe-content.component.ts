@@ -47,7 +47,6 @@ import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {MapGlobeRenderComponent} from './render/map-globe-render.component';
 import {
@@ -99,7 +98,7 @@ export class MapGlobeContentComponent implements OnChanges {
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
 
-  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
+  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.markerData || changes.constraintData) {
@@ -207,9 +206,7 @@ export class MapGlobeContentComponent implements OnChanges {
   }
 
   private onGetLocationFailure(error: any) {
-    this.notificationService.error(
-      this.i18n({id: 'map.content.location.error', value: 'I could not save the new location.'})
-    );
+    this.notificationService.error($localize`:@@map.content.location.error:I could not save the new location.`);
 
     // revert moved marker position
     this.refreshMarkers$.next(Date.now());

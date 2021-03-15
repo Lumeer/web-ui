@@ -235,9 +235,9 @@
 				<target>A hivatkozáson keresztül kapod meg az adott dokumentumhoz csatolt rekordot</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.createDocumentBlock2">
-				<source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
+				<source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
 				<target>Új rekordot hoz létre. Rendeld hozzá egy változóhoz a tulajdonságai megváltoztatásához. A végtelen hurkok elkerülése érdekében csak
-					<x id="INTERPOLATION" equiv-text="{{limit}}"/>
+					<x id="limit" equiv-text="{{limit}}"/>
 					dokumentumokat lehet létrehozni az automatizálások és funkciók egyetlen sorozatában.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.currentDateBlock">
@@ -341,9 +341,9 @@
 				<target>A dátumot a legközelebbi időegység elejéhez vagy végéhez igazítja.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/shift-date-of-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.showMessageBlock">
-				<source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
+				<source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="limit" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
 				<target>Üzenetet mutat a felhasználónak. Csak akkor működik, ha az automatizálást Műveletgombon keresztül indítja el. A legtöbb
-					<x id="INTERPOLATION" equiv-text="{{limit}}"/>
+					<x id="limit" equiv-text="{{limit}}"/>
 					üzenet egyetlen automatizálásból és függvénysorozat-végrehajtásból mutatható ki, hogy megakadályozza a kapcsolódási pont eltömődését.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.stringReplaceBlock">
@@ -562,9 +562,9 @@
 				<target>Először válaszd ki a hivatkozás típusát</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.selectFrom">
-				<source>Select from <x id="INTERPOLATION" equiv-text="{{collection}}"/></source>
+				<source>Select from <x id="collection" equiv-text="{{collection}}"/></source>
 				<target>Kiválaszt a
-					<x id="INTERPOLATION" equiv-text="{{collection}}"/>
+					<x id="collection" equiv-text="{{collection}}"/>
 					-ből</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.selectLinkType">
@@ -1244,8 +1244,8 @@
 				<target>Időtartomány</target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.duration.unit">
-				<source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source>
-				<target>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</target>
+				<source>{unit, select, w {w} d {d} h {h} m {m} s {s} }</source>
+				<target>{unit, select, w {w} d {d} h {h} m {m} s {s} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.duration.unit.conversion">
 				<source>
@@ -1780,7 +1780,7 @@
 				<target>Változat
 					<x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></target>
 			<context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/detail/header/document-detail-header.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
-			
+
 			<trans-unit datatype="html" id="document.remove.favorite.fail">
 				<source>Could not remove the record from favorites</source>
 				<target>Nem lehetett eltávolítani a rekordot a kedvencekből</target>
@@ -2456,7 +2456,7 @@
 				<source>Your current subscription lasts until <x id="INTERPOLATION" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="INTERPOLATION_1" equiv-text="{{1}}"/>?
  In case you want to add more users, please contact support@lumeer.io.</source>
 				<target>
-				A jelenlegi előfizetésed <x id="INTERPOLATION" equiv-text="{{0}}"/>	végéig tart. 
+				A jelenlegi előfizetésed <x id="INTERPOLATION" equiv-text="{{0}}"/>	végéig tart.
 				Biztosan egy korábbi kezdési dátummal <x id="INTERPOLATION_1" equiv-text="{{1}}"/> rendelkező rendeléssel folytatod?
 					Ha további felhasználókat szeretnél hozzáadni, kérjük, fordulj a support@lumeer.io -hoz.
 					</target>
@@ -3409,28 +3409,28 @@
 					<target>NYILVÁNOS PROJEKT: Bárki láthatja a projekt tartalmát. Ne tárolj bizalmas adatokat ebben a projektben.</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/public-project-message/public-project-message.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.date">
-					<source>{VAR_SELECT, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source>
-					<target>{VAR_SELECT, select, eq {Van} neq {Nincs} gt {Utána} lt {Előtte} gte {Benne van vagy utána} lte {Benne van vagy előtte} between {Közte van} notBetween {Nincs közte} empty {Üres} notEmpty {Nem üres} }</target>
+					<source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+					<target>{condition, select, eq {Van} neq {Nincs} gt {Utána} lt {Előtte} gte {Benne van vagy utána} lte {Benne van vagy előtte} between {Közte van} notBetween {Nincs közte} empty {Üres} notEmpty {Nem üres} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.number">
-					<source>{VAR_SELECT, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source>
-					<target>{VAR_SELECT, select, between {Tartomány} notBetween {Nem a tartományból} empty {Üres} notEmpty {Nem üres} }</target>
+					<source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+					<target>{condition, select, between {Tartomány} notBetween {Nem a tartományból} empty {Üres} notEmpty {Nem üres} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.select">
-					<source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
-					<target>{VAR_SELECT, select, eq {Benne van} neq {Nincs egy sem} in {Bent} nin {Nincs egy sem} hasAll {Mindegyik van} hasSome {Néhány van} empty {Üres} notEmpty {Nem üres} }</target>
+					<source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+					<target>{condition, select, eq {Benne van} neq {Nincs egy sem} in {Bent} nin {Nincs egy sem} hasAll {Mindegyik van} hasSome {Néhány van} empty {Üres} notEmpty {Nem üres} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.text">
-					<source>{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source>
-					<target>{VAR_SELECT, select, eq {Van} neq {Nincs} contains {Tartalmazza} notContains {Nem tartalmazza} startsWith {Kezdődik a} endsWith {Végződik a} in {Benne van} nin {Nincs benne} empty {Üres} notEmpty {Nem üres} enabled {Engedélyezett} disabled {Nem engedélyezett} }</target>
+					<source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source>
+					<target>{condition, select, eq {Van} neq {Nincs} contains {Tartalmazza} notContains {Nem tartalmazza} startsWith {Kezdődik a} endsWith {Végződik a} in {Benne van} nin {Nincs benne} empty {Üres} notEmpty {Nem üres} enabled {Engedélyezett} disabled {Nem engedélyezett} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.date">
-					<source>{VAR_SELECT, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source>
-					<target>{VAR_SELECT, select, today {Ma} yesterday {Tegnap} tomorrow {Holnap} thisWeek {Ez a hét} thisMonth {Eza hónap} lastWeek {Múlt hét} lastMonth {Múlt hónap} nextMonth {Következő hónap} nextWeek {Következő hét} }</target>
+					<source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source>
+					<target>{condition, select, today {Ma} yesterday {Tegnap} tomorrow {Holnap} thisWeek {Ez a hét} thisMonth {Eza hónap} lastWeek {Múlt hét} lastMonth {Múlt hónap} nextMonth {Következő hónap} nextWeek {Következő hét} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.user">
-					<source>{VAR_SELECT, select, currentUser {Current User} }</source>
-					<target>{VAR_SELECT, select, currentUser {Jelenlegi felhasználó} }</target>
+					<source>{type, select, currentUser {Current User} }</source>
+					<target>{type, select, currentUser {Jelenlegi felhasználó} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.item.button.remove">
 					<source>Remove query item</source>
@@ -3768,7 +3768,7 @@
 					<source>There are no tables yet!</source>
 					<target>Még nincsenek táblázatok!</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/empty-collections/empty-collections.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
-				
+
 				<trans-unit datatype="html" id="search.records.empty.subtitle">
 					<source>Open a table by clicking on it and add your first record.</source>
 					<target>Nyisson meg egy táblázatot, kattintson rá, és adja hozzá az első rekordot.</target>
@@ -3934,28 +3934,28 @@
 					<target>Nem található rekord.</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/results-table/results-table.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/body/links-list-table-body.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="modal.links.modify.title" datatype="html">
         <source>Select Linked Records</source><target state="new">Select Linked Records</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="modal.links.modify.selected" datatype="html">
         <source>
             <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
           </source><target state="new">
             <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
           </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</source><target state="new">{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="modal.links.modify.filter.title" datatype="html">
         <source>
             Use filters to find records to link. Selected records are always visible (no matter of filters).
           </source><target state="new">
             Use filters to find records to link. Selected records are always visible (no matter of filters).
           </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="button.confirm" datatype="html">
         <source>Confirm</source><target state="new">Confirm</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="show.detail">
 					<source>Show detail</source>
@@ -3974,7 +3974,7 @@
 					<target>Sor duplikálása</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
         <source>Add/Remove links</source><target state="new">Add/Remove links</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.body.row.copy.value">
 					<source>Copy value</source>
@@ -4328,7 +4328,7 @@
 					<target>{VAR_SELECT, select, ResourceShared {Szervezet, Projekt, Nézet vagy Táblázat megosztva} DueDateChanged {Határidő közeledik vagy megváltozott} TaskAssigned {Feladat hozzárendelve vagy visszavonva} TaskUpdated {Feladat részletei frissítve} TaskRemoved {A feladatod törölve lett} StateUpdated {A feladatod státusza frissült} Comments {Hozzászólások a feladatodnál vagy valaki megemlített téged egy hozzászólásban} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/shared/user-settings/notification-settings/notification-settings.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="modal.links.modify.filter.add" datatype="html">
         <source>Add filter</source><target state="new">Add filter</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/filters/collection-filters.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="user.notification.settings.language">
 					<source>Notifications language</source>
@@ -4566,7 +4566,7 @@
 					<source>This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.</source>
 					<target>Ez a felhasználó a szervezet vezetője, és engedélyeik nem módosíthatók. Először távolítsd el a szervezeti kezeléseket.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
-				
+
 				<trans-unit datatype="html" id="validation.link.name.short">
 					<source>
         Link name needs to have at least 3 characters.
@@ -4669,7 +4669,7 @@
 					<target>A nézet nem létezik!</target>
 				<context-group purpose="location"><context context-type="sourcefile">app/view/view.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder.short" datatype="html">
         <source>Enter name</source><target state="new">Enter name</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/row/post-it-row.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.not.found">
 					<source>View not found</source>
@@ -4762,9 +4762,9 @@
 					<target>Két rekordot összekapcsol a kiválasztott linktípus segítségével.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/link-documents-no-return-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.deleteDocumentBlock">
-					<source>Deletes an existing record. To prevent large damage, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
+					<source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
 					<target>Meglévő rekord törlése. A nagy károk elkerülése érdekében csak
-						<x id="INTERPOLATION" equiv-text="{{limit}}"/>
+						<x id="limit" equiv-text="{{limit}}"/>
 						dokumentumokat lehet törölni egyetlen automatizálási és függvénysorozaton belül.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.navigateBlock">
@@ -4780,9 +4780,9 @@
 					<target>bezárt, nyitott</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/navigate-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.readDocumentsBlock">
-					<source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</source>
+					<source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="{{limit}}"/> records are returned.</source>
 					<target>A kiválasztott nézetből visszaküldött rekordok olvasása. Ha több táblázatot vagy linket használ, csak az első táblázat rekordjai kerülnek vissza. Legfeljebb
-						<x id="INTERPOLATION" equiv-text="{{limit}}"/>
+						<x id="limit" equiv-text="{{limit}}"/>
 						rekord kerül visszaadásra.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.sendEmailBlock">

@@ -17,11 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {COLOR_PRIMARY, COLOR_SUCCESS} from '../../../../core/constants';
+import {COLOR_SUCCESS} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkDocumentsNoReturnBlocklyComponent} from './link-documents-no-return-blockly-component';
 import {BlocklyComponent} from './blockly-component';
 import {View} from '../../../../core/store/views/view';
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
@@ -32,8 +29,8 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
   protected tooltip: string;
   protected viewOptions = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n, protected views: View[]) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils, protected views: View[]) {
+    super(blocklyUtils);
 
     views.forEach(view => this.viewOptions.push([view.name, view.id]));
 
@@ -41,14 +38,8 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
       this.viewOptions.push(['?', '']);
     }
 
-    this.tooltip = i18n(
-      {
-        id: 'blockly.tooltip.readDocumentsBlock',
-        value:
-          'Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most {{limit}} records are returned.',
-      },
-      {limit: BlocklyUtils.MAXIMUM_DOCUMENTS_RETURNED}
-    );
+    const limit = BlocklyUtils.MAXIMUM_DOCUMENTS_RETURNED;
+    this.tooltip = $localize`:@@blockly.tooltip.readDocumentsBlock:Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most ${limit}:limit: records are returned.`;
   }
 
   public getVisibility(): MasterBlockType[] {

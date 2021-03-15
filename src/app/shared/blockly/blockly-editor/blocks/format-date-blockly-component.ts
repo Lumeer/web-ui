@@ -20,21 +20,16 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_PINK} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class FormatDateBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.formatDateBlock',
-      value:
-        'Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.formatDateBlock:Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.`;
   }
 
   public getVisibility(): MasterBlockType[] {

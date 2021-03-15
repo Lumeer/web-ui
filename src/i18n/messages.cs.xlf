@@ -441,10 +441,10 @@
         <source>
             Use filters to find records to link. Selected records are always visible (no matter of filters).
           </source><target>Použijte filtry k vyhledání záznamů. Vybrané záznamy jsou vždy viditelné (bez ohledu na filtry).</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="modal.links.modify.filter.add" datatype="html">
         <source>Add filter</source><target>Přidat filtr</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/filters/collection-filters.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="form.errors.minMaxInvalid" datatype="html">
         <source>
     Minimum must be less or equal than maximum.
@@ -1068,7 +1068,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="copy" datatype="html">
         <source>Copy</source><target>Kopírovat</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="table.header.menu.changeType" datatype="html">
         <source>Attribute settings...</source><target>Nastavení atributu...</target>
 
@@ -1120,13 +1120,13 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="resource.attribute.name" datatype="html">
         <source>Copy column name</source><target>Kopírovat název sloupce</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">134</context></context-group></trans-unit><trans-unit id="table.header.menu.copy.values" datatype="html">
         <source>Copy all column values</source><target>Kopírovat všechny hodnoty</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">141</context></context-group></trans-unit><trans-unit id="table.header.menu.copy.values.unique" datatype="html">
         <source>Copy unique column values</source><target>Kopírovat unikátní hodnoty</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">147</context></context-group></trans-unit><trans-unit id="table.header.add.link.column" datatype="html">
         <source>Add link column</source><target>Přidat sloupec do vazby</target>
 
@@ -1409,7 +1409,7 @@
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
-            
+
             <trans-unit id="validation.link.name.short" datatype="html">
                 <source>
         Link name needs to have at least 3 characters.
@@ -1508,7 +1508,7 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.card.layout" datatype="html">
         <source>Card layout</source><target>Formát karet</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
         <source>Cards</source><target>Karty</target>
         <context-group purpose="location">
@@ -2326,22 +2326,22 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/results-table/results-table.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/body/links-list-table-body.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="modal.links.modify.title" datatype="html">
         <source>Select Linked Records</source><target>Vyberte propojené záznamy</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="modal.links.modify.selected" datatype="html">
         <source>
             <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
           </source><target>
           <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</source>
         <target>{VAR_PLURAL, plural, =0 {Žádné vybrané záznamy} one {1 vybraný záznam} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> vybrané záznamy} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> vybraných záznamů} }</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="button.confirm" datatype="html">
         <source>Confirm</source><target>Confirm</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit>
             <trans-unit id="collection.settings.users.count" datatype="html">
                 <source>Number of users</source>
@@ -2513,7 +2513,7 @@
       </source><target>
         Které stavy úkolu jsou považovány za konečené? To znamená, že se již nemají posílat upozornění na změny úkolu.
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.label" datatype="html">
         <source>
       Observer
@@ -2531,41 +2531,41 @@
       </source><target>
         Který atribut určuje, kdo (navíc oproti zodpovědné osobě) má být upozorňován na změny úkolu? Pracuje nejlépe s atributy typu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Uživatel<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.label" datatype="html">
         <source>
       Priority
     </source><target>
       Priorita
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.select" datatype="html">
         <source>Select priority attribute</source><target>Atribut s prioritou</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">112</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.priority.help" datatype="html">
         <source>
         Which attribute specifies the task priority?
       </source><target>
         Který atribut určuje prioritu?
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.label" datatype="html">
         <source>
       Tags
     </source><target>
       Značky
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.select" datatype="html">
         <source>Select tags attribute</source><target>Atribut se značkami</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.tags.help" datatype="html">
         <source>
         Tags, labels, hashtags... Simply anything you use to categorize the tasks.
       </source><target>
         Značky, štítky, hashtagy... Jednoduše cokoliv, co používáte ke kategorizaci úkolů.
       </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">137</context></context-group></trans-unit>
             <trans-unit id="collection.tab.attributes.attribute.default" datatype="html">
                 <source>Displayed attribute</source>
@@ -3228,7 +3228,7 @@
         </context-group>
       </trans-unit><trans-unit id="2af7efecfae8d7fed3b07f718a623eca1ad8163f" datatype="html">
         <source>Labels</source><target>Štítky</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.label.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
@@ -3242,11 +3242,11 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">
         <source>Values</source><target>Hodnoty</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.value.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
         <source>Data set</source><target>Datová řada</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.dataSet.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
         <source>Size</source><target>Velikost</target>
@@ -3487,7 +3487,7 @@
         </context-group>
       </trans-unit><trans-unit id="document.detail.comments.posting.user.title" datatype="html">
         <source>Posting as</source><target>Přispíváte jako</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="document.detail.comments.empty" datatype="html">
         <source>
     No comments yet. Write the first one!
@@ -3665,44 +3665,44 @@
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
-        <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target>{VAR_SELECT, select, w {t} d {d} h {h} m {m} s {s} }</target>
+        <source>{unit, select, w {w} d {d} h {h} m {m} s {s} }</source><target>{unit, select, w {t} d {d} h {h} m {m} s {s} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
-        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
-        <target>{VAR_SELECT, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} hasAll {Má všechny} hasSome {Má některé} empty {Je prázdný} notEmpty {Není prázdný} }</target>
+        <source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+        <target>{condition, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} hasAll {Má všechny} hasSome {Má některé} empty {Je prázdný} notEmpty {Není prázdný} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.text" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source><target>{VAR_SELECT, select, eq {Je} neq {Není} contains {Obsahuje} notContains {Neobsahuje} startsWith {Začíná na} endsWith {Končí na} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} enabled {Je povoleno} disabled {Není povoleno} }</target>
+        <source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source><target>{condition, select, eq {Je} neq {Není} contains {Obsahuje} notContains {Neobsahuje} startsWith {Začíná na} endsWith {Končí na} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} enabled {Je povoleno} disabled {Není povoleno} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.number" datatype="html">
-        <source>{VAR_SELECT, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{VAR_SELECT, select, between {V rozsahu} notBetween {Není v rozsahu} empty {Je prázdný} notEmpty {Není prázdný} }</target>
+        <source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{condition, select, between {V rozsahu} notBetween {Není v rozsahu} empty {Je prázdný} notEmpty {Není prázdný} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.date" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{VAR_SELECT, select, eq {Je} neq {Není} gt {Je po} lt {Je před} gte {Je v nebo po} lte {Je v nebo před} between {Je mezi} notBetween {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
+        <source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{condition, select, eq {Je} neq {Není} gt {Je po} lt {Je před} gte {Je v nebo po} lte {Je v nebo před} between {Je mezi} notBetween {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.value.constraint.date" datatype="html">
-        <source>{VAR_SELECT, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source><target>{VAR_SELECT, select, today {Dnes} yesterday {Včera} tomorrow {Zítra} thisWeek {Tento týden} thisMonth {Tento měsíc} lastWeek {Minulý týden} lastMonth {Minulý měsíc} nextMonth {Příští měsíc} nextWeek {Příští týden} }</target>
+        <source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week} }</source><target>{condition, select, today {Dnes} yesterday {Včera} tomorrow {Zítra} thisWeek {Tento týden} thisMonth {Tento měsíc} lastWeek {Minulý týden} lastMonth {Minulý měsíc} nextMonth {Příští měsíc} nextWeek {Příští týden} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.value.constraint.user" datatype="html">
-        <source>{VAR_SELECT, select, currentUser {Current User} }</source><target>{VAR_SELECT, select, currentUser {Aktuální uživatel} }</target>
+        <source>{type, select, currentUser {Current User} }</source><target>{type, select, currentUser {Aktuální uživatel} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -4911,14 +4911,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
         <source>Aggregation</source><target>Agregace</target>
-        
+
         <note priority="1" from="description">perspective.chart.config.aggregation.placeholder</note>
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
         <source>Lock axes</source><target>Uzamknout osy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
         <source>Show range slider</source><target>Zobrazit výběr rozsahu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
         <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} median {Medián} }</target>
 
@@ -5096,7 +5096,7 @@
         </context-group>
       </trans-unit><trans-unit id="tasks.sample.data.failure" datatype="html">
         <source>Could not add task table to project</source><target>Nepodařilo se mi do projektu přidat tabulku s úkoly</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
         <source>Summary</source><target>Souhrn</target>
 
@@ -5452,7 +5452,7 @@
         </context-group>
       </trans-unit><trans-unit id="tasks.empty.collections.button" datatype="html">
         <source>Create Tasks Table</source><target>Vytvořit tabulku s úkoly</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="tasks.empty.permissions.title" datatype="html">
         <source>No tasks table</source><target>Žádná tabulka s úkoly</target>
         <context-group purpose="location">
@@ -5664,8 +5664,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="table.header.menu.editDescription" datatype="html">
         <source>Edit description...</source><target>Upravit popis...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
         <source>Could not delete the view</source><target>Pohled se nepodařilo smazat</target>
         <context-group purpose="location">
@@ -5691,8 +5691,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
-        <target>Vytvoří nový záznam. Přiřaďte jej do proměnné, abyste mohli nastavit jeho atributy. Je možné vytvořit maximálně <x id="INTERPOLATION" equiv-text="{{limit}}"/> záznamů v rámci jednoho řetězce volání automatizací a funkcí, aby se předešlo neúmyslnému zacyklení.</target>
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be created within a single sequence of automations and functions.</source>
+        <target>Vytvoří nový záznam. Přiřaďte jej do proměnné, abyste mohli nastavit jeho atributy. Je možné vytvořit maximálně <x id="limit" equiv-text="{{limit}}"/> záznamů v rámci jednoho řetězce volání automatizací a funkcí, aby se předešlo neúmyslnému zacyklení.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5805,8 +5805,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.deleteDocumentBlock" datatype="html">
-        <source>Deletes an existing record. To prevent large damage, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
-        <target>Smaže existující záznam. Z důvodu zabránění nechtěných škod je počet smazaných záznamů omezen na <x id="INTERPOLATION" equiv-text="{{limit}}"/> v rámci jedné série spuštěných automatizací.</target>
+        <source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="{{limit}}"/> documents can be deleted within a single sequence of automations and functions.</source>
+        <target>Smaže existující záznam. Z důvodu zabránění nechtěných škod je počet smazaných záznamů omezen na <x id="limit" equiv-text="{{limit}}"/> v rámci jedné série spuštěných automatizací.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5894,8 +5894,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
-        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> records are returned.</source>
-        <target>Načte záznamy z daného pohledu. Pokud pohled obsahuje více tabulek, nebo vazeb, vrátí záznamy jen z první tabulky. Vrátí nejvýše <x id="INTERPOLATION" equiv-text="{{limit}}"/> záznamů.</target>
+        <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="{{limit}}"/> records are returned.</source>
+        <target>Načte záznamy z daného pohledu. Pokud pohled obsahuje více tabulek, nebo vazeb, vrátí záznamy jen z první tabulky. Vrátí nejvýše <x id="limit" equiv-text="{{limit}}"/> záznamů.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5949,8 +5949,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
-        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
-        <target>Zobrazí zprávu uživateli. Funguje jen, když je automatizace spuštěna pomocí akčního tlačítka. Je možné poslat maximálně <x id="INTERPOLATION" equiv-text="{{limit}}"/> zpráv v rámci jednoho řetězce vyvolání automatizací a funkcí. To zabraňuje před zahlcením zprávami.</target>
+        <source>Show a message to the user. Works only when the automation is initiated via an Action button. At most <x id="limit" equiv-text="{{limit}}"/> messages can be shown from a single automation and function sequence execution to prevent interface clogging.</source>
+        <target>Zobrazí zprávu uživateli. Funguje jen, když je automatizace spuštěna pomocí akčního tlačítka. Je možné poslat maximálně <x id="limit" equiv-text="{{limit}}"/> zpráv v rámci jednoho řetězce vyvolání automatizací a funkcí. To zabraňuje před zahlcením zprávami.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6264,7 +6264,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.selectFrom" datatype="html">
-        <source>Select from <x id="INTERPOLATION" equiv-text="{{collection}}"/></source><target>Vyberte z <x id="INTERPOLATION" equiv-text="{{collection}}"/></target>
+        <source>Select from <x id="collection" equiv-text="{{collection}}"/></source><target>Vyberte z <x id="collection" equiv-text="{{collection}}"/></target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkTypeFirst" datatype="html">

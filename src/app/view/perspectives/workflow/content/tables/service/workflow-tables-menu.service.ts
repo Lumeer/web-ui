@@ -18,7 +18,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
@@ -55,8 +54,6 @@ export enum RowMenuId {
 @Injectable()
 export class WorkflowTablesMenuService {
   public readonly macOS = isMacOS();
-
-  constructor(private i18n: I18n) {}
 
   public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked?: boolean): MenuItem[] {
     const items: MenuItem[] = [
@@ -115,15 +112,15 @@ export class WorkflowTablesMenuService {
   private translateRowMenuItem(id: string): string {
     switch (id) {
       case RowMenuId.Edit:
-        return this.i18n({id: 'table.body.row.edit', value: 'Edit value'});
+        return $localize`:@@table.body.row.edit:Edit value`;
       case RowMenuId.Detail:
-        return this.i18n({id: 'table.body.row.show.detail', value: 'Show detail'});
+        return $localize`:@@table.body.row.show.detail:Show detail`;
       case RowMenuId.Copy:
-        return this.i18n({id: 'table.body.row.copy.value', value: 'Copy value'});
+        return $localize`:@@table.body.row.copy.value:Copy value`;
       case RowMenuId.Delete:
-        return this.i18n({id: 'remove.row', value: 'Remove row'});
+        return $localize`:@@remove.row:Remove row`;
       case RowMenuId.Unlink:
-        return this.i18n({id: 'table.body.row.unlink', value: 'Unlink row'});
+        return $localize`:@@table.body.row.unlink:Unlink row`;
       default:
         return '';
     }
@@ -258,35 +255,35 @@ export class WorkflowTablesMenuService {
   private translateHeaderMenuItem(id: string): string {
     switch (id) {
       case HeaderMenuId.Edit:
-        return this.i18n({id: 'table.header.menu.edit', value: 'Edit name'});
+        return $localize`:@@table.header.menu.edit:Edit name`;
       case HeaderMenuId.Type:
-        return this.i18n({id: 'table.header.menu.changeAttribute', value: 'Attribute settings...'});
+        return $localize`:@@table.header.menu.changeAttribute:Attribute settings...`;
       case HeaderMenuId.Function:
-        return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
+        return $localize`:@@table.header.menu.editFunction:Edit function...`;
       case HeaderMenuId.Description:
-        return this.i18n({id: 'table.header.menu.editDescription', value: 'Edit description...'});
+        return $localize`:@@table.header.menu.editDescription:Edit description...`;
       case HeaderMenuId.Rule:
-        return this.i18n({id: 'table.header.menu.editAutomation', value: 'Edit automation...'});
+        return $localize`:@@table.header.menu.editAutomation:Edit automation...`;
       case HeaderMenuId.Displayed:
-        return this.i18n({id: 'table.header.menu.defaultAttribute', value: 'Set as displayed attribute'});
+        return $localize`:@@table.header.menu.defaultAttribute:Set as displayed attribute`;
       case HeaderMenuId.Hide:
-        return this.i18n({id: 'table.header.menu.hide', value: 'Hide column'});
+        return $localize`:@@table.header.menu.hide:Hide column`;
       case HeaderMenuId.Copy:
-        return this.i18n({id: 'copy', value: 'Copy'});
+        return $localize`:@@copy:Copy`;
       case HeaderMenuId.CopyName:
-        return this.i18n({id: 'resource.attribute.name', value: 'Copy column name'});
+        return $localize`:@@resource.attribute.name:Copy column name`;
       case HeaderMenuId.CopyValues:
-        return this.i18n({id: 'table.header.menu.copy.values', value: 'Copy all column values'});
+        return $localize`:@@table.header.menu.copy.values:Copy all column values`;
       case HeaderMenuId.CopyValuesUnique:
-        return this.i18n({id: 'table.header.menu.copy.values.unique', value: 'Copy unique column values'});
+        return $localize`:@@table.header.menu.copy.values.unique:Copy unique column values`;
       case HeaderMenuId.Delete:
-        return this.i18n({id: 'table.header.menu.remove', value: 'Delete column'});
-      case HeaderMenuId.AddToRight:
-        return this.i18n({id: 'table.header.menu.add.column.next', value: 'Add column left'});
+        return $localize`:@@table.header.menu.remove:Delete column`;
       case HeaderMenuId.AddToLeft:
-        return this.i18n({id: 'table.header.menu.add.column.previous', value: 'Add column right'});
+        return $localize`:@@table.header.menu.add.column.next:Add column left`;
+      case HeaderMenuId.AddToRight:
+        return $localize`:@@table.header.menu.add.column.previous:Add column right`;
       case HeaderMenuId.AddLinkColumn:
-        return this.i18n({id: 'table.header.menu.add.linkColumn', value: 'Add Link column'});
+        return $localize`:@@table.header.menu.add.linkColumn:Add Link column`;
       default:
         return '';
     }

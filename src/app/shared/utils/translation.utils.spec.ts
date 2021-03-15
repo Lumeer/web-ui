@@ -17,24 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from './translation.utils';
 
-export abstract class BlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils) {}
+fdescribe('translation utils', () => {
+  it('should parse simple select', () => {
+    expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'a'})).toEqual('A');
+    expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'b'})).toEqual('B');
+    expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'x'})).toEqual('');
+  });
 
-  public abstract getVisibility(): MasterBlockType[];
-
-  public abstract registerBlock(workspace: any): void;
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
-  }
-
-  public getLinkVariablesXml(workspace: any): string {
-    return null;
-  }
-
-  // eslint-disable-next-line no-empty, @typescript-eslint/no-empty-function
-  public onWorkspaceChange(workspace, changeEvent) {}
-}
+  it('should parse simple multiple selects', () => {
+    expect(
+      parseSelectTranslation(
+        'Hello {unit, select, a {A} b {B} c {C}} text continues {unit, select, a {A} b {B} c {C}}',
+        {unit: 'a'}
+      )
+    ).toEqual('Hello A text continues A');
+  });
+});

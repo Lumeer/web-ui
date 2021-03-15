@@ -238,6 +238,7 @@
                   "maximumWarning": "6kb"
                 }
               ],
+              "baseHref": "/ui/",
               "buildOptimizer": false,
               "localize": ["hu"],
               "optimization": false,

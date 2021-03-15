@@ -19,8 +19,7 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_CYAN, COLOR_PINK} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {COLOR_PINK} from '../../../../core/constants';
 
 declare var Blockly: any;
 
@@ -29,20 +28,14 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
   private units: string[];
   private ops: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.dateChangeBlock',
-      value:
-        'Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.',
-    });
-    this.units = i18n({
-      id: 'blockly.dropdown.units.dateChangeBlock',
-      value:
-        'second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)',
-    }).split(',');
-    this.ops = i18n({id: 'blockly.dropdown.ops.dateChangeBlock', value: 'add,subtract,set'}).split(',');
+    this.tooltip = $localize`:@@blockly.tooltip.dateChangeBlock:Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.`;
+    this.units = $localize`:@@blockly.dropdown.units.dateChangeBlock:'second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)`.split(
+      ','
+    );
+    this.ops = $localize`:@@blockly.dropdown.ops.dateChangeBlock:add,subtract,set`.split(',');
   }
 
   public getVisibility(): MasterBlockType[] {

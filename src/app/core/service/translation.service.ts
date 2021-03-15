@@ -29,6 +29,7 @@ import {
   DurationUnit,
   UserConstraintConditionValue,
 } from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../shared/utils/translation.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -37,11 +38,11 @@ export class TranslationService {
   constructor(private i18n: I18n) {}
 
   public createCurrencyAbbreviations(): string[] {
-    return this.i18n({id: 'currency.abbreviations', value: 'k|m|b|t'}).split('|');
+    return $localize`:@@currency.abbreviations:k|m|b|t`.split('|');
   }
 
   public createCurrencyOrdinals(): string[] {
-    return this.i18n({id: 'currency.ordinals', value: 'st|nd|rd|th'}).split('|');
+    return $localize`:@@currency.ordinals:st|nd|rd|th`.split('|');
   }
 
   public createDurationUnitsMap(): Record<DurationUnit | string, string> {
@@ -49,11 +50,8 @@ export class TranslationService {
   }
 
   public translateDurationUnit(unit: DurationUnit): string {
-    return this.i18n(
-      {
-        id: 'constraint.duration.unit',
-        value: '{unit, select, w {w} d {d} h {h} m {m} s {s}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@constraint.duration.unit:{unit, select, w {w} d {d} h {h} m {m} s {s}}`,
       {unit}
     );
   }
@@ -82,23 +80,15 @@ export class TranslationService {
   }
 
   private translateConditionByUserAndSelect(condition: ConditionType): string {
-    return this.i18n(
-      {
-        id: 'query.filter.condition.constraint.select',
-        value:
-          '{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@query.filter.condition.constraint.select:{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}`,
       {condition}
     );
   }
 
   private translateConditionByText(condition: ConditionType): string {
-    return this.i18n(
-      {
-        id: 'query.filter.condition.constraint.text',
-        value:
-          '{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@query.filter.condition.constraint.text:{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}`,
       {condition}
     );
   }
@@ -119,23 +109,15 @@ export class TranslationService {
         return '≤';
     }
 
-    return this.i18n(
-      {
-        id: 'query.filter.condition.constraint.number',
-        value:
-          '{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@query.filter.condition.constraint.number:{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}`,
       {condition}
     );
   }
 
   private translateConditionByDate(condition: ConditionType): string {
-    return this.i18n(
-      {
-        id: 'query.filter.condition.constraint.date',
-        value:
-          '{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@query.filter.condition.constraint.date:{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}`,
       {condition}
     );
   }
@@ -156,22 +138,15 @@ export class TranslationService {
   }
 
   private translateDateConstraintConditionValue(condition: DateTimeConstraintConditionValue): string {
-    return this.i18n(
-      {
-        id: 'query.filter.condition.value.constraint.date',
-        value:
-          '{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@query.filter.condition.value.constraint.date:{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}`,
       {condition}
     );
   }
 
   private translateUserConstraintConditionValue(type: UserConstraintConditionValue): string {
-    return this.i18n(
-      {
-        id: 'query.filter.condition.value.constraint.user',
-        value: '{type, select, currentUser {Current User}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@query.filter.condition.value.constraint.user:{type, select, currentUser {Current User}}`,
       {type}
     );
   }

@@ -19,8 +19,7 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_CYAN, COLOR_PINK} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {COLOR_PINK} from '../../../../core/constants';
 
 declare var Blockly: any;
 
@@ -29,18 +28,14 @@ export class ShiftDateOfBlocklyComponent extends BlocklyComponent {
   private units: string[];
   private ops: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.shiftDateOfBlock',
-      value: 'Aligns a date to either beginning or end of the closest time unit.',
-    });
-    this.units = i18n({
-      id: 'blockly.dropdown.units.shiftDateOfBlock',
-      value: 'minute,hour,day,week,month,quarter,year',
-    }).split(',');
-    this.ops = i18n({id: 'blockly.dropdown.ops.shiftDateOfBlock', value: 'start,end'}).split(',');
+    this.tooltip = $localize`:@@blockly.tooltip.shiftDateOfBlock:Aligns a date to either beginning or end of the closest time unit.`;
+    this.units = $localize`:@@blockly.dropdown.units.shiftDateOfBlock:minute,hour,day,week,month,quarter,year`.split(
+      ','
+    );
+    this.ops = $localize`:@@blockly.dropdown.ops.shiftDateOfBlock:start,end`.split(',');
   }
 
   public getVisibility(): MasterBlockType[] {
