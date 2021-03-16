@@ -69,7 +69,9 @@ const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
-const blocklyCdn = env['BLOCKLY_CDN'] || `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v26/blockly.${locale === 'cs' ? 'cs' : 'en'}.min.js`;
+const blocklyCdn =
+  env['BLOCKLY_CDN'] ||
+  `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v26/blockly.${locale === 'cs' ? 'cs' : 'en'}.min.js`;
 const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
 const publicScriptCdn = env['PUBLIC_SCRIPT_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/public-view.js`;
 const logzioKey = env['LOGZIO_KEY'] || '';
