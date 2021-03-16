@@ -160,7 +160,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "6mb",
+                  "baseline": "7mb",
                   "maximumWarning": "10%",
                   "maximumError": "25%"
                 },
