@@ -19,9 +19,8 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {EMPTY, Observable, of} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
@@ -109,7 +108,7 @@ export class LinkInstancesEffects {
       ofType<LinkInstancesAction.GetFailure>(LinkInstancesActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.instances.get.fail', value: 'Could not get links'});
+        const message = $localize`:@@link.instances.get.fail:Could not get links`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -192,7 +191,7 @@ export class LinkInstancesEffects {
       ofType<LinkInstancesAction.CreateFailure>(LinkInstancesActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.instance.create.fail', value: 'Could not create the link'});
+        const message = $localize`:@@link.instance.create.fail:Could not create the link`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -270,7 +269,7 @@ export class LinkInstancesEffects {
       ofType<LinkInstancesAction.UpdateFailure>(LinkInstancesActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.instance.update.fail', value: 'Could not update the link'});
+        const message = $localize`:@@link.instance.update.fail:Could not update the link`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -323,11 +322,8 @@ export class LinkInstancesEffects {
     this.actions$.pipe(
       ofType<LinkInstancesAction.DeleteConfirm>(LinkInstancesActionType.DELETE_CONFIRM),
       map((action: LinkInstancesAction.DeleteConfirm) => {
-        const title = this.i18n({id: 'link.instance.delete.dialog.title', value: 'Remove link'});
-        const message = this.i18n({
-          id: 'link.instance.delete.dialog.message',
-          value: 'Do you really want to unlink (remove the link between) these records?',
-        });
+        const title = $localize`:@@link.instance.delete.dialog.title:Remove link`;
+        const message = $localize`:@@link.instance.delete.dialog.message:Do you really want to unlink (remove the link between) these records`;
 
         return new NotificationsAction.Confirm({
           title,
@@ -344,7 +340,7 @@ export class LinkInstancesEffects {
       ofType<LinkInstancesAction.DeleteFailure>(LinkInstancesActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'link.instance.delete.fail', value: 'Could not delete the link'});
+        const message = $localize`:@@link.instance.delete.fail:Could not delete the link`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -435,10 +431,7 @@ export class LinkInstancesEffects {
       ofType<LinkInstancesAction.SetDocumentLinksFailure>(LinkInstancesActionType.SET_DOCUMENT_LINKS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'link.instance.document.setLinks.failure',
-          value: 'Could not link records',
-        });
+        const message = $localize`:@@link.instance.document.setLinks.failure:Could not link records`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -463,10 +456,7 @@ export class LinkInstancesEffects {
       ofType<LinkInstancesAction.RunRuleFailure>(LinkInstancesActionType.RUN_RULE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'dataResource.runRule.fail',
-          value: 'Could not run the selected automation',
-        });
+        const message = $localize`:@@dataResource.runRule.fail:Could not run the selected automation`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -474,7 +464,6 @@ export class LinkInstancesEffects {
 
   constructor(
     private actions$: Actions,
-    private i18n: I18n,
     private searchService: SearchService,
     private linkInstanceService: LinkInstanceService,
     private store$: Store<AppState>

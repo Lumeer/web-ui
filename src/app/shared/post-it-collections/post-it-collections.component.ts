@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {map, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
@@ -61,7 +60,7 @@ export class PostItCollectionsComponent implements OnInit {
 
   private query: Query;
 
-  constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>) {}
+  constructor(private router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.collections$ = this.store$.pipe(
@@ -78,11 +77,8 @@ export class PostItCollectionsComponent implements OnInit {
   }
 
   public onDelete(collection: Collection) {
-    const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
-    const message = this.i18n({
-      id: 'collection.delete.dialog.message',
-      value: 'Do you really want to delete this table?',
-    });
+    const title = $localize`:@@collection.delete.dialog.title:Delete?`;
+    const message = $localize`:@@collection.delete.dialog.message:Do you really want to delete this table?`;
 
     this.store$.dispatch(
       new NotificationsAction.Confirm({

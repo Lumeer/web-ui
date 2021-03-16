@@ -29,7 +29,6 @@ import {
   TemplateRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -127,7 +126,6 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public contactUrl = environment.contactUrl;
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,

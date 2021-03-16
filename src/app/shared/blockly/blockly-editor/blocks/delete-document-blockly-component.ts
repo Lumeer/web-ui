@@ -20,7 +20,6 @@
 import {BlocklyComponent} from './blockly-component';
 import {COLOR_GREEN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
 
 declare var Blockly: any;
@@ -28,17 +27,11 @@ declare var Blockly: any;
 export class DeleteDocumentBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n(
-      {
-        id: 'blockly.tooltip.deleteDocumentBlock',
-        value:
-          'Deletes an existing record. To prevent large damage, only up to {{limit}} documents can be deleted within a single sequence of automations and functions.',
-      },
-      {limit: BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT}
-    );
+    const limit = BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
+    this.tooltip = $localize`:@@blockly.tooltip.deleteDocumentBlock:Deletes an existing record. To prevent large damage, only up to ${limit}:limit: documents can be deleted within a single sequence of automations and functions.`;
   }
 
   public getVisibility(): MasterBlockType[] {

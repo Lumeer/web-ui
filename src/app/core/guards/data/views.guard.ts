@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {first, map, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
@@ -37,7 +36,6 @@ import {Perspective} from '../../../view/perspectives/perspective';
 @Injectable()
 export class ViewsGuard implements Resolve<View[]> {
   constructor(
-    private i18n: I18n,
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,
     private router: Router,
@@ -86,7 +84,7 @@ export class ViewsGuard implements Resolve<View[]> {
 
   private onViewNotFound(organizationCode: string, projectCode: string) {
     this.router.navigate(['w', organizationCode, projectCode, 'view', Perspective.Search]);
-    const message = this.i18n({id: 'view.not.found', value: 'View not found'});
+    const message = $localize`:@@view.not.found:View not found`;
     this.notificationService.error(message);
   }
 }

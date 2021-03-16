@@ -29,7 +29,6 @@ import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/sto
 import {isAllDayEvent, isAllDayEventSingle} from '../../../view/perspectives/calendar/util/calendar-util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
 import {
@@ -96,7 +95,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   private currentResource: AttributesResource;
   private currentDataResource: DataResource;
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -231,7 +230,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private getInitialTitleName(): string {
-    return this.i18n({id: 'dialog.create.calendar.event.default.title', value: 'New event'});
+    return $localize`:@@dialog.create.calendar.event.default.title:New event`;
   }
 
   public onDataResourceChanged(dataResource: DataResource) {

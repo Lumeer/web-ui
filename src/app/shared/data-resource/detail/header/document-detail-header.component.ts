@@ -44,7 +44,7 @@ import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-typ
 import {Attribute} from '../../../../core/store/collections/collection';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {User} from '../../../../core/store/users/user';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+
 import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
@@ -101,15 +101,11 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public readonly updatedOnMsg;
   public readonly updatedByMsg;
 
-  constructor(
-    private store$: Store<AppState>,
-    private toggleService: DocumentFavoriteToggleService,
-    private i18n: I18n
-  ) {
-    this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
-    this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
-    this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
-    this.updatedByMsg = this.i18n({id: 'document.detail.header.updatedBy', value: 'Updated by'});
+  constructor(private store$: Store<AppState>, private toggleService: DocumentFavoriteToggleService) {
+    this.createdOnMsg = $localize`:@@document.detail.header.createdOn:Created on`;
+    this.createdByMsg = $localize`:@@document.detail.header.createdBy:Created by`;
+    this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
+    this.updatedByMsg = $localize`:@@document.detail.header.updatedBy:Updated by`;
   }
 
   public ngOnInit() {

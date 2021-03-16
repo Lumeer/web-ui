@@ -23,7 +23,6 @@ import {Router} from '@angular/router';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {AppState} from '../app.state';
@@ -78,7 +77,7 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'organizations.get.fail', value: 'Could not get organizations'});
+        const message = $localize`:@@organizations.get.fail:Could not get organizations`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -159,7 +158,7 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'organization.create.fail', value: 'Could not create the organization'});
+        const message = $localize`:@@organization.create.fail:Could not create the organization`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -222,7 +221,7 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'organization.update.fail', value: 'Could not update the organization'});
+        const message = $localize`:@@organization.update.fail:Could not update the organization`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -271,7 +270,7 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'organization.delete.fail', value: 'Could not delete the organization'});
+        const message = $localize`:@@organization.delete.fail:Could not delete the organization`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -312,10 +311,7 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.ChangePermissionFailure>(OrganizationsActionType.CHANGE_PERMISSION_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'organization.permission.change.fail',
-          value: 'Could not change the organization permissions',
-        });
+        const message = $localize`:@@organization.permission.change.fail:Could not change the organization permissions`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -337,12 +333,8 @@ export class OrganizationsEffects {
     this.actions$.pipe(
       ofType<OrganizationsAction.OfferPayment>(OrganizationsActionType.OFFER_PAYMENT),
       map(action => {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-        const message = this.i18n({
-          id: 'project.create.serviceLimits',
-          value:
-            'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?',
-        });
+        const title = $localize`:@@serviceLimits.trial:Free Service`;
+        const message = $localize`:@@project.create.serviceLimits:You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?`;
         return new NotificationsAction.Confirm({
           title: action.payload.title || title,
           message: action.payload.message || message,
@@ -358,7 +350,6 @@ export class OrganizationsEffects {
   );
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,

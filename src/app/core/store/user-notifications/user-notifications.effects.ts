@@ -19,10 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, Observable, of} from 'rxjs';
-import {Action, select, Store} from '@ngrx/store';
+import {EMPTY, of} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../app.state';
 import {Router} from '@angular/router';
 import {UserNotificationsAction, UserNotificationsActionType} from './user-notifications.action';
@@ -57,7 +56,7 @@ export class UserNotificationsEffects {
       ofType<UserNotificationsAction.GetFailure>(UserNotificationsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'userNotifications.get.fail', value: 'Could not read notifications'});
+        const message = $localize`:@@userNotifications.get.fail:Could not read notifications`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -85,7 +84,7 @@ export class UserNotificationsEffects {
       ofType<UserNotificationsAction.UpdateFailure>(UserNotificationsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'userNotifications.update.fail', value: 'Could not update notification state'});
+        const message = $localize`:@@userNotifications.update.fail:Could not update notification state`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -114,14 +113,13 @@ export class UserNotificationsEffects {
       ofType<UserNotificationsAction.DeleteFailure>(UserNotificationsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'userNotification.delete.fail', value: 'Could not delete notification'});
+        const message = $localize`:@@userNotification.delete.fail:Could not delete notification`;
         return new NotificationsAction.Error({message});
       })
     )
   );
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,

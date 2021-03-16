@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
@@ -43,6 +42,7 @@ import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 import {environment} from '../../environments/environment';
+import {parseSelectTranslation} from '../shared/utils/translation.utils';
 
 @Component({
   templateUrl: './view.component.html',
@@ -61,7 +61,6 @@ export class ViewComponent implements OnInit {
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
     private viewSettingsService: ViewSettingsService,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>,
     private modalService: ModalService
@@ -171,15 +170,9 @@ export class ViewComponent implements OnInit {
   }
 
   private informAboutSameNameView(view: View) {
-    const title = this.i18n({
-      id: 'view.name.exists',
-      value: 'View already exist',
-    });
-    const message = this.i18n(
-      {
-        id: 'view.name.exists.message',
-        value: 'Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?',
-      },
+    const title = $localize`:@@view.name.exists:View already exist`;
+    const message = parseSelectTranslation(
+      $localize`:@@view.name.exists.message:Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?`,
       {create: !!view.code ? '0' : '1'}
     );
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.createOrUpdateView(view));
@@ -195,12 +188,9 @@ export class ViewComponent implements OnInit {
 
   private askToCloneView(view: View) {
     const title = null;
-    const message = this.i18n({
-      id: 'view.dialog.clone.message',
-      value: 'Do you want to make a copy of the view or rename the existing one?',
-    });
-    const cloneButtonText = this.i18n({id: 'view.dialog.clone.clone', value: 'Make a copy'});
-    const renameButtonText = this.i18n({id: 'view.dialog.clone.update', value: 'Rename'});
+    const message = $localize`:@@view.dialog.clone.message:Do you want to make a copy of the view or rename the existing one?`;
+    const cloneButtonText = $localize`:@@view.dialog.clone.clone:Make a copy`;
+    const renameButtonText = $localize`:@@view.dialog.clone.update:Rename`;
 
     this.notificationService.confirm(
       message,

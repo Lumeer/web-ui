@@ -27,7 +27,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
@@ -70,8 +69,6 @@ export class FilesDropdownComponent implements AfterViewInit {
     DropdownPosition.TopEnd,
   ];
 
-  constructor(private i18n: I18n) {}
-
   public ngAfterViewInit() {
     this.dropdown.open();
   }
@@ -106,13 +103,7 @@ export class FilesDropdownComponent implements AfterViewInit {
   private showFileSizeError() {
     const size = environment.maxFileUploadSize.toFixed(0);
     this.fileSizeError$.next(
-      this.i18n(
-        {
-          id: 'file.upload.max.size.error',
-          value: 'Cannot process files bigger than {{size}} MB. Please upload smaller file.',
-        },
-        {size}
-      )
+      $localize`:@@file.upload.max.size.error:Cannot process files bigger than ${size}:size: MB. Please upload smaller file.`
     );
   }
 

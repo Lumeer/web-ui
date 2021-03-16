@@ -20,20 +20,16 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_PINK} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class DateNowBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.dateNowBlock',
-      value: 'Gets current date as ISO string for storage in date/time attributes.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.dateNowBlock:Gets current date as ISO string for storage in date/time attributes.`;
   }
 
   public getVisibility(): MasterBlockType[] {

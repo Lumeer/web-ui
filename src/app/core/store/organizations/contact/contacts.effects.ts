@@ -17,16 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {ContactConverter} from './contact.converter';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContactsAction, ContactsActionType} from './contacts.action';
 import {OrganizationService} from '../../../data-service';
 
@@ -49,7 +48,7 @@ export class ContactsEffects {
       ofType<ContactsAction.GetContactFailure>(ContactsActionType.GET_CONTACT_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'organization.contact.get.fail', value: 'Could not read contact information'});
+        const message = $localize`:@@organization.contact.get.fail:Could not read contact information`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -74,14 +73,13 @@ export class ContactsEffects {
       ofType<ContactsAction.GetContactFailure>(ContactsActionType.SET_CONTACT_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'organization.contact.set.fail', value: 'Could not save contact information'});
+        const message = $localize`:@@organization.contact.set.fail:Could not save contact information`;
         return new NotificationsAction.Error({message});
       })
     )
   );
 
   constructor(
-    private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,

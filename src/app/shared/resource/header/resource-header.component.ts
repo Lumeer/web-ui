@@ -21,7 +21,6 @@ import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
 
 @Component({
@@ -63,8 +62,6 @@ export class ResourceHeaderComponent {
   public isDuplicate: boolean;
 
   private shouldEmitFirstLine: boolean;
-
-  constructor(private i18n: I18n) {}
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
@@ -150,17 +147,11 @@ export class ResourceHeaderComponent {
   }
 
   public getCodePlaceholder(): string {
-    return this.i18n({
-      id: 'resource.postit.code',
-      value: 'Set code',
-    });
+    return $localize`:@@resource.postit.code:Set code`;
   }
 
   public getNamePlaceholder(): string {
-    return this.i18n({
-      id: 'resource.postit.name',
-      value: 'Fill in name',
-    });
+    return $localize`:@@resource.postit.name:Fill in name`;
   }
 
   public getFilter(): RegExp {

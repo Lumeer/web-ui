@@ -35,7 +35,6 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import * as Driver from 'driver.js';
 import {UsersAction} from '../../../../core/store/users/users.action';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import PatchCurrentUser = UsersAction.PatchCurrentUser;
 import {selectAllViews} from '../../../../core/store/views/views.state';
@@ -77,30 +76,17 @@ export class UserMenuComponent implements OnInit {
     private authService: AuthService,
     private modalService: ModalService,
     private store$: Store<AppState>,
-    private router: Router,
-    private i18n: I18n
+    private router: Router
   ) {}
 
   public ngOnInit() {
     this.driver = new Driver({
       opacity: 0.5,
       scrollIntoViewOptions: {block: 'start'},
-      closeBtnText: this.i18n({
-        id: 'button.dismiss',
-        value: 'Dismiss',
-      }),
-      doneBtnText: this.i18n({
-        id: 'button.onward',
-        value: 'Onward!',
-      }),
-      nextBtnText: this.i18n({
-        id: 'button.next',
-        value: 'Next',
-      }),
-      prevBtnText: this.i18n({
-        id: 'button.previous',
-        value: 'Previous',
-      }),
+      closeBtnText: $localize`:@@button.dismiss:Dismiss`,
+      doneBtnText: $localize`:@@button.onward:Onward!`,
+      nextBtnText: $localize`:@@button.next:Next`,
+      prevBtnText: $localize`:@@button.previous:Previous`,
       onReset: () => this.dismissWizard(),
     });
 
@@ -196,11 +182,7 @@ export class UserMenuComponent implements OnInit {
             } else {
               this.store$.dispatch(
                 new NotificationsAction.Error({
-                  message: this.i18n({
-                    id: 'menu.appTour.invocationError',
-                    value:
-                      'Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.',
-                  }),
+                  message: $localize`:@@menu.appTour.invocationError:Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.`,
                 })
               );
             }
@@ -261,30 +243,16 @@ export class UserMenuComponent implements OnInit {
     let stepNo = 1;
 
     const driverSteps = [];
-    const basicTitle = this.i18n({
-      id: 'appTour.title.basic',
-      value: 'Access your information',
-    });
-    const basicDescription = this.i18n({
-      id: 'appTour.description.basic',
-      value:
-        'Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.',
-    });
+    const basicTitle = $localize`:@@appTour.title.basic:Access your information`;
+    const basicDescription = $localize`:@@appTour.description.basic:Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.`;
 
     driverSteps.push({
       element: '[data-tour="logo"]',
       popover: {
-        title: this.i18n({
-          id: 'appTour.title.welcome',
-          value: 'Welcome to Lumeer',
-        }),
+        title: $localize`:@@appTour.title.welcome:Welcome to Lumeer`,
         description:
           this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.welcome',
-            value:
-              'Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.',
-          }),
+          $localize`:@@appTour.description.welcome:Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.`,
         position: 'right',
       },
     });
@@ -305,17 +273,10 @@ export class UserMenuComponent implements OnInit {
         driverSteps.push({
           element: '[data-tour="search-views"]',
           popover: {
-            title: this.i18n({
-              id: 'appTour.title.searchViewsNoView',
-              value: 'Create views of your data',
-            }),
+            title: $localize`:@@appTour.title.searchViewsNoView:Create views of your data`,
             description:
               this.getStepCounter(stepNo++, totalSteps) +
-              this.i18n({
-                id: 'appTour.description.searchViewsNoView',
-                value:
-                  'Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!',
-              }),
+              $localize`:@@appTour.description.searchViewsNoView:Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!`,
             position: 'top',
           },
         });
@@ -337,11 +298,7 @@ export class UserMenuComponent implements OnInit {
           title: basicTitle,
           description:
             this.getStepCounter(stepNo++, totalSteps) +
-            this.i18n({
-              id: 'appTour.description.searchViews',
-              value:
-                'Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!',
-            }),
+            $localize`:@@appTour.description.searchViews:Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!`,
           position: 'bottom',
         },
       });
@@ -349,16 +306,10 @@ export class UserMenuComponent implements OnInit {
       driverSteps.push({
         element: '[data-tour="tables-tab"]',
         popover: {
-          title: this.i18n({
-            id: 'appTour.title.tablesView',
-            value: 'See the tables',
-          }),
+          title: $localize`:@@appTour.title.tablesView:See the tables`,
           description:
             this.getStepCounter(stepNo++, totalSteps) +
-            this.i18n({
-              id: 'appTour.description.tablesTab',
-              value: 'The raw data are stored in Tables which can be accessed on their own tab.',
-            }),
+            $localize`:@@appTour.description.tablesTab:The raw data are stored in Tables which can be accessed on their own tab.`,
           position: 'right',
         },
       });
@@ -367,17 +318,10 @@ export class UserMenuComponent implements OnInit {
     driverSteps.push({
       element: '[data-tour="search-box"]',
       popover: {
-        title: this.i18n({
-          id: 'appTour.title.search',
-          value: 'Search for information',
-        }),
+        title: $localize`:@@appTour.title.search:Search for information`,
         description:
           this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.search',
-            value:
-              'The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.',
-          }),
+          $localize`:@@appTour.description.search:The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.`,
         position: 'bottom',
       },
     });
@@ -385,17 +329,10 @@ export class UserMenuComponent implements OnInit {
     driverSteps.push({
       element: '[data-tour="perspective"]',
       popover: {
-        title: this.i18n({
-          id: 'appTour.title.perspectives',
-          value: 'Perspectives',
-        }),
+        title: $localize`:@@appTour.title.perspectives:Perspectives`,
         description:
           this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.perspectives',
-            value:
-              'When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.',
-          }),
+          $localize`:@@appTour.description.perspectives:When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.`,
         position: 'bottom',
       },
     });
@@ -403,17 +340,10 @@ export class UserMenuComponent implements OnInit {
     driverSteps.push({
       element: '[data-tour="view"]',
       popover: {
-        title: this.i18n({
-          id: 'appTour.title.views',
-          value: 'Views and sharing',
-        }),
+        title: $localize`:@@appTour.title.views:Views and sharing`,
         description:
           this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.views',
-            value:
-              'Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.',
-          }),
+          $localize`:@@appTour.description.views:Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.`,
         position: 'bottom',
       },
     });
@@ -421,16 +351,10 @@ export class UserMenuComponent implements OnInit {
     driverSteps.push({
       element: '[data-tour="get-help-button"]',
       popover: {
-        title: this.i18n({
-          id: 'appTour.title.getHelp',
-          value: 'Help with Lumeer',
-        }),
+        title: $localize`:@@appTour.title.getHelp:Help with Lumeer`,
         description:
           this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.getHelp',
-            value: 'Here you can always get help in case you got lost.',
-          }),
+          $localize`:@@appTour.description.getHelp:Here you can always get help in case you got lost.`,
         position: 'top-right',
       },
     });
@@ -438,17 +362,10 @@ export class UserMenuComponent implements OnInit {
     driverSteps.push({
       element: '[data-tour="user-menu"]',
       popover: {
-        title: this.i18n({
-          id: 'appTour.title.userMenu',
-          value: 'Return to this Tour',
-        }),
+        title: $localize`:@@appTour.title.userMenu:Return to this Tour`,
         description:
           this.getStepCounter(stepNo++, totalSteps) +
-          this.i18n({
-            id: 'appTour.description.userMenu',
-            value:
-              'You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.',
-          }),
+          $localize`:@@appTour.description.userMenu:You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.`,
         position: 'left',
       },
     });

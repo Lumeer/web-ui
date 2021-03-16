@@ -33,7 +33,6 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Point} from 'geojson';
 import {
   GeoJSONSource,
@@ -112,7 +111,6 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
 
   constructor(
     private deviceDetectorService: DeviceDetectorService,
-    private i18n: I18n,
     private ngZone: NgZone,
     private platform: Platform,
     private renderer: Renderer2
@@ -391,19 +389,16 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private translateMap(): Record<string, string> {
     // translation ids can be found in node_modules/mapbox-gl/src/ui/default_locale.js
     return {
-      'GeolocateControl.FindMyLocation': this.i18n({id: 'map.location.find', value: 'Find my location'}),
-      'GeolocateControl.LocationNotAvailable': this.i18n({
-        id: 'map.location.notAvailable',
-        value: 'Location not available',
-      }),
-      'NavigationControl.ResetBearing': this.i18n({id: 'map.control.compass', value: 'Reset bearing to north'}),
-      'NavigationControl.ZoomIn': this.i18n({id: 'map.control.zoom.in', value: 'Zoom in'}),
-      'NavigationControl.ZoomOut': this.i18n({id: 'map.control.zoom.out', value: 'Zoom out'}),
-      'ScaleControl.Feet': this.i18n({id: 'distance.feat', value: 'ft'}),
-      'ScaleControl.Meters': this.i18n({id: 'distance.meters', value: 'm'}),
-      'ScaleControl.Kilometers': this.i18n({id: 'distance.kilometers', value: 'km'}),
-      'ScaleControl.Miles': this.i18n({id: 'distance.miles', value: 'mi'}),
-      'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
+      'GeolocateControl.FindMyLocation': $localize`:@@map.location.find:Find my location`,
+      'GeolocateControl.LocationNotAvailable': $localize`:@@map.location.notAvailable:Location not available`,
+      'NavigationControl.ResetBearing': $localize`:@@map.control.compass:Reset bearing to north`,
+      'NavigationControl.ZoomIn': $localize`:@@map.control.zoom.in:Zoom in`,
+      'NavigationControl.ZoomOut': $localize`:@@map.control.zoom.out:Zoom out`,
+      'ScaleControl.Feet': $localize`:@@distance.feat:ft`,
+      'ScaleControl.Meters': $localize`:@@distance.meters:m`,
+      'ScaleControl.Kilometers': $localize`:@@distance.kilometers:km`,
+      'ScaleControl.Miles': $localize`:@@distance.miles:mi`,
+      'ScaleControl.NauticalMiles': $localize`:@@distance.nauticalMiles:nm`,
     };
   }
 }

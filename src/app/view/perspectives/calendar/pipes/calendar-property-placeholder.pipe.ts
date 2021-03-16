@@ -18,23 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Pipe({
   name: 'calendarPropertyPlaceholder',
 })
 export class CalendarPropertyPlaceholderPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
   public transform(barProperty: string): string {
-    return this.i18n(
-      {
-        id: 'calendar.property.placeholder',
-        value: '{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }',
-      },
-      {
-        barProperty,
-      }
+    return parseSelectTranslation(
+      $localize`:@@calendar.property.placeholder:{barProperty, select, name {Name} start {Start} end {End} color {Color} group {Group} }`,
+      {barProperty}
     );
   }
 }

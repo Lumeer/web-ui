@@ -30,7 +30,6 @@ import {OrganizationValidators} from '../../../../core/validators/organization.v
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {Subscription} from 'rxjs';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 
 @Component({
@@ -66,13 +65,9 @@ export class CreateResourceDialogFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private projectValidators: ProjectValidators,
-    private organizationValidators: OrganizationValidators,
-    private i18n: I18n
+    private organizationValidators: OrganizationValidators
   ) {
-    this.iconChooserLabel = i18n({
-      id: 'resource.new.dialog.icon.label.hint',
-      value: '(click the icon to change it)',
-    });
+    this.iconChooserLabel = $localize`:@@resource.new.dialog.icon.label.hint:(click the icon to change it)`;
   }
 
   public ngOnInit() {

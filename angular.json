@@ -7,7 +7,8 @@
       "i18n": {
         "sourceLocale": "en",
         "locales": {
-          "cs": "src/i18n/messages.cs.xlf"
+          "cs": "src/i18n/messages.cs.xlf",
+          "hu": "src/i18n/messages.hu.xlf"
         }
       },
       "root": "",
@@ -159,7 +160,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "6mb",
+                  "baseline": "7mb",
                   "maximumWarning": "10%",
                   "maximumError": "25%"
                 },
@@ -229,6 +230,20 @@
               "optimization": false,
               "sourceMap": true
             },
+            "hu": {
+              "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "baseHref": "/ui/",
+              "buildOptimizer": false,
+              "localize": ["hu"],
+              "optimization": false,
+              "sourceMap": true
+            },
             "en": {
               "aot": true,
               "baseHref": "/ui/",
@@ -254,6 +269,9 @@
           "configurations": {
             "cs": {
               "browserTarget": "lumeer:build:cs"
+            },
+            "hu": {
+              "browserTarget": "lumeer:build:hu"
             },
             "en": {
               "browserTarget": "lumeer:build:en"
@@ -285,7 +303,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": ["src/app/**/*.ts", "src/app/**/*.html"]
           }
         }
       }

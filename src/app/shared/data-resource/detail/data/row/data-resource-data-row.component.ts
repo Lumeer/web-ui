@@ -30,7 +30,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
 import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
@@ -121,8 +120,8 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
     return this.row?.attribute?.constraint?.type;
   }
 
-  constructor(private i18n: I18n) {
-    this.placeholder = i18n({id: 'dataResource.attribute.placeholder', value: 'Enter attribute name'});
+  constructor() {
+    this.placeholder = $localize`:@@dataResource.attribute.placeholder:Enter attribute name`;
   }
 
   public ngOnChanges(changes: SimpleChanges) {

@@ -20,24 +20,17 @@
 import {BlocklyComponent} from './blockly-component';
 import {COLOR_GREEN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class CreateDocumentBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n(
-      {
-        id: 'blockly.tooltip.createDocumentBlock2',
-        value:
-          'Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to {{limit}} documents can be created within a single sequence of automations and functions.',
-      },
-      {limit: BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT}
-    );
+    const limit = BlocklyUtils.CREATE_DELETE_DOCUMENTS_LINKS_LIMIT;
+    this.tooltip = $localize`:@@blockly.tooltip.createDocumentBlock2:Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to ${limit}:limit: documents can be created within a single sequence of automations and functions.`;
   }
 
   public getVisibility(): MasterBlockType[] {

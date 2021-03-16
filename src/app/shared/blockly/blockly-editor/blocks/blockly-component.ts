@@ -18,10 +18,9 @@
  */
 
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 export abstract class BlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {}
+  public constructor(public blocklyUtils: BlocklyUtils) {}
 
   public abstract getVisibility(): MasterBlockType[];
 

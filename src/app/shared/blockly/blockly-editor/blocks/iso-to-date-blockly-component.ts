@@ -20,20 +20,16 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_PINK} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class IsoToDateBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.isoToDateBlock',
-      value: 'Converts date in an ISO string (from stored data) to the date object.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.isoToDateBlock:Converts date in an ISO string (from stored data) to the date object.`;
   }
 
   public getVisibility(): MasterBlockType[] {

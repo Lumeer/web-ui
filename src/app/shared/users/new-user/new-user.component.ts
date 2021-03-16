@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {User} from '../../../core/store/users/user';
 
 @Component({
@@ -36,8 +35,6 @@ export class NewUserComponent {
 
   public email: string;
   public isDuplicate: boolean = false;
-
-  constructor(private i18n: I18n) {}
 
   public onAddUser() {
     this.userCreated.emit(this.email);
@@ -58,9 +55,6 @@ export class NewUserComponent {
   }
 
   public emailPlaceHolder(): string {
-    return this.i18n({
-      id: 'user.add.placeholder',
-      value: 'Type email to invite another user',
-    });
+    return $localize`:@@user.add.placeholder:Type email to invite another user`;
   }
 }

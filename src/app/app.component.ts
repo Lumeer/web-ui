@@ -21,7 +21,6 @@ import {AfterViewInit, Component, OnInit, ViewContainerRef} from '@angular/core'
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
@@ -57,7 +56,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
     private authService: AuthService,
-    private i18n: I18n,
     private router: Router,
     private store$: Store<AppState>,
     private title: Title,
@@ -68,7 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private localeService: BsLocaleService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
-    this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer | Visual, easy project and team management'}));
+    this.title.setTitle($localize`:@@page.title:Lumeer | Visual, easy project and team management`);
 
     this.storeReferralCookie();
     this.initPushNotifications();

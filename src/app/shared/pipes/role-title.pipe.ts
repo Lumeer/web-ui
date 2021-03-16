@@ -20,24 +20,16 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {Role} from '../../core/model/role';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'roleTitle',
 })
 export class RoleTitlePipe implements PipeTransform {
-  constructor(private i18n: I18n) {}
-
   public transform(role: Role): string {
-    return this.i18n(
-      {
-        id: 'user.permission.icon',
-        value:
-          '{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share}}',
-      },
-      {
-        role: role,
-      }
+    return parseSelectTranslation(
+      $localize`:@@user.permission.icon:{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share}}`,
+      {role}
     );
   }
 }

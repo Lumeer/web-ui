@@ -31,7 +31,6 @@ import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {environment} from '../../../../../environments/environment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {UnknownConstraint} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
@@ -287,7 +286,6 @@ describe('Pivot data converter', () => {
           provide: TRANSLATIONS_FORMAT,
           useFactory: () => environment.i18nFormat,
         },
-        I18n,
       ],
     });
     constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);

@@ -20,7 +20,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {saveAs} from 'file-saver';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -45,7 +44,6 @@ export class FileAttachmentButtonComponent {
 
   constructor(
     private fileApiService: FileApiService,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
   ) {}
@@ -113,19 +111,11 @@ export class FileAttachmentButtonComponent {
 
   private showDownloadErrorNotification() {
     this.notificationService.error(
-      this.i18n({
-        id: 'file.attachment.download.failure',
-        value: 'Could not download the file attachment. Please try again later.',
-      })
+      $localize`:@@file.attachment.download.failure:Could not download the file attachment. Please try again later.`
     );
   }
 
   private showFileNotExistNotification() {
-    this.notificationService.error(
-      this.i18n({
-        id: 'file.attachment.not.exist',
-        value: 'Could not find the file attachment.',
-      })
-    );
+    this.notificationService.error($localize`:@@file.attachment.not.exist:Could not find the file attachment.`);
   }
 }

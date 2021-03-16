@@ -17,19 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
 import {Constraint, DurationConstraint, DurationConstraintConfig, DurationUnit} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../utils/translation.utils';
 
 const maxDurationUnits = [DurationUnit.Days, DurationUnit.Hours, DurationUnit.Minutes, DurationUnit.Seconds];
 
 export class DurationConfigOverrideService extends ConstraintConfigOverrideService<DurationConstraintConfig> {
   private readonly defaultTitle: string;
 
-  constructor(private i18n: I18n) {
+  constructor() {
     super();
-    this.defaultTitle = i18n({id: 'default', value: 'Default'});
+    this.defaultTitle = $localize`:@@default:Default`;
   }
 
   public create(config: DurationConstraintConfig, withDefaultItem: boolean): SelectItemModel[] {
@@ -44,11 +44,8 @@ export class DurationConfigOverrideService extends ConstraintConfigOverrideServi
   }
 
   private translateDurationUnit(unit: DurationUnit): string {
-    return this.i18n(
-      {
-        id: 'select.constraint.items.duration.maxUnit',
-        value: '{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@select.constraint.items.duration.maxUnit:{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}`,
       {unit}
     );
   }

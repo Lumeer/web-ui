@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
@@ -58,7 +57,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
-    private i18n: I18n,
     private router: Router,
     private store$: Store<AppState>,
     private notificationService: NotificationService
@@ -73,11 +71,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete() {
-    const message = this.i18n({
-      id: 'organization.delete.dialog.message',
-      value: 'Do you really want to permanently delete this organization?',
-    });
-    const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
+    const message = $localize`:@@organization.delete.dialog.message:Do you really want to permanently delete this organization?`;
+    const title = $localize`:@@organization.delete.dialog.title:Delete organization?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteOrganization());
   }
 

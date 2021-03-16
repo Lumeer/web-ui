@@ -42,7 +42,6 @@ import listPlugin from '@fullcalendar/list';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 import {environment} from '../../../../../../environments/environment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {
   CalendarGridMode,
   CalendarMode,
@@ -135,20 +134,17 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private setupInitialDate = true;
 
-  constructor(private i18n: I18n) {
-    this.calendarText = this.i18n({id: 'perspective.calendar.display.calendar', value: 'Calendar'});
-    this.listText = this.i18n({id: 'perspective.calendar.display.list', value: 'List'});
-    this.moreText = this.i18n({id: 'perspective.calendar.display.more', value: 'more'});
-    this.allDayText = this.i18n({id: 'perspective.calendar.display.allDay', value: 'All day'});
-    this.noEventsText = this.i18n({
-      id: 'perspective.calendar.display.empty',
-      value: 'There are no events in current selected range',
-    });
+  constructor() {
+    this.calendarText = $localize`:@@perspective.calendar.display.calendar:Calendar`;
+    this.listText = $localize`:@@perspective.calendar.display.list:List`;
+    this.moreText = $localize`:@@perspective.calendar.display.more:more`;
+    this.allDayText = $localize`:@@perspective.calendar.display.allDay:All day`;
+    this.noEventsText = $localize`:@@perspective.calendar.display.empty:There are no events in current selected range`;
     this.buttonText = {
-      today: i18n({id: 'perspective.calendar.header.today', value: 'Today'}),
-      month: i18n({id: 'perspective.calendar.header.month', value: 'Month'}),
-      week: i18n({id: 'perspective.calendar.header.week', value: 'Week'}),
-      day: i18n({id: 'perspective.calendar.header.day', value: 'Day'}),
+      today: $localize`:@@perspective.calendar.header.today:Today`,
+      month: $localize`:@@perspective.calendar.header.month:Month`,
+      week: $localize`:@@perspective.calendar.header.week:Week`,
+      day: $localize`:@@perspective.calendar.header.day:'Day`,
     };
     this.listCustomButtons = {
       calendarToggle: {

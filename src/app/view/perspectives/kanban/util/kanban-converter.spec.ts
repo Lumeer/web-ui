@@ -26,7 +26,6 @@ import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from './kanban-converter';
 import {environment} from '../../../../../environments/environment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributesResourceType} from '../../../../core/model/resource';
 
 const documents: DocumentModel[] = [
@@ -125,7 +124,6 @@ describe('Kanban converter', () => {
           provide: TRANSLATIONS_FORMAT,
           useFactory: () => environment.i18nFormat,
         },
-        I18n,
       ],
     });
     constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);

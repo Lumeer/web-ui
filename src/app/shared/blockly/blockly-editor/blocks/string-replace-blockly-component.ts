@@ -19,21 +19,16 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_CYAN} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class StringReplaceBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.stringReplaceBlock',
-      value: 'Replaces a regular expression pattern in a given string.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.stringReplaceBlock:Replaces a regular expression pattern in a given string.`;
   }
 
   public getVisibility(): MasterBlockType[] {

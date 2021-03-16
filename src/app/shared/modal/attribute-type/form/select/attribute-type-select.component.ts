@@ -18,11 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {constraintIconsMap, isConstraintTypeEnabled} from '../../../../../core/model/constraint';
 import {SelectItemModel} from '../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../utils/translation.utils';
 
 @Component({
   selector: 'attribute-type-select',
@@ -38,8 +38,6 @@ export class AttributeTypeSelectComponent implements OnInit {
 
   public items: SelectItemModel[];
 
-  constructor(private i18n: I18n) {}
-
   public ngOnInit() {
     this.items = this.createSelectItems();
   }
@@ -49,8 +47,8 @@ export class AttributeTypeSelectComponent implements OnInit {
       .filter(type => isConstraintTypeEnabled(type))
       .map(type => ({
         id: type,
-        value: this.i18n(
-          '{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}',
+        value: parseSelectTranslation(
+          $localize`:@@constraint.type:{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}`,
           {type}
         ),
         icons: [constraintIconsMap[type]],

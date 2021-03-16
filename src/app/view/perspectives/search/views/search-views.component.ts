@@ -28,7 +28,6 @@ import {selectAllCollections} from '../../../../core/store/collections/collectio
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {map, tap} from 'rxjs/operators';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -62,7 +61,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   private searchId: string;
   private subscriptions = new Subscription();
 
-  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(select(selectViewsByQuery));
@@ -109,11 +108,8 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteView(view: View) {
-    const message = this.i18n({
-      id: 'views.delete.message',
-      value: 'Do you really want to permanently delete this view?',
-    });
-    const title = this.i18n({id: 'views.delete.title', value: 'Delete view?'});
+    const message = $localize`:@@views.delete.message:Do you really want to permanently delete this view?`;
+    const title = $localize`:@@views.delete.title:Delete view?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteView(view));
   }
 

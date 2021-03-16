@@ -24,7 +24,6 @@ import {selectOrganizationByWorkspace} from '../../../../../core/store/organizat
 import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../../../core/store/app.state';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Subscription} from 'rxjs';
@@ -45,7 +44,7 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   public serviceLimits: ServiceLimits;
   private serviceLimitsSubscription: Subscription;
 
-  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
+  constructor(private router: Router, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeToStore();

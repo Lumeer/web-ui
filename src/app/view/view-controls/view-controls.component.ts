@@ -31,7 +31,6 @@ import {
 } from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {debounceTime, map, take, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -119,7 +118,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private i18n: I18n,
     private store$: Store<AppState>
   ) {}
 
@@ -192,13 +190,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private askToDiscardChanges() {
-    const message = this.i18n({
-      id: 'view.discard.changes.message',
-      value: 'The view was changed. Do you want to save the changes?',
-    });
-    const title = this.i18n({id: 'view.discard.changes.message.title', value: 'Save view'});
-    const discard = this.i18n({id: 'button.discard', value: 'Discard'});
-    const save = this.i18n({id: 'button.save', value: 'Save'});
+    const message = $localize`:@@view.discard.changes.message:The view was changed. Do you want to save the changes?`;
+    const title = $localize`:@@view.discard.changes.message.title:Save view`;
+    const discard = $localize`:@@button.discard:Discard`;
+    const save = $localize`:@@button.save:Save`;
 
     this.notificationService.confirm(
       message,

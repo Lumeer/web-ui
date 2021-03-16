@@ -22,7 +22,6 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, forkJoin, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
@@ -103,7 +102,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.GetFailure>(ProjectsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'projects.get.fail', value: 'Could not get projects'});
+        const message = $localize`:@@projects.get.fail:Could not get projects`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -220,7 +219,7 @@ export class ProjectsEffects {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
           return new OrganizationsAction.OfferPayment(action.payload);
         }
-        const errorMessage = this.i18n({id: 'project.create.fail', value: 'Could not create the project'});
+        const errorMessage = $localize`:@@project.create.fail:Could not create the project`;
         return new NotificationsAction.Error({message: errorMessage});
       })
     )
@@ -285,7 +284,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.UpdateFailure>(ProjectsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'project.update.fail', value: 'Could not update the project'});
+        const message = $localize`:@@project.update.fail:Could not update the project`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -335,7 +334,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.DeleteFailure>(ProjectsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'project.delete.fail', value: 'Could not delete the project'});
+        const message = $localize`:@@project.delete.fail:Could not delete the project`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -376,10 +375,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.ChangePermissionFailure>(ProjectsActionType.CHANGE_PERMISSION_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'project.permission.change.fail',
-          value: 'Could not change the project permissions',
-        });
+        const message = $localize`:@@project.permission.change.fail:Could not change the project permissions`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -403,10 +399,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.ApplyTemplateFailure>(ProjectsActionType.APPLY_TEMPLATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'project.template.apply.fail',
-          value: 'Could not add template to project',
-        });
+        const message = $localize`:@@project.template.apply.fail:Could not add template to project`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -448,10 +441,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.CopyFailure>(ProjectsActionType.COPY_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({
-          id: 'project.copy.fail',
-          value: 'Could not copy project',
-        });
+        const message = $localize`:@@project.copy.fail:Could not copy project`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -527,7 +517,6 @@ export class ProjectsEffects {
 
   constructor(
     private actions$: Actions,
-    private i18n: I18n,
     private router: Router,
     private notificationService: NotificationService,
     private projectService: ProjectService,

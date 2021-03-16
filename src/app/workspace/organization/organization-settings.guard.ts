@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
@@ -34,7 +33,6 @@ import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
   public constructor(
-    private i18n: I18n,
     private router: Router,
     private workspaceService: WorkspaceService,
     private store$: Store<AppState>
@@ -63,15 +61,12 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActionsNotExist() {
-    const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+    const message = $localize`:@@organization.not.exist:Organization does not exist`;
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActionsNotPermission() {
-    const message = this.i18n({
-      id: 'organization.permission.missing',
-      value: 'You do not have permission to access this organization',
-    });
+    const message = $localize`:@@organization.permission.missing:You do not have permission to access this organization`;
     this.dispatchErrorActions(message);
   }
 

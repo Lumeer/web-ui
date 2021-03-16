@@ -19,7 +19,6 @@
 
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkDocumentsNoReturnBlocklyComponent} from './link-documents-no-return-blockly-component';
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
@@ -27,8 +26,8 @@ import {isNotNullOrUndefined} from '../../../utils/common.utils';
 declare var Blockly: any;
 
 export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n, protected linkTypes: LinkType[]) {
-    super(blocklyUtils, i18n, linkTypes);
+  public constructor(public blocklyUtils: BlocklyUtils, protected linkTypes: LinkType[]) {
+    super(blocklyUtils, linkTypes);
   }
 
   public getVisibility(): MasterBlockType[] {

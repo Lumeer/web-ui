@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
 import {COLOR_SUCCESS} from '../../../../../../core/constants';
 import {Subscription} from 'rxjs';
@@ -66,8 +65,8 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   private savedColor: string;
   private subscription = new Subscription();
 
-  constructor(private i18n: I18n) {
-    this.defaultTitle = this.i18n({id: 'constraint.action.title.default', value: 'Action'});
+  constructor() {
+    this.defaultTitle = $localize`:@@constraint.action.title.default:Action`;
   }
 
   public get titleControl(): AbstractControl {

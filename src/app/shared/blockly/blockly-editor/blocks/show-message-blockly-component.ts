@@ -20,7 +20,6 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_CYAN} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
@@ -28,18 +27,12 @@ export class ShowMessageBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
   private types: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n(
-      {
-        id: 'blockly.tooltip.showMessageBlock',
-        value:
-          'Show a message to the user. Works only when the automation is initiated via an Action button. At most {{limit}} messages can be shown from a single automation and function sequence execution to prevent interface clogging.',
-      },
-      {limit: BlocklyUtils.SHOW_MESSAGES_LIMIT}
-    );
-    this.types = i18n({id: 'blockly.dropdown.values.showMessageBlock', value: 'success,info,warning,error'}).split(',');
+    const limit = BlocklyUtils.SHOW_MESSAGES_LIMIT;
+    this.tooltip = $localize`:@@blockly.tooltip.showMessageBlock:Show a message to the user. Works only when the automation is initiated via an Action button. At most ${limit}:limit: messages can be shown from a single automation and function sequence execution to prevent interface clogging.`;
+    this.types = $localize`:@@blockly.dropdown.values.showMessageBlock:success,info,warning,error`.split(',');
   }
 
   public getVisibility(): MasterBlockType[] {

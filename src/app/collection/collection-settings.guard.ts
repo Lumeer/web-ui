@@ -29,7 +29,6 @@ import {Collection} from '../core/store/collections/collection';
 import {CollectionsAction} from '../core/store/collections/collections.action';
 import {Organization} from '../core/store/organizations/organization';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/utils/resource.utils';
 import {WorkspaceService} from '../workspace/workspace.service';
 import {User} from '../core/store/users/user';
@@ -39,7 +38,6 @@ import {CollectionService} from '../core/data-service';
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
   constructor(
-    private i18n: I18n,
     private router: Router,
     private collectionService: CollectionService,
     private workspaceService: WorkspaceService,
@@ -54,12 +52,12 @@ export class CollectionSettingsGuard implements CanActivate {
     return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
       mergeMap(({user, organization, project}) => {
         if (!organization) {
-          const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+          const message = $localize`:@@organization.not.exist:Organization does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
         if (!project) {
-          const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+          const message = $localize`:@@project.not.exist:Project does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
@@ -111,15 +109,12 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActionsNotExist() {
-    const message = this.i18n({id: 'file.not.exist', value: 'Table does not exist'});
+    const message = $localize`:@@file.not.exist:Table does not exist`;
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActionsNotPermission() {
-    const message = this.i18n({
-      id: 'file.permission.missing',
-      value: 'You do not have permission to access this table',
-    });
+    const message = $localize`:@@file.permission.missing:You do not have permission to access this table`;
     this.dispatchErrorActions(message);
   }
 

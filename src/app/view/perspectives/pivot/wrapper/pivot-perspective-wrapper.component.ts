@@ -37,12 +37,12 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, throttleTime} from 'rxjs/operators';
 import {PivotData} from '../util/pivot-data';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {checkOrTransformPivotConfig} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 interface Data {
   collections: Collection[];
@@ -102,19 +102,15 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public pivotData$: Observable<PivotData>;
 
-  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter, private i18n: I18n) {
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
     this.pivotTransformer = new PivotDataConverter(constraintItemsFormatter, type =>
       this.createValueAggregationTitle(type)
     );
   }
 
   private createValueAggregationTitle(aggregation: DataAggregationType): string {
-    return this.i18n(
-      {
-        id: 'perspective.pivot.data.aggregation',
-        value:
-          '{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@perspective.pivot.data.aggregation:{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}`,
       {aggregation}
     );
   }

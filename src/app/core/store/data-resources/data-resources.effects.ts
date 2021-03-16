@@ -19,8 +19,8 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Observable, of} from 'rxjs';
-import {Action, select, Store} from '@ngrx/store';
+import {of} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {DocumentsAction} from '../documents/documents.action';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {convertQueryModelToDto} from '../navigation/query/query.converter';
@@ -37,7 +37,6 @@ import {
   selectTasksQueries,
 } from './data-resources.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
 
@@ -119,16 +118,11 @@ export class DataResourcesEffects {
       ofType<DataResourcesAction.GetTasksFailure>(DataResourcesActionType.GET_TASKS_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = this.i18n({id: 'tasks.get.fail', value: 'Could not get tasks'});
+        const message = $localize`:@@tasks.get.fail:Could not get tasks`;
         return new NotificationsAction.Error({message});
       })
     )
   );
 
-  constructor(
-    private actions$: Actions,
-    private searchService: SearchService,
-    private store$: Store<AppState>,
-    private i18n: I18n
-  ) {}
+  constructor(private actions$: Actions, private searchService: SearchService, private store$: Store<AppState>) {}
 }

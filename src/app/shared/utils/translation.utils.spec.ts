@@ -17,17 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
+import {parseSelectTranslation} from './translation.utils';
 
-@Pipe({
-  name: 'calendarPropertyEmptyValue',
-})
-export class CalendarValuePropertyPipe implements PipeTransform {
-  public transform(barProperty: string): string {
-    return parseSelectTranslation(
-      $localize`:@@calendar.value.placeholder:Select {barProperty, select, name {name} start {start date} end {end date} color {color} group {group} }`,
-      {barProperty}
-    );
-  }
-}
+describe('translation utils', () => {
+  it('should parse simple select', () => {
+    expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'a'})).toEqual('A');
+    expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'b'})).toEqual('B');
+    expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'x'})).toEqual('');
+  });
+
+  it('should parse simple multiple selects', () => {
+    expect(
+      parseSelectTranslation(
+        'Hello {unit, select, a {A} b {B} c {C}} text continues {unit, select, a {A} b {B} c {C}}',
+        {unit: 'a'}
+      )
+    ).toEqual('Hello A text continues A');
+  });
+});

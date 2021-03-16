@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {KeyCode} from '../../../../../key-code';
 
 @Component({
@@ -43,8 +42,6 @@ export class NewUserComponent {
   public email: string;
   public isDuplicate: boolean = false;
   public isAllowed: boolean = true;
-
-  constructor(private i18n: I18n) {}
 
   public onAddUser() {
     if (this.allowedUsers && this.allowedUsers.length) {
@@ -83,10 +80,7 @@ export class NewUserComponent {
   }
 
   public emailPlaceHolder(): string {
-    return this.i18n({
-      id: 'inviteUser.dialog.input.add.placeholder',
-      value: 'Enter an email and press Enter',
-    });
+    return $localize`:@@inviteUser.dialog.input.add.placeholder:Enter an email and press Enter`;
   }
 
   public onKeyPress($event: KeyboardEvent) {

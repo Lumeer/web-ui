@@ -19,7 +19,6 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../../../environments/environment';
@@ -48,7 +47,6 @@ export class UserFeedbackModalComponent implements OnInit {
 
   public constructor(
     private bsRef: BsModalRef,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private userService: UserService,
     private angulartics2: Angulartics2
@@ -96,14 +94,14 @@ export class UserFeedbackModalComponent implements OnInit {
   }
 
   private notifyOnSuccess() {
-    const message = this.i18n({id: 'dialog.feedback.success', value: 'Your feedback has been sent.'});
+    const message = $localize`:@@dialog.feedback.success:Your feedback has been sent.`;
     this.notificationService.success(message);
 
     this.hideDialog();
   }
 
   private notifyOnError() {
-    const message = this.i18n({id: 'dialog.feedback.error', value: 'Could not send feedback.'});
+    const message = $localize`:@@dialog.feedback.error:Could not send feedback.`;
     this.notificationService.error(message);
 
     this.performingAction$.next(false);

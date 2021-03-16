@@ -21,20 +21,16 @@ import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {uniqueValues} from '../../../utils/array.utils';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class GetLinkDocumentBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.createDocumentBlock',
-      value: 'Gets a record linked to the given document via the selected link.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.createDocumentBlock:'Gets a record linked to the given document via the selected link.`;
   }
 
   public getVisibility(): MasterBlockType[] {
