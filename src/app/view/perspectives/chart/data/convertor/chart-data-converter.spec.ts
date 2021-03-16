@@ -37,7 +37,6 @@ import {AttributesResourceType} from '../../../../../core/model/resource';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {environment} from '../../../../../../environments/environment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ChartDataConverter} from './chart-data-converter';
 import {ChartDataSet, ChartPoint} from './chart-data';
 import {PercentageConstraint, PercentageConstraintConfig} from '@lumeer/data-filters';
@@ -107,7 +106,6 @@ describe('Chart data converter single collection', () => {
           provide: TRANSLATIONS_FORMAT,
           useFactory: () => environment.i18nFormat,
         },
-        I18n,
       ],
     });
     constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);
@@ -873,7 +871,6 @@ describe('Chart data converter linked collections', () => {
           provide: TRANSLATIONS_FORMAT,
           useFactory: () => environment.i18nFormat,
         },
-        I18n,
       ],
     });
     constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);

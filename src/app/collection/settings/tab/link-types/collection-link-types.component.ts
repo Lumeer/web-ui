@@ -22,7 +22,6 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
@@ -45,7 +44,7 @@ export class CollectionLinkTypesComponent implements OnInit {
   public collection$: Observable<Collection>;
   public searchString$ = new BehaviorSubject<string>('');
 
-  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeData();

@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
@@ -62,7 +61,6 @@ export class ViewComponent implements OnInit {
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
     private viewSettingsService: ViewSettingsService,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>,
     private modalService: ModalService

@@ -27,7 +27,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
@@ -69,8 +68,6 @@ export class FilesDropdownComponent implements AfterViewInit {
     DropdownPosition.TopStart,
     DropdownPosition.TopEnd,
   ];
-
-  constructor(private i18n: I18n) {}
 
   public ngAfterViewInit() {
     this.dropdown.open();

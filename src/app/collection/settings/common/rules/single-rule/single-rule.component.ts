@@ -18,12 +18,10 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Rule, RuleTiming, RuleType} from '../../../../../core/model/rule';
+import {Rule, RuleType} from '../../../../../core/model/rule';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NotificationService} from '../../../../../core/notifications/notification.service';
 
 @Component({
   selector: 'single-rule',
@@ -46,7 +44,7 @@ export class SingleRuleComponent {
   @Output()
   public onDuplicate = new EventEmitter<Rule>();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  constructor(private store$: Store<AppState>) {}
 
   public fireEdit(rule: Rule): void {
     if (rule.type === RuleType.Zapier) {

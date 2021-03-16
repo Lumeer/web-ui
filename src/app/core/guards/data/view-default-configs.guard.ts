@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
@@ -33,7 +32,7 @@ import {WorkspaceService} from '../../../workspace/workspace.service';
 
 @Injectable()
 export class ViewDefaultConfigsGuard implements Resolve<any> {
-  constructor(private i18n: I18n, private workspaceService: WorkspaceService, private store$: Store<AppState>) {}
+  constructor(private workspaceService: WorkspaceService, private store$: Store<AppState>) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     const organizationCode = route.paramMap.get('organizationCode');

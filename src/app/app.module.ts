@@ -20,7 +20,6 @@
 import {APP_INITIALIZER, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
@@ -77,7 +76,6 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
       provide: TRANSLATIONS_FORMAT,
       useFactory: () => environment.i18nFormat,
     },
-    I18n,
     ConstraintDataService,
     {
       provide: APP_INITIALIZER,

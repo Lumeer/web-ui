@@ -19,7 +19,7 @@
 
 import {parseSelectTranslation} from './translation.utils';
 
-fdescribe('translation utils', () => {
+describe('translation utils', () => {
   it('should parse simple select', () => {
     expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'a'})).toEqual('A');
     expect(parseSelectTranslation('{unit, select, a {A} b {B} c {C}}', {unit: 'b'})).toEqual('B');

@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../../../core/notifications/notification.service';
@@ -43,7 +42,6 @@ export class CollectionAttributesComponent implements OnInit {
   private collection: Collection;
 
   constructor(
-    private i18n: I18n,
     private notificationService: NotificationService,
     private modalService: ModalService,
     private store$: Store<AppState>

@@ -18,9 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Collection} from '../../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {MapAttributeModel} from '../../../../../../core/store/maps/map.model';
 
 @Component({

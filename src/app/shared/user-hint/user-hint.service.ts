@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {EMPTY, Observable, of} from 'rxjs';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -31,7 +30,7 @@ import {PercentageConstraint} from '@lumeer/data-filters';
   providedIn: 'root',
 })
 export class UserHintService {
-  public constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public processDataHints(values: any[], entry: [string, any], collection: Collection): Observable<any> {
     if (values.length === 3) {

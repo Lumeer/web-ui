@@ -19,9 +19,6 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Role} from '../../core/model/role';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-
 @Pipe({
   name: 'valueFilter',
 })
