@@ -265,6 +265,7 @@ export class BlocklyUtils {
         if (children && children.length > 0) {
           const child = children[0];
           const childOutputType = this.getOutputConnectionCheck(child);
+          console.log(childOutputType);
 
           if (childOutputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             const newType = childOutputType.replace(BlocklyUtils.ARRAY_TYPE_SUFFIX, '');

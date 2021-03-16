@@ -57,7 +57,10 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
               type: 'field_dropdown',
               name: 'COLLECTION_ID',
               options: function () {
-                return (this_.blocklyUtils.getCollections() || []).map(collection => [collection.name, collection.id]);
+                return (this_.blocklyUtils.getCollections() || []).map(collection => [
+                  collection.name.replace(/ /g, '\u00A0'),
+                  collection.id,
+                ]);
               },
             },
           ],

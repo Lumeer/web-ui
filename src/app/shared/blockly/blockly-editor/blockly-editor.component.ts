@@ -583,9 +583,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           if (block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX)) {
             const link = block.getInput('DOCUMENT');
             const linkedBlock = link.connection?.targetConnection?.getSourceBlock();
-
             if (linkedBlock && linkedBlock.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
-              const blockOutputType = this.blocklyUtils.getOutputConnectionCheck(block);
+              const blockOutputType = this.blocklyUtils.getOutputConnectionCheck(linkedBlock);
               const linkParts = this.blocklyUtils.getLinkParts(block.type);
               const counterpart =
                 linkParts[0] === blockOutputType.replace(BlocklyUtils.DOCUMENT_VAR_SUFFIX, '')
@@ -601,11 +600,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private onWorkspaceChange(changeEvent): void {
     const workspace = this.workspace;
 
+    console.log(changeEvent);
     // keep for easy debugging
-    /*if (changeEvent instanceof Blockly.Events.Ui) {
+    if (changeEvent instanceof Blockly.Events.Ui) {
       const block = workspace.getBlockById(changeEvent.blockId);
       console.log(block);
-    }*/
+    }
 
     if (changeEvent instanceof Blockly.Events.Create) {
       this.onWorkspaceBlockCreate(changeEvent, workspace);
