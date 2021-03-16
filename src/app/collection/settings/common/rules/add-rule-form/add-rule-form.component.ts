@@ -258,10 +258,10 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     return this.types
       .filter(type => type !== RuleType.Zapier)
       .map(type => ({
-        id: type, // TODO TRL create some other type
+        id: type,
         value: parseSelectTranslation(
-          $localize`:@@collection.config.tab.rules.type:{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}`,
-          {type}
+          $localize`:@@collection.config.tab.rules.type:{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}`,
+          {VAR_SELECT: type}
         ),
       }));
   }

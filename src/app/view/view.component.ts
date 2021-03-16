@@ -171,7 +171,6 @@ export class ViewComponent implements OnInit {
 
   private informAboutSameNameView(view: View) {
     const title = $localize`:@@view.name.exists:View already exist`;
-    // TODO TRL check hungarian translation
     const message = parseSelectTranslation(
       $localize`:@@view.name.exists.message:Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?`,
       {create: !!view.code ? '0' : '1'}
