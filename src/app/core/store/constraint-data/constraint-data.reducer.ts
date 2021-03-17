@@ -26,7 +26,7 @@ export function constraintDataReducer(
 ): ConstraintDataState {
   switch (action.type) {
     case ConstraintDataActionType.INIT:
-      return {...state, ...action.payload};
+      return {...state, ...action.payload.data};
     default:
       return state;
   }
