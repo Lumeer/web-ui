@@ -149,7 +149,7 @@ export class LinkTypeRulesComponent implements OnInit {
 
   private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
     const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this rule?`;
-    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this rule?'`;
+    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this rule?`;
 
     if (isBeingUsed) {
       const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This rule is being used in an action button.`;

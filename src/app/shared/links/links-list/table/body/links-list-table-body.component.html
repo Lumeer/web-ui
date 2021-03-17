@@ -4,8 +4,8 @@
 
 <ng-container *ngIf="{rows: [rows, (newRows$ | async)] | concat} as data">
   <tr *ngIf="data.rows.length === 0">
-    <td [attr.colspan]="columns.length" class="text-center" i18n="@@shared.preview.results.noResults">
-      No records found.
+    <td [attr.colspan]="columns.length" class="text-center">
+      <span i18n="@@shared.preview.results.noResults">No records found.</span>
     </td>
   </tr>
 

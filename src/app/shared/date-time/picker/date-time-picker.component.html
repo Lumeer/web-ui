@@ -35,16 +35,14 @@
         <div class="d-flex flex-grow-0 justify-content-end">
           <button class="btn btn-sm btn-outline-secondary"
                   data-test="date-time-picker-cancel-button"
-                  i18n="@@button.cancel"
                   (click)="onCancel($event)">
-            Cancel
+            <span i18n="@@button.cancel">Cancel</span>
           </button>
           <button class="btn btn-sm btn-primary ml-2"
                   data-test="date-time-picker-save-button"
-                  i18n="@@button.save"
                   [disabled]="!dateControl.value"
                   (click)="onSave($event)">
-            Save
+            <span i18n="@@button.save">Save</span>
           </button>
         </div>
       </div>

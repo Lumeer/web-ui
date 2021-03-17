@@ -30,7 +30,8 @@
              (keydown)="onTitleKeyDown($event)">
       <button class="btn btn-sm btn-primary ml-2"
               [disabled]="invalid$ | async"
-              i18n="@@button.save" (click)="$event.stopPropagation(); onSave()">Save
+              (click)="$event.stopPropagation(); onSave()">
+        <span i18n="@@button.save">Save</span>
       </button>
     </form>
   </div>

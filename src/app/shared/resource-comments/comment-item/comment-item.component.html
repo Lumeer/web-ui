@@ -40,7 +40,7 @@
        (click)="editComment(comment)">
     </i>
     <i *ngIf="user?.id === comment?.author"
-       tooltip="Remove"
+       tooltip="Delete"
        i18n-tooltip="@@button.remove"
        placement="top"
        class="far fa-trash-alt color-danger cursor-pointer"
