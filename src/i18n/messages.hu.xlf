@@ -223,7 +223,19 @@
 			<trans-unit datatype="html" id="blockly.tooltip.createDocumentBlock">
 				<source>'Gets a record linked to the given document via the selected link.</source>
 				<target>A hivatkozáson keresztül kapod meg az adott dokumentumhoz csatolt rekordot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getParentDocumentBlock" datatype="html">
+        <source>Gets the parent record in hierarchy. Returns null if there isn't any.</source><target state="new">Gets the parent record in hierarchy. Returns null if there isn't any.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-parent-document-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getSiblingsBlock" datatype="html">
+        <source>Follows the link from the given record and then all the links back to the original table, returning all siblings.</source><target state="new">Follows the link from the given record and then all the links back to the original table, returning all siblings.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-siblings-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.createDocumentBlock2">
 				<source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</source>
 				<target>Új rekordot hoz létre. Rendeld hozzá egy változóhoz a tulajdonságai megváltoztatásához. A végtelen hurkok elkerülése érdekében csak
@@ -277,7 +289,19 @@
 			<trans-unit datatype="html" id="blockly.tooltip.getAttributeBlock">
 				<source>Gets the value of an attribute in the given record.</source>
 				<target>Megadja a tulajdonság értékét az adott rekordban.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getChildDocumentsBlock" datatype="html">
+        <source>Gets the immediate child records in hierarchy. Returns an empty array if there aren't any.</source><target state="new">Gets the immediate child records in hierarchy. Returns an empty array if there aren't any.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-child-documents-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getHierarchySiblingsDocumentsBlock" datatype="html">
+        <source>Gets the sibling records in hierarchy. Returns an empty array if there aren't any.</source><target state="new">Gets the sibling records in hierarchy. Returns an empty array if there aren't any.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-hierarchy-siblings-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.getLinkAttributeBlock">
 				<source>Gets the value of an attribute in the given link.</source>
 				<target>Megadja a tulajdonság értékét az adott hivatkozásban.</target>

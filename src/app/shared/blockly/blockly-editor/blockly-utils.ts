@@ -88,6 +88,10 @@ export class BlocklyUtils {
   public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
   public static readonly LINK_DOCUMENTS_RETURN = 'link_documents_return';
   public static readonly READ_DOCUMENTS = 'read_documents';
+  public static readonly GET_SIBLINGS = 'get_siblings';
+  public static readonly GET_HIERARCHY_SIBLINGS = 'get_hierarchy_siblings';
+  public static readonly GET_PARENT_DOCUMENT = 'get_parent_document';
+  public static readonly GET_CHILD_DOCUMENTS = 'get_child_documents';
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
@@ -168,6 +172,43 @@ export class BlocklyUtils {
           if (collectionId) {
             block.setOutput(true, collectionId + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
           }
+        }
+      }
+
+      // set output type of get child documents block
+      if (block.type === BlocklyUtils.GET_PARENT_DOCUMENT) {
+        const input = block.getInput('DOCUMENT');
+
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+          const inputType =
+            input.connection.targetConnection?.check_ instanceof Array
+              ? input.connection.targetConnection?.check_[0]
+              : input.connection.targetConnection?.check_;
+
+          block.setOutput(true, inputType);
+        }
+      }
+
+      // set output type of get siblings block, and
+      // set output type of get siblings in hierarchy block, and
+      // set output type of get child documents block
+      if (
+        block.type === BlocklyUtils.GET_SIBLINGS ||
+        block.type === BlocklyUtils.GET_HIERARCHY_SIBLINGS ||
+        block.type === BlocklyUtils.GET_CHILD_DOCUMENTS
+      ) {
+        const input = block.getInput('DOCUMENT');
+
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+          const inputType =
+            input.connection.targetConnection?.check_ instanceof Array
+              ? input.connection.targetConnection?.check_[0]
+              : input.connection.targetConnection?.check_;
+
+          block.setOutput(
+            true,
+            inputType.replace(BlocklyUtils.DOCUMENT_VAR_SUFFIX, BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+          );
         }
       }
 
@@ -265,7 +306,6 @@ export class BlocklyUtils {
         if (children && children.length > 0) {
           const child = children[0];
           const childOutputType = this.getOutputConnectionCheck(child);
-          console.log(childOutputType);
 
           if (childOutputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             const newType = childOutputType.replace(BlocklyUtils.ARRAY_TYPE_SUFFIX, '');
@@ -385,6 +425,9 @@ export class BlocklyUtils {
 
     if (parentBlock.type === BlocklyUtils.GET_ATTRIBUTE || parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
       const newType =
+        block.type.endsWith(BlocklyUtils.GET_HIERARCHY_SIBLINGS) ||
+        block.type.endsWith(BlocklyUtils.GET_CHILD_DOCUMENTS) ||
+        block.type.endsWith(BlocklyUtils.GET_SIBLINGS) ||
         block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
         block.type.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
           ? ['Array']
@@ -404,8 +447,9 @@ export class BlocklyUtils {
       const children = block.getChildren();
       const idx = (children || []).findIndex(
         child =>
-          child.type?.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX) &&
-          child.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)
+          (child.type?.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX) &&
+            child.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) ||
+          child.type === BlocklyUtils.GET_PARENT_DOCUMENT
       );
 
       // search for all variable setters connected to document variables and set the variable type accordingly
@@ -413,9 +457,23 @@ export class BlocklyUtils {
         if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
           const variable = block.inputList[0].fieldRow[1].getVariable();
           if (variable) {
-            const [, , collectionId] = children[idx].type.split('_');
-            this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
-            block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+            if (children[idx].type === BlocklyUtils.GET_PARENT_DOCUMENT) {
+              const input = children[idx].getInput('DOCUMENT');
+
+              if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+                const inputType =
+                  input.connection.targetConnection?.check_ instanceof Array
+                    ? input.connection.targetConnection?.check_[0]
+                    : input.connection.targetConnection?.check_;
+                const [collectionId] = inputType.split('_');
+                this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+                block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+              }
+            } else {
+              const [, , collectionId] = children[idx].type.split('_');
+              this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+              block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+            }
           }
         }
       } else {
