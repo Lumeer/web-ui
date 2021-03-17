@@ -4161,7 +4161,21 @@
         <target>Vytvoří nový záznam. Uložte ho do proměnné, abyste jej mohli dál měnit.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.isEmpty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getParentDocumentBlock" datatype="html">
+        <source>Gets the parent record in hierarchy. Returns null if there isn't any.</source>
+        <target>Získá nadřazený záznam v hierarchii. Vrátí null, pokud žádný neexistuje.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-parent-document-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getSiblingsBlock" datatype="html">
+        <source>Follows the link from the given record and then all the links back to the original table, returning all siblings.</source>
+        <target>Následuje všechna propojení daného typu z uvedeného záznamu a pak všechna propojení zpět do původní tabulky. Tak vrátí veškeré sourozence.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-siblings-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isEmpty" datatype="html">
         <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source>
         <target>Vrátí true pokud je vstup null, undefined, prázdný řetězec, prázdné pole, prázdný objekt or nebo pole s jednou prázdnou hodnotou.</target>
         
@@ -4238,7 +4252,21 @@
         <source>Gets the value of an attribute in the given record.</source>
         <target>Vrátí hodnotu daného sloupce v daném záznamu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getLinkAttributeBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getChildDocumentsBlock" datatype="html">
+        <source>Gets the immediate child records in hierarchy. Returns an empty array if there aren't any.</source>
+        <target>Vrátí příme potomky v hierarchii. Vrátí prázdné pole, pokud žádní neexistují.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-child-documents-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getHierarchySiblingsDocumentsBlock" datatype="html">
+        <source>Gets the sibling records in hierarchy. Returns an empty array if there aren't any.</source>
+        <target>Vrátí sourozence v hierarchii - záznamy na stejné úrovni mající stejného rodiče. Vrátí prázdné pole pokud žádní neexsitují.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-hierarchy-siblings-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getLinkAttributeBlock" datatype="html">
         <source>Gets the value of an attribute in the given link.</source>
         <target>Vrátí hodnotu daného sloupce v dané vazbě.</target>
         

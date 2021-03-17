@@ -78,6 +78,10 @@ import {View} from '../../../core/store/views/view';
 import {ReadDocumentsBlocklyComponent} from './blocks/read-documents-blockly-component';
 import {SendEmailBlocklyComponent} from './blocks/send-email-blockly-component';
 import {NavigateBlocklyComponent} from './blocks/navigate-blockly-component';
+import {GetSiblingsBlocklyComponent} from './blocks/get-siblings-blockly-component';
+import {GetParentDocumentBlocklyComponent} from './blocks/get-parent-document-blockly-component';
+import {GetChildDocumentsBlocklyComponent} from './blocks/get-child-documents-blockly-component';
+import {GetHierarchySiblingsBlocklyComponent} from './blocks/get-hierarchy-siblings-blockly-component';
 
 declare var Blockly: any;
 
@@ -184,6 +188,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.views),
       new SendEmailBlocklyComponent(this.blocklyUtils),
       new NavigateBlocklyComponent(this.blocklyUtils, this.views),
+      new GetSiblingsBlocklyComponent(this.blocklyUtils, this.linkTypes),
+      new GetParentDocumentBlocklyComponent(this.blocklyUtils),
+      new GetChildDocumentsBlocklyComponent(this.blocklyUtils),
+      new GetHierarchySiblingsBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
@@ -598,12 +606,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   private onWorkspaceChange(changeEvent): void {
     const workspace = this.workspace;
 
-    console.log(changeEvent);
     // keep for easy debugging
+    /*console.log(changeEvent);
     if (changeEvent instanceof Blockly.Events.Ui) {
       const block = workspace.getBlockById(changeEvent.blockId);
       console.log(block);
-    }
+    }*/
 
     if (changeEvent instanceof Blockly.Events.Create) {
       this.onWorkspaceBlockCreate(changeEvent, workspace);
