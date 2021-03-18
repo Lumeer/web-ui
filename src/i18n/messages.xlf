@@ -3221,19 +3221,19 @@
           <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="constraint.address.part" datatype="html">
         <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}
   "/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">56,57</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
-        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.coordinates.description" datatype="html">
@@ -3346,6 +3346,13 @@
           <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
+        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="constraint.duration.unit.description" datatype="html">
         <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }
           "/> </source>
@@ -3354,11 +3361,11 @@
           <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
+      <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
+        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.unit.conversion" datatype="html">
@@ -3367,13 +3374,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">34,35</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
-        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.description" datatype="html">
@@ -4055,19 +4055,19 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="modal.links.modify.selected" datatype="html">
         <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }
           "/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.filter.title" datatype="html">
@@ -4242,6 +4242,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context>
           <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="users.header.roles" datatype="html">
+        <source>Roles</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.actions.remove" datatype="html">
@@ -4872,13 +4879,6 @@
           <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="query.suggestion.type" datatype="html">
         <source> <x id="ICU" equiv-text="{suggestion.type, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}
 "/>
@@ -4886,6 +4886,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
@@ -6073,13 +6080,6 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source> <x id="ICU" equiv-text="{yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}
 "/>
@@ -6087,6 +6087,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
+        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">

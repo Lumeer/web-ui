@@ -716,7 +716,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it/row/post-it-row.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
             <trans-unit id="view.perspective.name" datatype="html">
                 <source>{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}</source>
-                <target>{perspective, select, detail {Detail} pivot {Pivot} kanban {Nástěnka} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} }</target>
+                <target>{perspective, select, detail {Detail} pivot {Pivot} kanban {Nástěnka} chart {Graf} ganttChart {Časová osa} calendar {Kalendář} map {Mapa} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} workflow {Worklow} }</target>
 
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/perspective-name.pipe.ts</context><context context-type="linenumber">32</context></context-group></trans-unit>
@@ -3135,7 +3135,13 @@
                 <source>Email</source>
                 <target>E-mail</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.header.roles" datatype="html">
+        <source>Roles</source><target>Oprávnění</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="users.header.search.placeholder" datatype="html">
                 <source>Search user...</source>
                 <target>Vyhledat uživatele...</target>
