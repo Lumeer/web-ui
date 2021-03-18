@@ -278,7 +278,7 @@
         <source>I am sorry but you do not have permissions to add tables. </source><target>Je mi líto, ale nemáte oprávnění přidávat tabulky.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="search.records.empty.title" datatype="html">
-        <source>There are no Records yet!</source><target state="new">There are no Records yet!</target>
+        <source>There are no Records yet!</source><target>Nejssou zde ještě žádné záznamy!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/warning-message/empty-records/empty-records.component.html</context>
           <context context-type="linenumber">7</context>
@@ -940,7 +940,7 @@
         <source>none so far, keep working!</source><target>zatím žádný, pracujte na tom!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="referralDialog.paidEarnings.label" datatype="html">
-        <source>Your paid earnings are: </source><target state="new">Your paid earnings are: </target>
+        <source>Your paid earnings are: </source><target>Vaše proplacené výdělky jsou: </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
           <context context-type="linenumber">36</context>
@@ -1691,7 +1691,8 @@
         <source>Confirm</source><target>Confirm</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="modal.links.modify.empty.title" datatype="html">
-        <source> I am sorry but there is nothing to link. </source><target state="new"> I am sorry but there is nothing to link. </target>
+        <source> I am sorry but there is nothing to link. </source>
+        <target> Je mi líto, ale není zde nic k propojení. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">64,65</context>
@@ -2022,7 +2023,7 @@
 
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.extension" datatype="html">
-        <source>Subscription Extension</source><target state="new">Subscription Extension</target>
+        <source>Subscription Extension</source><target>Prodloužení předplatného</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
           <context context-type="linenumber">19</context>
@@ -2049,7 +2050,7 @@
 
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.extension.start" datatype="html">
-        <source>Subscription Extension Start Date</source><target state="new">Subscription Extension Start Date</target>
+        <source>Subscription Extension Start Date</source><target>Počáteční datum prodloužení předplatného</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
           <context context-type="linenumber">40</context>
@@ -2471,7 +2472,7 @@
         <source>Size</source><target>Velikost</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="perspective.chart.config.attribute.empty" datatype="html">
-        <source>Select attribute</source><target state="new">Select attribute</target>
+        <source>Select attribute</source><target>Vyberte atribut</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">43</context>
@@ -2695,13 +2696,14 @@
                 <target>Pohledy</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="search.views.empty.title.task" datatype="html">
-        <source>Your first task is to create a view!</source><target state="new">Your first task is to create a view!</target>
+        <source>Your first task is to create a view!</source><target>Váš první úkol je vytvořit nový pohled!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="search.views.empty.subtitle.task" datatype="html">
-        <source>Views are the most important part of Lumeer that boosts your productivity and saves your time.</source><target state="new">Views are the most important part of Lumeer that boosts your productivity and saves your time.</target>
+        <source>Views are the most important part of Lumeer that boosts your productivity and saves your time.</source>
+        <target>Pohledy jsou nejdůležitější součást Lumeera, která Vám pomáhá zvýšit efektivitu a šetří Váš čas.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context>
           <context context-type="linenumber">24</context>
@@ -3685,7 +3687,7 @@
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">231</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
-        <source>Could not move card</source><target state="new">Could not move card</target>
+        <source>Could not move card</source><target>Kartu nelze přesunout</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
           <context context-type="linenumber">602</context>
@@ -4040,7 +4042,8 @@
         <source>Let's add some Records into</source><target>Přidejte nějaké záznamy do</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
-        <source>Open a table by clicking on it and add your first record.</source><target state="new">Open a table by clicking on it and add your first record.</target>
+        <source>Open a table by clicking on it and add your first record.</source>
+        <target>Otevřte tabulku kliknutím na ni a přidejte Váš první záznam.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/warning-message/empty-records/empty-records.component.html</context>
           <context context-type="linenumber">22</context>
