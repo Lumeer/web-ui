@@ -3221,19 +3221,19 @@
           <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
-        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="constraint.address.part" datatype="html">
         <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}
   "/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.coordinates.description" datatype="html">
@@ -4055,19 +4055,19 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="modal.links.modify.selected" datatype="html">
         <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }
           "/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">18,19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.filter.title" datatype="html">
@@ -4879,6 +4879,13 @@
           <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="query.suggestion.type" datatype="html">
         <source> <x id="ICU" equiv-text="{suggestion.type, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}
 "/>
@@ -4886,13 +4893,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11,12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
-          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
@@ -5043,7 +5043,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.next" datatype="html">
@@ -5054,7 +5054,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inviteUser.dialog.button" datatype="html">
@@ -5271,18 +5271,11 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="panel.plan.free" datatype="html">
-        <source>Free Plan: Upgrade now!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="language.czech" datatype="html">
         <source>Czech</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/user-settings/notification-settings/notification-settings.component.ts</context>
@@ -5292,117 +5285,19 @@
       <trans-unit id="language.english" datatype="html">
         <source>English</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/user-settings/notification-settings/notification-settings.component.ts</context>
           <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="menu.notification.settings" datatype="html">
-        <source>Email Notifications</source>
+      <trans-unit id="language.hungary" datatype="html">
+        <source>Hungarian</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.sendFeedback" datatype="html">
-        <source>Send Feedback</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.applicationTour" datatype="html">
-        <source>Application Tour</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.hintsEnable" datatype="html">
-        <source>Show Hints</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.hintsDisable" datatype="html">
-        <source>Hide Hints</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.affiliateProgram" datatype="html">
-        <source>Affiliate Program</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">79</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
-        <source>Earn with Lumeer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.solutionsSupport" datatype="html">
-        <source>Solutions and Support</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">89</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.getHelp" datatype="html">
-        <source>Get Help</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">94</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.account" datatype="html">
-        <source>Account</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="menu.logout" datatype="html">
-        <source>Log out</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">107</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dialog.feedback.title" datatype="html">
@@ -5458,14 +5353,126 @@
         <source>User menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="panel.plan.free" datatype="html">
+        <source>Free Plan: Upgrade now!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.notification.settings" datatype="html">
+        <source>Email Notifications</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.sendFeedback" datatype="html">
+        <source>Send Feedback</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.applicationTour" datatype="html">
+        <source>Application Tour</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.hintsEnable" datatype="html">
+        <source>Show Hints</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.hintsDisable" datatype="html">
+        <source>Hide Hints</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.affiliateProgram" datatype="html">
+        <source>Affiliate Program</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
+        <source>Earn with Lumeer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.solutionsSupport" datatype="html">
+        <source>Solutions and Support</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.getHelp" datatype="html">
+        <source>Get Help</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.account" datatype="html">
+        <source>Account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="menu.logout" datatype="html">
+        <source>Log out</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.dismiss" datatype="html">
         <source>Dismiss</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
@@ -5476,147 +5483,147 @@
         <source>Onward!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="menu.appTour.invocationError" datatype="html">
         <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">207</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.basic" datatype="html">
         <source>Access your information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">268</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.basic" datatype="html">
         <source>Lumeer organizes your information in tables. Later, you can use this button to add your tables. Then you can open the table by simply clicking on it.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">247</context>
+          <context context-type="linenumber">269</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.welcome" datatype="html">
         <source>Welcome to Lumeer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">274</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.welcome" datatype="html">
         <source>Let me guide you around briefly! By clicking on the Lumeer icon, you can always return to this page where you can best find and access your stored data.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">277</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.searchViewsNoView" datatype="html">
         <source>Create views of your data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">276</context>
+          <context context-type="linenumber">298</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.searchViewsNoView" datatype="html">
         <source>Views are the central nerve of Lumeer. They are the main booster of your productivity and save your precious time. Your first task is to create a View!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">301</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.searchViews" datatype="html">
         <source>Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">323</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.tablesView" datatype="html">
         <source>See the tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">309</context>
+          <context context-type="linenumber">331</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.tablesTab" datatype="html">
         <source>The raw data are stored in Tables which can be accessed on their own tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">312</context>
+          <context context-type="linenumber">334</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.search" datatype="html">
         <source>Search for information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">321</context>
+          <context context-type="linenumber">343</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.search" datatype="html">
         <source>The best way to locate your stored information is to search for it. Lumeer will guide you, just start typing in the search box.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">324</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.perspectives" datatype="html">
         <source>Perspectives</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">332</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.perspectives" datatype="html">
         <source>When you open your table or search results, try selecting a different visual perspective. Update an event in a calendar, plan tasks in timelines, track addresses on a map, drag point in a chart, create a pivot table report and more.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">335</context>
+          <context context-type="linenumber">357</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.views" datatype="html">
         <source>Views and sharing</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">365</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.views" datatype="html">
         <source>Once you fine tune your visual perspective, give it a name and save it. Later you can access the stored view on the home page or you can share the view with your colleagues.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">368</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.getHelp" datatype="html">
         <source>Help with Lumeer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">376</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.getHelp" datatype="html">
         <source>Here you can always get help in case you got lost.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">379</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.title.userMenu" datatype="html">
         <source>Return to this Tour</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">365</context>
+          <context context-type="linenumber">387</context>
         </context-group>
       </trans-unit>
       <trans-unit id="appTour.description.userMenu" datatype="html">
         <source>You can always return to this tour and find more information in our knowledge base which can be accessed in the user menu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">368</context>
+          <context context-type="linenumber">390</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.detail.type" datatype="html">

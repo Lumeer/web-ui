@@ -24,6 +24,7 @@ import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language
 export const localeLanguageTags: Record<string, LanguageTag> = {
   [LanguageCode.EN]: LanguageTag.USA,
   [LanguageCode.CZ]: LanguageTag.Czech,
+  [LanguageCode.HU]: LanguageTag.Hungary,
 };
 
 export function getCurrentLocaleLanguageTag(): LanguageTag {

@@ -668,7 +668,8 @@ export class BlocklyUtils {
 
   public getLinkType(id: string): LinkType {
     const currentLinkType = this.linkTypes?.find(linkType => linkType.id === id);
-    const collections = this.collections?.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
+    const collections =
+      currentLinkType && this.collections?.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
     if (collections?.length === 2) {
       return {...currentLinkType, collections: [collections[0], collections[1]]};
     }

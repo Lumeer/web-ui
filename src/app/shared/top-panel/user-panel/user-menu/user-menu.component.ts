@@ -44,6 +44,8 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 import {SearchTab} from '../../../../core/store/navigation/search-tab';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
 import {NotificationSettingsModalComponent} from '../../../modal/notification-settings/notification-settings-modal.component';
+import {environment} from '../../../../../environments/environment';
+import {availableLanguages, Language, LanguageCode} from './language';
 
 @Component({
   selector: 'user-menu',
@@ -64,9 +66,16 @@ export class UserMenuComponent implements OnInit {
   @Output()
   public toggleControls = new EventEmitter();
 
+  public readonly buildNumber = environment.buildNumber;
+  public readonly locale = environment.locale;
+  public readonly languageCode = LanguageCode;
+  public readonly languages = availableLanguages.filter(language => language.code !== this.locale);
+  public readonly helpLink: string;
+
   public currentUser$: Observable<User>;
   public url$: Observable<string>;
   public freePlan$: Observable<boolean>;
+  public currentLanguage: Language;
 
   private starting: boolean = false;
   private dismissing: boolean = false;
@@ -77,7 +86,9 @@ export class UserMenuComponent implements OnInit {
     private modalService: ModalService,
     private store$: Store<AppState>,
     private router: Router
-  ) {}
+  ) {
+    this.helpLink = this.getHelpLink();
+  }
 
   public ngOnInit() {
     this.driver = new Driver({
@@ -89,6 +100,8 @@ export class UserMenuComponent implements OnInit {
       prevBtnText: $localize`:@@button.previous:Previous`,
       onReset: () => this.dismissWizard(),
     });
+
+    this.currentLanguage = availableLanguages.find(language => language.code === this.locale);
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.url$ = this.store$.pipe(select(selectUrl));
@@ -110,6 +123,15 @@ export class UserMenuComponent implements OnInit {
         first()
       )
       .subscribe(([, , collections, views]) => this.startTour(false, collections.length, views.length));
+  }
+
+  private getHelpLink() {
+    switch (this.locale) {
+      case LanguageCode.CZ:
+        return 'https://www.lumeer.io/cs/pomoc';
+      default:
+        return 'https://www.lumeer.io/get-help';
+    }
   }
 
   private isViewSearchAll(url: string): boolean {
