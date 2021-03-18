@@ -43,8 +43,12 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {map, take} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {objectChanged} from '../../utils/common.utils';
+import {
+  selectCollectionsPermissions,
+  selectLinkTypesPermissions,
+} from '../../../core/store/user-permissions/user-permissions.state';
+import {objectChanged, preventEvent} from '../../utils/common.utils';
+import {ModalService} from '../../modal/modal.service';
 
 @Component({
   selector: 'links-accordeon',
@@ -77,16 +81,18 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public linkTypePermissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
 
   public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+    this.linkTypePermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -113,6 +119,14 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
       }
     }
     this.openedGroups$.next(openedGroups);
+  }
+
+  public onSetLinks(event: MouseEvent, linkType: LinkType) {
+    preventEvent(event);
+
+    if (this.collection && this.document) {
+      this.modalService.showModifyDocumentLinks(this.document.id, this.collection.id, linkType.id);
+    }
   }
 
   public isOpenChanged(state: boolean, id: string) {

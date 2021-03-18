@@ -169,13 +169,16 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
-      this.detailColumnId = this.tableModel?.columns?.find(
-        column =>
-          !column.hidden &&
-          (column.attribute?.constraint?.isTextRepresentation ||
-            column.attribute?.constraint?.type === ConstraintType.User)
-      )?.id;
+      this.detailColumnId = this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
     }
+  }
+
+  private columnCanShowDetailIndicator(column: TableColumn): boolean {
+    const allowedTypes = [ConstraintType.User, ConstraintType.Text];
+    return (
+      !column.hidden &&
+      (column.attribute?.constraint?.isTextRepresentation || allowedTypes.includes(column.attribute?.constraint?.type))
+    );
   }
 
   private checkScrollPositionForSelectedCell() {
