@@ -203,15 +203,15 @@
 			<trans-unit datatype="html" id="blockly.dropdown.ops.dateChangeBlock">
 				<source>add,subtract,set</source>
 				<target>hozzáadni,elvonni, beállítani</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">40</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.dropdown.ops.shiftDateOfBlock">
 				<source>start,end</source>
 				<target>indítani,befejezni</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/shift-date-of-blockly-component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.dropdown.units.dateChangeBlock">
-				<source>'second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
-				<target>másodperc(ek),perc(ek), óra(k), nap(ok), hét(ek), hónap(ok), hónap(k) (ragaszkodás a hónap végéig), negyedév(ek), negyedév(ek) (ragaszkodás a hónap végéig), év(ek), év(ek) (ragaszkodás a hónap végéig)</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit>
+				<source>'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+				<target>másodperc(ek),perc(ek),óra(k),nap(ok),munkanap(ok),hét(ek),hónap(ok),hónap(k) (ragaszkodás a hónap végéig),negyedév(ek),negyedév(ek) (ragaszkodás a hónap végéig),év(ek),év(ek) (ragaszkodás a hónap végéig)</target>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.dropdown.units.shiftDateOfBlock">
 				<source>minute,hour,day,week,month,quarter,year</source>
 				<target>perc,óra,nap,hét,hónap,negyedév,év</target>
@@ -254,7 +254,7 @@
 			<trans-unit datatype="html" id="blockly.tooltip.dateChangeBlock">
 				<source>Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.</source>
 				<target>Módosítja a dátum objektumot visszatérve az új frissített dátumobjektumhoz. Dátum alkalmazása az ISO-nak dátum/idő tulajdonságban való tárolásához.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.dateNowBlock">
 				<source>Gets current date as ISO string for storage in date/time attributes.</source>
 				<target>Az aktuális dátum betöltése ISO-karakterláncként dátum/idő tulajdonságbanban való tároláshoz.</target>
@@ -1587,7 +1587,7 @@
 			<trans-unit datatype="html" id="document.detail.links.noLinks">
 				<source>There are no links.</source>
 				<target>Nincsenek linkek.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.remove">
 				<source>Remove Record</source>
 				<target>Rekord eltávolítása</target>
@@ -3738,7 +3738,7 @@
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
         <source>Add/Remove links</source><target state="new">Add/Remove links</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.body.row.copy.value">
 					<source>Copy value</source>
 					<target>Érték másolása</target>

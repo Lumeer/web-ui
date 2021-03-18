@@ -2735,7 +2735,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
         <source>Add/Remove links</source><target>Přidat/Odebrat vazby</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit>
             <trans-unit id="file.not.exist" datatype="html">
                 <source>Table does not exist</source>
                 <target>Tabulka neexistuje</target>
@@ -4277,14 +4277,14 @@
         <source>Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.</source>
         <target>Změní objekt s datumem a vrátí nový změněný objekt. Napojte na blok datum na ISO pro uložení do atributu typu datum a čas.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>'second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
-        <target>sekund(y),minut(y),hodin(y),dn(ů/y),týdn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
+        <source>'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+        <target>sekund(y),minut(y),hodin(y),dn(ů/y),pracovní(ch) dn(ů/y),týdn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="blockly.dropdown.ops.dateChangeBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="blockly.dropdown.ops.dateChangeBlock" datatype="html">
         <source>add,subtract,set</source><target>přidej,odečti,nastav</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="blockly.tooltip.dateNowBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="blockly.tooltip.dateNowBlock" datatype="html">
         <source>Gets current date as ISO string for storage in date/time attributes.</source>
         <target>Vrátí aktuální datum a čas jako ISO řetězec vhodný pro uložení do sloupce typu datum.</target>
 
@@ -4482,7 +4482,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="document.detail.links.noLinks" datatype="html">
         <source>There are no links.</source><target>Nemáte žádné vazby.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="home" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="home" datatype="html">
         <source>Home</source><target>Domů</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="query.suggestion.type" datatype="html">
