@@ -17,10 +17,13 @@ tbody {
   z-index: 2; // otherwise checkboxes in the body are shown over the header when scrolling down
 }
 
-th,
-td {
-  max-width: 8rem;
-  width: 8rem;
+th.check-column,
+td.check-column {
+  width: 1%;
+}
+
+th:not(.check-column),
+td:not(.check-column) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -31,6 +34,7 @@ th,
 td > data-input-preview {
   height: 2em;
   max-height: 2em;
+  max-width: 8rem;
 }
 
 .clickable-row {

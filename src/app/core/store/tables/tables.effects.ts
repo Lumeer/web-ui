@@ -812,7 +812,7 @@ export class TablesEffects {
 
                     const removedIndexes = linkedRows.reduce((indexes, row, index) => {
                       const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
-                      if (!linkInstance) {
+                      if (row.linkInstanceId && !linkInstance) {
                         indexes.push(index);
                       }
                       return indexes;

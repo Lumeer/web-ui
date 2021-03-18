@@ -2,7 +2,7 @@
   <table class="table table-sm">
     <thead>
     <tr>
-      <th class="sticky-header"
+      <th class="sticky-header check-column"
           [style.top]="inverseTranslation"
           scope="col">
         <custom-checkbox class="d-inline-block"
@@ -39,7 +39,7 @@
     </tr>
     <tr *cdkVirtualFor="let row of rows; trackBy:trackByRow"
         class="clickable-row" (click)="toggleRow(row)">
-      <td>
+      <td class="check-column">
         <custom-checkbox class="d-inline-block"
                          [checkboxId]="row.linkInstance?.id || row.document.id"
                          [checked]="row | isResultRowChecked:removedLinkInstancesIds:selectedDocumentIds"
