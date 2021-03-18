@@ -46,7 +46,7 @@ export class GetParentDocumentBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_PARENT_DOCUMENT,
-          message0: 'get parent in hierarchy %1', //'%{BKY_BLOCK_GET_PARENT_DOCUMENT}', // get parent in hierarchy %1
+          message0: '%{BKY_BLOCK_GET_PARENT_DOCUMENT}', // get parent in hierarchy %1
           args0: [
             {
               type: 'input_value',
