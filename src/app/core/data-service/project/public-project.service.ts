@@ -39,7 +39,7 @@ export class PublicProjectService extends PublicPermissionService implements Pro
   }
 
   public getProjects(organizationId: string): Observable<ProjectDto[]> {
-    return this.getProject(organizationId, '').pipe(map(project => [project]));
+    return this.getCurrentPublicProject(organizationId).pipe(map(project => [project]));
   }
 
   public getProjectCodes(organizationId: string): Observable<string[]> {
@@ -47,27 +47,29 @@ export class PublicProjectService extends PublicPermissionService implements Pro
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {
+    return this.httpClient
+      .get<ProjectDto>(this.apiPrefix(organizationId, projectId))
+      .pipe(
+        map(project =>
+          setDefaultUserPermissions(
+            project,
+            DEFAULT_USER,
+            project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+          )
+        )
+      );
+  }
+
+  private getCurrentPublicProject(organizationId: string): Observable<ProjectDto> {
     return this.store$.pipe(
       select(selectPublicProjectId),
       take(1),
-      mergeMap(publicProjectId =>
-        this.httpClient
-          .get<ProjectDto>(this.apiPrefix(organizationId, publicProjectId))
-          .pipe(
-            map(project =>
-              setDefaultUserPermissions(
-                project,
-                DEFAULT_USER,
-                project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
-              )
-            )
-          )
-      )
+      mergeMap(publicProjectId => this.getProject(organizationId, publicProjectId))
     );
   }
 
   public getProjectByCode(organizationId: string, projectCode: string): Observable<ProjectDto> {
-    return this.getProject(organizationId, '');
+    return this.getCurrentPublicProject(organizationId);
   }
 
   public deleteProject(organizationId: string, projectId: string): Observable<any> {

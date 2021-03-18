@@ -36,6 +36,7 @@ import {PublicProjectService} from '../../../core/data-service/project/public-pr
 @Component({
   templateUrl: './copy-project-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [PublicProjectService],
 })
 export class CopyProjectModalComponent implements OnInit, OnDestroy {
   @Input()
