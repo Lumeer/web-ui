@@ -4274,7 +4274,13 @@
 				<trans-unit datatype="html" id="users.header.email">
 					<source>Email</source>
 					<target>E-mail</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.header.roles" datatype="html">
+        <source>Roles</source><target state="new">Roles</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="users.header.existingUsers">
 					<source>Existing users</source>
 					<target>Meglévő felhasználók</target>

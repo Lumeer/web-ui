@@ -310,7 +310,13 @@
         <source>Email</source><target state="final">Email</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.header.search.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.header.roles" datatype="html">
+        <source>Roles</source><target state="final">Roles</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/share-view/body/share-view-dialog-body.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="users.header.search.placeholder" datatype="html">
         <source>Search user...</source><target state="final">Search user...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="users.header.search.title" datatype="html">
