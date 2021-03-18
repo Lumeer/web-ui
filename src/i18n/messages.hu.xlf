@@ -2763,7 +2763,7 @@
 					<source>Size</source>
 					<target>Méret</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="perspective.chart.config.attribute.empty" datatype="html">
-        <source>Select attribute</source><target state="new">Select attribute</target>
+        <source>Select attribute</source><target>Tulajdonság kiválasztása</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">43</context>
@@ -3697,13 +3697,13 @@
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="modal.links.modify.selected" datatype="html">
-        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }
-          "/> </source><target state="new">
-            <x id="ICU" equiv-text="{selected.count, plural, =0 {...} one {...} few {...} other {...}}"/>
+        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source><target state="new">
+            <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/>
           </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source><target state="new">{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} other {<x id="INTERPOLATION" equiv-text="{{selected.count}}"/> records selected} }</target>
+        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
+		<target state="new">{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="modal.links.modify.filter.title" datatype="html">
         <source> Use filters to find records to link. Selected records are always visible (no matter of filters). </source><target state="new">
@@ -4024,7 +4024,7 @@
 					<target>Vissza a kezdőképernyőre</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/lumeer-logo/lumeer-logo.component.ts</context><context context-type="linenumber">44</context></context-group></trans-unit>
 				<trans-unit id="search.input.placeholder" datatype="html">
-        <source>Type anything you search for...</source><target state="new">Gépelj be azt, hogy mit keresel...</target>
+        <source>Type anything you search for...</source><target>Gépelj be azt, hogy mit keresel...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">70</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="topPanel.notifications.title">
@@ -4420,7 +4420,7 @@
 					<source>View does not exist! </source>
 					<target>A nézet nem létezik!</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder.short" datatype="html">
-        <source>Enter name</source><target state="new">Enter name</target>
+        <source>Enter name</source><target>Nevének megadása</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it/row/post-it-row.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.not.found">

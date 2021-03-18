@@ -46,7 +46,7 @@ export class GetHierarchySiblingsBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_HIERARCHY_SIBLINGS,
-          message0: 'get siblings in hierarchy %1', //'%{BKY_BLOCK_GET_HIERARCHY_SIBLINGS}', // get siblings in hierarchy %1
+          message0: '%{BKY_BLOCK_GET_HIERARCHY_SIBLINGS}', // get siblings in hierarchy %1
           args0: [
             {
               type: 'input_value',

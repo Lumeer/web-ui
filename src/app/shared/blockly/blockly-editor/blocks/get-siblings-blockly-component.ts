@@ -43,7 +43,7 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_SIBLINGS,
-          message0: 'get siblings via %1 %2', //'%{BKY_BLOCK_GET_SIBLINGS}', // get siblings via %1 %2
+          message0: '%{BKY_BLOCK_GET_SIBLINGS}', // get siblings via %1 %2
           args0: [
             {
               type: 'field_dropdown',

@@ -46,7 +46,7 @@ export class GetChildDocumentsBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_CHILD_DOCUMENTS,
-          message0: 'get children in hierarchy %1', //'%{BKY_BLOCK_GET_CHILD_DOCUMENTS}', // get children in hierarchy %1
+          message0: '%{BKY_BLOCK_GET_CHILD_DOCUMENTS}', // get children in hierarchy %1
           args0: [
             {
               type: 'input_value',
