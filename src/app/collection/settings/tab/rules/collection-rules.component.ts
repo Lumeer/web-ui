@@ -152,7 +152,7 @@ export class CollectionRulesComponent implements OnInit {
     let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this rule?`;
 
     if (isBeingUsed) {
-      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:It is used in attribute configuration.`;
+      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This rule is being used in an action button.`;
       message = `${message} ${additionalMessage}`;
     }
 

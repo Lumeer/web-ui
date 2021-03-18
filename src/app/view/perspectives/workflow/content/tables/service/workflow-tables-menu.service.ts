@@ -279,9 +279,9 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Delete:
         return $localize`:@@table.header.menu.remove:Delete column`;
       case HeaderMenuId.AddToLeft:
-        return $localize`:@@table.header.menu.add.column.next:Add column left`;
+        return $localize`:@@table.header.menu.add.column.next:Add column right`;
       case HeaderMenuId.AddToRight:
-        return $localize`:@@table.header.menu.add.column.previous:Add column right`;
+        return $localize`:@@table.header.menu.add.column.previous:Add column left`;
       case HeaderMenuId.AddLinkColumn:
         return $localize`:@@table.header.menu.add.linkColumn:Add Link column`;
       default:

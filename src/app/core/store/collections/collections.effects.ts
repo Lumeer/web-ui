@@ -189,7 +189,7 @@ export class CollectionsEffects {
       withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
       map(([action, organization]) => {
         if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-          const message = $localize`:@@collection.create.serviceLimits::You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?`;
+          const message = $localize`:@@collection.create.serviceLimits:You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?`;
           return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
         }
         const errorMessage = $localize`:@@collection.import.fail:Could not import table`;
@@ -266,7 +266,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = $localize`:@@resource.rule.update.fail:Could not save rule`;
+        const message = $localize`:@@resource.rule.update.fail:Could not save automation`;
         return new NotificationsAction.Error({message});
       })
     )

@@ -625,7 +625,7 @@ export class DocumentsEffects {
       ofType<DocumentsAction.RunRuleFailure>(DocumentsActionType.RUN_RULE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = $localize`:@@dataResource.runRule.fail:Could not run the selected rule`;
+        const message = $localize`:@@dataResource.runRule.fail:Could not run the selected automation`;
         return new NotificationsAction.Error({message});
       })
     )

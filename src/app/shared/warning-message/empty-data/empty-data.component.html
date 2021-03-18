@@ -1,24 +1,24 @@
 <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
 <empty-state *ngIf="query | emptyQuery"
              [icon]="'fa fa-file-times'">
-  <h3 i18n="@@search.records.empty.title"
+  <h3 i18n="@@search.records.empty.project.title"
       class="text-center"
       data-test="empty-project-header">Your project is empty!</h3>
 
   <ng-container *ngIf="(projectPermissions$ | async)?.write; else noPermission">
-    <div i18n="@@search.records.empty.subtitle"
+    <div i18n="@@search.records.empty.project.subtitle"
          class="text-center mb-3">Go to the Tables tab and create your first table.
     </div>
 
     <button type="button"
             class="btn btn-sm btn-primary"
-            title="Create new table"
+            title="Create New Table"
             i18n-title="@@create.new.collection"
             data-test="empty-data-create-collection"
             (click)="onSwitchToCollectionsTab()"
             data-tour="collection-create">
       <span class="font-weight-bold"
-            i18n="@@create.new.collection">Create new table</span>
+            i18n="@@create.new.collection">Create New Table</span>
     </button>
   </ng-container>
 

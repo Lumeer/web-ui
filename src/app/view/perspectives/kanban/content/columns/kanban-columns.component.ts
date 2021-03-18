@@ -599,7 +599,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
     if (documents.length === 0 || linkInstances.length === 0) {
       return;
     }
-    const failureMessage = $localize`:@@perspective.kanban.create.card.failure:Could not move card`;
+    const failureMessage = $localize`:@@perspective.kanban.move.card.failure:Could not move card`;
     this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
   }
 

@@ -9,7 +9,8 @@
   <div class="flex-grow-1">
     <form [formGroup]="form" class="">
       <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
-        <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.automation.name.new">New automation name</label>
+        <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.automation.name.new">New automation
+          name</label>
         <input type="text" class="form-control ml-3 w-50" autocomplete="off" id="name" formControlName="name"
                aria-errormessage="ruleNameError">
         <small
@@ -26,21 +27,15 @@
         </div>
         <div class="custom-control custom-checkbox ml-3">
           <input class="custom-control-input" type="checkbox" formControlName="timingCreate" id="timingCreate">
-          <label class="custom-control-label" for="timingCreate" i18n="@@collection.config.tab.rules.timing.create">
-            Create
-          </label>
+          <label class="custom-control-label" for="timingCreate" i18n="@@collection.config.tab.rules.timing.create">Create</label>
         </div>
         <div class="custom-control custom-checkbox ml-3">
           <input class="custom-control-input" type="checkbox" formControlName="timingUpdate" id="timingUpdate">
-          <label class="custom-control-label" for="timingUpdate" i18n="@@collection.config.tab.rules.timing.update">
-            Update
-          </label>
+          <label class="custom-control-label" for="timingUpdate" i18n="@@collection.config.tab.rules.timing.update">Update</label>
         </div>
         <div class="custom-control custom-checkbox ml-3">
           <input class="custom-control-input" type="checkbox" formControlName="timingDelete" id="timingDelete">
-          <label class="custom-control-label" for="timingDelete" i18n="@@collection.config.tab.rules.timing.delete">
-            Delete
-          </label>
+          <label class="custom-control-label" for="timingDelete" i18n="@@collection.config.tab.rules.timing.delete">Delete</label>
         </div>
       </div>
       <div *ngIf="collection" class="form-group d-flex align-items-center justify-content-start flex-wrap mb-1">

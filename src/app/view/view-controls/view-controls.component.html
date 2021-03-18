@@ -80,7 +80,8 @@
                   (click)="onShareClick()"
                   class="btn btn-primary"
                   type="button"
-                  title="Share" i18n-title="@@button.share" i18n="@@button.share">Share
+                  title="Share" i18n-title="@@button.share">
+            <span i18n="@@button.share">Share</span>
           </button>
         </div>
       </div>
@@ -88,7 +89,7 @@
     <div *ngIf="state.viewChanged && state.permissions.canManage"
          class="small text-right text-warning">
       <i class="far fa-exclamation-triangle mr-1 text-warning"
-         title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">
+         title="Changes are not saved yet!" i18n-title="@@view.changes.not.saved">
       </i>
       <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
       <span *ngIf="!buttonsData.disabled"

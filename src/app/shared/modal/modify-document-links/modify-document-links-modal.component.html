@@ -60,7 +60,7 @@
 <ng-template #noData>
   <empty-state *ngIf="query$ | async | emptyQuery; else emptySearch"
                class="py-4 d-block" [compact]="true" icon="fa fa-file-times">
-    <h4 i18n="@@modal.links.modify.title" class="text-center mt-2">
+    <h4 i18n="@@modal.links.modify.empty.title" class="text-center mt-2">
       I am sorry but there is nothing to link.
     </h4>
   </empty-state>
