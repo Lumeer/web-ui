@@ -20,7 +20,6 @@
 import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener, OnDestroy} from '@angular/core';
 import {Organization} from '../../../core/store/organizations/organization';
 import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
-import {ProjectService} from '../../../core/data-service';
 import {catchError, map} from 'rxjs/operators';
 import {KeyCode} from '../../key-code';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -32,6 +31,7 @@ import {NavigationExtras} from '@angular/router';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
 import {CreateProjectService} from '../../../core/service/create-project.service';
 import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
+import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
 
 @Component({
   templateUrl: './copy-project-modal.component.html',
@@ -58,7 +58,7 @@ export class CopyProjectModalComponent implements OnInit, OnDestroy {
   public onClose$ = new Subject();
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: PublicProjectService,
     private bsModalRef: BsModalRef,
     private store$: Store<AppState>,
     private createProjectService: CreateProjectService
