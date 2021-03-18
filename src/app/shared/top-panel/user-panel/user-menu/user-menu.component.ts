@@ -418,6 +418,4 @@ export class UserMenuComponent implements OnInit {
     config['backdrop'] = 'static';
     this.modalService.show(NotificationSettingsModalComponent, config);
   }
-
-  public onLanguageSelect(language: Language) {}
 }
