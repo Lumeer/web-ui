@@ -348,7 +348,9 @@ export namespace DocumentsAction {
   export class RunRule implements Action {
     public readonly type = DocumentsActionType.RUN_RULE;
 
-    public constructor(public payload: {collectionId: string; documentId: string; attributeId: string}) {}
+    public constructor(
+      public payload: {collectionId: string; documentId: string; attributeId: string; actionName?: string}
+    ) {}
   }
 
   export class RunRuleFailure implements Action {

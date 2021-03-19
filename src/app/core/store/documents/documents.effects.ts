@@ -19,7 +19,7 @@
 
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {act, Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
@@ -610,9 +610,9 @@ export class DocumentsEffects {
     this.actions$.pipe(
       ofType<DocumentsAction.RunRule>(DocumentsActionType.RUN_RULE),
       mergeMap(action => {
-        const {collectionId, documentId, attributeId} = action.payload;
+        const {collectionId, documentId, attributeId, actionName} = action.payload;
 
-        return this.documentService.runRule(collectionId, documentId, attributeId).pipe(
+        return this.documentService.runRule(collectionId, documentId, attributeId, actionName).pipe(
           mergeMap(() => EMPTY),
           catchError(error => of(new DocumentsAction.RunRuleFailure({...action.payload, error})))
         );

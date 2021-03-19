@@ -42,5 +42,10 @@ export abstract class LinkInstanceService {
     linkInstanceDuplicate: LinkInstanceDuplicateDto
   ): Observable<LinkInstanceDto[]>;
 
-  public abstract runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any>;
+  public abstract runRule(
+    linkTypeId: string,
+    linkInstanceId: string,
+    attributeId: string,
+    actionName?: string
+  ): Observable<any>;
 }
