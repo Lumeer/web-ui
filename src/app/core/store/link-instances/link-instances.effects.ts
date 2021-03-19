@@ -441,9 +441,9 @@ export class LinkInstancesEffects {
     this.actions$.pipe(
       ofType<LinkInstancesAction.RunRule>(LinkInstancesActionType.RUN_RULE),
       mergeMap(action => {
-        const {linkTypeId, linkInstanceId, attributeId} = action.payload;
+        const {linkTypeId, linkInstanceId, attributeId, actionName} = action.payload;
 
-        return this.linkInstanceService.runRule(linkTypeId, linkInstanceId, attributeId).pipe(
+        return this.linkInstanceService.runRule(linkTypeId, linkInstanceId, attributeId, actionName).pipe(
           mergeMap(() => EMPTY),
           catchError(error => of(new LinkInstancesAction.RunRuleFailure({...action.payload, error})))
         );

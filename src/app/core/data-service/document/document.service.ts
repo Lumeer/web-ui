@@ -53,7 +53,12 @@ export abstract class DocumentService {
 
   public abstract getDocuments(documentsId: string[]): Observable<DocumentDto[]>;
 
-  public abstract runRule(collectionId: string, documentId: string, attributeId: string): Observable<any>;
+  public abstract runRule(
+    collectionId: string,
+    documentId: string,
+    attributeId: string,
+    actionName?: string
+  ): Observable<any>;
 
   public abstract duplicateDocuments(
     collectionId: string,

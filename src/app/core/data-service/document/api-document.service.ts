@@ -127,10 +127,14 @@ export class ApiDocumentService extends BaseService implements DocumentService {
     );
   }
 
-  public runRule(collectionId: string, documentId: string, attributeId: string): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}`, {
-      correlationId: this.appId.getAppId(),
-    });
+  public runRule(collectionId: string, documentId: string, attributeId: string, actionName?: string): Observable<any> {
+    return this.httpClient.post<any>(
+      `${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}?actionName=${actionName || ''}`,
+      {
+        correlationId: this.appId.getAppId(),
+        actionName,
+      }
+    );
   }
 
   private apiPrefix(workspace?: Workspace): string {

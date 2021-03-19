@@ -208,6 +208,7 @@ export class ActionDataInputComponent implements OnChanges {
           collectionId: this.cursor.collectionId,
           documentId: this.cursor.documentId,
           attributeId: this.cursor.attributeId,
+          actionName: this.config.title,
         })
       );
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {

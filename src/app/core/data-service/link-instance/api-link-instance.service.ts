@@ -71,10 +71,18 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
     return this.httpClient.post<LinkInstanceDto[]>(`${this.apiPrefix()}/duplicate`, linkInstanceDuplicate);
   }
 
-  public runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {
-      correlationId: this.appId.getAppId(),
-    });
+  public runRule(
+    linkTypeId: string,
+    linkInstanceId: string,
+    attributeId: string,
+    actionName?: string
+  ): Observable<any> {
+    return this.httpClient.post<any>(
+      `${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}?actionName=${actionName || ''}`,
+      {
+        correlationId: this.appId.getAppId(),
+      }
+    );
   }
 
   public setDocumentLinks(linkTypeId: string, dto: DocumentLinksDto): Observable<LinkInstanceDto[]> {
