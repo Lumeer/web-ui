@@ -217,6 +217,7 @@ export class ActionDataInputComponent implements OnChanges {
           linkTypeId: this.cursor.linkTypeId,
           linkInstanceId: this.cursor.linkInstanceId,
           attributeId: this.cursor.attributeId,
+          actionName: this.config.title,
         })
       );
     }
