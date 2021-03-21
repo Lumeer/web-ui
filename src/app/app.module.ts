@@ -66,43 +66,44 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: (cs: ConfigurationService) => () => cs.loadConfiguration(),
+      useFactory: (configurationService: ConfigurationService) => () => configurationService.loadConfiguration(),
       deps: [ConfigurationService],
       multi: true,
     },
     {
       provide: LOCALE_ID,
       deps: [ConfigurationService],
-      useFactory: (cs: ConfigurationService) => cs.getConfiguration().locale,
+      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().locale,
     },
     {
       provide: TRANSLATIONS,
-      useFactory: (cs: ConfigurationService) => require(`raw-loader!../../${cs.getConfiguration().i18nPath}`).default,
+      useFactory: (configurationService: ConfigurationService) =>
+        require(`raw-loader!../../${configurationService.getConfiguration().i18nPath}`).default,
       deps: [ConfigurationService],
     },
     {
       provide: TRANSLATIONS_FORMAT,
       deps: [ConfigurationService],
-      useFactory: (cs: ConfigurationService) => cs.getConfiguration().i18nFormat,
+      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().i18nFormat,
     },
     ConstraintDataService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (ds: ConstraintDataService) => () => ds.init(),
+      useFactory: (constraintDataService: ConstraintDataService) => () => constraintDataService.init(),
       deps: [ConstraintDataService],
       multi: true,
     },
     PermissionsCheckService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (ds: PermissionsCheckService) => () => ds.init(),
+      useFactory: (permissionsCheckService: PermissionsCheckService) => () => permissionsCheckService.init(),
       deps: [PermissionsCheckService],
       multi: true,
     },
     AppIdService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (ds: AppIdService) => () => ds.init(),
+      useFactory: (appIdService: AppIdService) => () => appIdService.init(),
       deps: [AppIdService],
       multi: true,
     },

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// there should be absolut path because this file is copied to another location
+// there should be absolute path because this file is copied to another location
 import {Configuration} from 'src/app/configuration/configuration-type';
 
 export const configuration: Partial<Configuration> = {

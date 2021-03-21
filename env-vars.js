@@ -29,7 +29,7 @@ config.SENTRY_DSN = env.SENTRY_DSN;
 config.SESSION_TIMEOUT = env.SESSION_TIMEOUT;
 config.SMARTLOOK_KEY = env.SMARTLOOK_KEY;
 
-const dir = '.src/assets/config';
+const dir = './src/assets/config';
 
 if (!existsSync(dir)) {
   mkdirSync(dir);
