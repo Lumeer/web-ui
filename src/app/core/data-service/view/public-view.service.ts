@@ -27,7 +27,6 @@ import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {Workspace} from '../../store/navigation/workspace';
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
-import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
@@ -36,10 +35,15 @@ import {Role} from '../../model/role';
 import {selectViewByCode} from '../../store/views/views.state';
 import {convertViewModelToDto} from '../../store/views/view.converter';
 import {selectPublicProject} from '../../store/projects/projects.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class PublicViewService extends BaseService implements ViewService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -125,7 +129,9 @@ export class PublicViewService extends BaseService implements ViewService {
     const organizationId = this.getOrCurrentOrganizationId(workspace || this.workspace);
     const projectId = this.getOrCurrentProjectId(workspace || this.workspace);
 
-    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/views`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/p/organizations/${organizationId}/projects/${projectId}/views`;
   }
 }
 

@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
 import {Project} from '../../../../core/store/projects/project';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {environment} from '../../../../../environments/environment';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'copy-project-content',
@@ -34,7 +34,7 @@ export class CopyProjectContentComponent implements OnChanges {
 
   public publicViewUrl: SafeUrl;
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  constructor(private domSanitizer: DomSanitizer, private configurationService: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.project && this.project) {
@@ -43,7 +43,9 @@ export class CopyProjectContentComponent implements OnChanges {
   }
 
   private createPublicViewUrl(): SafeUrl {
-    const url = `${environment.publicViewCdn}?o=${this.project.organizationId}&p=${this.project.id}`;
+    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${this.project.organizationId}&p=${
+      this.project.id
+    }`;
     return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

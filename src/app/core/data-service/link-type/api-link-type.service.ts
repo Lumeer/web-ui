@@ -27,11 +27,15 @@ import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiLinkTypeService extends BaseService implements LinkTypeService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -73,6 +77,8 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
     const projectId = this.getOrCurrentProjectId(workspace);
     const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
   }
 }

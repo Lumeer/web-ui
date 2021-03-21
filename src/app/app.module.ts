@@ -21,7 +21,6 @@ import {APP_INITIALIZER, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT}
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
-import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CollectionModule} from './collection/collection.module';
@@ -34,11 +33,13 @@ import {ConstraintDataService} from './core/service/constraint-data.service';
 import {PermissionsCheckService} from './core/service/permissions-check.service';
 import {AppIdService} from './core/service/app-id.service';
 import {PrintModule} from './print/print.module';
+import {ConfigurationService} from './configuration/configuration.service';
+import {configuration} from './configuration/configuration';
 
 declare const require; // Use the require method provided by webpack
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
-  developerMode: !environment.analytics,
+  developerMode: !configuration.analytics,
   pageTracking: {
     clearIds: true,
     idsRegExp: new RegExp('^[0-9a-z]{24}$'),
@@ -64,17 +65,25 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
   ],
   providers: [
     {
+      provide: APP_INITIALIZER,
+      useFactory: (cs: ConfigurationService) => () => cs.loadConfiguration(),
+      deps: [ConfigurationService],
+      multi: true,
+    },
+    {
       provide: LOCALE_ID,
-      useFactory: () => environment.locale,
+      deps: [ConfigurationService],
+      useFactory: (cs: ConfigurationService) => cs.getConfiguration().locale,
     },
     {
       provide: TRANSLATIONS,
-      useFactory: locale => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`).default, // TODO ${environment.i18nPath}
-      deps: [LOCALE_ID],
+      useFactory: (cs: ConfigurationService) => require(`raw-loader!../../${cs.getConfiguration().i18nPath}`).default,
+      deps: [ConfigurationService],
     },
     {
       provide: TRANSLATIONS_FORMAT,
-      useFactory: () => environment.i18nFormat,
+      deps: [ConfigurationService],
+      useFactory: (cs: ConfigurationService) => cs.getConfiguration().i18nFormat,
     },
     ConstraintDataService,
     {

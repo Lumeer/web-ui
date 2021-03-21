@@ -81,6 +81,7 @@ import {
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 interface Data {
   collections: Collection[];
@@ -177,9 +178,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private configurationService: ConfigurationService
   ) {
-    this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
+    this.converter = new GanttChartConverter(
+      this.selectItemWithConstraintFormatter,
+      configurationService.getConfiguration()
+    );
     this.newTaskName = $localize`:@@gantt.perspective.task.create.title:New task`;
   }
 

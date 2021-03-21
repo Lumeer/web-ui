@@ -40,13 +40,13 @@ import {
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 import {Angulartics2} from 'angulartics2';
-import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {createCallbackActions} from '../utils/store.utils';
 import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from '../../dto/service-level-type';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class UsersEffects {
@@ -202,7 +202,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType<UsersAction.CreateSuccess>(UsersActionType.CREATE_SUCCESS),
         tap((action: UsersAction.CreateSuccess) => {
-          if (environment.analytics) {
+          if (this.configurationService.getConfiguration().analytics) {
             this.angulartics2.eventTrack.next({
               action: 'User add',
               properties: {
@@ -210,7 +210,7 @@ export class UsersEffects {
               },
             });
 
-            if (environment.mixpanelKey) {
+            if (this.configurationService.getConfiguration().mixpanelKey) {
               mixpanel.track('User Create', {user: action.payload.user.email});
             }
           }
@@ -289,7 +289,7 @@ export class UsersEffects {
       this.actions$.pipe(
         ofType<UsersAction.InviteSuccess>(UsersActionType.INVITE_SUCCESS),
         tap((action: UsersAction.InviteSuccess) => {
-          if (environment.analytics) {
+          if (this.configurationService.getConfiguration().analytics) {
             this.angulartics2.eventTrack.next({
               action: 'User add',
               properties: {
@@ -297,7 +297,7 @@ export class UsersEffects {
               },
             });
 
-            if (environment.mixpanelKey) {
+            if (this.configurationService.getConfiguration().mixpanelKey) {
               action.payload.users.forEach(user => mixpanel.track('User Create', {user: user.email}));
             }
           }
@@ -513,6 +513,7 @@ export class UsersEffects {
     private actions$: Actions,
     private store$: Store<AppState>,
     private userService: UserService,
-    private angulartics2: Angulartics2
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
   ) {}
 }

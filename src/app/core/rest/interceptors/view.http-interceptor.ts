@@ -25,13 +25,14 @@ import {first, mergeMap} from 'rxjs/operators';
 import {isBackendUrl} from '../../api/api.utils';
 import {AppState} from '../../store/app.state';
 import {selectWorkspaceWithIds} from '../../store/common/common.selectors';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ViewHttpInterceptor implements HttpInterceptor {
-  public constructor(private store: Store<AppState>) {}
+  public constructor(private store: Store<AppState>, private configurationService: ConfigurationService) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(request.url)) {
+    if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {
       return next.handle(request);
     }
 

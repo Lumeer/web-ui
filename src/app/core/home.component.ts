@@ -34,9 +34,9 @@ import {selectCurrentUser} from './store/users/users.state';
 import {NotificationService} from './notifications/notification.service';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {Perspective} from '../view/perspectives/perspective';
-import {environment} from '../../environments/environment';
 import {selectPublicViewCode} from './store/public-data/public-data.state';
 import {PublicDataAction} from './store/public-data/public-data.action';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 @Component({
   template: '',
@@ -49,11 +49,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private configurationService: ConfigurationService
   ) {}
 
   public ngOnInit() {
-    if (environment.publicView) {
+    if (this.configurationService.getConfiguration().publicView) {
       this.initPublicData();
       this.subscriptions.add(this.redirectToPublicWorkspace());
     } else {

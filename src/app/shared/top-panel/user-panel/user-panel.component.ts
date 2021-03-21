@@ -22,11 +22,9 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {selectUrl} from '../../../core/store/navigation/navigation.state';
-import {map, mergeMap} from 'rxjs/operators';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'user-panel',
@@ -50,11 +48,17 @@ export class UserPanelComponent implements OnInit {
   @Output()
   public toggleControls = new EventEmitter();
 
-  public readonly showControls = !environment.publicView;
+  public readonly showControls: boolean;
 
   public user$: Observable<User>;
 
-  constructor(public element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
+  constructor(
+    public element: ElementRef<HTMLElement>,
+    private configurationService: ConfigurationService,
+    private store$: Store<AppState>
+  ) {
+    this.showControls = !configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.user$ = this.store$.pipe(select(selectCurrentUser));

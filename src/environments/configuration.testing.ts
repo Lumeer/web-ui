@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EnvironmentVariables} from './environment-variables';
+// there should be absolut path because this file is copied to another location
+import {Configuration} from 'src/app/configuration/configuration-type';
 
-export interface Environment extends EnvironmentVariables {
-  analytics: boolean;
-  auth: boolean;
-  authPersistence?: boolean; // keep auth token in local storage
-  production: boolean;
-  publicView: boolean;
-  pusherLogDisabled?: boolean;
-  notificationsDisabled?: boolean;
-  storeDevtools: boolean;
-  name?: string;
-  paymentGw?: string;
-}
+export const configuration: Partial<Configuration> = {
+  analytics: false,
+  auth: true,
+  authPersistence: true,
+  production: false,
+  publicView: false,
+  storeDevtools: true,
+  name: 'testing',
+  paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
+};

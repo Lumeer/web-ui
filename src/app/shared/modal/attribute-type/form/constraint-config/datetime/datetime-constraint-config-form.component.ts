@@ -26,9 +26,9 @@ import {SelectItemModel} from '../../../../../select/select-item/select-item.mod
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
 import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../date-time/date-time-options';
-import {environment} from '../../../../../../../environments/environment';
 import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
 import {DateTimeConstraintConfig, DateTimeDataValue} from '@lumeer/data-filters';
+import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -65,7 +65,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   public exampleValue$: Observable<DateTimeDataValue>;
 
-  constructor() {
+  constructor(private configurationService: ConfigurationService) {
     this.formatItems = this.createFormatItems();
   }
 
@@ -75,7 +75,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   }
 
   public getDateTimeConstraintHelpUrl(): string {
-    switch (environment.locale) {
+    switch (this.configurationService.getConfiguration().locale) {
       case LanguageCode.CZ:
         return this.createUrl('cs/typ-sloupce-datum');
       default:
@@ -84,7 +84,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   }
 
   private createUrl(suffix: string): string {
-    return `${environment.pageUrl}/${suffix}`;
+    return `${this.configurationService.getConfiguration().pageUrl}/${suffix}`;
   }
 
   private bindExampleValue(): Observable<DateTimeDataValue> {

@@ -28,12 +28,12 @@ import {InvitationType} from '../../model/invitation-type';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {FeedbackDto} from '../../dto/feedback.dto';
-import {environment} from '../../../../environments/environment';
 import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiUserService implements UserService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private configurationService: ConfigurationService) {}
 
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
@@ -121,6 +121,6 @@ export class ApiUserService implements UserService {
   }
 
   private usersApiPrefix(): string {
-    return `${environment.apiUrl}/rest/users`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/users`;
   }
 }

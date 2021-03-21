@@ -21,32 +21,32 @@ import {Injectable} from '@angular/core';
 import {IndividualConfig, ToastrService} from 'ngx-toastr';
 import {NotificationButton} from './notification-button';
 import {NotificationComponent} from './notification/notification.component';
-import {environment} from '../../../environments/environment';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class NotificationService {
-  constructor(private notifications: ToastrService) {}
+  constructor(private notifications: ToastrService, private configurationService: ConfigurationService) {}
 
   public success(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
       this.notifications.success(message, $localize`:@@notification.service.Success:Success`, config);
     }
   }
 
   public info(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
       this.notifications.info(message, $localize`:@@notification.service.Info:Info`, config);
     }
   }
 
   public warning(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
       this.notifications.warning(message, $localize`:@@notification.service.Warning:Warning`, config);
     }
   }
 
   public error(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
       this.notifications.error(message, $localize`:@@notification.service.Error:Error`, config);
     }
   }

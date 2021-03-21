@@ -21,7 +21,6 @@ import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {Angulartics2} from 'angulartics2';
-import {environment} from '../../../../../../environments/environment';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import mixpanel from 'mixpanel-browser';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -29,6 +28,7 @@ import {map, startWith} from 'rxjs/operators';
 import {KeyCode} from '../../../../key-code';
 import {DialogType} from '../../../../modal/dialog-type';
 import {UserService} from '../../../../../core/data-service';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'user-feedback-modal',
@@ -49,7 +49,8 @@ export class UserFeedbackModalComponent implements OnInit {
     private bsRef: BsModalRef,
     private notificationService: NotificationService,
     private userService: UserService,
-    private angulartics2: Angulartics2
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
   ) {}
 
   public ngOnInit() {
@@ -75,7 +76,7 @@ export class UserFeedbackModalComponent implements OnInit {
 
     this.userService.sendFeedback(message).subscribe(
       () => {
-        if (environment.analytics) {
+        if (this.configurationService.getConfiguration().analytics) {
           this.angulartics2.eventTrack.next({
             action: 'Feedback send',
             properties: {
@@ -83,7 +84,7 @@ export class UserFeedbackModalComponent implements OnInit {
             },
           });
 
-          if (environment.mixpanelKey) {
+          if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('Feedback Send');
           }
         }

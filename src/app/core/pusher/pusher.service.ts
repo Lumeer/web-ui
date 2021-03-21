@@ -22,7 +22,6 @@ import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
 import {of, timer} from 'rxjs';
 import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {OrganizationDto, ProjectDto} from '../dto';
@@ -81,6 +80,7 @@ import {LocationStrategy} from '@angular/common';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable({
   providedIn: 'root',
@@ -103,7 +103,8 @@ export class PusherService implements OnDestroy {
     private notificationService: NotificationService,
     private appId: AppIdService,
     private router: Router,
-    private locationStrategy: LocationStrategy
+    private locationStrategy: LocationStrategy,
+    private configurationService: ConfigurationService
   ) {
     this.userNotificationTitle = {
       success: $localize`:@@rules.blockly.action.message.success:Success`,
@@ -117,7 +118,7 @@ export class PusherService implements OnDestroy {
   }
 
   public init(): void {
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       this.subscribeToUser();
     }
     this.subscribeToWorkspace();
@@ -137,10 +138,10 @@ export class PusherService implements OnDestroy {
   }
 
   private subscribePusher(user: User): void {
-    Pusher.logToConsole = !environment.pusherLogDisabled;
-    this.pusher = new Pusher(environment.pusherKey, {
-      cluster: environment.pusherCluster,
-      authEndpoint: `${environment.apiUrl}/rest/pusher`,
+    Pusher.logToConsole = !this.configurationService.getConfiguration().pusherLogDisabled;
+    this.pusher = new Pusher(this.configurationService.getConfiguration().pusherKey, {
+      cluster: this.configurationService.getConfiguration().pusherCluster,
+      authEndpoint: `${this.configurationService.getConfiguration().apiUrl}/rest/pusher`,
       auth: {
         params: {},
         headers: {

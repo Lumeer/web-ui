@@ -30,13 +30,13 @@ import {Project} from '../../../core/store/projects/project';
 import {View} from '../../../core/store/views/view';
 import {Permission} from '../../../core/store/permissions/permissions';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
 import {Angulartics2} from 'angulartics2';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
 import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   templateUrl: './share-view-modal.component.html',
@@ -59,7 +59,12 @@ export class ShareViewModalComponent implements OnInit {
   public formInvalid$ = new BehaviorSubject(true);
   public performingAction$ = new BehaviorSubject(false);
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private angulartics2: Angulartics2) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService,
+    private angulartics2: Angulartics2
+  ) {}
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
@@ -84,7 +89,7 @@ export class ShareViewModalComponent implements OnInit {
       })
     );
 
-    if (environment.analytics) {
+    if (this.configurationService.getConfiguration().analytics) {
       this.angulartics2.eventTrack.next({
         action: 'View share',
         properties: {
@@ -94,7 +99,7 @@ export class ShareViewModalComponent implements OnInit {
         },
       });
 
-      if (environment.mixpanelKey) {
+      if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('View Shared', {view: this.view.id});
       }
     }

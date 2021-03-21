@@ -22,26 +22,30 @@ import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
 import {ProjectDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {BaseService} from './base.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class TemplateService extends BaseService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
   public getTemplates(): Observable<ProjectDto[]> {
-    return this.http.get<ProjectDto[]>(this.apiPrefix(), {params: {l: environment.locale}});
+    return this.http.get<ProjectDto[]>(this.apiPrefix());
   }
 
   public getTemplateByCode(code: string): Observable<ProjectDto> {
-    return this.http.get<ProjectDto>(`${this.apiPrefix()}/code/${code}`, {params: {l: environment.locale}});
+    return this.http.get<ProjectDto>(`${this.apiPrefix()}/code/${code}`);
   }
 
   private apiPrefix(): string {
-    return `${environment.apiProdUrl}/rest/templates`;
+    return `${this.configurationService.getConfiguration().apiProdUrl}/rest/templates`;
   }
 }

@@ -21,17 +21,19 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class EnvironmentHttpInterceptor implements HttpInterceptor {
+  constructor(private configurationService: ConfigurationService) {}
+
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(request.url)) {
+    if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {
       return next.handle(request);
     }
 
     const requestClone = request.clone({
-      setHeaders: {'X-Lumeer-Locale': environment.locale},
+      setHeaders: {'X-Lumeer-Locale': this.configurationService.getConfiguration().locale},
     });
 
     return next.handle(requestClone);

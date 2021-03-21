@@ -30,7 +30,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {DeviceDetectorService} from 'ngx-device-detector';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 class CustomHttpRequest<T> extends HttpRequest<T> {
   // Prevent automatic adding of the Content-Type header
@@ -43,7 +43,11 @@ class CustomHttpRequest<T> extends HttpRequest<T> {
 export class ResponseTimeHttpInterceptor implements HttpInterceptor {
   private readonly TIMESTAMP_HEADER = 'X-Lumeer-Start-Timestamp';
 
-  public constructor(private deviceService: DeviceDetectorService, private http: HttpClient) {}
+  public constructor(
+    private deviceService: DeviceDetectorService,
+    private http: HttpClient,
+    private configurationService: ConfigurationService
+  ) {}
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const random = Math.floor(Math.random() * 100);
@@ -53,7 +57,7 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
       return next.handle(custReq);
     }
 
-    if (!environment.logzioKey) {
+    if (!this.configurationService.getConfiguration().logzioKey) {
       return next.handle(req);
     }
 
@@ -79,14 +83,16 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
             if (random < 10 || responseTime > 999) {
               this.http
                 .post(
-                  `https://listener-${environment.logzioRegion}.logz.io:8071/?token=${environment.logzioKey}`,
+                  `https://listener-${this.configurationService.getConfiguration().logzioRegion}.logz.io:8071/?token=${
+                    this.configurationService.getConfiguration().logzioKey
+                  }`,
                   {
                     startTime: headerStartTimestamp,
                     endTime: endTimestamp,
                     responseTime: responseTime,
                     url: res.url,
                     type: 'browser',
-                    environment: environment.name || 'localhost',
+                    environment: this.configurationService.getConfiguration().name || 'localhost',
                     deviceInfo: JSON.stringify(deviceInfo),
                   },
                   {headers: new HttpHeaders()}

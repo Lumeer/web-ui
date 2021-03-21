@@ -23,12 +23,20 @@ import {minMaxValidator} from '../../../../../../core/validators/min-max-validat
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {NumberConstraintFormControl} from './number-constraint-form-control';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {isNumeric, objectValues, toNumber} from '../../../../../utils/common.utils';
-import {LanguageTag, NumberConstraint, NumberConstraintConfig, NumberDataValue} from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../../../core/model/language-tag';
+import {
+  ConstraintData,
+  LanguageTag,
+  NumberConstraint,
+  NumberConstraintConfig,
+  NumberDataValue,
+} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../../utils/translation.utils';
+import {AppState} from '../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -47,7 +55,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
   public exampleValue$: Observable<NumberDataValue>;
 
-  constructor() {
+  constructor(private store$: Store<AppState>) {
     this.currencySelectItems = this.createCurrencySelectItems();
   }
 
@@ -82,17 +90,17 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
     this.exampleValue$ = this.form.valueChanges.pipe(
       startWith(''),
-      map(() => this.createNumberDataValue())
+      withLatestFrom(this.store$.pipe(select(selectConstraintData))),
+      map(([, constraintData]) => this.createNumberDataValue(constraintData))
     );
   }
 
-  private createNumberDataValue(): NumberDataValue {
+  private createNumberDataValue(constraintData: ConstraintData): NumberDataValue {
     const config: NumberConstraintConfig = {...this.form.value};
     let exampleValue = 123456789.123456789;
     if (config.negative) {
       exampleValue *= -1;
     }
-    config.locale = getCurrentLocaleLanguageTag();
     config.decimals = isNumeric(config.decimals) ? toNumber(config.decimals) : null;
 
     return new NumberConstraint(config).createDataValue(exampleValue);

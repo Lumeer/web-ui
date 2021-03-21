@@ -28,11 +28,15 @@ import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {Workspace} from '../../store/navigation/workspace';
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiViewService extends BaseService implements ViewService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -102,7 +106,9 @@ export class ApiViewService extends BaseService implements ViewService {
     const organizationId = this.getOrCurrentOrganizationId(workspace || this.workspace);
     const projectId = this.getOrCurrentProjectId(workspace || this.workspace);
 
-    const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/views`;
+    const viewsPath = `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/views`;
     return id ? viewsPath.concat('/', id) : viewsPath;
   }
 }

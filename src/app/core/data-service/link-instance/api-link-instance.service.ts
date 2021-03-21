@@ -29,13 +29,18 @@ import {AppState} from '../../store/app.state';
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {AppIdService} from '../../service/app-id.service';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>, private appId: AppIdService) {
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private appId: AppIdService,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -91,6 +96,8 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}`;
   }
 }

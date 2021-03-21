@@ -27,12 +27,16 @@ import {BaseService} from '../../rest/base.service';
 import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
 import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {SearchService} from './search.service';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiSearchService extends BaseService implements SearchService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -83,6 +87,8 @@ export class ApiSearchService extends BaseService implements SearchService {
   private searchPath(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/search`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/search`;
   }
 }

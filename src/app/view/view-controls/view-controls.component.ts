@@ -56,7 +56,6 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {ViewsAction} from '../../core/store/views/views.action';
-import {environment} from '../../../environments/environment';
 import {objectValues} from '../../shared/utils/common.utils';
 import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
 import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
@@ -68,6 +67,7 @@ import {
   selectProjectPermissions,
   selectViewsPermissions,
 } from '../../core/store/user-permissions/user-permissions.state';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -110,7 +110,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private currentPerspective: Perspective;
   private workspace: Workspace;
 
-  public readonly canShareView = !environment.publicView;
+  public readonly canShareView: boolean;
   public readonly perspectives = objectValues(Perspective);
 
   private subscriptions = new Subscription();
@@ -118,8 +118,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private store$: Store<AppState>
-  ) {}
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
+    this.canShareView = !this.configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());

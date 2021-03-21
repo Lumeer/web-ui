@@ -25,16 +25,20 @@ import {ProjectService} from './project.service';
 import {ProjectDto} from '../../dto';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
-import {environment} from '../../../../environments/environment';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
 import {Role} from '../../model/role';
 import {selectPublicProjectId} from '../../store/public-data/public-data.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class PublicProjectService extends PublicPermissionService implements ProjectService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -106,6 +110,6 @@ export class PublicProjectService extends PublicPermissionService implements Pro
   }
 
   private baseApiPrefix(organizationId: string): string {
-    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/p/organizations/${organizationId}/projects`;
   }
 }

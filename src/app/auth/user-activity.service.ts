@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 const STORE_KEY = 'last_activity';
 
@@ -27,6 +27,8 @@ const STORE_KEY = 'last_activity';
 })
 export class UserActivityService {
   private lastActivity = Date.now();
+
+  constructor(private configurationService: ConfigurationService) {}
 
   public resetUserInteraction() {
     this.setLastActivity(Date.now());
@@ -37,7 +39,7 @@ export class UserActivityService {
   }
 
   public getLastActivity(): number {
-    if (environment.publicView) {
+    if (this.configurationService.getConfiguration().publicView) {
       return Date.now();
     }
     if (localStorage.getItem(STORE_KEY)) {
@@ -52,7 +54,7 @@ export class UserActivityService {
   }
 
   private setLastActivity(lastActivity: number) {
-    if (!environment.publicView) {
+    if (!this.configurationService.getConfiguration().publicView) {
       // some browsers doesn't support access to localStorage in iframe
       localStorage.setItem(STORE_KEY, lastActivity.toString());
     }

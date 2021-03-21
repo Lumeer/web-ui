@@ -28,7 +28,6 @@ import * as moment from 'moment';
 import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
-import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
 import {superUserEmails} from './auth/super-user-emails';
 import {ServiceLevelType} from './core/dto/service-level-type';
@@ -45,6 +44,10 @@ import {UserActivityService} from './auth/user-activity.service';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {parseQueryParams} from './core/store/navigation/query/query.util';
 import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
+import {ConfigurationService} from './configuration/configuration.service';
+import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
+import {defineLocale} from 'ngx-bootstrap/chronos';
+import {csLocale, huLocale} from 'ngx-bootstrap/locale';
 
 @Component({
   selector: APP_NAME_SELECTOR,
@@ -64,6 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
     private localeService: BsLocaleService,
+    private configurationService: ConfigurationService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle($localize`:@@page.title:Lumeer | Visual, easy project and team management`);
@@ -83,7 +87,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private subscribeToData() {
-    if (environment.publicView) {
+    if (this.configurationService.getConfiguration().publicView) {
       this.showPublicProjectWarning$ = of(false);
     } else {
       this.showPublicProjectWarning$ = combineLatest([
@@ -99,33 +103,36 @@ export class AppComponent implements OnInit, AfterViewInit {
       const referral = urlParams['ref'];
 
       if (!Cookies.get(LUMEER_REFERRAL)) {
-        const domain = environment.production || environment.name ? '.lumeer.io' : 'localhost';
+        const domain =
+          this.configurationService.getConfiguration().production || this.configurationService.getConfiguration().name
+            ? '.lumeer.io'
+            : 'localhost';
         Cookies.set(LUMEER_REFERRAL, referral, {sameSite: 'strict', domain, secure: true, expires: 366});
       }
     }
   }
 
   private initPushNotifications() {
-    if (environment.pusherKey) {
+    if (this.configurationService.getConfiguration().pusherKey) {
       this.pusherService.init();
     }
   }
 
   private handleAuthentication() {
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       this.authService.handleAuthentication();
     }
   }
 
   private startAnalyticsTracking() {
-    if (!environment.analytics) {
+    if (!this.configurationService.getConfiguration().analytics) {
       return;
     }
 
     this.angulartics2GoogleAnalytics.startTracking();
 
-    if (environment.mixpanelKey) {
-      mixpanel.init(environment.mixpanelKey, {cross_site_cookie: true});
+    if (this.configurationService.getConfiguration().mixpanelKey) {
+      mixpanel.init(this.configurationService.getConfiguration().mixpanelKey, {cross_site_cookie: true});
     }
   }
 
@@ -147,14 +154,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         this.configureSentryUserScope(userIdHash);
 
-        if (environment.mixpanelKey) {
+        if (this.configurationService.getConfiguration().mixpanelKey) {
           mixpanel.track('Application Started');
         }
       });
   }
 
   private setAnalyticsUsername(userIdHash: string) {
-    if (!environment.analytics) {
+    if (!this.configurationService.getConfiguration().analytics) {
       return;
     }
 
@@ -162,7 +169,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private setAnalyticsDimensions(serviceLevel: string, monthYear?: string) {
-    if (!environment.analytics) {
+    if (!this.configurationService.getConfiguration().analytics) {
       return;
     }
 
@@ -173,13 +180,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.angulartics2GoogleAnalytics.setUserProperties(dimensions);
 
-    if (environment.mixpanelKey) {
+    if (this.configurationService.getConfiguration().mixpanelKey) {
       mixpanel.register({'Registered on': monthYear, 'Service Level': serviceLevel});
     }
   }
 
   private configureSentryUserScope(userIdHash: string) {
-    if (!environment.sentryDsn) {
+    if (!this.configurationService.getConfiguration().sentryDsn) {
       return;
     }
 
@@ -195,7 +202,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private initSmartlook() {
-    if (environment.smartlookKey) {
+    if (this.configurationService.getConfiguration().smartlookKey) {
       this.store$
         .pipe(
           select(selectCurrentUser),
@@ -205,7 +212,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           catchError(() => of(null))
         )
         .subscribe(() => {
-          smartlookClient.init(environment.smartlookKey);
+          smartlookClient.init(this.configurationService.getConfiguration().smartlookKey);
         });
     }
   }
@@ -226,7 +233,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private initLanguage() {
-    this.localeService.use(environment.locale);
+    this.localeService.use(this.configurationService.getConfiguration().locale);
+
+    switch (this.configurationService.getConfiguration().locale) {
+      case LanguageCode.CZ: {
+        defineLocale('cs', csLocale);
+        break;
+      }
+      case LanguageCode.HU: {
+        defineLocale('hu', huLocale);
+        break;
+      }
+    }
   }
 }
 

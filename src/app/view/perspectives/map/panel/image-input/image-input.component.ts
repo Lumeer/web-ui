@@ -30,8 +30,8 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {environment} from '../../../../../../environments/environment';
 import {LanguageCode} from '../../../../../shared/top-panel/user-panel/user-menu/language';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'image-input',
@@ -52,14 +52,16 @@ export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private configurationService: ConfigurationService) {
     this.form = this.fb.group({[this.formControlName]: null}, {updateOn: 'blur'});
   }
 
   public ngOnInit(): void {
     this.subscriptions.add(this.subscribeToValueChanges());
     this.helpLink =
-      environment.locale === LanguageCode.CZ ? 'https://www.lumeer.io/cs/mapa-cors' : 'https://www.lumeer.io/map-cors';
+      this.configurationService.getConfiguration().locale === LanguageCode.CZ
+        ? 'https://www.lumeer.io/cs/mapa-cors'
+        : 'https://www.lumeer.io/map-cors';
   }
 
   private subscribeToValueChanges(): Subscription {

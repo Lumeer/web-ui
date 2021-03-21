@@ -26,13 +26,17 @@ import {ContactDto, OrganizationDto} from '../../dto';
 import {ServiceLimitsDto} from '../../dto/service-limits.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {PaymentDto} from '../../dto/payment.dto';
-import {environment} from '../../../../environments/environment';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiOrganizationService extends ApiPermissionService implements OrganizationService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(httpClient, store$);
   }
 
@@ -105,6 +109,6 @@ export class ApiOrganizationService extends ApiPermissionService implements Orga
   }
 
   private apiPrefix(id?: string): string {
-    return `${environment.apiUrl}/rest/organizations${id ? `/${id}` : ''}`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/organizations${id ? `/${id}` : ''}`;
   }
 }

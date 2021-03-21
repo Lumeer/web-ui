@@ -22,15 +22,19 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
 import {GroupDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {map} from 'rxjs/operators';
 import {BaseService} from './base.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class GroupService extends BaseService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -52,6 +56,8 @@ export class GroupService extends BaseService {
 
   private apiPrefix(groupId?: string): string {
     const organizationId = this.getOrCurrentOrganizationId();
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/groups${groupId ? `/${groupId}` : ''}`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/organizations/${organizationId}/groups${
+      groupId ? `/${groupId}` : ''
+    }`;
   }
 }

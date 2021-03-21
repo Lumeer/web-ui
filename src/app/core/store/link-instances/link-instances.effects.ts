@@ -44,6 +44,7 @@ import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
 import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -55,13 +56,20 @@ export class LinkInstancesEffects {
         this.store$.pipe(select(selectLinkTypesPermissions))
       ),
       map(([action, collectionsPermissions, linkTypePermissions]) =>
-        checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+        checkLoadedDataQueryPayload(
+          action.payload,
+          this.configurationService.getConfiguration().publicView,
+          collectionsPermissions,
+          linkTypePermissions
+        )
       ),
       withLatestFrom(
         this.store$.pipe(select(selectLinkInstancesQueries)),
         this.store$.pipe(select(selectLinkInstancesLoadingQueries))
       ),
-      filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+      filter(([payload, queries, loadingQueries]) =>
+        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new LinkInstancesAction.SetLoadingQuery({query: payload.query}))),
       mergeMap(payload => {
@@ -466,6 +474,7 @@ export class LinkInstancesEffects {
     private actions$: Actions,
     private searchService: SearchService,
     private linkInstanceService: LinkInstanceService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
   ) {}
 }

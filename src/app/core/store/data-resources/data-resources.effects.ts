@@ -39,6 +39,7 @@ import {
 import {NotificationsAction} from '../notifications/notifications.action';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class DataResourcesEffects {
@@ -50,13 +51,20 @@ export class DataResourcesEffects {
         this.store$.pipe(select(selectLinkTypesPermissions))
       ),
       map(([action, collectionsPermissions, linkTypePermissions]) =>
-        checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+        checkLoadedDataQueryPayload(
+          action.payload,
+          this.configurationService.getConfiguration().publicView,
+          collectionsPermissions,
+          linkTypePermissions
+        )
       ),
       withLatestFrom(
         this.store$.pipe(select(selectDataResourcesQueries)),
         this.store$.pipe(select(selectDataResourcesLoadingQueries))
       ),
-      filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+      filter(([payload, queries, loadingQueries]) =>
+        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingQuery({query: payload.query}))),
       mergeMap(payload => {
@@ -88,9 +96,13 @@ export class DataResourcesEffects {
   public getTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
-      map(action => checkLoadedDataQueryPayload(action.payload)),
+      map(action =>
+        checkLoadedDataQueryPayload(action.payload, this.configurationService.getConfiguration().publicView)
+      ),
       withLatestFrom(this.store$.pipe(select(selectTasksQueries)), this.store$.pipe(select(selectTasksLoadingQueries))),
-      filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+      filter(([payload, queries, loadingQueries]) =>
+        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingTasksQuery({query: payload.query}))),
       mergeMap(payload => {
@@ -124,5 +136,10 @@ export class DataResourcesEffects {
     )
   );
 
-  constructor(private actions$: Actions, private searchService: SearchService, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private searchService: SearchService,
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {}
 }

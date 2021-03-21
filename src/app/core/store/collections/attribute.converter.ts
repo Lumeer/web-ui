@@ -31,7 +31,6 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../shared/picker/colors';
-import {getCurrentLocaleLanguageTag} from '../../model/language-tag';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {
@@ -90,7 +89,6 @@ function convertNumberConstraintConfigDtoToModel(config: any): NumberConstraintC
     ...config,
     minValue: convertToBig(config.minValue),
     maxValue: convertToBig(config.maxValue),
-    locale: getCurrentLocaleLanguageTag(),
   };
 }
 

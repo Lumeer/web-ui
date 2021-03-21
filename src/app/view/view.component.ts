@@ -41,8 +41,8 @@ import {selectCurrentUser} from '../core/store/users/users.state';
 import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
-import {environment} from '../../environments/environment';
 import {parseSelectTranslation} from '../shared/utils/translation.utils';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 @Component({
   templateUrl: './view.component.html',
@@ -63,7 +63,8 @@ export class ViewComponent implements OnInit {
     private viewSettingsService: ViewSettingsService,
     private notificationService: NotificationService,
     private store$: Store<AppState>,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private configurationService: ConfigurationService
   ) {}
 
   public ngOnInit() {
@@ -73,7 +74,7 @@ export class ViewComponent implements OnInit {
     this.fileAttachmentsService.init();
     this.viewSettingsService.init();
 
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       this.checkEmailVerified();
     }
   }

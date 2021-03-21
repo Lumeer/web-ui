@@ -30,7 +30,6 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {environment} from '../../../../../environments/environment';
 import {UnknownConstraint} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
@@ -275,7 +274,7 @@ describe('Pivot data converter', () => {
       providers: [
         {
           provide: LOCALE_ID,
-          useFactory: () => environment.locale,
+          useFactory: () => 'en',
         },
         {
           provide: TRANSLATIONS,
@@ -284,7 +283,7 @@ describe('Pivot data converter', () => {
         },
         {
           provide: TRANSLATIONS_FORMAT,
-          useFactory: () => environment.i18nFormat,
+          useFactory: () => 'xlf',
         },
       ],
     });

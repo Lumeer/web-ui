@@ -17,18 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {MapQuestLocation} from './external/mapquest-response.dto';
-
-export enum GeoCodingProvider {
-  Mapbox = 'MAPBOX',
-  MapQuest = 'MAPQUEST',
-  MapTiler = 'MAPTILER',
-}
-
-export type GeoCodingResultsDto = MapQuestLocation[]; // different formats based on provider
-
-export interface GeocodingResultDto {
-  provider: GeoCodingProvider;
-  query: string;
-  results: GeoCodingResultsDto;
+export interface ConfigurationVariables {
+  apiUrl: string;
+  apiProdUrl: string;
+  pageUrl: string;
+  authClientId: string;
+  authDomain: string;
+  buildNumber: string;
+  i18nFormat: string;
+  i18nPath: string;
+  locale: string;
+  mapboxKey: string;
+  mapQuestKey: string;
+  mapTilerKey: string;
+  maxFileUploadSize: number;
+  presignedUrlTimeout: number;
+  sentryDsn: string;
+  sessionTimeout: number;
+  pusherCluster: string;
+  pusherKey: string;
+  blocklyCdn: string;
+  publicViewCdn: string;
+  publicScriptCdn: string;
+  logzioKey: string;
+  logzioRegion: string;
+  smartlookKey: string;
+  mixpanelKey: string;
+  contactUrl: string;
 }

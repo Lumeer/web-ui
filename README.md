@@ -91,7 +91,7 @@ $ AUTH_CLIENT_ID=<auth0 client id> \
 - `SMARTLOOK_KEY`: Smartlook API key
 - `context.root`: front-end deployment context root (`/ui/` by default)
 
-If you are adding a new environment variable, make sure it is used in both `env-vars.js` and `src/environments/environment-variables.ts` files.
+If you are adding a new environment variable, make sure it is used in both `env-vars.js` and `src/environments/configuration-variables.ts` files.
 Otherwise, it will not get propagated to the application.
 
 ## Translations

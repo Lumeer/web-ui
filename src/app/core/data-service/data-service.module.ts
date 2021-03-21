@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {environment} from '../../../environments/environment';
 import {PublicCollectionService} from './collection/public-collection.service';
 import {ApiCollectionService} from './collection/api-collection.service';
 import {CollectionService} from './collection/collection.service';
@@ -56,6 +55,7 @@ import {ApiGeocodingService} from './geocoding/api-geocoding.service';
 import {ResourceCommentService} from './resource-comment/resource-comment.service';
 import {PublicResourceCommentService} from './resource-comment/public-resource-comment.service';
 import {ApiResourceCommentService} from './resource-comment/api-resource-comment.service';
+import {configuration} from '../../configuration/configuration';
 
 @NgModule({
   declarations: [],
@@ -63,51 +63,51 @@ import {ApiResourceCommentService} from './resource-comment/api-resource-comment
   providers: [
     {
       provide: CollectionService,
-      useClass: environment.publicView ? PublicCollectionService : ApiCollectionService,
+      useClass: configuration.publicView ? PublicCollectionService : ApiCollectionService,
     },
     {
       provide: LinkTypeService,
-      useClass: environment.publicView ? PublicLinkTypeService : ApiLinkTypeService,
+      useClass: configuration.publicView ? PublicLinkTypeService : ApiLinkTypeService,
     },
     {
       provide: ViewService,
-      useClass: environment.publicView ? PublicViewService : ApiViewService,
+      useClass: configuration.publicView ? PublicViewService : ApiViewService,
     },
     {
       provide: DocumentService,
-      useClass: environment.publicView ? PublicDocumentService : ApiDocumentService,
+      useClass: configuration.publicView ? PublicDocumentService : ApiDocumentService,
     },
     {
       provide: LinkInstanceService,
-      useClass: environment.publicView ? PublicLinkInstanceService : ApiLinkInstanceService,
+      useClass: configuration.publicView ? PublicLinkInstanceService : ApiLinkInstanceService,
     },
     {
       provide: SearchService,
-      useClass: environment.publicView ? PublicSearchService : ApiSearchService,
+      useClass: configuration.publicView ? PublicSearchService : ApiSearchService,
     },
     {
       provide: UserService,
-      useClass: environment.publicView ? PublicUserService : ApiUserService,
+      useClass: configuration.publicView ? PublicUserService : ApiUserService,
     },
     {
       provide: OrganizationService,
-      useClass: environment.publicView ? PublicOrganizationService : ApiOrganizationService,
+      useClass: configuration.publicView ? PublicOrganizationService : ApiOrganizationService,
     },
     {
       provide: ProjectService,
-      useClass: environment.publicView ? PublicProjectService : ApiProjectService,
+      useClass: configuration.publicView ? PublicProjectService : ApiProjectService,
     },
     {
       provide: AttachmentsService,
-      useClass: environment.publicView ? PublicAttachmentsService : ApiAttachmentsService,
+      useClass: configuration.publicView ? PublicAttachmentsService : ApiAttachmentsService,
     },
     {
       provide: GeocodingService,
-      useClass: environment.publicView ? PublicGeocodingService : ApiGeocodingService,
+      useClass: configuration.publicView ? PublicGeocodingService : ApiGeocodingService,
     },
     {
       provide: ResourceCommentService,
-      useClass: environment.publicView ? PublicResourceCommentService : ApiResourceCommentService,
+      useClass: configuration.publicView ? PublicResourceCommentService : ApiResourceCommentService,
     },
   ],
 })

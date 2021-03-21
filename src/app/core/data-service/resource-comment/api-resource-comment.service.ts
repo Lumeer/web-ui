@@ -24,14 +24,18 @@ import {Observable} from 'rxjs';
 import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {ResourceCommentService} from './resource-comment.service';
 import {ResourceCommentDto} from '../../dto/resource-comment.dto';
 import {ResourceType} from '../../model/resource-type';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiResourceCommentService extends BaseService implements ResourceCommentService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -72,6 +76,8 @@ export class ApiResourceCommentService extends BaseService implements ResourceCo
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}`;
   }
 }

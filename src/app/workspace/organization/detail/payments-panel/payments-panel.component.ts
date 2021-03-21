@@ -34,9 +34,9 @@ import {DatePipe, DOCUMENT} from '@angular/common';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {environment} from '../../../../../environments/environment';
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'payments-panel',
@@ -63,7 +63,8 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
     @Inject(DOCUMENT) private document,
     private elementRef: ElementRef,
     private notificationService: NotificationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private configurationService: ConfigurationService
   ) {
     this.languageCode = $localize`:@@organization.payments.lang.code:en`;
   }
@@ -196,7 +197,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   public ngAfterViewInit(): void {
     const script = this.document.createElement('script');
     script.type = 'text/javascript';
-    script.src = environment.paymentGw;
+    script.src = this.configurationService.getConfiguration().paymentGw;
     this.elementRef.nativeElement.appendChild(script);
   }
 }
