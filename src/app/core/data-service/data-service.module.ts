@@ -55,7 +55,7 @@ import {ApiGeocodingService} from './geocoding/api-geocoding.service';
 import {ResourceCommentService} from './resource-comment/resource-comment.service';
 import {PublicResourceCommentService} from './resource-comment/public-resource-comment.service';
 import {ApiResourceCommentService} from './resource-comment/api-resource-comment.service';
-import {configuration} from '../../configuration/configuration';
+import {configuration} from '../../../environments/configuration';
 
 @NgModule({
   declarations: [],

@@ -19,9 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {availableLanguages, LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
-import {Configuration} from './configuration-type';
-import {configuration} from './configuration';
-import {ConfigurationVariables} from './configuration-variables';
+import {Configuration} from '../../environments/configuration-type';
+import {configuration} from '../../environments/configuration';
+import {ConfigurationVariables} from '../../environments/configuration-variables';
 
 let env = {};
 try {

@@ -22,7 +22,7 @@ import {AppState} from '../app.state';
 import {DataQuery} from '../../model/data-query';
 import {selectViewDataQuery} from '../view-settings/view-settings.state';
 import {isDataQueryLoaded} from '../utils/data-query-payload';
-import {configuration} from '../../../configuration/configuration';
+import {configuration} from '../../../../environments/configuration';
 
 export interface DataResourcesState {
   queries: DataQuery[];

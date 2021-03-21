@@ -71,7 +71,7 @@ import {
   UnknownConstraint,
   UserConstraint,
 } from '@lumeer/data-filters';
-import {Configuration} from '../../../../configuration/configuration-type';
+import {Configuration} from '../../../../../environments/configuration-type';
 
 export interface GanttTaskMetadata {
   nameDataId: string;

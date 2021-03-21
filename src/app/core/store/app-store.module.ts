@@ -82,7 +82,7 @@ import {userPermissionsReducer} from './user-permissions/user-permissions.reduce
 import {WorkflowsEffects} from './workflows/workflows.effects';
 import {dataResourcesReducer} from './data-resources/data-resources.reducer';
 import {DataResourcesEffects} from './data-resources/data-resources.effects';
-import {configuration} from '../../configuration/configuration';
+import {configuration} from '../../../environments/configuration';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,

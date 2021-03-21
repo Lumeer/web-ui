@@ -19,7 +19,7 @@
 
 import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
 import {Address, AddressField} from '@lumeer/data-filters';
-import {Configuration} from '../../../../../../configuration/configuration-type';
+import {Configuration} from '../../../../../../../environments/configuration-type';
 
 const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.HouseNumber, AddressField.City, AddressField.Country];
 const ENGLISH_DEFAULT_FIELDS = [

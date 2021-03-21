@@ -98,7 +98,7 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/app/configuration/configuration.ts",
+                  "replace": "src/environments/configuration.ts",
                   "with": "src/environments/configuration.production.ts"
                 }
               ],
@@ -121,7 +121,7 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/app/configuration/configuration.ts",
+                  "replace": "src/environments/configuration.ts",
                   "with": "src/environments/configuration.public.ts"
                 }
               ],
@@ -144,7 +144,7 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/app/configuration/configuration.ts",
+                  "replace": "src/environments/configuration.ts",
                   "with": "src/environments/configuration.staging.ts"
                 }
               ],
@@ -201,7 +201,7 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/app/configuration/configuration.ts",
+                  "replace": "src/environments/configuration.ts",
                   "with": "src/environments/configuration.testing.ts"
                 }
               ],

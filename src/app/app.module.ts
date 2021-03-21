@@ -34,7 +34,7 @@ import {PermissionsCheckService} from './core/service/permissions-check.service'
 import {AppIdService} from './core/service/app-id.service';
 import {PrintModule} from './print/print.module';
 import {ConfigurationService} from './configuration/configuration.service';
-import {configuration} from './configuration/configuration';
+import {configuration} from '../environments/configuration';
 
 declare const require; // Use the require method provided by webpack
 

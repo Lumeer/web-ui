@@ -24,7 +24,7 @@ import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
 import {DataQuery} from '../../model/data-query';
 import {isDataQueryLoaded} from '../utils/data-query-payload';
-import {configuration} from '../../../configuration/configuration';
+import {configuration} from '../../../../environments/configuration';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId

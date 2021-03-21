@@ -22,7 +22,7 @@ import {AnyLayer, GeoJSONSourceRaw, LngLat, LngLatBounds, Map, MapboxOptions, Ma
 import {MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
-import {Configuration} from '../../../../../../configuration/configuration-type';
+import {Configuration} from '../../../../../../../environments/configuration-type';
 
 export function createMapboxMap(
   elementId: string,
