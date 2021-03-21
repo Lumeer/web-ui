@@ -103,7 +103,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
     }
     config.decimals = isNumeric(config.decimals) ? toNumber(config.decimals) : null;
 
-    return new NumberConstraint(config).createDataValue(exampleValue);
+    return new NumberConstraint(config).createDataValue(exampleValue, constraintData);
   }
 
   private createCurrencySelectItems(): SelectItemModel[] {

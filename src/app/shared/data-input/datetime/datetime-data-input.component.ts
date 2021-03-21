@@ -215,10 +215,17 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   }
 
   public ngAfterViewInit(): void {
-    document.body.style.setProperty(
-      '--first-day-of-week',
-      this.configurationService.getConfiguration().locale === LanguageCode.CZ ? '8' : '2'
-    );
+    document.body.style.setProperty('--first-day-of-week', this.firstDayOfWeek());
+  }
+
+  private firstDayOfWeek(): string {
+    const locale = this.configurationService.getConfiguration().locale;
+    switch (locale) {
+      case LanguageCode.EN:
+        return '2';
+      default:
+        return '8';
+    }
   }
 
   public onValueChange(date: Date) {

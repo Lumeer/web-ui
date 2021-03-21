@@ -29,6 +29,7 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 
 const termsOfServiceLinks = {
   cs: 'https://www.lumeer.io/cs/vseobecne-obchodni-podminky/',
@@ -76,9 +77,11 @@ export class AgreementComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>
   ) {
     const locale = this.configurationService.getConfiguration().locale;
-    this.termsOfServiceLink = termsOfServiceLinks[locale];
-    this.privacyPolicyLink = privacyPolicyLinks[locale];
-    this.dataProcessingAgreementLink = dataProcessingAgreementLinks[locale];
+    const supportedLocales = [LanguageCode.CZ.toString(), LanguageCode.EN.toString()];
+    const supportedLocale = supportedLocales.includes(locale) ? locale : LanguageCode.EN;
+    this.termsOfServiceLink = termsOfServiceLinks[supportedLocale];
+    this.privacyPolicyLink = privacyPolicyLinks[supportedLocale];
+    this.dataProcessingAgreementLink = dataProcessingAgreementLinks[supportedLocale];
   }
 
   public ngOnInit() {
