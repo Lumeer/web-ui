@@ -50,6 +50,7 @@
         "comma-dangle": ["off", "always-multiline"],
         "no-bitwise": "off",
         "no-debugger": "off",
+        "no-console": "error",
         "no-empty": "error",
         "no-var": "off",
         "no-redeclare": "off",

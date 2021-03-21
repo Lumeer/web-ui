@@ -121,7 +121,6 @@ function parseLanguageFromLocation(): string {
   if (href.startsWith(origin)) {
     const withoutOrigin = href.substring(origin.length + 1);
     const languageCode = withoutOrigin.split('/')[0];
-    console.log(withoutOrigin, languageCode);
     if (availableLanguages.some(language => language.code === languageCode)) {
       return languageCode;
     }
