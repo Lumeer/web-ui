@@ -209,7 +209,7 @@
 				<target>indítani,befejezni</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/shift-date-of-blockly-component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.dropdown.units.dateChangeBlock">
-				<source>'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+				<source>second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
 				<target>másodperc(ek),perc(ek),óra(k),nap(ok),munkanap(ok),hét(ek),hónap(ok),hónap(k) (ragaszkodás a hónap végéig),negyedév(ek),negyedév(ek) (ragaszkodás a hónap végéig),év(ek),év(ek) (ragaszkodás a hónap végéig)</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.dropdown.units.shiftDateOfBlock">
@@ -221,7 +221,7 @@
 				<target>siker,info,figyelmeztetés,hiba</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.createDocumentBlock">
-				<source>'Gets a record linked to the given document via the selected link.</source>
+				<source>Gets a record linked to the given document via the selected link.</source>
 				<target>A hivatkozáson keresztül kapod meg az adott dokumentumhoz csatolt rekordot</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getParentDocumentBlock" datatype="html">
         <source>Gets the parent record in hierarchy. Returns null if there isn't any.</source><target state="new">Gets the parent record in hierarchy. Returns null if there isn't any.</target>
@@ -1730,11 +1730,11 @@
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">183</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="ganttChart.bar.placeholder">
 				<source>{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color}}</source>
-				<target>{barPlaceholder, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
+				<target>{barProperty, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context><context context-type="linenumber">29</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="ganttChart.empty.placeholder">
 				<source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color}}</source>
-				<target>Válassza ki {barPlaceholder, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
+				<target>Válassza ki {emptyProperty, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context><context context-type="linenumber">29</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="get.help.button">
 				<source>Get Help</source>
@@ -2732,7 +2732,7 @@
 					<target>Több</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">140</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.calendar.header.day">
-					<source>'Day</source>
+					<source>Day</source>
 					<target>Nap</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">147</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.calendar.header.month">
@@ -3618,7 +3618,7 @@
 					<target>Véglegesen eltávolítod ezt a sorozatot?</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="sequence.item.delete.title">
-					<source>'Remove sequence?</source>
+					<source>Remove sequence?</source>
 					<target>Eltávolítod a sorozatot?</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">43</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="sequence.item.remove.button.title">

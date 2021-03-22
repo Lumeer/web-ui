@@ -1734,7 +1734,7 @@
         <source>Week</source><target state="final">Week</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">146</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
-        <source>'Day</source><target state="final">'Day</target>
+        <source>Day</source><target state="final">Day</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">147</context></context-group></trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source> Main settings
@@ -2826,7 +2826,7 @@
         <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</source><target state="final">Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock" datatype="html">
-        <source>'Gets a record linked to the given document via the selected link.</source><target state="final">'Gets a record linked to the given document via the selected link.</target>
+        <source>Gets a record linked to the given document via the selected link.</source><target state="final">'ets a record linked to the given document via the selected link.</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getParentDocumentBlock" datatype="html">
@@ -2866,7 +2866,7 @@
         <source>Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.</source><target state="final">Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source><target state="final">'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</target>
+        <source>second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source><target state="final">second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="blockly.dropdown.ops.dateChangeBlock" datatype="html">
         <source>add,subtract,set</source><target state="final">add,subtract,set</target>
@@ -3111,7 +3111,7 @@
         <source>Do you want to permanently remove this sequence?</source><target state="final">Do you want to permanently remove this sequence?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="sequence.item.delete.title" datatype="html">
-        <source>'Remove sequence?</source><target state="final">'Remove sequence?</target>
+        <source>Remove sequence?</source><target state="final">Remove sequence?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">43</context></context-group></trans-unit>
       <trans-unit id="query.item.deleted.file" datatype="html">
