@@ -61,7 +61,7 @@ export class ConfigurationService {
     const buildNumber = env['BUILD_NUMBER'];
     const locale: string = env['I18N_LOCALE'] || parseLanguageFromLocation();
     const i18nFormat = env['I18N_FORMAT'] || 'xlf';
-    const i18nPath = env['I18N_PATH'] || `src/i18n/messages.${locale}.${i18nFormat}`;
+    const i18nPath = env['I18N_PATH'] || `messages.${locale}.${i18nFormat}`;
     const mapboxKey: string = env['MAPBOX_KEY'];
     const mapQuestKey: string = env['MAPQUEST_KEY'];
     const mapTilerKey: string = env['MAPTILER_KEY'];
