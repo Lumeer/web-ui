@@ -283,6 +283,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
     });
+    if (this.masterType === MasterBlockType.Function) {
+      this.workspace.createVariable('lumeerActionName', null, null);
+    }
     setTimeout(() => {
       this.initializing = false;
     }, 500); // let the DOM to be parsed in their timeout
