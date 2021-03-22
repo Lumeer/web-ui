@@ -305,9 +305,7 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
                 <source>Enter user email and press Enter</source>
-                <target>
-                    Zadejte emaily kolegů...
-                </target>
+                <target>Zadejte emaily kolegů...</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/input/share-view-input.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="view.share.dialog.input.button" datatype="html">
         <source>Add</source><target>Přidat kolegu</target>
