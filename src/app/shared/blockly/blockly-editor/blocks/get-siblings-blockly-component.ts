@@ -80,26 +80,29 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
   private checkWorkspaceChange(workspace, changeEvent, block) {
     if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.GET_SIBLINGS) {
       const linkTypeId = block.getField('LINKTYPE').value_;
-      const linkType = this.linkTypes.find(lt => lt.id === linkTypeId);
-      const checks = linkType.collectionIds;
-      const input = block.getInput('DOCUMENT');
+      const linkType = this.linkTypes?.find(lt => lt.id === linkTypeId);
 
-      // is the input connected?
-      if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
-        const inputType =
-          input.connection.targetConnection?.check_ instanceof Array
-            ? input.connection.targetConnection?.check_[0]
-            : input.connection.targetConnection?.check_;
+      if (linkType) {
+        const checks = linkType?.collectionIds;
+        const input = block.getInput('DOCUMENT');
 
-        if (inputType === checks[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
-          block.setOutput(true, checks[0] + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+        // is the input connected?
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+          const inputType =
+            input.connection.targetConnection?.check_ instanceof Array
+              ? input.connection.targetConnection?.check_[0]
+              : input.connection.targetConnection?.check_;
+
+          if (inputType === checks[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
+            block.setOutput(true, checks[0] + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+          } else {
+            block.setOutput(true, checks[1] + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+          }
         } else {
-          block.setOutput(true, checks[1] + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+          // we don't know the output type
+          block.setOutput(true, 'UNKNOWN');
+          input.setCheck([checks[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX, checks[1] + BlocklyUtils.DOCUMENT_VAR_SUFFIX]);
         }
-      } else {
-        // we don't know the output type
-        block.setOutput(true, 'UNKNOWN');
-        input.setCheck([checks[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX, checks[1] + BlocklyUtils.DOCUMENT_VAR_SUFFIX]);
       }
     }
   }
