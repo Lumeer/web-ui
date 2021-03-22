@@ -27,8 +27,4 @@ export const configuration: Partial<Configuration> = {
   storeDevtools: true,
   publicView: false,
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
-  pusherKey: '22b1d531f1fc10719c7c',
-  mapboxKey: 'pk.eyJ1IjoibGl2dGhvbWFzIiwiYSI6ImNqeDR2MDd1aDBjaTg0M3J2Mm9leHdkOHAifQ.xAbEX4xSYcTXHVLLxAQggw',
-  mapQuestKey: '5na5S3NX2BPYXG4xIny4mjodvC4frAp2',
-  mapTilerKey: 'J0rj14U2Xg9GYrAQhJ6B',
 };

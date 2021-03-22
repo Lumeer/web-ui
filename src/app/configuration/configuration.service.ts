@@ -39,8 +39,8 @@ export class ConfigurationService {
   constructor() {
     const partialConfiguration = this.checkConfiguration(env);
     this._configuration = {
-      ...configuration,
       ...partialConfiguration,
+      ...configuration,
     } as Configuration;
   }
 
