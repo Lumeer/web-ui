@@ -28,12 +28,16 @@ import {AppState} from '../../store/app.state';
 import {AttributeDto, CollectionDto} from '../../dto';
 import {ApiPermissionService} from '../common/api-permission.service';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(httpClient, store$);
   }
 
@@ -116,6 +120,8 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/collections`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/collections`;
   }
 }

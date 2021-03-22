@@ -22,15 +22,19 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
 import {CollectionDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {ImportedCollectionDto} from '../dto/imported-collection.dto';
 import {BaseService} from './base.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class ImportService extends BaseService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -44,6 +48,8 @@ export class ImportService extends BaseService {
     const organizationId = this.getOrCurrentOrganizationId();
     const projectId = this.getOrCurrentProjectId();
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/import`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/import`;
   }
 }

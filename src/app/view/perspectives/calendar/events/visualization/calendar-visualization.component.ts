@@ -41,7 +41,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
-import {environment} from '../../../../../../environments/environment';
 import {
   CalendarGridMode,
   CalendarMode,
@@ -50,6 +49,7 @@ import {
 } from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'calendar-visualization',
@@ -96,7 +96,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   @ViewChild('calendar', {static: true})
   public calendarComponent: FullCalendarComponent;
 
-  public readonly locale = environment.locale;
+  public readonly locale: string;
   public readonly calendarPlugins = [
     timeGridPlugin,
     dayGridPlugin,
@@ -134,7 +134,8 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private setupInitialDate = true;
 
-  constructor() {
+  constructor(private configurationService: ConfigurationService) {
+    this.locale = configurationService.getConfiguration().locale;
     this.calendarText = $localize`:@@perspective.calendar.display.calendar:Calendar`;
     this.listText = $localize`:@@perspective.calendar.display.list:List`;
     this.moreText = $localize`:@@perspective.calendar.display.more:more`;

@@ -24,7 +24,6 @@ import {Action, Store} from '@ngrx/store';
 import {Angulartics2} from 'angulartics2';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
-import {environment} from '../../../../../environments/environment';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
 import {PaymentConverter} from './payment.converter';
@@ -32,6 +31,7 @@ import {PaymentsAction, PaymentsActionType} from './payments.action';
 import mixpanel from 'mixpanel-browser';
 import {Payment} from './payment';
 import {OrganizationService} from '../../../data-service';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Injectable()
 export class PaymentsEffects {
@@ -64,7 +64,7 @@ export class PaymentsEffects {
       this.actions$.pipe(
         ofType<PaymentsAction.GetPaymentSuccess>(PaymentsActionType.GET_PAYMENT_SUCCESS),
         tap((action: PaymentsAction.GetPaymentSuccess) => {
-          if (environment.analytics && action.payload.payment.state === 'PAID') {
+          if (this.configurationService.getConfiguration().analytics && action.payload.payment.state === 'PAID') {
             this.angulartics2.eventTrack.next({
               action: 'Payment paid',
               properties: {
@@ -87,7 +87,7 @@ export class PaymentsEffects {
               ga('ecommerce:send');
             }
 
-            if (environment.mixpanelKey) {
+            if (this.configurationService.getConfiguration().mixpanelKey) {
               mixpanel.track('Payment Paid', {
                 CZK: price,
                 users: action.payload.payment.users,
@@ -161,7 +161,7 @@ export class PaymentsEffects {
       this.actions$.pipe(
         ofType<PaymentsAction.CreatePaymentSuccess>(PaymentsActionType.CREATE_PAYMENT_SUCCESS),
         tap((action: PaymentsAction.CreatePaymentSuccess) => {
-          if (environment.analytics) {
+          if (this.configurationService.getConfiguration().analytics) {
             this.angulartics2.eventTrack.next({
               action: 'Payment create',
               properties: {
@@ -171,7 +171,7 @@ export class PaymentsEffects {
               },
             });
 
-            if (environment.mixpanelKey) {
+            if (this.configurationService.getConfiguration().mixpanelKey) {
               const price = this.getPrice(action.payload.payment);
               mixpanel.track('Payment Create', {
                 CZK: price,
@@ -200,6 +200,7 @@ export class PaymentsEffects {
     private router: Router,
     private actions$: Actions,
     private organizationService: OrganizationService,
-    private angulartics2: Angulartics2
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
   ) {}
 }

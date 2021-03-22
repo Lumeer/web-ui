@@ -22,16 +22,23 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
 import {AuthService} from '../../../auth/auth.service';
 import {isBackendUrl} from '../../api/api.utils';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
-  public constructor(private authService: AuthService, private router: Router) {}
+  public constructor(
+    private authService: AuthService,
+    private router: Router,
+    private configurationService: ConfigurationService
+  ) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!environment.auth || !isBackendUrl(request.url)) {
+    if (
+      !this.configurationService.getConfiguration().auth ||
+      !isBackendUrl(request.url, this.configurationService.getConfiguration())
+    ) {
       return next.handle(request);
     }
 

@@ -25,7 +25,6 @@ import {Action, select, Store} from '@ngrx/store';
 import {Angulartics2} from 'angulartics2';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
 import {CollectionDto, PermissionDto} from '../../dto';
 import {ImportService} from '../../rest';
 import {AppState} from '../app.state';
@@ -57,6 +56,7 @@ import mixpanel from 'mixpanel-browser';
 import {CollectionService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {createCallbackActions} from '../utils/store.utils';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class CollectionsEffects {
@@ -111,7 +111,7 @@ export class CollectionsEffects {
           map(dto => convertCollectionDtoToModel(dto, collection.correlationId)),
           withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
           mergeMap(([newCollection, collections]) => {
-            if (environment.analytics) {
+            if (this.configurationService.getConfiguration().analytics) {
               this.angulartics2.eventTrack.next({
                 action: 'Collection create',
                 properties: {
@@ -121,7 +121,7 @@ export class CollectionsEffects {
                 },
               });
 
-              if (environment.mixpanelKey) {
+              if (this.configurationService.getConfiguration().mixpanelKey) {
                 mixpanel.track('Collection Create', {
                   count: Object.keys(collections).length + 1,
                   name: action.payload.collection.name,
@@ -655,7 +655,8 @@ export class CollectionsEffects {
     private store$: Store<AppState>,
     private collectionService: CollectionService,
     private importService: ImportService,
-    private angulartics2: Angulartics2
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
   ) {}
 }
 

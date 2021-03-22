@@ -22,11 +22,14 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
 import * as moment from 'moment-timezone';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class TimezoneHttpInterceptor implements HttpInterceptor {
+  constructor(private configurationService: ConfigurationService) {}
+
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(request.url)) {
+    if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {
       return next.handle(request);
     }
 

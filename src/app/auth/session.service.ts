@@ -19,28 +19,31 @@
 
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
-import {environment} from '../../environments/environment';
 import {AuthService} from './auth.service';
 import {UserActivityService} from './user-activity.service';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 const CHECK_INTERVAL = 3000; // millis
-const TIMEOUT_MINUTES = environment.sessionTimeout;
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionService {
   private timerId: number;
+  private readonly timeoutMinutes;
 
   public constructor(
     private router: Router,
     private ngZone: NgZone,
     private authService: AuthService,
-    private activityService: UserActivityService
-  ) {}
+    private activityService: UserActivityService,
+    private configurationService: ConfigurationService
+  ) {
+    this.timeoutMinutes = this.configurationService.getConfiguration().sessionTimeout;
+  }
 
   public init() {
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       this.initInterval();
     }
   }
@@ -55,7 +58,7 @@ export class SessionService {
 
   private check() {
     const now = Date.now();
-    const timeLeft = this.activityService.getLastActivity() + TIMEOUT_MINUTES * 60 * 1000;
+    const timeLeft = this.activityService.getLastActivity() + this.timeoutMinutes * 60 * 1000;
     const isTimeout = timeLeft - now < 0;
 
     this.ngZone.run(() => {

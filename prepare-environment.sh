@@ -1,6 +1,6 @@
 #!/bin/sh
 # prepare local environment file if not exists
 
-if [ ! -f ./src/environments/environment.ts ]; then
-    cp ./src/environments/environment.local.ts ./src/environments/environment.ts || true
+if [ ! -f ./src/environments/configuration.ts ]; then
+    cp ./src/environments/configuration.local.ts ./src/environments/configuration.ts || true
 fi

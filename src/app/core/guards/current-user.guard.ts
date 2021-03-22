@@ -27,16 +27,21 @@ import {AppState} from '../store/app.state';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUser} from '../store/users/users.state';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common.utils';
-import {environment} from '../../../environments/environment';
 import {hashUserId} from '../../shared/utils/system.utils';
 import mixpanel from 'mixpanel-browser';
 import Cookies from 'js-cookie';
 import {LUMEER_REFERRAL} from '../constants';
 import {idToReference} from '../../shared/utils/string.utils';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
-  constructor(private authService: AuthService, private router: Router, private store$: Store<AppState>) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isCurrentUserLoaded(state);
@@ -79,13 +84,19 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
           this.authService.saveLoginRedirectPath(state.url);
           this.router.navigate(['/', 'agreement']);
 
-          if (environment.analytics && environment.mixpanelKey) {
+          if (
+            this.configurationService.getConfiguration().analytics &&
+            this.configurationService.getConfiguration().mixpanelKey
+          ) {
             const userHash = hashUserId(user.id);
             mixpanel.alias(userHash);
             mixpanel.identify(userHash);
           }
         } else {
-          if (environment.analytics && environment.mixpanelKey) {
+          if (
+            this.configurationService.getConfiguration().analytics &&
+            this.configurationService.getConfiguration().mixpanelKey
+          ) {
             const userHash = hashUserId(user.id);
             mixpanel.identify(userHash);
           }

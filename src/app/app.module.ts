@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {APP_INITIALIZER, InjectionToken, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
-import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CollectionModule} from './collection/collection.module';
@@ -34,11 +33,13 @@ import {ConstraintDataService} from './core/service/constraint-data.service';
 import {PermissionsCheckService} from './core/service/permissions-check.service';
 import {AppIdService} from './core/service/app-id.service';
 import {PrintModule} from './print/print.module';
+import {ConfigurationService} from './configuration/configuration.service';
+import {configuration} from '../environments/configuration';
 
 declare const require; // Use the require method provided by webpack
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
-  developerMode: !environment.analytics,
+  developerMode: !configuration.analytics,
   pageTracking: {
     clearIds: true,
     idsRegExp: new RegExp('^[0-9a-z]{24}$'),
@@ -47,6 +48,8 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     anonymizeIp: true,
   },
 };
+
+export const TRANSLATIONS_PATH = new InjectionToken<string>('TRANSLATIONS_PATH');
 
 @NgModule({
   imports: [
@@ -64,36 +67,49 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
   ],
   providers: [
     {
+      provide: APP_INITIALIZER,
+      useFactory: (configurationService: ConfigurationService) => () => configurationService.loadConfiguration(),
+      deps: [ConfigurationService],
+      multi: true,
+    },
+    {
       provide: LOCALE_ID,
-      useFactory: () => environment.locale,
+      deps: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().locale,
+    },
+    {
+      provide: TRANSLATIONS_PATH,
+      deps: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().i18nPath,
     },
     {
       provide: TRANSLATIONS,
-      useFactory: locale => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`).default, // TODO ${environment.i18nPath}
-      deps: [LOCALE_ID],
+      useFactory: i18nPath => require(`raw-loader!../../src/i18n/${i18nPath}`).default,
+      deps: [TRANSLATIONS_PATH],
     },
     {
       provide: TRANSLATIONS_FORMAT,
-      useFactory: () => environment.i18nFormat,
+      deps: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().i18nFormat,
     },
     ConstraintDataService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (ds: ConstraintDataService) => () => ds.init(),
+      useFactory: (constraintDataService: ConstraintDataService) => () => constraintDataService.init(),
       deps: [ConstraintDataService],
       multi: true,
     },
     PermissionsCheckService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (ds: PermissionsCheckService) => () => ds.init(),
+      useFactory: (permissionsCheckService: PermissionsCheckService) => () => permissionsCheckService.init(),
       deps: [PermissionsCheckService],
       multi: true,
     },
     AppIdService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (ds: AppIdService) => () => ds.init(),
+      useFactory: (appIdService: AppIdService) => () => appIdService.init(),
       deps: [AppIdService],
       multi: true,
     },

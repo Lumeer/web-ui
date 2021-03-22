@@ -305,9 +305,7 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
                 <source>Enter user email and press Enter</source>
-                <target>
-                    Zadejte emaily kolegů...
-                </target>
+                <target>Zadejte emaily kolegů...</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/share-view/body/input/share-view-input.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="view.share.dialog.input.button" datatype="html">
         <source>Add</source><target>Přidat kolegu</target>
@@ -1202,7 +1200,7 @@
         <source>Do you want to permanently remove this sequence?</source><target>Chcete skutečně trvale odstranit tuto posloupnost?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="sequence.item.delete.title" datatype="html">
-        <source>'Remove sequence?</source><target>Odstranit posloupnost?</target>
+        <source>Remove sequence?</source><target>Odstranit posloupnost?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context><context context-type="linenumber">43</context></context-group></trans-unit>
             <trans-unit id="collection.delete.dialog.message" datatype="html">
@@ -2433,7 +2431,7 @@
       </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">146</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
-        <source>'Day</source><target>
+        <source>Day</source><target>
         Den
       </target>
 
@@ -3680,7 +3678,7 @@
         <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color}}</source><target>Vyberte {emptyProperty, select, name {Název} start {Začátek} end {Konec} progress {Průběh} category {Kategorie} subCategory {Podkategorie} color {Barva} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="ganttChart.bar.placeholder" datatype="html">
-        <source>{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color}}</source><target>{barPlaceholder, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} category {Kategorie} subCategory {Podkategorie} color {Barva} }</target>
+        <source>{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color}}</source><target>{barProperty, select, name {Název} start {Začátek} end {Konec} id {Identifikátor úlohy} dependencies {Závisející úlohy} progress {Průběh} category {Kategorie} subCategory {Podkategorie} color {Barva} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-placeholder.pipe.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.mode" datatype="html">
         <source>{mode, select, Quarter Day {Quarter Days} Half Day {Half Days} Day {Days} Week {Weeks} Month {Months} Year {Years}}</source><target>{mode, select, Quarter Day {Čtvrt Dny} Half Day {Půl dny} Day {Dny} Week {Týdny} Month {Měsíce} Year {Roky} }</target>
@@ -4240,7 +4238,7 @@
         <target>Vytvoří nový záznam. Přiřaďte jej do proměnné, abyste mohli nastavit jeho atributy. Je možné vytvořit maximálně <x id="limit" equiv-text="{{limit}}"/> záznamů v rámci jednoho řetězce volání automatizací a funkcí, aby se předešlo neúmyslnému zacyklení.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.tooltip.createDocumentBlock" datatype="html">
-        <source>'Gets a record linked to the given document via the selected link.</source>
+        <source>Gets a record linked to the given document via the selected link.</source>
         <target>Vytvoří nový záznam. Uložte ho do proměnné, abyste jej mohli dál měnit.</target>
 
 
@@ -4290,7 +4288,7 @@
         <target>Změní objekt s datumem a vrátí nový změněný objekt. Napojte na blok datum na ISO pro uložení do atributu typu datum a čas.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+        <source>second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
         <target>sekund(y),minut(y),hodin(y),dn(ů/y),pracovní(ch) dn(ů/y),týdn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="blockly.dropdown.ops.dateChangeBlock" datatype="html">

@@ -56,7 +56,6 @@ import {
   NumberConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../core/model/language-tag';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -609,7 +608,7 @@ export class PivotDataConverter {
         if (isValueAggregation(pivotAttribute.aggregation)) {
           constraints.push(this.pivotAttributeConstraint(pivotAttribute));
         } else {
-          constraints.push(new NumberConstraint({locale: getCurrentLocaleLanguageTag()}));
+          constraints.push(new NumberConstraint({}));
         }
         const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
         titles.push(title);

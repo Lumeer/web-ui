@@ -18,8 +18,8 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {LanguageCode} from '../top-panel/user-panel/user-menu/language';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
   selector: 'get-help',
@@ -30,8 +30,10 @@ import {LanguageCode} from '../top-panel/user-panel/user-menu/language';
 export class GetHelpComponent implements OnInit {
   public link: string;
 
+  constructor(private configurationService: ConfigurationService) {}
+
   public ngOnInit(): void {
-    if (environment.locale === LanguageCode.CZ) {
+    if (this.configurationService.getConfiguration().locale === LanguageCode.CZ) {
       this.link = 'https://www.lumeer.io/cs/pomoc';
     } else {
       this.link = 'https://www.lumeer.io/get-help';

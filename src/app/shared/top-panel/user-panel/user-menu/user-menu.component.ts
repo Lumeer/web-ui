@@ -44,8 +44,8 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 import {SearchTab} from '../../../../core/store/navigation/search-tab';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
 import {NotificationSettingsModalComponent} from '../../../modal/notification-settings/notification-settings-modal.component';
-import {environment} from '../../../../../environments/environment';
 import {availableLanguages, Language, LanguageCode} from './language';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'user-menu',
@@ -66,10 +66,10 @@ export class UserMenuComponent implements OnInit {
   @Output()
   public toggleControls = new EventEmitter();
 
-  public readonly buildNumber = environment.buildNumber;
-  public readonly locale = environment.locale;
+  public readonly buildNumber: string;
+  public readonly locale: string;
   public readonly languageCode = LanguageCode;
-  public readonly languages = availableLanguages.filter(language => language.code !== this.locale);
+  public readonly languages: Language[];
   public readonly helpLink: string;
 
   public currentUser$: Observable<User>;
@@ -85,8 +85,12 @@ export class UserMenuComponent implements OnInit {
     private authService: AuthService,
     private modalService: ModalService,
     private store$: Store<AppState>,
-    private router: Router
+    private router: Router,
+    private configurationService: ConfigurationService
   ) {
+    this.locale = configurationService.getConfiguration().locale;
+    this.languages = availableLanguages.filter(language => language.code !== this.locale);
+    this.buildNumber = configurationService.getConfiguration().buildNumber;
     this.helpLink = this.getHelpLink();
   }
 

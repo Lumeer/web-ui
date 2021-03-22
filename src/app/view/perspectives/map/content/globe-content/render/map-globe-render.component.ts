@@ -48,7 +48,6 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {DeviceDetectorService, OS} from 'ngx-device-detector';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
-import {environment} from '../../../../../../../environments/environment';
 import {MapCoordinates, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
 import {
   createMapboxMap,
@@ -62,9 +61,7 @@ import {MarkerMoveEvent} from './marker-move.event';
 import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
-
-mapboxgl.accessToken = environment.mapboxKey;
-window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
+import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 
 const MAP_SOURCE_ID = 'records';
 
@@ -113,8 +110,12 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
     private deviceDetectorService: DeviceDetectorService,
     private ngZone: NgZone,
     private platform: Platform,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private configurationService: ConfigurationService
+  ) {
+    mapboxgl.accessToken = configurationService.getConfiguration().mapboxKey;
+    window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToMapMarkers());
@@ -184,7 +185,12 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   private initMap(position: MapPosition) {
-    this.mapboxMap = createMapboxMap(this.mapElementId, position, this.translateMap());
+    this.mapboxMap = createMapboxMap(
+      this.mapElementId,
+      position,
+      this.configurationService.getConfiguration(),
+      this.translateMap()
+    );
     this.mapboxMap.addControl(new NavigationControl(), 'top-right');
     this.mapboxMap.addControl(new ScaleControl(), 'bottom-right');
     // GeolocateControl needs to be added after ScaleControl to be shown above it
@@ -382,7 +388,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private activateMapTilesLanguageAutoDetection() {
     const mapbox = this.mapboxMap as any;
     if (mapbox) {
-      mapbox.autodetectLanguage(environment.locale);
+      mapbox.autodetectLanguage(this.configurationService.getConfiguration().locale);
     }
   }
 

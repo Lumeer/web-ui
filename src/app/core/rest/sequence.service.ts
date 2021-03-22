@@ -23,15 +23,19 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
 import {SequenceDto} from '../dto/sequence.dto';
 import {BaseService} from './base.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class SequenceService extends BaseService {
-  constructor(protected httpClient: HttpClient, protected store: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store);
   }
 
@@ -53,6 +57,8 @@ export class SequenceService extends BaseService {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/sequences`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/sequences`;
   }
 }

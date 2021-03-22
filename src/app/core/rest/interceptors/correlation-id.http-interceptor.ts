@@ -21,13 +21,16 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 export const correlationIdHeader = 'X-Lumeer-Correlation-Id';
 
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
+  constructor(private configurationService: ConfigurationService) {}
+
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(request.url)) {
+    if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {
       return next.handle(request);
     }
 

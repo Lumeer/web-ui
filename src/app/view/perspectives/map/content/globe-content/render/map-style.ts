@@ -17,14 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {environment} from '../../../../../../../environments/environment';
-
 export enum MapStyle {
   MapboxStreets = 'MapboxStreets',
   MapTilerStreets = 'MapTilerStreets',
 }
 
-export const mapStyleUrls = {
-  [MapStyle.MapboxStreets]: 'mapbox://styles/mapbox/streets-v11',
-  [MapStyle.MapTilerStreets]: 'https://api.maptiler.com/maps/streets/style.json?key=' + environment.mapTilerKey,
-};
+export function mapStyleUrls(style: MapStyle, mapTilerKey: string): string {
+  switch (style) {
+    case MapStyle.MapboxStreets:
+      return 'mapbox://styles/mapbox/streets-v11';
+    case MapStyle.MapTilerStreets:
+      return 'https://api.maptiler.com/maps/streets/style.json?key=' + mapTilerKey;
+    default:
+      return '';
+  }
+}

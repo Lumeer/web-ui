@@ -25,7 +25,6 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from './kanban-converter';
-import {environment} from '../../../../../environments/environment';
 import {AttributesResourceType} from '../../../../core/model/resource';
 
 const documents: DocumentModel[] = [
@@ -113,7 +112,7 @@ describe('Kanban converter', () => {
       providers: [
         {
           provide: LOCALE_ID,
-          useFactory: () => environment.locale,
+          useFactory: () => 'en',
         },
         {
           provide: TRANSLATIONS,
@@ -122,7 +121,7 @@ describe('Kanban converter', () => {
         },
         {
           provide: TRANSLATIONS_FORMAT,
-          useFactory: () => environment.i18nFormat,
+          useFactory: () => 'xlf',
         },
       ],
     });

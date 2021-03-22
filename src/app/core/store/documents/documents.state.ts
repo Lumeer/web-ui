@@ -24,7 +24,7 @@ import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
 import {DataQuery} from '../../model/data-query';
 import {isDataQueryLoaded} from '../utils/data-query-payload';
-import {environment} from '../../../../environments/environment';
+import {configuration} from '../../../../environments/configuration';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId
@@ -61,7 +61,7 @@ export const selectDocumentsLoadingQueries = createSelector(
 );
 
 export const selectQueryDocumentsLoaded = (query: DataQuery) =>
-  createSelector(selectDocumentsQueries, queries => isDataQueryLoaded(query, queries, environment.publicView));
+  createSelector(selectDocumentsQueries, queries => isDataQueryLoaded(query, queries, configuration.publicView));
 
 export const selectDocumentById = (id: string) =>
   createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);

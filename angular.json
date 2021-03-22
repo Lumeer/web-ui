@@ -98,8 +98,8 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.production.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.production.ts"
                 }
               ],
               "namedChunks": true,
@@ -121,8 +121,8 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.public.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.public.ts"
                 }
               ],
               "namedChunks": true,
@@ -144,8 +144,8 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.staging.ts"
                 }
               ],
               "namedChunks": true,
@@ -201,8 +201,8 @@
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.testing.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.testing.ts"
                 }
               ],
               "namedChunks": true,

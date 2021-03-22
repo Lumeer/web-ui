@@ -52,6 +52,7 @@ import {objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class DocumentsEffects {
@@ -63,13 +64,20 @@ export class DocumentsEffects {
         this.store$.pipe(select(selectLinkTypesPermissions))
       ),
       map(([action, collectionsPermissions, linkTypePermissions]) =>
-        checkLoadedDataQueryPayload(action.payload, collectionsPermissions, linkTypePermissions)
+        checkLoadedDataQueryPayload(
+          action.payload,
+          this.configurationService.getConfiguration().publicView,
+          collectionsPermissions,
+          linkTypePermissions
+        )
       ),
       withLatestFrom(
         this.store$.pipe(select(selectDocumentsQueries)),
         this.store$.pipe(select(selectDocumentsLoadingQueries))
       ),
-      filter(([payload, queries, loadingQueries]) => shouldLoadByDataQuery(payload, queries, loadingQueries)),
+      filter(([payload, queries, loadingQueries]) =>
+        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new DocumentsAction.SetLoadingQuery({query: payload.query}))),
       mergeMap(payload => {
@@ -638,6 +646,7 @@ export class DocumentsEffects {
     private collectionService: CollectionService,
     private searchService: SearchService,
     private store$: Store<AppState>,
-    private userHints: UserHintService
+    private userHints: UserHintService,
+    private configurationService: ConfigurationService
   ) {}
 }

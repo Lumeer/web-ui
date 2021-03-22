@@ -22,7 +22,6 @@ import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
 import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {environment} from '../../../environments/environment';
 import {AppState, initialAppState} from './app.state';
 import {calendarsReducer} from './calendars/calendars.reducer';
 import {chartsReducer} from './charts/charts.reducer';
@@ -83,6 +82,7 @@ import {userPermissionsReducer} from './user-permissions/user-permissions.reduce
 import {WorkflowsEffects} from './workflows/workflows.effects';
 import {dataResourcesReducer} from './data-resources/data-resources.reducer';
 import {DataResourcesEffects} from './data-resources/data-resources.effects';
+import {configuration} from '../../../environments/configuration';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -160,7 +160,7 @@ const effects = [
       },
     }),
     EffectsModule.forRoot(effects),
-    environment.storeDevtools
+    configuration.storeDevtools
       ? StoreDevtoolsModule.instrument({maxAge: 50, name: `Lumeer NgRx Store (${location.hostname})`})
       : [],
   ],

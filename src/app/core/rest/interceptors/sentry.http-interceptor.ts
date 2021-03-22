@@ -23,14 +23,16 @@ import * as Sentry from '@sentry/browser';
 import {Severity} from '@sentry/browser';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class SentryHttpInterceptor implements HttpInterceptor {
+  constructor(private configurationService: ConfigurationService) {}
+
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(error => {
-        if (environment.sentryDsn && ![402, 500].includes(error.status)) {
+        if (this.configurationService.getConfiguration().sentryDsn && ![402, 500].includes(error.status)) {
           this.processError(error);
         }
 

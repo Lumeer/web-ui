@@ -11,8 +11,8 @@ bin/
 *.iml
 *.log
 
-.env.json
-environment.ts
+configuration.ts
+src/assets/config/config.json
 
 .classpath
 .project

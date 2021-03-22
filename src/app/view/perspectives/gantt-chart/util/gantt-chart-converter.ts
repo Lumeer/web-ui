@@ -19,7 +19,6 @@
 
 import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
-import {environment} from '../../../../../environments/environment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../core/model/resource';
@@ -72,6 +71,7 @@ import {
   UnknownConstraint,
   UserConstraint,
 } from '@lumeer/data-filters';
+import {Configuration} from '../../../../../environments/configuration-type';
 
 export interface GanttTaskMetadata {
   nameDataId: string;
@@ -103,7 +103,7 @@ export class GanttChartConverter {
       this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
   );
 
-  constructor(private formatter: SelectItemWithConstraintFormatter) {}
+  constructor(private formatter: SelectItemWithConstraintFormatter, private configuration: Configuration) {}
 
   public convert(
     config: GanttChartConfig,
@@ -166,7 +166,7 @@ export class GanttChartConverter {
       resizeSwimlanes: true,
       dragTaskSwimlanes: true,
       createTasks,
-      language: environment.locale,
+      language: this.configuration.locale,
       lockResize: config.lockResize || false,
       padding: config.padding,
       dateFormat: GANTT_DATE_FORMAT,

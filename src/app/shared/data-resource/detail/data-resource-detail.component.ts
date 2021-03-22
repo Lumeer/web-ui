@@ -57,11 +57,11 @@ import {
   selectLinkInstanceById,
   selectLinkInstancesByDocumentIds,
 } from '../../../core/store/link-instances/link-instances.state';
-import {environment} from '../../../../environments/environment';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {objectChanged} from '../../utils/common.utils';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'data-resource-detail',
@@ -123,14 +123,17 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   public startEditing$ = new BehaviorSubject<boolean>(false);
 
-  public contactUrl = environment.contactUrl;
+  public readonly contactUrl: string;
 
   constructor(
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
-    private modalService: ModalService
-  ) {}
+    private modalService: ModalService,
+    private configurationService: ConfigurationService
+  ) {
+    this.contactUrl = configurationService.getConfiguration().contactUrl;
+  }
 
   public get isCollection(): boolean {
     return this.resourceType === AttributesResourceType.Collection;

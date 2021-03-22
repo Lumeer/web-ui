@@ -17,18 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {Configuration} from './configuration-type';
 
-export const environment: Environment = {
+export const configuration: Partial<Configuration> = {
   analytics: true,
   auth: true,
   authPersistence: true,
-  production: true,
+  production: false,
   publicView: false,
-  pusherLogDisabled: true,
-  storeDevtools: false,
-  name: 'production',
-  paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables,
+  storeDevtools: true,
+  name: 'staging',
+  paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
 };

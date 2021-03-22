@@ -19,7 +19,6 @@
 
 import {ElementRef} from '@angular/core';
 import {Config, d3, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
-import {environment} from '../../../../../environments/environment';
 import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
 import {DataChange, PlotlyChartData, PlotMaker} from './plot-maker/plot-maker';
 import {ChartData, ChartSettings} from '../data/convertor/chart-data';
@@ -47,6 +46,8 @@ export class ChartVisualizer {
 
   private writable: boolean;
 
+  private locale: string;
+
   private onValueChanged: (ValueChange) => void;
   private onDoubleClick: (ClickEvent) => void;
   private onAxisSettingsChange: (AxisSettingsChange) => void;
@@ -63,6 +64,10 @@ export class ChartVisualizer {
 
   public setOnAxisSettingsChange(onAxisSettingsChange: (AxisSettingsChange) => void) {
     this.onAxisSettingsChange = onAxisSettingsChange;
+  }
+
+  public setLocale(locale: string) {
+    this.locale = locale;
   }
 
   public createChart(data: ChartData, settings: ChartSettings) {
@@ -268,7 +273,7 @@ export class ChartVisualizer {
   }
 
   private createConfig(): Partial<Config> {
-    return {responsive: true, locale: environment.locale};
+    return {responsive: true, locale: this.locale};
   }
 
   public resize() {

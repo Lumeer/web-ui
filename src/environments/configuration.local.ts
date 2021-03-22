@@ -17,16 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {Configuration} from './configuration-type';
 
-export const environment: Environment = {
+export const configuration: Partial<Configuration> = {
   analytics: false,
   auth: true,
   authPersistence: true,
   production: false,
-  publicView: false,
   storeDevtools: true,
+  publicView: false,
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables,
+  pusherKey: '22b1d531f1fc10719c7c',
+  mapboxKey: 'pk.eyJ1IjoibGl2dGhvbWFzIiwiYSI6ImNqeDR2MDd1aDBjaTg0M3J2Mm9leHdkOHAifQ.xAbEX4xSYcTXHVLLxAQggw',
+  mapQuestKey: '5na5S3NX2BPYXG4xIny4mjodvC4frAp2',
+  mapTilerKey: 'J0rj14U2Xg9GYrAQhJ6B',
 };

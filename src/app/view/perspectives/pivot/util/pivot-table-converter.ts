@@ -42,7 +42,6 @@ import {
   PercentageConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../core/model/language-tag';
 
 interface HeaderGroupInfo {
   background: string;
@@ -702,9 +701,7 @@ function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numVal
 function getValueTypeInfo(values: any[][], type: PivotValueType, rows: number[], columns: number[]): ValueTypeInfo {
   const containsDecimal = containsDecimalValue(values, rows, columns);
   const valueTypeInfo: ValueTypeInfo = {
-    defaultConstraint: containsDecimal
-      ? new NumberConstraint({decimals: 2, locale: getCurrentLocaleLanguageTag()})
-      : null,
+    defaultConstraint: containsDecimal ? new NumberConstraint({decimals: 2}) : null,
   };
 
   if (type === PivotValueType.AllPercentage) {
@@ -927,7 +924,7 @@ function sortPivotDataHeadersRecursive(
 function getConstraintForSort(sort: PivotSort, headers: PivotDataHeader[]): Constraint {
   if ((sort?.list?.values || []).length > 0) {
     // sort is done by values in columns
-    return new NumberConstraint({locale: getCurrentLocaleLanguageTag()});
+    return new NumberConstraint({});
   }
   return ((headers || [])[0] && (headers || [])[0].constraint) || new UnknownConstraint();
 }

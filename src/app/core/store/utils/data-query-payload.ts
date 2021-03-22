@@ -20,7 +20,6 @@
 import {DataQuery} from '../../model/data-query';
 import {Workspace} from '../navigation/workspace';
 import {areDataQueriesEqual} from '../navigation/query/query.helper';
-import {environment} from '../../../../environments/environment';
 import {Query, QueryStem} from '../navigation/query/query';
 import {isQuerySubset} from '../navigation/query/query.util';
 import {AllowedPermissions} from '../../model/allowed-permissions';
@@ -35,14 +34,15 @@ export interface DataQueryPayload {
 export function shouldLoadByDataQuery(
   payload: DataQueryPayload,
   queries: DataQuery[],
-  loadingQueries: DataQuery[]
+  loadingQueries: DataQuery[],
+  publicView: boolean
 ): boolean {
   if (payload.force) {
     return true;
   }
 
   // is already loaded
-  if (isDataQueryLoaded(payload.query, queries, environment.publicView)) {
+  if (isDataQueryLoaded(payload.query, queries, publicView)) {
     return false;
   }
 
@@ -52,18 +52,13 @@ export function shouldLoadByDataQuery(
 
 export function checkLoadedDataQueryPayload(
   payload: DataQueryPayload,
+  publicView: boolean,
   collectionsPermissions?: Record<string, AllowedPermissions>,
   linkTypePermissions?: Record<string, AllowedPermissions>
 ): DataQueryPayload {
   return {
     ...payload,
-    query: checkLoadedDataQuery(
-      payload.query,
-      collectionsPermissions,
-      linkTypePermissions,
-      environment.publicView,
-      payload.silent
-    ),
+    query: checkLoadedDataQuery(payload.query, collectionsPermissions, linkTypePermissions, publicView, payload.silent),
   };
 }
 

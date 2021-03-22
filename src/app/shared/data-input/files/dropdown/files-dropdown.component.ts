@@ -28,10 +28,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {environment} from '../../../../../environments/environment';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'files-dropdown',
@@ -69,6 +69,8 @@ export class FilesDropdownComponent implements AfterViewInit {
     DropdownPosition.TopEnd,
   ];
 
+  constructor(private configurationService: ConfigurationService) {}
+
   public ngAfterViewInit() {
     this.dropdown.open();
   }
@@ -91,7 +93,7 @@ export class FilesDropdownComponent implements AfterViewInit {
 
     const file = files.item(0);
 
-    if (file.size > environment.maxFileUploadSize * 1024 * 1024) {
+    if (file.size > this.configurationService.getConfiguration().maxFileUploadSize * 1024 * 1024) {
       this.showFileSizeError();
       return;
     }
@@ -101,7 +103,7 @@ export class FilesDropdownComponent implements AfterViewInit {
   }
 
   private showFileSizeError() {
-    const size = environment.maxFileUploadSize.toFixed(0);
+    const size = this.configurationService.getConfiguration().maxFileUploadSize.toFixed(0);
     this.fileSizeError$.next(
       $localize`:@@file.upload.max.size.error:Cannot process files bigger than ${size}:size: MB. Please upload smaller file.`
     );

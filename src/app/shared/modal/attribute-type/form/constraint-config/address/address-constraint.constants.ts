@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {environment} from '../../../../../../../environments/environment';
 import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
 import {Address, AddressField} from '@lumeer/data-filters';
+import {Configuration} from '../../../../../../../environments/configuration-type';
 
 const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.HouseNumber, AddressField.City, AddressField.Country];
 const ENGLISH_DEFAULT_FIELDS = [
@@ -30,8 +30,13 @@ const ENGLISH_DEFAULT_FIELDS = [
   AddressField.Country,
 ];
 
-export const ADDRESS_DEFAULT_FIELDS =
-  environment.locale === LanguageCode.CZ ? CZECH_DEFAULT_FIELDS : ENGLISH_DEFAULT_FIELDS;
+export function addressDefaultFields(configuration: Configuration) {
+  return configuration.locale === LanguageCode.CZ ? CZECH_DEFAULT_FIELDS : ENGLISH_DEFAULT_FIELDS;
+}
+
+export function addressExample(configuration: Configuration) {
+  return configuration.locale === LanguageCode.CZ ? CZECH_EXAMPLE_ADDRESS : ENGLISH_EXAMPLE_ADDRESS;
+}
 
 const CZECH_EXAMPLE_ADDRESS: Address = {
   houseNumber: '452/9',
@@ -51,5 +56,3 @@ const ENGLISH_EXAMPLE_ADDRESS: Address = {
   country: 'USA',
   continent: 'North America',
 };
-
-export const EXAMPLE_ADDRESS = environment.locale === LanguageCode.CZ ? CZECH_EXAMPLE_ADDRESS : ENGLISH_EXAMPLE_ADDRESS;

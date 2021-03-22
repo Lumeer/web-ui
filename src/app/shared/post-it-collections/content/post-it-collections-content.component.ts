@@ -47,8 +47,8 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
-import {environment} from '../../../../environments/environment';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -106,7 +106,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public selectedCollections$ = new BehaviorSubject<string[]>([]);
   public correlationIdsOrder = [];
 
-  public readonly canImportCollection = !environment.publicView;
+  public readonly canImportCollection: boolean;
 
   private readonly colors = Colors.palette;
 
@@ -114,8 +114,11 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
     private toggleService: CollectionFavoriteToggleService,
     private notificationService: NotificationService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private configurationService: ConfigurationService
+  ) {
+    this.canImportCollection = !configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);

@@ -36,6 +36,7 @@ import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {ChartData, ChartSettings} from '../convertor/chart-data';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'chart-visualizer',
@@ -67,6 +68,8 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
   private axisSettingsChangeSubject$ = new Subject<AxisSettingsChange>();
 
+  constructor(private configurationService: ConfigurationService) {}
+
   public ngOnInit() {
     (PlotlyJS as any).register(CSLocale);
     this.subscribeConfigChange();
@@ -95,6 +98,7 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
 
   private createChart() {
     this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    this.chartVisualizer.setLocale(this.configurationService.getConfiguration().locale);
     this.chartVisualizer.setOnValueChanged(event => this.change.emit(event));
     this.chartVisualizer.setOnDoubleClick(event => this.doubleClick.emit(event));
     this.chartVisualizer.setOnAxisSettingsChange(event => this.axisSettingsChangeSubject$.next(event));

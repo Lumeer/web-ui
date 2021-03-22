@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {Configuration} from './configuration-type';
 
-export const environment: Environment = {
+export const configuration: Partial<Configuration> = {
   analytics: false,
   auth: true,
   authPersistence: true,
@@ -29,5 +28,4 @@ export const environment: Environment = {
   storeDevtools: true,
   name: 'testing',
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables,
 };

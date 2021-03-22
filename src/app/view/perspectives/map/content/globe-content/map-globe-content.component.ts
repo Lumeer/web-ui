@@ -44,7 +44,6 @@ import {GeocodingAction} from '../../../../../core/store/geocoding/geocoding.act
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
-import {ADDRESS_DEFAULT_FIELDS} from '../../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
@@ -57,6 +56,8 @@ import {
 } from '@lumeer/data-filters';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AppState} from '../../../../../core/store/app.state';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {addressDefaultFields} from '../../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 
 @Component({
   selector: 'map-globe-content',
@@ -98,7 +99,11 @@ export class MapGlobeContentComponent implements OnChanges {
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
 
-  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private notificationService: NotificationService,
+    private configurationService: ConfigurationService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.markerData || changes.constraintData) {
@@ -189,7 +194,10 @@ export class MapGlobeContentComponent implements OnChanges {
     const attribute = this.findResourceByProperty(properties)?.attributes.find(
       attr => attr.id === properties.attributeId
     );
-    const value = (attribute?.constraint || new AddressConstraint({fields: ADDRESS_DEFAULT_FIELDS}))
+    const value = (
+      attribute?.constraint ||
+      new AddressConstraint({fields: addressDefaultFields(this.configurationService.getConfiguration())})
+    )
       .createDataValue(location.address)
       .serialize();
     this.store$.dispatch(new GeocodingAction.GetCoordinatesSuccess({coordinatesMap: {[value]: location.coordinates}}));

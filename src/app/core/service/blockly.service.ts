@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Renderer2} from '@angular/core';
-import {environment} from '../../../environments/environment';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 export interface BlocklyLoadFn {
   (): void;
@@ -30,6 +30,8 @@ export interface BlocklyLoadFn {
 export class BlocklyService {
   private readonly blocklyId = 'blocklyScript';
 
+  constructor(private configurationService: ConfigurationService) {}
+
   public loadBlockly(renderer2: Renderer2, document: Document, onLoad?: BlocklyLoadFn): void {
     const e = document.getElementById(this.blocklyId);
 
@@ -37,7 +39,7 @@ export class BlocklyService {
       const script = renderer2.createElement('script');
       script.id = this.blocklyId;
       script.type = 'text/javascript';
-      script.src = environment.blocklyCdn;
+      script.src = this.configurationService.getConfiguration().blocklyCdn;
       if (onLoad) {
         script.onload = onLoad;
       }

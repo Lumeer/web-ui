@@ -44,7 +44,6 @@ import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded, selectViewsState} from './views.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {Angulartics2} from 'angulartics2';
-import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
 import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {User} from '../users/user';
@@ -65,6 +64,7 @@ import {WorkflowsAction} from '../workflows/workflows.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UsersAction} from '../users/users.action';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ViewsEffects {
@@ -156,13 +156,13 @@ export class ViewsEffects {
           paths.push(Perspective.Map);
           paths.push(mapPositionPathParams(navigation.mapPosition));
         }
-        if (environment.analytics) {
+        if (this.configurationService.getConfiguration().analytics) {
           this.angulartics2.eventTrack.next({
             action: 'View create',
             properties: {category: 'Application Resources', label: 'count', value: Object.keys(views).length + 1},
           });
 
-          if (environment.mixpanelKey) {
+          if (this.configurationService.getConfiguration().mixpanelKey) {
             mixpanel.track('View Create', {
               count: Object.keys(views).length + 1,
               perspective: String(action.payload.view.perspective),
@@ -519,6 +519,7 @@ export class ViewsEffects {
     private store$: Store<AppState>,
     private viewService: ViewService,
     private userService: UserService,
-    private angulartics2: Angulartics2
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
   ) {}
 }

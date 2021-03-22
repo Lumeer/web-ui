@@ -23,12 +23,12 @@ import {Store} from '@ngrx/store';
 import {saveAs} from 'file-saver';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {environment} from '../../../../../environments/environment';
 import {FileApiService} from '../../../../core/service/file-api.service';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {FileAttachmentsAction} from '../../../../core/store/file-attachments/file-attachments.action';
 import {AppState} from '../../../../core/store/app.state';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'file-attachment-button',
@@ -45,7 +45,8 @@ export class FileAttachmentButtonComponent {
   constructor(
     private fileApiService: FileApiService,
     private notificationService: NotificationService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
   ) {}
 
   public onClick() {
@@ -57,7 +58,9 @@ export class FileAttachmentButtonComponent {
 
     if (
       this.fileAttachment.refreshTime &&
-      this.fileAttachment.refreshTime.getTime() + environment.presignedUrlTimeout * 1000 > Date.now()
+      this.fileAttachment.refreshTime.getTime() +
+        this.configurationService.getConfiguration().presignedUrlTimeout * 1000 >
+        Date.now()
     ) {
       this.downloadFileAttachment(this.fileAttachment);
       return;

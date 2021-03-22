@@ -64,7 +64,6 @@ import {
   PercentageConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../../core/model/language-tag';
 
 enum DataObjectInfoKeyType {
   X = 'x',
@@ -475,7 +474,7 @@ export class ChartDataConverter {
 
   private constraintAxisConfig(axisConfig: ChartAxisConfig): Constraint {
     if (!isValueAggregation(axisConfig.aggregation)) {
-      return new NumberConstraint({locale: getCurrentLocaleLanguageTag()});
+      return new NumberConstraint({});
     }
 
     return this.constraintForAxis(axisConfig.axis);

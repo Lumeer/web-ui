@@ -22,11 +22,11 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {map, startWith} from 'rxjs/operators';
-import {environment} from '../../../../../../environments/environment';
 import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {PublicScriptType} from './public-script-type';
+import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'project-template-script',
@@ -57,7 +57,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
     return this.formGroup.controls.defaultView;
   }
 
-  constructor(private clipboardService: ClipboardService) {}
+  constructor(private clipboardService: ClipboardService, private configurationService: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.workspace) {
@@ -82,8 +82,8 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
       startWith([this.workspace, this.formGroup.value]),
       map(([workspace, value]) => {
         const showTopPanel = value.showTopPanel || false;
-        const scriptSrc = environment.publicScriptCdn;
-        const language = environment.locale;
+        const scriptSrc = this.configurationService.getConfiguration().publicScriptCdn;
+        const language = this.configurationService.getConfiguration().locale;
         const view = value.defaultView ? `data-v="${value.defaultView}"` : '';
         const shortcodeView = value.defaultView ? `/${value.defaultView}` : '';
         const linkView = value.defaultView ? `&v=${value.defaultView}` : '';

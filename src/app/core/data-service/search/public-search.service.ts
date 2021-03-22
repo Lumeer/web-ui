@@ -22,17 +22,21 @@ import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {environment} from '../../../../environments/environment';
 import {Workspace} from '../../store/navigation/workspace';
 import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
 import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {SearchService} from './search.service';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class PublicSearchService extends BaseService implements SearchService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -75,6 +79,8 @@ export class PublicSearchService extends BaseService implements SearchService {
   private searchPath(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
-    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/p/organizations/${organizationId}/projects/${projectId}`;
   }
 }

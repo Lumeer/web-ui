@@ -39,9 +39,9 @@ import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {Workspace} from '../../core/store/navigation/workspace';
-import {environment} from '../../../environments/environment';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
   selector: 'users',
@@ -60,7 +60,11 @@ export class UsersComponent implements OnInit, OnDestroy {
   private resourceId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private angulartics2: Angulartics2) {}
+  constructor(
+    private store$: Store<AppState>,
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
+  ) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -80,7 +84,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     this.store$.dispatch(new UsersAction.Create({organizationId: this.getOrganizationId(), user}));
 
-    if (environment.analytics && this.resourceType === ResourceType.Organization) {
+    if (this.configurationService.getConfiguration().analytics && this.resourceType === ResourceType.Organization) {
       this.angulartics2.eventTrack.next({
         action: 'User invite',
         properties: {
@@ -88,7 +92,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         },
       });
 
-      if (environment.mixpanelKey) {
+      if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('User Invite', {user: email});
       }
     }
