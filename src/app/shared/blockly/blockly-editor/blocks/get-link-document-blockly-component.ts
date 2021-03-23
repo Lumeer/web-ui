@@ -30,7 +30,7 @@ export class GetLinkDocumentBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.createDocumentBlock:'Gets a record linked to the given document via the selected link.`;
+    this.tooltip = $localize`:@@blockly.tooltip.createDocumentBlock:Gets a record linked to the given document via the selected link.`;
   }
 
   public getVisibility(): MasterBlockType[] {

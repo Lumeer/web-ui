@@ -34,7 +34,7 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
     super(blocklyUtils);
 
     this.tooltip = $localize`:@@blockly.tooltip.dateChangeBlock:Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.`;
-    this.units = $localize`:@@blockly.dropdown.units.dateChangeBlock:'second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)`
+    this.units = $localize`:@@blockly.dropdown.units.dateChangeBlock:second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)`
       .replace(/ /g, '\u00A0')
       .split(',');
     this.ops = $localize`:@@blockly.dropdown.ops.dateChangeBlock:add,subtract,set`.split(',');
