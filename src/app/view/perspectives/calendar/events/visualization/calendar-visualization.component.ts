@@ -145,7 +145,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       today: $localize`:@@perspective.calendar.header.today:Today`,
       month: $localize`:@@perspective.calendar.header.month:Month`,
       week: $localize`:@@perspective.calendar.header.week:Week`,
-      day: $localize`:@@perspective.calendar.header.day:'Day`,
+      day: $localize`:@@perspective.calendar.header.day:Day`,
     };
     this.listCustomButtons = {
       calendarToggle: {

@@ -40,7 +40,7 @@ export class SequenceItemComponent {
 
   public remove(): void {
     const message = $localize`:@@sequence.item.delete.message:Do you want to permanently remove this sequence?`;
-    const title = $localize`:@@sequence.item.delete.title:'Remove sequence?`;
+    const title = $localize`:@@sequence.item.delete.title:Remove sequence?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeSequence.emit(this.sequence));
   }
 
