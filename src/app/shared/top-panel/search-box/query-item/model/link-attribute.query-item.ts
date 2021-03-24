@@ -20,7 +20,7 @@
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {Attribute} from '../../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {LinkAttributeFilter} from '../../../../../core/store/navigation/query/query';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConditionType, ConditionValue} from '@lumeer/data-filters';
@@ -37,15 +37,19 @@ export class LinkAttributeQueryItem implements QueryItem {
   ) {}
 
   public get icons(): string[] {
-    return this.linkType.collections.map(collection => collection.icon);
+    return this.notNullCollections().map(collection => collection.icon);
   }
 
   public get colors(): string[] {
-    return this.linkType.collections.map(collection => collection.color);
+    return this.notNullCollections().map(collection => collection.color);
   }
 
   public get collectionIds(): string[] {
-    return this.linkType.collections.map(collection => collection.id);
+    return this.notNullCollections().map(collection => collection.id);
+  }
+
+  private notNullCollections(): Collection[] {
+    return this.linkType.collections?.filter(collection => !!collection) || [];
   }
 
   public get text(): string {

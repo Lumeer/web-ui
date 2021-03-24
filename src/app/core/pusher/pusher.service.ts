@@ -74,7 +74,6 @@ import {selectResourceCommentsDictionary} from '../store/resource-comments/resou
 import {NotificationService} from '../notifications/notification.service';
 import {AppIdService} from '../service/app-id.service';
 import {NotificationButton} from '../notifications/notification-button';
-import {DataResourcesAction} from '../store/data-resources/data-resources.action';
 import {Router} from '@angular/router';
 import {LocationStrategy} from '@angular/common';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
@@ -235,9 +234,6 @@ export class PusherService implements OnDestroy {
       this.store$.dispatch(new CollectionsAction.Get({force: true}));
       this.store$.dispatch(new LinkTypesAction.Get({force: true}));
       this.store$.dispatch(new ViewsAction.Get({force: true}));
-      this.store$.dispatch(new DataResourcesAction.ClearQueries({}));
-      this.store$.dispatch(new DocumentsAction.ClearQueries({}));
-      this.store$.dispatch(new LinkInstancesAction.ClearQueries({}));
     }
   }
 
@@ -477,8 +473,6 @@ export class PusherService implements OnDestroy {
       .subscribe(collection => {
         if (!collection) {
           this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId}]}, silent: true}));
-          this.store$.dispatch(new DataResourcesAction.ClearQueries({collectionId}));
-          this.store$.dispatch(new DocumentsAction.ClearQueries({collectionId}));
         }
       });
   }

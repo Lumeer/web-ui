@@ -20,6 +20,7 @@
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 export class LinkQueryItem implements QueryItem {
   public type = QueryItemType.Link;
@@ -27,15 +28,31 @@ export class LinkQueryItem implements QueryItem {
   public constructor(public linkType: LinkType) {}
 
   public get icons(): string[] {
-    return this.linkType.collections?.map(collection => collection.icon).filter(icon => !!icon) || [];
+    return (
+      this.notNullCollections()
+        .map(collection => collection.icon)
+        .filter(icon => !!icon) || []
+    );
   }
 
   public get colors(): string[] {
-    return this.linkType.collections?.map(collection => collection.color).filter(color => !!color) || [];
+    return (
+      this.notNullCollections()
+        .map(collection => collection.color)
+        .filter(color => !!color) || []
+    );
   }
 
   public get collectionIds(): string[] {
-    return this.linkType.collections?.map(collection => collection?.id).filter(id => !!id) || [];
+    return (
+      this.notNullCollections()
+        .map(collection => collection?.id)
+        .filter(id => !!id) || []
+    );
+  }
+
+  private notNullCollections(): Collection[] {
+    return this.linkType.collections?.filter(collection => !!collection) || [];
   }
 
   public get text(): string {

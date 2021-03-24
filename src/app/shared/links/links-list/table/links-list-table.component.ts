@@ -45,7 +45,7 @@ import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {
   getOtherLinkedDocumentId,
   getOtherLinkedDocumentIds,
@@ -60,7 +60,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../settings/settings.util';
-import {objectChanged} from '../../../utils/common.utils';
+import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 
 const columnWidth = 100;
@@ -200,7 +200,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
     if (this.linkType && this.document) {
       return this.store$.pipe(
         select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])),
-        mergeMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
+        switchMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
       );
     }
 
@@ -212,9 +212,10 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
     return this.store$.pipe(
       select(selectDocumentsByIds(documentsIds)),
       map(documents => {
+        const documentsMap = objectsByIdMap(documents);
         return linkInstances.reduce((rows, linkInstance) => {
           const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
-          const document = documents.find(doc => doc.id === otherDocumentId);
+          const document = documentsMap[otherDocumentId];
           if (document) {
             rows.push({linkInstance, document, correlationId: linkInstance.correlationId});
           }

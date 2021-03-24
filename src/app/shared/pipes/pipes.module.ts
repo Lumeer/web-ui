@@ -104,6 +104,7 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
 import {AttributeTitlePipe} from './attribute-title.pipe';
 import {ModifyAttributeForQueryFilterPipe} from './modify-attribute-for-query-filter.pipe';
 import {StateListDataValuePipe} from './state-list-data-value.pipe';
+import {CanCreateLinksPipe} from './can-create-links.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -192,6 +193,7 @@ import {StateListDataValuePipe} from './state-list-data-value.pipe';
     AttributeTitlePipe,
     ModifyAttributeForQueryFilterPipe,
     StateListDataValuePipe,
+    CanCreateLinksPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -279,6 +281,7 @@ import {StateListDataValuePipe} from './state-list-data-value.pipe';
     AttributeTitlePipe,
     ModifyAttributeForQueryFilterPipe,
     StateListDataValuePipe,
+    CanCreateLinksPipe,
   ],
 })
 export class PipesModule {}
