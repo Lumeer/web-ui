@@ -910,14 +910,17 @@ export class WorkflowTablesDataService {
   }
 
   public showAttributeType(column: TableColumn) {
+    this.stateService.resetSelectedCell();
     this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 
   public showAttributeDescription(column: TableColumn) {
+    this.stateService.resetSelectedCell();
     this.modalService.showAttributeDescription(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 
   public showAttributeFunction(column: TableColumn) {
+    this.stateService.resetSelectedCell();
     this.modalService.showAttributeFunction(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 

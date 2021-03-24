@@ -43,10 +43,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {map, take} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {
-  selectCollectionsPermissions,
-  selectLinkTypesPermissions,
-} from '../../../core/store/user-permissions/user-permissions.state';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {objectChanged, preventEvent} from '../../utils/common.utils';
 import {ModalService} from '../../modal/modal.service';
 
@@ -81,7 +78,6 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public linkTypePermissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
 
   public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
@@ -92,7 +88,6 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.linkTypePermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

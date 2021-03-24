@@ -53,7 +53,7 @@ export function dataResourcesReducer(
           queries: state.queries.filter(
             query => !query.stems?.some(stem => stem.collectionId === action.payload.collectionId)
           ),
-          tasksQueries: state.queries.filter(
+          tasksQueries: state.tasksQueries.filter(
             query => !query.stems?.some(stem => stem.collectionId === action.payload.collectionId)
           ),
         };

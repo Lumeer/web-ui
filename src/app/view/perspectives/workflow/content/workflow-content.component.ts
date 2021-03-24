@@ -33,7 +33,6 @@ import {ConstraintData} from '@lumeer/data-filters';
 @Component({
   selector: 'workflow-content',
   templateUrl: './workflow-content.component.html',
-  styleUrls: ['./workflow-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowContentComponent implements OnChanges {
