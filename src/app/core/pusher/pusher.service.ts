@@ -417,32 +417,41 @@ export class PusherService implements OnDestroy {
     this.channel.bind('NavigationRequest', data => {
       if (this.isCurrentWorkspace(data) && data.correlationId === this.appId.getAppId()) {
         this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
-          const encodedQuery = convertQueryModelToString(view.query);
-          const encodedCursor = isNotNullOrUndefined(data.object.documentId)
-            ? convertViewCursorToString({
-                collectionId: data.object.collectionId,
-                documentId: data.object.documentId,
-                attributeId: data.object.attributeId,
-                sidebar: data.object.sidebar,
-              })
-            : '';
-
-          if (data.object.newWindow) {
-            const a = document.createElement('a');
-            a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
-              data.object.projectCode
-            }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
+          if (view) {
+            const encodedQuery = convertQueryModelToString(view.query);
+            const encodedCursor = isNotNullOrUndefined(data.object.documentId)
+              ? convertViewCursorToString({
+                  collectionId: data.object.collectionId,
+                  documentId: data.object.documentId,
+                  attributeId: data.object.attributeId,
+                  sidebar: data.object.sidebar,
+                })
+              : '';
 
             if (data.object.newWindow) {
-              a.target = '_blank';
-            }
+              const a = document.createElement('a');
+              a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
+                data.object.projectCode
+              }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
 
-            a.click();
-          } else {
-            this.router.navigate(
-              ['/w', data.object.organizationCode, data.object.projectCode, 'view', {vc: view.code}, view.perspective],
-              {queryParams: {q: encodedQuery, c: encodedCursor}}
-            );
+              if (data.object.newWindow) {
+                a.target = '_blank';
+              }
+
+              a.click();
+            } else {
+              this.router.navigate(
+                [
+                  '/w',
+                  data.object.organizationCode,
+                  data.object.projectCode,
+                  'view',
+                  {vc: view.code},
+                  view.perspective,
+                ],
+                {queryParams: {q: encodedQuery, c: encodedCursor}}
+              );
+            }
           }
         });
       }

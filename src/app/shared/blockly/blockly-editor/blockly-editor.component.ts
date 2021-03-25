@@ -682,7 +682,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       // disconnect invalid foreach input
       if (parentBlock.type === BlocklyUtils.FOREACH_LINK_ARRAY) {
-        if (parentBlock.getInput('LIST').connection?.targetConnection.sourceBlock_.id === block.id) {
+        if (parentBlock.getInput('LIST').connection?.targetConnection?.sourceBlock_.id === block.id) {
           if (!blockOutputType.endsWith(BlocklyUtils.LINK_TYPE_ARRAY_SUFFIX)) {
             parentBlock.getInput('LIST').connection.disconnect();
           } else {
