@@ -2865,7 +2865,8 @@
         <target>Je mi líto, ale atribut '<x id="name" equiv-text="{{attributeName}}"/>' již existuje.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="warning.link.nameExisting" datatype="html">
-        <source>I am sorry, the link name '<x id="name" equiv-text="action.payload.name"/>' already exists.</source><target state="new">I am sorry, the link name '<x id="name" equiv-text="action.payload.name"/>' already exists.</target>
+        <source>I am sorry, the link name '<x id="name" equiv-text="action.payload.name"/>' already exists.</source>
+        <target>Je mi líto, ale název '<x id="name" equiv-text="action.payload.name"/>' již existuje.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">146</context>
