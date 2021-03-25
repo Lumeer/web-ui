@@ -31,8 +31,6 @@ import {
   OnInit,
 } from '@angular/core';
 import {AxisSettingsChange, ChartVisualizer, ClickEvent, ValueChange} from '../../visualizer/chart-visualizer';
-import * as PlotlyJS from 'plotly.js';
-import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {ChartData, ChartSettings} from '../convertor/chart-data';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
@@ -71,7 +69,6 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private configurationService: ConfigurationService) {}
 
   public ngOnInit() {
-    (PlotlyJS as any).register(CSLocale);
     this.subscribeConfigChange();
   }
 
