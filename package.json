@@ -21,6 +21,8 @@
     "prettier": "prettier",
     "reset-env": "mkdir -p ./src/assets/config && echo {} > ./src/assets/config/config.json",
     "start": "npm run reset-env && ng serve",
+    "start:cs": "npm run reset-env && ng serve --configuration=cs",
+    "start:hu": "npm run reset-env && ng serve --configuration=hu",
     "test": "ng test",
     "test:watch": "ng test --watch",
     "cypress:open": "npx cypress open",
