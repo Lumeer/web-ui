@@ -33,10 +33,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {
-  selectCollectionsPermissions,
-  selectLinkTypesPermissions,
-} from '../../../core/store/user-permissions/user-permissions.state';
+import {selectLinkTypesPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -48,7 +45,6 @@ import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/p
 })
 export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
   public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
 
   constructor(protected store$: Store<AppState>) {
@@ -90,7 +86,6 @@ export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanC
 
   private subscribeAdditionalData() {
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.linkTypesPermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
   }
 
