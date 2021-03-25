@@ -117,11 +117,9 @@
         </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="created && allowedPermissions?.writeWithView">
-        <hr class="my-2" *ngIf="cursor.partIndex > 0 || !canManageConfig || data.numberOfParts >= 4">
-        <button *ngIf="cursor.partIndex % 2 === 0 && cursor.partIndex + 1 < data.numberOfParts"
-                (click)="onClick($event); onUpdateLinks()"
-                mat-menu-item>
+      <ng-container *ngIf="setLinks$ | async">
+        <hr class="my-2">
+        <button (click)="onClick($event); onUpdateLinks()" mat-menu-item>
           <div class="d-flex align-items-baseline">
             <i class="far fa-fw fa-link mr-1" aria-hidden="true"></i>
             <span class="flex-grow-1" i18n="@@table.body.row.links.update">Add/Remove links</span>

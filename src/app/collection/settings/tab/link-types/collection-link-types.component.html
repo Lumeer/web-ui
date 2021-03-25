@@ -18,10 +18,11 @@
     </tr>
     </thead>
 
-    <ng-container *ngFor="let linkType of linkTypes$ | async | linkTypeFilter:(searchString$ | async); trackBy:trackByLinkType">
-      <tbody>
+    <ng-container *ngIf="linkTypes$ | async as linkTypes">
+      <tbody *ngFor="let linkType of linkTypes | linkTypeFilter:(searchString$ | async); trackBy:trackByLinkType">
         <tr link-type
             [linkType]="linkType"
+            [allLinkTypes]="linkTypes"
             (delete)="onDeleteLinkType(linkType, $event)"
             (newName)="onNewName(linkType, $event)"
             class="border-top">

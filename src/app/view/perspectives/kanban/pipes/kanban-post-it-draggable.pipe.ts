@@ -25,6 +25,6 @@ import {KanbanCard} from '../util/kanban-data';
 })
 export class KanbanPostItDraggablePipe implements PipeTransform {
   public transform(card: KanbanCard): boolean {
-    return !!card; // TODO
+    return card?.permissions?.writeWithView;
   }
 }

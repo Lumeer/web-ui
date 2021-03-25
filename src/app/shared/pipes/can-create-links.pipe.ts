@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'canCreateLinks',
 })
+@Injectable({providedIn: 'root'})
 export class CanCreateLinksPipe implements PipeTransform {
   public transform(linkType: LinkType, collectionsPermissions: Record<string, AllowedPermissions>): boolean {
     if (linkType?.collectionIds) {
