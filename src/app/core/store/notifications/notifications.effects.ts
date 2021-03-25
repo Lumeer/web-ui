@@ -138,6 +138,19 @@ export class NotificationsEffects {
     {dispatch: false}
   );
 
+  public existingLinkWarning$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<NotificationsAction.ExistingLinkWarning>(NotificationsActionType.EXISTING_LINK_WARNING),
+        tap(action => {
+          const message = $localize`:@@warning.link.nameExisting:I am sorry, the link name '${action.payload.name}:name:' already exists.`;
+
+          this.notificationService.warning(message);
+        })
+      ),
+    {dispatch: false}
+  );
+
   constructor(
     private actions$: Actions,
     private router: Router,

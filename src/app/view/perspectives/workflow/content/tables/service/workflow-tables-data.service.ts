@@ -577,7 +577,9 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      columns.push(column);
+      if (!setting.hidden || permissions?.read || permissions?.manageWithView) {
+        columns.push(column);
+      }
       return columns;
     }, []);
 

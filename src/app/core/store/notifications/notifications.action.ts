@@ -30,6 +30,7 @@ export enum NotificationsActionType {
 
   FORCE_REFRESH = '[Notifications] Force Refresh',
   EXISTING_ATTRIBUTE_WARNING = '[Notifications] Existing Attribute Warning',
+  EXISTING_LINK_WARNING = '[Notifications] Existing Link Warning',
 }
 
 export namespace NotificationsAction {
@@ -77,6 +78,12 @@ export namespace NotificationsAction {
 
   export class ExistingAttributeWarning implements Action {
     public readonly type = NotificationsActionType.EXISTING_ATTRIBUTE_WARNING;
+
+    public constructor(public payload: {name: string}) {}
+  }
+
+  export class ExistingLinkWarning implements Action {
+    public readonly type = NotificationsActionType.EXISTING_LINK_WARNING;
 
     public constructor(public payload: {name: string}) {}
   }

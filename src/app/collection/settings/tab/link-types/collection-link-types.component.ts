@@ -100,7 +100,7 @@ export class CollectionLinkTypesComponent implements OnInit {
     this.store$.dispatch(new LinkTypesAction.Delete({linkTypeId: linkType.id}));
   }
 
-  public trackByLinkType(linkType: LinkType, index: number): string {
+  public trackByLinkType(index: number, linkType: LinkType): string {
     return linkType.id;
   }
 
