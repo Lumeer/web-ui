@@ -251,6 +251,23 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         this.blocklyUtils.ensureLinkTypeBlock(this.linkTypes[i]);
         this.blocklyUtils.ensureLinkInstanceBlock(this.linkTypes[i]);
       }
+
+      const blocks = dom.getElementsByTagName('block');
+      for (let j = 0; j < blocks.length; j++) {
+        const blockType = blocks.item(j).attributes.getNamedItem('type').value;
+
+        if (
+          blockType.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
+          blockType.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
+        ) {
+          const linkType = blockType.split('-')[0];
+
+          if (!this.linkTypes.find(lt => lt.id === linkType)) {
+            blocks.item(j).remove();
+          }
+        }
+      }
+
       Blockly.Xml.domToWorkspace(dom, this.workspace);
       this.blocklyUtils.ensureTypeChecks(this.workspace);
     } else {
