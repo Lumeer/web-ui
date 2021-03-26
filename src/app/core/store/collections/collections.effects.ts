@@ -57,6 +57,7 @@ import {CollectionService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {createCallbackActions} from '../utils/store.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 
 @Injectable()
 export class CollectionsEffects {
@@ -324,7 +325,10 @@ export class CollectionsEffects {
       withLatestFrom(this.store$.pipe(select(selectNavigation))),
       mergeMap(([action, navigation]) => {
         const {collectionId} = action.payload;
-        const actions: Action[] = [new DocumentsAction.ClearByCollection({collectionId})];
+        const actions: Action[] = [
+          new DocumentsAction.ClearByCollection({collectionId}),
+          AuditLogActions.clearByCollection({collectionId}),
+        ];
         const isCollectionSettingsPage =
           navigation && navigation.workspace && navigation.workspace.collectionId === collectionId;
         if (isCollectionSettingsPage) {

@@ -35,6 +35,7 @@ import {Attribute} from '../collections/collection';
 import {LinkInstance} from '../link-instances/link.instance';
 import {LinkTypeService} from '../../data-service';
 import {selectViewQuery} from '../views/views.state';
+import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -195,7 +196,10 @@ export class LinkTypesEffects {
       withLatestFrom(this.store$.pipe(select(selectViewQuery))),
       mergeMap(([action]) => {
         const {linkTypeId} = action.payload;
-        const actions: Action[] = [new LinkInstancesAction.ClearByLinkType({linkTypeId})];
+        const actions: Action[] = [
+          new LinkInstancesAction.ClearByLinkType({linkTypeId}),
+          AuditLogActions.clearByLink({linkTypeId}),
+        ];
 
         return actions;
       })

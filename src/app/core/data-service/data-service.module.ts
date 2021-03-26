@@ -56,6 +56,9 @@ import {ResourceCommentService} from './resource-comment/resource-comment.servic
 import {PublicResourceCommentService} from './resource-comment/public-resource-comment.service';
 import {ApiResourceCommentService} from './resource-comment/api-resource-comment.service';
 import {configuration} from '../../../environments/configuration';
+import {AuditLogService} from './audit-log/audit-log.service';
+import {PublicAuditLogService} from './audit-log/public-audit-log.service';
+import {ApiAuditLogService} from './audit-log/api-audit-log.service';
 
 @NgModule({
   declarations: [],
@@ -108,6 +111,10 @@ import {configuration} from '../../../environments/configuration';
     {
       provide: ResourceCommentService,
       useClass: configuration.publicView ? PublicResourceCommentService : ApiResourceCommentService,
+    },
+    {
+      provide: AuditLogService,
+      useClass: configuration.publicView ? PublicAuditLogService : ApiAuditLogService,
     },
   ],
 })
