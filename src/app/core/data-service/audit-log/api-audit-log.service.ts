@@ -39,18 +39,24 @@ export class ApiAuditLogService extends BaseService implements AuditLogService {
   }
 
   public getByDocument(collectionId: string, documentId: string): Observable<AuditLogDto[]> {
-    return this.httpClient.get<AuditLogDto[]>(this.apiPrefix({}));
+    return this.httpClient.get<AuditLogDto[]>(this.collectionApiPrefix(documentId, {collectionId}));
   }
 
   public getByLink(linkTypeId: string, linkInstanceId: string): Observable<AuditLogDto[]> {
-    return this.httpClient.get<AuditLogDto[]>(this.apiPrefix({}));
+    return this.httpClient.get<AuditLogDto[]>(this.linkTypeApiPrefix(linkInstanceId, linkTypeId));
   }
 
-  private apiPrefix(workspace?: Workspace): string {
-    return `${this.workspaceApiPrefix(workspace)}/`;
+  private linkTypeApiPrefix(linkInstanceId: string, linkTypeId: string, workspace?: Workspace): string {
+    return `${this.workspaceApiPrefix(workspace)}/link-instances/${linkTypeId}/${linkInstanceId}/audit`;
   }
 
-  private workspaceApiPrefix(workspace: Workspace): string {
+  private collectionApiPrefix(documentId: string, workspace?: Workspace): string {
+    const collectionId = this.getOrCurrentCollectionId(workspace);
+
+    return `${this.workspaceApiPrefix(workspace)}/collections/${collectionId}/documents/${documentId}/audit`;
+  }
+
+  private workspaceApiPrefix(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
