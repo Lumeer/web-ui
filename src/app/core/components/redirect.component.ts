@@ -21,16 +21,16 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, first, map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
-import {Organization} from './store/organizations/organization';
+import {Organization} from '../store/organizations/organization';
 import {select, Store} from '@ngrx/store';
-import {selectAllOrganizations, selectOrganizationsLoaded} from './store/organizations/organizations.state';
-import {OrganizationsAction} from './store/organizations/organizations.action';
-import {WorkspaceSelectService} from './service/workspace-select.service';
-import {AppState} from './store/app.state';
-import {NotificationsAction} from './store/notifications/notifications.action';
-import {TemplateService} from './rest/template.service';
-import {OrganizationService} from './data-service';
-import {OrganizationConverter} from './store/organizations/organization.converter';
+import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {OrganizationsAction} from '../store/organizations/organizations.action';
+import {WorkspaceSelectService} from '../service/workspace-select.service';
+import {AppState} from '../store/app.state';
+import {NotificationsAction} from '../store/notifications/notifications.action';
+import {TemplateService} from '../rest/template.service';
+import {OrganizationService} from '../data-service';
+import {OrganizationConverter} from '../store/organizations/organization.converter';
 
 @Component({
   template: '',

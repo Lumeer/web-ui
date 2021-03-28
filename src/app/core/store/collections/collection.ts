@@ -90,4 +90,5 @@ export interface TaskPurposeMetadata {
   observersAttributeId?: string;
   tagsAttributeId?: string;
   priorityAttributeId?: string;
+  defaultViewCode?: string;
 }

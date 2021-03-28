@@ -33,6 +33,7 @@ import {Project} from '../store/projects/project';
 import {SearchTab} from '../store/navigation/search-tab';
 import {View} from '../store/views/view';
 import {selectSearchById} from '../store/searches/searches.state';
+import {QueryParam} from '../store/navigation/query-param';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
@@ -46,13 +47,19 @@ export class ViewRedirectGuard implements CanActivate {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
     const viewCode = next.paramMap.get('vc');
+    const cursor = next.queryParamMap.get(QueryParam.ViewCursor);
 
     return this.workspaceService
       .selectOrGetWorkspace(organizationCode, projectCode)
-      .pipe(mergeMap(({organization, project}) => this.canActivateView(organization, project, viewCode)));
+      .pipe(mergeMap(({organization, project}) => this.canActivateView(organization, project, viewCode, cursor)));
   }
 
-  private canActivateView(organization: Organization, project: Project, viewCode: string): Observable<any> {
+  private canActivateView(
+    organization: Organization,
+    project: Project,
+    viewCode: string,
+    cursor: string
+  ): Observable<any> {
     return this.store$.pipe(
       select(selectViewsLoaded),
       tap(loaded => {
@@ -74,7 +81,7 @@ export class ViewRedirectGuard implements CanActivate {
         }
         viewPath.push(perspective);
 
-        const extras: NavigationExtras = {queryParams: {q: query}};
+        const extras: NavigationExtras = {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}};
         if (perspective === Perspective.Search) {
           return this.redirectToSearchPerspective(view, viewPath, extras);
         }
