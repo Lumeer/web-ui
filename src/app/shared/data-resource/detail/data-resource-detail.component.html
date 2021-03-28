@@ -85,11 +85,11 @@
   </ng-container>
 
   <ng-container *ngIf="data.selectedTab === detailTabType.Activity">
-    <audit-log *ngIf="resource && dataResource?.id"
-               [resourceType]="resourceType | attributeResourceTypeToResourceType"
-               [resourceId]="dataResource.id"
-               [parentId]="resource.id">
-    </audit-log>
+    <resource-activity *ngIf="resource && dataResource?.id"
+                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                       [resourceId]="dataResource.id"
+                       [parent]="resource">
+    </resource-activity>
   </ng-container>
 
   <div class="spacer mb-5"></div>

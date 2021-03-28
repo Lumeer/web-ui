@@ -20,12 +20,13 @@
 import {ResourceType} from '../../model/resource-type';
 
 export interface AuditLog {
+  id: string;
   parentId?: string;
   resourceType: ResourceType;
   resourceId: string;
   changeDate: Date;
-  user?: string;
-  type: string;
+  userId?: string;
+  automation: string;
   oldState: Record<string, any>;
   newState: Record<string, any>;
 }

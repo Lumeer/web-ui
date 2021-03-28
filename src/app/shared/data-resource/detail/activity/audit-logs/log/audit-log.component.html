@@ -1,0 +1,27 @@
+<div class="d-flex align-items-center text-nowrap flex-nowrap">
+  <user-avatar *ngIf="user"
+               [avatarSize]="15"
+               placement="top"
+               [email]="user.email"
+               [tooltipText]="updatedByMsg + ' ' + user.name" class="mr-2">
+  </user-avatar>
+  <short-date *ngIf="auditLog.changeDate"
+              [date]="auditLog.changeDate"
+              [tooltipText]="updatedOnMsg + ' ' + (auditLog.changeDate | date:'medium')"
+              placement="top"
+              format="ll">
+  </short-date>
+</div>
+
+<div class="d-flex flex-row flex-wrap align-items-center overflow-hidden">
+  <ng-container
+    *ngFor="let entry of entries; let first = first">
+    <span class="mt-1" *ngIf="!first">,&nbsp;</span>
+    <span *ngIf="entry.label" class="text-attribute text-nowrap mt-1 text-truncate">{{entry.label}}:&nbsp;</span>
+    <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
+                        [dataValue]="entry.dataValue"
+                        [configuration]="configuration"
+                        [constraint]="entry.constraint">
+    </data-input-preview>
+  </ng-container>
+</div>

@@ -39,7 +39,9 @@ import {LinksModule} from '../links/links.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
-import {AuditLogComponent} from './detail/audit-log/audit-log.component';
+import {ResourceActivityComponent} from './detail/activity/resource-activity.component';
+import {AuditLogsComponent} from './detail/activity/audit-logs/audit-logs.component';
+import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.component';
 
 @NgModule({
   imports: [
@@ -67,6 +69,8 @@ import {AuditLogComponent} from './detail/audit-log/audit-log.component';
     DefaultDataRowPipe,
     DetailTabsComponent,
     LinksToolbarComponent,
+    ResourceActivityComponent,
+    AuditLogsComponent,
     AuditLogComponent,
   ],
   exports: [DataResourceDetailComponent],

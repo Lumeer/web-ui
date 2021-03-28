@@ -18,12 +18,13 @@
  */
 
 export interface AuditLogDto {
+  id: string;
   parentId?: string;
   resourceType: string;
   resourceId: string;
   changeDate: number;
   user?: string;
-  type: string;
+  automation?: string;
   oldState: Record<string, any>;
   newState: Record<string, any>;
 }

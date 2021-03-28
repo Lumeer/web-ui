@@ -23,12 +23,13 @@ import {resourceTypesMap} from '../../model/resource-type';
 
 export function convertAuditLogDtoToModel(dto: AuditLogDto): AuditLog {
   return {
+    id: dto.id,
     parentId: dto.parentId,
-    resourceType: resourceTypesMap[dto.resourceType],
+    resourceType: resourceTypesMap[dto.resourceType?.toLowerCase()],
     resourceId: dto.resourceId,
     changeDate: dto.changeDate ? new Date(dto.changeDate) : null,
-    user: dto.user,
-    type: dto.type,
+    userId: dto.user,
+    automation: dto.automation,
     oldState: dto.oldState,
     newState: dto.newState,
   };

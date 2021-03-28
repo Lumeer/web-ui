@@ -1,0 +1,13 @@
+<ng-container *ngIf="audit$ | async as audit">
+  <audit-logs *ngIf="audit.length; else emptyState"
+              class="p-3"
+              [auditLogs]="audit"
+              [parent]="parent">
+  </audit-logs>
+</ng-container>
+
+<ng-template #emptyState>
+  <div class="text-center p-4 font-italic" i18n="@@document.detail.activity.empty">
+    No activity yet.
+  </div>
+</ng-template>

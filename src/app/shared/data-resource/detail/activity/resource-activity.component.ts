@@ -25,14 +25,14 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectAuditLogsByDocument, selectAuditLogsByLink} from '../../../../core/store/audit-logs/audit-logs.state';
 import {select, Store} from '@ngrx/store';
 import * as AuditLogActions from '../../../../core/store/audit-logs/audit-logs.actions';
+import {AttributesResource} from '../../../../core/model/resource';
 
 @Component({
-  selector: 'audit-log',
-  templateUrl: './audit-log.component.html',
-  styleUrls: ['./audit-log.component.scss'],
+  selector: 'resource-activity',
+  templateUrl: './resource-activity.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuditLogComponent implements OnChanges {
+export class ResourceActivityComponent implements OnChanges {
   @Input()
   public resourceType: ResourceType;
 
@@ -40,14 +40,14 @@ export class AuditLogComponent implements OnChanges {
   public resourceId: string;
 
   @Input()
-  public parentId: string;
+  public parent: AttributesResource;
 
   public audit$: Observable<AuditLog[]>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceType || changes.resourceId) {
+    if (changes.resourceType || changes.resourceId || changes.parent) {
       this.subscribeData();
     }
   }
@@ -55,10 +55,10 @@ export class AuditLogComponent implements OnChanges {
   private subscribeData() {
     if (this.resourceType === ResourceType.Document) {
       this.audit$ = this.store$.pipe(select(selectAuditLogsByDocument(this.resourceId)));
-      this.store$.dispatch(AuditLogActions.getByDocument({documentId: this.resourceId, collectionId: this.parentId}));
+      this.store$.dispatch(AuditLogActions.getByDocument({documentId: this.resourceId, collectionId: this.parent.id}));
     } else if (this.resourceType === ResourceType.Link) {
       this.audit$ = this.store$.pipe(select(selectAuditLogsByLink(this.resourceId)));
-      this.store$.dispatch(AuditLogActions.getByLink({linkTypeId: this.resourceId, linkInstanceId: this.parentId}));
+      this.store$.dispatch(AuditLogActions.getByLink({linkTypeId: this.resourceId, linkInstanceId: this.parent.id}));
     }
   }
 }

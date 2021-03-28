@@ -27,7 +27,7 @@ export function convertResourceCommentDtoToModel(
 ): ResourceCommentModel {
   return {
     id: dto.id,
-    resourceType: resourceTypesMap[dto.resourceType.toLowerCase()],
+    resourceType: resourceTypesMap[dto.resourceType?.toLowerCase()],
     resourceId: dto.resourceId,
     metaData: dto.metaData,
     creationDate: new Date(dto.creationDate),

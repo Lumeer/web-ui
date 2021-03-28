@@ -1,0 +1,20 @@
+<ng-container
+  *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async} as data">
+  <audit-log *ngFor="let auditLog of auditLogs; trackBy:trackByAudit; let first = first"
+             class="d-block"
+             [class.mt-2]="!first"
+             [auditLog]="auditLog"
+             [parent]="parent"
+             [constraintData]="data.constraintData"
+             [usersMap]="data.usersMap">
+  </audit-log>
+  <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
+       class="py-3 mt-3 d-flex flex-column align-items-center text-center">
+    <span i18n="@@document.detail.audit.limit">Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, contact us.</span>
+    <button *ngIf="(organizationPermissions$ | async)?.manage"
+            (click)="openServiceOrder()"
+            class="btn btn-success mt-2">
+      <span i18n="@@collection.config.tab.rules.upgradePlan">Upgrade to Business Plan!</span>
+    </button>
+  </div>
+</ng-container>

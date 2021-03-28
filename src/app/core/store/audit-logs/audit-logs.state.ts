@@ -37,10 +37,17 @@ export const selectAuditLogs = createSelector(selectAuditLogsState, selectAll);
 
 export const selectAuditLogsByDocument = (documentId: string) =>
   createSelector(selectAuditLogs, logs =>
-    logs.filter(log => log.resourceType === ResourceType.Collection && log.resourceId === documentId)
+    sortByDate(logs.filter(log => log.resourceType === ResourceType.Document && log.resourceId === documentId))
   );
 
 export const selectAuditLogsByLink = (linkInstanceId: string) =>
   createSelector(selectAuditLogs, logs =>
-    logs.filter(log => log.resourceType === ResourceType.Link && log.resourceId === linkInstanceId)
+    sortByDate(logs.filter(log => log.resourceType === ResourceType.Link && log.resourceId === linkInstanceId))
   );
+
+function sortByDate(logs: AuditLog[], sortDesc = true): AuditLog[] {
+  return [...logs].sort((a, b) => {
+    const value = a.changeDate?.getTime() - b.changeDate?.getTime();
+    return (value !== 0 ? value : a.id.localeCompare(b.id)) * (sortDesc ? -1 : 1);
+  });
+}
