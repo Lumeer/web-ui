@@ -4133,7 +4133,7 @@
 					<target>– nincs határidő beállítva</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.dueDateChangedPrefix">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a changed due date</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a changed due date</source>
 					<target>A
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
@@ -4144,7 +4144,7 @@
 					<target>.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.dueDateSoon">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
 					<target>A
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
@@ -4173,7 +4173,7 @@
 					<target>Egy új szervezetet osztottak meg veled.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.pastDueDate">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
 					<target>A
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
@@ -4190,23 +4190,30 @@
 					<target>Csak olvasatlan megjelenítése</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.stateUpdate">
-					<source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
-					<target>A feladat állapota
-						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
-						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
-						frissült a
-						<x id="START_EMPHASISED_TEXT_1" ctype="x-em" equiv-text="&lt;em>"/>
-						<x id="INTERPOLATION" equiv-text="{{taskState}}"/>
-						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
-						következőre: .</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
+					<source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
+					<target>A feladat állapota <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> frissült a következőre <x id="START_EMPHASISED_TEXT_1" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="userNotifications.stateUpdate.len1" datatype="html">
+        <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</source>
+		<target>A feladat állapota <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> frissült a következőre <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="userNotifications.stateUpdate.len0" datatype="html">
+        <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/>none<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
+		<target>A feladat állapota <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> frissült a következőre <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em>"/>none<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskAssignedMiddle">
 					<source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
 					<target>határidővel
 						<x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/></target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskAssignedPrefix">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/></source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/></source>
 					<target>A feladat
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/></target>
@@ -4216,40 +4223,40 @@
 					<target>hozzá van rendelve a számodra.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskCommented">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has a new comment.</source>
 					<target>A
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 						feladathoz új megjegyzést fűztek.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskMentioned">
-					<source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
+					<source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>.</source>
 					<target>Megemlítettek a feladat egyik megjegyzésében
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 						.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskRemoved">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source>
 					<target>A feladat
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 						eltávolításra került.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskUnassigned">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source>
 					<target>A
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 						feladat nincs hozzád rendelve.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.taskUpdated">
-					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source>
+					<source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source>
 					<target>A
 						<x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 						<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 						feladat frissült.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="userNotifications.update.fail">
 					<source>Could not update notification state</source>
 					<target>Nem lehet frissíteni az értesítés állapotát</target>
