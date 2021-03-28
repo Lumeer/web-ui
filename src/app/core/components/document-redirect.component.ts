@@ -62,7 +62,7 @@ export class DocumentRedirectComponent implements OnInit {
           if (document) {
             this.handleDocument(organizationCode, projectCode, document);
           } else {
-            const message = $localize`:@@notification.document.notVisible:I am sorry, document could not be found.`;
+            const message = $localize`:@@notification.document.notVisible:I am sorry, this record could not be found.`;
             this.redirectToHomeWithError(message);
           }
         });
@@ -91,7 +91,7 @@ export class DocumentRedirectComponent implements OnInit {
           this.redirectToHome(() => setTimeout(() => this.modalService.showDocumentDetail(document.id), 1000));
           return;
         } else {
-          const message = $localize`:@@notification.document.notVisible:I am sorry, document could not be found.`;
+          const message = $localize`:@@notification.document.notVisible:I am sorry, this record could not be found.`;
           this.redirectToHomeWithError(message);
           return;
         }

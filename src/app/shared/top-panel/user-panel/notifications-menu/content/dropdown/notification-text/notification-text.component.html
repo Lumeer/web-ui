@@ -16,47 +16,49 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskAssigned">
-    <span class="trail" i18n="@@userNotifications.taskAssignedPrefix">The task <em [innerHTML]="taskName"></em> </span>
+    <span class="trail" i18n="@@userNotifications.taskAssignedPrefix">The task <em [innerHTML]="taskName | truncate:128"></em> </span>
     <span class="trail" i18n="@@userNotifications.taskAssignedMiddle" *ngIf="taskDueDate"> with due date {{taskDueDate}} </span>
     <span class="trail" i18n="@@userNotifications.taskAssignedSuffix"> has been assigned to you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.DueDateSoon">
-    <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName"></em> has due date soon – {{taskDueDate}}.</span>
+    <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName | truncate:128"></em> has due date soon – {{taskDueDate}}.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.PastDueDate">
-    <span class="trail" i18n="@@userNotifications.pastDueDate">The task <em [innerHTML]="taskName"></em> is past due date {{taskDueDate}}.</span>
+    <span class="trail" i18n="@@userNotifications.pastDueDate">The task <em [innerHTML]="taskName | truncate:128"></em> is past due date {{taskDueDate}}.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.DueDateChanged">
-    <span class="trail" i18n="@@userNotifications.dueDateChangedPrefix">The task <em [innerHTML]="taskName"></em> has a changed due date</span>
+    <span class="trail" i18n="@@userNotifications.dueDateChangedPrefix">The task <em [innerHTML]="taskName | truncate:128"></em> has a changed due date</span>
     <span class="trail" i18n="@@userNotifications.dueDateChangedMiddle" *ngIf="taskDueDate"> – {{taskDueDate}}</span>
     <span class="trail" i18n="@@userNotifications.dueDateChangedNoDate" *ngIf="!taskDueDate"> – no due date set</span>
     <span class="trail" i18n="@@userNotifications.dueDateChangedSuffix">.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.StateUpdate">
-    <span class="trail" i18n="@@userNotifications.stateUpdate">The state of task <em [innerHTML]="taskName"></em> has been updated to <em>{{taskState}}</em>.</span>
+    <span *ngIf="taskState?.length > 1" class="trail" i18n="@@userNotifications.stateUpdate">The state of task <em [innerHTML]="taskName | truncate:128"></em> has been updated to <em>{{taskState}}</em>.</span>
+    <span *ngIf="taskState?.length === 1" class="trail" i18n="@@userNotifications.stateUpdate.len1">The state of task <em [innerHTML]="taskName | truncate:128"></em> has been updated to {{taskState}}.</span>
+    <span *ngIf="taskState?.length === 0" class="trail" i18n="@@userNotifications.stateUpdate.len0">The state of task <em [innerHTML]="taskName | truncate:128"></em> has been updated to <em>none</em>.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskUpdated">
-    <span class="trail" i18n="@@userNotifications.taskUpdated">The task <em [innerHTML]="taskName"></em> has been updated.</span>
+    <span class="trail" i18n="@@userNotifications.taskUpdated">The task <em [innerHTML]="taskName | truncate:128"></em> has been updated.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskRemoved">
-    <span class="trail" i18n="@@userNotifications.taskRemoved">The task <em [innerHTML]="taskName"></em> has been removed.</span>
+    <span class="trail" i18n="@@userNotifications.taskRemoved">The task <em [innerHTML]="taskName | truncate:128"></em> has been removed.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskUnassigned">
-    <span class="trail" i18n="@@userNotifications.taskUnassigned">The task <em [innerHTML]="taskName"></em> has been unassigned from you.</span>
+    <span class="trail" i18n="@@userNotifications.taskUnassigned">The task <em [innerHTML]="taskName | truncate:128"></em> has been unassigned from you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskCommented">
-    <span class="trail" i18n="@@userNotifications.taskCommented">The task <em [innerHTML]="taskName"></em> has a new comment.</span>
+    <span class="trail" i18n="@@userNotifications.taskCommented">The task <em [innerHTML]="taskName | truncate:128"></em> has a new comment.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskMentioned">
-    <span class="trail" i18n="@@userNotifications.taskMentioned">You have been mentioned in a comment of the task <em [innerHTML]="taskName"></em>.</span>
+    <span class="trail" i18n="@@userNotifications.taskMentioned">You have been mentioned in a comment of the task <em [innerHTML]="taskName | truncate:128"></em>.</span>
   </ng-container>
 </ng-container>
