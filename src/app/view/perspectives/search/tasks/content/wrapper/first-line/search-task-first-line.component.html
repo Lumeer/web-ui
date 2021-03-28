@@ -65,7 +65,7 @@
         i18n-title="@@task.pinned">
       <i class="fa-thumbtack text-warning" [ngClass]="document.favorite ? 'fas' : 'fal'" aria-hidden="true"></i>
   </span>
-  <span *ngIf="permissions?.read" class="clickable mx-2"
+  <span class="clickable mx-2"
         (click)="$event.stopPropagation(); detail.emit()"><i class="far fa-file-search" aria-hidden="true"></i>
   </span>
 </div>

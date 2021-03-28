@@ -45,6 +45,7 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
+import {AllowedPermissions} from '../../../model/allowed-permissions';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -240,19 +241,29 @@ export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boole
   );
 }
 
-export function checkTasksCollectionsQuery(collections: Collection[], query: DataQuery): DataQuery {
+export function checkTasksCollectionsQuery(
+  collections: Collection[],
+  query: DataQuery,
+  permissions: Record<string, AllowedPermissions>
+): DataQuery {
   if (queryIsEmptyExceptPagination(query)) {
-    return tasksCollectionsQuery(collections);
+    return tasksCollectionsQuery(collections, permissions);
   }
   return query;
 }
 
-export function tasksCollectionsQuery(collections: Collection[]): Query {
-  const stems = collections.map(collection => tasksCollectionQueryStem(collection)).filter(stem => !!stem);
+export function tasksCollectionsQuery(
+  collections: Collection[],
+  permissions: Record<string, AllowedPermissions>
+): Query {
+  const stems = collections.map(collection => tasksCollectionQueryStem(collection, permissions)).filter(stem => !!stem);
   return {stems};
 }
 
-export function tasksCollectionQueryStem(collection: Collection): QueryStem {
+export function tasksCollectionQueryStem(
+  collection: Collection,
+  permissions: Record<string, AllowedPermissions>
+): QueryStem {
   if (collection.purpose?.type === CollectionPurposeType.Tasks) {
     const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
     const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
@@ -269,6 +280,8 @@ export function tasksCollectionQueryStem(collection: Collection): QueryStem {
         ],
       };
     }
+  } else if (permissions?.[collection.id]?.read) {
+    return {collectionId: collection.id};
   }
   return null;
 }

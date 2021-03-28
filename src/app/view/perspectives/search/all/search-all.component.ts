@@ -25,7 +25,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
   selectCollectionsByQuery,
-  selectTasksCollectionsByReadPermission,
+  selectTasksCollections,
   selectTasksDocumentsByQuery,
   selectViewsByQuery,
 } from '../../../../core/store/common/permissions.selectors';
@@ -97,7 +97,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     );
 
     this.hasTaskCollection$ = this.store$.pipe(
-      select(selectTasksCollectionsByReadPermission),
+      select(selectTasksCollections),
       map(collections => collections && collections.length > 0)
     );
 
