@@ -622,7 +622,8 @@
 				<source>Do you want to run the rule for all the rows in the table now? Please note that this might take significant time to complete.</source>
 				<target>Futtatja most a szabályt a tábla összes sorára? Kérjük vedd figyelembe, hogy ez jelentős időt vehet igénybe.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="notification.document.notVisible" datatype="html">
-        <source>I am sorry, this record could not be found.</source><target state="new">I am sorry, document could not be found.</target>
+        <source>I am sorry, record could not be found.</source>
+		<target>Sajnálom, de ez a rekord nem található.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context>
           <context context-type="linenumber">65</context>
