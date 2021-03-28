@@ -23,7 +23,7 @@ import {Collection, TaskPurposeMetadata} from '../../../../../../../core/store/c
 import {TaskPurposeFormControl} from './task-purpose-form-control';
 import {removeAllFormControls} from '../../../../../../../shared/utils/form.utils';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {AppState} from '../../../../../../../core/store/app.state';
@@ -37,8 +37,14 @@ import {
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {selectDocumentsByCollectionId} from '../../../../../../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
-import {map, startWith} from 'rxjs/operators';
+import {filter, map, startWith} from 'rxjs/operators';
 import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
+import {View} from '../../../../../../../core/store/views/view';
+import {selectViewsByRead} from '../../../../../../../core/store/common/permissions.selectors';
+import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
+import {QueryData} from '../../../../../../../shared/top-panel/search-box/util/query-data';
+import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
+import {selectAllLinkTypes} from '../../../../../../../core/store/link-types/link-types.state';
 
 @Component({
   selector: 'collection-purpose-tasks',
@@ -64,6 +70,8 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   public stateList$: Observable<any[]>;
   public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
+  public viewsByCollection$: Observable<View[]>;
+  public queryData$: Observable<QueryData>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -95,6 +103,10 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
     return this.form.get(TaskPurposeFormControl.Tags);
   }
 
+  public get defaultViewControl(): AbstractControl {
+    return this.form.get(TaskPurposeFormControl.View);
+  }
+
   public ngOnInit() {
     this.resetForm();
     this.createForm();
@@ -104,6 +116,10 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
       startWith(this.stateListControl.value),
       map(() => this.stateListControl.value)
     );
+    this.queryData$ = combineLatest([
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+    ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -133,6 +149,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
       this.patchValue(this.observersControl, metaData.observersAttributeId);
       this.patchValue(this.tagsControl, metaData.tagsAttributeId);
       this.patchValue(this.priorityControl, metaData.priorityAttributeId);
+      this.patchValue(this.defaultViewControl, metaData.defaultViewCode);
     }
   }
 
@@ -147,6 +164,10 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   private updateData() {
     this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: this.collection.id}]}}));
     this.documents$ = this.store$.pipe(select(selectDocumentsByCollectionId(this.collection.id)));
+    this.viewsByCollection$ = this.store$.pipe(
+      select(selectViewsByRead),
+      map(views => views.filter(view => getBaseCollectionIdsFromQuery(view.query).includes(this.collection.id)))
+    );
   }
 
   private resetForm() {
@@ -174,6 +195,8 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
 
     const tagsAttribute = findAttribute(this.collection?.attributes, metaData?.tagsAttributeId);
     this.form.addControl(TaskPurposeFormControl.Tags, new FormControl(tagsAttribute?.id));
+
+    this.form.addControl(TaskPurposeFormControl.View, new FormControl(metaData?.defaultViewCode));
   }
 
   public onSelectValue(control: AbstractControl, value: any) {

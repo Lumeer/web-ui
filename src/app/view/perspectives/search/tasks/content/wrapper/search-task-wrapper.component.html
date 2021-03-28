@@ -24,7 +24,8 @@
 <search-task-second-line *ngIf="medium || large"
                          [attributes]="attributes"
                          [document]="document"
-                         [constraintData]="constraintData">
+                         [constraintData]="constraintData"
+                         (commentClick)="onDetail()">
 </search-task-second-line>
 
 <ng-content></ng-content>

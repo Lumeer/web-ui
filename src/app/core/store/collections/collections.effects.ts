@@ -263,7 +263,7 @@ export class CollectionsEffects {
 
   public upsertRuleFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
+      ofType<CollectionsAction.UpsertRuleFailure>(CollectionsActionType.UPSERT_RULE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@resource.rule.update.fail:Could not save automation`;

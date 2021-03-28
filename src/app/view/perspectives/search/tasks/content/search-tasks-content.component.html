@@ -26,13 +26,13 @@
         (click)="toggleDocument(document)"
         (detail)="onDetailClick(document)">
 
-        <div class="d-flex flex-row flex-wrap align-items-center"
+        <div class="d-flex flex-row flex-wrap align-items-center overflow-hidden"
              *ngIf="currentSize === sizeType.L || (document | isDocumentOpened:config)">
           <ng-container
             *ngFor="let entry of document | dataValueEntries:collectionsMap[document.collectionId]:data.taskAttributes[document.collectionId]:constraintData:config; let first = first;trackBy: trackByEntry">
             <span class="mt-1" *ngIf="!first">,&nbsp;</span>
             <span *ngIf="entry.label"
-                  class="text-attribute text-nowrap mt-1"
+                  class="text-attribute text-nowrap mt-1 text-truncate"
                   [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
             <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
                                 [dataValue]="entry.dataValue"

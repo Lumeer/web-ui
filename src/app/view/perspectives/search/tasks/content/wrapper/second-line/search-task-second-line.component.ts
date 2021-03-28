@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TaskAttributes} from '../../../model/task-attributes';
@@ -27,7 +27,7 @@ import {TaskAttributes} from '../../../model/task-attributes';
   templateUrl: './search-task-second-line.component.html',
   styleUrls: ['./search-task-second-line.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex flex-row flex-nowrap text-truncate'},
+  host: {class: 'd-flex flex-row flex-nowrap text-truncate justify-content-end'},
 })
 export class SearchTaskSecondLineComponent {
   @Input()
@@ -38,4 +38,7 @@ export class SearchTaskSecondLineComponent {
 
   @Input()
   public attributes: TaskAttributes;
+
+  @Output()
+  public commentClick = new EventEmitter();
 }

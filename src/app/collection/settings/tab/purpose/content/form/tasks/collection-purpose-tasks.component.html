@@ -7,6 +7,8 @@
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select assignee attribute"
                    i18n-emptyValue="@@collections.tab.purpose.assignee.select"
                    [selectedId]="assigneeControl.value"
@@ -26,6 +28,8 @@
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="collection | attributesSelectItems:constraintType.DateTime"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select due date attribute"
                    i18n-emptyValue="@@collections.tab.purpose.dueDate.select"
                    [selectedId]="dueDateControl.value"
@@ -43,9 +47,10 @@
       State
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
-      <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
-                   [items]="data.collectionSelectItems"
+      <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select state attribute"
                    i18n-emptyValue="@@collections.tab.purpose.state.select"
                    [selectedId]="stateControl.value"
@@ -89,6 +94,8 @@
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select observer attribute"
                    i18n-emptyValue="@@collections.tab.purpose.observer.select"
                    [selectedId]="observersControl.value"
@@ -128,6 +135,8 @@
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select tags attribute"
                    i18n-emptyValue="@@collections.tab.purpose.tags.select"
                    [selectedId]="tagsControl.value"
@@ -136,6 +145,29 @@
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.tags.help">
         Tags, labels, hashtags... Simply anything you use to categorize the tasks.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">
+      Open with view
+    </label>
+
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]=" viewsByCollection$ | async | viewsSelectItems:(queryData$ | async)"
+                   class="w-100"
+                   buttonClasses="w-100"
+                   emptyValue="Select view"
+                   i18n-emptyValue="@@projects.tab.template.metadata.defaultView.empty"
+                   [removable]="true"
+                   [selectedId]="defaultViewControl.value"
+                   [fitParent]="true"
+                   (selected)="onSelectValue(defaultViewControl, $event)"
+                   (remove)="onSelectValue(defaultViewControl, null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.defaultView.help">
+        The view in which notification will be open to users who do not have permissions to read table.
       </div>
     </div>
   </div>

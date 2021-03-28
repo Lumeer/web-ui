@@ -33,10 +33,10 @@ import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {SharedModule} from '../shared/shared.module';
 import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
-import {HomeComponent} from './home.component';
+import {HomeComponent} from './components/home.component';
 import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
-import {RedirectComponent} from './redirect.component';
+import {RedirectComponent} from './components/redirect.component';
 import {GroupService, ImportService} from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
@@ -54,6 +54,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
+import {DocumentRedirectComponent} from './components/document-redirect.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -85,7 +86,7 @@ FullCalendarModule.registerPlugins([
     DataServiceModule,
     FullCalendarModule,
   ],
-  declarations: [HomeComponent, RedirectComponent],
+  declarations: [HomeComponent, RedirectComponent, DocumentRedirectComponent],
   providers: [
     {
       provide: ErrorHandler,
@@ -102,7 +103,7 @@ FullCalendarModule.registerPlugins([
     UserNotificationsService,
     SequenceService,
   ],
-  exports: [HomeComponent, NotificationsModule, RedirectComponent],
+  exports: [HomeComponent, NotificationsModule, RedirectComponent, DocumentRedirectComponent],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

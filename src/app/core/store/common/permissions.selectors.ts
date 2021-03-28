@@ -77,6 +77,10 @@ export const selectCollectionsByQuery = createSelector(
     filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
 );
 
+export const selectTasksCollections = createSelector(selectAllCollections, collections =>
+  collections.filter(collection => collection.purpose?.type === CollectionPurposeType.Tasks)
+);
+
 const selectCollectionsByPurposeAndPermission = (purpose: CollectionPurposeType, role: Role) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
     collections.filter(
@@ -84,7 +88,7 @@ const selectCollectionsByPurposeAndPermission = (purpose: CollectionPurposeType,
     )
   );
 
-export const selectTasksCollectionsByReadPermission = selectCollectionsByPurposeAndPermission(
+const selectTasksCollectionsByReadPermission = selectCollectionsByPurposeAndPermission(
   CollectionPurposeType.Tasks,
   Role.Read
 );
@@ -92,17 +96,24 @@ export const selectTasksCollectionsByReadPermission = selectCollectionsByPurpose
 export const selectTasksQuery = createSelector(
   selectViewQuery,
   selectTasksCollectionsByReadPermission,
-  (query, collections) => checkTasksCollectionsQuery(collections, query)
+  (query, collections) => checkTasksCollectionsQuery(collections, query, {})
 );
 
 export const selectTasksCollectionsByQuery = createSelector(
-  selectTasksCollectionsByReadPermission,
+  selectTasksCollections,
   selectAllDocuments,
   selectAllLinkTypes,
-  selectTasksQuery,
+  selectViewQuery,
+  selectCollectionsPermissions,
   selectConstraintData,
-  (collections, documents, linkTypes, query, constraintData) =>
-    filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
+  (collections, documents, linkTypes, query, permissions, constraintData) =>
+    filterCollectionsByQuery(
+      collections,
+      documents,
+      linkTypes,
+      checkTasksCollectionsQuery(collections, query, permissions),
+      constraintData
+    )
 );
 
 export const selectCollectionsByQueryWithoutLinks = createSelector(
@@ -251,7 +262,7 @@ export const selectTasksDocumentsByQuery = createSelector(
 
     if (queryIsEmpty(query)) {
       tasksDocuments = filterTaskDocuments(documents, collections, constraintData);
-      tasksQuery = tasksCollectionsQuery(collections);
+      tasksQuery = tasksCollectionsQuery(collections, permissions.collections);
     }
 
     const filteredTasks = filterDocumentsAndLinksByQuery(

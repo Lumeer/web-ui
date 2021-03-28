@@ -65,6 +65,10 @@ export const selectViewByCode = (code: string) =>
   createSelector(selectAllViews, views => views.find(view => view.code === code));
 export const selectViewById = (id: string) => createSelector(selectViewsDictionary, viewsMap => viewsMap[id]);
 
+export const selectViewsDictionaryByCode = createSelector(selectAllViews, views =>
+  views.reduce((map, view) => ({...map, [view.code]: view}), {})
+);
+
 export const selectCurrentView = createSelector(selectViewCode, selectAllViews, (viewCode, views) =>
   viewCode ? views.find(view => view.code === viewCode) : null
 );

@@ -22,21 +22,21 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
-import {AppState} from './store/app.state';
-import {Organization} from './store/organizations/organization';
-import {OrganizationsAction} from './store/organizations/organizations.action';
-import {selectAllOrganizations, selectOrganizationsLoaded} from './store/organizations/organizations.state';
-import {Project} from './store/projects/project';
-import {ProjectsAction} from './store/projects/projects.action';
-import {selectAllProjects, selectProjectsLoaded} from './store/projects/projects.state';
-import {DefaultWorkspace} from './store/users/user';
-import {selectCurrentUser} from './store/users/users.state';
-import {NotificationService} from './notifications/notification.service';
-import {WorkspaceSelectService} from './service/workspace-select.service';
-import {Perspective} from '../view/perspectives/perspective';
-import {selectPublicViewCode} from './store/public-data/public-data.state';
-import {PublicDataAction} from './store/public-data/public-data.action';
-import {ConfigurationService} from '../configuration/configuration.service';
+import {AppState} from '../store/app.state';
+import {Organization} from '../store/organizations/organization';
+import {OrganizationsAction} from '../store/organizations/organizations.action';
+import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {Project} from '../store/projects/project';
+import {ProjectsAction} from '../store/projects/projects.action';
+import {selectAllProjects, selectProjectsLoaded} from '../store/projects/projects.state';
+import {DefaultWorkspace} from '../store/users/user';
+import {selectCurrentUser} from '../store/users/users.state';
+import {NotificationService} from '../notifications/notification.service';
+import {WorkspaceSelectService} from '../service/workspace-select.service';
+import {Perspective} from '../../view/perspectives/perspective';
+import {selectPublicViewCode} from '../store/public-data/public-data.state';
+import {PublicDataAction} from '../store/public-data/public-data.action';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
   template: '',
