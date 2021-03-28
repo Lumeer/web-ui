@@ -621,7 +621,17 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.run.message">
 				<source>Do you want to run the rule for all the rows in the table now? Please note that this might take significant time to complete.</source>
 				<target>Futtatja most a szabályt a tábla összes sorára? Kérjük vedd figyelembe, hogy ez jelentős időt vehet igénybe.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="notification.document.notVisible" datatype="html">
+        <source>I am sorry, this record could not be found.</source><target state="new">I am sorry, document could not be found.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/document-redirect.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.run.title">
 				<source>Run the Rule</source>
 				<target>A szabály futtatása</target>
@@ -888,7 +898,7 @@
 					tulajdonságtípussal
 					<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 					működik a legjobban.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.assignee.label">
 				<source> Assignee </source>
 				<target>Engedményes</target>
@@ -896,7 +906,7 @@
 			<trans-unit datatype="html" id="collections.tab.purpose.assignee.select">
 				<source>Select assignee attribute</source>
 				<target>Engedményes tulajdonság kiválasztása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.description.generic">
 				<source> A generic table to store any type of information you might have. The possibilities are limitless.
 </source>
@@ -914,15 +924,15 @@
 					attribútumtípussal
 					<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 					tulajdonsággal működik.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.dueDate.label">
 				<source> Due Date </source>
 				<target>Határidő</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.dueDate.select">
 				<source>Select due date attribute</source>
 				<target>Határidő tulajdonságának kiválasztása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.observer.help">
 				<source> Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
 				<target>Melyik tulajdonság határozza meg, hogy az engedményezetten kívül kit kell értesíteni a tevékenységek frissítéseiről? A
@@ -930,27 +940,27 @@
 					attribútumtípussal
 					<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 					tulajdonság típussal működik a legjobban.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.observer.label">
 				<source> Observer </source>
 				<target>Megfigyelő</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">87</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.observer.select">
 				<source>Select observer attribute</source>
 				<target>Megfigyelő tulajdonság kiválasztása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.priority.help">
 				<source> Which attribute specifies the task priority? </source>
 				<target>Melyik tulajdonság adja meg a tevékenység prioritását?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">119</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.priority.label">
 				<source> Priority </source>
 				<target>Prioritás</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.priority.select">
 				<source>Select priority attribute</source>
 				<target>Prioritás tulajdonság kiválasztása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">112</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">119</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.state.help">
 				<source> Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type. </source>
 				<target>Melyik tulajdonság határozza meg a tevékenység állapotát? Legjobban a
@@ -958,35 +968,35 @@
 					attribútumtípussal
 					<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 					tulajdonság típussal működik.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.state.label">
 				<source> State </source>
 				<target>Állapot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.state.select">
 				<source>Select state attribute</source>
 				<target>Állap tulajdonság kiválasztása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.stateList.help">
 				<source> Which states are considered final? That means no further notifications about the task will be sent. </source>
 				<target>Mely állapotok tekinthetők véglegesnek? Ez azt jelenti, hogy a rendszer nem küld további értesítéseket a feladatról.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.stateList.label">
 				<source> Done States </source>
 				<target>Kész állapotok</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.tags.help">
 				<source> Tags, labels, hashtags... Simply anything you use to categorize the tasks. </source>
 				<target>Megjelölések, címkék, hashtagek... Egyszerűen bármi, amit a feladatok kategorizálására használ.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">138</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">147</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.tags.label">
 				<source> Tags </source>
 				<target>Megjelölések</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">133</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.purpose.tags.select">
 				<source>Select tags attribute</source>
 				<target>Címke tulajdonságok kijelölése</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">131</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">140</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.tab.workflow.heading">
 				<source>What best describes your intentions with this table?</source>
 				<target>Mi írja le a legjobban a szándékaidat ezzel a táblázattal?</target>
@@ -3100,13 +3110,20 @@
 					<target>A projektek beágyazására engedélyezett tartományok. Pl. www.lumeer.io, acme.com. Írd be a * értéket, hogy beágyazhass bármely weboldalba.</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="projects.tab.template.metadata.defaultView">
-					<source> Open with view </source>
+					<source> Open in View </source>
 					<target>Megnyitás nézetben</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">154</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="projects.tab.template.metadata.defaultView.empty">
 					<source>Select view</source>
 					<target>Nézet kiválasztása</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">161</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.defaultView.help" datatype="html">
+        <source> In what view do you want to open task notifications? </source>
+		<target> Milyen nézetben szeretné megnyitni a feladat értesítéseit? </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">170,171</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="projects.tab.template.metadata.defaultView.help">
 					<source> The view that opens when the project is first loaded in the project creation dialog or embedded view. Leave empty for the default home page. </source>
 					<target>Az a nézet, amely akkor nyílik meg, amikor a projekt először betöltődik a projektlétrehozási párbeszédpanelre vagy a beágyazott nézetbe. Hagyd üresen az alapértelmezett kezdőlapot.</target>
@@ -3957,15 +3974,15 @@
 				<trans-unit datatype="html" id="template.create.empty">
 					<source>I am sorry, you do not have any organization to create project in.</source>
 					<target>Sajnálom, de nincs olyan szervezet, amelyben projektet hozhatnál létre.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/redirect.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="template.create.error">
 					<source>I am sorry, something went wrong.</source>
 					<target>Sajnálom, valami rosszul sült el.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/redirect.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="template.create.limitsExceeded">
 					<source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source>
 					<target>Sajnálom, nem lehet létrehozni több projektet az ingyenes fiókban. Szeretnél most frissíteni az Üzleti verzióra?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/redirect.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="templates.button.empty">
 					<source>Start with empty project</source>
 					<target>Kezdés üres projekttel</target>
@@ -4029,7 +4046,14 @@
 				<trans-unit datatype="html" id="topPanel.notifications.title">
 					<source>Notifications</source>
 					<target>Értesítések</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/notifications-menu-content.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/notifications-menu-content.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="notification.task.notVisible" datatype="html">
+        <source>I am sorry, you can not see selected task</source>
+		<target>Sajnálom, de nem láthatja a kiválasztott feladatot</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/notifications-menu.component.ts</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="topPanel.organizationMenu.title">
 					<source>Organization menu</source>
 					<target>Szervezeti menü</target>
