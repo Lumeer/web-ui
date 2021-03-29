@@ -20,17 +20,9 @@
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
 import {AuditLog} from '../../../../../../core/store/audit-logs/audit-log.model';
 import {User} from '../../../../../../core/store/users/user';
-import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
-import {Constraint, ConstraintData, DataValue} from '@lumeer/data-filters';
+import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResource} from '../../../../../../core/model/resource';
-import {objectsByIdMap} from '../../../../../utils/common.utils';
-
-interface ChangeEntry {
-  label?: string;
-  attributeId: string;
-  dataValue: DataValue;
-  constraint: Constraint;
-}
+import {DEFAULT_USER} from '../../../../../../core/constants';
 
 @Component({
   selector: 'audit-log',
@@ -52,6 +44,9 @@ export class AuditLogComponent implements OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
+  public reverting: boolean;
+
+  @Input()
   public allowRevert: boolean;
 
   @Input()
@@ -64,12 +59,14 @@ export class AuditLogComponent implements OnChanges {
   public revert = new EventEmitter();
 
   public user: User;
-  public entries: ChangeEntry[];
 
   public readonly updatedByMsg: string;
   public readonly updatedOnMsg: string;
   public readonly unknownUser: string;
-  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
+  public readonly unknownUserEmail = DEFAULT_USER;
+
+  public hasNewState: boolean;
+  public hasOldState: boolean;
 
   constructor() {
     this.unknownUser = $localize`:@@user.unknown:Unknown user`;
@@ -80,33 +77,8 @@ export class AuditLogComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.auditLog || changes.usersMap) {
       this.user = this.usersMap?.[this.auditLog.userId];
+      this.hasNewState = Object.keys(this.auditLog?.newState || {}).length > 0;
+      this.hasOldState = Object.keys(this.auditLog?.oldState || {}).length > 0;
     }
-    if (changes.auditLog || changes.parent || changes.constraintData) {
-      this.createEntries();
-    }
-    if (this.first) {
-      this.auditLog = {...this.auditLog, automation: '=lalala'};
-    }
-    if (this.last) {
-      this.auditLog = {...this.auditLog, automation: 'lalala'};
-    }
-  }
-
-  private createEntries() {
-    const attributesMap = objectsByIdMap(this.parent?.attributes);
-    this.entries = Object.keys(this.auditLog.newState || {}).reduce<ChangeEntry[]>((array, attributeId) => {
-      const attribute = attributesMap[attributeId];
-      const value = this.auditLog.newState[attributeId];
-      if (attribute) {
-        array.push({
-          attributeId,
-          constraint: attribute.constraint,
-          label: attribute.name,
-          dataValue: attribute.constraint?.createDataValue(value, this.constraintData),
-        });
-      }
-
-      return array;
-    }, []);
   }
 }

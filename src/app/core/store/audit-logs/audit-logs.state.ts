@@ -23,17 +23,23 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {ResourceType} from '../../model/resource-type';
 
-export interface AuditLogsState extends EntityState<AuditLog> {}
+export interface AuditLogsState extends EntityState<AuditLog> {
+  revertingIds: string[];
+}
 
 export const auditLogsAdapter: EntityAdapter<AuditLog> = createEntityAdapter<AuditLog>();
 
-export const initialAuditLogsState: AuditLogsState = auditLogsAdapter.getInitialState();
+export const initialAuditLogsState: AuditLogsState = auditLogsAdapter.getInitialState({
+  revertingIds: [],
+});
 
 export const selectAuditLogsState = (state: AppState) => state.auditLogs;
 
 export const {selectIds, selectEntities, selectAll, selectTotal} = auditLogsAdapter.getSelectors();
 
 export const selectAuditLogs = createSelector(selectAuditLogsState, selectAll);
+
+export const selectRevertingAuditLogsIds = createSelector(selectAuditLogsState, state => state.revertingIds);
 
 export const selectAuditLogsByDocument = (documentId: string) =>
   createSelector(selectAuditLogs, logs =>

@@ -42,7 +42,10 @@ export const revertDocumentSuccess = createAction(
   props<{auditLogId: string}>()
 );
 
-export const revertDocumentFailure = createAction('[AuditLogs] Revert Document :: Failure', props<{error: any}>());
+export const revertDocumentFailure = createAction(
+  '[AuditLogs] Revert Document :: Failure',
+  props<{error: any; auditLogId: string}>()
+);
 
 export const getByLink = createAction('[AuditLogs] Get By Link', props<{linkInstanceId: string; linkTypeId: string}>());
 
@@ -60,7 +63,10 @@ export const revertLink = createAction(
 
 export const revertLinkSuccess = createAction('[AuditLogs] Revert Link :: Success', props<{auditLogId: string}>());
 
-export const revertLinkFailure = createAction('[AuditLogs] Revert Link :: Failure', props<{error: any}>());
+export const revertLinkFailure = createAction(
+  '[AuditLogs] Revert Link :: Failure',
+  props<{error: any; auditLogId: string}>()
+);
 
 export const clearByCollection = createAction('[AuditLogs] Clear By Collection', props<{collectionId: string}>());
 

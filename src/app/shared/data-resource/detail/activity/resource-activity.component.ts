@@ -23,9 +23,12 @@ import {AuditLog} from '../../../../core/store/audit-logs/audit-log.model';
 import {Observable} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
 import {selectAuditLogsByDocument, selectAuditLogsByLink} from '../../../../core/store/audit-logs/audit-logs.state';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import * as AuditLogActions from '../../../../core/store/audit-logs/audit-logs.actions';
-import {AttributesResource} from '../../../../core/model/resource';
+import {AttributesResource, DataResource} from '../../../../core/model/resource';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'resource-activity',
@@ -43,6 +46,7 @@ export class ResourceActivityComponent implements OnChanges {
   public parent: AttributesResource;
 
   public audit$: Observable<AuditLog[]>;
+  public dataResource$: Observable<DataResource>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -54,31 +58,40 @@ export class ResourceActivityComponent implements OnChanges {
 
   private subscribeData() {
     if (this.resourceType === ResourceType.Document) {
+      this.dataResource$ = this.store$.pipe(select(selectDocumentById(this.resourceId)));
       this.audit$ = this.store$.pipe(select(selectAuditLogsByDocument(this.resourceId)));
       this.store$.dispatch(AuditLogActions.getByDocument({documentId: this.resourceId, collectionId: this.parent.id}));
     } else if (this.resourceType === ResourceType.Link) {
+      this.dataResource$ = this.store$.pipe(select(selectLinkInstanceById(this.resourceId)));
       this.audit$ = this.store$.pipe(select(selectAuditLogsByLink(this.resourceId)));
       this.store$.dispatch(AuditLogActions.getByLink({linkInstanceId: this.resourceId, linkTypeId: this.parent.id}));
     }
   }
 
   public onRevertAudit(auditLog: AuditLog) {
-    if (this.resourceType === ResourceType.Document) {
-      this.store$.dispatch(
-        AuditLogActions.revertDocument({
-          documentId: this.resourceId,
-          collectionId: this.parent.id,
-          auditLogId: auditLog.id,
-        })
-      );
-    } else if (this.resourceType === ResourceType.Link) {
-      this.store$.dispatch(
-        AuditLogActions.revertLink({
-          linkInstanceId: this.resourceId,
-          linkTypeId: this.parent.id,
-          auditLogId: auditLog.id,
-        })
-      );
+    const action = this.revertAuditAction(auditLog);
+    if (action) {
+      const title = $localize`:@@audit.revert.confirm.title:Revert data?`;
+      const message = $localize`:@@audit.revert.confirm.message:Do you really want to revert this record?`;
+
+      this.store$.dispatch(new NotificationsAction.Confirm({title, message, type: 'info', action}));
     }
+  }
+
+  public revertAuditAction(auditLog: AuditLog): Action {
+    if (this.resourceType === ResourceType.Document) {
+      return AuditLogActions.revertDocument({
+        documentId: this.resourceId,
+        collectionId: this.parent.id,
+        auditLogId: auditLog.id,
+      });
+    } else if (this.resourceType === ResourceType.Link) {
+      return AuditLogActions.revertLink({
+        linkInstanceId: this.resourceId,
+        linkTypeId: this.parent.id,
+        auditLogId: auditLog.id,
+      });
+    }
+    return null;
   }
 }

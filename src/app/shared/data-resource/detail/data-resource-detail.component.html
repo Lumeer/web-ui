@@ -17,6 +17,7 @@
                [activeTab]="data.selectedTab"
                [commentsCount]="data.commentsCount"
                [linksCount]="linksCount$ | async"
+               [permissions]="permissions"
                (onTabSelect)="selectTab($event)">
   </detail-tabs>
 
@@ -84,7 +85,7 @@
     </comments-panel>
   </ng-container>
 
-  <ng-container *ngIf="data.selectedTab === detailTabType.Activity">
+  <ng-container *ngIf="data.selectedTab === detailTabType.Activity && permissions?.writeWithView">
     <resource-activity *ngIf="resource && dataResource?.id"
                        [resourceType]="resourceType | attributeResourceTypeToResourceType"
                        [resourceId]="dataResource.id"

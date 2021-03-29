@@ -3,6 +3,7 @@
               class="p-3"
               [auditLogs]="audit"
               [parent]="parent"
+              [dataResource]="dataResource$ | async"
               (revert)="onRevertAudit($event)">
   </audit-logs>
 </ng-container>

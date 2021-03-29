@@ -22,13 +22,19 @@ import {ResourceType} from '../../model/resource-type';
 export interface AuditLog {
   id: string;
   parentId?: string;
-  resourceType: ResourceType;
-  resourceId: string;
+  resourceType?: ResourceType;
+  resourceId?: string;
   changeDate: Date;
+  type: AuditLogType;
   userId?: string;
   userName?: string;
   userEmail?: string;
-  automation: string;
-  oldState: Record<string, any>;
-  newState: Record<string, any>;
+  automation?: string;
+  oldState?: Record<string, any>;
+  newState?: Record<string, any>;
+}
+
+export enum AuditLogType {
+  Updated = 'updated',
+  Created = 'created',
 }

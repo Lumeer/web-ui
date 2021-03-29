@@ -1,0 +1,15 @@
+<div class="changes d-flex flex-row flex-wrap align-items-center overflow-hidden mt-2 px-2 py-1">
+  <ng-container
+    *ngFor="let entry of entries; let first = first">
+    <span class="mt-1" *ngIf="!first">,&nbsp;</span>
+    <span *ngIf="entry.label"
+          [class.text-line-through]="entry.deleted"
+          class="text-attribute text-nowrap mt-1 text-truncate">{{entry.label}}:&nbsp;</span>
+    <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
+                        [ngClass]="valueClasses"
+                        [dataValue]="entry.dataValue"
+                        [configuration]="configuration"
+                        [constraint]="entry.constraint">
+    </data-input-preview>
+  </ng-container>
+</div>

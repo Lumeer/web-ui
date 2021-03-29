@@ -21,6 +21,7 @@ import {createReducer, on} from '@ngrx/store';
 import * as AuditLogActions from './audit-logs.actions';
 import {auditLogsAdapter, initialAuditLogsState} from './audit-logs.state';
 import {ResourceType} from '../../model/resource-type';
+import {appendToArray, removeFromArray} from '../../../shared/utils/array.utils';
 
 export const auditLogsReducer = createReducer(
   initialAuditLogsState,
@@ -42,8 +43,24 @@ export const auditLogsReducer = createReducer(
       )
     )
   ),
+  on(AuditLogActions.revertDocument, (state, action) => ({
+    ...state,
+    revertingIds: appendToArray(state.revertingIds, action.auditLogId),
+  })),
   on(AuditLogActions.revertDocumentSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
+  on(AuditLogActions.revertDocumentFailure, (state, action) => ({
+    ...state,
+    revertingIds: removeFromArray(state.revertingIds, action.auditLogId),
+  })),
+  on(AuditLogActions.revertLink, (state, action) => ({
+    ...state,
+    revertingIds: appendToArray(state.revertingIds, action.auditLogId),
+  })),
   on(AuditLogActions.revertLinkSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
+  on(AuditLogActions.revertLinkFailure, (state, action) => ({
+    ...state,
+    revertingIds: removeFromArray(state.revertingIds, action.auditLogId),
+  })),
   on(AuditLogActions.clearByCollection, (state, action) =>
     auditLogsAdapter.removeMany(
       log => log.resourceType === ResourceType.Collection && log.parentId === action.collectionId,

@@ -66,7 +66,7 @@ export class AuditLogsEffects {
             new DocumentsAction.RevertData({document}),
             AuditLogActions.revertDocumentSuccess({auditLogId: action.auditLogId}),
           ]),
-          catchError(error => of(AuditLogActions.revertDocumentFailure({error})))
+          catchError(error => of(AuditLogActions.revertDocumentFailure({error, auditLogId: action.auditLogId})))
         )
       )
     )
@@ -117,7 +117,7 @@ export class AuditLogsEffects {
             new LinkInstancesAction.RevertData({linkInstance}),
             AuditLogActions.revertLinkSuccess({auditLogId: action.auditLogId}),
           ]),
-          catchError(error => of(AuditLogActions.revertLinkFailure({error})))
+          catchError(error => of(AuditLogActions.revertLinkFailure({error, auditLogId: action.auditLogId})))
         )
       )
     )

@@ -24,6 +24,8 @@ export interface AuditLogDto {
   resourceId: string;
   changeDate: number;
   user?: string;
+  userName?: string;
+  userEmail?: string;
   automation?: string;
   oldState: Record<string, any>;
   newState: Record<string, any>;

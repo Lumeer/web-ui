@@ -17,14 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {AuditLog, AuditLogType} from '../../../../../core/store/audit-logs/audit-log.model';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {User} from '../../../../../core/store/users/user';
 import {Observable} from 'rxjs';
 import {selectUsersDictionary} from '../../../../../core/store/users/users.state';
-import {AttributesResource} from '../../../../../core/model/resource';
+import {AttributesResource, DataResource} from '../../../../../core/model/resource';
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
@@ -35,15 +44,20 @@ import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organiza
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {first, map} from 'rxjs/operators';
 import {RouterAction} from '../../../../../core/store/router/router.action';
+import {generateId} from '../../../../utils/resource.utils';
+import {selectRevertingAuditLogsIds} from '../../../../../core/store/audit-logs/audit-logs.state';
 
 @Component({
   selector: 'audit-logs',
   templateUrl: './audit-logs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuditLogsComponent implements OnInit {
+export class AuditLogsComponent implements OnInit, OnChanges {
   @Input()
   public auditLogs: AuditLog[];
+
+  @Input()
+  public dataResource: DataResource;
 
   @Input()
   public parent: AttributesResource;
@@ -57,6 +71,9 @@ export class AuditLogsComponent implements OnInit {
   public constraintData$: Observable<ConstraintData>;
   public organizationPermissions$: Observable<AllowedPermissions>;
   public serviceLimits$: Observable<ServiceLimits>;
+  public revertingAuditLogs$: Observable<string[]>;
+
+  public auditLogCreated: AuditLog;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -65,6 +82,22 @@ export class AuditLogsComponent implements OnInit {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
+    this.revertingAuditLogs$ = this.store$.pipe(select(selectRevertingAuditLogsIds));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.dataResource && this.dataResource) {
+      this.createAuditLogForCreation();
+    }
+  }
+
+  private createAuditLogForCreation() {
+    this.auditLogCreated = {
+      type: AuditLogType.Created,
+      changeDate: this.dataResource.creationDate,
+      userId: this.dataResource.createdBy,
+      id: generateId(),
+    };
   }
 
   public trackByAudit(index: number, log: AuditLog): string {
