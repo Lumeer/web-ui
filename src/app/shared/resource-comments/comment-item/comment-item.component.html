@@ -4,8 +4,8 @@
     <user-avatar *ngIf="comment.id"
                  [avatarSize]="15"
                  placement="top"
-                 [email]="comment?.authorEmail"
-                 [tooltipText]="createdByMsg + ' ' + comment?.authorName" class="mr-2">
+                 [email]="user?.email || comment?.authorEmail"
+                 [tooltipText]="createdByMsg + ' ' + (user?.name || comment?.authorName)" class="mr-2">
     </user-avatar>
     <span *ngIf="!comment.id && !comment.error" class="spinner-grow spinner-grow-sm mr-2 avatar-indicator" role="status"
           aria-hidden="true"></span>
@@ -32,14 +32,14 @@
   <div *ngIf="!(editing$ | async)" class="none"></div>
 
   <div *ngIf="!(editing$ | async)" class="controls">
-    <i *ngIf="user?.id === comment?.author"
+    <i *ngIf="currentUser?.id === comment?.author"
        tooltip="Edit"
        i18n-tooltip="@@button.edit"
        placement="top"
        class="fal fa-edit color-success mr-2 cursor-pointer"
        (click)="editComment(comment)">
     </i>
-    <i *ngIf="user?.id === comment?.author"
+    <i *ngIf="currentUser?.id === comment?.author"
        tooltip="Delete"
        i18n-tooltip="@@button.remove"
        placement="top"
@@ -53,8 +53,8 @@
 
   <div class="edit">
     <new-comment *ngIf="editing$ | async"
-                 [user]="user"
-                 [users]="users$ | async"
+                 [currentUser]="currentUser"
+                 [usersMap]="usersMap"
                  [initialComment]="comment"
                  (onNewComment)="onUpdateComment($event)"
                  (onCancel)="cancelEdit()">

@@ -61,6 +61,14 @@ export function linkInstancesReducer(
       return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
     case LinkInstancesActionType.SET_DOCUMENT_LINKS_SUCCESS:
       return setDocumentLinks(state, action);
+    case LinkInstancesActionType.REVERT_DATA:
+      return linkInstancesAdapter.updateOne(
+        {
+          id: action.payload.linkInstance.id,
+          changes: {data: action.payload.linkInstance.data},
+        },
+        state
+      );
     case LinkInstancesActionType.RUN_RULE:
       return setActionExecutionTime(
         state,

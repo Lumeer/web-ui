@@ -83,6 +83,8 @@ import {WorkflowsEffects} from './workflows/workflows.effects';
 import {dataResourcesReducer} from './data-resources/data-resources.reducer';
 import {DataResourcesEffects} from './data-resources/data-resources.effects';
 import {configuration} from '../../../environments/configuration';
+import {auditLogsReducer} from './audit-logs/audit-logs.reducer';
+import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -119,6 +121,7 @@ const reducers: ActionReducerMap<AppState> = {
   resourceComments: resourceCommentsReducer,
   modals: modalsReducer,
   userPermissions: userPermissionsReducer,
+  auditLogs: auditLogsReducer,
 };
 
 const effects = [
@@ -148,6 +151,7 @@ const effects = [
   ResourceCommentsEffects,
   ModalsEffects,
   WorkflowsEffects,
+  AuditLogsEffects,
 ];
 
 @NgModule({

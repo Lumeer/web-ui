@@ -1,4 +1,5 @@
-<ng-container *ngIf="{workspace: workspace$ | async, startEditing: startEditing$ | async, constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
+<ng-container
+  *ngIf="{workspace: workspace$ | async, startEditing: startEditing$ | async, constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
   <document-detail-header class="d-block mb-4"
                           [resource]="resource"
                           [dataResource]="dataResource"
@@ -16,6 +17,7 @@
                [activeTab]="data.selectedTab"
                [commentsCount]="data.commentsCount"
                [linksCount]="linksCount$ | async"
+               [permissions]="permissions"
                (onTabSelect)="selectTab($event)">
   </detail-tabs>
 
@@ -60,14 +62,14 @@
     <div>
       <links-toolbar class="d-block w-100 text-right" [collection]="resource"></links-toolbar>
       <links-accordeon class="d-block"
-                  *ngIf="resource && dataResource?.id"
-                  [document]="dataResource"
-                  [preventEventBubble]="preventEventBubble"
-                  [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
-                  [allowSelectDocument]="allowSelectDocument"
-                  [collection]="resource"
-                  [viewSettings]="viewSettings"
-                  (documentSelect)="documentSelect.emit($event)">
+                       *ngIf="resource && dataResource?.id"
+                       [document]="dataResource"
+                       [preventEventBubble]="preventEventBubble"
+                       [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
+                       [allowSelectDocument]="allowSelectDocument"
+                       [collection]="resource"
+                       [viewSettings]="viewSettings"
+                       (documentSelect)="documentSelect.emit($event)">
       </links-accordeon>
     </div>
   </ng-container>
@@ -83,8 +85,12 @@
     </comments-panel>
   </ng-container>
 
-  <ng-container *ngIf="data.selectedTab === detailTabType.Activity">
-    <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="{{contactUrl}}" target="_blank">contact support</a>.</p>
+  <ng-container *ngIf="data.selectedTab === detailTabType.Activity && permissions?.writeWithView">
+    <resource-activity *ngIf="resource && dataResource?.id"
+                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                       [resourceId]="dataResource.id"
+                       [parent]="resource">
+    </resource-activity>
   </ng-container>
 
   <div class="spacer mb-5"></div>

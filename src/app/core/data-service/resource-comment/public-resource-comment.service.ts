@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {ResourceCommentService} from './resource-comment.service';
@@ -28,10 +27,8 @@ import {ResourceCommentDto} from '../../dto/resource-comment.dto';
 import {ResourceType} from '../../model/resource-type';
 
 @Injectable()
-export class PublicResourceCommentService extends BaseService implements ResourceCommentService {
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
-  }
+export class PublicResourceCommentService implements ResourceCommentService {
+  constructor(private store$: Store<AppState>) {}
 
   public createComment(comment: ResourceCommentDto): Observable<ResourceCommentDto> {
     return of({...comment, id: generateId(), creationDate: new Date().getTime()});

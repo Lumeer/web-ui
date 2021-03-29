@@ -31,21 +31,25 @@ import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
 import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
-  return {
-    stems: dto.stems?.map(stem => convertQueryStemDtoToModel(stem)),
-    fulltexts: dto.fulltexts,
-    page: dto.page,
-    pageSize: dto.pageSize,
-  };
+  return (
+    dto && {
+      stems: dto.stems?.map(stem => convertQueryStemDtoToModel(stem)),
+      fulltexts: dto.fulltexts,
+      page: dto.page,
+      pageSize: dto.pageSize,
+    }
+  );
 }
 
 export function convertQueryModelToDto(model: Query): QueryDto {
-  return {
-    stems: model.stems?.map(stem => convertQueryStemModelToDto(stem)),
-    fulltexts: model.fulltexts,
-    page: model.page,
-    pageSize: model.pageSize,
-  };
+  return (
+    model && {
+      stems: model.stems?.map(stem => convertQueryStemModelToDto(stem)),
+      fulltexts: model.fulltexts,
+      page: model.page,
+      pageSize: model.pageSize,
+    }
+  );
 }
 
 function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {

@@ -1,6 +1,7 @@
 <quill-view-html class="quill-editor overflow-hidden {{inputClass}}"
                  *ngIf="readonly"
-                 [ngClass]="multilineMode ? 'multiline h-100' : 'single-line'"
+                 [ngClass]="multilineMode ? 'multiline' : 'single-line'"
+                 [class.h-100]="isMultiline"
                  [content]="value | previewDataValue"
                  [title]="value | formatDataValueTitle"
                  (dblclick)="onDoubleClick()"

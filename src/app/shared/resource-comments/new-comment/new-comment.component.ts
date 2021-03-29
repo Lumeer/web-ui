@@ -33,7 +33,7 @@ import {isKeyPrintable, KeyCode} from '../../key-code';
 import {User} from '../../../core/store/users/user';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
 import {generateId} from '../../utils/resource.utils';
-import {preventEvent} from '../../utils/common.utils';
+import {objectValues, preventEvent} from '../../utils/common.utils';
 import {ContentChange} from 'ngx-quill';
 
 import * as QuillNamespace from 'quill';
@@ -46,20 +46,11 @@ import QuillMention from 'quill-mention';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCommentComponent implements OnInit, AfterViewChecked {
-  @Output()
-  public onNewComment = new EventEmitter<Partial<ResourceCommentModel>>();
-
-  @Output()
-  public onCancel = new EventEmitter();
-
-  @Output()
-  public onEdit = new EventEmitter();
-
   @Input()
   public bottomBorder = true;
 
   @Input()
-  public user: User;
+  public currentUser: User;
 
   @Input()
   public initialComment: ResourceCommentModel;
@@ -68,7 +59,16 @@ export class NewCommentComponent implements OnInit, AfterViewChecked {
   public startEditing = false;
 
   @Input()
-  public users: User[];
+  public usersMap: Record<string, User>;
+
+  @Output()
+  public onNewComment = new EventEmitter<Partial<ResourceCommentModel>>();
+
+  @Output()
+  public onCancel = new EventEmitter();
+
+  @Output()
+  public onEdit = new EventEmitter();
 
   public editing$ = new BehaviorSubject<boolean>(false);
 
@@ -123,7 +123,7 @@ export class NewCommentComponent implements OnInit, AfterViewChecked {
   }
 
   public mentionsSource(searchTerm: string, renderItem, mentionChar) {
-    const values = this.users.map(u => ({id: u.id, value: u.name || u.email, target: u.email}));
+    const values = objectValues(this.usersMap).map(u => ({id: u.id, value: u.name || u.email, target: u.email}));
     if (searchTerm.length === 0) {
       renderItem(values, searchTerm);
     } else {
@@ -178,9 +178,9 @@ export class NewCommentComponent implements OnInit, AfterViewChecked {
         correlationId: generateId(),
         creationDate: new Date(),
         comment: cleanTextBeforeSave(this.commentText),
-        author: this.user.id,
-        authorName: this.user.name,
-        authorEmail: this.user.email,
+        author: this.currentUser.id,
+        authorName: this.currentUser.name,
+        authorEmail: this.currentUser.email,
       };
     }
     this.onNewComment.emit(comment);

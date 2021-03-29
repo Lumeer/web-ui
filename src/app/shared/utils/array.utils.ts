@@ -105,6 +105,14 @@ export function createRangeInclusive(from: number, to: number): number[] {
   return range;
 }
 
+export function appendToArray<T>(array: T[], item: T): T[] {
+  return [...(array || []), item];
+}
+
+export function removeFromArray<T>(array: T[], item: T): T[] {
+  return [...(array || [])].filter(it => it !== item);
+}
+
 export function createRange(from: number, to: number): number[] {
   const range = [...Array(to - from).keys()];
   return range.map(r => r + from);

@@ -17,38 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceCommentDto} from '../../dto/resource-comment.dto';
-import {ResourceCommentModel} from './resource-comment.model';
+import {AuditLogDto} from '../../dto/audit-log.dto';
+import {AuditLog, AuditLogType} from './audit-log.model';
 import {resourceTypesMap} from '../../model/resource-type';
 
-export function convertResourceCommentDtoToModel(
-  dto: ResourceCommentDto,
-  correlationId?: string
-): ResourceCommentModel {
+export function convertAuditLogDtoToModel(dto: AuditLogDto): AuditLog {
   return {
     id: dto.id,
+    parentId: dto.parentId,
     resourceType: resourceTypesMap[dto.resourceType?.toLowerCase()],
     resourceId: dto.resourceId,
-    metaData: dto.metaData,
-    creationDate: new Date(dto.creationDate),
-    updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
-    author: dto.author,
-    authorEmail: dto.authorEmail,
-    authorName: dto.authorName,
-    comment: dto.comment,
-    correlationId,
-  };
-}
-
-export function convertResourceCommentModelToDto(
-  model: ResourceCommentModel | Partial<ResourceCommentModel>
-): ResourceCommentDto {
-  return {
-    id: model.id,
-    correlationId: model.correlationId,
-    resourceType: model.resourceType.toUpperCase(),
-    resourceId: model.resourceId,
-    metaData: model.metaData,
-    comment: model.comment,
+    changeDate: dto.changeDate ? new Date(dto.changeDate) : null,
+    userId: dto.user,
+    type: AuditLogType.Updated,
+    userName: dto.userName,
+    userEmail: dto.userEmail,
+    automation: dto.automation,
+    oldState: dto.oldState,
+    newState: dto.newState,
   };
 }

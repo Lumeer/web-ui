@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DetailTabType} from '../detail-tab-type';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'detail-tabs',
@@ -38,6 +39,9 @@ export class DetailTabsComponent {
 
   @Input()
   public linksCount: number;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   public readonly detailTabTypes = DetailTabType;
 

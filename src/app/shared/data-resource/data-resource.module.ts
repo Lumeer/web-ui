@@ -39,6 +39,12 @@ import {LinksModule} from '../links/links.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
+import {ResourceActivityComponent} from './detail/activity/resource-activity.component';
+import {AuditLogsComponent} from './detail/activity/audit-logs/audit-logs.component';
+import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.component';
+import {AuditLogAutomationTitlePipe} from './detail/activity/audit-logs/pipes/audit-log-automation-title.pipe';
+import {AuditLogEntriesComponent} from './detail/activity/audit-logs/log/entries/audit-log-entries.component';
+import {AuditLogAutomationStringPipe} from './detail/activity/audit-logs/pipes/audit-log-automation-string.pipe';
 
 @NgModule({
   imports: [
@@ -66,6 +72,12 @@ import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.compon
     DefaultDataRowPipe,
     DetailTabsComponent,
     LinksToolbarComponent,
+    ResourceActivityComponent,
+    AuditLogsComponent,
+    AuditLogComponent,
+    AuditLogAutomationTitlePipe,
+    AuditLogAutomationStringPipe,
+    AuditLogEntriesComponent,
   ],
   exports: [DataResourceDetailComponent],
 })

@@ -1,7 +1,7 @@
 <ng-container *ngIf="{comments: comments$ | async} as data">
   <new-comment *ngIf="permissions?.readWithView"
-               [user]="user$ | async"
-               [users]="users$ | async"
+               [currentUser]="currentUser$ | async"
+               [usersMap]="usersMap$ | async"
                [initialComment]="initialComment$ | async"
                [startEditing]="startEditing"
                [bottomBorder]="!maxCommentsCount || data.comments?.length > 0"
@@ -12,7 +12,8 @@
 
   <ng-container
     *ngFor="let comment of data.comments | slice:0:(maxCommentsCount ? maxCommentsCount : data.comments.length);">
-    <comment-item [user]="user$ | async"
+    <comment-item [currentUser]="currentUser$ | async"
+                  [usersMap]="usersMap$ | async"
                   [comment]="comment"
                   (onRemove)="removeComment($event)"
                   (onUpdate)="updateComment($event)"

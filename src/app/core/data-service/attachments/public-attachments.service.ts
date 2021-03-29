@@ -26,9 +26,7 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {catchError} from 'rxjs/operators';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class PublicAttachmentsService implements AttachmentsService {
   constructor(private http: HttpClient, private configurationService: ConfigurationService) {}
 

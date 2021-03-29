@@ -24,9 +24,7 @@ import {FileApiPath, AttachmentsService} from './attachments.service';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ApiAttachmentsService implements AttachmentsService {
   constructor(private http: HttpClient, private configurationService: ConfigurationService) {}
 

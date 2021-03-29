@@ -48,6 +48,14 @@ export function documentsReducer(
       return onCreateDocumentFailure(state, action);
     case DocumentsActionType.UPDATE_DATA_INTERNAL:
       return updateDocument(state, action);
+    case DocumentsActionType.REVERT_DATA:
+      return documentsAdapter.updateOne(
+        {
+          id: action.payload.document.id,
+          changes: {data: action.payload.document.data},
+        },
+        state
+      );
     case DocumentsActionType.PATCH_DATA:
       return onPatchData(state, action);
     case DocumentsActionType.PATCH_DATA_INTERNAL:

@@ -28,7 +28,7 @@
     <div class="author">
       <ng-container *ngIf="!initialComment || startEditing">
         <span i18n="@@document.detail.comments.posting.user.title" class="mr-2 text-muted">Posting as</span>
-        <user-avatar [email]="user.email" [tooltipText]="user.name" [avatarSize]="15"></user-avatar>
+        <user-avatar [email]="currentUser.email" [tooltipText]="currentUser.name" [avatarSize]="15"></user-avatar>
       </ng-container>
     </div>
     <div class="button">

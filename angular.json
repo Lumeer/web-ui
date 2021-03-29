@@ -16,21 +16,21 @@
       "projectType": "application",
       "prefix": "",
       "schematics": {
-        "@schematics/angular:component": {
+        "@ngrx/schematics:component": {
           "changeDetection": "OnPush",
           "skipTests": true,
           "style": "scss"
         },
-        "@schematics/angular:guard": {
+        "@ngrx/schematics:guard": {
           "skipTests": true
         },
-        "@schematics/angular:module": {
+        "@ngrx/schematics:module": {
           "skipTests": true
         },
-        "@schematics/angular:pipe": {
+        "@ngrx/schematics:pipe": {
           "skipTests": true
         },
-        "@schematics/angular:service": {
+        "@ngrx/schematics:service": {
           "skipTests": true
         }
       },
@@ -309,5 +309,8 @@
       }
     }
   },
-  "defaultProject": "lumeer"
+  "defaultProject": "lumeer",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

@@ -17,13 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
 import {User} from '../../../core/store/users/user';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'comment-item',
@@ -31,9 +28,12 @@ import {selectAllUsers} from '../../../core/store/users/users.state';
   styleUrls: ['./comment-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentItemComponent implements OnInit {
+export class CommentItemComponent implements OnChanges {
   @Input()
-  public user: User;
+  public currentUser: User;
+
+  @Input()
+  public usersMap: Record<string, User>;
 
   @Input()
   public comment: ResourceCommentModel;
@@ -49,20 +49,22 @@ export class CommentItemComponent implements OnInit {
 
   public editing$ = new BehaviorSubject<boolean>(false);
 
-  public users$: Observable<User[]>;
+  public user: User;
 
-  public createdOnMsg = '';
-  public createdByMsg = '';
-  public updatedOnMsg = '';
+  public readonly createdOnMsg: string;
+  public readonly createdByMsg: string;
+  public readonly updatedOnMsg: string;
 
-  constructor(private store$: Store<AppState>) {
+  constructor() {
     this.createdOnMsg = $localize`:@@document.detail.header.createdOn:Created on`;
     this.createdByMsg = $localize`:@@document.detail.header.createdBy:Created by`;
     this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
   }
 
-  public ngOnInit(): void {
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.comment || changes.usersMap) {
+      this.user = this.usersMap?.[this.comment?.author];
+    }
   }
 
   public editComment(comment: ResourceCommentModel) {
