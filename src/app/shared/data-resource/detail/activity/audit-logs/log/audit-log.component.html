@@ -1,27 +1,47 @@
-<div class="d-flex align-items-center text-nowrap flex-nowrap">
-  <user-avatar *ngIf="user"
-               [avatarSize]="15"
+<div class="icon mr-2 align-self-center" [style.height.px]="20">
+  <user-avatar [avatarSize]="20"
+               class="d-inline-block"
+               [style.height.px]="20"
                placement="top"
-               [email]="user.email"
-               [tooltipText]="updatedByMsg + ' ' + user.name" class="mr-2">
+               [email]="user?.email || auditLog?.userEmail"
+               [tooltipText]="updatedByMsg + ' ' + (user?.name || auditLog?.userName || unknownUser)">
   </user-avatar>
-  <short-date *ngIf="auditLog.changeDate"
+</div>
+
+<div class="title d-flex">
+  <div class="flex-grow-1 text-truncate">
+    <span i18n="@@audit.title.data.update">Data updated</span>
+    <span *ngIf="auditLog.automation" class="badge badge-info ml-2">{{auditLog | auditLogAutomationTitle}}</span>
+  </div>
+  <span *ngIf="allowRevert" class="clickable ml-2" (click)="revert.emit()"
+        title="Revert"
+        i18n-title="@@audit.action.revert">
+    <i class="far fa-undo" aria-hidden="true"></i>
+  </span>
+</div>
+
+<div class="line pr-2 d-flex justify-content-center py-1">
+  <div *ngIf="!last" class="horizontal-line"></div>
+</div>
+
+<div class="content pb-4">
+  <short-date class="small text-secondary d-block"
               [date]="auditLog.changeDate"
               [tooltipText]="updatedOnMsg + ' ' + (auditLog.changeDate | date:'medium')"
               placement="top"
               format="ll">
   </short-date>
+  <div class="changes d-flex flex-row flex-wrap align-items-center overflow-hidden mt-2 px-2 py-1">
+    <ng-container
+      *ngFor="let entry of entries; let first = first">
+      <span class="mt-1" *ngIf="!first">,&nbsp;</span>
+      <span *ngIf="entry.label" class="text-attribute text-nowrap mt-1 text-truncate">{{entry.label}}:&nbsp;</span>
+      <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
+                          [dataValue]="entry.dataValue"
+                          [configuration]="configuration"
+                          [constraint]="entry.constraint">
+      </data-input-preview>
+    </ng-container>
+  </div>
 </div>
 
-<div class="d-flex flex-row flex-wrap align-items-center overflow-hidden">
-  <ng-container
-    *ngFor="let entry of entries; let first = first">
-    <span class="mt-1" *ngIf="!first">,&nbsp;</span>
-    <span *ngIf="entry.label" class="text-attribute text-nowrap mt-1 text-truncate">{{entry.label}}:&nbsp;</span>
-    <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
-                        [dataValue]="entry.dataValue"
-                        [configuration]="configuration"
-                        [constraint]="entry.constraint">
-    </data-input-preview>
-  </ng-container>
-</div>

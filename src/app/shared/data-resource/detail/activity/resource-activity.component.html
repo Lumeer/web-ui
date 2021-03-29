@@ -2,7 +2,8 @@
   <audit-logs *ngIf="audit.length; else emptyState"
               class="p-3"
               [auditLogs]="audit"
-              [parent]="parent">
+              [parent]="parent"
+              (revert)="onRevertAudit($event)">
   </audit-logs>
 </ng-container>
 

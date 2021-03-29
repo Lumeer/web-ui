@@ -42,6 +42,8 @@ export const auditLogsReducer = createReducer(
       )
     )
   ),
+  on(AuditLogActions.revertDocumentSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
+  on(AuditLogActions.revertLinkSuccess, (state, action) => auditLogsAdapter.removeOne(action.auditLogId, state)),
   on(AuditLogActions.clearByCollection, (state, action) =>
     auditLogsAdapter.removeMany(
       log => log.resourceType === ResourceType.Collection && log.parentId === action.collectionId,

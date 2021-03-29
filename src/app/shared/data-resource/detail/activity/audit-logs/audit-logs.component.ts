@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {AuditLog} from '../../../../../core/store/audit-logs/audit-log.model';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -39,7 +39,6 @@ import {RouterAction} from '../../../../../core/store/router/router.action';
 @Component({
   selector: 'audit-logs',
   templateUrl: './audit-logs.component.html',
-  styleUrls: ['./audit-logs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuditLogsComponent implements OnInit {
@@ -48,6 +47,9 @@ export class AuditLogsComponent implements OnInit {
 
   @Input()
   public parent: AttributesResource;
+
+  @Output()
+  public revert = new EventEmitter<AuditLog>();
 
   public readonly serviceLevel = ServiceLevelType;
 
@@ -84,5 +86,9 @@ export class AuditLogsComponent implements OnInit {
           })
         );
       });
+  }
+
+  public onRevert(auditLog: AuditLog) {
+    this.revert.emit(auditLog);
   }
 }

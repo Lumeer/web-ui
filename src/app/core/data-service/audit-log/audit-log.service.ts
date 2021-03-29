@@ -19,9 +19,18 @@
 
 import {Observable} from 'rxjs';
 import {AuditLogDto} from '../../dto/audit-log.dto';
+import {DocumentDto, LinkInstanceDto} from '../../dto';
 
 export abstract class AuditLogService {
   public abstract getByDocument(collectionId: string, documentId: string): Observable<AuditLogDto[]>;
 
+  public abstract revertDocument(collectionId: string, documentId: string, auditLogId: string): Observable<DocumentDto>;
+
   public abstract getByLink(linkTypeId: string, linkInstanceId: string): Observable<AuditLogDto[]>;
+
+  public abstract revertLink(
+    linkTypeId: string,
+    linkInstanceId: string,
+    auditLogId: string
+  ): Observable<LinkInstanceDto>;
 }

@@ -25,6 +25,10 @@ import {AuditLogService} from '../../data-service/audit-log/audit-log.service';
 import {convertAuditLogDtoToModel} from './audit-log.converter';
 import * as AuditLogActions from './audit-logs.actions';
 import {of} from 'rxjs';
+import {convertDocumentDtoToModel} from '../documents/document.converter';
+import {DocumentsAction} from '../documents/documents.action';
+import {convertLinkInstanceDtoToModel} from '../link-instances/link-instance.converter';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 
 @Injectable()
 export class AuditLogsEffects {
@@ -46,7 +50,34 @@ export class AuditLogsEffects {
       ofType(AuditLogActions.getByDocumentFailure),
       tap(action => console.error(action.error)),
       map(() => {
-        const message = $localize`:@@auditLogs.get.document.fail:Could not get audit logs for selected record`;
+        const message = $localize`:@@audit.get.document.fail:Could not get audit logs for selected record`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public revertDocument$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.revertDocument),
+      mergeMap(action =>
+        this.service.revertDocument(action.collectionId, action.documentId, action.auditLogId).pipe(
+          map(dto => convertDocumentDtoToModel(dto)),
+          mergeMap(document => [
+            new DocumentsAction.RevertData({document}),
+            AuditLogActions.revertDocumentSuccess({auditLogId: action.auditLogId}),
+          ]),
+          catchError(error => of(AuditLogActions.revertDocumentFailure({error})))
+        )
+      )
+    )
+  );
+
+  public revertDocumentFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.revertDocumentFailure),
+      tap(action => console.error(action.error)),
+      map(() => {
+        const message = $localize`:@@audit.revert.document.fail:Could not revert record data`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -70,7 +101,34 @@ export class AuditLogsEffects {
       ofType(AuditLogActions.getByLinkFailure),
       tap(action => console.error(action.error)),
       map(() => {
-        const message = $localize`:@@auditLogs.get.link.fail:Could not get audit logs for selected link`;
+        const message = $localize`:@@audit.get.link.fail:Could not get audit logs for selected link`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public revertLink$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.revertLink),
+      mergeMap(action =>
+        this.service.revertLink(action.linkTypeId, action.linkInstanceId, action.auditLogId).pipe(
+          map(dto => convertLinkInstanceDtoToModel(dto)),
+          mergeMap(linkInstance => [
+            new LinkInstancesAction.RevertData({linkInstance}),
+            AuditLogActions.revertLinkSuccess({auditLogId: action.auditLogId}),
+          ]),
+          catchError(error => of(AuditLogActions.revertLinkFailure({error})))
+        )
+      )
+    )
+  );
+
+  public revertLinkFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuditLogActions.revertLinkFailure),
+      tap(action => console.error(action.error)),
+      map(() => {
+        const message = $localize`:@@audit.revert.link.fail:Could not revert link data`;
         return new NotificationsAction.Error({message});
       })
     )

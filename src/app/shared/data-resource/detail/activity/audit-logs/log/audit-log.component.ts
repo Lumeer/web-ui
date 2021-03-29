@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
 import {AuditLog} from '../../../../../../core/store/audit-logs/audit-log.model';
 import {User} from '../../../../../../core/store/users/user';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
@@ -51,14 +51,28 @@ export class AuditLogComponent implements OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public allowRevert: boolean;
+
+  @Input()
+  public first: boolean;
+
+  @Input()
+  public last: boolean;
+
+  @Output()
+  public revert = new EventEmitter();
+
   public user: User;
   public entries: ChangeEntry[];
 
   public readonly updatedByMsg: string;
   public readonly updatedOnMsg: string;
+  public readonly unknownUser: string;
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
 
   constructor() {
+    this.unknownUser = $localize`:@@user.unknown:Unknown user`;
     this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
     this.updatedByMsg = $localize`:@@document.detail.header.updatedBy:Updated by`;
   }
@@ -69,6 +83,12 @@ export class AuditLogComponent implements OnChanges {
     }
     if (changes.auditLog || changes.parent || changes.constraintData) {
       this.createEntries();
+    }
+    if (this.first) {
+      this.auditLog = {...this.auditLog, automation: '=lalala'};
+    }
+    if (this.last) {
+      this.auditLog = {...this.auditLog, automation: 'lalala'};
     }
   }
 

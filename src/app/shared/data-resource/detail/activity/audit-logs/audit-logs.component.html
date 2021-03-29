@@ -1,12 +1,14 @@
 <ng-container
   *ngIf="{usersMap: usersMap$ | async, constraintData: constraintData$ | async, serviceLimits: serviceLimits$ | async} as data">
-  <audit-log *ngFor="let auditLog of auditLogs; trackBy:trackByAudit; let first = first"
-             class="d-block"
-             [class.mt-2]="!first"
+  <audit-log *ngFor="let auditLog of auditLogs; trackBy:trackByAudit; let first = first; let last = last"
              [auditLog]="auditLog"
              [parent]="parent"
+             [first]="first"
+             [last]="last"
              [constraintData]="data.constraintData"
-             [usersMap]="data.usersMap">
+             [allowRevert]="first && (data.serviceLimits && data.serviceLimits?.serviceLevel !== serviceLevel.FREE)"
+             [usersMap]="data.usersMap"
+             (revert)="onRevert(auditLog)">
   </audit-log>
   <div *ngIf="!data.serviceLimits || data.serviceLimits.serviceLevel === serviceLevel.FREE"
        class="py-3 mt-3 d-flex flex-column align-items-center text-center">

@@ -58,7 +58,27 @@ export class ResourceActivityComponent implements OnChanges {
       this.store$.dispatch(AuditLogActions.getByDocument({documentId: this.resourceId, collectionId: this.parent.id}));
     } else if (this.resourceType === ResourceType.Link) {
       this.audit$ = this.store$.pipe(select(selectAuditLogsByLink(this.resourceId)));
-      this.store$.dispatch(AuditLogActions.getByLink({linkTypeId: this.resourceId, linkInstanceId: this.parent.id}));
+      this.store$.dispatch(AuditLogActions.getByLink({linkInstanceId: this.resourceId, linkTypeId: this.parent.id}));
+    }
+  }
+
+  public onRevertAudit(auditLog: AuditLog) {
+    if (this.resourceType === ResourceType.Document) {
+      this.store$.dispatch(
+        AuditLogActions.revertDocument({
+          documentId: this.resourceId,
+          collectionId: this.parent.id,
+          auditLogId: auditLog.id,
+        })
+      );
+    } else if (this.resourceType === ResourceType.Link) {
+      this.store$.dispatch(
+        AuditLogActions.revertLink({
+          linkInstanceId: this.resourceId,
+          linkTypeId: this.parent.id,
+          auditLogId: auditLog.id,
+        })
+      );
     }
   }
 }

@@ -42,6 +42,7 @@ import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.compon
 import {ResourceActivityComponent} from './detail/activity/resource-activity.component';
 import {AuditLogsComponent} from './detail/activity/audit-logs/audit-logs.component';
 import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.component';
+import {AuditLogAutomationTitlePipe} from './detail/activity/audit-logs/pipes/audit-log-automation-title.pipe';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.comp
     ResourceActivityComponent,
     AuditLogsComponent,
     AuditLogComponent,
+    AuditLogAutomationTitlePipe,
   ],
   exports: [DataResourceDetailComponent],
 })

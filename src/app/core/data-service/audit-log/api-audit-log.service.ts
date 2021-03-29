@@ -27,6 +27,7 @@ import {Workspace} from '../../store/navigation/workspace';
 import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {Store} from '@ngrx/store';
+import {DocumentDto, LinkInstanceDto} from '../../dto';
 
 @Injectable()
 export class ApiAuditLogService extends BaseService implements AuditLogService {
@@ -43,10 +44,24 @@ export class ApiAuditLogService extends BaseService implements AuditLogService {
   }
 
   public getByLink(linkTypeId: string, linkInstanceId: string): Observable<AuditLogDto[]> {
-    return this.httpClient.get<AuditLogDto[]>(this.linkTypeApiPrefix(linkInstanceId, linkTypeId));
+    return this.httpClient.get<AuditLogDto[]>(this.linkTypeApiPrefix(linkTypeId, linkInstanceId));
   }
 
-  private linkTypeApiPrefix(linkInstanceId: string, linkTypeId: string, workspace?: Workspace): string {
+  public revertDocument(collectionId: string, documentId: string, auditLogId: string): Observable<DocumentDto> {
+    return this.httpClient.post<DocumentDto>(
+      `${this.collectionApiPrefix(documentId, {collectionId})}/${auditLogId}/revert`,
+      {}
+    );
+  }
+
+  public revertLink(linkTypeId: string, linkInstanceId: string, auditLogId: string): Observable<LinkInstanceDto> {
+    return this.httpClient.post<LinkInstanceDto>(
+      `${this.linkTypeApiPrefix(linkTypeId, linkInstanceId)}/${auditLogId}/revert`,
+      {}
+    );
+  }
+
+  private linkTypeApiPrefix(linkTypeId: string, linkInstanceId: string, workspace?: Workspace): string {
     return `${this.workspaceApiPrefix(workspace)}/link-instances/${linkTypeId}/${linkInstanceId}/audit`;
   }
 
