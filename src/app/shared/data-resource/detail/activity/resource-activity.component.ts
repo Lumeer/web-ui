@@ -71,8 +71,8 @@ export class ResourceActivityComponent implements OnChanges {
   public onRevertAudit(auditLog: AuditLog) {
     const action = this.revertAuditAction(auditLog);
     if (action) {
-      const title = $localize`:@@audit.revert.confirm.title:Revert data?`;
-      const message = $localize`:@@audit.revert.confirm.message:Do you really want to revert this record?`;
+      const title = $localize`:@@audit.revert.confirm.title:Revert changes?`;
+      const message = $localize`:@@audit.revert.confirm.message:Do you really want to revert the latest changes?`;
 
       this.store$.dispatch(new NotificationsAction.Confirm({title, message, type: 'info', action}));
     }

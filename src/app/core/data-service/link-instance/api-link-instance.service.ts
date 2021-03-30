@@ -32,6 +32,7 @@ import {Workspace} from '../../store/navigation/workspace';
 import {AppIdService} from '../../service/app-id.service';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {correlationIdHeader} from '../../rest/interceptors/correlation-id.http-interceptor';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
@@ -61,11 +62,19 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   }
 
   public patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto> {
-    return this.httpClient.patch<LinkInstanceDto>(`${this.apiPrefix(linkInstanceId)}/data`, data);
+    return this.httpClient.patch<LinkInstanceDto>(`${this.apiPrefix(linkInstanceId)}/data`, data, {
+      headers: {
+        [correlationIdHeader]: this.appId.getAppId(),
+      },
+    });
   }
 
   public updateLinkInstanceData(linkInstanceDto: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.put<LinkInstanceDto>(`${this.apiPrefix(linkInstanceDto.id)}/data`, linkInstanceDto.data);
+    return this.httpClient.put<LinkInstanceDto>(`${this.apiPrefix(linkInstanceDto.id)}/data`, linkInstanceDto.data, {
+      headers: {
+        [correlationIdHeader]: this.appId.getAppId(),
+      },
+    });
   }
 
   public deleteLinkInstance(id: string): Observable<string> {

@@ -57,7 +57,11 @@ export class ApiDocumentService extends BaseService implements DocumentService {
 
   public updateDocumentData(document: DocumentDto): Observable<DocumentDto> {
     return this.httpClient
-      .put<DocumentDto>(`${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`, document.data)
+      .put<DocumentDto>(`${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`, document.data, {
+        headers: {
+          [correlationIdHeader]: this.appId.getAppId(),
+        },
+      })
       .pipe(
         map(returnedDocument => {
           return {...returnedDocument, collectionId: document.collectionId};
@@ -68,7 +72,12 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   public patchDocumentData(document: DocumentDto): Observable<DocumentDto> {
     return this.httpClient.patch<DocumentDto>(
       `${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`,
-      document.data
+      document.data,
+      {
+        headers: {
+          [correlationIdHeader]: this.appId.getAppId(),
+        },
+      }
     );
   }
 
