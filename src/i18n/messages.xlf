@@ -806,14 +806,18 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.upgradePlan" datatype="html">
-        <source> Upgrade to Business Plan! </source>
+        <source>Upgrade to Business Plan!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context>
-          <context context-type="linenumber">64,65</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.html</context>
-          <context context-type="linenumber">66,67</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
@@ -1325,124 +1329,152 @@
           <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="audit.get.document.fail" datatype="html">
+        <source>Could not get activity logs for the selected record</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.revert.document.fail" datatype="html">
+        <source>Could not revert record changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.get.link.fail" datatype="html">
+        <source>Could not get activity logs for the selected link</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.revert.link.fail" datatype="html">
+        <source>Could not revert link changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/audit-logs/audit-logs.effects.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="collections.get.fail" datatype="html">
         <source>Could not get tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">193</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.create.fail" datatype="html">
         <source>Could not create table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.import.fail" datatype="html">
         <source>Could not import table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.update.fail" datatype="html">
         <source>Could not update table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.rule.update.fail" datatype="html">
         <source>Could not save automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">269</context>
+          <context context-type="linenumber">270</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.update.purpose.fail" datatype="html">
         <source>Could not update table purpose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.fail" datatype="html">
         <source>Could not delete table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">344</context>
+          <context context-type="linenumber">348</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.add.favorite.fail" datatype="html">
         <source>Could not add the table to favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">369</context>
+          <context context-type="linenumber">373</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.remove.favorite.fail" datatype="html">
         <source>Could not remove the table from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">394</context>
+          <context context-type="linenumber">398</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.attribute.default.set.fail" datatype="html">
         <source>Could not set the displayed attribute id</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">445</context>
+          <context context-type="linenumber">449</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.create.attributes.fail" datatype="html">
         <source>Could not create attributes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">497</context>
+          <context context-type="linenumber">501</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.attribute.fail" datatype="html">
         <source>Could not change the attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">541</context>
+          <context context-type="linenumber">545</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.remove.attribute.fail" datatype="html">
         <source>Could not delete the attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">581</context>
+          <context context-type="linenumber">585</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.permission.fail" datatype="html">
         <source>Could not change the table permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">622</context>
+          <context context-type="linenumber">626</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.runRule.fail" datatype="html">
         <source>Could not run the selected rule for the whole table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">647</context>
+          <context context-type="linenumber">651</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tasks.get.fail" datatype="html">
@@ -1607,28 +1639,28 @@
         <source>Could not get link types</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="link.type.create.fail" datatype="html">
         <source>Could not create the link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="link.type.update.fail" datatype="html">
         <source>Could not update the link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="link.type.delete.fail" datatype="html">
         <source>Could not delete the link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="lumeer.advice" datatype="html">
@@ -2647,32 +2679,114 @@
           <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="document.detail.audit.limit" datatype="html">
+        <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, contact us.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.title.data.update" datatype="html">
+        <source>{VAR_SELECT, select, updated {Updated} created {Created}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/log/audit-log.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.action.revert" datatype="html">
+        <source>Revert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/log/audit-log.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="user.unknown" datatype="html">
+        <source>Unknown user</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/log/audit-log.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="document.detail.header.updatedOn" datatype="html">
+        <source>Updated on</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/log/audit-log.component.ts</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource-comments/comment-item/comment-item.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="document.detail.header.updatedBy" datatype="html">
+        <source>Updated by</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/log/audit-log.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.automation.function" datatype="html">
+        <source>Function</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/pipes/audit-log-automation-string.pipe.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.automation.automation" datatype="html">
+        <source>Automation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/pipes/audit-log-automation-string.pipe.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="document.detail.activity.empty" datatype="html">
+        <source> No activity yet. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.revert.confirm.title" datatype="html">
+        <source>Revert changes?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="audit.revert.confirm.message" datatype="html">
+        <source>Do you really want to revert the latest changes?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="document.detail.detail.comments.seeAll" datatype="html">
         <source> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> &gt; </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">53,55</context>
+          <context context-type="linenumber">55,57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="document.detail.activity.contact" datatype="html">
-        <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;{{contactUrl}}&quot; target=&quot;_blank&quot;&gt;"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dataResource.attribute.placeholder" datatype="html">
@@ -2846,24 +2960,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comment-item/comment-item.component.ts</context>
           <context context-type="linenumber">60</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="document.detail.header.updatedOn" datatype="html">
-        <source>Updated on</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context>
-          <context context-type="linenumber">107</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/resource-comments/comment-item/comment-item.component.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="document.detail.header.updatedBy" datatype="html">
-        <source>Updated by</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/header/document-detail-header.component.ts</context>
-          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.detail.linkType.add" datatype="html">
@@ -3268,18 +3364,18 @@
           <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
-        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="constraint.address.part" datatype="html">
         <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.coordinates.description" datatype="html">
@@ -4098,18 +4194,18 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="modal.links.modify.selected" datatype="html">
-        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-          <context context-type="linenumber">18,19</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="modal.links.modify.selected" datatype="html">
+        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18,19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.filter.title" datatype="html">
@@ -4679,21 +4775,21 @@
         <source> No comments yet. Write the first one! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.html</context>
-          <context context-type="linenumber">25,26</context>
+          <context context-type="linenumber">26,27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.detail.comments.commentRemove.title" datatype="html">
         <source>Delete this comment?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
         <source>Do you really want to delete this comment?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.detail.comments.new.write" datatype="html">
@@ -6147,19 +6243,19 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source> <x id="ICU" equiv-text="{yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}"/>
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
+        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">

@@ -50,7 +50,7 @@ export class AuditLogsEffects {
       ofType(AuditLogActions.getByDocumentFailure),
       tap(action => console.error(action.error)),
       map(() => {
-        const message = $localize`:@@audit.get.document.fail:Could not get audit logs for selected record`;
+        const message = $localize`:@@audit.get.document.fail:Could not get activity logs for the selected record`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -77,7 +77,7 @@ export class AuditLogsEffects {
       ofType(AuditLogActions.revertDocumentFailure),
       tap(action => console.error(action.error)),
       map(() => {
-        const message = $localize`:@@audit.revert.document.fail:Could not revert record data`;
+        const message = $localize`:@@audit.revert.document.fail:Could not revert record changes`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -101,7 +101,7 @@ export class AuditLogsEffects {
       ofType(AuditLogActions.getByLinkFailure),
       tap(action => console.error(action.error)),
       map(() => {
-        const message = $localize`:@@audit.get.link.fail:Could not get audit logs for selected link`;
+        const message = $localize`:@@audit.get.link.fail:Could not get activity logs for the selected link`;
         return new NotificationsAction.Error({message});
       })
     )
@@ -128,7 +128,7 @@ export class AuditLogsEffects {
       ofType(AuditLogActions.revertLinkFailure),
       tap(action => console.error(action.error)),
       map(() => {
-        const message = $localize`:@@audit.revert.link.fail:Could not revert link data`;
+        const message = $localize`:@@audit.revert.link.fail:Could not revert link changes`;
         return new NotificationsAction.Error({message});
       })
     )
