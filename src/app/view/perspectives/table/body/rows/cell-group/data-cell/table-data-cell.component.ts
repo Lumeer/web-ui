@@ -183,7 +183,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.edited = editing && !attribute?.constraint?.isDirectlyEditable;
         if (editing) {
           this.setEditedAttribute();
-          this.editedValue = attribute.constraint?.createDataValue(this.getValue(), this.constraintData);
+          this.editedValue = attribute?.constraint?.createDataValue(this.getValue(), this.constraintData);
           this.setSuggesting();
         } else {
           this.clearEditedAttribute();
@@ -740,6 +740,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (isNotNullOrUndefined(dataValue)) {
       this.useSelectionOrSave(dataValue);
     }
+    this.editing$.next(false);
   }
 
   public onCancelEditing() {

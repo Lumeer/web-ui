@@ -42,7 +42,7 @@
             [user]="user"
             [editable]="user.id !== currentUser.id && (resourceType | isOrganizationType)"
             [changeRoles]="user.id !== currentUser.id && (user | canChangeRoles:resourceType:organization:project)"
-            [userRoles]="user | userRolesInResource:resource:resourceType:organization:project"
+            [userRoles]="user | userRolesInResource:resource:resourceType:organization:project:pendingUserUpdates"
             [inheritedManage]="inheritedManagePermission$ | async"
             (rolesUpdate)="onUserRolesChanged(user.id, $event)"
             (userUpdated)="userUpdated.emit($event)"

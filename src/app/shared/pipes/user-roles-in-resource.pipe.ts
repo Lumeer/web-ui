@@ -26,6 +26,7 @@ import {Project} from '../../core/store/projects/project';
 import {ResourceType} from '../../core/model/resource-type';
 import {ResourceRolesPipe} from './resource-roles.pipe';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
+import {Permission} from '../../core/store/permissions/permissions';
 
 @Pipe({
   name: 'userRolesInResource',
@@ -41,13 +42,11 @@ export class UserRolesInResourcePipe implements PipeTransform {
     resource: Resource,
     resourceType: ResourceType,
     organization?: Organization,
-    project?: Project
+    project?: Project,
+    overridePermissions?: Record<string, {new: Permission}>
   ): string[] {
     const userPermission =
-      resource &&
-      resource.permissions &&
-      resource.permissions.users &&
-      resource.permissions.users.find(perm => perm.id === user.id);
+      overridePermissions?.[user.id]?.new || resource?.permissions?.users?.find(perm => perm.id === user.id);
     const roles = userPermission ? userPermission.roles : [];
 
     if (resourceType === ResourceType.Organization) {
