@@ -41,7 +41,7 @@ import {Resource} from '../../../../core/model/resource';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {User} from '../../../../core/store/users/user';
-import {Observable, of} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
@@ -51,6 +51,7 @@ import {
   selectOrganizationPermissions,
   selectProjectPermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
+import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
 
 @Component({
   selector: 'resource-menu',
@@ -87,8 +88,10 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly dropdownPositions = [DropdownPosition.BottomStart];
 
+  private serviceLimits: ServiceLimits;
+  private serviceLimitsSubscription = new Subscription();
+
   public currentUser$: Observable<User>;
-  public serviceLimits$: Observable<ServiceLimits>;
   public permissions$: Observable<AllowedPermissions>;
 
   constructor(private store$: Store<AppState>) {}
@@ -102,8 +105,24 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public newResource(): void {
-    this.onNewResource.emit(this.type);
+    if (this.type === ResourceType.Organization) {
+      this.onNewResource.emit(this.type);
+    } else if (this.checkProjectServiceLimits()) {
+      this.onNewResource.emit(this.type);
+    }
     this.close();
+  }
+
+  private checkProjectServiceLimits(): boolean {
+    const hasLimits = this.serviceLimits && this.projects && this.projects.length < this.serviceLimits.projects;
+    if (!hasLimits) {
+      const project = <Project>this.resource;
+      const organization = this.organizations?.find(organization => organization.id === project.organizationId);
+      if (organization) {
+        this.store$.dispatch(new OrganizationsAction.OfferPayment({organizationCode: organization.code}));
+      }
+    }
+    return hasLimits;
   }
 
   public selectResource(resource: Resource): void {
@@ -114,15 +133,22 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges): void {
     if (objectChanged(changes.resource) || changes.resourceType) {
       if (this.isOrganizationType) {
-        this.serviceLimits$ = of(null);
+        this.serviceLimits = null;
         this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
       } else {
         const project = <Project>this.resource;
-        this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)));
+        this.subscribeServiceLimits(project);
         this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
         this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
       }
     }
+  }
+
+  private subscribeServiceLimits(project: Project) {
+    this.serviceLimitsSubscription.unsubscribe();
+    this.serviceLimitsSubscription = this.store$
+      .pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)))
+      .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
   }
 
   public open() {
@@ -138,6 +164,7 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
+    this.serviceLimitsSubscription.unsubscribe();
     this.close();
   }
 }

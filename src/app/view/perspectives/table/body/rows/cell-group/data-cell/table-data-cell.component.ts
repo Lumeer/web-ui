@@ -181,17 +181,19 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(skip(1), distinctUntilChanged(), withLatestFrom(this.attribute$))
       .subscribe(([editing, attribute]) => {
         this.edited = editing && !attribute?.constraint?.isDirectlyEditable;
-        if (!editing) {
+        if (editing) {
+          this.setEditedAttribute();
+          this.editedValue = attribute.constraint?.createDataValue(this.getValue(), this.constraintData);
+          this.setSuggesting();
+        } else {
           this.clearEditedAttribute();
           this.editedValue = null;
-          this.checkSuggesting();
+          this.resetSuggesting();
 
           if (this.selected) {
             // sets focus to hidden input
             this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
           }
-        } else {
-          this.setEditedAttribute();
         }
       });
   }
@@ -220,9 +222,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.editing$.next(false);
       }
     }
-    if (changes.document || changes.linkInstance) {
-      this.checkSuggesting();
-    }
     if ((changes.column || changes.canManageConfig) && this.column) {
       this.columnWidth = getTableColumnWidth(this.column, this.canManageConfig);
     }
@@ -249,7 +248,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (this.attribute$) {
       return this.attribute$.pipe(
         map(attribute => {
-          const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+          const constraint = attribute?.constraint || new UnknownConstraint();
           if (typed) {
             return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
           }
@@ -279,12 +278,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private checkSuggesting() {
+  private setSuggesting() {
     if (this.cursor.partIndex < 2) {
       return;
     }
+    this.suggesting$.next(true);
+  }
 
-    this.suggesting$.next(!this.isEntityInitialized() || !this.editedValue);
+  private resetSuggesting() {
+    this.editedValue = null;
+    this.suggesting$.next(false);
   }
 
   private subscribeToEditSelectedCell(): Subscription {
@@ -302,8 +305,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private isAttributeEditable(attribute: Attribute): boolean {
-    const parentId =
-      (this.document && this.document.collectionId) || (this.linkInstance && this.linkInstance.linkTypeId);
+    const parentId = this.document?.collectionId || this.linkInstance?.linkTypeId;
     return isAttributeEditableWithQuery(attribute, parentId, this.allowedPermissions, this.query);
   }
 
@@ -401,6 +403,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       if (dataValue.format()) {
         this.showUninitializedLinkedRowWarningAndResetValue();
       }
+      this.editing$.next(false);
       return;
     }
 
@@ -415,7 +418,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.notificationService.warning(
       $localize`:@@table.data.cell.linked.row.uninitialized:I cannot link the entered value to anything, you must enter a value to the previous part of the table first.`
     );
-    this.editedValue = null;
   }
 
   private isPreviousLinkedRowInitialized(): boolean {
@@ -428,7 +430,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private setEditedAttribute() {
-    if (this.document && this.document.id) {
+    if (this.document?.id) {
       this.store$.dispatch(
         new TablesAction.SetEditedAttribute({
           editedAttribute: {
@@ -734,11 +736,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editable) {
       return false;
     }
-    this.editedValue = null;
+
     if (isNotNullOrUndefined(dataValue)) {
       this.useSelectionOrSave(dataValue);
     }
-    this.editing$.next(false);
   }
 
   public onCancelEditing() {
@@ -811,12 +812,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onUseDocumentHint() {
-    this.selected = false;
     this.editing$.next(false);
   }
 
   public onEnterInvalid() {
-    if (this.suggestions && this.suggestions.isSelected()) {
+    if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
       this.editing$.next(false);
     }

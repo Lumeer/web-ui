@@ -24,7 +24,6 @@ import {Role} from '../../../../../core/model/role';
 import {Project} from '../../../../../core/store/projects/project';
 import {superUserEmails} from '../../../../../auth/super-user-emails';
 import {Organization} from '../../../../../core/store/organizations/organization';
-import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {User} from '../../../../../core/store/users/user';
 import {userHasManageRoleInResource, userHasRoleInResource} from '../../../../utils/resource.utils';
 
@@ -32,14 +31,7 @@ import {userHasManageRoleInResource, userHasRoleInResource} from '../../../../ut
   name: 'canCreateResource',
 })
 export class CanCreateResourcePipe implements PipeTransform {
-  public transform(
-    resource: Resource,
-    type: ResourceType,
-    organizations: Organization[],
-    projects: Project[],
-    currentUser: User,
-    serviceLimits: ServiceLimits
-  ): boolean {
+  public transform(resource: Resource, type: ResourceType, organizations: Organization[], currentUser: User): boolean {
     if (!resource) {
       return false;
     }
@@ -55,11 +47,7 @@ export class CanCreateResourcePipe implements PipeTransform {
     } else if (type === ResourceType.Project) {
       const project = resource as Project;
       const organization = organizations.find(org => org.id === project.organizationId);
-      return (
-        serviceLimits &&
-        userHasRoleInResource(currentUser, organization, Role.Write) &&
-        projects.length < serviceLimits.projects
-      );
+      return userHasRoleInResource(currentUser, organization, Role.Write);
     }
     return true;
   }
