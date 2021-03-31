@@ -214,13 +214,13 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
     return false;
   }
 
-  if ((subset?.stems?.length || 0) > (superset?.stems?.length || 0)) {
+  if ((superset?.stems?.length || 0) > (subset?.stems?.length || 0)) {
     return false;
   }
 
-  return (subset?.stems || []).every(stem => {
-    const supersetStem = superset?.stems?.find(s => s.collectionId === stem.collectionId);
-    return supersetStem && isQueryStemSubset(supersetStem, stem);
+  return (superset?.stems || []).every(stem => {
+    const subsetStem = subset?.stems?.find(s => s.collectionId === stem.collectionId);
+    return subsetStem && isQueryStemSubset(subsetStem, stem);
   });
 }
 

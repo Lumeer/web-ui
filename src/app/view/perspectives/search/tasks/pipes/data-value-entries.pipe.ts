@@ -23,7 +23,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
-import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {TaskAttributes} from '../model/task-attributes';
 
 @Pipe({
@@ -44,6 +44,12 @@ export class DataValueEntriesPipe implements PipeTransform {
       .filter(attribute => !taskAttributes?.usedAttributes?.has(attribute.id))
       .reduce((array, attribute) => {
         const constraint: Constraint = attribute.constraint || new UnknownConstraint();
+
+        // showing disabled buttons doesn't make sense
+        if (constraint.type === ConstraintType.Action) {
+          return array;
+        }
+
         const dataValue = constraint.createDataValue(document.data[attribute.id], constraintData);
         if (expanded || constraint.isDirectlyEditable || !!dataValue.format()) {
           const label = expanded ? attribute.name : null;

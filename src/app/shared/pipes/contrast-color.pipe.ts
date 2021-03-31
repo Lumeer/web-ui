@@ -27,7 +27,7 @@ import {contrastColor} from '../utils/color.utils';
   providedIn: 'root',
 })
 export class ContrastColorPipe implements PipeTransform {
-  public transform(color: string, returnCodes?: {dark: string; light: string}): string {
-    return contrastColor(color, returnCodes);
+  public transform(color: string, returnCodes?: {dark: string; light: string}, opacity?: number): string {
+    return contrastColor(color, returnCodes, opacity);
   }
 }
