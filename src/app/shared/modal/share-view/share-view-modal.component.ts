@@ -19,7 +19,7 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, HostListener, ViewChild, Input} from '@angular/core';
 import {DialogType} from '../dialog-type';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -37,6 +37,12 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
 import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {perspectiveIconsMap} from '../../../view/perspectives/perspective';
+import {selectAllCollections} from '../../../core/store/collections/collections.state';
+import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import {map} from 'rxjs/operators';
+import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-items.converter';
+import {queryItemsColor} from '../../../core/store/navigation/query/query.util';
 
 @Component({
   templateUrl: './share-view-modal.component.html',
@@ -53,8 +59,11 @@ export class ShareViewModalComponent implements OnInit {
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
   public users$: Observable<User[]>;
+  public viewColor$: Observable<string>;
 
   public readonly dialogType = DialogType;
+
+  public icon: string;
 
   public formInvalid$ = new BehaviorSubject(true);
   public performingAction$ = new BehaviorSubject(false);
@@ -67,10 +76,21 @@ export class ShareViewModalComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    this.icon = perspectiveIconsMap[this.view?.perspective] || '';
+
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.users$ = this.store$.pipe(select(selectAllUsers));
+
+    this.viewColor$ = combineLatest([
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+    ]).pipe(
+      map(([collections, linkTypes]) => ({collections, linkTypes})),
+      map(queryData => new QueryItemsConverter(queryData).fromQuery(this.view.query)),
+      map(queryItems => queryItemsColor(queryItems))
+    );
   }
 
   public onSubmit() {

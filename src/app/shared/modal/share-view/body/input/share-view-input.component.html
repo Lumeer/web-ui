@@ -1,31 +1,30 @@
-<div class="input-group flex-row p-0">
+<div class="input-group flex-row p-0" *ngIf="{canAddUser: canAddNewUsers && (text | canAddNewUser:currentUsers)} as data">
   <input class="form-control form-control-sm"
-         [ngModel]="text"
-         (keydown)="onKeyDown($event)"
-         (input)="onInputChanged($event.target.value); onSuggest()"
-         (focus)="onSuggest()"
+         [(ngModel)]="text"
+         (keydown)="onKeyDown($event, data.canAddUser)"
+         (focus)="onFocus()"
+         (blur)="onBlur()"
+         (input)="onInput()"
          placeholder="Enter user email and press Enter"
          i18n-placeholder="@@view.share.dialog.input.placeholder"/>
 
   <div class="input-group-append">
-    <button type="button"
-            *ngIf="canAddNewUsers"
-            class="btn btn-sm btn-primary text-nowrap"
-            [disabled]="!(text | canAddNewUser:currentUsers)"
-            (click)="onAddUser()">
+    <button *ngIf="canAddNewUsers"
+            type="button" class="btn btn-sm btn-primary text-nowrap"
+            [disabled]="!data.canAddUser"
+            (click)="onEnter()">
       <i class="fas fa-plus mr-2"></i>
       <span class="font-weight-bold" i18n="@@view.share.dialog.input.button">Add</span>
     </button>
   </div>
 </div>
 
-<div class="dropdown" *ngIf="text && suggestions.length > 0">
-  <div class="dropdown-menu show suggestions">
-    <div class="dropdown-item"
-         *ngFor="let suggestion of suggestions; let index = index"
-         [class.selected]="index === selectedIndex"
-         (click)="onSuggestionClick(suggestion)">
-      {{suggestion}}
-    </div>
-  </div>
-</div>
+<options-dropdown *ngIf="text.length && availableUsers.length"
+                  [options]="availableUsers | filterUsers:text"
+                  [showBackdrop]="false"
+                  [closeOnClickOutside]="false"
+                  [origin]="element"
+                  [highlightedText]="text"
+                  [firstItemActive]="false"
+                  (selectOption)="onSelectOption($event)">
+</options-dropdown>

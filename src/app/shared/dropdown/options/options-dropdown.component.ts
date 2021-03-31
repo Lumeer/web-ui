@@ -177,7 +177,7 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public isOpen(): boolean {
-    return this.dropdown && this.dropdown.isOpen();
+    return this.dropdown?.isOpen();
   }
 
   public onKeyDown(event: KeyboardEvent) {

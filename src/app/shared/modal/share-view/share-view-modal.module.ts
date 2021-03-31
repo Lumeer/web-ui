@@ -33,6 +33,8 @@ import {InputModule} from '../../input/input.module';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {GravatarModule} from 'ngx-gravatar';
 import {UsersModule} from '../../users/users.module';
+import {DropdownModule} from '../../dropdown/dropdown.module';
+import {DataInputModule} from '../../data-input/data-input.module';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import {UsersModule} from '../../users/users.module';
     InputModule,
     GravatarModule,
     UsersModule,
+    DropdownModule,
+    DataInputModule,
   ],
   exports: [ShareViewModalComponent],
 })
