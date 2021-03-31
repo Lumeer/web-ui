@@ -37,7 +37,7 @@ import {CreateProjectModalModule} from './create-project/create-project-modal.mo
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
-import {NotificationSettingsModalModule} from './notification-settings/notification-settings-modal.module';
+import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
 import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
 
@@ -64,7 +64,7 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
-    NotificationSettingsModalModule,
+    UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
   ],
   exports: [
@@ -87,7 +87,7 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
-    NotificationSettingsModalModule,
+    UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
   ],
 })

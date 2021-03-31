@@ -23,12 +23,11 @@ import {UserNotificationGroupType, userNotificationGroupTypes} from '../../../co
 import {NotificationChannel} from '../../../core/model/notification-channel';
 import {NotificationFrequency} from '../../../core/model/notification-frequency';
 import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
-import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {availableLanguages, LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'notification-settings',
   templateUrl: './notification-settings.component.html',
-  styleUrls: ['./notification-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationSettingsComponent implements OnInit {
@@ -47,10 +46,11 @@ export class NotificationSettingsComponent implements OnInit {
   public languageSelectItems: SelectItem2Model[];
 
   constructor() {
-    this.languageSelectItems = [
-      {id: LanguageCode.EN, icons: ['flag-icon flag-icon-gb'], value: $localize`:@@language.english:English`},
-      {id: LanguageCode.CZ, icons: ['flag-icon flag-icon-cz'], value: $localize`:@@language.czech:Czech`},
-    ];
+    this.languageSelectItems = availableLanguages.map(language => ({
+      id: language.code,
+      icons: [language.icon],
+      value: language.translatedName,
+    }));
   }
 
   public ngOnInit() {

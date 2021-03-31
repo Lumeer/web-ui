@@ -3,9 +3,13 @@
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 
-  <span class="title" i18n="@@modal.notification.settings.title">Email notification settings</span>
+  <span class="title" i18n="@@modal.settings.title">User settings</span>
 
   <div class="body p-3">
+    <user-settings [user]="user$ | async"
+                   (nameChange)="onNameChange($event)">
+    </user-settings>
+    <hr>
     <notification-settings [user]="user$ | async"
                            (settingsChange)="onSettingsChange($event)"
                            (languageChange)="onLanguageChange($event)">

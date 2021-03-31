@@ -43,7 +43,7 @@ import {ModalService} from '../../../modal/modal.service';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {SearchTab} from '../../../../core/store/navigation/search-tab';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
-import {NotificationSettingsModalComponent} from '../../../modal/notification-settings/notification-settings-modal.component';
+import {UserSettingsModalComponent} from '../../../modal/user-settings/user-settings-modal.component';
 import {availableLanguages, Language, LanguageCode} from './language';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 
@@ -417,9 +417,9 @@ export class UserMenuComponent implements OnInit {
     this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.applicationHints, value: $event}));
   }
 
-  public onNotificationSettings() {
+  public onSettings() {
     const config = {initialState: {}, keyboard: true};
     config['backdrop'] = 'static';
-    this.modalService.show(NotificationSettingsModalComponent, config);
+    this.modalService.show(UserSettingsModalComponent, config);
   }
 }

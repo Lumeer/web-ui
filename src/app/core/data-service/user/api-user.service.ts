@@ -28,7 +28,7 @@ import {InvitationType} from '../../model/invitation-type';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {FeedbackDto} from '../../dto/feedback.dto';
-import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {UserHintsDto} from '../../dto/user.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
@@ -114,10 +114,6 @@ export class ApiUserService implements UserService {
 
   public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
     return this.httpClient.put<UserHintsDto>(`${this.usersApiPrefix()}/current/hints`, hints);
-  }
-
-  public updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto> {
-    return this.httpClient.put<UserDto>(`${this.usersApiPrefix()}/current/notifications`, notifications);
   }
 
   private usersApiPrefix(): string {
