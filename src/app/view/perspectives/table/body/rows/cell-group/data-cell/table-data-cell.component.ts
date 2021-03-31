@@ -813,6 +813,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onUseDocumentHint() {
+    this.selected = false;
     this.editing$.next(false);
   }
 
