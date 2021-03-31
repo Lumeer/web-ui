@@ -64,6 +64,7 @@ const loadingTime = 2000;
 @Component({
   selector: 'action-data-input',
   templateUrl: './action-data-input.component.html',
+  styleUrls: ['./action-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex align-items-center'},
 })

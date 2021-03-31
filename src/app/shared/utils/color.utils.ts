@@ -18,8 +18,9 @@
  */
 
 import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
+import {hex2rgba} from './html-modifier';
 
-export function contrastColor(color: string, returnCodes?: {dark: string; light: string}): string {
+export function contrastColor(color: string, returnCodes?: {dark: string; light: string}, opacity?: number): string {
   if (!color) {
     return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
   }
@@ -32,8 +33,8 @@ export function contrastColor(color: string, returnCodes?: {dark: string; light:
   const luminance = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
 
   if (luminance > 0.5) {
-    return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
+    return returnCodes ? returnCodes.dark : hex2rgba(COLOR_PRIMARY, opacity || 1);
   } else {
-    return returnCodes ? returnCodes.light : COLOR_LIGHT;
+    return returnCodes ? returnCodes.light : hex2rgba(COLOR_LIGHT, opacity || 1);
   }
 }
