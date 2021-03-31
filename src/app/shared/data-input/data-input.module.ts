@@ -129,6 +129,7 @@ import {ActionDataInputComponent} from './action/action-data-input.component';
     RichTextDataInputComponent,
     ConstraintAsTextPipe,
     ConstraintClassPipe,
+    FilterUsersPipe,
     ActionDataInputComponent,
   ],
 })

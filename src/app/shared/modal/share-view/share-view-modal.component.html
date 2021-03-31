@@ -2,10 +2,17 @@
                [dialogType]="dialogType.Success"
                [performingAction]="performingAction$ | async"
                [submitDisabled]="formInvalid$ | async"
+               [customHeader]="true"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 
-  <span class="title" i18n="@@view.share.dialog.title">Share View</span>
+  <div class="custom-header p-3 text-center bg-success text-white w-100 rounded-top">
+    <h5 class="modal-title break-all">
+      <span class="mr-3" i18n="@@view.share.dialog.title">Share View</span>
+      <i class="{{icon}} align-self-center" [style.color]="viewColor$ | async" aria-hidden="true"></i>&nbsp;
+      <span>{{view.name}}</span>
+    </h5>
+  </div>
 
   <div class="body">
     <share-view-dialog-body [currentUser]="currentUser$ | async"

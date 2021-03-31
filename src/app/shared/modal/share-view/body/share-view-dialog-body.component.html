@@ -1,4 +1,5 @@
-<ng-container *ngIf="{changeableUsers: changeableUsers$| async,newUsers: newUsers$ | async, userRoles: userRoles$ | async} as data">
+<ng-container
+  *ngIf="{changeableUsers: changeableUsers$| async, newUsers: newUsers$ | async, userRoles: userRoles$ | async} as data">
 
   <share-view-copy
     [viewShareUrl]="viewShareUrl$ | async"
@@ -8,36 +9,32 @@
   <div class="p-3">
     <share-view-input
       class="d-block my-2 mt-4"
-      [text]="text$ | async"
-      [suggestions]="suggestions$ | async"
-      [selectedIndex]="selectedIndex$ | async"
+      [readableUsers]="usersWithReadPermission"
       [currentUsers]="[staticUsers, data.changeableUsers, data.newUsers] | concat"
       [canAddNewUsers]="canAddNewUsers"
-      (inputChanged)="onInputChanged($event)"
-      (suggestionChoose)="onSuggestionClick($event)"
-      (inputKeyDown)="onKeyDown($event)"
-      (suggest)="suggest()"
-      (addNewUser)="onAddNewUser()">
+      (selectUser)="onUserSelected($event)"
+      (addUser)="addNewUser($event)">
     </share-view-input>
 
     <table class="table">
       <thead>
-        <tr>
-          <th class="border-top-0"></th>
-          <th class="border-top-0"><span i18n="@@users.header.email">Email</span></th>
-          <th class="border-top-0 tools"><span i18n="@@users.header.roles">Roles</span></th>
-        </tr>
+      <tr>
+        <th class="border-top-0"></th>
+        <th class="border-top-0"><span i18n="@@users.header.email">Email</span></th>
+        <th class="border-top-0 tools"><span i18n="@@users.header.roles">Roles</span></th>
+      </tr>
       </thead>
       <tbody>
-        <tr share-user *ngFor="let user of [staticUsers, data.changeableUsers, data.newUsers] | concat; trackBy:trackByUser"
-            [canRemove]="user | canRemoveUser:currentUser:organization:project"
-            [changeRoles]="user.id !== currentUser?.id && (user | canChangeRoles:viewResourceType:organization:project)"
-            [roles]="user | userRoles:data.userRoles"
-            [email]="user.email"
-            [userName]="user.name"
-            (rolesChange)="onNewRoles(user, $event)"
-            (delete)="deleteUser(user)">
-        </tr>
+      <tr share-user
+          *ngFor="let user of [staticUsers, data.changeableUsers, data.newUsers] | concat; trackBy:trackByUser"
+          [canRemove]="user | canRemoveUser:currentUser:organization:project"
+          [changeRoles]="user.id !== currentUser?.id && (user | canChangeRoles:viewResourceType:organization:project)"
+          [roles]="user | userRoles:data.userRoles"
+          [email]="user.email"
+          [userName]="user.name"
+          (rolesChange)="onNewRoles(user, $event)"
+          (delete)="deleteUser(user)">
+      </tr>
       </tbody>
 
     </table>

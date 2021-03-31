@@ -91,9 +91,9 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   public inheritedManagePermission$: Observable<boolean>;
 
   public searchString: string;
+  public pendingUserUpdates: Record<string, {new: Permission; current: Permission}> = {};
 
   private initialWorkspace: Workspace;
-  private pendingUserUpdates: Record<string, {new: Permission; current: Permission}> = {};
   private rolesChange$ = new Subject<string>();
   private rolesChangeSubscription: Subscription;
 
@@ -168,12 +168,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getUserPermission(userId: string): Permission {
-    return (
-      this.resource &&
-      this.resource.permissions &&
-      this.resource.permissions.users &&
-      this.resource.permissions.users.find(perm => perm.id === userId)
-    );
+    return this.resource?.permissions?.users?.find(perm => perm.id === userId);
   }
 
   public trackByUserId(index: number, user: User): string {

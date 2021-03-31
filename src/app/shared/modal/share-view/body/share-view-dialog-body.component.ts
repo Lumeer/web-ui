@@ -86,9 +86,6 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   public userRoles$ = new BehaviorSubject<Record<string, string[]>>({});
 
   public viewShareUrl$ = new BehaviorSubject<string>('');
-  public text$ = new BehaviorSubject<string>('');
-  public suggestions$ = new BehaviorSubject<string[]>([]);
-  public selectedIndex$ = new BehaviorSubject<number>(null);
 
   public readonly viewResourceType = ResourceType.View;
 
@@ -118,85 +115,15 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     this.clipboardService.copy(this.viewShareUrl$.getValue());
   }
 
-  public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case KeyCode.Enter:
-        this.onEnter();
-        return;
-      case KeyCode.ArrowUp:
-      case KeyCode.ArrowDown:
-        this.onUpAndDownArrowKeysDown(event);
-        return;
-    }
-  }
-
-  private onEnter() {
-    this.addItem(this.text$.getValue().trim());
-  }
-
-  private addItem(text: string) {
-    const selectedIndex = this.selectedIndex$.getValue();
-    const suggestions = this.suggestions$.getValue();
-
-    if (isNotNullOrUndefined(selectedIndex) && selectedIndex < suggestions.length) {
-      this.addUserWithEmail(suggestions[selectedIndex]);
-    } else {
-      const userWasAdded = [
-        ...this.staticUsers,
-        ...this.changeableUsers$.getValue(),
-        ...this.newUsers$.getValue(),
-      ].find(u => u.email.toLowerCase() === text.toLowerCase());
-      const user = this.usersWithReadPermission?.find(u => u.email.toLowerCase() === text.toLowerCase());
-      if (!userWasAdded) {
-        if (user) {
-          this.addUser(user);
-        } else {
-          this.addNewUser(text);
-        }
-      }
-    }
-  }
-
-  private addUserWithEmail(email: string) {
-    const user = this.usersWithReadPermission?.find(u => u.email === email);
-    if (user) {
-      this.addUser(user);
-    }
-  }
-
   private addUser(user: User) {
     this.userRoles$.next({...this.userRoles$.getValue(), [user.id]: []});
     this.changeableUsers$.next([...this.changeableUsers$.getValue(), user]);
-    this.text$.next('');
   }
 
-  private addNewUser(text: string) {
-    if (this.canAddNewUsers && isEmailValid(text)) {
-      const newUser: User = {correlationId: generateCorrelationId(), email: text, groupsMap: {}};
-      this.userRoles$.next({...this.userRoles$.getValue(), [newUser.correlationId]: []});
-      this.newUsers$.next([...this.newUsers$.getValue(), newUser]);
-      this.text$.next('');
-    }
-  }
-
-  public onAddNewUser() {
-    this.onEnter();
-  }
-
-  private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
-    const suggestions = this.suggestions$.getValue();
-    if (suggestions.length === 0) {
-      return;
-    }
-
-    event.preventDefault();
-    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
-
-    const selectedIndex = this.selectedIndex$.getValue();
-    const newIndex = isNullOrUndefined(selectedIndex) ? 0 : selectedIndex + direction;
-    if (newIndex >= 0 && newIndex < suggestions.length) {
-      this.selectedIndex$.next(newIndex);
-    }
+  public addNewUser(text: string) {
+    const newUser: User = {correlationId: generateCorrelationId(), email: text, groupsMap: {}};
+    this.userRoles$.next({...this.userRoles$.getValue(), [newUser.correlationId]: []});
+    this.newUsers$.next([...this.newUsers$.getValue(), newUser]);
   }
 
   public deleteUser(user: User) {
@@ -216,41 +143,14 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     this.userRoles$.next({...this.userRoles$.getValue(), [user.id || user.correlationId]: roles});
   }
 
-  public suggest() {
-    const textLowerCase = this.text$.getValue().toLowerCase();
-    const newSuggestions = this.usersWithReadPermission
-      .filter(user => !this.isUserPresented(user))
-      .map(user => user.email)
-      .filter(email => email.toLowerCase().includes(textLowerCase));
-
-    this.suggestions$.next(newSuggestions);
-    this.recomputeSelectedIndex();
-  }
-
   private isUserPresented(user: User): boolean {
     return (
       !!this.changeableUsers$.getValue().find(u => u.id === user.id) || !!this.staticUsers.find(u => u.id === user.id)
     );
   }
 
-  private recomputeSelectedIndex() {
-    const text = this.text$.getValue();
-    const selectedIndex = this.selectedIndex$.getValue();
-    const suggestions = this.suggestions$.getValue();
-
-    if (suggestions.length === 0 || !text) {
-      this.selectedIndex$.next(null);
-    } else if (!isNullOrUndefined(selectedIndex)) {
-      this.selectedIndex$.next(Math.min(selectedIndex, suggestions.length - 1));
-    }
-  }
-
-  public onInputChanged(value: string) {
-    this.text$.next(value);
-  }
-
-  public onSuggestionClick(text: string) {
-    this.addItem(text);
+  public onUserSelected(user: User) {
+    this.addUser(user);
   }
 
   private getUserPermissionsInView(user: User): Permission {

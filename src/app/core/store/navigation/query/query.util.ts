@@ -168,8 +168,7 @@ export function getQueryStemFiltersForResource(
 }
 
 export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {
-  const stems = (query && query.stems) || [];
-  return stems.reduce((filters, stem) => {
+  return (query?.stems || []).reduce((filters, stem) => {
     const newFilters = (stem.filters || []).filter(
       filter => filter.collectionId === collectionId && !filters.find(f => deepObjectsEquals(f, filter))
     );
@@ -179,8 +178,7 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
 }
 
 export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): LinkAttributeFilter[] {
-  const stems = (query && query.stems) || [];
-  return stems.reduce((filters, stem) => {
+  return (query?.stems || []).reduce((filters, stem) => {
     const newFilters = (stem.linkFilters || []).filter(
       filter => filter.linkTypeId === linkTypeId && !filters.find(f => deepObjectsEquals(f, filter))
     );
@@ -190,15 +188,10 @@ export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): Li
 }
 
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
-  return (
-    (query &&
-      query.stems &&
-      query.stems.reduce((ids, stem) => {
-        (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
-        return ids;
-      }, [])) ||
-    []
-  );
+  return (query?.stems || []).reduce((ids, stem) => {
+    (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
+    return ids;
+  }, []);
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {

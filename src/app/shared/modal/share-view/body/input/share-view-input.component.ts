@@ -17,8 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {User} from '../../../../../core/store/users/user';
+import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
+import {isEmailValid} from '../../../../utils/email.utils';
+import {KeyCode} from '../../../../key-code';
 
 @Component({
   selector: 'share-view-input',
@@ -26,15 +40,9 @@ import {User} from '../../../../../core/store/users/user';
   styleUrls: ['./share-view-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareViewInputComponent {
+export class ShareViewInputComponent implements OnChanges {
   @Input()
-  public text: string;
-
-  @Input()
-  public suggestions: string[];
-
-  @Input()
-  public selectedIndex: number;
+  public readableUsers: User[];
 
   @Input()
   public currentUsers: User[];
@@ -43,37 +51,79 @@ export class ShareViewInputComponent {
   public canAddNewUsers: boolean;
 
   @Output()
-  public suggestionChoose = new EventEmitter<string>();
+  public selectUser = new EventEmitter<User>();
 
   @Output()
-  public inputKeyDown = new EventEmitter<KeyboardEvent>();
+  public addUser = new EventEmitter<string>();
 
-  @Output()
-  public suggest = new EventEmitter();
+  @ViewChild(OptionsDropdownComponent)
+  public dropdown: OptionsDropdownComponent;
 
-  @Output()
-  public inputChanged = new EventEmitter<string>();
+  public text = '';
 
-  @Output()
-  public addNewUser = new EventEmitter();
+  public availableUsers: User[];
 
-  public onSuggestionClick(suggestion: string) {
-    this.suggestionChoose.emit(suggestion);
+  constructor(public element: ElementRef) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.readableUsers || changes.currentUsers) {
+      this.filterAvailableUsers();
+    }
   }
 
-  public onKeyDown(event: KeyboardEvent) {
-    this.inputKeyDown.emit(event);
+  private filterAvailableUsers() {
+    const currentUsersByEmail = (this.currentUsers || []).reduce((map, user) => ({...map, [user.email]: user}), {});
+    this.availableUsers = (this.readableUsers || []).filter(user => !currentUsersByEmail[user.email]);
   }
 
-  public onSuggest() {
-    this.suggest.emit();
+  public onSelectOption(option: DropdownOption) {
+    const selectedUser = this.readableUsers.find(user => user.email === option.value);
+    if (selectedUser) {
+      this.selectUser.emit(selectedUser);
+    }
+    this.text = '';
   }
 
-  public onInputChanged(value: string) {
-    this.inputChanged.emit(value);
+  public onEnter() {
+    const trimmed = this.text.trim();
+    const selectedUser = this.readableUsers.find(user => user.email === trimmed);
+    if (selectedUser) {
+      this.selectUser.emit(selectedUser);
+      this.text = '';
+    } else if (isEmailValid(trimmed)) {
+      this.addUser.emit(trimmed);
+      this.text = '';
+    }
   }
 
-  public onAddUser() {
-    this.addNewUser.emit();
+  public onFocus() {
+    this.dropdown?.open();
+  }
+
+  public onInput() {
+    if (!this.dropdown?.isOpen()) {
+      this.openAfterTimeout();
+    }
+  }
+
+  private openAfterTimeout() {
+    setTimeout(() => this.dropdown?.open());
+  }
+
+  public onBlur() {
+    this.dropdown?.close();
+  }
+
+  public onKeyDown(event: KeyboardEvent, canAddUser: boolean) {
+    if (event.code === KeyCode.Enter) {
+      const activeOption = this.dropdown?.getActiveOption();
+      if (activeOption) {
+        this.onSelectOption(activeOption);
+      } else if (canAddUser) {
+        this.onEnter();
+      }
+      return;
+    }
+    this.dropdown?.onKeyDown(event);
   }
 }

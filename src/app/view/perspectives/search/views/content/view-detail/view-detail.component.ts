@@ -71,6 +71,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public readonly viewType = ResourceType.View;
   public readonly sizeType = SizeType;
 
+  public icon: string;
+
   public constructor(private modalService: ModalService) {}
 
   public ngOnInit() {
@@ -78,11 +80,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.createQueryItems();
-  }
-
-  public getIconForPerspective(perspective: string): string {
-    return perspectiveIconsMap[perspective] || '';
+    if (changes.queryData || changes.view) {
+      this.createQueryItems();
+    }
+    if (changes.view) {
+      this.icon = perspectiveIconsMap[this.view?.perspective] || '';
+    }
   }
 
   public onClicked() {
