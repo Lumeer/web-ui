@@ -28,19 +28,17 @@ import {KeyCode} from '../../key-code';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 import {tap} from 'rxjs/operators';
-import {deepArrayEquals} from '../../utils/array.utils';
+import {deepObjectCopy, deepObjectsEquals} from '../../utils/common.utils';
 
 @Component({
-  selector: 'notification-settings-modal',
-  templateUrl: './notification-settings-modal.component.html',
+  templateUrl: './user-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationSettingsModalComponent implements OnInit {
+export class UserSettingsModalComponent implements OnInit {
   public user$: Observable<User>;
   public performingAction$ = new BehaviorSubject(false);
 
-  private settings: NotificationSettings[];
-  private language: string;
+  private updateUser: Partial<User>;
   private user: User;
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
@@ -48,28 +46,43 @@ export class NotificationSettingsModalComponent implements OnInit {
   public ngOnInit() {
     this.user$ = this.store$.pipe(
       select(selectCurrentUser),
-      tap(user => (this.user = user))
+      tap(user => {
+        this.user = user;
+        this.checkPatchUser(user);
+      })
     );
   }
 
+  private checkPatchUser(user: User) {
+    if (!this.updateUser) {
+      this.updateUser = this.createPatchUser(user);
+    }
+  }
+
+  private createPatchUser(user: User): Partial<User> {
+    return {
+      name: user.name,
+      notifications: deepObjectCopy(user.notifications),
+    };
+  }
+
   public onSubmit() {
-    const settingsChanged = this.settings && !deepArrayEquals(this.settings, this.user?.notifications?.settings);
-    const languageChanged = this.language && this.language !== this.user?.notifications?.language;
-    if (settingsChanged || languageChanged) {
+    if (this.checkPatchChanged()) {
       this.updateNotifications();
     } else {
       this.hideDialog();
     }
   }
 
+  private checkPatchChanged(): boolean {
+    return !deepObjectsEquals(this.createPatchUser(this.user), this.updateUser);
+  }
+
   private updateNotifications() {
     this.performingAction$.next(true);
     this.store$.dispatch(
-      new UsersAction.UpdateNotifications({
-        notifications: {
-          settings: this.settings || this.user?.notifications?.settings,
-          language: this.language || this.user?.notifications?.language,
-        },
+      new UsersAction.PatchCurrentUser({
+        user: this.updateUser,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -88,10 +101,22 @@ export class NotificationSettingsModalComponent implements OnInit {
   }
 
   public onSettingsChange(settings: NotificationSettings[]) {
-    this.settings = settings;
+    if (this.updateUser.notifications) {
+      this.updateUser.notifications.settings = settings;
+    } else {
+      this.updateUser.notifications = {settings};
+    }
   }
 
   public onLanguageChange(language: LanguageCode) {
-    this.language = language;
+    if (this.updateUser.notifications) {
+      this.updateUser.notifications.language = language;
+    } else {
+      this.updateUser.notifications = {language};
+    }
+  }
+
+  public onNameChange(name: string) {
+    this.updateUser.name = name;
   }
 }

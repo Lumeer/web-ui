@@ -59,6 +59,4 @@ export abstract class UserService {
   public abstract getHints(): Observable<UserHintsDto>;
 
   public abstract updateHints(hints: UserHintsDto): Observable<UserHintsDto>;
-
-  public abstract updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto>;
 }

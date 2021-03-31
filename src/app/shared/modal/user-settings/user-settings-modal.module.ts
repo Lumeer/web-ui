@@ -19,13 +19,13 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NotificationSettingsModalComponent} from './notification-settings-modal.component';
+import {UserSettingsModalComponent} from './user-settings-modal.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {UserSettingsModule} from '../../user-settings/user-settings.module';
 
 @NgModule({
-  declarations: [NotificationSettingsModalComponent],
+  declarations: [UserSettingsModalComponent],
   imports: [CommonModule, ModalWrapperModule, UserSettingsModule],
-  exports: [NotificationSettingsModalComponent],
+  exports: [UserSettingsModalComponent],
 })
-export class NotificationSettingsModalModule {}
+export class UserSettingsModalModule {}

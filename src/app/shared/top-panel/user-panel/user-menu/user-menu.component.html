@@ -29,13 +29,12 @@
           <span [ngClass]="currentLanguage.icon"></span>
           <span>{{currentLanguage.name}}</span>&nbsp;(<span>{{currentLanguage.translatedName}}</span>)
         </button>
-        <button mat-menu-item (click)="onNotificationSettings()"
-                title="Email Notifications"
-                i18n-title="@@menu.notification.settings">
+        <button mat-menu-item (click)="onSettings()"
+                title="User Settings" i18n-title="@@menu.user.settings">
           <i class="far fa-fw fa-cog"
              data-fa-transform="left-4"
              aria-hidden="true"></i>&nbsp;
-          <span i18n="@@menu.notification.settings">Email Notifications</span>
+          <span i18n="@@menu.user.settings">User Settings</span>
         </button>
         <button mat-menu-item (click)="onFeedbackClick()"
                 title="Send Feedback"

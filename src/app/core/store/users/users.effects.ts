@@ -162,20 +162,13 @@ export class UsersEffects {
         const dto = convertUserModelToDto(action.payload.user);
         return this.userService.patchCurrentUser(dto).pipe(
           map(user => convertUserDtoToModel(user)),
-          mergeMap(user => {
-            const actions: Action[] = [new UsersAction.GetCurrentUserSuccess({user})];
-            if (action.payload.onSuccess) {
-              actions.push(new CommonAction.ExecuteCallback({callback: action.payload.onSuccess}));
-            }
-            return actions;
-          }),
+          mergeMap(user => [
+            new UsersAction.GetCurrentUserSuccess({user}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
           catchError(() => {
-            if (action.payload.onFailure) {
-              action.payload.onFailure();
-            }
-
             const message = $localize`:@@currentUser.patch.fail:Could not update user details`;
-            return of(new NotificationsAction.Error({message}));
+            return of(new NotificationsAction.Error({message}), ...createCallbackActions(action.payload.onFailure));
           })
         );
       })
@@ -438,33 +431,6 @@ export class UsersEffects {
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@currentUser.get.fail:Could not get user details`;
-        return new NotificationsAction.Error({message});
-      })
-    )
-  );
-
-  public updateNotifications$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<UsersAction.UpdateNotifications>(UsersActionType.UPDATE_NOTIFICATIONS),
-      mergeMap(action => {
-        const {notifications, onSuccess, onFailure} = action.payload;
-        return this.userService.updateNotifications(convertNotificationsToDto(notifications)).pipe(
-          map(dto => convertUserDtoToModel(dto)),
-          mergeMap(user => [new UsersAction.UpdateNotificationsSuccess({user}), ...createCallbackActions(onSuccess)]),
-          catchError(error =>
-            of(new UsersAction.UpdateNotificationsFailure({error}), ...createCallbackActions(onFailure))
-          )
-        );
-      })
-    )
-  );
-
-  public updateNotificationsFailure$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<UsersAction.UpdateNotificationsFailure>(UsersActionType.UPDATE_NOTIFICATIONS_FAILURE),
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = $localize`:@@user.update.notifications.fail:Could not update notifications settings`;
         return new NotificationsAction.Error({message});
       })
     )
