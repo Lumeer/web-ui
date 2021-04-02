@@ -82,6 +82,13 @@ import {GetSiblingsBlocklyComponent} from './blocks/get-siblings-blockly-compone
 import {GetParentDocumentBlocklyComponent} from './blocks/get-parent-document-blockly-component';
 import {GetChildDocumentsBlocklyComponent} from './blocks/get-child-documents-blockly-component';
 import {GetHierarchySiblingsBlocklyComponent} from './blocks/get-hierarchy-siblings-blockly-component';
+import {LoopBreakBlocklyComponent} from './blocks/loop-break-blockly-component';
+import {LoopContinueBlocklyComponent} from './blocks/loop-continue-blockly-component';
+import {EscapeHtmlBlocklyComponent} from './blocks/escape-html-blockly-component';
+import {UnescapeHtmlBlocklyComponent} from './blocks/unescape-html-blockly-component';
+import {PrintTextBlocklyComponent} from './blocks/print-text-blockly-component';
+import {FormatCurrencyBlocklyComponent} from './blocks/format-currency-blockly-component';
+import {TranslationService} from '../../../core/service/translation.service';
 
 declare var Blockly: any;
 
@@ -143,7 +150,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     private contrastColorPipe: ContrastColorPipe,
     private blocklyService: BlocklyService,
     private renderer2: Renderer2,
-    @Inject(DOCUMENT) private document
+    @Inject(DOCUMENT) private document,
+    private translationService: TranslationService
   ) {}
 
   public ngAfterViewInit(): void {
@@ -181,6 +189,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new IsoToMsBlocklyComponent(this.blocklyUtils),
       new ShiftDateOfBlocklyComponent(this.blocklyUtils),
       new PrintAttributeBlocklyComponent(this.blocklyUtils),
+      new PrintTextBlocklyComponent(this.blocklyUtils),
       new StringReplaceBlocklyComponent(this.blocklyUtils),
       new DeleteDocumentBlocklyComponent(this.blocklyUtils),
       new LinkDocumentsNoReturnBlocklyComponent(this.blocklyUtils, this.linkTypes),
@@ -192,6 +201,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetParentDocumentBlocklyComponent(this.blocklyUtils),
       new GetChildDocumentsBlocklyComponent(this.blocklyUtils),
       new GetHierarchySiblingsBlocklyComponent(this.blocklyUtils),
+      new LoopBreakBlocklyComponent(this.blocklyUtils),
+      new LoopContinueBlocklyComponent(this.blocklyUtils),
+      new EscapeHtmlBlocklyComponent(this.blocklyUtils),
+      new UnescapeHtmlBlocklyComponent(this.blocklyUtils),
+      new FormatCurrencyBlocklyComponent(this.blocklyUtils, this.translationService),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

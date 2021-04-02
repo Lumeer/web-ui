@@ -38,6 +38,12 @@ const printRoutes: Routes = [
     },
     component: PrintComponent,
   },
+  {
+    path: 'print/:organizationCode/:projectCode/:resourceType/:content',
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard],
+    canDeactivate: [ViewConfigCleanUpGuard],
+    component: PrintComponent,
+  },
 ];
 
 @NgModule({

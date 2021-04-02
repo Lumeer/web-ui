@@ -23,38 +23,52 @@ import {COLOR_CYAN} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class CurrentLocaleBlocklyComponent extends BlocklyComponent {
+export class PrintTextBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.currentLocaleBlock:Get current user language code (e.g. en).`;
+    this.tooltip = $localize`:@@blockly.tooltip.printTextBlock:Prints the given text string.`;
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
+    return [MasterBlockType.Function];
   }
 
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.CURRENT_LOCALE] = {
+    Blockly.Blocks[BlocklyUtils.PRINT_TEXT] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.CURRENT_LOCALE,
-          message0: '%{BKY_BLOCK_CURRENT_LOCALE}', // current locale
-          output: '',
+          type: BlocklyUtils.PRINT_TEXT,
+          message0: 'print text %1', //'%{BKY_BLOCK_PRINT_ATTRIBUTE}', // print %1 of %2
+          args0: [
+            {
+              type: 'input_value',
+              name: 'MESSAGE',
+              check: 'String',
+            },
+          ],
+          previousStatement: null,
+          nextStatement: null,
           colour: COLOR_CYAN,
           tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_LOCALE] = function (block) {
-      const code = this_.blocklyUtils.getLumeerVariable() + '.getCurrentLocale()';
+    Blockly.JavaScript[BlocklyUtils.PRINT_TEXT] = function (block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+      if (!argument0) {
+        return '';
+      }
+
+      const code = this_.blocklyUtils.getLumeerVariable() + '.printText(' + argument0 + ');\n';
+
+      return code;
     };
   }
 }
