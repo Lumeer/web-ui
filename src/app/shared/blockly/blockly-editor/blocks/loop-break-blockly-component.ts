@@ -43,7 +43,7 @@ export class LoopBreakBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.LOOP_BREAK,
-          message0: 'break', //'%{BKY_BLOCK_LOOP_BREAK}', // current date
+          message0: '%{BKY_BLOCK_LOOP_BREAK}', // break
           previousStatement: null,
           nextStatement: null,
           colour: '%{BKY_LOOPS_HUE}',

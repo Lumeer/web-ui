@@ -43,7 +43,7 @@ export class LoopContinueBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.LOOP_CONTINUE,
-          message0: 'continue', //'%{BKY_BLOCK_LOOP_CONTINUE}', // current date
+          message0: '%{BKY_BLOCK_LOOP_CONTINUE}', // continue
           previousStatement: null,
           nextStatement: null,
           colour: '%{BKY_LOOPS_HUE}',

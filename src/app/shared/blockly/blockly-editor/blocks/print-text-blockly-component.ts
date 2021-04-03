@@ -43,7 +43,7 @@ export class PrintTextBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.PRINT_TEXT,
-          message0: 'print text %1', //'%{BKY_BLOCK_PRINT_ATTRIBUTE}', // print %1 of %2
+          message0: '%{BKY_BLOCK_PRINT_TEXT}', // print text %1
           args0: [
             {
               type: 'input_value',

@@ -58,7 +58,7 @@ export class FormatCurrencyBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.FORMAT_CURRENCY,
-          message0: 'format currency in locale %1 with %2 decimals %3', //'%{BKY_BLOCK_FORMAT_CURRENCY}', // current locale
+          message0: '%{BKY_BLOCK_FORMAT_CURRENCY}', // format currency in locale %1 with %2 decimals %3
           args0: [
             {
               type: 'field_dropdown',

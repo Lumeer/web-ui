@@ -43,7 +43,7 @@ export class UnescapeHtmlBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.UNESCAPE_HTML,
-          message0: 'unescape html %1', //'%{BKY_BLOCK_UNESCCAPE_HTML}', // current locale
+          message0: '%{BKY_BLOCK_UNESCAPE_HTML}', // unescape html %1
           args0: [
             {
               type: 'input_value',

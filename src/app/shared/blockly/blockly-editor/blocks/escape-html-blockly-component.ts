@@ -43,7 +43,7 @@ export class EscapeHtmlBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.ESCAPE_HTML,
-          message0: 'escape html %1', //'%{BKY_BLOCK_ESCCAPE_HTML}', // current locale
+          message0: '%{BKY_BLOCK_ESCAPE_HTML}', // escape html %1
           args0: [
             {
               type: 'input_value',
