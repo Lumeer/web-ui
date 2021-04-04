@@ -22,7 +22,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
@@ -48,6 +48,10 @@ export class PrintComponent implements OnInit {
         const resourceType = paramMap.get('resourceType');
         const documentId = paramMap.get('documentId');
         const attributeId = paramMap.get('attributeId');
+
+        if (resourceType === 'text') {
+          return of(paramMap.get('content'));
+        }
 
         return combineLatest([
           this.store$.pipe(select(selectWorkspace)),

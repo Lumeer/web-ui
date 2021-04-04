@@ -73,7 +73,7 @@ export class ConfigurationService {
     const pusherKey = env['PUSHER_KEY'] || '';
     const blocklyCdn =
       env['BLOCKLY_CDN'] ||
-      `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v27/blockly.${blocklyCdnLanguagePath(locale)}.min.js`;
+      `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v28/blockly.${blocklyCdnLanguagePath(locale)}.min.js`;
     const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
     const publicScriptCdn =
       env['PUBLIC_SCRIPT_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/public-view.js`;

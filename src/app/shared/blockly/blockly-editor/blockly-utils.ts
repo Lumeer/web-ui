@@ -83,6 +83,9 @@ export class BlocklyUtils {
   public static readonly CURRENT_DATE = 'current_date';
   public static readonly CURRENT_USER = 'current_user';
   public static readonly CURRENT_LOCALE = 'current_locale';
+  public static readonly ESCAPE_HTML = 'escape_html';
+  public static readonly UNESCAPE_HTML = 'unescape_html';
+  public static readonly FORMAT_CURRENCY = 'format_currency';
   public static readonly CREATE_DOCUMENT = 'create_document';
   public static readonly DELETE_DOCUMENT = 'delete_document';
   public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
@@ -95,9 +98,12 @@ export class BlocklyUtils {
   public static readonly IS_EMPTY = 'is_empty';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
+  public static readonly PRINT_TEXT = 'print_text';
   public static readonly SEND_EMAIL = 'send_email';
   public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
   public static readonly STRING_REPLACE = 'string_replace';
+  public static readonly LOOP_BREAK = 'loop_break';
+  public static readonly LOOP_CONTINUE = 'loop_continue';
   public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
   public static readonly MAXIMUM_DOCUMENTS_RETURNED = 1000;
   public static readonly SHOW_MESSAGES_LIMIT = 5;

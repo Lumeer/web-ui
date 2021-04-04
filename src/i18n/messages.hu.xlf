@@ -280,7 +280,13 @@
 			<trans-unit datatype="html" id="blockly.tooltip.forEachLinkBlock">
 				<source>Loops over all links in the given list.</source>
 				<target>Hurkok az adott lista összes linkje felett.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-link-array-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-link-array-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatCurrencyBlock" datatype="html">
+        <source>Formats number as a currency using defined locale.</source><target>Formázza a számot pénznemként meghatározott területi beállításokkal.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.formatDateBlock">
 				<source>Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</source>
 				<target>Az időt vagy dátumobjektumban vagy ezredmásodpercben formázza a korszak (Unix-idő) óta a megadott formátum karakterlánc és területi karakterlánc használatával. Karakterláncot eredményez.</target>
@@ -332,7 +338,13 @@
 			<trans-unit datatype="html" id="blockly.tooltip.printAttributeBlock">
 				<source>Prints the value of an attribute in the given record or link.</source>
 				<target>Egy tulajdonság értékét nyomtatja ki az adott rekordba vagy hivatkozásba.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.printTextBlock" datatype="html">
+        <source>Prints the given text string.</source><target>Kinyomtatja a megadott szöveg karakterláncot.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/print-text-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.sequenceBlock">
 				<source>Gets another value from the given sequence aligned to the given number of digits.</source>
 				<target>Egy másik értéket kapsz az adott sorozatból a megadott számjegyszámhoz igazítva.</target>
@@ -358,7 +370,13 @@
 			<trans-unit datatype="html" id="blockly.tooltip.stringReplaceBlock">
 				<source>Replaces a regular expression pattern in a given string.</source>
 				<target>Lecseréli a reguláris kifejezés mintáját egy adott karakterláncban.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/string-replace-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/string-replace-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.unescapeHtmlBlock" datatype="html">
+        <source>Unescape HTML entities in a string.</source><target>Távolítsa el a HTML-entitásokat egy karakterláncban.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/unescape-html-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="button.back">
 				<source>Back</source>
 				<target>Vissza</target>
@@ -1173,7 +1191,7 @@
 			<trans-unit datatype="html" id="constraint.duration.unit">
 				<source>{unit, select, w {w} d {d} h {h} m {m} s {s}}</source>
 				<target>{unit, select, w {w} d {d} h {h} m {m} s {s} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">51</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.duration.unit.conversion">
 				<source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
 				<target><x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/></target>
@@ -1209,7 +1227,7 @@
 			<trans-unit datatype="html" id="constraint.number.currency.select">
 				<source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
 				<target>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukrajna - ₴ (UAH)} tr-TR {Törökország - ₺ (TRY)} en-MT {Málta - € (EUR)} en-IE {Írország - € (EUR)} da-DK {Dánia - kr (DKK)} de-CH {Svájc - CHF} en-NZ {Új Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Svédország - kr (SEK)} nb-NO {Norvégia - kr (NOK)} fi-FI {Finnország - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Spanyolország - € (EUR)} fr-FR {Franciaország - € (EUR)} it-IT {Olaszország - € (EUR)} en-GB {Egyesült Királyság - £ (GBP)} pt-PT {Portugália - € (EUR)} pl-PL {Lengyelország - zł (PLN)} cs-CZ {Csehország - Kč (CZK)} sk-SK {Szlovákia - € (EUR)} hu-HU {Magyarország - Ft (HUF)} de-AT {Ausztria - € (EUR)} de-DE {Németország - € (EUR)} en-US {Amerikai Egyesült Államok - $ (USD)} pt-BR {Brazília - R$ (BRL)} zh-TW {Tajvan - NT$ (TWD)} nl-NL {Hollandia - € (EUR)} zh-CN {Kína - ¥ (CNY)} ru-RU {Oroszország - ₽ (RUB)} ja-JP {Japán - ¥ (JPY)} en-AU {Ausztrália - $ (AUD)} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.ts</context><context context-type="linenumber">120</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.number.decimals.description">
 				<source> Leave empty for no rounding. </source>
 				<target>Hagyd üresen, kerekítés nélkül.</target>
@@ -1407,11 +1425,11 @@
 			<trans-unit datatype="html" id="currency.abbreviations">
 				<source>k|m|b|t</source>
 				<target>k|m|b|t</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">38</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">39</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="currency.ordinals">
 				<source>st|nd|rd|th</source>
 				<target>st|nd|rd|th</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">42</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">43</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="currentUser.get.fail">
 				<source>Could not get user details</source>
 				<target>Nem lehet beszerezni a felhasználói adatokat</target>
@@ -3281,27 +3299,27 @@
 				<trans-unit datatype="html" id="query.filter.condition.constraint.date">
 					<source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, eq {Van} neq {Nincs} gt {Utána} lt {Előtte} gte {Benne van vagy utána} lte {Benne van vagy előtte} between {Közte van} notBetween {Nincs közte} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">117</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.number">
 					<source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, between {Tartomány} notBetween {Nem a tartományból} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">110</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">118</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.select">
 					<source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, eq {Benne van} neq {Nincs egy sem} in {Bent} nin {Nincs egy sem} hasAll {Mindegyik van} hasSome {Néhány van} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">81</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">89</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.text">
 					<source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}</source>
 					<target>{condition, select, eq {Van} neq {Nincs} contains {Tartalmazza} notContains {Nem tartalmazza} startsWith {Kezdődik a} endsWith {Végződik a} in {Benne van} nin {Nincs benne} empty {Üres} notEmpty {Nem üres} enabled {Engedélyezett} disabled {Nem engedélyezett} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">88</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.date">
 					<source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}</source>
 					<target>{condition, select, today {Ma} yesterday {Tegnap} tomorrow {Holnap} thisWeek {Ez a hét} thisMonth {Eza hónap} lastWeek {Múlt hét} lastMonth {Múlt hónap} nextMonth {Következő hónap} nextWeek {Következő hét} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">139</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">147</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.user">
 					<source>{type, select, currentUser {Current User}}</source>
 					<target>{type, select, currentUser {Jelenlegi felhasználó} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">146</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">154</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.item.button.remove">
 					<source>Delete query item</source>
 					<target>Lekérdezési elem eltávolítása</target>
@@ -4632,13 +4650,31 @@
 				<trans-unit datatype="html" id="blockly.tooltip.linkDocumentsNoReturnBlock">
 					<source>Links two records using the selected link type.</source>
 					<target>Két rekordot összekapcsol a kiválasztott linktípus segítségével.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/link-documents-no-return-blockly-component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/link-documents-no-return-blockly-component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="blockly.tooltip.loopBreakBlock" datatype="html">
+        <source>Breaks the for cycle, if branch, switch case etc.</source><target>Megszakítja a ciklust, ha elágazás, kapcsolótok stb.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-break-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.loopContinueBlock" datatype="html">
+        <source>Continues the for cycle.</source><target>Folytatja a for ciklust.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-continue-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.deleteDocumentBlock">
 					<source>Deletes an existing record. To prevent large damage, only up to <x id="limit" equiv-text="limit"/> documents can be deleted within a single sequence of automations and functions.</source>
 					<target>Meglévő rekord törlése. A nagy károk elkerülése érdekében csak
 						<x id="limit" equiv-text="{{limit}}"/>
 						dokumentumokat lehet törölni egyetlen automatizálási és függvénysorozaton belül.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/delete-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="blockly.tooltip.escapeHtmlBlock" datatype="html">
+        <source>Escape HTML entities in a string.</source><target>Menekülés HTML-entitásokból egy karakterláncban.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/escape-html-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.navigateBlock">
 					<source>Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.</source>
 					<target>Megnyitja a megadott nézetet és rekordot. Megnyithatja a nézetet ugyanazon a böngésző lapon vagy egy újban. Ahol lehetséges (pl. Munkafolyamat), oldalsáv nyitható.</target>

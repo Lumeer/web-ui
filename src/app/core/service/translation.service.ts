@@ -26,6 +26,7 @@ import {
   ConstraintType,
   DateTimeConstraintConditionValue,
   DurationUnit,
+  LanguageTag,
   UserConstraintConditionValue,
 } from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../shared/utils/translation.utils';
@@ -74,6 +75,13 @@ export class TranslationService {
       default:
         return this.translateConditionByText(condition);
     }
+  }
+
+  public translateLanguageTag(tag: LanguageTag): string {
+    return parseSelectTranslation(
+      $localize`:@@constraint.number.currency.select:{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}`,
+      {tag}
+    );
   }
 
   private translateConditionByUserAndSelect(condition: ConditionType): string {

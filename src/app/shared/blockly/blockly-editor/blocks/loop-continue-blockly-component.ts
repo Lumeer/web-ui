@@ -19,42 +19,41 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_CYAN} from '../../../../core/constants';
+import {COLOR_PINK} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class CurrentLocaleBlocklyComponent extends BlocklyComponent {
+export class LoopContinueBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.currentLocaleBlock:Get current user language code (e.g. en).`;
+    this.tooltip = $localize`:@@blockly.tooltip.loopContinueBlock:Continues the for cycle.`;
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
+    return [MasterBlockType.Function];
   }
 
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.CURRENT_LOCALE] = {
+    Blockly.Blocks[BlocklyUtils.LOOP_CONTINUE] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.CURRENT_LOCALE,
-          message0: '%{BKY_BLOCK_CURRENT_LOCALE}', // current locale
-          output: '',
-          colour: COLOR_CYAN,
+          type: BlocklyUtils.LOOP_CONTINUE,
+          message0: '%{BKY_BLOCK_LOOP_CONTINUE}', // continue
+          previousStatement: null,
+          nextStatement: null,
+          colour: '%{BKY_LOOPS_HUE}',
           tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_LOCALE] = function (block) {
-      const code = this_.blocklyUtils.getLumeerVariable() + '.getCurrentLocale()';
-
-      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    Blockly.JavaScript[BlocklyUtils.LOOP_CONTINUE] = function (block) {
+      return 'continue;';
     };
   }
 }

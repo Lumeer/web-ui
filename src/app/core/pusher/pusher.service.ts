@@ -411,6 +411,17 @@ export class PusherService implements OnDestroy {
         a.click();
       }
     });
+
+    this.channel.bind('TextPrintRequest', data => {
+      if (data.correlationId === this.appId.getAppId()) {
+        const a = document.createElement('a');
+        a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+          data.object.projectCode
+        }/text/${encodeURIComponent(data.object.text)}`;
+        a.target = '_blank';
+        a.click();
+      }
+    });
   }
 
   private bindNavigateEvents() {

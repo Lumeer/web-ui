@@ -46,7 +46,7 @@ export class CurrentUserBlocklyComponent extends BlocklyComponent {
           message0: '%{BKY_BLOCK_CURRENT_USER}', // current user
           output: '',
           colour: COLOR_CYAN,
-          tooltip: '',
+          tooltip: this_.tooltip,
           helpUrl: '',
         });
       },

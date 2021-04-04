@@ -23,13 +23,13 @@ import {COLOR_CYAN} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class CurrentLocaleBlocklyComponent extends BlocklyComponent {
+export class UnescapeHtmlBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.currentLocaleBlock:Get current user language code (e.g. en).`;
+    this.tooltip = $localize`:@@blockly.tooltip.unescapeHtmlBlock:Unescape HTML entities in a string.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -39,11 +39,18 @@ export class CurrentLocaleBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.CURRENT_LOCALE] = {
+    Blockly.Blocks[BlocklyUtils.UNESCAPE_HTML] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.CURRENT_LOCALE,
-          message0: '%{BKY_BLOCK_CURRENT_LOCALE}', // current locale
+          type: BlocklyUtils.UNESCAPE_HTML,
+          message0: '%{BKY_BLOCK_UNESCAPE_HTML}', // unescape html %1
+          args0: [
+            {
+              type: 'input_value',
+              name: 'MESSAGE',
+              check: 'String',
+            },
+          ],
           output: '',
           colour: COLOR_CYAN,
           tooltip: this_.tooltip,
@@ -51,8 +58,9 @@ export class CurrentLocaleBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_LOCALE] = function (block) {
-      const code = this_.blocklyUtils.getLumeerVariable() + '.getCurrentLocale()';
+    Blockly.JavaScript[BlocklyUtils.UNESCAPE_HTML] = function (block) {
+      const value_message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC) || null;
+      const code = `/** he.js **/ he.unescape(${value_message})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
