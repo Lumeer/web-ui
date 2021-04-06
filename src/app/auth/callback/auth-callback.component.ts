@@ -64,7 +64,7 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
   }
 
   private navigateToApplication() {
-    const path = this.authService.getLoginRedirectPath();
+    const path = this.authService.getAndClearLoginRedirectPath();
     if (path) {
       this.router.navigateByUrl(path);
     } else {

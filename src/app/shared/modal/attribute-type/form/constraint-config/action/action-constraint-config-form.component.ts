@@ -124,6 +124,7 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   private createForm() {
     this.addPermissionsForm();
     this.addButtonForms();
+    this.addConfirmationForms();
     this.addRuleForm();
     this.addConditionsForm();
   }
@@ -145,6 +146,17 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
       this.titleUserControl.valueChanges.subscribe(value => {
         this.titleControl.setValue(cleanTitle(value) || this.defaultTitle);
       })
+    );
+  }
+
+  private addConfirmationForms() {
+    this.form.addControl(
+      ActionConstraintFormControl.RequiresConfirmation,
+      new FormControl(this.config?.requiresConfirmation)
+    );
+    this.form.addControl(
+      ActionConstraintFormControl.ConfirmationTitle,
+      new FormControl(this.config?.confirmationTitle)
     );
   }
 

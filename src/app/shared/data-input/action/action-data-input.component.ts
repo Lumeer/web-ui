@@ -31,7 +31,7 @@ import {DataCursor} from '../data-cursor';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
 import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
 import {
@@ -58,6 +58,8 @@ import {
   createDataValuesMap,
   isActionButtonEnabled,
 } from '@lumeer/data-filters';
+import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute-type/form/constraint-config/action/action-constraint.utils';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 
 const loadingTime = 2000;
 
@@ -199,28 +201,47 @@ export class ActionDataInputComponent implements OnChanges {
 
   public onClick(event: MouseEvent) {
     preventEvent(event);
-    this.runRule();
+    if (this.value.config?.requiresConfirmation) {
+      this.showConfirmation();
+    } else {
+      this.runRule();
+    }
+  }
+
+  private showConfirmation() {
+    const title = $localize`:@@constraint.action.confirmation.label:Confirmation`;
+    const message =
+      this.value.config?.confirmationTitle?.trim() ||
+      actionConstraintConfirmationPlaceholder(this.value.config?.title || '');
+    const action = this.runRuleAction();
+    if (action) {
+      this.store$.dispatch(new NotificationsAction.Confirm({title, message, action, type: 'warning'}));
+    }
   }
 
   private runRule() {
-    if (this.cursor?.collectionId && this.cursor?.documentId) {
-      this.store$.dispatch(
-        new DocumentsAction.RunRule({
-          collectionId: this.cursor.collectionId,
-          documentId: this.cursor.documentId,
-          attributeId: this.cursor.attributeId,
-          actionName: this.config.title,
-        })
-      );
-    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
-      this.store$.dispatch(
-        new LinkInstancesAction.RunRule({
-          linkTypeId: this.cursor.linkTypeId,
-          linkInstanceId: this.cursor.linkInstanceId,
-          attributeId: this.cursor.attributeId,
-          actionName: this.config.title,
-        })
-      );
+    const action = this.runRuleAction();
+    if (action) {
+      this.store$.dispatch(action);
     }
+  }
+
+  private runRuleAction(): Action {
+    if (this.cursor?.collectionId && this.cursor?.documentId) {
+      return new DocumentsAction.RunRule({
+        collectionId: this.cursor.collectionId,
+        documentId: this.cursor.documentId,
+        attributeId: this.cursor.attributeId,
+        actionName: this.config.title,
+      });
+    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
+      return new LinkInstancesAction.RunRule({
+        linkTypeId: this.cursor.linkTypeId,
+        linkInstanceId: this.cursor.linkInstanceId,
+        attributeId: this.cursor.attributeId,
+        actionName: this.config.title,
+      });
+    }
+    return null;
   }
 }

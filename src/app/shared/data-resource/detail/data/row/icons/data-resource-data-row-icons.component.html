@@ -1,14 +1,3 @@
-<ng-container *ngIf="permissions?.writeWithView">
-  <i class="far fa-fw fa-trash-alt text-danger mr-2 clickable text-danger button-remove"
-     aria-hidden="true"
-     title="Remove row"
-     i18n-title="@@remove.row"
-     tooltip="Remove row"
-     i18n-tooltip="@@remove.row"
-     (click)="onDelete()">
-  </i>
-</ng-container>
-
 <ng-container *ngIf="{manage: row.attribute && row.attribute.id && permissions?.manageWithView} as attributeData">
   <i class="fa fa-fw fa-shapes mr-2 clickable text-success button-config"
      aria-hidden="true"

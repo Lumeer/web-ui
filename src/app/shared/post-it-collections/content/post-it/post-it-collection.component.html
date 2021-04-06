@@ -53,22 +53,22 @@
     <div *ngIf="collection.id && allowedPermissions.read"
          class="toggle-favorite opacity-content clickable text-warning"
          [class.always-visible]="collection.favorite">
-      <a *ngIf="collection.favorite"
-         title="Remove from favorites"
-         i18n-title="@@collection.favorite.remove"
-         (click)="$event.preventDefault(); toggleFavorite()">
-        <i class="fas fa-star"
+      <span *ngIf="collection.favorite"
+            title="Remove from favorites"
+            i18n-title="@@collection.favorite.remove"
+            (click)="$event.preventDefault(); toggleFavorite()">
+        <i class="fas fa-star text-warning"
            aria-hidden="true">
         </i>
-      </a>
-      <a *ngIf="!collection.favorite"
-         title="Add to favorites"
-         i18n-title="@@collection.favorite.add"
-         (click)="$event.preventDefault(); toggleFavorite()">
-        <i class="far fa-star"
+      </span>
+      <span *ngIf="!collection.favorite"
+            title="Add to favorites"
+            i18n-title="@@collection.favorite.add"
+            (click)="$event.preventDefault(); toggleFavorite()">
+        <i class="far fa-star text-warning"
            aria-hidden="true">
         </i>
-      </a>
+      </span>
     </div>
 
     <div *ngIf="collection.id"

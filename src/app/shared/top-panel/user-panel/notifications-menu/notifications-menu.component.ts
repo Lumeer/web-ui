@@ -218,29 +218,28 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     this.subscribeTaskData$(notification).subscribe(
       ([organization, collection, viewsMap, viewsPermissions, documentsMap, collectionsPermissions]) => {
         if (organization) {
-          let query: string;
-          const path: any[] = ['w', organization.code, notification.projectCode, 'view'];
-          const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
-          if (defaultView && viewsPermissions[defaultView.id]?.read) {
-            query = '';
-            path.push({vc: defaultView.code});
-          } else if (collection && collectionsPermissions[collection.id]?.read) {
-            query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
-            path.push(Perspective.Workflow);
-          } else {
-            const document = documentsMap[notification.documentId];
-            if (document && collection) {
-              this.modalService.showDocumentDetail(document.id);
-            } else {
-              const message = $localize`:@@notification.task.notVisible:I am sorry, you can not see selected task`;
-              this.store$.dispatch(new NotificationsAction.Error({message}));
-            }
-            return;
-          }
-
-          const cursor = notification.documentCursor;
-
           if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
+            let query: string;
+            const path: any[] = ['w', organization.code, notification.projectCode, 'view'];
+            const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
+            if (defaultView && viewsPermissions[defaultView.id]?.read) {
+              query = '';
+              path.push({vc: defaultView.code});
+            } else if (collection && collectionsPermissions[collection.id]?.read) {
+              query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
+              path.push(Perspective.Workflow);
+            } else {
+              const document = documentsMap[notification.documentId];
+              if (document && collection) {
+                this.modalService.showDocumentDetail(document.id);
+              } else {
+                const message = $localize`:@@notification.task.notVisible:I am sorry, you can not see selected task`;
+                this.store$.dispatch(new NotificationsAction.Error({message}));
+              }
+              return;
+            }
+
+            const cursor = notification.documentCursor;
             const buildUrl = this.router
               .createUrlTree(path, {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}})
               .toString();
@@ -248,7 +247,15 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
               this.router.navigate(path, {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}});
             }
           } else {
-            this.router.navigate(path, {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}});
+            const path: any[] = [
+              'w',
+              organization.code,
+              notification.projectCode,
+              'document',
+              notification.collectionId,
+              notification.documentId,
+            ];
+            this.router.navigate(path);
           }
         }
       }
