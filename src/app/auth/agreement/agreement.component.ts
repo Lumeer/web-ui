@@ -135,7 +135,7 @@ export class AgreementComponent implements OnInit, OnDestroy {
   }
 
   private navigateToApplication() {
-    const path = this.authService.getLoginRedirectPath();
+    const path = this.authService.getAndClearLoginRedirectPath();
     this.router.navigate([path]);
   }
 

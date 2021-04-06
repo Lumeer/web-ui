@@ -220,7 +220,7 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
 
   return (superset?.stems || []).every(stem => {
     const subsetStem = subset?.stems?.find(s => s.collectionId === stem.collectionId);
-    return subsetStem && isQueryStemSubset(subsetStem, stem);
+    return subsetStem && isQueryStemSubset(stem, subsetStem);
   });
 }
 

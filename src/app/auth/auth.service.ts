@@ -309,8 +309,10 @@ export class AuthService {
     }
   }
 
-  public getLoginRedirectPath(): string {
-    return localStorage.getItem(REDIRECT_KEY) || '/';
+  public getAndClearLoginRedirectPath(): string {
+    const redirectPath = localStorage.getItem(REDIRECT_KEY) || '/';
+    localStorage.removeItem(REDIRECT_KEY);
+    return redirectPath;
   }
 
   public saveLoginRedirectPath(redirectPath: string) {

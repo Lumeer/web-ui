@@ -56,6 +56,8 @@ import {ActionConstraintPermissionsFormComponent} from './form/constraint-config
 import {CollectionSettingsPathPipe} from './form/constraint-config/action/pipes/collection-settings-path.pipe';
 import {RouterModule} from '@angular/router';
 import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
+import {ActionConstraintConfirmationFormComponent} from './form/constraint-config/action/confirmation/action-constraint-confirmation-form.component';
+import {InputModule} from '../../input/input.module';
 
 @NgModule({
   declarations: [
@@ -83,6 +85,7 @@ import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/act
     ActionConstraintPermissionsFormComponent,
     CollectionSettingsPathPipe,
     ActionConstraintConfigEmptyComponent,
+    ActionConstraintConfirmationFormComponent,
   ],
   imports: [
     CommonModule,
@@ -99,6 +102,7 @@ import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/act
     FilterPreviewModule,
     FilterBuilderModule,
     RouterModule,
+    InputModule,
   ],
   exports: [AttributeTypeModalComponent],
 })

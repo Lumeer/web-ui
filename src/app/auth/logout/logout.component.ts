@@ -37,7 +37,7 @@ export class LogoutComponent implements OnInit {
   }
 
   private navigateToApplication() {
-    const path = this.authService.getLoginRedirectPath();
+    const path = this.authService.getAndClearLoginRedirectPath();
     if (path) {
       this.router.navigateByUrl(path);
     } else {

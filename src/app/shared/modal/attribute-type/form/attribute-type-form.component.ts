@@ -199,6 +199,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           openInApp: this.configForm.get(LinkConstraintFormControl.OpenInApp)?.value,
         };
       case ConstraintType.Action:
+        const requiresConfirmation = this.configForm.get(ActionConstraintFormControl.RequiresConfirmation).value;
         return {
           title: this.configForm.get(ActionConstraintFormControl.Title).value,
           icon: this.configForm.get(ActionConstraintFormControl.Icon).value,
@@ -206,6 +207,10 @@ export class AttributeTypeFormComponent implements OnChanges {
           rule: this.configForm.get(ActionConstraintFormControl.Rule).value,
           role: this.configForm.get(ActionConstraintFormControl.Role).value,
           equation: this.createActionEquation(),
+          requiresConfirmation,
+          confirmationTitle: requiresConfirmation
+            ? this.configForm.get(ActionConstraintFormControl.ConfirmationTitle).value?.trim()
+            : null,
         };
       default:
         return null;

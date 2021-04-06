@@ -33,35 +33,33 @@
       </i>
       <span i18n="@@table.header.menu.edit">Edit name</span>
     </button>
-    <button *ngIf="attribute.id"
-            mat-menu-item
-            [disabled]="!allowedPermissions?.manageWithView"
-            (click)="onClick($event); configure.emit()"
-            data-test="table-column-menu-change-constraint">
-      <i class="fa fa-fw fa-shapes mr-1"
-         aria-hidden="true">
-      </i>
-      <span i18n="@@table.header.menu.changeType">Attribute settings...</span>
-    </button>
-    <button *ngIf="attribute.id"
-            mat-menu-item
-            [disabled]="!allowedPermissions?.manageWithView"
-            (click)="onClick($event); functionEdit.emit()">
-      <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>
-      <span *ngIf="attribute?.constraint?.type !== type.Action"
-            i18n="@@table.header.menu.editFunction">Edit function...</span>
-      <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editAutomation">Edit automation...</span>
-    </button>
-    <hr class="my-2">
-    <button *ngIf="attribute.id"
-            mat-menu-item
-            [disabled]="!allowedPermissions?.manageWithView"
-            (click)="onClick($event); descriptionEdit.emit()">
-      <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>
-      <span i18n="@@table.header.menu.editDescription">Edit description...</span>
-    </button>
-    <ng-container *ngIf="attribute.id && !defaultAttribute">
+    <ng-container *ngIf="attribute.id">
       <button mat-menu-item
+              [disabled]="!allowedPermissions?.manageWithView"
+              (click)="onClick($event); configure.emit()"
+              data-test="table-column-menu-change-constraint">
+        <i class="fa fa-fw fa-shapes mr-1"
+           aria-hidden="true">
+        </i>
+        <span i18n="@@table.header.menu.changeType">Attribute settings...</span>
+      </button>
+      <button mat-menu-item
+              [disabled]="!allowedPermissions?.manageWithView"
+              (click)="onClick($event); functionEdit.emit()">
+        <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>
+        <span *ngIf="attribute?.constraint?.type !== type.Action"
+              i18n="@@table.header.menu.editFunction">Edit function...</span>
+        <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editAutomation">Edit automation...</span>
+      </button>
+      <hr class="my-2">
+      <button mat-menu-item
+              [disabled]="!allowedPermissions?.manageWithView"
+              (click)="onClick($event); descriptionEdit.emit()">
+        <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>
+        <span i18n="@@table.header.menu.editDescription">Edit description...</span>
+      </button>
+      <button *ngIf="!defaultAttribute"
+              mat-menu-item
               [disabled]="!allowedPermissions?.manageWithView"
               (click)="onClick($event); setDefaultAttribute.emit()">
         <i class="fa fa-fw fa-check-square mr-1"

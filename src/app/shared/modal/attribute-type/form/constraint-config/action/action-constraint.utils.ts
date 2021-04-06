@@ -17,22 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum ActionConstraintFormControl {
-  Title = 'title',
-  Icon = 'icon',
-  TitleUser = 'titleUser',
-  Background = 'background',
-  Rule = 'rule',
-  Role = 'role',
-  Filters = 'filters',
-  RequiresConfirmation = 'requiresConfirmation',
-  ConfirmationTitle = 'confirmationTitle',
-}
-
-export enum ActionConstraintFiltersFormControl {
-  Attribute = 'attribute',
-  Operator = 'operator',
-  ConstraintType = 'constraintType',
-  Condition = 'condition',
-  ConditionValues = 'values',
+export function actionConstraintConfirmationPlaceholder(buttonTitle: string): string {
+  return $localize`:@@constraint.action.confirmation.placeholder:Are you sure to perform ${buttonTitle}?`;
 }

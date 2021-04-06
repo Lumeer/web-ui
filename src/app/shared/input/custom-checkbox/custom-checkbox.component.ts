@@ -33,7 +33,7 @@ export class CustomCheckboxComponent {
   public checked: boolean;
 
   @Input()
-  public title: string;
+  public checkboxTitle: string;
 
   @Output()
   public checkedChange = new EventEmitter<boolean>();
