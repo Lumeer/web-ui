@@ -32,7 +32,7 @@ import {Attribute, AttributeFunction, Collection} from '../../../../../core/stor
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {BlocklyDebugDisplay} from '../../../../blockly/blockly-debugger/blockly-debugger.component';
 import {RuleVariable} from '../../../../blockly/rule-variable-type';
-import {attributeHasFunction} from '../../../../utils/attribute.utils';
+import {attributeHasEditableFunction} from '../../../../utils/attribute.utils';
 import {View} from '../../../../../core/store/views/view';
 
 @Component({
@@ -78,7 +78,7 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
   }
 
   private checkVariables() {
-    this.isFunction = attributeHasFunction(this.attribute) || this.attribute?.constraint?.allowEditFunction;
+    this.isFunction = attributeHasEditableFunction(this.attribute);
     if (this.collection) {
       if (this.isFunction) {
         this.variables = [{name: 'thisRecord', collectionId: this.collection.id} as RuleVariable];
@@ -139,10 +139,6 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
 
   public onXmlUpdate(xml: string) {
     this.xmlControl.patchValue(xml);
-  }
-
-  public onEditableChange(editable: boolean) {
-    this.editableControl.patchValue(editable);
   }
 
   public onDisplay(type: BlocklyDebugDisplay) {

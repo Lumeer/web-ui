@@ -85,7 +85,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
 
   public numInputs: number;
   public ngForIndexes: number[];
-  public focused: {column: number; row: number} = {column: 0, row: 0};
+  public focused$ = new BehaviorSubject({column: 0, row: 0});
   public dataValues: DataValue[];
   public conditionItems: ConditionItem[];
   public conditionValueItems: ConstraintConditionValueItem[];
@@ -154,7 +154,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
   }
 
   private focusCell(row: number, column: number) {
-    this.focused = {row, column};
+    this.focused$.next({row, column});
     this.hiddenInputComponent?.focus();
   }
 
@@ -173,7 +173,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
   }
 
   private endFocus() {
-    this.focused = null;
+    this.focused$.next(null);
     this.hiddenInputComponent?.blur();
   }
 
@@ -218,7 +218,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    if (!this.focused) {
+    if (!this.focused$.value) {
       return;
     }
     switch (event.key) {
@@ -252,47 +252,56 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
   }
 
   private moveFocusDown() {
-    if (this.focused.column === 0) {
-      if (this.focused.row < this.conditionItems.length - 1) {
-        this.selectCondition(this.conditionItems[this.focused.row + 1]);
-        this.focusCell(this.focused.row + 1, this.focused.column);
+    const focused = this.focused$.value;
+    if (focused) {
+      if (focused.column === 0) {
+        if (focused.row < this.conditionItems.length - 1) {
+          this.selectCondition(this.conditionItems[focused.row + 1]);
+          this.focusCell(focused.row + 1, focused.column);
+        }
+      } else if (focused.row < this.conditionValueItems.length) {
+        // first row in values index is data input
+        this.selectConditionValue(this.conditionValueItems[focused.row], focused.column - 1);
+        this.focusCell(focused.row + 1, focused.column);
       }
-    } else if (this.focused.row < this.conditionValueItems.length) {
-      // first row in values index is data input
-      this.selectConditionValue(this.conditionValueItems[this.focused.row], this.focused.column - 1);
-      this.focusCell(this.focused.row + 1, this.focused.column);
     }
   }
 
   private moveFocusUp() {
-    if (this.focused.column === 0) {
-      if (this.focused.row > 0) {
-        this.selectCondition(this.conditionItems[this.focused.row - 1]);
-        this.focusCell(this.focused.row - 1, this.focused.column);
-      }
-    } else {
-      // first row in values index is data input
-      if (this.focused.row > 1) {
-        this.selectConditionValue(this.conditionValueItems[this.focused.row - 2], this.focused.column - 1);
-        this.focusCell(this.focused.row - 1, this.focused.column);
-      } else if (this.focused.row > 0) {
-        this.startEditing(this.focused.column - 1);
+    const focused = this.focused$.value;
+    if (focused) {
+      if (focused.column === 0) {
+        if (focused.row > 0) {
+          this.selectCondition(this.conditionItems[focused.row - 1]);
+          this.focusCell(focused.row - 1, focused.column);
+        }
+      } else {
+        // first row in values index is data input
+        if (focused.row > 1) {
+          this.selectConditionValue(this.conditionValueItems[focused.row - 2], focused.column - 1);
+          this.focusCell(focused.row - 1, focused.column);
+        } else if (focused.row > 0) {
+          this.startEditing(focused.column - 1);
+        }
       }
     }
   }
 
   private moveFocusRight() {
-    if (this.focused.row === 0 && this.focused.column === 0 && this.numInputs > 0) {
-      this.startEditing(0);
-      return;
-    }
+    const focused = this.focused$.value;
+    if (focused) {
+      if (focused.row === 0 && focused.column === 0 && this.numInputs > 0) {
+        this.startEditing(0);
+        return;
+      }
 
-    const nextColumn = this.focused.column + 1;
-    if (nextColumn <= this.numInputs) {
-      const rowIndex =
-        this.getSelectedRow(nextColumn) || Math.min(this.focused.row - 1, this.conditionValueItems.length - 1);
-      this.selectConditionValue(this.conditionValueItems[rowIndex], nextColumn - 1);
-      this.focusCell(rowIndex + 1, nextColumn);
+      const nextColumn = focused.column + 1;
+      if (nextColumn <= this.numInputs) {
+        const rowIndex =
+          this.getSelectedRow(nextColumn) || Math.min(focused.row - 1, this.conditionValueItems.length - 1);
+        this.selectConditionValue(this.conditionValueItems[rowIndex], nextColumn - 1);
+        this.focusCell(rowIndex + 1, nextColumn);
+      }
     }
   }
 
@@ -309,22 +318,25 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
   }
 
   private moveFocusLeft() {
-    const nextColumn = this.focused.column - 1;
-    if (nextColumn >= 0) {
-      if (nextColumn === 0) {
-        const rowIndex = this.getSelectedRow(0) || Math.min(this.focused.row, this.conditionItems.length - 1);
-        this.selectCondition(this.conditionItems[rowIndex]);
-        this.focusCell(rowIndex, nextColumn);
-      } else {
-        const rowIndex = this.getSelectedRow(nextColumn) || this.focused.row - 1;
-        this.selectConditionValue(this.conditionValueItems[rowIndex], nextColumn - 1);
-        this.focusCell(rowIndex + 1, nextColumn);
+    const focused = this.focused$.value;
+    if (focused) {
+      const nextColumn = focused.column - 1;
+      if (nextColumn >= 0) {
+        if (nextColumn === 0) {
+          const rowIndex = this.getSelectedRow(0) || Math.min(focused.row, this.conditionItems.length - 1);
+          this.selectCondition(this.conditionItems[rowIndex]);
+          this.focusCell(rowIndex, nextColumn);
+        } else {
+          const rowIndex = this.getSelectedRow(nextColumn) || focused.row - 1;
+          this.selectConditionValue(this.conditionValueItems[rowIndex], nextColumn - 1);
+          this.focusCell(rowIndex + 1, nextColumn);
+        }
       }
     }
   }
 
   private startEditingColumn(left: boolean) {
-    const columnToEdit = this.focused.column + (left ? -1 : 1);
+    const columnToEdit = (this.focused$.value?.column || 0) + (left ? -1 : 1);
     if (columnToEdit > this.numInputs) {
       this.finishEditing.emit();
     } else if (columnToEdit > 0) {
@@ -333,7 +345,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
   }
 
   private checkFinishEditingByFocus() {
-    if (this.focused.column >= this.numInputs) {
+    if (this.focused$.value?.column >= this.numInputs) {
       this.finishEditing.emit();
     }
   }
@@ -370,6 +382,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
 
   public focus() {
     this.hiddenInputComponent?.focus();
+    this.initFocusedItem();
   }
 
   private initFocusedItem() {

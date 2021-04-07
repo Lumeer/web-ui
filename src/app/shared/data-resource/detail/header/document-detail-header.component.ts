@@ -171,8 +171,8 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   }
 
   public onFavoriteToggle() {
-    if (this.dataResource && this.resourceType === AttributesResourceType.Collection) {
-      const document = <DocumentModel>this.dataResource;
+    const document = <DocumentModel>this.dataResource;
+    if (document && this.resourceType === AttributesResourceType.Collection) {
       this.toggleService.set(document.id, !document.favorite, document);
     }
   }
