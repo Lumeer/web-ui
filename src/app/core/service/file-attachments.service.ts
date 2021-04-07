@@ -23,8 +23,11 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
 import {selectViewQuery} from '../store/views/views.state';
-import {filter} from 'rxjs/operators';
-import {queryIsEmpty, queryIsNotEmpty} from '../store/navigation/query/query.util';
+import {filter, switchMap} from 'rxjs/operators';
+import {queryIsNotEmpty} from '../store/navigation/query/query.util';
+import {selectPerspective} from '../store/navigation/navigation.state';
+import {Perspective} from '../../view/perspectives/perspective';
+import {selectTasksQuery} from '../store/common/permissions.selectors';
 
 @Injectable()
 export class FileAttachmentsService implements OnDestroy {
@@ -39,8 +42,16 @@ export class FileAttachmentsService implements OnDestroy {
   private subscribeToQuery(): Subscription {
     return this.store$
       .pipe(
-        select(selectViewQuery),
-        filter(query => queryIsNotEmpty(query))
+        select(selectPerspective),
+        switchMap(perspective => {
+          if (perspective === Perspective.Search) {
+            return this.store$.pipe(select(selectTasksQuery));
+          }
+          return this.store$.pipe(
+            select(selectViewQuery),
+            filter(query => queryIsNotEmpty(query))
+          );
+        })
       )
       .subscribe(query => this.store$.dispatch(new FileAttachmentsAction.GetByQuery({query})));
   }
