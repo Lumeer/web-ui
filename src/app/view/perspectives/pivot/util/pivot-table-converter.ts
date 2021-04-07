@@ -143,7 +143,6 @@ export class PivotTableConverter {
     const rowGroups = this.fillCellsByRows(cells);
     const columnGroups = this.fillCellsByColumns(cells);
     this.fillCellsByGroupIntersection(cells, rowGroups, columnGroups);
-
     return {cells};
   }
 
@@ -198,9 +197,9 @@ export class PivotTableConverter {
       const summary = level === 0 ? this.summaryString : this.headerSummaryString;
       const columnIndex = Math.max(level - 1, 0);
       cells[currentIndex][columnIndex] = {
-        value: parentHeader && parentHeader.title,
-        constraint: parentHeader && parentHeader.constraint,
-        label: parentHeader && parentHeader.attributeName,
+        value: parentHeader?.title,
+        constraint: parentHeader?.constraint,
+        label: parentHeader?.attributeName,
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: 1,
@@ -413,9 +412,9 @@ export class PivotTableConverter {
       const shouldAddValueHeaders = numberOfValues > 1;
 
       cells[rowIndex][currentIndex] = {
-        value: parentHeader && parentHeader.title,
-        constraint: parentHeader && parentHeader.constraint,
-        label: parentHeader && parentHeader.attributeName,
+        value: parentHeader?.title,
+        constraint: parentHeader?.constraint,
+        label: parentHeader?.attributeName,
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: this.columnLevels - rowIndex - (shouldAddValueHeaders ? 1 : 0),
