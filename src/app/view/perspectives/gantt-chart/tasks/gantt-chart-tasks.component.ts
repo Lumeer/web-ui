@@ -715,10 +715,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public onTaskDetail(task: GanttTask) {
     const metadata = task.metadata as GanttTaskMetadata;
-    const resourceType = metadata.stemConfig.name?.resourceType || metadata.stemConfig.start?.resourceType;
-    const dataResource = this.getDataResource(metadata.nameDataId || metadata.startDataId, resourceType);
-    if (dataResource) {
-      this.openDataResourceModal(dataResource, resourceType);
+    if (metadata) {
+      const resourceType = metadata.stemConfig.name?.resourceType || metadata.stemConfig.start?.resourceType;
+      const dataResource = this.getDataResource(metadata.nameDataId || metadata.startDataId, resourceType);
+      if (dataResource) {
+        this.openDataResourceModal(dataResource, resourceType);
+      }
     }
   }
 
