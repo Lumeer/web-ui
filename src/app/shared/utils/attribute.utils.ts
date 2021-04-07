@@ -40,6 +40,10 @@ export function attributeHasFunction(attribute: Attribute): boolean {
   return attribute?.constraint?.allowEditFunction && attribute?.function?.js?.length > 0;
 }
 
+export function attributeHasEditableFunction(attribute: Attribute): boolean {
+  return attributeHasFunction(attribute) || attribute?.constraint?.allowEditFunction;
+}
+
 export function attributeHasRuleFunction(attribute: Attribute, rules?: Rule[]): boolean {
   return !!attributeRuleFunction(attribute, rules);
 }

@@ -122,8 +122,8 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   private setData(resource: AttributesResource, dataResource: DataResource) {
     this.resourceType = getAttributesResourceType(resource);
-    this.resource$ = of(resource);
-    this.dataResource$ = of(dataResource);
+    this.resource$ = this.selectResource$(resource.id);
+    this.dataResource$ = this.selectDataResource$(dataResource.id);
     this.permissions$ = this.selectPermissions$(resource);
 
     this.subscribeExist(resource, dataResource);
