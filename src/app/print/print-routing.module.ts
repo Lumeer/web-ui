@@ -39,7 +39,7 @@ const printRoutes: Routes = [
     component: PrintComponent,
   },
   {
-    path: 'print/:organizationCode/:projectCode/:resourceType/:content',
+    path: 'print/:organizationCode/:projectCode/:resourceType',
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard],
     canDeactivate: [ViewConfigCleanUpGuard],
     component: PrintComponent,
