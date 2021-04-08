@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {User} from '../../../core/store/users/user';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Component({
   selector: 'new-user',
@@ -47,7 +48,8 @@ export class NewUserComponent {
   }
 
   public checkDuplicates() {
-    this.isDuplicate = !!this.users.find(user => user.email === this.email);
+    const emailCleaned = removeAccentFromString(this.email, true).trim();
+    this.isDuplicate = !!this.users.find(user => removeAccentFromString(user.email, true) === emailCleaned);
   }
 
   private clearInputs() {

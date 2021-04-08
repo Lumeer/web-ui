@@ -80,6 +80,7 @@ import {convertQueryModelToString} from '../store/navigation/query/query.convert
 import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
 import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {PrintService} from '../service/print.service';
 
 @Injectable({
   providedIn: 'root',
@@ -103,7 +104,8 @@ export class PusherService implements OnDestroy {
     private appId: AppIdService,
     private router: Router,
     private locationStrategy: LocationStrategy,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private printService: PrintService
   ) {
     this.userNotificationTitle = {
       success: $localize`:@@rules.blockly.action.message.success:Success`,
@@ -414,10 +416,11 @@ export class PusherService implements OnDestroy {
 
     this.channel.bind('TextPrintRequest', data => {
       if (data.correlationId === this.appId.getAppId()) {
+        this.printService.setContent(data.object.text);
         const a = document.createElement('a');
         a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
           data.object.projectCode
-        }/text/${encodeURIComponent(data.object.text)}`;
+        }/text`;
         a.target = '_blank';
         a.click();
       }

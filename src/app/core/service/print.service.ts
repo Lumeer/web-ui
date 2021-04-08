@@ -17,21 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import {User} from '../../../../core/store/users/user';
-import {removeAccentFromString} from '@lumeer/data-filters';
+const CONTENT = 'print_content';
 
-@Pipe({
-  name: 'userFilter',
+@Injectable({
+  providedIn: 'root',
 })
-@Injectable()
-export class UserFilterPipe implements PipeTransform {
-  public transform(users: User[], value: string): User[] {
-    if (!users || !value) {
-      return users;
-    }
-    const valueLowerCase = removeAccentFromString(value, true);
-    return users.filter(user => removeAccentFromString(user.email, true).includes(valueLowerCase));
+export class PrintService {
+  public setContent(content: string) {
+    localStorage.setItem(CONTENT, content);
+  }
+
+  public getContent(): string {
+    return localStorage.getItem(CONTENT) || '';
   }
 }
