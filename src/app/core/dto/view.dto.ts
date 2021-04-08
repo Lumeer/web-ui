@@ -28,4 +28,5 @@ export interface ViewDto extends ResourceDto {
   authorRights?: Record<string, string[]>;
   favorite?: boolean;
   lastTimeUsed?: number;
+  folders?: string[];
 }

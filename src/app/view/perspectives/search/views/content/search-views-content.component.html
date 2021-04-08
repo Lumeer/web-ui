@@ -10,7 +10,6 @@
                  [queryData]="queryData"
                  [viewSize]="currentSize"
                  [permissions]="truncateContent && index >= maxViews - 2 ? null : permissions && permissions[view.id]"
-                 (delete)="onDeleteView(view)"
                  (clicked)="showView(view)"
                  (favoriteToggle)="onFavoriteToggle(view)">
     </view-detail>

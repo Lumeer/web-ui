@@ -18,10 +18,10 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {User} from '../../../../core/store/users/user';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {Project} from '../../../../core/store/projects/project';
-import {userIsManagerInWorkspace} from '../../../utils/resource.utils';
+import {User} from '../../../../../core/store/users/user';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
+import {userIsManagerInWorkspace} from '../../../../utils/resource.utils';
 
 @Pipe({
   name: 'canRemoveUser',

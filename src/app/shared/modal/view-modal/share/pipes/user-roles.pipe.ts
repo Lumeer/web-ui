@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {User} from '../../../../core/store/users/user';
+import {User} from '../../../../../core/store/users/user';
 
 @Pipe({
   name: 'userRoles',

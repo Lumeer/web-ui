@@ -174,7 +174,13 @@ export namespace ViewsAction {
   export class Delete implements Action {
     public readonly type = ViewsActionType.DELETE;
 
-    public constructor(public payload: {viewId: string}) {}
+    public constructor(
+      public payload: {
+        viewId: string;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class DeleteSuccess implements Action {

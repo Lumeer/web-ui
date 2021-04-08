@@ -73,9 +73,6 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
   @Output()
   public configChange = new EventEmitter<SearchViewsConfig>();
 
-  @Output()
-  public deleteView = new EventEmitter<View>();
-
   public currentSize: SizeType;
   public truncateContent: boolean;
 
@@ -115,10 +112,6 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
 
   private workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public onDeleteView(view: View) {
-    this.deleteView.emit(view);
   }
 
   public onFavoriteToggle(view: View) {

@@ -28,11 +28,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {User} from '../../../../../core/store/users/user';
-import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
-import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
-import {isEmailValid} from '../../../../utils/email.utils';
-import {KeyCode} from '../../../../key-code';
+import {User} from '../../../../../../core/store/users/user';
+import {DropdownOption} from '../../../../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../../../../dropdown/options/options-dropdown.component';
+import {isEmailValid} from '../../../../../utils/email.utils';
+import {KeyCode} from '../../../../../key-code';
 
 @Component({
   selector: 'share-view-input',

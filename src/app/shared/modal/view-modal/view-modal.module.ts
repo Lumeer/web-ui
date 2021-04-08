@@ -19,22 +19,25 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ShareViewModalComponent} from './share-view-modal.component';
-import {ShareUserComponent} from './body/user/share-user.component';
-import {ShareViewInputComponent} from './body/input/share-view-input.component';
-import {ShareViewCopyComponent} from './body/copy/share-view-copy.component';
-import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
-import {CanRemoveUserPipe} from './pipes/can-remove-user.pipe';
-import {UserRolesPipe} from './pipes/user-roles.pipe';
-import {CanAddNewUserPipe} from './pipes/can-add-new-user.pipe';
+import {ShareViewModalComponent} from './share/share-view-modal.component';
+import {ShareUserComponent} from './share/body/user/share-user.component';
+import {ShareViewInputComponent} from './share/body/input/share-view-input.component';
+import {ShareViewCopyComponent} from './share/body/copy/share-view-copy.component';
+import {ShareViewDialogBodyComponent} from './share/body/share-view-dialog-body.component';
+import {UserRolesPipe} from './share/pipes/user-roles.pipe';
+import {CanRemoveUserPipe} from './share/pipes/can-remove-user.pipe';
+import {CanAddNewUserPipe} from './share/pipes/can-add-new-user.pipe';
+import {ViewSettingsModalComponent} from './settings/view-settings-modal.component';
 import {PipesModule} from '../../pipes/pipes.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {InputModule} from '../../input/input.module';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {InputModule} from '../../input/input.module';
 import {GravatarModule} from 'ngx-gravatar';
 import {UsersModule} from '../../users/users.module';
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {DataInputModule} from '../../data-input/data-input.module';
+import {ViewHeaderComponent} from './header/view-header.component';
+import {ViewSettingsModalBodyComponent} from './settings/body/view-settings-modal-body.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import {DataInputModule} from '../../data-input/data-input.module';
     UserRolesPipe,
     CanRemoveUserPipe,
     CanAddNewUserPipe,
+    ViewHeaderComponent,
+    ViewSettingsModalComponent,
+    ViewSettingsModalBodyComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +65,6 @@ import {DataInputModule} from '../../data-input/data-input.module';
     DropdownModule,
     DataInputModule,
   ],
-  exports: [ShareViewModalComponent],
+  exports: [ShareViewModalComponent, ViewSettingsModalComponent],
 })
-export class ShareViewModalModule {}
+export class ViewModalModule {}

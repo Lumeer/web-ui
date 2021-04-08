@@ -294,8 +294,16 @@ export class ViewsEffects {
       mergeMap(([action, viewsMap]) => {
         const view = viewsMap[action.payload.viewId];
         return this.viewService.deleteView(action.payload.viewId).pipe(
-          map(() => new ViewsAction.DeleteSuccess({viewId: action.payload.viewId, viewCode: view.code})),
-          catchError(error => of(new ViewsAction.DeleteFailure({error})))
+          mergeMap(() => [
+            new ViewsAction.DeleteSuccess({
+              viewId: action.payload.viewId,
+              viewCode: view.code,
+            }),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(new ViewsAction.DeleteFailure({error}), ...createCallbackActions(action.payload.onFailure))
+          )
         );
       })
     )

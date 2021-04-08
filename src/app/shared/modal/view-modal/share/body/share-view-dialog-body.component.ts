@@ -29,20 +29,20 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {map, skip} from 'rxjs/operators';
-import {User} from '../../../../core/store/users/user';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {Project} from '../../../../core/store/projects/project';
-import {View} from '../../../../core/store/views/view';
-import {Permission} from '../../../../core/store/permissions/permissions';
+import {User} from '../../../../../core/store/users/user';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
+import {View} from '../../../../../core/store/views/view';
+import {Permission} from '../../../../../core/store/permissions/permissions';
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {ClipboardService} from '../../../../core/service/clipboard.service';
-import {UserRolesInResourcePipe} from '../../../pipes/user-roles-in-resource.pipe';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../../utils/common.utils';
-import {KeyCode} from '../../../key-code';
-import {isEmailValid} from '../../../utils/email.utils';
-import {generateCorrelationId, userCanReadWorkspace, userIsManagerInWorkspace} from '../../../utils/resource.utils';
-import {containsSameElements} from '../../../utils/array.utils';
+import {ClipboardService} from '../../../../../core/service/clipboard.service';
+import {UserRolesInResourcePipe} from '../../../../pipes/user-roles-in-resource.pipe';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../utils/common.utils';
+import {KeyCode} from '../../../../key-code';
+import {isEmailValid} from '../../../../utils/email.utils';
+import {generateCorrelationId, userCanReadWorkspace, userIsManagerInWorkspace} from '../../../../utils/resource.utils';
+import {containsSameElements} from '../../../../utils/array.utils';
 
 @Component({
   selector: 'share-view-dialog-body',

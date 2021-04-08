@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {User} from '../../../../core/store/users/user';
-import {isEmailValid} from '../../../utils/email.utils';
+import {User} from '../../../../../core/store/users/user';
+import {isEmailValid} from '../../../../utils/email.utils';
 
 @Pipe({
   name: 'canAddNewUser',

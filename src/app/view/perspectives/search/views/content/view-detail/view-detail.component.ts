@@ -61,9 +61,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public clicked = new EventEmitter();
 
   @Output()
-  public delete = new EventEmitter();
-
-  @Output()
   public favoriteToggle = new EventEmitter();
 
   public queryItems: QueryItem[] = [];
@@ -96,8 +93,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     return `${queryItem.type}:${queryItem.value}`;
   }
 
-  public onDelete() {
-    this.delete.emit();
+  public onSettings() {
+    this.modalService.showViewSettings(this.view);
   }
 
   private createQueryItems() {

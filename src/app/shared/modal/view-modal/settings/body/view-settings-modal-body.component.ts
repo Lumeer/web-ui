@@ -17,49 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {AbstractControl, FormGroup} from '@angular/forms';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
-  selector: '[share-user]',
-  templateUrl: './share-user.component.html',
-  styleUrls: ['./share-user.component.scss'],
+  selector: 'view-settings-modal-body',
+  templateUrl: './view-settings-modal-body.component.html',
+  styleUrls: ['./view-settings-modal-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareUserComponent {
+export class ViewSettingsModalBodyComponent {
   @Input()
-  public canRemove: boolean;
+  public form: FormGroup;
 
   @Input()
-  public changeRoles: boolean;
-
-  @Input()
-  public email: string;
-
-  @Input()
-  public userName: string;
-
-  @Input()
-  public roles: string[];
+  public views: View[];
 
   @Output()
   public delete = new EventEmitter();
 
-  @Output()
-  public rolesChange = new EventEmitter<string[]>();
-
-  public viewResourceType = ResourceType.View;
-
-  public toggleRole(role: string) {
-    if (!this.changeRoles) {
-      return;
-    }
-
-    const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role) : [...this.roles, role];
-    this.rolesChange.emit(newRoles);
-  }
-
-  public onDelete() {
-    this.delete.emit();
+  public get nameControl(): AbstractControl {
+    return this.form.controls.name;
   }
 }

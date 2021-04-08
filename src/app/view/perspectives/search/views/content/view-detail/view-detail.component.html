@@ -7,11 +7,10 @@
        (click)="!$event.defaultPrevented && onClicked()">
 
     <div class="mr-3">
-      <i
-        [ngClass]="viewSize | viewIconSize"
-        class="fa-fw {{icon}} align-self-center"
-        [ngStyle]="viewSize === sizeType.L ? {} : {color: queryItems | queryColor}"
-        aria-hidden="true">
+      <i [ngClass]="viewSize | viewIconSize"
+         class="fa-fw {{icon}} align-self-center"
+         [ngStyle]="viewSize === sizeType.L ? {} : {color: queryItems | queryColor}"
+         aria-hidden="true">
       </i>
     </div>
 
@@ -41,9 +40,9 @@
              title="Share" i18n-title="@@button.share"
              aria-hidden="true">
           </i>
-          <i class="far fa-fw fa-trash-alt text-danger cursor-pointer"
-             (click)="$event.preventDefault(); onDelete()"
-             title="Delete" i18n-title="@@delete"
+          <i class="fas fa-fw fa-cog text-success cursor-pointer"
+             (click)="$event.preventDefault(); onSettings()"
+             title="Settings" i18n-title="@@settings"
              aria-hidden="true">
           </i>
         </ng-container>

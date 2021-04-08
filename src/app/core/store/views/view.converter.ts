@@ -45,6 +45,7 @@ export function convertViewDtoToModel(dto: ViewDto): View {
     version: dto.version,
     favorite: dto.favorite,
     lastTimeUsed: new Date(dto.lastTimeUsed),
+    folders: dto.folders,
   };
 }
 
@@ -58,6 +59,7 @@ export function convertViewModelToDto(model: View): ViewDto {
     perspective: model.perspective,
     config: model.config,
     description: model.description,
+    folders: model.folders,
   };
 }
 
