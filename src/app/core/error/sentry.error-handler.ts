@@ -38,6 +38,11 @@ export class SentryErrorHandler implements ErrorHandler {
   }
 
   public handleError(error: any): void {
+    if (/Loading chunk [\d]+ failed/.test(error?.message)) {
+      window.location.reload();
+      return;
+    }
+
     if (this.configurationService.getConfiguration().sentryDsn) {
       Sentry.captureException(error.originalError || error);
     }
