@@ -1,0 +1,10 @@
+<views-folder *ngFor="let folder of viewFolders.folders"
+              [folder]="folder"
+              [viewSize]="viewSize">
+</views-folder>
+<view-detail *ngFor="let view of viewFolders.objects"
+             [permissions]="permissions && permissions[view.id]"
+             [queryData]="queryData"
+             [view]="view"
+             [viewSize]="viewSize">
+</view-detail>

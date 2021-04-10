@@ -33,7 +33,6 @@ import {View} from '../../../../../../core/store/views/view';
 import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
 import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
-import {ResourceType} from '../../../../../../core/model/resource-type';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
@@ -65,7 +64,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
 
   public queryItems: QueryItem[] = [];
 
-  public readonly viewType = ResourceType.View;
   public readonly sizeType = SizeType;
 
   public icon: string;

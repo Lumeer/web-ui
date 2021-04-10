@@ -38,7 +38,7 @@ export interface View extends Resource {
   authorRights?: Record<string, string[]>;
   lastTimeUsed?: Date;
   favorite?: boolean;
-  folders?: string[];
+  folders: string[];
 }
 
 export interface ViewConfig {

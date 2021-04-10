@@ -29,26 +29,24 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Router} from '@angular/router';
-import {checkSizeType, SearchViewsConfig} from '../../../../../core/store/searches/search';
-import {View} from '../../../../../core/store/views/view';
-import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {SizeType} from '../../../../../shared/slider/size/size-type';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {Perspective} from '../../../perspective';
-import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
-import {ViewFavoriteToggleService} from '../../../../../shared/toggle/view-favorite-toggle.service';
-import {SearchTab} from '../../../../../core/store/navigation/search-tab';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {checkSizeType, SearchViewsConfig} from '../../../../../../core/store/searches/search';
+import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
+import {View} from '../../../../../../core/store/views/view';
+import {ViewFavoriteToggleService} from '../../../../../../shared/toggle/view-favorite-toggle.service';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {SizeType} from '../../../../../../shared/slider/size/size-type';
+import {createObjectFolders, ObjectFolders} from './util/object-folders';
 
 @Component({
-  selector: 'search-views-content',
-  templateUrl: './search-views-content.component.html',
-  styleUrls: ['./search-views-content.component.scss'],
+  selector: 'views-folders-content',
+  templateUrl: './views-folders-content.component.html',
+  styleUrls: ['./views-folders-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ViewFavoriteToggleService],
 })
-export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy {
+export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public config: SearchViewsConfig;
 
@@ -62,9 +60,6 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
   public query: Query;
 
   @Input()
-  public maxViews: number;
-
-  @Input()
   public workspace: Workspace;
 
   @Input()
@@ -74,7 +69,7 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
   public configChange = new EventEmitter<SearchViewsConfig>();
 
   public currentSize: SizeType;
-  public truncateContent: boolean;
+  public viewFolders: ObjectFolders<View>;
 
   constructor(private router: Router, private toggleService: ViewFavoriteToggleService) {}
 
@@ -86,8 +81,8 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
     if (changes.config) {
       this.currentSize = checkSizeType(this.config?.size);
     }
-    if (changes.views || changes.maxViews) {
-      this.truncateContent = this.maxViews > 0 && this.maxViews < this.views?.length;
+    if (changes.views) {
+      this.viewFolders = createObjectFolders(this.views);
     }
   }
 
@@ -102,16 +97,6 @@ export class SearchViewsContentComponent implements OnInit, OnChanges, OnDestroy
 
   public trackByView(index: number, view: View): string {
     return view.id;
-  }
-
-  public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Views], {
-      queryParams: {q: convertQueryModelToString(this.query)},
-    });
-  }
-
-  private workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
   public onFavoriteToggle(view: View) {

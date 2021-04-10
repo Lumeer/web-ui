@@ -112,7 +112,7 @@ export class ViewComponent implements OnInit {
             filter(view => !!view)
           );
         } else {
-          return of({name: viewName || '', query, perspective: null, config: {}});
+          return of({name: viewName || '', query, perspective: null, config: {}, folders: []});
         }
       })
     );

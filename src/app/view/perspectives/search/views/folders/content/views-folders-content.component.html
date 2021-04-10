@@ -1,0 +1,16 @@
+<div *ngIf="views?.length; else noViews"
+     class="pt-2 pb-5 position-relative">
+  <size-slider class="d-flex justify-content-end mb-4"
+               [defaultSize]="currentSize" (newSize)="onSizeChange($event)">
+  </size-slider>
+  <views-folders [viewSize]="currentSize"
+                 [queryData]="queryData"
+                 [permissions]="permissions"
+                 [viewFolders]="viewFolders"
+                 (viewClick)="showView($event)">
+  </views-folders>
+</div>
+
+<ng-template #noViews>
+  <empty-views [query]="query"></empty-views>
+</ng-template>
