@@ -17,25 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {ObjectFolders} from '../../util/object-folders';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {calculateObjectFoldersOverallCount, ObjectFolders} from '../../util/object-folders';
 import {View} from '../../../../../../../../core/store/views/view';
 import {SizeType} from '../../../../../../../../shared/slider/size/size-type';
 
 @Component({
   selector: 'views-folder',
   templateUrl: './views-folder.component.html',
-  styleUrls: ['./views-folder.component.scss', '../../../../common/view-detail/view-detail.component.scss'],
+  styleUrls: ['../../../../common/view-detail/view-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewsFolderComponent {
+export class ViewsFolderComponent implements OnChanges {
   @Input()
   public folder: ObjectFolders<View>;
 
   @Input()
   public viewSize: SizeType;
 
+  @Output()
+  public clicked = new EventEmitter();
+
   public readonly sizeType = SizeType;
 
-  public onClick() {}
+  public count: number;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.folder) {
+      this.count = calculateObjectFoldersOverallCount(this.folder);
+    }
+  }
+
+  public onClick() {
+    this.clicked.emit();
+  }
 }

@@ -18,10 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../core/store/app.state';
 import {SearchViewsComponent} from '../search-views.component';
+import {Observable} from 'rxjs';
+import {selectViewsFoldersPath} from '../../../../../core/store/views/views.state';
+import {ViewsAction} from '../../../../../core/store/views/views.action';
 
 @Component({
   selector: 'search-views-folders',
@@ -29,7 +32,19 @@ import {SearchViewsComponent} from '../search-views.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchViewsFoldersComponent extends SearchViewsComponent implements OnInit, OnDestroy {
+  public foldersPath$: Observable<string[]>;
+
   constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {
     super(notificationService, store$);
+  }
+
+  public ngOnInit() {
+    super.ngOnInit();
+
+    this.foldersPath$ = this.store$.pipe(select(selectViewsFoldersPath));
+  }
+
+  public onFolderPathChange(foldersPath: string[]) {
+    this.store$.dispatch(new ViewsAction.SetCurrentFoldersPath({foldersPath}));
   }
 }

@@ -4,5 +4,7 @@
                        [query]="query$ | async"
                        [permissions]="permissions$ | async"
                        [queryData]="queryData$ | async"
-                       (configChange)="onConfigChange($event)">
+                       [foldersPath]="foldersPath$ | async"
+                       (configChange)="onConfigChange($event)"
+                       (folderPathChange)="onFolderPathChange($event)">
 </views-folders-content>

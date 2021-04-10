@@ -1,13 +1,21 @@
 <div *ngIf="views?.length; else noViews"
      class="pt-2 pb-5 position-relative">
-  <size-slider class="d-flex justify-content-end mb-4"
-               [defaultSize]="currentSize" (newSize)="onSizeChange($event)">
-  </size-slider>
+  <div class="d-flex mb-4">
+    <views-folders-breadcrumb class="d-block flex-grow-1"
+                              [viewFolders]="viewFolders"
+                              [foldersPath]="foldersPath"
+                              (pathSelected)="folderPathChange.emit($event)">
+    </views-folders-breadcrumb>
+    <size-slider class="d-block"
+                 [defaultSize]="currentSize" (newSize)="onSizeChange($event)">
+    </size-slider>
+  </div>
   <views-folders [viewSize]="currentSize"
                  [queryData]="queryData"
                  [permissions]="permissions"
-                 [viewFolders]="viewFolders"
-                 (viewClick)="showView($event)">
+                 [viewFolders]="viewFolders | viewFoldersByPath:foldersPath"
+                 (viewClick)="showView($event)"
+                 (folderClick)="showFolder($event)">
   </views-folders>
 </div>
 

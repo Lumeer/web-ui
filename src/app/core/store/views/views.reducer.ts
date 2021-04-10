@@ -49,6 +49,8 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
     case ViewsActionType.REMOVE_FAVORITE_FAILURE:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
+    case ViewsActionType.SET_CURRENT_FOLDERS_PATH:
+      return {...state, foldersPath: action.payload.foldersPath};
     case ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS:
       return setDefaultConfig(state, action);
     case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:

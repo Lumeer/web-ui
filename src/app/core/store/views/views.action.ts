@@ -62,6 +62,8 @@ export enum ViewsActionType {
   GET_DEFAULT_CONFIGS = '[Views] Get Default Configs',
   GET_DEFAULT_CONFIGS_SUCCESS = '[Views] Get Default Configs :: Success',
 
+  SET_CURRENT_FOLDERS_PATH = '[Views] Set Views Folders Path',
+
   SET_DEFAULT_CONFIG_SNAPSHOT = '[Views] Set Default Config Snapshot',
 
   RESET_VIEW_CONFIG = '[Views] Reset View Config',
@@ -259,6 +261,12 @@ export namespace ViewsAction {
     public constructor(public payload: {configs: DefaultViewConfig[]}) {}
   }
 
+  export class SetCurrentFoldersPath implements Action {
+    public readonly type = ViewsActionType.SET_CURRENT_FOLDERS_PATH;
+
+    public constructor(public payload: {foldersPath: string[]}) {}
+  }
+
   export class SetDefaultConfig implements Action {
     public readonly type = ViewsActionType.SET_DEFAULT_CONFIG;
 
@@ -319,6 +327,7 @@ export namespace ViewsAction {
     | SetSidebarOpened
     | SetPanelWidth
     | SetDefaultConfig
+    | SetCurrentFoldersPath
     | ResetDefaultConfigBySnapshot
     | ResetViewConfig
     | SetDefaultConfigSuccess

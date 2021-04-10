@@ -44,4 +44,15 @@ export class ViewsFoldersComponent {
 
   @Output()
   public viewClick = new EventEmitter<View>();
+
+  @Output()
+  public folderClick = new EventEmitter<string>();
+
+  public trackByView(index: number, view: View): string {
+    return view.id;
+  }
+
+  public trackByFolder(index: number, folder: ObjectFolders<View>): string {
+    return folder.name;
+  }
 }

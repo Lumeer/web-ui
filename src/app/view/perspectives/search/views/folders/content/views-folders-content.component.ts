@@ -65,8 +65,14 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
   @Input()
   public permissions: Record<string, AllowedPermissions>;
 
+  @Input()
+  public foldersPath: string[];
+
   @Output()
   public configChange = new EventEmitter<SearchViewsConfig>();
+
+  @Output()
+  public folderPathChange = new EventEmitter<string[]>();
 
   public currentSize: SizeType;
   public viewFolders: ObjectFolders<View>;
@@ -95,15 +101,16 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 
-  public trackByView(index: number, view: View): string {
-    return view.id;
-  }
-
   public onFavoriteToggle(view: View) {
     this.toggleService.set(view.id, !view.favorite);
   }
 
   public ngOnDestroy() {
     this.toggleService.onDestroy();
+  }
+
+  public showFolder(name: string) {
+    const pathCopy = [...(this.foldersPath || []), name];
+    this.folderPathChange.emit(pathCopy);
   }
 }

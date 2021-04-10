@@ -1,10 +1,12 @@
-<views-folder *ngFor="let folder of viewFolders.folders"
+<views-folder *ngFor="let folder of viewFolders.folders; trackBy: trackByFolder"
               [folder]="folder"
-              [viewSize]="viewSize">
+              [viewSize]="viewSize"
+              (clicked)="folderClick.emit(folder.name)">
 </views-folder>
-<view-detail *ngFor="let view of viewFolders.objects"
+<view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
              [permissions]="permissions && permissions[view.id]"
              [queryData]="queryData"
              [view]="view"
-             [viewSize]="viewSize">
+             [viewSize]="viewSize"
+             (clicked)="viewClick.emit(view)">
 </view-detail>

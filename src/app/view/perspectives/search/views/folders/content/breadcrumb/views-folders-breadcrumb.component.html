@@ -1,0 +1,8 @@
+<div *ngIf="path.length" class="d-flex flex-wrap align-items-center mt-3 py-2">
+  <i class="fas fa-home text-success cursor-pointer" (click)="onHomeClick()"></i>
+  <ng-container *ngFor="let name of path; let index = index; let first = first; let last = last">
+    <span class="px-2">/</span>
+    <span [ngClass]="last ? 'text-primary' : 'text-success cursor-pointer clickable'"
+          (click)="!last && onPathClick(index)">{{name}}</span>
+  </ng-container>
+</div>

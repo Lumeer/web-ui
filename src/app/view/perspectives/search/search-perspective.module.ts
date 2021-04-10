@@ -37,6 +37,8 @@ import {ViewsPreviewContentComponent} from './views/preview/content/views-previe
 import {ViewsFoldersContentComponent} from './views/folders/content/views-folders-content.component';
 import {ViewsFoldersComponent} from './views/folders/content/folders/views-folders.component';
 import {ViewsFolderComponent} from './views/folders/content/folders/folder/views-folder.component';
+import {ViewFoldersByPathPipe} from './views/folders/content/pipes/view-folders-by-path.pipe';
+import {ViewsFoldersBreadcrumbComponent} from './views/folders/content/breadcrumb/views-folders-breadcrumb.component';
 
 @NgModule({
   imports: [
@@ -61,6 +63,8 @@ import {ViewsFolderComponent} from './views/folders/content/folders/folder/views
     ViewIconSizePipe,
     ViewsFoldersComponent,
     ViewsFolderComponent,
+    ViewFoldersByPathPipe,
+    ViewsFoldersBreadcrumbComponent,
   ],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],

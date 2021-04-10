@@ -27,6 +27,17 @@ export interface ObjectFolders<T extends ObjectFoldersType> {
 
 export type ObjectFoldersType = {folders: string[]};
 
+export function calculateObjectFoldersOverallCount<T extends ObjectFoldersType>(folders: ObjectFolders<T>): number {
+  return (folders?.objects.length || 0) + calculateObjectFoldersCount(folders?.folders);
+}
+
+export function calculateObjectFoldersCount<T extends ObjectFoldersType>(folders: ObjectFolders<T>[]): number {
+  return (folders || []).reduce(
+    (sum, folder) => sum + folder.objects.length + calculateObjectFoldersCount(folder.folders),
+    0
+  );
+}
+
 export function createObjectFolders<T extends ObjectFoldersType>(objects: T[]): ObjectFolders<T> {
   return (objects || []).reduce((folders, object) => addObjectToObjectFolders(object, folders), {
     objects: [],
@@ -66,7 +77,9 @@ function addObjectToObjectFolders<T extends ObjectFoldersType>(
 function sortObjectFolders<T extends ObjectFoldersType>(objectFolders: ObjectFolders<T>): ObjectFolders<T> {
   return {
     ...objectFolders,
-    folders: objectFolders.folders.sort((a, b) => a.name.localeCompare(b.name)),
+    folders: objectFolders.folders
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(folders => sortObjectFolders(folders)),
   };
 }
 
