@@ -27,4 +27,22 @@
            i18n="@@view.name.exist">View already exist</small>
   </div>
 
+  <div class="form-group row mt-3">
+    <label class="col-12 col-form-label"
+           i18n="@@view.modal.settings.folders"
+           for="name">Folders:</label>
+
+    <div class="col-12">
+      <input-tags [formGroup]="form"
+                  controlName="folders"
+                  placeholderTitle="Enter folder name and press Enter"
+                  i18n-placeholderTitle="@@view.modal.settings.folders.placeholder"
+                  removeTagTitle="Remove folder"
+                  i18n-removeTagTitle="@@view.modal.settings.folders.remove">
+      </input-tags>
+    </div>
+    <div class="col-12 mt-1 text-muted small"
+           i18n="@@view.modal.settings.folders.help">Use "/" to create nested folders i.e "Folder/Subfolder"</div>
+  </div>
+
 </form>

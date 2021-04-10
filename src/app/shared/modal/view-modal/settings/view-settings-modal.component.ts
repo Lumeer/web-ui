@@ -68,7 +68,7 @@ export class ViewSettingsModalComponent implements OnInit {
 
     this.form = this.fb.group({
       name: [this.view.name, notEmptyValidator(), this.uniqueName()],
-      folders: [this.view.folders],
+      folders: this.fb.array(this.view.folders || []),
     });
   }
 

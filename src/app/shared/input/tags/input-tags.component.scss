@@ -1,5 +1,10 @@
 @import 'src/styles/variables';
 
+:host {
+  border: 1px solid $gray-400;
+  border-radius: 0.25rem;
+}
+
 input {
   border: 1px solid transparent !important;
   outline: none !important;

@@ -19,20 +19,29 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {KeyCode} from '../../../../../shared/key-code';
-import {KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {KeyCode} from '../../key-code';
 
 @Component({
-  selector: 'project-template-tags',
-  templateUrl: './project-template-tags.component.html',
-  styleUrls: ['./project-template-tags.component.scss'],
+  selector: 'input-tags',
+  templateUrl: './input-tags.component.html',
+  styleUrls: ['./input-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-block'},
 })
-export class ProjectTemplateTagsComponent implements OnInit {
+export class InputTagsComponent implements OnInit {
   @Input()
   public formGroup: FormGroup;
+
+  @Input()
+  public controlName: string;
+
+  @Input()
+  public removeTagTitle: string;
+
+  @Input()
+  public placeholderTitle: string;
 
   @Output()
   public focus = new EventEmitter();
@@ -40,22 +49,30 @@ export class ProjectTemplateTagsComponent implements OnInit {
   @Output()
   public blur = new EventEmitter();
 
+  public readonly removeTagTitleDefault: string;
+  public readonly placeholderTitleDefault: string;
+
   public text = '';
 
   public tags$: Observable<string[]>;
 
+  constructor() {
+    this.removeTagTitle = $localize`:@@tag.remove:Remove tag`;
+    this.placeholderTitleDefault = $localize`:@@projects.tab.template.metadata.tags.placeholder:Type tag name and press Enter`;
+  }
+
   public get tagsControl(): FormArray {
-    return <FormArray>this.formGroup.controls.tags;
+    return <FormArray>this.formGroup.get(this.controlName);
   }
 
   public get tags(): string[] {
-    return this.tagsControl.value;
+    return this.tagsControl?.value;
   }
 
   public ngOnInit() {
-    this.tags$ = this.tagsControl.valueChanges.pipe(
-      startWith(this.tagsControl.value),
-      map(() => this.tagsControl.value)
+    this.tags$ = this.tagsControl?.valueChanges.pipe(
+      startWith(this.tagsControl?.value),
+      map(() => this.tagsControl?.value)
     );
   }
 
@@ -78,7 +95,7 @@ export class ProjectTemplateTagsComponent implements OnInit {
   private submitTag() {
     const tag = (this.text || '').trim();
     if (tag && !this.tags.includes(tag)) {
-      this.tagsControl.push(new FormControl(tag));
+      this.tagsControl?.push(new FormControl(tag));
       this.text = '';
     }
   }
@@ -90,6 +107,6 @@ export class ProjectTemplateTagsComponent implements OnInit {
   }
 
   public removeTag(index: number) {
-    this.tagsControl.removeAt(index);
+    this.tagsControl?.removeAt(index);
   }
 }
