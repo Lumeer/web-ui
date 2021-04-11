@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 
 import {AppState} from '../../../../core/store/app.state';
@@ -41,15 +41,8 @@ import {selectViewQuery} from '../../../../core/store/views/views.state';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
-@Component({
-  selector: 'search-views',
-  templateUrl: './search-views.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class SearchViewsComponent implements OnInit, OnDestroy {
-  @Input()
-  public maxLines: number = -1;
-
+@Injectable()
+export abstract class SearchViewsComponent implements OnInit, OnDestroy {
   public views$: Observable<View[]>;
   public queryData$: Observable<QueryData>;
   public query$: Observable<Query>;
@@ -61,7 +54,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   private searchId: string;
   private subscriptions = new Subscription();
 
-  constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(select(selectViewsByQuery));
@@ -85,7 +78,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     return this.store$.pipe(
       select(selectSearchConfig),
       tap(config => (this.config = config)),
-      map(config => config && config.views)
+      map(config => config?.views)
     );
   }
 
@@ -105,16 +98,6 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
         );
       }
     }
-  }
-
-  public onDeleteView(view: View) {
-    const message = $localize`:@@views.delete.message:Do you really want to permanently delete this view?`;
-    const title = $localize`:@@views.delete.title:Delete view?`;
-    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteView(view));
-  }
-
-  public deleteView(view: View) {
-    this.store$.dispatch(new ViewsAction.Delete({viewId: view.id}));
   }
 
   public ngOnDestroy() {

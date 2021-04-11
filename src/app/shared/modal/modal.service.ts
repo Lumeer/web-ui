@@ -36,7 +36,7 @@ import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
 import {View} from '../../core/store/views/view';
-import {ShareViewModalComponent} from './share-view/share-view-modal.component';
+import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
@@ -53,6 +53,7 @@ import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.
 import {findAttribute} from '../../core/store/collections/collection.util';
 import {AttributeDescriptionModalComponent} from './attribute-description/attribute-description-modal.component';
 import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
+import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -145,6 +146,11 @@ export class ModalService {
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
+  }
+
+  public showViewSettings(view: View): BsModalRef {
+    const initialState = {view};
+    return this.showStaticDialog(initialState, ViewSettingsModalComponent);
   }
 
   public showCreateLink(collectionIds: string[], callback?: (linkType: LinkType) => void): BsModalRef {

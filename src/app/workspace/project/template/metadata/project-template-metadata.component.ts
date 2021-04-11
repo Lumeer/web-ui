@@ -33,7 +33,6 @@ import {removeAllFormArrayControls} from '../../../../shared/utils/form.utils';
 @Component({
   selector: 'project-template-metadata',
   templateUrl: './project-template-metadata.component.html',
-  styleUrls: ['./project-template-metadata.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UpdateProjectService],
 })

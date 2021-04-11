@@ -96,6 +96,9 @@ export class ActionDataInputComponent implements OnChanges {
   public loading$: Observable<boolean>;
   public config$ = new BehaviorSubject<ActionConstraintConfig>(null);
 
+  public title: string;
+  public icon: string;
+
   private enabled: boolean;
   private loading: boolean;
 
@@ -118,6 +121,8 @@ export class ActionDataInputComponent implements OnChanges {
     if (changes.config) {
       this.config$.next(this.config);
     }
+    this.title = this.value?.config?.title;
+    this.icon = this.value?.config?.icon;
   }
 
   private bindLoading$(): Observable<boolean> {

@@ -1,0 +1,35 @@
+<modal-wrapper class="d-block"
+               [dialogType]="dialogType.Success"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="!data.view || (formInvalid$ | async)"
+               [customHeader]="true"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()"
+               *ngIf="{view: view$ | async} as data">
+
+  <view-header class="custom-header" [viewId]="view.id"
+               prefix="Share View"
+               i18n-prefix="@@view.share.dialog.title">
+  </view-header>
+
+  <div class="body" *ngIf="data.view; else contentInvalid">
+    <share-view-dialog-body [currentUser]="currentUser$ | async"
+                            [organization]="organization$ | async"
+                            [project]="project$ | async"
+                            [view]="view"
+                            [users]="users$ | async"
+                            (submitForm)="onShare($event)"
+                            (rolesChanged)="onRolesChanged($event)">
+    </share-view-dialog-body>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@button.share">Share</span>
+
+</modal-wrapper>
+
+<ng-template #contentInvalid>
+  <h4 class="text-danger text-center my-5"
+      i18n="@@resource.new.dialog.invalid">I am sorry, something went wrong.
+  </h4>
+</ng-template>

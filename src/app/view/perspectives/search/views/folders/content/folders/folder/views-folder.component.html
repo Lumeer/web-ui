@@ -1,0 +1,20 @@
+<div class="card p-2 view flex-row align-items-center view-hover bg-transparent"
+     [class.mb-2]="viewSize !== sizeType.S"
+     [class.mb-1]="viewSize === sizeType.S"
+     (click)="onClick()">
+
+  <div class="mr-3">
+    <i [ngClass]="viewSize | viewIconSize"
+       class="fa-fw fas fa-folder align-self-center" aria-hidden="true">
+    </i>
+  </div>
+
+  <span class="text-truncate font-weight-bold flex-grow-1 mr-2"
+        [class.title]="viewSize !== sizeType.S">{{folder.name}}</span>
+
+  <span class="text-secondary"
+        title="Number of views" i18n-title="@@views.folders.number.views">
+    {{count}}&nbsp;<i class="far fa-fw fa-file" aria-hidden="true"></i>
+  </span>
+
+</div>

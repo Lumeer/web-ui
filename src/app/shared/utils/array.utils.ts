@@ -84,6 +84,18 @@ export function uniqueValues<T>(array: T[]): T[] {
   return Array.from(new Set(array));
 }
 
+export function uniqueArrays<T>(arrays: T[][]): T[][] {
+  const uniqueArrays: T[][] = [];
+  for (const array of arrays) {
+    if (
+      !uniqueArrays.some(ua => ua.length === array.length && ua.every((element, index) => element === array[index]))
+    ) {
+      uniqueArrays.push(array);
+    }
+  }
+  return uniqueArrays;
+}
+
 export function flattenMatrix<T>(array: T[][]): T[] {
   return (array || []).reduce((arr, item) => {
     arr.push(...item);

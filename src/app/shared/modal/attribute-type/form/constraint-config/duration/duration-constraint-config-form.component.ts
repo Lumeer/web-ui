@@ -90,7 +90,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    const type = (this.config && this.config.type) || DurationType.Work;
+    const type = this.config?.type || DurationType.Work;
     this.form.addControl(DurationConstraintFormControl.Type, new FormControl(type));
     this.form.addControl(
       DurationConstraintFormControl.Conversions,

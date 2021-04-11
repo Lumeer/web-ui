@@ -20,4 +20,5 @@
 export enum QueryParam {
   Query = 'q',
   ViewCursor = 'c',
+  PerspectiveSettings = 'ps',
 }

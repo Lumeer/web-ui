@@ -26,7 +26,6 @@ import {AttributeFunctionModalModule} from './attribute-function/attribute-funct
 import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
 import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
 import {CreateLinkModalModule} from './create-link/create-link-modal.module';
-import {ShareViewModalModule} from './share-view/share-view-modal.module';
 import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
 import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-event-detail-modal.module';
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
@@ -40,9 +39,9 @@ import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.modul
 import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
 import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
+import {ViewModalModule} from './view-modal/view-modal.module';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     ModalWrapperModule,
@@ -53,7 +52,6 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
-    ShareViewModalModule,
     TextEditorModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
@@ -66,6 +64,7 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
     EmbeddedLinkModalModule,
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
+    ViewModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -76,7 +75,6 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
-    ShareViewModalModule,
     TextEditorModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
@@ -89,6 +87,7 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
     EmbeddedLinkModalModule,
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
+    ViewModalModule,
   ],
 })
 export class ModalModule {}

@@ -41,7 +41,6 @@ import {OrganizationGroupsComponent} from './organization/groups/organization-gr
 import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
 import {ProjectTemplateComponent} from './project/template/project-template.component';
 import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
-import {ProjectTemplateTagsComponent} from './project/template/metadata/tags/project-template-tags.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {ProjectTemplateScriptComponent} from './project/template/metadata/script/project-template-script.component';
 import {DirectivesModule} from '../shared/directives/directives.module';
@@ -65,7 +64,6 @@ import {DirectivesModule} from '../shared/directives/directives.module';
     ProjectSequencesComponent,
     ProjectTemplateComponent,
     ProjectTemplateMetadataComponent,
-    ProjectTemplateTagsComponent,
     ProjectTemplateScriptComponent,
   ],
   exports: [],

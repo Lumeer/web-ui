@@ -1,12 +1,13 @@
 <ng-container *ngIf="{loading: loading$ | async, enabled: enabled$ | async} as data">
-  <button class="btn btn-sm small text-truncate mx-1"
+  <button class="btn btn-sm small text-truncate mx-1 text-nowrap"
           *ngIf="{opacity: (!data.enabled || data.loading) ? 0.5 : 1} as buttonData"
           [style.background]="value?.config?.background"
           [disabled]="!data.enabled || data.loading"
           [style.color]="value?.config?.background | contrastColor:null:buttonData.opacity"
           (click)="onClick($event)">
     <span *ngIf="data.loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
-    <ng-container><i [ngClass]="value?.config?.icon"></i>&nbsp;</ng-container>
-    {{value?.config?.title}}
+    <i *ngIf="icon" [ngClass]="icon"></i>
+    <ng-container *ngIf="title && icon || !title && !icon">&nbsp;</ng-container>
+    <span *ngIf="title">{{title}}</span>
   </button>
 </ng-container>

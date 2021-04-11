@@ -113,6 +113,10 @@ export class OptionsDropdownComponent implements OnChanges {
     }
   }
 
+  public updatePosition() {
+    this.dropdown?.updatePosition();
+  }
+
   private firstOptionValue(): any {
     const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
     if (isTopPosition && this.options) {

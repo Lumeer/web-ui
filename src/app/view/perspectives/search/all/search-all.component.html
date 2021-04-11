@@ -17,7 +17,7 @@
         <div class="h3 ml-3 my-2" i18n="@@search.all.views" data-tour="search-views-label">
           Views
         </div>
-        <search-views *ngIf="data.hasView" [maxLines]="10"></search-views>
+        <search-views-preview *ngIf="data.hasView"></search-views-preview>
         <div *ngIf="!data.hasAnyView" class="mt-2" data-tour="search-views">
           <h3 i18n="@@search.views.empty.title.task" class="text-center">Your first task is to create a view!</h3>
           <div class="text-center mb-3">
