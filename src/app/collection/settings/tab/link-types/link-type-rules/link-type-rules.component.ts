@@ -112,7 +112,7 @@ export class LinkTypeRulesComponent implements OnInit {
 
   private getEmptyRule(): Rule {
     const count = (this.linkType.rules?.length || 0) + 1;
-    const rulePrefix = $localize`:@@collection.config.tab.rules.newRule.prefix:Rule`;
+    const rulePrefix = $localize`:@@collection.config.tab.rules.newRule.prefix:Automation`;
 
     return {
       name: rulePrefix + ' ' + count,
@@ -148,11 +148,11 @@ export class LinkTypeRulesComponent implements OnInit {
   }
 
   private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
-    const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this rule?`;
-    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this rule?`;
+    const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this automation?`;
+    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this automation?`;
 
     if (isBeingUsed) {
-      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This rule is being used in an action button.`;
+      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This automation is being used in an action button.`;
       message = `${message} ${additionalMessage}`;
     }
 
