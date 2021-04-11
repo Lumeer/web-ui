@@ -38,6 +38,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {createObjectFolder, createObjectFolders, ObjectFolders, parseObjectFolder} from './util/object-folders';
 import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
+import {sortResourcesByFavoriteAndLastUsed} from '../../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'views-folders-content',
@@ -93,10 +94,22 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
     }
     if (changes.views) {
       this.viewFolders = createObjectFolders(this.views);
+      this.addFavoriteViewsToRootFolder(this.viewFolders);
     }
     if (changes.views || changes.foldersPath) {
       this.cleanedPath = this.checkPath();
     }
+  }
+
+  private addFavoriteViewsToRootFolder(viewFolders: ObjectFolders<View>) {
+    const viewsInRoot = new Set(viewFolders.objects.map(view => view.id));
+    this.views?.forEach(view => {
+      if (view.favorite && !viewsInRoot.has(view.id)) {
+        viewFolders.objects.push(view);
+      }
+    });
+
+    viewFolders.objects = sortResourcesByFavoriteAndLastUsed<View>(viewFolders.objects);
   }
 
   private checkPath(): string[] {
@@ -140,8 +153,10 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
   public onViewFolderAdded(data: {view: View; folder: string}) {
     const viewFolders = [...(data.view.folders || [])];
     if (this.cleanedPath?.length === 0) {
-      viewFolders.push(data.folder);
-      this.viewFoldersChange.emit({viewId: data.view.id, folders: viewFolders});
+      if (!viewFolders.includes(data.folder)) {
+        viewFolders.push(data.folder);
+        this.viewFoldersChange.emit({viewId: data.view.id, folders: viewFolders});
+      }
     } else {
       const viewFolderIndex = viewFolders.findIndex(rawFolder => {
         const folders = parseObjectFolder(rawFolder);
@@ -150,10 +165,13 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
 
       if (viewFolderIndex !== -1) {
         const elementToChange = viewFolders[viewFolderIndex];
-        const folders = parseObjectFolder(elementToChange);
-        folders.push(data.folder);
-        viewFolders[viewFolderIndex] = createObjectFolder(folders);
-        this.viewFoldersChange.emit({viewId: data.view.id, folders: viewFolders});
+        const folders = [...parseObjectFolder(elementToChange), data.folder];
+        const newFolder = createObjectFolder(folders);
+
+        if (!viewFolders.includes(newFolder)) {
+          viewFolders[viewFolderIndex] = newFolder;
+          this.viewFoldersChange.emit({viewId: data.view.id, folders: viewFolders});
+        }
       }
     }
   }

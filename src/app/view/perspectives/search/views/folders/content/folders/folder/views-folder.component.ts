@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {calculateObjectFoldersOverallCount, ObjectFolders} from '../../util/object-folders';
+import {getAllObjectFoldersObjects, ObjectFolders} from '../../util/object-folders';
 import {View} from '../../../../../../../../core/store/views/view';
 import {SizeType} from '../../../../../../../../shared/slider/size/size-type';
 
@@ -44,7 +44,8 @@ export class ViewsFolderComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.folder) {
-      this.count = calculateObjectFoldersOverallCount(this.folder);
+      const allObjects = getAllObjectFoldersObjects(this.folder);
+      this.count = new Set(allObjects.map(view => view.id)).size;
     }
   }
 

@@ -27,14 +27,14 @@ export interface ObjectFolders<T extends ObjectFoldersType> {
 
 export type ObjectFoldersType = {folders: string[]};
 
-export function calculateObjectFoldersOverallCount<T extends ObjectFoldersType>(folders: ObjectFolders<T>): number {
-  return (folders?.objects.length || 0) + calculateObjectFoldersCount(folders?.folders);
+export function getAllObjectFoldersObjects<T extends ObjectFoldersType>(folders: ObjectFolders<T>): T[] {
+  return [...(folders?.objects || []), ...getObjectFoldersObjects(folders?.folders)];
 }
 
-export function calculateObjectFoldersCount<T extends ObjectFoldersType>(folders: ObjectFolders<T>[]): number {
+function getObjectFoldersObjects<T extends ObjectFoldersType>(folders: ObjectFolders<T>[]): T[] {
   return (folders || []).reduce(
-    (sum, folder) => sum + folder.objects.length + calculateObjectFoldersCount(folder.folders),
-    0
+    (objects, folder) => [...(folder.objects || []), ...getObjectFoldersObjects(folder.folders)],
+    []
   );
 }
 

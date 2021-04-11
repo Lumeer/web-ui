@@ -63,7 +63,7 @@ export class ViewSettingsModalComponent implements OnInit {
     );
     this.views$ = this.store$.pipe(
       select(selectAllViews),
-      map(views => views.filter(view => view.id !== this.view.id))
+      map(views => views.filter(view => view.id !== this.view?.id))
     );
 
     this.form = this.fb.group({
