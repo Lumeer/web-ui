@@ -111,8 +111,11 @@ export class InputTagsComponent implements OnInit, OnChanges {
   public onKeyDown(event: KeyboardEvent) {
     switch (event.key) {
       case KeyCode.Enter:
-      case KeyCode.Tab:
       case KeyCode.NumpadEnter:
+        this.submitTag();
+        return;
+      case KeyCode.Tab:
+        event.preventDefault();
         this.submitTag();
         return;
       case KeyCode.Backspace:
