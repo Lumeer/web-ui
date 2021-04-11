@@ -114,6 +114,10 @@ export class InputTagsComponent implements OnInit, OnChanges {
       case KeyCode.NumpadEnter:
         this.submitTag();
         return;
+      case KeyCode.Tab:
+        event.preventDefault();
+        this.submitTag();
+        return;
       case KeyCode.Backspace:
         this.removeLastTag();
         return;
@@ -166,6 +170,7 @@ export class InputTagsComponent implements OnInit, OnChanges {
   }
 
   public onBlur() {
+    this.submitTag();
     this.dropdown?.close();
     this.blur.emit();
   }

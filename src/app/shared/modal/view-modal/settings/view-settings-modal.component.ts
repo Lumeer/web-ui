@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {DialogType} from '../../dialog-type';
 import {View} from '../../../../core/store/views/view';
@@ -30,7 +30,7 @@ import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {notEmptyValidator} from '../../../../core/validators/custom-validators';
 import {selectAllViews, selectViewById} from '../../../../core/store/views/views.state';
-import {map, take, tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 
 @Component({
   templateUrl: './view-settings-modal.component.html',
@@ -63,31 +63,13 @@ export class ViewSettingsModalComponent implements OnInit {
     );
     this.views$ = this.store$.pipe(
       select(selectAllViews),
-      map(views => views.filter(view => view.id !== this.view.id))
+      map(views => views.filter(view => view.id !== this.view?.id))
     );
 
     this.form = this.fb.group({
-      name: [this.view.name, notEmptyValidator(), this.uniqueName()],
+      name: [this.view.name, notEmptyValidator()],
       folders: this.fb.array(this.view.folders || []),
     });
-  }
-
-  public uniqueName(): AsyncValidatorFn {
-    return (control: AbstractControl) =>
-      this.store$.pipe(
-        select(selectAllViews),
-        map(views => {
-          const names = views.filter(view => view.id !== this.view.id).map(view => view.name);
-          const value = control.value.trim();
-
-          if (names.includes(value)) {
-            return {notUnique: true};
-          } else {
-            return null;
-          }
-        }),
-        take(1)
-      );
   }
 
   public onDeleteView() {
