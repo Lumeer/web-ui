@@ -17,11 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {KeyCode} from '../../key-code';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 
 @Component({
   selector: 'input-tags',
@@ -30,12 +42,15 @@ import {KeyCode} from '../../key-code';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block'},
 })
-export class InputTagsComponent implements OnInit {
+export class InputTagsComponent implements OnInit, OnChanges {
   @Input()
   public formGroup: FormGroup;
 
   @Input()
   public controlName: string;
+
+  @Input()
+  public suggestions: string[];
 
   @Input()
   public removeTagTitle: string;
@@ -49,10 +64,14 @@ export class InputTagsComponent implements OnInit {
   @Output()
   public blur = new EventEmitter();
 
+  @ViewChild(OptionsDropdownComponent)
+  public dropdown: OptionsDropdownComponent;
+
   public readonly removeTagTitleDefault: string;
   public readonly placeholderTitleDefault: string;
 
   public text = '';
+  public suggestionOptions: DropdownOption[];
 
   public tags$: Observable<string[]>;
 
@@ -76,6 +95,15 @@ export class InputTagsComponent implements OnInit {
     );
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.suggestions) {
+      this.suggestionOptions = (this.suggestions || []).map(suggestion => ({
+        value: suggestion,
+        displayValue: suggestion,
+      }));
+    }
+  }
+
   public onInput(event: Event) {
     this.text = event.target['value'];
   }
@@ -85,14 +113,20 @@ export class InputTagsComponent implements OnInit {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
         this.submitTag();
-        break;
+        return;
       case KeyCode.Backspace:
         this.removeLastTag();
-        break;
+        return;
     }
+    this.dropdown?.onKeyDown(event);
   }
 
   private submitTag() {
+    const activeOption = this.dropdown?.getActiveOption();
+    if (activeOption) {
+      this.onSelectOption(activeOption);
+      return;
+    }
     const tag = (this.text || '').trim();
     if (tag && !this.tags.includes(tag)) {
       this.tagsControl?.push(new FormControl(tag));
@@ -108,5 +142,31 @@ export class InputTagsComponent implements OnInit {
 
   public removeTag(index: number) {
     this.tagsControl?.removeAt(index);
+  }
+
+  public onSelectOption(option: DropdownOption) {
+    this.tagsControl?.push(new FormControl(option.value));
+    this.text = '';
+    this.updateDropdown();
+  }
+
+  private updateDropdown() {
+    setTimeout(() => {
+      if (this.dropdown?.isOpen()) {
+        this.dropdown?.updatePosition();
+      } else {
+        this.dropdown?.open();
+      }
+    });
+  }
+
+  public onFocus() {
+    this.dropdown?.open();
+    this.focus.emit();
+  }
+
+  public onBlur() {
+    this.dropdown?.close();
+    this.blur.emit();
   }
 }

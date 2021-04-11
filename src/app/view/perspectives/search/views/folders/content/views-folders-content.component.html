@@ -3,7 +3,7 @@
   <div class="d-flex mb-4">
     <views-folders-breadcrumb class="d-block flex-grow-1"
                               [viewFolders]="viewFolders"
-                              [foldersPath]="foldersPath"
+                              [foldersPath]="cleanedPath"
                               (pathSelected)="folderPathChange.emit($event)">
     </views-folders-breadcrumb>
     <size-slider class="d-block"
@@ -13,9 +13,11 @@
   <views-folders [viewSize]="currentSize"
                  [queryData]="queryData"
                  [permissions]="permissions"
-                 [viewFolders]="viewFolders | viewFoldersByPath:foldersPath"
-                 (viewClick)="showView($event)"
-                 (folderClick)="showFolder($event)">
+                 [workspace]="workspace"
+                 [viewFolders]="viewFolders | viewFoldersByPath:cleanedPath"
+                 (favoriteToggle)="onFavoriteToggle($event)"
+                 (folderClick)="showFolder($event)"
+                 (viewFolderAdded)="onViewFolderAdded($event)">
   </views-folders>
 </div>
 

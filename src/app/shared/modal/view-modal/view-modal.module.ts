@@ -38,6 +38,7 @@ import {DropdownModule} from '../../dropdown/dropdown.module';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {ViewHeaderComponent} from './header/view-header.component';
 import {ViewSettingsModalBodyComponent} from './settings/body/view-settings-modal-body.component';
+import {ViewsUniqueFoldersPipe} from './settings/pipes/views-unique-folders.pipe';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {ViewSettingsModalBodyComponent} from './settings/body/view-settings-moda
     ViewHeaderComponent,
     ViewSettingsModalComponent,
     ViewSettingsModalBodyComponent,
+    ViewsUniqueFoldersPipe,
   ],
   imports: [
     CommonModule,

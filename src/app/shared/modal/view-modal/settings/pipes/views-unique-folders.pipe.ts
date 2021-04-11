@@ -17,8 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum QueryParam {
-  Query = 'q',
-  ViewCursor = 'c',
-  PerspectiveSettings = 'ps',
+import {Pipe, PipeTransform} from '@angular/core';
+import {View} from '../../../../../core/store/views/view';
+import {cleanObjectFolders} from '../../../../../view/perspectives/search/views/folders/content/util/object-folders';
+import {uniqueValues} from '../../../../utils/array.utils';
+
+@Pipe({
+  name: 'viewsUniqueFolders',
+})
+export class ViewsUniqueFoldersPipe implements PipeTransform {
+  public transform(views: View[]): string[] {
+    return uniqueValues(
+      (views || []).reduce((folders, view) => {
+        folders.push(...cleanObjectFolders(view));
+        return folders;
+      }, [])
+    );
+  }
 }

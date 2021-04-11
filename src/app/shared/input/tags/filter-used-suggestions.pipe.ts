@@ -17,8 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum QueryParam {
-  Query = 'q',
-  ViewCursor = 'c',
-  PerspectiveSettings = 'ps',
+import {Pipe, PipeTransform} from '@angular/core';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+
+@Pipe({
+  name: 'filterUsedSuggestions',
+})
+export class FilterUsedSuggestionsPipe implements PipeTransform {
+  public transform(suggestions: DropdownOption[], tags: string[]): DropdownOption[] {
+    return (suggestions || []).filter(suggestion => !tags?.includes(suggestion.value));
+  }
 }

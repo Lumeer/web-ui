@@ -6,5 +6,6 @@
                        [queryData]="queryData$ | async"
                        [foldersPath]="foldersPath$ | async"
                        (configChange)="onConfigChange($event)"
-                       (folderPathChange)="onFolderPathChange($event)">
+                       (folderPathChange)="onFolderPathChange($event)"
+                       (viewFoldersChange)="onViewFoldersChange($event)">
 </views-folders-content>

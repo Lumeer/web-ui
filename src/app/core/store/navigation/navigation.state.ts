@@ -25,6 +25,7 @@ import {Query} from './query/query';
 import {SearchTab} from './search-tab';
 import {ViewCursor} from './view-cursor/view-cursor';
 import {Workspace} from './workspace';
+import {PerspectiveSettings} from './settings/perspective-settings';
 
 export interface NavigationState {
   mapPosition?: MapPosition;
@@ -35,6 +36,7 @@ export interface NavigationState {
   searchTab?: SearchTab;
   viewName?: string;
   viewCursor?: ViewCursor;
+  perspectiveSettings?: PerspectiveSettings;
   url: string;
   previousUrl?: string;
   previousWorkspaceUrl?: string;
@@ -59,5 +61,9 @@ export const selectPreviousWorkspaceUrl = createSelector(selectNavigation, state
 
 export const selectViewCode = createSelector(selectWorkspace, workspace => workspace?.viewCode);
 export const selectViewCursor = createSelector(selectNavigation, state => state?.viewCursor);
+export const selectViewFolderPath = createSelector(
+  selectNavigation,
+  state => state.perspectiveSettings?.viewFolderPath
+);
 
 export const selectMapPosition = createSelector(selectNavigation, navigation => navigation.mapPosition);

@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.service';
@@ -34,6 +33,7 @@ import {Query, QueryStem} from './query/query';
 import {convertQueryModelToString} from './query/query.converter';
 import {convertViewCursorToString} from './view-cursor/view-cursor';
 import {selectViewQuery} from '../views/views.state';
+import {convertPerspectiveSettingsToString} from './settings/perspective-settings';
 
 @Injectable()
 export class NavigationEffects {
@@ -106,6 +106,24 @@ export class NavigationEffects {
             },
             extras: {
               replaceUrl: true,
+              queryParamsHandling: 'merge',
+            },
+          })
+      )
+    )
+  );
+
+  public setPerspectiveSettings$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NavigationAction.SetPerspectiveSettings>(NavigationActionType.SET_PERSPECTIVE_SETTINGS),
+      map(
+        action =>
+          new RouterAction.Go({
+            path: [],
+            queryParams: {
+              [QueryParam.PerspectiveSettings]: convertPerspectiveSettingsToString(action.payload.settings) || null,
+            },
+            extras: {
               queryParamsHandling: 'merge',
             },
           })

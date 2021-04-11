@@ -1,8 +1,9 @@
-<div class="card post-it cursor-pointer"
-     *ngIf="permissions$ | async as allowedPermissions"
-     [class.uninitialized]="!collection.id"
-     [class.initialized]="collection.id"
-     (click)="!$event.defaultPrevented && openCollection()">
+<a class="card post-it cursor-pointer color-inherit"
+   *ngIf="permissions$ | async as allowedPermissions"
+   [class.uninitialized]="!collection.id"
+   [class.initialized]="collection.id"
+   [routerLink]="path"
+   [queryParams]="queryParams">
   <div class="card-body text-center">
     <div *ngIf="!collection.id"
          class="text-center small text-muted"
@@ -26,28 +27,21 @@
       </icon-color-picker>
     </div>
 
-    <a *ngIf="collection.id"
-       [style.color]="collection.color"
-       [title]="collection.name"
-       [routerLink]="[workspacePath(), 'view', 'table']"
-       [queryParams]="{ q: queryForCollectionDocuments() }"
-       data-test="collection-card-icon">
+    <div *ngIf="collection.id"
+         [style.color]="collection.color"
+         [title]="collection.name"
+         data-test="collection-card-icon">
       <i class="fa-3x {{ collection.icon }}"
          aria-hidden="true">
       </i>
-    </a>
+    </div>
 
     <div *ngIf="collection.id"
          class="document-count opacity-content clickable">
-      <a title="Record Count"
-         i18n-title="@@collection.document.count"
-         [routerLink]="[workspacePath(), 'view', 'table']"
-         [queryParams]="{ q: queryForCollectionDocuments() }">
+      <span title="Record Count" i18n-title="@@collection.document.count">
         <i class="far fa-file"
            aria-hidden="true">
-        </i>
-        &nbsp;{{ collection.documentsCount }}
-      </a>
+        </i>&nbsp;{{ collection.documentsCount }}</span>
     </div>
 
     <div *ngIf="collection.id && allowedPermissions.read"
@@ -56,7 +50,7 @@
       <span *ngIf="collection.favorite"
             title="Remove from favorites"
             i18n-title="@@collection.favorite.remove"
-            (click)="$event.preventDefault(); toggleFavorite()">
+            (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite()">
         <i class="fas fa-star text-warning"
            aria-hidden="true">
         </i>
@@ -64,7 +58,7 @@
       <span *ngIf="!collection.favorite"
             title="Add to favorites"
             i18n-title="@@collection.favorite.add"
-            (click)="$event.preventDefault(); toggleFavorite()">
+            (click)="$event.preventDefault(); $event.stopPropagation(); toggleFavorite()">
         <i class="far fa-star text-warning"
            aria-hidden="true">
         </i>
@@ -105,4 +99,4 @@
                            (selected)="selected.emit()"
                            (unselected)="unselected.emit()">
   </post-it-collection-name>
-</div>
+</a>

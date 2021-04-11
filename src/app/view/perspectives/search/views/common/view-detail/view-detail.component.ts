@@ -36,6 +36,7 @@ import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'view-detail',
@@ -56,8 +57,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
-  @Output()
-  public clicked = new EventEmitter();
+  @Input()
+  public workspace: Workspace;
 
   @Output()
   public favoriteToggle = new EventEmitter();
@@ -67,6 +68,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public readonly sizeType = SizeType;
 
   public icon: string;
+  public path: any[];
 
   public constructor(private modalService: ModalService) {}
 
@@ -81,10 +83,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     if (changes.view) {
       this.icon = perspectiveIconsMap[this.view?.perspective] || '';
     }
-  }
-
-  public onClicked() {
-    this.clicked.emit();
+    if (changes.view || changes.workspace) {
+      this.path = ['/w', this.workspace?.organizationCode, this.workspace?.projectCode, 'view', {vc: this.view.code}];
+    }
   }
 
   public trackByQueryItem(index: number, queryItem: QueryItem): string {

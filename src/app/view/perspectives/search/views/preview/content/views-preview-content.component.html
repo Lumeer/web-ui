@@ -9,8 +9,8 @@
     <view-detail [view]="view"
                  [queryData]="queryData"
                  [viewSize]="currentSize"
+                 [workspace]="workspace"
                  [permissions]="truncateContent && index >= maxViews - 2 ? null : permissions && permissions[view.id]"
-                 (clicked)="showView(view)"
                  (favoriteToggle)="onFavoriteToggle(view)">
     </view-detail>
     <div *ngIf="truncateContent && index >= maxViews - 2"

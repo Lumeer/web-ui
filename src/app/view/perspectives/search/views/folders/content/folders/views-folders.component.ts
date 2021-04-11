@@ -23,10 +23,13 @@ import {View} from '../../../../../../../core/store/views/view';
 import {QueryData} from '../../../../../../../shared/top-panel/search-box/util/query-data';
 import {SizeType} from '../../../../../../../shared/slider/size/size-type';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'views-folders',
   templateUrl: './views-folders.component.html',
+  styleUrls: ['./views-folders.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewsFoldersComponent {
@@ -42,11 +45,17 @@ export class ViewsFoldersComponent {
   @Input()
   public permissions: Record<string, AllowedPermissions>;
 
+  @Input()
+  public workspace: Workspace;
+
   @Output()
-  public viewClick = new EventEmitter<View>();
+  public favoriteToggle = new EventEmitter<View>();
 
   @Output()
   public folderClick = new EventEmitter<string>();
+
+  @Output()
+  public viewFolderAdded = new EventEmitter<{view: View; folder: string}>();
 
   public trackByView(index: number, view: View): string {
     return view.id;
@@ -54,5 +63,14 @@ export class ViewsFoldersComponent {
 
   public trackByFolder(index: number, folder: ObjectFolders<View>): string {
     return folder.name;
+  }
+
+  public onDropped(drop: CdkDragDrop<View, any>) {
+    const resultIndex = Math.max(drop.currentIndex - 1, 0);
+    const newFolder = this.viewFolders?.folders?.[resultIndex]?.name;
+    const view = this.viewFolders?.objects?.[drop.previousIndex];
+    if (view && newFolder) {
+      this.viewFolderAdded.emit({view, folder: newFolder});
+    }
   }
 }

@@ -28,7 +28,6 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {Router} from '@angular/router';
 import {checkSizeType, SearchViewsConfig} from '../../../../../../core/store/searches/search';
 import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
 import {View} from '../../../../../../core/store/views/view';
@@ -37,7 +36,8 @@ import {Query} from '../../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {createObjectFolders, ObjectFolders} from './util/object-folders';
+import {createObjectFolder, createObjectFolders, ObjectFolders, parseObjectFolder} from './util/object-folders';
+import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
 
 @Component({
   selector: 'views-folders-content',
@@ -74,10 +74,14 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
   @Output()
   public folderPathChange = new EventEmitter<string[]>();
 
+  @Output()
+  public viewFoldersChange = new EventEmitter<{viewId: string; folders: string[]}>();
+
   public currentSize: SizeType;
   public viewFolders: ObjectFolders<View>;
+  public cleanedPath: string[];
 
-  constructor(private router: Router, private toggleService: ViewFavoriteToggleService) {}
+  constructor(private toggleService: ViewFavoriteToggleService) {}
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
@@ -90,15 +94,34 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
     if (changes.views) {
       this.viewFolders = createObjectFolders(this.views);
     }
+    if (changes.views || changes.foldersPath) {
+      this.cleanedPath = this.checkPath();
+    }
+  }
+
+  private checkPath(): string[] {
+    if (!this.viewFolders || !this.foldersPath) {
+      return [];
+    }
+    const path = [];
+
+    // filter only valid path strings
+    let currentViewFolders = this.viewFolders;
+    for (const name of this.foldersPath) {
+      const viewFoldersByName = currentViewFolders.folders.find(folder => folder.name === name);
+      if (viewFoldersByName) {
+        currentViewFolders = viewFoldersByName;
+        path.push(name);
+      } else {
+        break;
+      }
+    }
+    return path;
   }
 
   public onSizeChange(size: SizeType) {
     const newConfig: SearchViewsConfig = {...this.config, size};
     this.configChange.emit(newConfig);
-  }
-
-  public showView(view: View) {
-    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 
   public onFavoriteToggle(view: View) {
@@ -112,5 +135,26 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
   public showFolder(name: string) {
     const pathCopy = [...(this.foldersPath || []), name];
     this.folderPathChange.emit(pathCopy);
+  }
+
+  public onViewFolderAdded(data: {view: View; folder: string}) {
+    const viewFolders = [...(data.view.folders || [])];
+    if (this.cleanedPath?.length === 0) {
+      viewFolders.push(data.folder);
+      this.viewFoldersChange.emit({viewId: data.view.id, folders: viewFolders});
+    } else {
+      const viewFolderIndex = viewFolders.findIndex(rawFolder => {
+        const folders = parseObjectFolder(rawFolder);
+        return deepArrayEquals(folders, this.cleanedPath);
+      });
+
+      if (viewFolderIndex !== -1) {
+        const elementToChange = viewFolders[viewFolderIndex];
+        const folders = parseObjectFolder(elementToChange);
+        folders.push(data.folder);
+        viewFolders[viewFolderIndex] = createObjectFolder(folders);
+        this.viewFoldersChange.emit({viewId: data.view.id, folders: viewFolders});
+      }
+    }
   }
 }

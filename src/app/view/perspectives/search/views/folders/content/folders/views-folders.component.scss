@@ -1,0 +1,11 @@
+@import 'src/styles/variables';
+
+.cdk-drop-list-dragging .views-folder:hover {
+  background: lighten($success, 60%);
+}
+
+.cdk-drag-placeholder {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}

@@ -50,7 +50,7 @@ function addObjectToObjectFolders<T extends ObjectFoldersType>(
   objectFolders: ObjectFolders<T>
 ): ObjectFolders<T> {
   const foldersArray = uniqueArrays(
-    (object.folders || []).map(rawFolder => parseFolders(rawFolder)).filter(folders => folders.length)
+    (object.folders || []).map(rawFolder => parseObjectFolder(rawFolder)).filter(folders => folders.length)
   );
   if (foldersArray.length) {
     for (const folders of foldersArray) {
@@ -83,7 +83,15 @@ function sortObjectFolders<T extends ObjectFoldersType>(objectFolders: ObjectFol
   };
 }
 
-function parseFolders(rawFolder: string): string[] {
+export function cleanObjectFolders<T extends ObjectFoldersType>(object: T): string[] {
+  return (object.folders || []).map(folder => parseObjectFolder(folder).join('/')).filter(folder => !!folder);
+}
+
+export function createObjectFolder(path: string[]): string {
+  return (path || []).join('/');
+}
+
+export function parseObjectFolder(rawFolder: string): string[] {
   return (rawFolder?.toString() || '')
     .split('/')
     .map(folder => folder.trim())

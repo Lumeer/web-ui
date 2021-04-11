@@ -39,6 +39,7 @@ import {ViewsFoldersComponent} from './views/folders/content/folders/views-folde
 import {ViewsFolderComponent} from './views/folders/content/folders/folder/views-folder.component';
 import {ViewFoldersByPathPipe} from './views/folders/content/pipes/view-folders-by-path.pipe';
 import {ViewsFoldersBreadcrumbComponent} from './views/folders/content/breadcrumb/views-folders-breadcrumb.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import {ViewsFoldersBreadcrumbComponent} from './views/folders/content/breadcrum
     SearchPerspectiveRoutingModule,
     SearchTasksModule,
     CreateDocumentModalModule,
+    DragDropModule,
   ],
   declarations: [
     SearchAllComponent,

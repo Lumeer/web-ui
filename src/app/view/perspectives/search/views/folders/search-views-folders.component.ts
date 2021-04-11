@@ -23,7 +23,9 @@ import {NotificationService} from '../../../../../core/notifications/notificatio
 import {AppState} from '../../../../../core/store/app.state';
 import {SearchViewsComponent} from '../search-views.component';
 import {Observable} from 'rxjs';
-import {selectViewsFoldersPath} from '../../../../../core/store/views/views.state';
+import {selectViewFolderPath} from '../../../../../core/store/navigation/navigation.state';
+import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
+import {PerspectiveSettings} from '../../../../../core/store/navigation/settings/perspective-settings';
 import {ViewsAction} from '../../../../../core/store/views/views.action';
 
 @Component({
@@ -41,10 +43,15 @@ export class SearchViewsFoldersComponent extends SearchViewsComponent implements
   public ngOnInit() {
     super.ngOnInit();
 
-    this.foldersPath$ = this.store$.pipe(select(selectViewsFoldersPath));
+    this.foldersPath$ = this.store$.pipe(select(selectViewFolderPath));
   }
 
   public onFolderPathChange(foldersPath: string[]) {
-    this.store$.dispatch(new ViewsAction.SetCurrentFoldersPath({foldersPath}));
+    const settings: PerspectiveSettings = {viewFolderPath: foldersPath};
+    this.store$.dispatch(new NavigationAction.SetPerspectiveSettings({settings}));
+  }
+
+  public onViewFoldersChange(data: {viewId: string; folders: string[]}) {
+    this.store$.dispatch(new ViewsAction.SetViewFolders(data));
   }
 }

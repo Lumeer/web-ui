@@ -1,12 +1,28 @@
-<views-folder *ngFor="let folder of viewFolders.folders; trackBy: trackByFolder"
-              [folder]="folder"
-              [viewSize]="viewSize"
-              (clicked)="folderClick.emit(folder.name)">
-</views-folder>
-<view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
-             [permissions]="permissions && permissions[view.id]"
-             [queryData]="queryData"
-             [view]="view"
-             [viewSize]="viewSize"
-             (clicked)="viewClick.emit(view)">
-</view-detail>
+<div cdkDropList
+     cdkDropListSortingDisabled
+     #folderList="cdkDropList"
+     (cdkDropListDropped)="onDropped($event)">
+  <views-folder *ngFor="let folder of viewFolders.folders; trackBy: trackByFolder"
+                class="views-folder d-block"
+                cdkDrag
+                cdkDragDisabled
+                [folder]="folder"
+                [viewSize]="viewSize"
+                (clicked)="folderClick.emit(folder.name)">
+  </views-folder>
+</div>
+<div cdkDropList
+     cdkDropListSortingDisabled
+     [cdkDropListConnectedTo]="[folderList]"
+     [cdkDropListData]="viewFolders.objects">
+  <view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
+               cdkDrag
+               class="d-block"
+               [permissions]="permissions && permissions[view.id]"
+               [queryData]="queryData"
+               [view]="view"
+               [viewSize]="viewSize"
+               [workspace]="workspace"
+               (favoriteToggle)="favoriteToggle.emit(view)">
+  </view-detail>
+</div>

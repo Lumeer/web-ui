@@ -37,6 +37,13 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return onSetPermissions(state, action);
     case ViewsActionType.RESET_VIEW_GLOBAL_CONFIG:
       return {...state, globalConfig: {}};
+    case ViewsActionType.SET_VIEW_FOLDERS:
+      return viewsAdapter.updateOne({id: action.payload.viewId, changes: {folders: action.payload.folders}}, state);
+    case ViewsActionType.SET_VIEW_FOLDERS_FAILURE:
+      return viewsAdapter.updateOne(
+        {id: action.payload.viewId, changes: {folders: action.payload.previousFolders}},
+        state
+      );
     case ViewsActionType.SET_SIDEBAR_OPENED:
       return {...state, globalConfig: {...state.globalConfig, sidebarOpened: action.payload.opened}};
     case ViewsActionType.SET_PANEL_WIDTH:
@@ -49,8 +56,6 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
     case ViewsActionType.REMOVE_FAVORITE_FAILURE:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
-    case ViewsActionType.SET_CURRENT_FOLDERS_PATH:
-      return {...state, foldersPath: action.payload.foldersPath};
     case ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS:
       return setDefaultConfig(state, action);
     case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:

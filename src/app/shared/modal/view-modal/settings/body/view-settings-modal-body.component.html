@@ -34,6 +34,7 @@
 
     <div class="col-12">
       <input-tags [formGroup]="form"
+                  [suggestions]="views | viewsUniqueFolders"
                   controlName="folders"
                   placeholderTitle="Enter folder name and press Enter"
                   i18n-placeholderTitle="@@view.modal.settings.folders.placeholder"

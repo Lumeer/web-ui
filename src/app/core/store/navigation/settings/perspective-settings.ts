@@ -17,8 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum QueryParam {
-  Query = 'q',
-  ViewCursor = 'c',
-  PerspectiveSettings = 'ps',
+import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
+import {
+  parseShortenedPerspectiveSettings,
+  prolongPerspectiveSettings,
+  shortenPerspectiveSettings,
+  stringifyShortenedPerspectiveSettings,
+} from './shortened-perspective-settings';
+
+export interface PerspectiveSettings {
+  viewFolderPath?: string[];
+}
+
+export function convertPerspectiveSettingsToString(settings: PerspectiveSettings): string {
+  return encodeQueryParam(stringifyShortenedPerspectiveSettings(shortenPerspectiveSettings(settings)));
+}
+
+export function convertStringToPerspectiveSettings(settings: string): PerspectiveSettings {
+  return prolongPerspectiveSettings(parseShortenedPerspectiveSettings(decodeQueryParam(settings)));
 }

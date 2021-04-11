@@ -46,7 +46,6 @@ export interface ViewsState extends EntityState<View> {
   defaultConfigs: Record<string, Record<string, DefaultViewConfig>>;
   defaultConfigsLoaded: boolean;
   defaultConfigSnapshot?: DefaultViewConfig;
-  foldersPath?: string[];
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
@@ -73,8 +72,6 @@ export const selectViewsDictionaryByCode = createSelector(selectAllViews, views 
 export const selectCurrentView = createSelector(selectViewCode, selectAllViews, (viewCode, views) =>
   viewCode ? views.find(view => view.code === viewCode) : null
 );
-
-export const selectViewsFoldersPath = createSelector(selectViewsState, state => state.foldersPath);
 
 export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 

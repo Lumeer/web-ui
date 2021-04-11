@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, EventEmitter, Output, Input} from '@angular/core';
 import {ObjectFolders} from '../util/object-folders';
 import {View} from '../../../../../../../core/store/views/view';
 
@@ -26,7 +26,7 @@ import {View} from '../../../../../../../core/store/views/view';
   templateUrl: './views-folders-breadcrumb.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewsFoldersBreadcrumbComponent implements OnChanges {
+export class ViewsFoldersBreadcrumbComponent {
   @Input()
   public viewFolders: ObjectFolders<View>;
 
@@ -36,40 +36,12 @@ export class ViewsFoldersBreadcrumbComponent implements OnChanges {
   @Output()
   public pathSelected = new EventEmitter<string[]>();
 
-  public path: string[];
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.viewFolders || changes.foldersPath) {
-      this.path = this.checkPath();
-    }
-  }
-
-  private checkPath(): string[] {
-    if (!this.viewFolders || !this.foldersPath) {
-      return [];
-    }
-    const path = [];
-
-    // filter only valid path strings
-    let currentViewFolders = this.viewFolders;
-    for (const name of this.foldersPath) {
-      const viewFoldersByName = currentViewFolders.folders.find(folder => folder.name === name);
-      if (viewFoldersByName) {
-        currentViewFolders = viewFoldersByName;
-        path.push(name);
-      } else {
-        break;
-      }
-    }
-    return path;
-  }
-
   public onHomeClick() {
     this.pathSelected.emit([]);
   }
 
   public onPathClick(index: number) {
-    const newPath = this.path.slice(0, index + 1);
+    const newPath = this.foldersPath.slice(0, index + 1);
     this.pathSelected.emit(newPath);
   }
 }

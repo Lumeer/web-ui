@@ -29,9 +29,11 @@ import {CustomCheckboxComponent} from './custom-checkbox/custom-checkbox.compone
 import {InputTagsComponent} from './tags/input-tags.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DirectivesModule} from '../directives/directives.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, DirectivesModule],
+  imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule],
   declarations: [
     FilterBoxComponent,
     InputBoxComponent,
@@ -40,6 +42,7 @@ import {DirectivesModule} from '../directives/directives.module';
     CopyTextBoxComponent,
     CustomCheckboxComponent,
     InputTagsComponent,
+    FilterUsedSuggestionsPipe,
   ],
   exports: [
     FilterBoxComponent,

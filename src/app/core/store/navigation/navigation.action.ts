@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Query} from './query/query';
 import {ViewCursor} from './view-cursor/view-cursor';
+import {PerspectiveSettings} from './settings/perspective-settings';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
@@ -31,6 +32,8 @@ export enum NavigationActionType {
   SET_QUERY = '[Navigation] Set query',
 
   SET_VIEW_CURSOR = '[Navigation] Set View Cursor',
+
+  SET_PERSPECTIVE_SETTINGS = '[Navigation] Set Perspective Settings',
 
   REMOVE_VIEW_FROM_URL = '[Navigation] Remove view from URL',
 }
@@ -58,6 +61,12 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.SET_VIEW_CURSOR;
 
     public constructor(public payload: {cursor: ViewCursor}) {}
+  }
+
+  export class SetPerspectiveSettings implements Action {
+    public readonly type = NavigationActionType.SET_PERSPECTIVE_SETTINGS;
+
+    public constructor(public payload: {settings: PerspectiveSettings}) {}
   }
 
   export class RemoveViewFromUrl implements Action {

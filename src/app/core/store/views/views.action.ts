@@ -54,6 +54,9 @@ export enum ViewsActionType {
   REMOVE_FAVORITE_SUCCESS = '[Views] Remove Favorite :: Success',
   REMOVE_FAVORITE_FAILURE = '[Views] Remove Favorite :: Failure',
 
+  SET_VIEW_FOLDERS = '[Views] Set View Folders',
+  SET_VIEW_FOLDERS_FAILURE = '[Views] Set View Folders :: Failure',
+
   SET_DEFAULT_CONFIG = '[Views] Set Default Config',
   SET_DEFAULT_CONFIG_SUCCESS = '[Views] Set Default Config :: Success',
 
@@ -61,8 +64,6 @@ export enum ViewsActionType {
 
   GET_DEFAULT_CONFIGS = '[Views] Get Default Configs',
   GET_DEFAULT_CONFIGS_SUCCESS = '[Views] Get Default Configs :: Success',
-
-  SET_CURRENT_FOLDERS_PATH = '[Views] Set Views Folders Path',
 
   SET_DEFAULT_CONFIG_SNAPSHOT = '[Views] Set Default Config Snapshot',
 
@@ -173,6 +174,18 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class SetViewFolders implements Action {
+    public readonly type = ViewsActionType.SET_VIEW_FOLDERS;
+
+    public constructor(public payload: {viewId: string; folders: string[]}) {}
+  }
+
+  export class SetViewFoldersFailure implements Action {
+    public readonly type = ViewsActionType.SET_VIEW_FOLDERS_FAILURE;
+
+    public constructor(public payload: {error: any; viewId: string; previousFolders: string[]}) {}
+  }
+
   export class Delete implements Action {
     public readonly type = ViewsActionType.DELETE;
 
@@ -261,12 +274,6 @@ export namespace ViewsAction {
     public constructor(public payload: {configs: DefaultViewConfig[]}) {}
   }
 
-  export class SetCurrentFoldersPath implements Action {
-    public readonly type = ViewsActionType.SET_CURRENT_FOLDERS_PATH;
-
-    public constructor(public payload: {foldersPath: string[]}) {}
-  }
-
   export class SetDefaultConfig implements Action {
     public readonly type = ViewsActionType.SET_DEFAULT_CONFIG;
 
@@ -324,10 +331,11 @@ export namespace ViewsAction {
     | RemoveFavorite
     | RemoveFavoriteSuccess
     | RemoveFavoriteFailure
+    | SetViewFolders
+    | SetViewFoldersFailure
     | SetSidebarOpened
     | SetPanelWidth
     | SetDefaultConfig
-    | SetCurrentFoldersPath
     | ResetDefaultConfigBySnapshot
     | ResetViewConfig
     | SetDefaultConfigSuccess

@@ -407,6 +407,42 @@ export class ViewsEffects {
     )
   );
 
+  public setViewFolders$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ViewsAction.SetViewFolders>(ViewsActionType.SET_VIEW_FOLDERS),
+      withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
+      mergeMap(([action, viewsMap]) => {
+        const view = viewsMap[action.payload.viewId];
+        const previousFolders = view.folders;
+        const dto = convertViewModelToDto({...view, folders: action.payload.folders});
+
+        return this.viewService.updateView(action.payload.viewId, dto).pipe(
+          mergeMap(() => EMPTY),
+          catchError(error =>
+            of(
+              new ViewsAction.SetViewFoldersFailure({
+                viewId: action.payload.viewId,
+                previousFolders,
+                error,
+              })
+            )
+          )
+        );
+      })
+    )
+  );
+
+  public setViewFoldersFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ViewsAction.SetViewFoldersFailure>(ViewsActionType.SET_VIEW_FOLDERS_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@view.set.folders.fail:Could not update view folders`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
   public addFavorite$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ViewsAction.AddFavorite>(ViewsActionType.ADD_FAVORITE),

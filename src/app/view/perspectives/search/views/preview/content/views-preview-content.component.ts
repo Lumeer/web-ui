@@ -95,10 +95,6 @@ export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestro
     this.configChange.emit(newConfig);
   }
 
-  public showView(view: View) {
-    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
-  }
-
   public trackByView(index: number, view: View): string {
     return view.id;
   }
