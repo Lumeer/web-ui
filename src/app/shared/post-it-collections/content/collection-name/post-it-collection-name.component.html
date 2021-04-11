@@ -1,4 +1,4 @@
-<div class="card-footer text-center bg-transparent">
+<div class="card-footer text-center bg-transparent" (click)="$event.preventDefault(); $event.stopPropagation()">
   <div #collectionNameInput
        class="font-weight-bold name form-control"
        [attr.contenteditable]="editable"
