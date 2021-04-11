@@ -1031,37 +1031,19 @@
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-      </trans-unit><trans-unit id="view.name.exist" datatype="html">
-        <source>View already exist</source><target>Pohled již existuje</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
       </trans-unit><trans-unit id="view.modal.settings.folders" datatype="html">
         <source>Folders:</source><target>Složky:</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
         <source>Enter folder name and press Enter</source><target>Zadejte název složky a stiskněte Enter</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.folders.remove" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.remove" datatype="html">
         <source>Remove folder</source><target>Odstranit složku</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.folders.help" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.help" datatype="html">
         <source>Use "/" to create nested folders i.e "Folder/Subfolder"</source><target>Používejte "/" pro vytvoření vnořených složek (např. "Složka/Podsložka")</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit><trans-unit id="settings" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="settings" datatype="html">
         <source>Settings</source><target>Nastavení</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
@@ -4617,10 +4599,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="views.delete.message" datatype="html">
         <source>Do you really want to permanently delete this view?</source><target>Chcete skutečně navždy smazat tento pohled?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="views.delete.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="views.delete.title" datatype="html">
         <source>Delete view?</source><target>Smazat pohled?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source><target>Nemám kam navázat zadanou hodnotu, musíte něco zadat do předchozí části tabulky.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">419</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
