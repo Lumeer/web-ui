@@ -59,11 +59,10 @@ export const selectUrl = createSelector(selectNavigation, state => state.url);
 export const selectPreviousUrl = createSelector(selectNavigation, state => state.previousUrl);
 export const selectPreviousWorkspaceUrl = createSelector(selectNavigation, state => state.previousWorkspaceUrl);
 
+export const selectPerspectiveSettings = createSelector(selectNavigation, state => state.perspectiveSettings);
+
 export const selectViewCode = createSelector(selectWorkspace, workspace => workspace?.viewCode);
 export const selectViewCursor = createSelector(selectNavigation, state => state?.viewCursor);
-export const selectViewFolderPath = createSelector(
-  selectNavigation,
-  state => state.perspectiveSettings?.viewFolderPath
-);
+export const selectViewFolderPath = createSelector(selectPerspectiveSettings, settings => settings?.viewFolderPath);
 
 export const selectMapPosition = createSelector(selectNavigation, navigation => navigation.mapPosition);

@@ -22,11 +22,15 @@ import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectNavigation, selectSearchTab} from '../../../core/store/navigation/navigation.state';
+import {
+  selectNavigation,
+  selectPerspectiveSettings,
+  selectSearchTab,
+} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
@@ -36,6 +40,8 @@ import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
+import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
+import {QueryParam} from '../../../core/store/navigation/query-param';
 
 @Component({
   templateUrl: './search-perspective.component.html',
@@ -46,7 +52,7 @@ import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public readonly searchTab = SearchTab;
 
-  public stringQuery$: Observable<string>;
+  public queryParams$: Observable<Record<string, string>>;
 
   private initialSearchTab: SearchTab;
   private subscriptions = new Subscription();
@@ -62,9 +68,31 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    this.stringQuery$ = this.store$.pipe(
+    const stringQuery$ = this.store$.pipe(
       select(selectViewQuery),
       map(query => convertQueryModelToString(query))
+    );
+    const perspectiveSettingsString$ = this.store$.pipe(
+      select(selectPerspectiveSettings),
+      map(settings => convertPerspectiveSettingsToString(settings))
+    );
+
+    this.queryParams$ = combineLatest([stringQuery$, perspectiveSettingsString$]).pipe(
+      map(([query, perspectiveSettings]) => {
+        const queryParams = {};
+        if (query) {
+          queryParams[QueryParam.Query] = query;
+        }
+        if (perspectiveSettings) {
+          queryParams[QueryParam.PerspectiveSettings] = perspectiveSettings;
+        }
+
+        if (Object.keys(queryParams).length) {
+          return queryParams;
+        }
+
+        return null;
+      })
     );
   }
 
