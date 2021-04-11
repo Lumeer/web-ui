@@ -51,8 +51,8 @@ export class CollectionRulesComponent implements OnInit {
   private readonly copyOf: string;
 
   constructor(private store$: Store<AppState>) {
-    this.runRuleTitle = $localize`:@@collection.config.tab.rules.run.title:Run the Rule`;
-    this.runRuleMessage = $localize`:@@collection.config.tab.rules.run.message:Do you want to run the rule for all the rows in the table now? Please note that this might take significant time to complete.`;
+    this.runRuleTitle = $localize`:@@collection.config.tab.rules.run.title:Run the Automation`;
+    this.runRuleMessage = $localize`:@@collection.config.tab.rules.run.message:Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.`;
     this.copyOf = $localize`:@@collection.config.tab.rules.prefix.copyOf:Copy of`;
   }
 
@@ -148,11 +148,11 @@ export class CollectionRulesComponent implements OnInit {
   }
 
   private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
-    const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this rule?`;
-    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this rule?`;
+    const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this automation?`;
+    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this automation?`;
 
     if (isBeingUsed) {
-      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This rule is being used in an action button.`;
+      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This automation is being used in an action button.`;
       message = `${message} ${additionalMessage}`;
     }
 

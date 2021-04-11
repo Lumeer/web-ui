@@ -72,7 +72,7 @@ export class SingleRuleComponent {
 
   public showZapierWarning(): void {
     const title = $localize`:@@collection.config.tab.rules.zapier.warning.title:Zapier Automation`;
-    const message = $localize`:@@collection.config.tab.rules.zapier.warning.text:This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).`;
+    const message = $localize`:@@collection.config.tab.rules.zapier.warning.text:This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).`;
 
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }

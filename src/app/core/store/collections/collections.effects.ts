@@ -648,7 +648,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.RunRuleFailure>(CollectionsActionType.RUN_RULE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = $localize`:@@collection.runRule.fail:Could not run the selected rule for the whole table`;
+        const message = $localize`:@@collection.runRule.fail:Could not run the selected automation for the whole table`;
         return new NotificationsAction.Error({message});
       })
     )
