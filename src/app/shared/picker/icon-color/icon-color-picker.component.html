@@ -22,8 +22,11 @@
 
     </div>
 
-    <div class="card-footer text-right p-3">
-      <button class="btn btn-outline-secondary btn-sm" (click)="onCancel()">
+    <div class="card-footer text-right p-3 d-flex">
+      <button class="btn btn-outline-secondary btn-sm" (click)="onClear()">
+        <span i18n="@@button.clear">Clear</span>
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="onCancel()" [class.ml-auto]="showClearIcon">
         <span i18n="@@button.cancel">Cancel</span>
       </button>
       <button class="btn btn-primary btn-sm ml-2" (click)="onSave()"

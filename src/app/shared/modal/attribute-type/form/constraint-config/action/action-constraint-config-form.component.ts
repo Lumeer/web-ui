@@ -18,7 +18,15 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
 import {COLOR_SUCCESS} from '../../../../../../core/constants';
@@ -30,7 +38,7 @@ import {IconColorPickerComponent} from '../../../../../picker/icon-color/icon-co
 import {Role} from '../../../../../../core/model/role';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {ActionConstraintConfig} from '@lumeer/data-filters';
+import {ActionConstraintConfig, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-config-form',
@@ -135,16 +143,18 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
 
   private addButtonForms() {
     const currentTitle = cleanTitle(this.config?.title);
+    const title = currentTitle || (this.attribute?.constraint?.type === ConstraintType.Action ? '' : this.defaultTitle);
     this.form.addControl(ActionConstraintFormControl.Icon, new FormControl(this.config?.icon));
-    this.form.addControl(ActionConstraintFormControl.Title, new FormControl(currentTitle || this.defaultTitle));
-    this.form.addControl(ActionConstraintFormControl.TitleUser, new FormControl(currentTitle));
+    this.form.addControl(ActionConstraintFormControl.Title, new FormControl(title));
+    this.form.addControl(ActionConstraintFormControl.TitleUser, new FormControl(title));
     this.form.addControl(
       ActionConstraintFormControl.Background,
       new FormControl(this.config?.background || COLOR_SUCCESS)
     );
+    this.form.setValidators(titleOrIconValidator());
     this.subscription.add(
       this.titleUserControl.valueChanges.subscribe(value => {
-        this.titleControl.setValue(cleanTitle(value) || this.defaultTitle);
+        this.titleControl.setValue(cleanTitle(value));
       })
     );
   }
@@ -179,10 +189,6 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     this.subscription.unsubscribe();
   }
 
-  public onColorChange(color: string) {
-    this.colorControl.setValue(color);
-  }
-
   public togglePicker() {
     this.savedColor = this.colorControl.value;
     this.iconColorDropdownComponent?.toggle();
@@ -192,6 +198,24 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     this.colorControl.setValue(data.color);
     this.iconControl.setValue(data.icon);
   }
+
+  public onIconColorRemove() {
+    this.colorControl.setValue(null);
+    this.iconControl.setValue(null);
+  }
+}
+
+export function titleOrIconValidator(): ValidatorFn {
+  return (form: FormGroup): ValidationErrors | null => {
+    const icon = form.get(ActionConstraintFormControl.Icon)?.value;
+    const title = form.get(ActionConstraintFormControl.Title)?.value;
+
+    if (!icon && !title) {
+      return {iconOrTitleEmpty: true};
+    }
+
+    return null;
+  };
 }
 
 function cleanTitle(value: string): string {
