@@ -47,7 +47,7 @@ export class ShareViewModalComponent implements OnInit {
   @Input()
   public view: View;
 
-  @ViewChild(ShareViewDialogBodyComponent, {static: true})
+  @ViewChild(ShareViewDialogBodyComponent)
   public shareViewDialogBody: ShareViewDialogBodyComponent;
 
   public currentUser$: Observable<User>;
