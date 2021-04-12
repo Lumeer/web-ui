@@ -7,7 +7,7 @@
                (onClose)="hideDialog()"
                *ngIf="{view: view$ | async} as data">
 
-  <view-header class="custom-header" [viewId]="view.id"
+  <view-header class="custom-header" [viewId]="view?.id"
                prefix="Settings" i18n-prefix="@@settings">
   </view-header>
 
