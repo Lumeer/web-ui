@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/views/view';
+import {AttributesSettings, ResourceAttributeSettings, ViewSettings} from '../../../../core/store/views/view';
 import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Pipe({
@@ -26,14 +26,14 @@ import {AttributesResourceType} from '../../../../core/model/resource';
 })
 export class ResourceAttributesSettingsPipe implements PipeTransform {
   public transform(
-    settings: ViewSettings,
+    settings: AttributesSettings,
     resourceType: AttributesResourceType,
     resourceId: string
   ): ResourceAttributeSettings[] {
     if (resourceType === AttributesResourceType.Collection) {
-      return settings?.attributes?.collections?.[resourceId];
+      return settings?.collections?.[resourceId];
     } else if (resourceType === AttributesResourceType.LinkType) {
-      return settings?.attributes?.linkTypes?.[resourceId];
+      return settings?.linkTypes?.[resourceId];
     }
 
     return [];

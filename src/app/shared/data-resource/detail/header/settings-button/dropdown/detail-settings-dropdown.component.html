@@ -7,12 +7,7 @@
 
   <div class="card p-0 overflow-auto" [style.width.px]="280">
 
-    <data-settings [settings]="settings?.data"
-                   (settingsChange)="dataSettingsChange.emit($event)">
-    </data-settings>
-
-    <attributes-settings *ngIf="showAttributes"
-                         [settings]="settings?.attributes"
+    <attributes-settings [settings]="settings?.attributes"
                          [attributesResourcesData]="attributesResourcesData$ | async"
                          (settingsChanged)="attributeSettingsChanged.emit($event)">
     </attributes-settings>

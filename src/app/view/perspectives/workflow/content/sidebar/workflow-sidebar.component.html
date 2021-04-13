@@ -8,10 +8,9 @@
   <data-resource-detail [resource]="collection"
                         [dataResource]="document"
                         [query]="query"
-                        [ignoreSettingsOnReadPermission]="true"
                         [allowSelectDocument]="false"
                         [permissions]="permissions"
-                        [attributeSettings]="viewSettings | resourceAttributesSettings:collectionResourceType:collection.id"
+                        [attributeSettings]="viewSettings?.attributes | resourceAttributesSettings:collectionResourceType:collection.id"
                         [viewSettings]="viewSettings">
   </data-resource-detail>
 </div>

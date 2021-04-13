@@ -45,7 +45,7 @@ import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {
   getOtherLinkedDocumentId,
   getOtherLinkedDocumentIds,
@@ -89,9 +89,6 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public preventEventBubble: boolean;
-
-  @Input()
-  public ignoreSettingsOnReadPermission: boolean;
 
   @Input()
   public allowSelectDocument: boolean;
@@ -153,10 +150,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   private createLinkTypeColumns(): LinkColumn[] {
-    const settings =
-      this.ignoreSettingsOnReadPermission && this.permissions?.read
-        ? []
-        : this.viewSettings?.attributes?.linkTypes?.[this.linkType?.id];
+    const settings = this.viewSettings?.attributes?.linkTypes?.[this.linkType?.id];
     return createAttributesSettingsOrder(this.linkType?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
@@ -172,10 +166,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private createCollectionColumns(): LinkColumn[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
-    const settings =
-      this.ignoreSettingsOnReadPermission && this.permissions?.read
-        ? []
-        : this.viewSettings?.attributes?.collections?.[this.collection?.id];
+    const settings = this.viewSettings?.attributes?.collections?.[this.collection?.id];
     return createAttributesSettingsOrder(this.collection?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {

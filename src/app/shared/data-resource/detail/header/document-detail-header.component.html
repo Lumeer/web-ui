@@ -30,6 +30,12 @@
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
+      <detail-settings-button *ngIf="permissions?.manageWithView"
+                              [style.line-height.px]="0"
+                              class="mr-2"
+                              [resource]="resource"
+                              [resourceType]="resourceType">
+      </detail-settings-button>
       <i class="{{tableIcon}} mr-2 clickable"
          aria-hidden="true"
          *ngIf="permissions?.read"

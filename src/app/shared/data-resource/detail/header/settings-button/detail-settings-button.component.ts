@@ -17,22 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AttributesSettings} from '../../../core/store/views/view';
-import {AttributesResourceData} from './attributes-settings-configuration';
+import {Component, ChangeDetectionStrategy, ElementRef, Input} from '@angular/core';
+import {AttributesSettings, ViewSettings} from '../../../../../core/store/views/view';
+import {BehaviorSubject} from 'rxjs';
+import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 
 @Component({
-  selector: 'attributes-settings',
-  templateUrl: './attributes-settings.component.html',
+  selector: 'detail-settings-button',
+  templateUrl: './detail-settings-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributesSettingsComponent {
+export class DetailSettingsButtonComponent {
   @Input()
-  public settings: AttributesSettings;
+  public resource: AttributesResource;
 
   @Input()
-  public attributesResourcesData: AttributesResourceData[];
+  public resourceType: AttributesResourceType;
 
-  @Output()
-  public settingsChanged = new EventEmitter<AttributesSettings>();
+  public viewSettings$ = new BehaviorSubject<ViewSettings>({});
+
+  constructor(public element: ElementRef) {}
+
+  public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
+    const changedSettings: ViewSettings = {...this.viewSettings$.value, attributes: attributesSettings};
+    this.viewSettings$.next(changedSettings);
+  }
 }

@@ -1,0 +1,11 @@
+<span class="text-primary clickable" (click)="detailSettings.open()">
+  <i class="far fa-line-columns"></i>
+</span>
+
+<detail-settings-dropdown #detailSettings
+                          [origin]="element"
+                          [resource]="resource"
+                          [resourceType]="resourceType"
+                          [settings]="viewSettings$ | async"
+                          (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
+</detail-settings-dropdown>

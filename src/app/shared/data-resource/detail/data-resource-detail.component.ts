@@ -89,9 +89,6 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public preventEventBubble: boolean;
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
-
-  @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
   @Input()

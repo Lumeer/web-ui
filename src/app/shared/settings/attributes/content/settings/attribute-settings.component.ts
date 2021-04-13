@@ -37,6 +37,9 @@ export class AttributeSettingsComponent {
   @Input()
   public settings: ResourceAttributeSettings;
 
+  @Input()
+  public sortable?: boolean;
+
   @Output()
   public settingsChanged = new EventEmitter<ResourceAttributeSettings>();
 

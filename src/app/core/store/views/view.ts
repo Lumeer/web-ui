@@ -55,7 +55,7 @@ export interface ViewConfig {
 }
 
 export interface DetailConfig {
-  whateverConfig?: string;
+  attributesSettings?: AttributesSettings;
 }
 
 export type PerspectiveConfig =

@@ -64,9 +64,6 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public preventEventBubble: boolean;
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
-
-  @Input()
   public allowSelectDocument = true;
 
   @Input()

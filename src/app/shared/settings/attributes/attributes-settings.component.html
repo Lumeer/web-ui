@@ -1,6 +1,4 @@
-<attributes-settings-content [collections]="collections$ | async"
-                             [linkTypes]="linkTypes$ | async"
-                             [query]="query$ | async"
+<attributes-settings-content [attributesResourcesData]="attributesResourcesData"
                              [settings]="settings"
                              (settingsChanged)="settingsChanged.emit($event)">
 </attributes-settings-content>

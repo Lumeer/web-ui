@@ -17,22 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AttributesSettings} from '../../../core/store/views/view';
-import {AttributesResourceData} from './attributes-settings-configuration';
+import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 
-@Component({
-  selector: 'attributes-settings',
-  templateUrl: './attributes-settings.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class AttributesSettingsComponent {
-  @Input()
-  public settings: AttributesSettings;
-
-  @Input()
-  public attributesResourcesData: AttributesResourceData[];
-
-  @Output()
-  public settingsChanged = new EventEmitter<AttributesSettings>();
+export interface AttributesResourceData {
+  resource: AttributesResource;
+  type: AttributesResourceType;
+  defaultAttributeId?: string;
+  sortable?: boolean;
 }
