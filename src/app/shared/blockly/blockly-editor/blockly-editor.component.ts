@@ -89,6 +89,7 @@ import {UnescapeHtmlBlocklyComponent} from './blocks/unescape-html-blockly-compo
 import {PrintTextBlocklyComponent} from './blocks/print-text-blockly-component';
 import {FormatCurrencyBlocklyComponent} from './blocks/format-currency-blockly-component';
 import {TranslationService} from '../../../core/service/translation.service';
+import {BlockCommentBlocklyComponent} from './blocks/block-comment-blockly-component';
 
 declare var Blockly: any;
 
@@ -206,6 +207,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new EscapeHtmlBlocklyComponent(this.blocklyUtils),
       new UnescapeHtmlBlocklyComponent(this.blocklyUtils),
       new FormatCurrencyBlocklyComponent(this.blocklyUtils, this.translationService),
+      new BlockCommentBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

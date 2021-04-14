@@ -1718,7 +1718,19 @@
         <source>Loading...</source><target>Načítám...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="blockly.tooltip.blockCommentBlock" datatype="html">
+        <source>Add any comment to your automation.</source><target>Přidejte si do Vaší automatizace libovolný komentář.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/block-comment-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.sampleComment.blockCommentBlock" datatype="html">
+        <source>Your comment goes here...</source><target>Sem napiště Váš komentář...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/block-comment-blockly-component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source><target>Zdrojový kód Blockly</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.debug" datatype="html">
@@ -4486,11 +4498,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-link-array-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatCurrencyBlock" datatype="html">
         <source>Formats number as a currency using defined locale.</source><target>Formátuje číslo jako měnu podle dané lokality.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit><trans-unit id="blockly.tooltip.formatDateBlock" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatDateBlock" datatype="html">
         <source>Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</source>
         <target>Naformátuje čas jako objekt nebo v milisekundách (Unixový čas) pomocí daného formátu a jazyku. Výsledek je řetězec.</target>
 

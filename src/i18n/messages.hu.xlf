@@ -279,11 +279,8 @@
 				<target>Hurkok az adott lista összes linkje felett.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-link-array-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatCurrencyBlock" datatype="html">
         <source>Formats number as a currency using defined locale.</source><target>Formázza a számot pénznemként meghatározott területi beállításokkal.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.formatDateBlock">
 				<source>Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</source>
 				<target>Az időt vagy dátumobjektumban vagy ezredmásodpercben formázza a korszak (Unix-idő) óta a megadott formátum karakterlánc és területi karakterlánc használatával. Karakterláncot eredményez.</target>
@@ -2297,7 +2294,19 @@
 			<trans-unit datatype="html" id="message.loading">
 				<source>Loading...</source>
 				<target>Betöltés...</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="blockly.tooltip.blockCommentBlock" datatype="html">
+        <source>Add any comment to your automation.</source><target>Adjon megjegyzéseket az automatizáláshoz.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/block-comment-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.sampleComment.blockCommentBlock" datatype="html">
+        <source>Your comment goes here...</source><target>A kommented ide tartozik...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/block-comment-blockly-component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="modal.kanban.chooseDocument.description">
 				<source> Select to which record you want to link the new one. </source>
 				<target>Jelöld be, hogy melyik rekordhoz szeretnéd csatolni az új hivatkozást.</target>

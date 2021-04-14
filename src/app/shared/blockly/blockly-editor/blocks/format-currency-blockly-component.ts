@@ -22,7 +22,6 @@ import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_CYAN} from '../../../../core/constants';
 import {TranslationService} from '../../../../core/service/translation.service';
 import {LanguageTag} from '@lumeer/data-filters';
-import {isNullOrUndefinedOrEmpty} from '../../../utils/common.utils';
 
 declare var Blockly: any;
 
