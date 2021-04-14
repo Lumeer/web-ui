@@ -65,10 +65,10 @@ export class PrintComponent implements OnInit {
             : this.store$.pipe(select(selectLinkInstanceById(documentId))),
         ]).pipe(
           filter(([w, d]) => !!w && !!d),
-          map(([, d]) => d.data[attributeId]),
-          tap(() => setTimeout(() => window.print(), 3000))
+          map(([, d]) => d.data[attributeId])
         );
-      })
+      }),
+      tap(() => setTimeout(() => window.print(), 3000))
     );
   }
 
