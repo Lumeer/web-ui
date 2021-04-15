@@ -14,9 +14,8 @@
                           [query]="query$ | async"
                           [preventEventBubble]="true"
                           [permissions]="permissions$ | async"
-                          [attributeSettings]="data.viewSettings?.attributes | resourceAttributesSettings:resourceType:data.collection.id"
+                          [attributesSettings]="data.viewSettings?.attributes"
                           [toolbarRef]="toolbarRef"
-                          [viewSettings]="data.viewSettings"
                           (dataResourceChanged)="onDocumentChanged($event)"
                           (documentSelect)="selectCollectionAndDocument($event)">
     </data-resource-detail>

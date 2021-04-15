@@ -234,14 +234,14 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query) =
           data.documents,
           collectionsMap,
           AttributesResourceType.Collection,
-          viewSettings,
+          viewSettings?.attributes,
           constraintData
         ),
         linkInstances: sortDataResourcesByViewSettings(
           data.linkInstances,
           linkTypesMap,
           AttributesResourceType.LinkType,
-          viewSettings,
+          viewSettings?.attributes,
           constraintData
         ),
       };
@@ -298,7 +298,7 @@ export const selectDocumentsByQuerySorted = createSelector(
       documents,
       collectionsMap,
       AttributesResourceType.Collection,
-      viewSettings,
+      viewSettings?.attributes,
       constraintData
     )
 );
@@ -357,6 +357,9 @@ const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean) =>
 
 export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean) =>
   createSelector(selectDocumentsAndLinksByCustomQuery(query, desc), data => data.documents);
+
+export const selectDocumentsByCustomQuerySorted = (query: Query) =>
+  createSelector(selectDocumentsAndLinksByCustomQuerySorted(query), data => data.documents);
 
 export const selectLinkTypesByReadPermission = createSelector(
   selectAllLinkTypes,

@@ -23,6 +23,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -49,7 +50,7 @@ import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
+import {AttributesSettings, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {filter, map, take} from 'rxjs/operators';
@@ -62,6 +63,10 @@ import {objectChanged} from '../../utils/common.utils';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {DetailConfig} from '../../../core/store/details/detail';
+import {selectDetailById} from '../../../core/store/details/detail.state';
+import * as DetailActions from './../../../core/store/details/detail.actions';
+import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
 
 @Component({
   selector: 'data-resource-detail',
@@ -69,7 +74,9 @@ import {ConfigurationService} from '../../../configuration/configuration.service
   styleUrls: ['./data-resource-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataResourceDetailComponent implements OnInit, OnChanges {
+export class DataResourceDetailComponent
+  extends ViewConfigPerspectiveComponent<DetailConfig>
+  implements OnInit, OnChanges, OnDestroy {
   @Input()
   public resource: AttributesResource;
 
@@ -89,10 +96,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public preventEventBubble: boolean;
 
   @Input()
-  public attributeSettings: ResourceAttributeSettings[];
-
-  @Input()
-  public viewSettings: ViewSettings;
+  public attributesSettings: AttributesSettings;
 
   @Input()
   public allowSelectDocument = true;
@@ -123,12 +127,13 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public readonly contactUrl: string;
 
   constructor(
-    private store$: Store<AppState>,
+    protected store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private modalService: ModalService,
     private configurationService: ConfigurationService
   ) {
+    super(store$);
     this.contactUrl = configurationService.getConfiguration().contactUrl;
   }
 
@@ -137,6 +142,8 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
+    super.ngOnInit();
+
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
   }
@@ -251,5 +258,51 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   public selectTab(tab: DetailTabType) {
     this.selectedTab$.next(tab);
+  }
+
+  public onShowLink(linkTypeId: string) {
+    this.store$.dispatch(
+      DetailActions.removeHiddenLink({
+        detailId: this.perspectiveId$.value,
+        linkTypeId,
+      })
+    );
+  }
+
+  public onHideLink(linkTypeId: string) {
+    this.store$.dispatch(
+      DetailActions.addHiddenLink({
+        detailId: this.perspectiveId$.value,
+        linkTypeId,
+      })
+    );
+  }
+
+  protected checkOrTransformConfig(
+    config: DetailConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): DetailConfig {
+    return config || {hiddenLinkTypes: []};
+  }
+
+  protected configChanged(perspectiveId: string, config: DetailConfig) {
+    this.store$.dispatch(DetailActions.add({detail: {id: perspectiveId, config}}));
+  }
+
+  protected getConfig(viewConfig: ViewConfig): DetailConfig {
+    return viewConfig?.detail;
+  }
+
+  protected subscribeConfig$(perspectiveId: string): Observable<DetailConfig> {
+    return this.store$.pipe(
+      select(selectDetailById(perspectiveId)),
+      map(entityConfig => entityConfig?.config)
+    );
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }

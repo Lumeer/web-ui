@@ -20,7 +20,7 @@
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
 import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
-import {AttributeSortType, ViewSettings} from '../../core/store/views/view';
+import {AttributeSortType, AttributesSettings} from '../../core/store/views/view';
 import {createAttributesMap} from '../../core/store/collections/collection.util';
 import {isArray, objectValues} from './common.utils';
 import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
@@ -29,16 +29,13 @@ export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],
   resourcesMap: Record<string, AttributesResource>,
   type: AttributesResourceType,
-  viewSettings: ViewSettings,
+  attributesSettings: AttributesSettings,
   constraintData: ConstraintData,
   sortDesc?: boolean
 ): T[] {
   const dataResourcesByResource = groupDataResourceByResource(dataResources, type);
-  const viewSettingsAttributes = viewSettings?.attributes;
   const resourcesSettings =
-    type === AttributesResourceType.Collection
-      ? viewSettingsAttributes?.collections
-      : viewSettingsAttributes?.linkTypes || {};
+    type === AttributesResourceType.Collection ? attributesSettings?.collections : attributesSettings?.linkTypes || {};
   const resultDataResources = [];
 
   for (const resourceId of Object.keys(dataResourcesByResource)) {

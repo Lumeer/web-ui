@@ -225,7 +225,7 @@ export function createRowObjectsFromAggregated(
     documents,
     collectionsMap,
     AttributesResourceType.Collection,
-    viewSettings,
+    viewSettings?.attributes,
     constraintData
   );
   return sortedDocuments.reduce(

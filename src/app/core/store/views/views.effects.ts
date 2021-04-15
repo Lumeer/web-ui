@@ -65,6 +65,8 @@ import {selectOrganizationByWorkspace} from '../organizations/organizations.stat
 import {HttpErrorResponse} from '@angular/common/http';
 import {UsersAction} from '../users/users.action';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import * as DetailActions from './../details/detail.actions';
+import {getPerspectiveSavedPerspectives} from './view.utils';
 
 @Injectable()
 export class ViewsEffects {
@@ -251,40 +253,50 @@ export class ViewsEffects {
       mergeMap(([action, viewsMap]) => {
         const view = viewsMap[action.payload.viewId];
 
-        switch (view.perspective) {
-          case Perspective.Search:
-            const searchConfig = view.config?.search;
-            return of(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
-          case Perspective.Table:
-            const tableConfig = view.config?.table;
-            return of(new TablesAction.SetConfig({tableId: view.code, config: tableConfig}));
-          case Perspective.Pivot:
-            const pivotConfig = view.config?.pivot;
-            return of(new PivotsAction.SetConfig({pivotId: view.code, config: pivotConfig}));
-          case Perspective.GanttChart:
-            const ganttConfig = view.config?.ganttChart;
-            return of(new GanttChartAction.SetConfig({ganttChartId: view.code, config: ganttConfig}));
-          case Perspective.Map:
-            const mapConfig = view.config?.map;
-            return of(new MapsAction.SetConfig({mapId: view.code, config: mapConfig}));
-          case Perspective.Calendar:
-            const calendarConfig = view.config?.calendar;
-            return of(new CalendarsAction.SetConfig({calendarId: view.code, config: calendarConfig}));
-          case Perspective.Kanban:
-            const kanbanConfig = view.config?.kanban;
-            return of(new KanbansAction.SetConfig({kanbanId: view.code, config: kanbanConfig}));
-          case Perspective.Chart:
-            const chartConfig = view.config?.chart;
-            return of(new ChartAction.SetConfig({chartId: view.code, config: chartConfig}));
-          case Perspective.Workflow:
-            const workflowConfig = view.config?.workflow;
-            return of(new WorkflowsAction.SetConfig({workflowId: view.code, config: workflowConfig}));
-          default:
-            return EMPTY;
-        }
+        return getPerspectiveSavedPerspectives(view.perspective).reduce((actions, savedPerspective) => {
+          actions.push(...this.resetPerspectiveConfigActions(view, savedPerspective));
+          return actions;
+        }, []);
       })
     )
   );
+
+  private resetPerspectiveConfigActions(view: View, perspective: Perspective): Action[] {
+    switch (perspective) {
+      case Perspective.Search:
+        const searchConfig = view.config?.search;
+        return [new SearchesAction.SetConfig({searchId: view.code, config: searchConfig})];
+      case Perspective.Table:
+        const tableConfig = view.config?.table;
+        return [new TablesAction.SetConfig({tableId: view.code, config: tableConfig})];
+      case Perspective.Pivot:
+        const pivotConfig = view.config?.pivot;
+        return [new PivotsAction.SetConfig({pivotId: view.code, config: pivotConfig})];
+      case Perspective.GanttChart:
+        const ganttConfig = view.config?.ganttChart;
+        return [new GanttChartAction.SetConfig({ganttChartId: view.code, config: ganttConfig})];
+      case Perspective.Map:
+        const mapConfig = view.config?.map;
+        return [new MapsAction.SetConfig({mapId: view.code, config: mapConfig})];
+      case Perspective.Calendar:
+        const calendarConfig = view.config?.calendar;
+        return [new CalendarsAction.SetConfig({calendarId: view.code, config: calendarConfig})];
+      case Perspective.Kanban:
+        const kanbanConfig = view.config?.kanban;
+        return [new KanbansAction.SetConfig({kanbanId: view.code, config: kanbanConfig})];
+      case Perspective.Chart:
+        const chartConfig = view.config?.chart;
+        return [new ChartAction.SetConfig({chartId: view.code, config: chartConfig})];
+      case Perspective.Workflow:
+        const workflowConfig = view.config?.workflow;
+        return [new WorkflowsAction.SetConfig({workflowId: view.code, config: workflowConfig})];
+      case Perspective.Detail:
+        const detailConfig = view.config?.detail;
+        return [DetailActions.setConfig({detailId: view.code, config: detailConfig})];
+      default:
+        return [];
+    }
+  }
 
   public delete$ = createEffect(() =>
     this.actions$.pipe(

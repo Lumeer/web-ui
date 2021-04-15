@@ -61,6 +61,7 @@ import {WorkflowsAction} from '../workflows/workflows.action';
 import {DataResourcesAction} from '../data-resources/data-resources.action';
 import {UserPermissionsAction} from '../user-permissions/user-permissions.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
+import * as DetailActions from './../details/detail.actions';
 
 @Injectable()
 export class ProjectsEffects {
@@ -482,6 +483,7 @@ export class ProjectsEffects {
           new LinkTypesAction.Clear(),
           new ViewsAction.Clear(),
           new KanbansAction.Clear(),
+          DetailActions.clear(),
           new MapsAction.Clear(),
           new PivotsAction.Clear(),
           new CalendarsAction.Clear(),

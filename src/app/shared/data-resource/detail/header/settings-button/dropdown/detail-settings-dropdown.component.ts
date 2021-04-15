@@ -41,7 +41,7 @@ import {
   selectCollectionsDictionary,
 } from '../../../../../../core/store/collections/collections.state';
 import {map} from 'rxjs/operators';
-import {mapLinkTypeCollections} from '../../../../../utils/link-type.utils';
+import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../../../../utils/link-type.utils';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {AttributesResourceData} from '../../../../../settings/attributes/attributes-settings-configuration';
 import {Collection} from '../../../../../../core/store/collections/collection';
@@ -98,38 +98,46 @@ export class DetailSettingsDropdownComponent implements OnChanges {
       this.attributesResourcesData$ = combineLatest([collection$, linkTypes$]).pipe(
         map(([collection, linkTypes]) => [
           this.getCollectionAttributesResourceData(collection),
-          ...linkTypes.map(linkType => this.getLinkAttributesResourceData(linkType, true)),
+          ...linkTypes.reduce(
+            (array, linkType) => [...array, ...this.getLinkAttributesResourceData(linkType, true)],
+            []
+          ),
         ])
       );
     } else if (this.resourceType === AttributesResourceType.LinkType) {
       this.attributesResourcesData$ = this.store$.pipe(
         select(selectLinkTypeById(this.resource.id)),
-        map(linkType => (linkType ? [this.getLinkAttributesResourceData(linkType)] : []))
+        map(linkType => (linkType ? this.getLinkAttributesResourceData(linkType) : []))
       );
     } else {
       this.attributesResourcesData$ = of([]);
     }
   }
 
-  private getCollectionAttributesResourceData(collection: Collection): AttributesResourceData {
+  private getCollectionAttributesResourceData(collection: Collection, sortable?: boolean): AttributesResourceData {
     return (
       collection && {
         resource: collection,
         defaultAttributeId: getDefaultAttributeId(collection),
         type: AttributesResourceType.Collection,
-        sortable: false,
+        sortable,
       }
     );
   }
 
-  private getLinkAttributesResourceData(linkType: LinkType, sortable?: boolean): AttributesResourceData {
-    return (
-      linkType && {
-        resource: linkType,
-        type: AttributesResourceType.LinkType,
-        sortable,
+  private getLinkAttributesResourceData(linkType: LinkType, sortable?: boolean): AttributesResourceData[] {
+    const data = [];
+    if (linkType) {
+      data.push({resource: linkType, type: AttributesResourceType.LinkType, sortable});
+      if (linkType.collections?.length === 2) {
+        const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
+        const collection = otherCollectionId && linkType.collections.find(coll => coll.id === otherCollectionId);
+        if (collection) {
+          data.push(this.getCollectionAttributesResourceData(collection, sortable));
+        }
       }
-    );
+    }
+    return data;
   }
 
   public isOpen(): boolean {

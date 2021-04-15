@@ -17,13 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {AttributesSettings} from '../views/view';
+import {QueryStem} from '../navigation/query/query';
 
-@Pipe({
-  name: 'includes',
-})
-export class IncludesPipe implements PipeTransform {
-  public transform(items: any[], item: any): boolean {
-    return items?.includes(item);
-  }
+export interface Detail {
+  id: string;
+  config?: DetailConfig;
+}
+
+export interface DetailConfig {
+  stemsConfigs?: DetailStemConfig[];
+  hiddenLinkTypes?: string[];
+}
+
+export interface DetailStemConfig {
+  stem?: QueryStem;
+  attributesSettings?: AttributesSettings;
 }

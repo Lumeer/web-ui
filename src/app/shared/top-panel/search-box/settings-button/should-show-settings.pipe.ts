@@ -26,7 +26,7 @@ import {Query} from '../../../../core/store/navigation/query/query';
 })
 export class ShouldShowSettingsPipe implements PipeTransform {
   public transform(perspective: Perspective, query: Query): boolean {
-    if ([Perspective.Table, Perspective.Detail, Perspective.Search].includes(perspective)) {
+    if ([Perspective.Table, Perspective.Search].includes(perspective)) {
       return false;
     }
     return (query?.stems || []).length > 0;

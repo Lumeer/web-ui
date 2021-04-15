@@ -29,6 +29,7 @@ import {PivotConfig} from '../pivots/pivot';
 import {SearchConfig} from '../searches/search';
 import {MapConfig} from '../maps/map.model';
 import {WorkflowConfig} from '../workflows/workflow';
+import {DetailConfig} from '../details/detail';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -52,10 +53,6 @@ export interface ViewConfig {
   pivot?: PivotConfig;
   map?: MapConfig;
   workflow?: WorkflowConfig;
-}
-
-export interface DetailConfig {
-  attributesSettings?: AttributesSettings;
 }
 
 export type PerspectiveConfig =

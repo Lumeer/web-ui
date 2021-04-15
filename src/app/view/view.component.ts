@@ -27,7 +27,7 @@ import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
-import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
+import {createViewSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
 import {
   selectCurrentView,
@@ -144,7 +144,7 @@ export class ViewComponent implements OnInit {
           ...currentView,
           query,
           name,
-          config: {[perspective]: createPerspectiveSaveConfig(perspective, config)},
+          config: createViewSaveConfig(perspective, config),
           settings,
           perspective,
         };

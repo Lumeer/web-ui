@@ -15,8 +15,7 @@
                           [preventEventBubble]="true"
                           [permissions]="permissions$ | async"
                           [toolbarRef]="toolbarRef"
-                          [attributeSettings]="data.viewSettings?.attributes | resourceAttributesSettings:resourceType:data.resource.id"
-                          [viewSettings]="data.viewSettings"
+                          [attributesSettings]="data.viewSettings?.attributes"
                           (dataResourceChanged)="onDataResourceChanged($event)"
                           (routingPerformed)="onClose()"
                           (documentSelect)="selectCollectionAndDocument($event)">

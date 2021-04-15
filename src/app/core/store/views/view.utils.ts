@@ -32,7 +32,7 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {DataSettings, PerspectiveConfig, ViewSettings} from './view';
+import {DataSettings, PerspectiveConfig, ViewConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
@@ -43,6 +43,26 @@ import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/wo
 import {WorkflowConfig} from '../workflows/workflow';
 
 export function isViewConfigChanged(
+  perspective: Perspective,
+  viewConfig: ViewConfig,
+  perspectiveConfig: ViewConfig,
+  documentsMap: Record<string, DocumentModel>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
+  return getPerspectiveSavedPerspectives(perspective).some(savedPerspective =>
+    isPerspectiveConfigChanged(
+      savedPerspective,
+      viewConfig?.[savedPerspective],
+      perspectiveConfig?.[savedPerspective],
+      documentsMap,
+      collectionsMap,
+      linkTypesMap
+    )
+  );
+}
+
+export function isPerspectiveConfigChanged(
   perspective: Perspective,
   viewConfig: any,
   perspectiveConfig: any,
@@ -87,6 +107,31 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createChartSaveConfig(config as ChartConfig);
     default:
       return config;
+  }
+}
+
+/**
+ * Creates perspective config with modifications before saving in a view
+ */
+export function createViewSaveConfig(perspective: Perspective, config: ViewConfig): ViewConfig {
+  return getPerspectiveSavedPerspectives(perspective).reduce(
+    (savedConfig, savedPerspective) => ({
+      ...savedConfig,
+      [savedPerspective]: createPerspectiveSaveConfig(perspective, config?.[perspective]),
+    }),
+    {}
+  );
+}
+
+/**
+ * In some cases multiple configs are saved (workflow + detail)
+ */
+export function getPerspectiveSavedPerspectives(perspective: Perspective): Perspective[] {
+  switch (perspective) {
+    case Perspective.Detail:
+      return [perspective];
+    default:
+      return [perspective, Perspective.Detail];
   }
 }
 

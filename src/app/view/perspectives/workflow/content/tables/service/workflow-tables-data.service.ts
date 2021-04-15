@@ -1036,7 +1036,7 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
-          afterSuccess: documentId => this.onRowCreated(row, data, documentId),
+          afterSuccess: document => this.onRowCreated(row, data, document.id),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );

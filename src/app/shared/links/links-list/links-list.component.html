@@ -14,7 +14,7 @@
       [query]="query$ | async"
       [allowSelectDocument]="allowSelectDocument"
       [preventEventBubble]="preventEventBubble"
-      [viewSettings]="viewSettings"
+      [attributesSettings]="viewSettings?.attributes"
       (unLink)="unLinkDocument($event)"
       (detail)="onSelectDocument($event)">
     </links-list-table>

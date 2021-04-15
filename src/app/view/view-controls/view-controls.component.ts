@@ -36,7 +36,12 @@ import {debounceTime, map, take, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPerspective, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {
+  selectPerspective,
+  selectPerspectiveSettings,
+  selectViewCursor,
+  selectWorkspace,
+} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
 import {View} from '../../core/store/views/view';
@@ -68,6 +73,11 @@ import {
   selectViewsPermissions,
 } from '../../core/store/user-permissions/user-permissions.state';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {convertViewCursorToString, ViewCursor} from '../../core/store/navigation/view-cursor/view-cursor';
+import {
+  convertPerspectiveSettingsToString,
+  PerspectiveSettings,
+} from '../../core/store/navigation/settings/perspective-settings';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -289,16 +299,27 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public revertChanges() {
-    this.store$.pipe(select(selectCurrentView), take(1)).subscribe(view => {
-      if (!view || !this.workspace) {
-        return;
-      }
-      const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
-      this.revertChangesForView(view, workspacePath);
-    });
+    combineLatest([
+      this.store$.pipe(select(selectCurrentView)),
+      this.store$.pipe(select(selectViewCursor)),
+      this.store$.pipe(select(selectPerspectiveSettings)),
+    ])
+      .pipe(take(1))
+      .subscribe(([view, cursor, perspectiveSettings]) => {
+        if (!view || !this.workspace) {
+          return;
+        }
+        const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
+        this.revertChangesForView(view, workspacePath, cursor, perspectiveSettings);
+      });
   }
 
-  private revertChangesForView(view: View, workspacePath: any[]) {
+  private revertChangesForView(
+    view: View,
+    workspacePath: any[],
+    cursor: ViewCursor,
+    perspectiveSettings: PerspectiveSettings
+  ) {
     this.resetName(view);
     this.resetViewSettings(view);
     this.resetViewConfig(view);
@@ -306,11 +327,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       case Perspective.Search:
         const searchConfig = view.config?.search;
         const searchPath = [...workspacePath, searchConfig?.searchTab || SearchTab.All];
-        this.revertQueryWithUrl(searchPath, view.query);
+        this.revertQueryWithUrl(searchPath, view.query, cursor, perspectiveSettings);
         this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
         return;
       default:
-        this.revertQueryWithUrl(workspacePath, view.query);
+        this.revertQueryWithUrl(workspacePath, view.query, cursor, perspectiveSettings);
         return;
     }
   }
@@ -328,11 +349,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new ViewsAction.ResetViewConfig({viewId: view.id}));
   }
 
-  private revertQueryWithUrl(path: any[], query: Query) {
+  private revertQueryWithUrl(path: any[], query: Query, cursor: ViewCursor, perspectiveSettings: PerspectiveSettings) {
     this.store$.dispatch(
       new RouterAction.Go({
         path,
-        queryParams: {[QueryParam.Query]: convertQueryModelToString(query)},
+        queryParams: {
+          [QueryParam.Query]: convertQueryModelToString(query),
+          [QueryParam.ViewCursor]: convertViewCursorToString(cursor),
+          [QueryParam.PerspectiveSettings]: convertPerspectiveSettingsToString(perspectiveSettings),
+        },
       })
     );
   }

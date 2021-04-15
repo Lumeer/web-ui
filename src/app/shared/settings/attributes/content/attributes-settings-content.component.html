@@ -2,6 +2,7 @@
   <ng-container *ngFor="let resourceData of attributesResourcesData; let first = first; trackBy:trackByResourceId">
     <accordion-group panelClass="lmr-accordion"
                      *ngIf="resourceData.resource?.attributes | createAttributesSettingsOrder: (settings | resourceAttributesSettings:resourceData.type:resourceData.resource.id) as attributesSettings"
+                     [isDisabled]="attributesSettings.length === 0"
                      [isOpen]="first">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: resourceData.resource | resourceIconsColors} as data">
         <icons-presenter class="d-block mr-1"
