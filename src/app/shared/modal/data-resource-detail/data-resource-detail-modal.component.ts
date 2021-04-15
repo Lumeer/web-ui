@@ -23,10 +23,8 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
@@ -62,7 +60,7 @@ import {
   styleUrls: ['./data-resource-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataResourceDetailModalComponent implements OnInit, OnChanges {
+export class DataResourceDetailModalComponent implements OnInit {
   @Input()
   public resource: AttributesResource;
 
@@ -110,12 +108,6 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resource || changes.dataResource) {
-      this.initData();
-    }
-  }
-
   private initData() {
     this.setData(this.resource, this.dataResource);
   }
@@ -123,7 +115,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   private setData(resource: AttributesResource, dataResource: DataResource) {
     this.resourceType = getAttributesResourceType(resource);
     this.resource$ = this.selectResource$(resource.id);
-    this.dataResource$ = this.selectDataResource$(dataResource.id);
+    this.dataResource$ = dataResource?.id ? this.selectDataResource$(dataResource.id) : of(dataResource);
     this.permissions$ = this.selectPermissions$(resource);
 
     this.subscribeExist(resource, dataResource);
