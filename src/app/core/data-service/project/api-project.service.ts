@@ -90,6 +90,10 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     return this.httpClient.put<ProjectDto>(this.apiPrefix(organizationId, projectId), project);
   }
 
+  public deleteSampleData(organizationId: string, projectId: string, confirmation: string): Observable<any> {
+    return this.httpClient.delete(`${this.apiPrefix(organizationId, projectId)}/sample-data`, {params: {confirmation}});
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }

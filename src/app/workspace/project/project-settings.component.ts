@@ -36,6 +36,9 @@ import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {SearchTab} from '../../core/store/navigation/search-tab';
+import {ModalService} from '../../shared/modal/modal.service';
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {TextInputModalComponent} from '../../shared/modal/text-input/text-input-modal.component';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -52,14 +55,24 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
   private subscriptions = new Subscription();
 
+  private modalRef: BsModalRef;
+  private deleteSamplesTitle = '';
+  private deleteSamplesDescription = '';
+  private deleteSamplesPlaceholder = '';
+
   constructor(
     private router: Router,
     private store$: Store<AppState>,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
     this.subscribeToStore();
+
+    this.deleteSamplesDescription = $localize`:@@project.deleteSamples.dialog.description:All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.`;
+    this.deleteSamplesTitle = $localize`:@@project.deleteSamples.dialog.title:Do you want to erase all sample data in the project?`;
+    this.deleteSamplesPlaceholder = $localize`:@@project.deleteSamples.dialog.placeholder:PERMANENTLY CLEAN`;
   }
 
   public ngOnDestroy() {
@@ -159,5 +172,29 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
 
   private updateProject(project: Project) {
     this.store$.dispatch(new ProjectsAction.Update({project}));
+  }
+
+  public onSampleDataEraseClick() {
+    this.modalRef = this.modalService.show(TextInputModalComponent, {
+      keyboard: true,
+      backdrop: 'static',
+      initialState: {
+        title: this.deleteSamplesTitle,
+        description: this.deleteSamplesDescription,
+        placeholder: this.deleteSamplesPlaceholder,
+        validationFunction: content => content === this.deleteSamplesPlaceholder,
+      },
+    });
+
+    this.subscriptions.add(
+      this.modalRef.content.onSave$.subscribe(value =>
+        this.store$.dispatch(
+          new ProjectsAction.DeleteSampleData({
+            organizationId: this.project$.getValue().organizationId,
+            projectId: this.project$.getValue().id,
+          })
+        )
+      )
+    );
   }
 }
