@@ -32,7 +32,7 @@ import {Workspace} from '../../store/navigation/workspace';
 import {AppIdService} from '../../service/app-id.service';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
-import {correlationIdHeader} from '../../rest/interceptors/correlation-id.http-interceptor';
+import {correlationIdHeader, correlationIdHeaderBackup} from '../../rest/interceptors/correlation-id.http-interceptor';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
@@ -58,7 +58,11 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   }
 
   public createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.post<LinkInstanceDto>(this.apiPrefix(), linkInstance);
+    return this.httpClient.post<LinkInstanceDto>(this.apiPrefix(), linkInstance, {
+      headers: {
+        [correlationIdHeaderBackup]: this.appId.getAppId(),
+      },
+    });
   }
 
   public patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto> {
@@ -78,7 +82,13 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
+    return this.httpClient
+      .delete(this.apiPrefix(id), {
+        headers: {
+          [correlationIdHeader]: this.appId.getAppId(),
+        },
+      })
+      .pipe(map(() => id));
   }
 
   public duplicateLinkInstances(linkInstanceDuplicate: LinkInstanceDuplicateDto): Observable<LinkInstanceDto[]> {

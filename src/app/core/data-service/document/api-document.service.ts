@@ -29,7 +29,7 @@ import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {AppIdService} from '../../service/app-id.service';
-import {correlationIdHeader} from '../../rest/interceptors/correlation-id.http-interceptor';
+import {correlationIdHeader, correlationIdHeaderBackup} from '../../rest/interceptors/correlation-id.http-interceptor';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
@@ -44,7 +44,11 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   }
 
   public createDocument(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.post<DocumentDto>(this.apiPrefix({collectionId: document.collectionId}), document);
+    return this.httpClient.post<DocumentDto>(this.apiPrefix({collectionId: document.collectionId}), document, {
+      headers: {
+        [correlationIdHeaderBackup]: this.appId.getAppId(),
+      },
+    });
   }
 
   public patchDocument(
@@ -100,6 +104,9 @@ export class ApiDocumentService extends BaseService implements DocumentService {
     return this.httpClient.delete(`${this.apiPrefix({collectionId})}/${documentId}`, {
       observe: 'response',
       responseType: 'text',
+      headers: {
+        [correlationIdHeader]: this.appId.getAppId(),
+      },
     });
   }
 

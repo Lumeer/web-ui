@@ -24,6 +24,7 @@ import {isBackendUrl} from '../../api/api.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 export const correlationIdHeader = 'X-Lumeer-Correlation-Id';
+export const correlationIdHeaderBackup = 'X-Lumeer-Correlation-Id-2';
 
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
