@@ -340,6 +340,30 @@ export class ProjectsEffects {
     )
   );
 
+  public deleteSampleData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ProjectsAction.DeleteSampleData>(ProjectsActionType.DELETE_SAMPLE_DATA),
+      mergeMap(action => {
+        const {organizationId, projectId} = action.payload;
+        return this.projectService.deleteSampleData(organizationId, projectId, 'PERMANENTLY DELETE').pipe(
+          mergeMap(() => EMPTY),
+          catchError(error => of(new ProjectsAction.DeleteSampleDataFailure({error})))
+        );
+      })
+    )
+  );
+
+  public deleteSampleDataFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ProjectsAction.DeleteSampleDataFailure>(ProjectsActionType.DELETE_SAMPLE_DATA_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@project.deleteSampleDate.fail:Could not delete sample data`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
   public changePermission$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),

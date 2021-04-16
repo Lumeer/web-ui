@@ -60,6 +60,9 @@ export enum ProjectsActionType {
   COPY = '[Projects] Copy',
   COPY_FAILURE = '[Projects] Copy :: Failure',
 
+  DELETE_SAMPLE_DATA = '[Projects] Delete Sample Data',
+  DELETE_SAMPLE_DATA_FAILURE = '[Projects] Delete Sample Data :: Failure',
+
   GET_TEMPLATES = '[Projects] Get Templates',
   GET_TEMPLATES_SUCCESS = '[Projects] Get Templates :: Success',
   GET_TEMPLATES_FAILURE = '[Projects] Get Templates :: Failure',
@@ -213,6 +216,18 @@ export namespace ProjectsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class DeleteSampleData implements Action {
+    public readonly type = ProjectsActionType.DELETE_SAMPLE_DATA;
+
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
+  }
+
+  export class DeleteSampleDataFailure implements Action {
+    public readonly type = ProjectsActionType.DELETE_SAMPLE_DATA_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class GetTemplates implements Action {
     public readonly type = ProjectsActionType.GET_TEMPLATES;
   }
@@ -298,6 +313,8 @@ export namespace ProjectsAction {
     | ChangePermissionFailure
     | ApplyTemplate
     | ApplyTemplateFailure
+    | DeleteSampleData
+    | DeleteSampleDataFailure
     | GetTemplates
     | GetTemplatesSuccess
     | GetTemplatesFailure

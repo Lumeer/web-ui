@@ -11,6 +11,14 @@
       (descriptionChange)="onNewDescription($event)"
       (nameChange)="onNewName($event)"
       (codeChange)="onNewCode($event)">
+
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger mr-3"
+           (click)="onSampleDataEraseClick()"
+           title="Delete sample data from the project" i18n-title="@@project.settings.collections.deleteSampleData">
+        <i class="far fa-eraser" aria-hidden="true"></i>&nbsp;
+      </div>
+
+
       <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
            title="Number of users" i18n-title="@@project.settings.users.count">
         <i class="far fa-user" aria-hidden="true"></i>&nbsp;<span>{{ userCount$ | async }}</span>

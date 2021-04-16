@@ -1,0 +1,30 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  [showHeader]="true"
+  (onClose)="cancelDialog()"
+  (onSubmit)="submitDialog()"
+  [showSubmit]="true"
+  [submitDisabled]="!valid">
+
+  <div class="title">
+    <h5 class="modal-title break-all">
+      {{title}}
+    </h5>
+  </div>
+
+  <div class="body p-3" #dialogBody>
+    <div class="mb-3">
+      {{description}}
+    </div>
+    <input type="text" class="form-control" [(ngModel)]="content" [placeholder]="placeholder" (ngModelChange)="validate($event)" />
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+    <i class="far fa-check"></i>&nbsp;<span i18n="@@button.confirm">Confirm</span>
+  </span>
+
+</modal-wrapper>

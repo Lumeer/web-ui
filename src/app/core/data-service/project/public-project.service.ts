@@ -105,6 +105,10 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return of(project);
   }
 
+  public deleteSampleData(organizationId: string, projectId: string, confirmation: string): Observable<any> {
+    return of();
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }

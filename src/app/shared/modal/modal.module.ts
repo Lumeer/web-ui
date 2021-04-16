@@ -40,6 +40,7 @@ import {UserSettingsModalModule} from './user-settings/user-settings-modal.modul
 import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
 import {ViewModalModule} from './view-modal/view-modal.module';
+import {TextInputModalModule} from './text-input/text-input-modal.module';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import {ViewModalModule} from './view-modal/view-modal.module';
     CreateDocumentModalModule,
     CreateLinkModalModule,
     TextEditorModalModule,
+    TextInputModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
@@ -76,6 +78,7 @@ import {ViewModalModule} from './view-modal/view-modal.module';
     CreateDocumentModalModule,
     CreateLinkModalModule,
     TextEditorModalModule,
+    TextInputModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
