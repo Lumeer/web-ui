@@ -1,4 +1,5 @@
-<div class="d-flex flex-column flex-lg-row" *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
+<div class="d-flex flex-column flex-lg-row"
+     *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
   <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
     <icons-presenter class="mr-2"
                      [icons]="data.iconColors.icons"
@@ -16,16 +17,23 @@
   </div>
 
   <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
-    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates" *ngIf="resourceType === collectionResourceType">
+    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates"
+         *ngIf="resourceType === collectionResourceType">
       <span (click)="versionClick.emit()" class="mr-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
       <span *ngIf="(dataResource.creationDate | isDateValid) && users.createdBy">
-        <short-date [date]="dataResource.creationDate" format="ll" [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')" icon="fa-file"></short-date>
-        <user-avatar class="ml-2" [email]="users.createdBy.email" [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
+        <short-date [date]="dataResource.creationDate" format="ll"
+                    [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')"
+                    icon="fa-file"></short-date>
+        <user-avatar class="ml-2" [email]="users.createdBy.email"
+                     [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
       </span>
       <span *ngIf="(dataResource.updateDate | isDateValid) && users.updatedBy">
         <br/>
-        <short-date [date]="dataResource.updateDate" format="ll" [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')" icon="fa-pencil"></short-date>
-        <user-avatar class="ml-2" [email]="users.updatedBy.email" [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
+        <short-date [date]="dataResource.updateDate" format="ll"
+                    [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')"
+                    icon="fa-pencil"></short-date>
+        <user-avatar class="ml-2" [email]="users.updatedBy.email"
+                     [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
       </span>
     </div>
 
@@ -34,7 +42,9 @@
                               [style.line-height.px]="0"
                               class="mr-2"
                               [resource]="resource"
-                              [resourceType]="resourceType">
+                              [resourceType]="resourceType"
+                              [attributesSettings]="attributesSettings"
+                              (attributesSettingsChanged)="attributesSettingsChanged.emit($event)">
       </detail-settings-button>
       <i class="{{tableIcon}} mr-2 clickable"
          aria-hidden="true"

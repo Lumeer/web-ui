@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {AttributesSettings, ViewSettings} from '../../../../../../core/store/views/view';
+import {AttributesSettings} from '../../../../../../core/store/views/view';
 import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
 import {select, Store} from '@ngrx/store';
@@ -58,7 +58,7 @@ export class DetailSettingsDropdownComponent implements OnChanges {
   public origin: ElementRef | HTMLElement;
 
   @Input()
-  public settings: ViewSettings;
+  public attributesSettings: AttributesSettings;
 
   @Input()
   public resource: AttributesResource;
@@ -67,7 +67,7 @@ export class DetailSettingsDropdownComponent implements OnChanges {
   public resourceType: AttributesResourceType;
 
   @Output()
-  public attributeSettingsChanged = new EventEmitter<AttributesSettings>();
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -114,13 +114,18 @@ export class DetailSettingsDropdownComponent implements OnChanges {
     }
   }
 
-  private getCollectionAttributesResourceData(collection: Collection, sortable?: boolean): AttributesResourceData {
+  private getCollectionAttributesResourceData(
+    collection: Collection,
+    sortable?: boolean,
+    composedWithId?: string
+  ): AttributesResourceData {
     return (
       collection && {
         resource: collection,
         defaultAttributeId: getDefaultAttributeId(collection),
         type: AttributesResourceType.Collection,
         sortable,
+        composedWithId,
       }
     );
   }
@@ -133,7 +138,7 @@ export class DetailSettingsDropdownComponent implements OnChanges {
         const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
         const collection = otherCollectionId && linkType.collections.find(coll => coll.id === otherCollectionId);
         if (collection) {
-          data.push(this.getCollectionAttributesResourceData(collection, sortable));
+          data.push(this.getCollectionAttributesResourceData(collection, sortable, linkType.id));
         }
       }
     }

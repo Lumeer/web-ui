@@ -26,6 +26,17 @@ import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {objectValues} from '../utils/common.utils';
 
+const composedIdSeparator = ':';
+
+export function parseViewSettingsLinkTypeCollectionIds(composedId: string): {collectionId: string; linkTypeId: string} {
+  const ids = (composedId || '').split(composedIdSeparator, 2);
+  return {collectionId: ids[1], linkTypeId: ids[0]};
+}
+
+export function composeViewSettingsLinkTypeCollectionId(collectionId: string, linkTypeId: string): string {
+  return `${linkTypeId}${composedIdSeparator}${collectionId}`;
+}
+
 export function createAttributesSettingsOrder(
   attributes: Attribute[],
   settings: ResourceAttributeSettings[]
@@ -64,7 +75,13 @@ export function viewAttributeSettingsChanged(
       previousSettings?.collections,
       currentSettings?.collections,
       collectionsMap
-    ) || viewResourceAttributesSettingsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes, linkTypesMap)
+    ) ||
+    viewResourceAttributesSettingsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes, linkTypesMap) ||
+    viewLinkTypesCollectionsAttributesSettingsChanged(
+      previousSettings?.linkTypesCollections,
+      currentSettings?.linkTypesCollections,
+      collectionsMap
+    )
   );
 }
 
@@ -77,6 +94,21 @@ function viewResourceAttributesSettingsChanged(
     const attributes = resourcesMap[resourceId]?.attributes || [];
     const previousOrder = createAttributesSettingsOrder(attributes, previousSettings?.[resourceId]);
     const currentOrder = createAttributesSettingsOrder(attributes, currentSettings?.[resourceId]);
+
+    return !deepArrayEquals(previousOrder, currentOrder);
+  });
+}
+
+function viewLinkTypesCollectionsAttributesSettingsChanged(
+  previousSettings: Record<string, ResourceAttributeSettings[]>,
+  currentSettings: Record<string, ResourceAttributeSettings[]>,
+  collectionsMap: Record<string, Collection>
+): boolean {
+  return Object.keys(currentSettings || {}).some(composedId => {
+    const {collectionId} = parseViewSettingsLinkTypeCollectionIds(composedId);
+    const attributes = collectionsMap[collectionId]?.attributes || [];
+    const previousOrder = createAttributesSettingsOrder(attributes, previousSettings?.[composedId]);
+    const currentOrder = createAttributesSettingsOrder(attributes, currentSettings?.[composedId]);
 
     return !deepArrayEquals(previousOrder, currentOrder);
   });

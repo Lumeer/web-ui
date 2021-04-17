@@ -41,6 +41,7 @@ import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
 import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
 import {WorkflowConfig} from '../workflows/workflow';
+import {isDetailConfigChanged} from '../details/detail.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -87,6 +88,8 @@ export function isPerspectiveConfigChanged(
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Workflow:
       return isWorkflowConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Detail:
+      return isDetailConfigChanged(viewConfig, perspectiveConfig, collectionsMap, linkTypesMap);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
@@ -124,7 +127,7 @@ export function createViewSaveConfig(perspective: Perspective, config: ViewConfi
 }
 
 /**
- * In some cases multiple configs are saved (workflow + detail)
+ * In some cases multiple configs are saved (i.e. workflow + detail)
  */
 export function getPerspectiveSavedPerspectives(perspective: Perspective): Perspective[] {
   switch (perspective) {

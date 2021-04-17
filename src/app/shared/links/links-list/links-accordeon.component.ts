@@ -67,7 +67,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public allowSelectDocument = true;
 
   @Input()
-  public hiddenLinkTypes: string[];
+  public collapsedLinkTypes: string[];
 
   @Input()
   public attributesSettings: AttributesSettings;

@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, ElementRef, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ElementRef, Input, Output, EventEmitter} from '@angular/core';
 import {AttributesSettings, ViewSettings} from '../../../../../core/store/views/view';
-import {BehaviorSubject} from 'rxjs';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 
 @Component({
@@ -34,12 +33,15 @@ export class DetailSettingsButtonComponent {
   @Input()
   public resourceType: AttributesResourceType;
 
-  public viewSettings$ = new BehaviorSubject<ViewSettings>({});
+  @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
   constructor(public element: ElementRef) {}
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
-    const changedSettings: ViewSettings = {...this.viewSettings$.value, attributes: attributesSettings};
-    this.viewSettings$.next(changedSettings);
+    this.attributesSettingsChanged.emit(attributesSettings);
   }
 }

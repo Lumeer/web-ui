@@ -20,7 +20,6 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {ViewSettings} from '../../../../../core/store/views/view';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../core/model/resource';
@@ -47,9 +46,6 @@ export class WorkflowSidebarComponent implements OnChanges {
 
   @Input()
   public query: Query;
-
-  @Input()
-  public viewSettings: ViewSettings;
 
   @Output()
   public close = new EventEmitter();

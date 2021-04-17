@@ -1,15 +1,18 @@
 <ng-container
-  *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
+  *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
+  constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
   <document-detail-header class="d-block mb-4"
                           [resource]="resource"
                           [dataResource]="dataResource"
                           [resourceType]="resourceType"
+                          [attributesSettings]="data.attributesSettings"
                           [constraintData]="data.constraintData"
                           [permissions]="permissions"
                           [workspace]="data.workspace"
                           (switchToTable)="onSwitchToTable()"
                           (remove)="onRemove()"
-                          (versionClick)="selectTab(detailTabType.Activity)">
+                          (versionClick)="selectTab(detailTabType.Activity)"
+                          (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
   </document-detail-header>
 
   <detail-tabs *ngIf="dataResource?.id"
@@ -31,7 +34,7 @@
                         [query]="query"
                         [toolbarRef]="toolbarRef"
                         [preventEventBubble]="preventEventBubble"
-                        [attributeSettings]="attributesSettings | resourceAttributesSettings:resourceType:resource.id"
+                        [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
                         (attributeTypeClick)="onAttributeTypeClick($event)"
                         (attributeFunctionCLick)="onAttributeFunctionClick($event)"
                         (removeDocument)="onRemove()"
@@ -66,8 +69,8 @@
                        [preventEventBubble]="preventEventBubble"
                        [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
-                       [hiddenLinkTypes]="data.detailConfig?.hiddenLinkTypes"
-                       [attributesSettings]="attributesSettings"
+                       [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
+                       [attributesSettings]="data.attributesSettings"
                        (documentSelect)="documentSelect.emit($event)"
                        (showLink)="onShowLink($event)"
                        (hideLink)="onHideLink($event)">

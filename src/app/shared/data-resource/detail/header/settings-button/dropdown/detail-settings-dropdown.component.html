@@ -7,9 +7,9 @@
 
   <div class="card p-0 overflow-auto" [style.width.px]="280">
 
-    <attributes-settings [settings]="settings?.attributes"
+    <attributes-settings [settings]="attributesSettings"
                          [attributesResourcesData]="attributesResourcesData$ | async"
-                         (settingsChanged)="attributeSettingsChanged.emit($event)">
+                         (settingsChanged)="attributesSettingsChanged.emit($event)">
     </attributes-settings>
 
   </div>

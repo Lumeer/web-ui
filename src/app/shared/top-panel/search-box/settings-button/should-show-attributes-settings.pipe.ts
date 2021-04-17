@@ -17,18 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../../../shared/shared.module';
-import {DetailPerspectiveComponent} from './detail-perspective.component';
-import {RouterModule} from '@angular/router';
-import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
-import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Perspective} from '../../../../view/perspectives/perspective';
+import {Query} from '../../../../core/store/navigation/query/query';
 
-@NgModule({
-  imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
-  declarations: [DetailPerspectiveComponent, DetailQueryStemPipe],
-  exports: [DetailPerspectiveComponent],
+@Pipe({
+  name: 'shouldShowAttributesSettings',
 })
-export class DetailPerspectiveModule {}
-
-export default DetailPerspectiveModule;
+export class ShouldShowAttributesSettingsPipe implements PipeTransform {
+  public transform(perspective: Perspective, query: Query): boolean {
+    if ([Perspective.Table, Perspective.Search].includes(perspective)) {
+      return false;
+    }
+    if ([Perspective.Detail].includes(perspective)) {
+      return true;
+    }
+    return (query?.stems || []).length > 0;
+  }
+}

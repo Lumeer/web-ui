@@ -31,18 +31,24 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
-import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectCollectionsByStems, selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQueryWithoutLinks,
+  selectLinkTypesInQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {combineLatest, Observable} from 'rxjs';
-import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {map} from 'rxjs/operators';
+import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {AppState} from '../../../core/store/app.state';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
+import {AttributesResourceType} from '../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {AttributesResourceData} from '../attributes/attributes-settings-configuration';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+import {Query} from '../../../core/store/navigation/query/query';
+import {selectPerspective, selectQuery} from '../../../core/store/navigation/navigation.state';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
   selector: 'view-settings-dropdown',
@@ -75,8 +81,8 @@ export class ViewSettingsDropdownComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    const query$ = this.store$.pipe(select(selectViewQuery));
-    const collections$ = this.store$.pipe(select(selectCollectionsByStems));
+    const query$ = this.selectQuery$();
+    const collections$ = this.store$.pipe(select(selectAllCollections));
     const linkTypes$ = combineLatest([
       this.store$.pipe(select(selectLinkTypesInQuery)),
       this.store$.pipe(select(selectCollectionsDictionary)),
@@ -101,6 +107,26 @@ export class ViewSettingsDropdownComponent implements OnInit {
         }, []);
       })
     );
+  }
+
+  private selectQuery$(): Observable<Query> {
+    return this.store$.pipe(
+      select(selectPerspective),
+      distinctUntilChanged(),
+      switchMap(perspective => this.selectQueryByPerspective$(perspective))
+    );
+  }
+
+  private selectQueryByPerspective$(perspective: Perspective): Observable<Query> {
+    switch (perspective) {
+      case Perspective.Detail:
+        return combineLatest([
+          this.store$.pipe(select(selectCollectionsByQueryWithoutLinks)),
+          this.store$.pipe(select(selectQuery)),
+        ]).pipe(map(([collections, query]) => modifyDetailPerspectiveQuery(query, collections)));
+      default:
+        return this.store$.pipe(select(selectQuery));
+    }
   }
 
   public isOpen(): boolean {

@@ -91,6 +91,7 @@ export interface DataSettings {
 export interface AttributesSettings {
   collections?: Record<string, ResourceAttributeSettings[]>;
   linkTypes?: Record<string, ResourceAttributeSettings[]>;
+  linkTypesCollections?: Record<string, ResourceAttributeSettings[]>; // key is constructed as `${linkTypeId}:${collectionId}`
 }
 
 export interface ResourceAttributeSettings {

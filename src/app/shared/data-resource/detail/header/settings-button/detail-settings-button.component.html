@@ -6,6 +6,6 @@
                           [origin]="element"
                           [resource]="resource"
                           [resourceType]="resourceType"
-                          [settings]="viewSettings$ | async"
-                          (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
+                          [attributesSettings]="attributesSettings"
+                          (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
 </detail-settings-dropdown>

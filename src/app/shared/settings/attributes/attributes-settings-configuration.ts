@@ -24,4 +24,5 @@ export interface AttributesResourceData {
   type: AttributesResourceType;
   defaultAttributeId?: string;
   sortable?: boolean;
+  composedWithId?: string;
 }

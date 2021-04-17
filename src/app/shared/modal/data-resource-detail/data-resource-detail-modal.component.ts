@@ -47,9 +47,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
-import {ViewSettings} from '../../../core/store/views/view';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {
   selectCollectionPermissions,
@@ -91,7 +89,6 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
   public permissions$: Observable<AllowedPermissions>;
-  public viewSettings$: Observable<ViewSettings>;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
@@ -106,7 +103,6 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 

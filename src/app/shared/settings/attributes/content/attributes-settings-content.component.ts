@@ -23,8 +23,9 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/views/view';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
+import {AttributesResourceType} from '../../../../core/model/resource';
 import {AttributesResourceData} from '../attributes-settings-configuration';
+import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
 
 @Component({
   selector: 'attributes-settings-content',
@@ -45,7 +46,7 @@ export class AttributesSettingsContentComponent {
   public onResourceSettingsChanged(
     settingsOrder: ResourceAttributeSettings[],
     index: number,
-    resource: AttributesResource,
+    resourceData: AttributesResourceData,
     type: AttributesResourceType,
     attributeSettings: ResourceAttributeSettings
   ) {
@@ -53,15 +54,19 @@ export class AttributesSettingsContentComponent {
     settingsOrderCopy[index] = attributeSettings;
 
     if (type === AttributesResourceType.Collection) {
-      this.emitCollectionChange(settingsOrderCopy, resource);
+      if (resourceData.composedWithId) {
+        this.emitLinkTypeCollectionChange(settingsOrderCopy, resourceData.resource, resourceData.composedWithId);
+      } else {
+        this.emitCollectionChange(settingsOrderCopy, resourceData.resource);
+      }
     } else {
-      this.emitLinkTypeChange(settingsOrderCopy, <LinkType>resource);
+      this.emitLinkTypeChange(settingsOrderCopy, <LinkType>resourceData.resource);
     }
   }
 
   public onResourceSettingsDropped(
     settingsOrder: ResourceAttributeSettings[],
-    resource: AttributesResource,
+    resourceData: AttributesResourceData,
     type: AttributesResourceType,
     event: CdkDragDrop<any>
   ) {
@@ -70,11 +75,30 @@ export class AttributesSettingsContentComponent {
       moveItemInArray(settingsOrderCopy, event.previousIndex, event.currentIndex);
 
       if (type === AttributesResourceType.Collection) {
-        this.emitCollectionChange(settingsOrderCopy, resource);
+        if (resourceData.composedWithId) {
+          this.emitLinkTypeCollectionChange(settingsOrderCopy, resourceData.resource, resourceData.composedWithId);
+        } else {
+          this.emitCollectionChange(settingsOrderCopy, resourceData.resource);
+        }
       } else {
-        this.emitLinkTypeChange(settingsOrderCopy, <LinkType>resource);
+        this.emitLinkTypeChange(settingsOrderCopy, <LinkType>resourceData.resource);
       }
     }
+  }
+
+  private emitLinkTypeCollectionChange(
+    settingsOrder: ResourceAttributeSettings[],
+    collection: Collection,
+    linkTypeId: string
+  ) {
+    const settingsCopy: AttributesSettings = {
+      ...this.settings,
+      linkTypesCollections: {
+        ...this.settings?.linkTypesCollections,
+        [composeViewSettingsLinkTypeCollectionId(collection.id, linkTypeId)]: settingsOrder,
+      },
+    };
+    this.settingsChanged.next(settingsCopy);
   }
 
   private emitCollectionChange(settingsOrder: ResourceAttributeSettings[], collection: Collection) {

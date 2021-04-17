@@ -39,7 +39,7 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
@@ -64,9 +64,10 @@ import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissi
 import {ConstraintData} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DetailConfig} from '../../../core/store/details/detail';
-import {selectDetailById} from '../../../core/store/details/detail.state';
+import {selectDetailAttributesSettings, selectDetailById} from '../../../core/store/details/detail.state';
 import * as DetailActions from './../../../core/store/details/detail.actions';
 import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
+import {checkOrTransformDetailConfig, modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
   selector: 'data-resource-detail',
@@ -96,10 +97,10 @@ export class DataResourceDetailComponent
   public preventEventBubble: boolean;
 
   @Input()
-  public attributesSettings: AttributesSettings;
+  public allowSelectDocument = true;
 
   @Input()
-  public allowSelectDocument = true;
+  public stem: QueryStem;
 
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
@@ -112,6 +113,7 @@ export class DataResourceDetailComponent
 
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
+  public attributesSettings$: Observable<AttributesSettings>;
 
   public resourceType: AttributesResourceType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
@@ -151,6 +153,9 @@ export class DataResourceDetailComponent
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.resource) || objectChanged(changes.dataResource)) {
       this.bindData();
+    }
+    if (changes.stem) {
+      this.attributesSettings$ = this.store$.pipe(select(selectDetailAttributesSettings(this.stem)));
     }
   }
 
@@ -262,7 +267,7 @@ export class DataResourceDetailComponent
 
   public onShowLink(linkTypeId: string) {
     this.store$.dispatch(
-      DetailActions.removeHiddenLink({
+      DetailActions.removeCollapsedLink({
         detailId: this.perspectiveId$.value,
         linkTypeId,
       })
@@ -271,7 +276,7 @@ export class DataResourceDetailComponent
 
   public onHideLink(linkTypeId: string) {
     this.store$.dispatch(
-      DetailActions.addHiddenLink({
+      DetailActions.addCollapsedLink({
         detailId: this.perspectiveId$.value,
         linkTypeId,
       })
@@ -284,7 +289,8 @@ export class DataResourceDetailComponent
     collections: Collection[],
     linkTypes: LinkType[]
   ): DetailConfig {
-    return config || {hiddenLinkTypes: []};
+    const modifiedQuery = modifyDetailPerspectiveQuery(query, collections);
+    return checkOrTransformDetailConfig(config, modifiedQuery, collections, linkTypes);
   }
 
   protected configChanged(perspectiveId: string, config: DetailConfig) {
@@ -304,5 +310,17 @@ export class DataResourceDetailComponent
 
   public ngOnDestroy() {
     super.ngOnDestroy();
+  }
+
+  public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
+    if (this.stem) {
+      this.store$.dispatch(
+        DetailActions.setStemAttributes({
+          stem: this.stem,
+          detailId: this.perspectiveId$.value,
+          attributes: attributesSettings,
+        })
+      );
+    }
   }
 }

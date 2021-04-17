@@ -4,14 +4,14 @@
     <accordion>
       <ng-container *ngFor="let linkType of data?.linkTypes; trackBy:trackById">
         <accordion-group panelClass="lmr-accordion"
-                         [isOpen]="!(hiddenLinkTypes | includes:linkType.id)"
+                         [isOpen]="!(collapsedLinkTypes | includes:linkType.id)"
                          [isDisabled]="false"
                          (isOpenChange)="isOpenChanged($event, linkType.id)">
           <div class="header-wrapper" accordion-heading
                *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
             <div class="mr-2" *ngIf="true">
-              <i *ngIf="!(hiddenLinkTypes | includes:linkType.id)" class="fas fa-eye-slash" tooltip="Hide Link" i18n-tooltip="@@document.detail.links.hide"></i>
-              <i *ngIf="hiddenLinkTypes | includes:linkType.id" class="fas fa-eye" tooltip="Show Link" i18n-tooltip="@@document.detail.links.show"></i>
+              <i *ngIf="!(collapsedLinkTypes | includes:linkType.id)"  class="fas fa-caret-down"></i>
+              <i *ngIf="collapsedLinkTypes | includes:linkType.id"  class="fas fa-caret-right"></i>
             </div>
             <icons-presenter class="d-block mr-1"
                              [colors]="iconData.iconColors.colors"
@@ -31,7 +31,7 @@
             <links-list-table
               *ngIf="linkType | linkTypeOtherCollection:data.collections:collection.id as otherCollection"
               class="d-block mt-2"
-              [visible]="!(hiddenLinkTypes | includes:linkType.id)"
+              [visible]="!(collapsedLinkTypes | includes:linkType.id)"
               [linkType]="linkType"
               [document]="document"
               [collection]="otherCollection"

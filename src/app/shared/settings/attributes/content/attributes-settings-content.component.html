@@ -1,7 +1,7 @@
 <accordion [closeOthers]="true">
   <ng-container *ngFor="let resourceData of attributesResourcesData; let first = first; trackBy:trackByResourceId">
     <accordion-group panelClass="lmr-accordion"
-                     *ngIf="resourceData.resource?.attributes | createAttributesSettingsOrder: (settings | resourceAttributesSettings:resourceData.type:resourceData.resource.id) as attributesSettings"
+                     *ngIf="resourceData.resource?.attributes | createAttributesSettingsOrder: (settings | resourceAttributesSettings:resourceData.type:resourceData.resource.id:resourceData.composedWithId) as attributesSettings"
                      [isDisabled]="attributesSettings.length === 0"
                      [isOpen]="first">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: resourceData.resource | resourceIconsColors} as data">
@@ -24,8 +24,8 @@
           [sortable]="resourceData.sortable"
           [attribute]="resourceData.resource.attributes | findAttribute:attributeSettings.attributeId"
           [isDefault]="attributeSettings.attributeId === resourceData.defaultAttributeId"
-          (settingsChanged)="onResourceSettingsChanged(attributesSettings, index, resourceData.resource, resourceData.type, $event)"
-          (cdkDragDropped)="onResourceSettingsDropped(attributesSettings, resourceData.resource, resourceData.type, $event)">
+          (settingsChanged)="onResourceSettingsChanged(attributesSettings, index, resourceData, resourceData.type, $event)"
+          (cdkDragDropped)="onResourceSettingsDropped(attributesSettings, resourceData, resourceData.type, $event)">
           <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
         </attribute-settings>
       </div>

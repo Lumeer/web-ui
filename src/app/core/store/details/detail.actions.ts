@@ -32,10 +32,13 @@ export const setConfig = createAction(
   props<{detailId: string; config: Partial<DetailConfig>}>()
 );
 
-export const addHiddenLink = createAction('[Detail] Add Hidden Link', props<{detailId: string; linkTypeId: string}>());
+export const addCollapsedLink = createAction(
+  '[Detail] Add Collapsed Link',
+  props<{detailId: string; linkTypeId: string}>()
+);
 
-export const removeHiddenLink = createAction(
-  '[Detail] Remove Hidden Link',
+export const removeCollapsedLink = createAction(
+  '[Detail] Remove Collapsed Link',
   props<{detailId: string; linkTypeId: string}>()
 );
 

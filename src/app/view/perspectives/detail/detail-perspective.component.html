@@ -22,8 +22,8 @@
     <div class="card p-4 mb-4" *ngIf="data.selected.collection && data.selected.document">
       <data-resource-detail [resource]="data.selected.collection"
                             [dataResource]="data.selected.document"
-                            [attributesSettings]="data.viewSettings?.attributes"
                             [query]="data.query"
+                            [stem]="data.selected.collection | detailQueryStem"
                             [permissions]="data.permissions"
                             (documentSelect)="selectCollectionAndDocument($event)">
       </data-resource-detail>

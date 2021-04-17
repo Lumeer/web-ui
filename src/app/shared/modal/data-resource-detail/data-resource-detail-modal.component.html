@@ -7,7 +7,7 @@
   (onSubmit)="onSubmit()">
 
   <div class="body p-3"
-       *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async, viewSettings: viewSettings$ | async} as data">
+       *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async} as data">
     <data-resource-detail *ngIf="data.resource && data.dataResource"
                           [resource]="data.resource"
                           [dataResource]="data.dataResource"
@@ -15,7 +15,6 @@
                           [preventEventBubble]="true"
                           [permissions]="permissions$ | async"
                           [toolbarRef]="toolbarRef"
-                          [attributesSettings]="data.viewSettings?.attributes"
                           (dataResourceChanged)="onDataResourceChanged($event)"
                           (routingPerformed)="onClose()"
                           (documentSelect)="selectCollectionAndDocument($event)">

@@ -17,18 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../../../shared/shared.module';
-import {DetailPerspectiveComponent} from './detail-perspective.component';
-import {RouterModule} from '@angular/router';
-import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
-import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../../../core/store/collections/collection';
+import {QueryStem} from '../../../../core/store/navigation/query/query';
 
-@NgModule({
-  imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
-  declarations: [DetailPerspectiveComponent, DetailQueryStemPipe],
-  exports: [DetailPerspectiveComponent],
+@Pipe({
+  name: 'detailQueryStem',
 })
-export class DetailPerspectiveModule {}
-
-export default DetailPerspectiveModule;
+export class DetailQueryStemPipe implements PipeTransform {
+  public transform(selectedCollection: Collection): QueryStem {
+    return selectedCollection && {collectionId: selectedCollection.id};
+  }
+}

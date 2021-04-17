@@ -20,37 +20,64 @@
 import {createReducer, on} from '@ngrx/store';
 import * as DetailActions from './detail.actions';
 import {detailsAdapter, DetailsState, initialDetailsState} from './detail.state';
+import {QueryStem} from '../navigation/query/query';
+import {AttributesSettings} from '../views/view';
+import {areQueryStemsEqual} from '../navigation/query/query.helper';
 
 export const detailsReducer = createReducer(
   initialDetailsState,
   on(DetailActions.add, (state, action) => detailsAdapter.upsertOne(action.detail, state)),
   on(DetailActions.remove, (state, action) => detailsAdapter.removeOne(action.detailId, state)),
-  on(DetailActions.addHiddenLink, (state, action) => addHiddenLink(state, action.detailId, action.linkTypeId)),
-  on(DetailActions.removeHiddenLink, (state, action) => removeHiddenLink(state, action.detailId, action.linkTypeId)),
+  on(DetailActions.setStemAttributes, (state, action) =>
+    setStemAttributes(state, action.detailId, action.stem, action.attributes)
+  ),
+  on(DetailActions.addCollapsedLink, (state, action) => addCollapsedLink(state, action.detailId, action.linkTypeId)),
+  on(DetailActions.removeCollapsedLink, (state, action) =>
+    removeCollapsedLink(state, action.detailId, action.linkTypeId)
+  ),
   on(DetailActions.setConfig, (state, action) =>
     detailsAdapter.updateOne({id: action.detailId, changes: {config: action.config}}, state)
   ),
   on(DetailActions.clear, state => detailsAdapter.removeAll(state))
 );
 
-function addHiddenLink(state: DetailsState, detailId: string, linkTypeId: string) {
+function setStemAttributes(
+  state: DetailsState,
+  detailId: string,
+  stem: QueryStem,
+  attributesSettings: AttributesSettings
+) {
   const detail = state.entities[detailId];
   if (detail) {
-    const hiddenLinkTypes = [...(detail.config?.hiddenLinkTypes || [])];
-    hiddenLinkTypes.push(linkTypeId);
-    return detailsAdapter.updateOne({id: detailId, changes: {config: {hiddenLinkTypes}}}, state);
+    const stemsConfigs = [...(detail.config.stemsConfigs || [])];
+    const stemConfigIndex = stemsConfigs.findIndex(stemConfig => areQueryStemsEqual(stemConfig.stem, stem));
+    if (stemConfigIndex !== -1) {
+      stemsConfigs[stemConfigIndex] = {...stemsConfigs[stemConfigIndex], attributesSettings};
+      return detailsAdapter.updateOne({id: detailId, changes: {config: {...detail.config, stemsConfigs}}}, state);
+    }
   }
 
   return state;
 }
 
-function removeHiddenLink(state: DetailsState, detailId: string, linkTypeId: string) {
+function addCollapsedLink(state: DetailsState, detailId: string, linkTypeId: string) {
   const detail = state.entities[detailId];
   if (detail) {
-    const hiddenLinkTypes = (detail.config?.hiddenLinkTypes || []).filter(
+    const collapsedLinkTypes = [...(detail.config?.collapsedLinkTypes || [])];
+    collapsedLinkTypes.push(linkTypeId);
+    return detailsAdapter.updateOne({id: detailId, changes: {config: {...detail.config, collapsedLinkTypes}}}, state);
+  }
+
+  return state;
+}
+
+function removeCollapsedLink(state: DetailsState, detailId: string, linkTypeId: string) {
+  const detail = state.entities[detailId];
+  if (detail) {
+    const collapsedLinkTypes = (detail.config?.collapsedLinkTypes || []).filter(
       hiddenLinkType => hiddenLinkType !== linkTypeId
     );
-    return detailsAdapter.updateOne({id: detailId, changes: {config: {hiddenLinkTypes}}}, state);
+    return detailsAdapter.updateOne({id: detailId, changes: {config: {...detail.config, collapsedLinkTypes}}}, state);
   }
 
   return state;

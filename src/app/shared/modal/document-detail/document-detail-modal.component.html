@@ -7,14 +7,13 @@
   (onSubmit)="onSubmit()">
 
   <div class="body p-3"
-       *ngIf="{collection: collection$ | async, document: document$ | async, viewSettings: viewSettings$ | async} as data">
+       *ngIf="{collection: collection$ | async, document: document$ | async} as data">
     <data-resource-detail *ngIf="data.collection && data.document"
                           [resource]="data.collection"
                           [dataResource]="data.document"
                           [query]="query$ | async"
                           [preventEventBubble]="true"
                           [permissions]="permissions$ | async"
-                          [attributesSettings]="data.viewSettings?.attributes"
                           [toolbarRef]="toolbarRef"
                           (dataResourceChanged)="onDocumentChanged($event)"
                           (documentSelect)="selectCollectionAndDocument($event)">

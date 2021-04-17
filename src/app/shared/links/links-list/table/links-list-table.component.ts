@@ -58,8 +58,8 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {AttributesSettings, ViewSettings} from '../../../../core/store/views/view';
-import {createAttributesSettingsOrder} from '../../../settings/settings.util';
+import {AttributesSettings} from '../../../../core/store/views/view';
+import {composeViewSettingsLinkTypeCollectionId, createAttributesSettingsOrder} from '../../../settings/settings.util';
 import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 
@@ -166,7 +166,8 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private createCollectionColumns(): LinkColumn[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
-    const settings = this.attributesSettings?.collections?.[this.collection?.id];
+    const composedId = composeViewSettingsLinkTypeCollectionId(this.collection?.id, this.linkType?.id);
+    const settings = this.attributesSettings?.linkTypesCollections?.[composedId];
     return createAttributesSettingsOrder(this.collection?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
