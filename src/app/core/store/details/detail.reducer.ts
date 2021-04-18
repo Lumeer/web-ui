@@ -23,6 +23,7 @@ import {detailsAdapter, DetailsState, initialDetailsState} from './detail.state'
 import {QueryStem} from '../navigation/query/query';
 import {AttributesSettings} from '../views/view';
 import {areQueryStemsEqual} from '../navigation/query/query.helper';
+import {uniqueValues} from '../../../shared/utils/array.utils';
 
 export const detailsReducer = createReducer(
   initialDetailsState,
@@ -65,7 +66,10 @@ function addCollapsedLink(state: DetailsState, detailId: string, linkTypeId: str
   if (detail) {
     const collapsedLinkTypes = [...(detail.config?.collapsedLinkTypes || [])];
     collapsedLinkTypes.push(linkTypeId);
-    return detailsAdapter.updateOne({id: detailId, changes: {config: {...detail.config, collapsedLinkTypes}}}, state);
+    return detailsAdapter.updateOne(
+      {id: detailId, changes: {config: {...detail.config, collapsedLinkTypes: uniqueValues(collapsedLinkTypes)}}},
+      state
+    );
   }
 
   return state;
