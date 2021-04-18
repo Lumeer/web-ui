@@ -47,7 +47,6 @@ export function modifyDetailPerspectiveQuery(query: Query, collections: Collecti
 
 export function createFlatResourcesSettingsQuery(collections: Collection[], linkTypes: LinkType[] = []): Query {
   const stems: QueryStem[] = (collections || []).map(collection => createFlatCollectionSettingsQueryStem(collection));
-
   const linkStems = (linkTypes || []).map(linkType => createFlatLinkTypeSettingsQueryStem(linkType));
 
   return {stems: [...stems, ...linkStems]};

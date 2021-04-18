@@ -38,9 +38,9 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -53,10 +53,6 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
-import {
-  selectCollectionsByReadPermission,
-  selectLinkTypesByReadPermission,
-} from '../../../core/store/common/permissions.selectors';
 import {
   createFlatCollectionSettingsQueryStem,
   createFlatLinkTypeSettingsQueryStem,
@@ -118,8 +114,8 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.settingsQuery$ = combineLatest([
-      this.store$.pipe(select(selectCollectionsByReadPermission)),
-      this.store$.pipe(select(selectLinkTypesByReadPermission)),
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => createFlatResourcesSettingsQuery(collections, linkTypes)));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
