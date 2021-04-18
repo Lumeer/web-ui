@@ -46,6 +46,7 @@ import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
 import {AllowedPermissions} from '../../../model/allowed-permissions';
+import {normalizeQueryStem} from './query.converter';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -314,7 +315,10 @@ export function queryStemWithoutFilters(stem: QueryStem): QueryStem {
 }
 
 export function queryStemsAreSame(s1: QueryStem, s2: QueryStem): boolean {
-  return deepObjectsEquals(queryStemWithoutFilters(s1), queryStemWithoutFilters(s2));
+  return deepObjectsEquals(
+    normalizeQueryStem(queryStemWithoutFilters(s1)),
+    normalizeQueryStem(queryStemWithoutFilters(s2))
+  );
 }
 
 export function uniqueStems(stems: QueryStem[]): QueryStem[] {

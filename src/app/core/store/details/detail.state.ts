@@ -24,7 +24,7 @@ import {selectWorkspace} from '../navigation/navigation.state';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {Detail} from './detail';
 import {QueryStem} from '../navigation/query/query';
-import {queryStemsAreSame, queryStemWithoutFilters} from '../navigation/query/query.util';
+import {queryStemsAreSame} from '../navigation/query/query.util';
 
 export interface DetailsState extends EntityState<Detail> {}
 
@@ -48,8 +48,5 @@ export const selectDetailAttributesSettings = (stem: QueryStem) =>
   createSelector(
     selectDetailConfig,
     config =>
-      stem &&
-      config?.stemsConfigs?.find(stemConfig =>
-        queryStemsAreSame(queryStemWithoutFilters(stem), queryStemWithoutFilters(stemConfig.stem))
-      )?.attributesSettings
+      stem && config?.stemsConfigs?.find(stemConfig => queryStemsAreSame(stem, stemConfig.stem))?.attributesSettings
   );

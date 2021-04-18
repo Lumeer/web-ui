@@ -67,7 +67,7 @@ import {DetailConfig} from '../../../core/store/details/detail';
 import {selectDetailAttributesSettings, selectDetailById} from '../../../core/store/details/detail.state';
 import * as DetailActions from './../../../core/store/details/detail.actions';
 import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
-import {checkOrTransformDetailConfig, modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
+import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
 
 @Component({
   selector: 'data-resource-detail',
@@ -88,6 +88,12 @@ export class DataResourceDetailComponent
   public query: Query;
 
   @Input()
+  public settingsQuery: Query;
+
+  @Input()
+  public settingsStem: QueryStem;
+
+  @Input()
   public permissions: AllowedPermissions;
 
   @Input()
@@ -98,9 +104,6 @@ export class DataResourceDetailComponent
 
   @Input()
   public allowSelectDocument = true;
-
-  @Input()
-  public stem: QueryStem;
 
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
@@ -119,6 +122,7 @@ export class DataResourceDetailComponent
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
+  public settingsQuery$ = new BehaviorSubject<Query>({});
   public readonly detailTabType = DetailTabType;
 
   public commentsCount$: Observable<number>;
@@ -154,8 +158,11 @@ export class DataResourceDetailComponent
     if (objectChanged(changes.resource) || objectChanged(changes.dataResource)) {
       this.bindData();
     }
-    if (changes.stem) {
-      this.attributesSettings$ = this.store$.pipe(select(selectDetailAttributesSettings(this.stem)));
+    if (changes.settingsStem) {
+      this.attributesSettings$ = this.store$.pipe(select(selectDetailAttributesSettings(this.settingsStem)));
+    }
+    if (changes.settingsQuery) {
+      this.settingsQuery$.next(this.settingsQuery);
     }
   }
 
@@ -283,14 +290,17 @@ export class DataResourceDetailComponent
     );
   }
 
+  protected selectViewQuery$(): Observable<Query> {
+    return this.settingsQuery$.asObservable();
+  }
+
   protected checkOrTransformConfig(
     config: DetailConfig,
     query: Query,
     collections: Collection[],
     linkTypes: LinkType[]
   ): DetailConfig {
-    const modifiedQuery = modifyDetailPerspectiveQuery(query, collections);
-    return checkOrTransformDetailConfig(config, modifiedQuery, collections, linkTypes);
+    return checkOrTransformDetailConfig(config, query, collections, linkTypes);
   }
 
   protected configChanged(perspectiveId: string, config: DetailConfig) {
@@ -313,10 +323,10 @@ export class DataResourceDetailComponent
   }
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
-    if (this.stem) {
+    if (this.settingsStem) {
       this.store$.dispatch(
         DetailActions.setStemAttributes({
-          stem: this.stem,
+          stem: this.settingsStem,
           detailId: this.perspectiveId$.value,
           attributes: attributesSettings,
         })

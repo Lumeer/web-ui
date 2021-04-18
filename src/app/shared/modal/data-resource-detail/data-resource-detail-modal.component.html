@@ -14,6 +14,8 @@
                           [query]="query$ | async"
                           [preventEventBubble]="true"
                           [permissions]="permissions$ | async"
+                          [settingsStem]="detailSettingsQueryStem"
+                          [settingsQuery]="settingsQuery$ | async"
                           [toolbarRef]="toolbarRef"
                           (dataResourceChanged)="onDataResourceChanged($event)"
                           (routingPerformed)="onClose()"

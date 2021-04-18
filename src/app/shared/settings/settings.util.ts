@@ -64,6 +64,14 @@ export function viewAttributeSettingsSortDefined(settings: ViewSettings): boolea
   return attributesSettings.some(attributeSettings => attributeSettings.some(setting => setting.sort));
 }
 
+export function viewAttributesSettingsIsEmpty(settings: AttributesSettings): boolean {
+  return (
+    Object.keys(settings?.collections || {}).length === 0 &&
+    Object.keys(settings?.linkTypes || {}).length === 0 &&
+    Object.keys(settings?.linkTypesCollections || {}).length === 0
+  );
+}
+
 export function viewAttributeSettingsChanged(
   previousSettings: AttributesSettings,
   currentSettings: AttributesSettings,

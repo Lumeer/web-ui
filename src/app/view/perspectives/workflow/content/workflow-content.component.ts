@@ -29,11 +29,23 @@ import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
 import {checkOrTransformWorkflowConfig} from '../../../../core/store/workflows/workflow.utils';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {WorkflowTablesService} from './tables/service/workflow-tables.service';
+import {WorkflowTablesStateService} from './tables/service/workflow-tables-state.service';
+import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
+import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.service';
+import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
 
 @Component({
   selector: 'workflow-content',
   templateUrl: './workflow-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    WorkflowTablesService,
+    WorkflowTablesMenuService,
+    WorkflowTablesDataService,
+    WorkflowTablesStateService,
+    WorkflowTablesKeyboardService,
+  ],
 })
 export class WorkflowContentComponent implements OnChanges {
   @Input()

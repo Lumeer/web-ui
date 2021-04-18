@@ -8,6 +8,8 @@
   <data-resource-detail [resource]="collection"
                         [dataResource]="document"
                         [query]="query"
+                        [settingsQuery]="query"
+                        [settingsStem]="currentStem$ | async"
                         [allowSelectDocument]="false"
                         [permissions]="permissions">
   </data-resource-detail>

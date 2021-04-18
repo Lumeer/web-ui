@@ -33,6 +33,7 @@ import {selectNavigation, selectViewCursor} from '../../../core/store/navigation
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionsByQueryWithoutLinks,
+  selectCollectionsByReadPermission,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {
@@ -50,6 +51,8 @@ import {DataQuery} from '../../../core/model/data-query';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
   selector: 'detail-perspective',
@@ -64,8 +67,10 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   public query$: Observable<Query>;
   public viewSettings$: Observable<ViewSettings>;
   public collectionPermission$: Observable<AllowedPermissions>;
+  public settingsQuery$: Observable<Query>;
 
   public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
+  public creatingDocument$ = new BehaviorSubject(false);
 
   private query: Query;
   private collectionSubscription = new Subscription();
@@ -78,6 +83,10 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     this.query$ = this.store$.pipe(
       select(selectViewDataQuery),
       tap(query => this.onQueryChanged(query))
+    );
+    this.settingsQuery$ = this.store$.pipe(
+      select(selectCollectionsByReadPermission),
+      map(collections => createFlatResourcesSettingsQuery(collections))
     );
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initSelection();
@@ -239,9 +248,14 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
           const queryFilters = getQueryFiltersForCollection(query, collection.id);
           const data = generateDocumentData(collection, queryFilters, constraintData, true);
           const document = {data, collectionId: collection.id};
+
+          this.creatingDocument$.next(true);
+
           this.store$.dispatch(
             new DocumentsAction.Create({
               document,
+              onSuccess: () => this.creatingDocument$.next(false),
+              onFailure: () => this.creatingDocument$.next(false),
               afterSuccess: createdDocument => this.selectDocument(createdDocument),
             })
           );

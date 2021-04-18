@@ -47,6 +47,10 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
 
   protected abstract getConfig(viewConfig: ViewConfig): T;
 
+  protected selectViewQuery$(): Observable<Query> {
+    return this.store$.pipe(select(selectViewQuery));
+  }
+
   protected getDefaultConfig(): T {
     return null;
   }
@@ -114,7 +118,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
 
   private checkPerspectiveConfig(config: T): Observable<T> {
     return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
+      this.selectViewQuery$(),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -125,8 +129,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
 
   private subscribeToDefault(): Observable<{perspectiveId?: string; config?: T}> {
     const perspectiveId = DEFAULT_PERSPECTIVE_ID;
-    return this.store$.pipe(
-      select(selectViewQuery),
+    return this.selectViewQuery$().pipe(
       switchMap(() =>
         this.selectDefaultViewConfig$().pipe(
           withLatestFrom(this.subscribeConfig$(perspectiveId)),

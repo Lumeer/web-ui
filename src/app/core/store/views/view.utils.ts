@@ -41,7 +41,8 @@ import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
 import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
 import {WorkflowConfig} from '../workflows/workflow';
-import {isDetailConfigChanged} from '../details/detail.utils';
+import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
+import {DetailConfig} from '../details/detail';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -108,6 +109,8 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createWorkflowSaveConfig(config as WorkflowConfig);
     case Perspective.Chart:
       return createChartSaveConfig(config as ChartConfig);
+    case Perspective.Detail:
+      return createDetailSaveConfig(config as DetailConfig);
     default:
       return config;
   }
@@ -120,7 +123,7 @@ export function createViewSaveConfig(perspective: Perspective, config: ViewConfi
   return getPerspectiveSavedPerspectives(perspective).reduce(
     (savedConfig, savedPerspective) => ({
       ...savedConfig,
-      [savedPerspective]: createPerspectiveSaveConfig(perspective, config?.[perspective]),
+      [savedPerspective]: createPerspectiveSaveConfig(savedPerspective, config?.[savedPerspective]),
     }),
     {}
   );

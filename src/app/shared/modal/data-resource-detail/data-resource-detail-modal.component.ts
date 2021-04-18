@@ -33,7 +33,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {KeyCode} from '../../key-code';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
@@ -53,6 +53,17 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {
+  selectCollectionsByReadPermission,
+  selectLinkTypesByReadPermission,
+} from '../../../core/store/common/permissions.selectors';
+import {
+  createFlatCollectionSettingsQueryStem,
+  createFlatLinkTypeSettingsQueryStem,
+  createFlatResourcesSettingsQuery,
+} from '../../../core/store/details/detail.utils';
+import {map} from 'rxjs/operators';
+import {LinkType} from '../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -86,9 +97,12 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public performingAction$ = new BehaviorSubject(false);
 
   public query$: Observable<Query>;
+  public settingsQuery$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
   public permissions$: Observable<AllowedPermissions>;
+
+  public detailSettingsQueryStem: QueryStem;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
@@ -103,6 +117,10 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
+    this.settingsQuery$ = combineLatest([
+      this.store$.pipe(select(selectCollectionsByReadPermission)),
+      this.store$.pipe(select(selectLinkTypesByReadPermission)),
+    ]).pipe(map(([collections, linkTypes]) => createFlatResourcesSettingsQuery(collections, linkTypes)));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
@@ -121,6 +139,12 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
     this.resource$ = this.selectResource$(resource.id);
     this.dataResource$ = this.selectDataResource$(dataResource.id);
     this.permissions$ = this.selectPermissions$(resource);
+
+    if (this.resourceType === AttributesResourceType.Collection) {
+      this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
+    } else if (this.resourceType === AttributesResourceType.LinkType) {
+      this.detailSettingsQueryStem = createFlatLinkTypeSettingsQueryStem(<LinkType>resource);
+    }
 
     this.subscribeExist(resource, dataResource);
     this.currentDataResource = dataResource;

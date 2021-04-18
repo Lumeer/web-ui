@@ -19,7 +19,7 @@
 
 import {DetailConfig, DetailStemConfig} from './detail';
 import {arrayContainsSameItems} from '@lumeer/lumeer-gantt/dist/utils/common.utils';
-import {viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
+import {viewAttributeSettingsChanged, viewAttributesSettingsIsEmpty} from '../../../shared/settings/settings.util';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {Query, QueryStem} from '../navigation/query/query';
@@ -28,8 +28,10 @@ import {
   findBestStemConfigIndex,
   getBaseCollectionIdsFromQuery,
   queryIsEmpty,
+  queryStemsAreSame,
   queryStemWithoutFilters,
 } from '../navigation/query/query.util';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function modifyDetailPerspectiveQuery(query: Query, collections: Collection[]): Query {
   if (queryIsEmpty(query)) {
@@ -43,26 +45,76 @@ export function modifyDetailPerspectiveQuery(query: Query, collections: Collecti
   return {stems};
 }
 
+export function createFlatResourcesSettingsQuery(collections: Collection[], linkTypes: LinkType[] = []): Query {
+  const stems: QueryStem[] = (collections || []).map(collection => createFlatCollectionSettingsQueryStem(collection));
+
+  const linkStems = (linkTypes || []).map(linkType => createFlatLinkTypeSettingsQueryStem(linkType));
+
+  return {stems: [...stems, ...linkStems]};
+}
+
+export function createFlatCollectionSettingsQueryStem(collection: Collection): QueryStem {
+  return {collectionId: collection.id};
+}
+
+export function createFlatLinkTypeSettingsQueryStem(linkType: LinkType): QueryStem {
+  return {collectionId: '', linkTypeIds: [linkType.id]};
+}
+
 export function isDetailConfigChanged(
   viewConfig: DetailConfig,
   previousConfig: DetailConfig,
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
+  if (isNullOrUndefined(previousConfig)) {
+    return false;
+  }
+
   if (!arrayContainsSameItems(viewConfig?.collapsedLinkTypes, previousConfig?.collapsedLinkTypes)) {
     return true;
   }
 
-  const viewConfigStems = viewConfig?.stemsConfigs || [];
-  const previousConfigStems = previousConfig?.stemsConfigs || [];
+  const viewConfigStems = (viewConfig?.stemsConfigs || []).filter(stemConfig => !detailStemConfigIsEmpty(stemConfig));
+  const previousConfigStems = (previousConfig?.stemsConfigs || []).filter(
+    stemConfig => !detailStemConfigIsEmpty(stemConfig)
+  );
 
   if (viewConfigStems.length !== previousConfigStems.length) {
     return true;
   }
 
+  const viewConfigStemsCopy = [...viewConfigStems];
+
+  for (let i = viewConfigStemsCopy.length - 1; i >= 0; i--) {
+    const stemConfig = viewConfigStemsCopy[i];
+    const indexInPrevious = previousConfigStems.findIndex(previousStemConfig =>
+      queryStemsAreSame(previousStemConfig.stem, stemConfig.stem)
+    );
+    if (indexInPrevious >= 0) {
+      if (isDetailStemConfigChanged(stemConfig, previousConfigStems[indexInPrevious], collectionsMap, linkTypesMap)) {
+        return true;
+      }
+      viewConfigStems.splice(i, 1);
+      previousConfigStems.splice(indexInPrevious, 1);
+    }
+  }
+
   return viewConfigStems.some((stemConfig, index) =>
     isDetailStemConfigChanged(stemConfig, previousConfigStems[index], collectionsMap, linkTypesMap)
   );
+}
+
+export function createDetailSaveConfig(config: DetailConfig): DetailConfig {
+  const stemsConfigs = (config?.stemsConfigs || []).filter(config => !detailStemConfigIsEmpty(config));
+  return {
+    ...config,
+    stemsConfigs,
+  };
+}
+
+function detailStemConfigIsEmpty(stemConfig: DetailStemConfig): boolean {
+  return viewAttributesSettingsIsEmpty(stemConfig.attributesSettings);
 }
 
 export function isDetailStemConfigChanged(
@@ -97,12 +149,29 @@ function checkOrTransformDetailStemsConfig(
   linkTypes: LinkType[]
 ): DetailStemConfig[] {
   const stemsConfigsCopy = [...(stemsConfigs || [])];
-  return (query?.stems || []).map(stem => {
+  const unpairedStems = [];
+  const resultStemsConfigs = [];
+
+  // first we find all stems that are same
+  for (const stem of query?.stems || []) {
+    const stemConfigIndex = stemsConfigsCopy.findIndex(stemConfig => queryStemsAreSame(stemConfig.stem, stem));
+    if (stemConfigIndex >= 0) {
+      const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1)[0];
+      resultStemsConfigs.push({...stemConfig, stem: queryStemWithoutFilters(stem)});
+    } else {
+      unpairedStems.push(stem);
+    }
+  }
+
+  // then we try to find stems by matching collection ids in query
+  for (const stem of unpairedStems) {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1)[0];
-    return {...stemConfig, stem: queryStemWithoutFilters(stem)};
-  });
+    resultStemsConfigs.push({...stemConfig, stem: queryStemWithoutFilters(stem)});
+  }
+
+  return resultStemsConfigs;
 }
 
 function detailDefaultConfig(query: Query): DetailConfig {

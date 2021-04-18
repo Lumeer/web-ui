@@ -52,10 +52,6 @@ import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hid
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {TableRow} from '../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../shared/table/model/table-column';
-import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service';
-import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
-import {WorkflowTablesStateService} from './service/workflow-tables-state.service';
-import {WorkflowTablesKeyboardService} from './service/workflow-tables-keyboard.service';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig, WorkflowStemConfig} from '../../../../../core/store/workflows/workflow';
@@ -73,13 +69,6 @@ import {ConstraintData} from '@lumeer/data-filters';
   templateUrl: './workflow-tables.component.html',
   styleUrls: ['./workflow-tables.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    WorkflowTablesService,
-    WorkflowTablesMenuService,
-    WorkflowTablesDataService,
-    WorkflowTablesStateService,
-    WorkflowTablesKeyboardService,
-  ],
 })
 export class WorkflowTablesComponent implements OnChanges {
   @Input()

@@ -17,16 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
+import {select, Store} from '@ngrx/store';
+import {viewCursorToWorkflowTable, WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
+import {WorkflowTablesStateService} from '../tables/service/workflow-tables-state.service';
+import {combineLatest, Observable} from 'rxjs';
+import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
@@ -34,7 +47,7 @@ import {WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
   styleUrls: ['./workflow-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkflowSidebarComponent implements OnChanges {
+export class WorkflowSidebarComponent implements OnInit, OnChanges {
   @Input()
   public collection: Collection;
 
@@ -50,9 +63,18 @@ export class WorkflowSidebarComponent implements OnChanges {
   @Output()
   public close = new EventEmitter();
 
+  public currentStem$: Observable<QueryStem>;
+
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private stateService: WorkflowTablesStateService) {}
+
+  public ngOnInit() {
+    this.currentStem$ = combineLatest([
+      this.store$.pipe(select(selectViewCursor)),
+      this.stateService.tables$.asObservable(),
+    ]).pipe(map(([cursor, tables]) => viewCursorToWorkflowTable(cursor, tables)?.stem));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document) {
