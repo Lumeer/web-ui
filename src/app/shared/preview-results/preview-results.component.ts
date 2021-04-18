@@ -28,12 +28,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, of, zip} from 'rxjs';
+import {combineLatest, Observable, of, zip} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
   selectCollectionsByQueryWithoutLinks,
+  selectCollectionsByReadPermission,
   selectDocumentsByCustomQuerySorted,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
@@ -103,7 +104,10 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
     } else {
       documents$ = of([]);
       if (queryIsEmpty(this.query) || queryContainsOnlyFulltexts(this.query)) {
-        loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(this.query)));
+        loaded$ = combineLatest([
+          this.store$.pipe(select(selectCollectionsByReadPermission)),
+          this.store$.pipe(select(selectQueryDocumentsLoaded(this.query))),
+        ]).pipe(map(([collections, loaded]) => collections.length === 0 || loaded));
       } else {
         loaded$ = this.store$.pipe(
           select(selectCollectionsByQueryWithoutLinks),

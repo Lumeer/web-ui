@@ -219,8 +219,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit>
             <trans-unit id="search.input.placeholder" datatype="html">
-                <source>Type anything you search for...</source>
-                <target>Napište cokoliv, co hledáte...</target>
+                <source>Type anything you search for…</source>
+                <target>Napište cokoliv, co hledáte…</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">70</context></context-group></trans-unit>
 
@@ -1033,16 +1033,16 @@
         </context-group>
       </trans-unit><trans-unit id="view.modal.settings.folders" datatype="html">
         <source>Folders:</source><target>Složky:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
         <source>Enter folder name and press Enter</source><target>Zadejte název složky a stiskněte Enter</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.remove" datatype="html">
         <source>Remove folder</source><target>Odstranit složku</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.help" datatype="html">
         <source>Use "/" to create nested folders i.e "Folder/Subfolder"</source><target>Používejte "/" pro vytvoření vnořených složek (např. "Složka/Podsložka")</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="settings" datatype="html">
         <source>Settings</source><target>Nastavení</target>
         <context-group purpose="location">
@@ -1648,7 +1648,7 @@
         </context-group>
       </trans-unit><trans-unit id="document.detail.activity.empty" datatype="html">
         <source> No activity yet. </source><target> Zatím neproběhla žádná aktivita. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.title" datatype="html">
         <source>Revert changes?</source><target>Vrátit změny?</target>
         <context-group purpose="location">
@@ -3277,7 +3277,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.header.roles" datatype="html">
         <source>Roles</source><target>Oprávnění</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/body/share-view-dialog-body.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit id="users.header.search.placeholder" datatype="html">
                 <source>Search user...</source>
@@ -4498,7 +4498,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-link-array-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatCurrencyBlock" datatype="html">
         <source>Formats number as a currency using defined locale.</source><target>Formátuje číslo jako měnu podle dané lokality.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatDateBlock" datatype="html">
         <source>Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</source>
         <target>Naformátuje čas jako objekt nebo v milisekundách (Unixový čas) pomocí daného formátu a jazyku. Výsledek je řetězec.</target>
@@ -4625,7 +4625,7 @@
         <source>Limited to 3 entries. Upgrade to the Business license to see 2 weeks worth of history. For even longer history, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
         href=&quot;https://www.lumeer.io/contact/&quot; target=&quot;_blank&quot;>"/>contact us.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/></source>
         <target>Omezeno na 3 záznamy. Aktivujte si program Lumeer Business a uvidíte záznamy za poslední 2 týdny. Pro delší historii nás kontaktujte.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="audit.title.data.update" datatype="html">
         <source>{VAR_SELECT, select, updated {Updated} created {Created}}</source><target>{VAR_SELECT, select, updated {Upraveno} created {Vytvořeno}}</target>
         <context-group purpose="location">
@@ -4731,7 +4731,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/notifications-menu-content.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="notification.task.notVisible" datatype="html">
         <source>I am sorry, you can not see selected task</source>
         <target>Je mi líto, ale vybraný úkol nemáte právo zobrazit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/notifications-menu.component.ts</context><context context-type="linenumber">236</context></context-group></trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
         <source>Welcome to Lumeer!</source><target>Lumeer Vás vítá!</target>
 
@@ -4748,8 +4748,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/collapsible-sidebar/toggle/collapsible-sidebar-toggle.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="constraint.action.confirmation.label" datatype="html">
         <source>Confirmation</source><target>Potvrzení</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/action/action-data-input.component.ts</context><context context-type="linenumber">217</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/confirmation/action-constraint-confirmation-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="topPanel.home.title" datatype="html">
         <source>Back to home screen</source><target>Zpět na domovskou obrazovku</target>
 
