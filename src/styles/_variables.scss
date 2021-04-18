@@ -49,6 +49,8 @@ $info-hover: darken($info, 15%);
 $warning-hover: darken($warning, 15%);
 $danger-hover: darken($danger, 15%);
 $danger-light: lighten($danger, 30%);
+$light-hover: darken($light, 15%);
+$dark-hover: darken($dark, 15%);
 
 $table-border-color: $gray-200 !default;
 $table-min-row-height: 34px;
