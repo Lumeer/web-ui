@@ -98,6 +98,7 @@ export interface ResourceAttributeSettings {
   attributeId: string;
   hidden?: boolean;
   sort?: AttributeSortType;
+  width?: number;
 }
 
 export enum AttributeSortType {

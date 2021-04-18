@@ -123,15 +123,6 @@ export function mergeCollections(collectionsA: Collection[], collectionsB: Colle
   return (collectionsA || []).concat(collectionsBToAdd);
 }
 
-export function createAttributesMap(attributes: Attribute[]): Record<string, Attribute> {
-  return (attributes || []).reduce((attributesMap, attribute) => {
-    if (attribute.id) {
-      attributesMap[attribute.id] = attribute;
-    }
-    return attributesMap;
-  }, {});
-}
-
 export function findAttribute(attributes: Attribute[], attributeId: string): Attribute {
   return attributeId && (attributes || []).find(attr => attr.id === attributeId);
 }

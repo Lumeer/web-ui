@@ -21,8 +21,9 @@ import {initialViewSettingsState, ViewSettingsState} from './view-settings.state
 import {ViewSettingsAction, ViewSettingsActionType} from './view-settings.action';
 import {
   addAttributeToSettings,
-  createAndModifyAttributesSettings,
+  createAndModifyViewSettings,
   moveAttributeInSettings,
+  setAttributeToAttributeSettings,
 } from '../../../shared/settings/settings.util';
 import {AttributesResource, AttributesResourceType} from '../../model/resource';
 
@@ -74,7 +75,7 @@ function hideOrShowAttributes(
   }
 
   return resources.reduce((currentState, resource) => {
-    return createAndModifyAttributesSettings(currentState, resource.resource, resource.type, settingsAttributes => {
+    return createAndModifyViewSettings(currentState, resource.resource, resource.type, settingsAttributes => {
       for (const attributeId of resource.attributeIds) {
         const attributeIndex = settingsAttributes.findIndex(setting => setting.attributeId === attributeId);
         if (attributeIndex !== -1) {
@@ -102,11 +103,7 @@ function addAttribute(state: ViewSettingsState, action: ViewSettingsAction.AddAt
 function setAttribute(state: ViewSettingsState, action: ViewSettingsAction.SetAttribute): ViewSettingsState {
   const {attributeId, settings, collection, linkType} = action.payload;
   const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
-  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, settingAttributes => {
-    const attributeIndex = settingAttributes.findIndex(setting => setting.attributeId === attributeId);
-    if (attributeIndex !== -1) {
-      settingAttributes[attributeIndex] = {...settingAttributes[attributeIndex], ...settings};
-    }
-    return settingAttributes;
-  });
+  return createAndModifyViewSettings(state, linkType || collection, resourceType, settingAttributes =>
+    setAttributeToAttributeSettings(attributeId, settingAttributes, settings)
+  );
 }

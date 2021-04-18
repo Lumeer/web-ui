@@ -45,6 +45,7 @@ import {AsAttributeResourcePipe} from './pipes/as-attribute-resource.pipe';
 import {LinksCountPipe} from './pipes/links-count.pipe';
 import {MatMenuModule} from '@angular/material/menu';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {SortLinkRowsPipe} from './pipes/sort-link-rows.pipe';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     LinksAccordeonComponent,
     AsAttributeResourcePipe,
     LinksCountPipe,
+    SortLinkRowsPipe,
   ],
   imports: [
     CommonModule,

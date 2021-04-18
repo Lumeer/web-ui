@@ -73,7 +73,8 @@
                        [attributesSettings]="data.attributesSettings"
                        (documentSelect)="documentSelect.emit($event)"
                        (showLink)="onShowLink($event)"
-                       (hideLink)="onHideLink($event)">
+                       (hideLink)="onHideLink($event)"
+                       (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
       </links-accordeon>
     </div>
   </ng-container>

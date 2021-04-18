@@ -81,6 +81,9 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   @Output()
   public showLink = new EventEmitter<string>();
 
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
+
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;

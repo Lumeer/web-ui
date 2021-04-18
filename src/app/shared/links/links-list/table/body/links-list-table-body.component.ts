@@ -137,7 +137,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   }
 
   private checkNewRow() {
-    if (this.permissions.writeWithView) {
+    if (this.permissions?.writeWithView) {
       if (this.newRows$.value.length === 0) {
         this.newRows$.next([{correlationId: generateCorrelationId()}]);
       }

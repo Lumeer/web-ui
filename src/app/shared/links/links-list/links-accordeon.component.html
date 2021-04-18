@@ -41,7 +41,8 @@
               [preventEventBubble]="preventEventBubble"
               [attributesSettings]="attributesSettings"
               (unLink)="unLinkDocument($event)"
-              (detail)="onSelectDocument($event)">
+              (detail)="onSelectDocument($event)"
+              (attributesSettingsChanged)="attributesSettingsChanged.emit($event)">
             </links-list-table>
           </div>
         </accordion-group>
