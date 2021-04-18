@@ -42,6 +42,7 @@ import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {objectValues} from '../../shared/utils/common.utils';
 import {initialConditionType, initialConditionValues, removeAccentFromString} from '@lumeer/data-filters';
+import {selectCollectionsByQuery, selectLinkTypesInQuery} from '../store/common/permissions.selectors';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -139,9 +140,9 @@ interface FullTextSuggestion extends ObjectSuggestion {
 export class SuggestionsService {
   constructor(private store$: Store<AppState>) {}
 
-  public suggest(text: string, queryItems: QueryItem[]): Observable<QueryItem[]> {
+  public suggest(text: string, queryItems: QueryItem[], restrictedMode: boolean): Observable<QueryItem[]> {
     const textWithoutAccent = removeAccentFromString(text);
-    return this.selectObjectsSorted(text).pipe(
+    return this.selectObjectsSorted(text, restrictedMode).pipe(
       map(suggestions => this.addScoreByCurrentItems(suggestions, textWithoutAccent, queryItems || [])),
       map(suggestions => this.filterAndSortSuggestions(suggestions)),
       map(suggestions => this.sliceTopSuggestions(suggestions, textWithoutAccent, queryItems)),
@@ -149,14 +150,14 @@ export class SuggestionsService {
     );
   }
 
-  private selectObjectsSorted(text: string): Observable<ObjectSuggestion[]> {
+  private selectObjectsSorted(text: string, restrictedMode: boolean): Observable<ObjectSuggestion[]> {
     const textWithoutAccent = removeAccentFromString(text);
     return combineLatest([
-      this.selectViewsSuggestions$(textWithoutAccent),
-      this.selectCollectionsSuggestions$(textWithoutAccent),
-      this.selectAttributesSuggestions$(textWithoutAccent),
-      this.selectLinkTypesSuggestions$(textWithoutAccent),
-      this.selectLinkAttributesSuggestions$(textWithoutAccent),
+      this.selectViewsSuggestions$(textWithoutAccent, restrictedMode),
+      this.selectCollectionsSuggestions$(textWithoutAccent, restrictedMode),
+      this.selectAttributesSuggestions$(textWithoutAccent, restrictedMode),
+      this.selectLinkTypesSuggestions$(textWithoutAccent, restrictedMode),
+      this.selectLinkAttributesSuggestions$(textWithoutAccent, restrictedMode),
       this.selectFullTextsSuggestions(text),
     ]).pipe(map(suggestions => flattenMatrix<ObjectSuggestion>(suggestions)));
   }
@@ -282,7 +283,10 @@ export class SuggestionsService {
     return this.filterAndSortSuggestions(slicedSuggestions);
   }
 
-  private selectViewsSuggestions$(text: string): Observable<ViewSuggestion[]> {
+  private selectViewsSuggestions$(text: string, restrictedMode: boolean): Observable<ViewSuggestion[]> {
+    if (restrictedMode) {
+      return of([]);
+    }
     return combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectAllViews)),
@@ -305,7 +309,10 @@ export class SuggestionsService {
     );
   }
 
-  private selectCollectionsSuggestions$(text: string): Observable<CollectionSuggestion[]> {
+  private selectCollectionsSuggestions$(text: string, restrictedMode: boolean): Observable<CollectionSuggestion[]> {
+    if (restrictedMode) {
+      return of([]);
+    }
     return this.store$.pipe(
       select(selectAllCollections),
       map(collections => {
@@ -324,9 +331,11 @@ export class SuggestionsService {
     );
   }
 
-  private selectAttributesSuggestions$(text: string): Observable<AttributeSuggestion[]> {
-    return this.store$.pipe(
-      select(selectAllCollections),
+  private selectAttributesSuggestions$(text: string, restrictedMode: boolean): Observable<AttributeSuggestion[]> {
+    const collectionObservable$ = restrictedMode
+      ? this.store$.pipe(select(selectCollectionsByQuery))
+      : this.store$.pipe(select(selectAllCollections));
+    return collectionObservable$.pipe(
       map(collections => {
         const sortedCollections = sortResourcesLastUsed<Collection>(collections).slice(0, lastUsedThreshold);
         const attributesOrder = createAttributesOrder(collections).slice(0, mostUsedThreshold);
@@ -356,7 +365,11 @@ export class SuggestionsService {
     );
   }
 
-  private selectLinkTypesSuggestions$(text: string): Observable<LinkTypeSuggestion[]> {
+  private selectLinkTypesSuggestions$(text: string, restrictedMode: boolean): Observable<LinkTypeSuggestion[]> {
+    if (restrictedMode) {
+      return of([]);
+    }
+
     return combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectAllLinkTypes)),
@@ -383,11 +396,14 @@ export class SuggestionsService {
     );
   }
 
-  private selectLinkAttributesSuggestions$(text: string): Observable<LinkAttributeSuggestion[]> {
-    return combineLatest([
-      this.store$.pipe(select(selectCollectionsDictionary)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-    ]).pipe(
+  private selectLinkAttributesSuggestions$(
+    text: string,
+    restrictedMode: boolean
+  ): Observable<LinkAttributeSuggestion[]> {
+    const linkTypesObservable$ = restrictedMode
+      ? this.store$.pipe(select(selectLinkTypesInQuery))
+      : this.store$.pipe(select(selectAllLinkTypes));
+    return combineLatest([this.store$.pipe(select(selectCollectionsDictionary)), linkTypesObservable$]).pipe(
       map(([collectionsMap, linkTypes]) => {
         const linkTypesWithCollections = linkTypes.map(linkType => mapLinkType(linkType, collectionsMap));
         const sortedCollections = sortResourcesLastUsed(objectValues(collectionsMap)).slice(0, lastUsedThreshold);

@@ -40,11 +40,10 @@ import {
   QueryItemsConverter,
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {queryItemToForm} from '../../../core/store/navigation/query/query.util';
+import {isQueryItemIsEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
-import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
@@ -172,29 +171,19 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onRemoveLastQueryItem() {
-    const lastIndex = this.queryItems$.getValue().length - 1;
+  public onRemoveLastQueryItem(canManageConfig: boolean) {
+    const lastIndex = this.queryItems$.value.length - 1;
     if (lastIndex >= 0) {
-      this.onRemoveQueryItem(lastIndex);
+      const queryItem = this.queryItems$.value[lastIndex];
+      if (isQueryItemIsEditable(queryItem, canManageConfig, this.currentView$.value?.query)) {
+        this.onRemoveQueryItem(lastIndex);
+      }
     }
   }
 
   public onRemoveQueryItem(index: number) {
-    if (this.shouldInvalidateQuery()) {
-      this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: {}}));
-    } else {
-      this.removeQueryItemWithRelatedItems(index);
-      this.onQueryItemsChanged();
-    }
-  }
-
-  private shouldInvalidateQuery(): boolean {
-    const currentView = this.currentView$.getValue();
-    return (
-      currentView &&
-      !userHasManageRoleInResource(this.currentUser, currentView) &&
-      !userIsManagerInWorkspace(this.currentUser, this.organization, this.project)
-    );
+    this.removeQueryItemWithRelatedItems(index);
+    this.onQueryItemsChanged();
   }
 
   private removeQueryItemWithRelatedItems(index: number) {

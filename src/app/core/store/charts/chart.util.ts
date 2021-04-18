@@ -18,7 +18,7 @@
  */
 
 import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartSort, ChartType} from './chart';
-import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectCopy, deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function createChartSaveConfig(config: ChartConfig): ChartConfig {
   const configCopy = deepObjectCopy(config);
@@ -35,6 +35,10 @@ export function createChartSaveConfig(config: ChartConfig): ChartConfig {
 }
 
 export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: ChartConfig): boolean {
+  if (isNullOrUndefined(currentConfig)) {
+    return false;
+  }
+
   if (
     viewConfig.type !== currentConfig.type ||
     viewConfig.prediction !== currentConfig.prediction ||

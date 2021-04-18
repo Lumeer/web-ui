@@ -54,6 +54,9 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   @Input()
   public origin: ElementRef | HTMLElement;
 
+  @Input()
+  public restrictedMode: boolean;
+
   @Output()
   public useSuggestion = new EventEmitter<QueryItem>();
 
@@ -126,7 +129,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   private retrieveSuggestions(text: string): Observable<QueryItem[]> {
     if (this.suggesting && isNotNullOrUndefined(text)) {
-      return this.suggestionsService.suggest(text, this.queryItems);
+      return this.suggestionsService.suggest(text, this.queryItems, this.restrictedMode);
     }
     return of([]);
   }

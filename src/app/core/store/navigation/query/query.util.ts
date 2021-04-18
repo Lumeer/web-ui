@@ -47,6 +47,7 @@ import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
 import {AllowedPermissions} from '../../../model/allowed-permissions';
 import {normalizeQueryStem} from './query.converter';
+import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -75,6 +76,28 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
         attributeQueryValidator
       );
   }
+}
+
+export function isQueryItemIsEditable(queryItem: QueryItem, canManageConfig: boolean, viewQuery: Query): boolean {
+  if (canManageConfig) {
+    return true;
+  }
+
+  if (queryItem.type === QueryItemType.Attribute) {
+    const filter = (<AttributeQueryItem>queryItem).getAttributeFilter();
+    const currentFilters = getQueryFiltersForCollection(viewQuery, filter.collectionId);
+    return !currentFilters.some(currentFilter => deepObjectsEquals(filter, currentFilter));
+  } else if (queryItem.type === QueryItemType.LinkAttribute) {
+    const filter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();
+    const currentFilters = getQueryFiltersForLinkType(viewQuery, filter.linkTypeId);
+    return !currentFilters.some(currentFilter => deepObjectsEquals(filter, currentFilter));
+  } else if (queryItem.type === QueryItemType.Collection) {
+    const collectionId = (<CollectionQueryItem>queryItem).collection?.id;
+    const baseCollectionIds = getBaseCollectionIdsFromQuery(viewQuery);
+    return !baseCollectionIds.includes(collectionId);
+  }
+
+  return false;
 }
 
 function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
@@ -219,10 +242,28 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
     return false;
   }
 
-  return (superset?.stems || []).every(stem => {
-    const subsetStem = subset?.stems?.find(s => s.collectionId === stem.collectionId);
-    return subsetStem && isQueryStemSubset(stem, subsetStem);
-  });
+  const subsetStems = [...(subset?.stems || [])];
+  const unpairedStems = [];
+
+  for (const stem of superset?.stems || []) {
+    const stemIndex = subsetStems.findIndex(
+      subsetStem => queryStemsAreSame(subsetStem, stem) && isQueryStemSubset(stem, subsetStem)
+    );
+    if (stemIndex >= 0) {
+      subsetStems.splice(stemIndex, 1);
+    } else {
+      unpairedStems.push(stem);
+    }
+  }
+
+  for (const stem of unpairedStems) {
+    const subsetStem = subsetStems.find(s => s.collectionId === stem.collectionId);
+    if (!subsetStem || !isQueryStemSubset(stem, subsetStem)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boolean {

@@ -46,6 +46,9 @@ export class SearchInputComponent {
   @Input()
   public readonly: boolean;
 
+  @Input()
+  public restrictedMode: boolean;
+
   @Output()
   public addQueryItem = new EventEmitter<QueryItem>();
 
@@ -61,13 +64,15 @@ export class SearchInputComponent {
   @ViewChild(SearchSuggestionsComponent, {static: true})
   public searchSuggestions: SearchSuggestionsComponent;
 
+  public readonly emptyPlaceholder: string;
   public readonly placeholder: string;
 
   public suggesting: boolean;
   public text = '';
 
   constructor(public hostElement: ElementRef) {
-    this.placeholder = $localize`:@@search.input.placeholder:Type anything you search for...`;
+    this.emptyPlaceholder = $localize`:@@search.input.placeholder:Type anything you search for…`;
+    this.placeholder = $localize`:@@search.input.placeholder.short:Search or filter…`;
   }
 
   public onUseSuggestion(suggestion: QueryItem) {

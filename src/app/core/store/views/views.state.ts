@@ -37,7 +37,7 @@ import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
-import {isQuerySubset} from '../navigation/query/query.util';
+import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 import {selectDetailConfig} from '../details/detail.state';
 
@@ -146,7 +146,12 @@ export const selectViewQuery = createSelector(
   selectQuery,
   selectViewsPermissions,
   (view, query, permissions) => {
-    if (!view || permissions?.[view.id]?.manageWithView || isQuerySubset(query, view.query)) {
+    if (
+      !view ||
+      permissions?.[view.id]?.manageWithView ||
+      queryIsEmpty(view.query) ||
+      isQuerySubset(query, view.query)
+    ) {
       return query;
     }
     return view.query;

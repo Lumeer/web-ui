@@ -51,7 +51,6 @@ import {DataQuery} from '../../../core/model/data-query';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
-import {LinkType} from '../../../core/store/link-types/link.type';
 import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
