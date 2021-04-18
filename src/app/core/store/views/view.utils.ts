@@ -32,7 +32,7 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {DataSettings, PerspectiveConfig, ViewSettings} from './view';
+import {DataSettings, PerspectiveConfig, ViewConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
@@ -41,8 +41,30 @@ import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
 import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
 import {WorkflowConfig} from '../workflows/workflow';
+import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
+import {DetailConfig} from '../details/detail';
 
 export function isViewConfigChanged(
+  perspective: Perspective,
+  viewConfig: ViewConfig,
+  perspectiveConfig: ViewConfig,
+  documentsMap: Record<string, DocumentModel>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
+  return getPerspectiveSavedPerspectives(perspective).some(savedPerspective =>
+    isPerspectiveConfigChanged(
+      savedPerspective,
+      viewConfig?.[savedPerspective],
+      perspectiveConfig?.[savedPerspective],
+      documentsMap,
+      collectionsMap,
+      linkTypesMap
+    )
+  );
+}
+
+export function isPerspectiveConfigChanged(
   perspective: Perspective,
   viewConfig: any,
   perspectiveConfig: any,
@@ -67,6 +89,8 @@ export function isViewConfigChanged(
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Workflow:
       return isWorkflowConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Detail:
+      return isDetailConfigChanged(viewConfig, perspectiveConfig, collectionsMap, linkTypesMap);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
@@ -85,8 +109,35 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createWorkflowSaveConfig(config as WorkflowConfig);
     case Perspective.Chart:
       return createChartSaveConfig(config as ChartConfig);
+    case Perspective.Detail:
+      return createDetailSaveConfig(config as DetailConfig);
     default:
       return config;
+  }
+}
+
+/**
+ * Creates perspective config with modifications before saving in a view
+ */
+export function createViewSaveConfig(perspective: Perspective, config: ViewConfig): ViewConfig {
+  return getPerspectiveSavedPerspectives(perspective).reduce(
+    (savedConfig, savedPerspective) => ({
+      ...savedConfig,
+      [savedPerspective]: createPerspectiveSaveConfig(savedPerspective, config?.[savedPerspective]),
+    }),
+    {}
+  );
+}
+
+/**
+ * In some cases multiple configs are saved (i.e. workflow + detail)
+ */
+export function getPerspectiveSavedPerspectives(perspective: Perspective): Perspective[] {
+  switch (perspective) {
+    case Perspective.Detail:
+      return [perspective];
+    default:
+      return [perspective, Perspective.Detail];
   }
 }
 

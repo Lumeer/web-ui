@@ -19,15 +19,15 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Perspective} from '../../../../view/perspectives/perspective';
-import {Query} from '../../../../core/store/navigation/query/query';
+import {Query} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'shouldShowSettings',
 })
 export class ShouldShowSettingsPipe implements PipeTransform {
   public transform(perspective: Perspective, query: Query): boolean {
-    if ([Perspective.Table, Perspective.Detail, Perspective.Search].includes(perspective)) {
-      return false;
+    if ([Perspective.Detail].includes(perspective)) {
+      return true;
     }
     return (query?.stems || []).length > 0;
   }

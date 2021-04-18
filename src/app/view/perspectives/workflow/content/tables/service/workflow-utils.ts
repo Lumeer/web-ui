@@ -225,7 +225,7 @@ export function createRowObjectsFromAggregated(
     documents,
     collectionsMap,
     AttributesResourceType.Collection,
-    viewSettings,
+    viewSettings?.attributes,
     constraintData
   );
   return sortedDocuments.reduce(
@@ -336,17 +336,21 @@ export function workflowCellToViewCursor(cell: TableCell, column: TableColumn): 
   return null;
 }
 
-export function viewCursorToWorkflowCell(cursor: ViewCursor, tables: TableModel[]): TableCell {
-  let table: TableModel;
-  if (cursor.value) {
-    table = tables.find(t => t.id === cursor.value);
+export function viewCursorToWorkflowTable<T extends TableModel>(cursor: ViewCursor, tables: T[]): T {
+  if (cursor?.value) {
+    return tables.find(t => t.id === cursor.value);
   }
-  if (!table && cursor.collectionId) {
-    table = tables.find(
+  if (cursor?.collectionId) {
+    return tables.find(
       t => t.collectionId === cursor.collectionId && t.rows.some(r => r.documentId === cursor.documentId)
     );
   }
 
+  return null;
+}
+
+export function viewCursorToWorkflowCell(cursor: ViewCursor, tables: TableModel[]): TableCell {
+  const table = viewCursorToWorkflowTable(cursor, tables);
   if (table) {
     const row = cursor.documentId && table.rows.find(r => r.documentId === cursor.documentId);
     const column = cursor.attributeId && table.columns.find(c => c.attribute?.id === cursor.attributeId);

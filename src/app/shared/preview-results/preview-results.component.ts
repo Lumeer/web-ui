@@ -28,12 +28,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {Observable, of, zip} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
   selectCollectionsByQueryWithoutLinks,
-  selectDocumentsByCustomQuery,
+  selectDocumentsByCustomQuerySorted,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {
@@ -45,6 +46,7 @@ import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.s
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataQuery} from '../../core/model/data-query';
+import {AttributesSettings} from '../../core/store/views/view';
 
 @Component({
   selector: 'preview-results',
@@ -61,6 +63,9 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   @Input()
   public query: DataQuery;
 
+  @Input()
+  public attributesSettings: AttributesSettings;
+
   @Output()
   public selectCollection = new EventEmitter<Collection>();
 
@@ -68,9 +73,8 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public selectDocument = new EventEmitter<DocumentModel>();
 
   public collections$: Observable<Collection[]>;
-  public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
-  public loaded$: Observable<boolean>;
+  public documentsData$: Observable<{loaded: boolean; documents: DocumentModel[]}>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -90,18 +94,25 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   private subscribeToDocuments() {
+    let documents$: Observable<DocumentModel[]>;
+    let loaded$: Observable<boolean>;
     if (this.selectedCollection && this.query) {
       const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
-      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)));
-      this.loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
+      documents$ = this.store$.pipe(select(selectDocumentsByCustomQuerySorted(collectionQuery)));
+      loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
     } else {
-      this.documents$ = of([]);
+      documents$ = of([]);
       if (queryIsEmpty(this.query) || queryContainsOnlyFulltexts(this.query)) {
-        this.loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(this.query)));
+        loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(this.query)));
       } else {
-        this.loaded$ = of(true);
+        loaded$ = this.store$.pipe(
+          select(selectCollectionsByQueryWithoutLinks),
+          map(collections => collections.length === 0)
+        );
       }
     }
+
+    this.documentsData$ = zip(documents$, loaded$).pipe(map(([documents, loaded]) => ({loaded, documents})));
   }
 
   public setActiveCollection(collection: Collection) {

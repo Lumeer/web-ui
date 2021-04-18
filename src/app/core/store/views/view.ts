@@ -29,6 +29,7 @@ import {PivotConfig} from '../pivots/pivot';
 import {SearchConfig} from '../searches/search';
 import {MapConfig} from '../maps/map.model';
 import {WorkflowConfig} from '../workflows/workflow';
+import {DetailConfig} from '../details/detail';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -52,10 +53,6 @@ export interface ViewConfig {
   pivot?: PivotConfig;
   map?: MapConfig;
   workflow?: WorkflowConfig;
-}
-
-export interface DetailConfig {
-  whateverConfig?: string;
 }
 
 export type PerspectiveConfig =
@@ -94,12 +91,14 @@ export interface DataSettings {
 export interface AttributesSettings {
   collections?: Record<string, ResourceAttributeSettings[]>;
   linkTypes?: Record<string, ResourceAttributeSettings[]>;
+  linkTypesCollections?: Record<string, ResourceAttributeSettings[]>; // key is constructed as `${linkTypeId}:${collectionId}`
 }
 
 export interface ResourceAttributeSettings {
   attributeId: string;
   hidden?: boolean;
   sort?: AttributeSortType;
+  width?: number;
 }
 
 export enum AttributeSortType {

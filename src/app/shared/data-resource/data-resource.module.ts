@@ -45,6 +45,10 @@ import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.comp
 import {AuditLogAutomationTitlePipe} from './detail/activity/audit-logs/pipes/audit-log-automation-title.pipe';
 import {AuditLogEntriesComponent} from './detail/activity/audit-logs/log/entries/audit-log-entries.component';
 import {AuditLogAutomationStringPipe} from './detail/activity/audit-logs/pipes/audit-log-automation-string.pipe';
+import {DetailSettingsButtonComponent} from './detail/header/settings-button/detail-settings-button.component';
+import {DetailSettingsDropdownComponent} from './detail/header/settings-button/dropdown/detail-settings-dropdown.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
 
 @NgModule({
   imports: [
@@ -62,6 +66,8 @@ import {AuditLogAutomationStringPipe} from './detail/activity/audit-logs/pipes/a
     ResourceCommentsModule,
     TooltipModule,
     MatMenuModule,
+    DropdownModule,
+    AttributesSettingsModule,
   ],
   declarations: [
     DataResourceDetailComponent,
@@ -78,6 +84,8 @@ import {AuditLogAutomationStringPipe} from './detail/activity/audit-logs/pipes/a
     AuditLogAutomationTitlePipe,
     AuditLogAutomationStringPipe,
     AuditLogEntriesComponent,
+    DetailSettingsButtonComponent,
+    DetailSettingsDropdownComponent,
   ],
   exports: [DataResourceDetailComponent],
 })

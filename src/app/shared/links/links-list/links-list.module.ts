@@ -44,6 +44,8 @@ import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {AsAttributeResourcePipe} from './pipes/as-attribute-resource.pipe';
 import {LinksCountPipe} from './pipes/links-count.pipe';
 import {MatMenuModule} from '@angular/material/menu';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {SortLinkRowsPipe} from './pipes/sort-link-rows.pipe';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,7 @@ import {MatMenuModule} from '@angular/material/menu';
     LinksAccordeonComponent,
     AsAttributeResourcePipe,
     LinksCountPipe,
+    SortLinkRowsPipe,
   ],
   imports: [
     CommonModule,
@@ -74,6 +77,7 @@ import {MatMenuModule} from '@angular/material/menu';
     DocumentHintsModule,
     AccordionModule,
     MatMenuModule,
+    TooltipModule,
   ],
   exports: [LinksListComponent, LinksAccordeonComponent],
 })

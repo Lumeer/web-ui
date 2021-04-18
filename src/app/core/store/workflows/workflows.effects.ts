@@ -18,9 +18,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {EMPTY, Observable, of} from 'rxjs';
+import {EMPTY, of} from 'rxjs';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {delay, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
 import {NavigationAction} from '../navigation/navigation.action';
@@ -43,9 +43,9 @@ export class WorkflowsEffects {
               documentId: action.payload.documentId,
               linkInstanceId: action.payload.cell?.linkId,
               linkTypeId: action.payload.column?.linkTypeId,
-              collectionId: action.payload.column?.collectionId,
+              collectionId: action.payload.column?.collectionId || action.payload.collectionId,
               attributeId: action.payload.column?.attribute?.id,
-              value: action.payload.column?.tableId || action.payload.cell?.tableId,
+              value: action.payload.column?.tableId || action.payload.cell?.tableId || action.payload.tableId,
               sidebar: true,
             },
           })

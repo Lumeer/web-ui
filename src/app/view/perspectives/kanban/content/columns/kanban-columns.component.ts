@@ -388,7 +388,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
-            afterSuccess: documentId => this.onObjectCreated(documentId, column),
+            afterSuccess: document => this.onObjectCreated(document.id, column),
           })
         );
       }

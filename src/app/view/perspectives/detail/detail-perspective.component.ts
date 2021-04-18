@@ -33,10 +33,12 @@ import {selectNavigation, selectViewCursor} from '../../../core/store/navigation
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionsByQueryWithoutLinks,
+  selectCollectionsByReadPermission,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {
   filterStemsForCollection,
+  getQueryFiltersForCollection,
   isNavigatingToOtherWorkspace,
   queryContainsOnlyFulltexts,
   queryIsEmpty,
@@ -44,8 +46,13 @@ import {
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {DataQuery} from '../../../core/model/data-query';
+import {ViewSettings} from '../../../core/store/views/view';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {generateDocumentData} from '../../../core/store/documents/document.utils';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
   selector: 'detail-perspective',
@@ -58,9 +65,12 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   public embedded: boolean;
 
   public query$: Observable<Query>;
+  public viewSettings$: Observable<ViewSettings>;
   public collectionPermission$: Observable<AllowedPermissions>;
+  public settingsQuery$: Observable<Query>;
 
   public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
+  public creatingDocument$ = new BehaviorSubject(false);
 
   private query: Query;
   private collectionSubscription = new Subscription();
@@ -74,6 +84,11 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       select(selectViewDataQuery),
       tap(query => this.onQueryChanged(query))
     );
+    this.settingsQuery$ = this.store$.pipe(
+      select(selectCollectionsByReadPermission),
+      map(collections => createFlatResourcesSettingsQuery(collections))
+    );
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initSelection();
   }
 
@@ -221,6 +236,30 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     if (document) {
       const query: Query = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
       this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    }
+  }
+
+  public addDocument() {
+    const collection = this.selected$.value.collection;
+    if (collection) {
+      combineLatest([this.store$.pipe(select(selectViewDataQuery)), this.store$.pipe(select(selectConstraintData))])
+        .pipe(take(1))
+        .subscribe(([query, constraintData]) => {
+          const queryFilters = getQueryFiltersForCollection(query, collection.id);
+          const data = generateDocumentData(collection, queryFilters, constraintData, true);
+          const document = {data, collectionId: collection.id};
+
+          this.creatingDocument$.next(true);
+
+          this.store$.dispatch(
+            new DocumentsAction.Create({
+              document,
+              onSuccess: () => this.creatingDocument$.next(false),
+              onFailure: () => this.creatingDocument$.next(false),
+              afterSuccess: createdDocument => this.selectDocument(createdDocument),
+            })
+          );
+        });
     }
   }
 }

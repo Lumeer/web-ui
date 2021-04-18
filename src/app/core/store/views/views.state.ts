@@ -39,6 +39,7 @@ import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {isQuerySubset} from '../navigation/query/query.util';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {selectDetailConfig} from '../details/detail.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -98,8 +99,9 @@ const selectConfigs1 = createSelector(
   })
 );
 
-const selectConfigs2 = createSelector(selectWorkflowConfig, workflowConfig => ({
+const selectConfigs2 = createSelector(selectWorkflowConfig, selectDetailConfig, (workflowConfig, detailConfig) => ({
   workflowConfig,
+  detailConfig,
 }));
 
 export const selectPerspectiveConfig = createSelector(
@@ -109,37 +111,31 @@ export const selectPerspectiveConfig = createSelector(
   (
     perspective,
     {tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig},
-    {workflowConfig}
-  ) =>
-    ({
-      [Perspective.Map]: mapConfig,
-      [Perspective.Table]: tableConfig,
-      [Perspective.Chart]: chartConfig,
-      [Perspective.GanttChart]: ganttChartConfig,
-      [Perspective.Calendar]: calendarConfig,
-      [Perspective.Kanban]: kanbanConfig,
-      [Perspective.Pivot]: pivotConfig,
-      [Perspective.Search]: searchConfig,
-      [Perspective.Workflow]: workflowConfig,
-    }[perspective])
-);
-
-export const selectPerspectiveViewConfig = createSelector(
-  selectCurrentView,
-  selectPerspective,
-  (view, perspective) => view?.config?.[perspective]
+    {workflowConfig, detailConfig}
+  ) => ({
+    [Perspective.Map]: mapConfig,
+    [Perspective.Table]: tableConfig,
+    [Perspective.Chart]: chartConfig,
+    [Perspective.GanttChart]: ganttChartConfig,
+    [Perspective.Calendar]: calendarConfig,
+    [Perspective.Kanban]: kanbanConfig,
+    [Perspective.Pivot]: pivotConfig,
+    [Perspective.Search]: searchConfig,
+    [Perspective.Workflow]: workflowConfig,
+    [Perspective.Detail]: detailConfig,
+  })
 );
 
 export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);
 
 export const selectViewConfigChanged = createSelector(
   selectPerspective,
+  selectViewConfig,
   selectPerspectiveConfig,
-  selectPerspectiveViewConfig,
   selectDocumentsDictionary,
   selectCollectionsDictionary,
   selectLinkTypesDictionary,
-  (perspective, perspectiveConfig, viewConfig, documentsMap, collectionsMap, linkTypesMap) =>
+  (perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap) =>
     viewConfig &&
     perspectiveConfig &&
     isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap)

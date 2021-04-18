@@ -1,15 +1,18 @@
 <ng-container
-  *ngIf="{workspace: workspace$ | async, startEditing: startEditing$ | async, constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
+  *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
+  constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
   <document-detail-header class="d-block mb-4"
                           [resource]="resource"
                           [dataResource]="dataResource"
                           [resourceType]="resourceType"
+                          [attributesSettings]="data.attributesSettings"
                           [constraintData]="data.constraintData"
                           [permissions]="permissions"
                           [workspace]="data.workspace"
                           (switchToTable)="onSwitchToTable()"
                           (remove)="onRemove()"
-                          (versionClick)="selectTab(detailTabType.Activity)">
+                          (versionClick)="selectTab(detailTabType.Activity)"
+                          (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
   </document-detail-header>
 
   <detail-tabs *ngIf="dataResource?.id"
@@ -28,11 +31,10 @@
                         [permissions]="permissions"
                         [constraintData]="data.constraintData"
                         [workspace]="data.workspace"
-                        [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
                         [query]="query"
                         [toolbarRef]="toolbarRef"
                         [preventEventBubble]="preventEventBubble"
-                        [attributeSettings]="attributeSettings"
+                        [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
                         (attributeTypeClick)="onAttributeTypeClick($event)"
                         (attributeFunctionCLick)="onAttributeFunctionClick($event)"
                         (removeDocument)="onRemove()"
@@ -65,11 +67,14 @@
                        *ngIf="resource && dataResource?.id"
                        [document]="dataResource"
                        [preventEventBubble]="preventEventBubble"
-                       [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
                        [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
-                       [viewSettings]="viewSettings"
-                       (documentSelect)="documentSelect.emit($event)">
+                       [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
+                       [attributesSettings]="data.attributesSettings"
+                       (documentSelect)="documentSelect.emit($event)"
+                       (showLink)="onShowLink($event)"
+                       (hideLink)="onHideLink($event)"
+                       (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
       </links-accordeon>
     </div>
   </ng-container>

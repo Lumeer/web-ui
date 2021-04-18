@@ -1,19 +1,35 @@
 <div class="container-fluid col-12 col-lg-10 col-xl-9">
-  <ng-container *ngIf="{selected: selected$ | async, query: query$ | async} as data">
+  <ng-container *ngIf="{selected: selected$ | async, query: query$ | async, viewSettings: viewSettings$ | async,
+  permissions: collectionPermission$ | async, creatingDocument: creatingDocument$ | async} as data">
     <preview-results
       class="mb-4 d-block"
       [selectedCollection]="data.selected.collection"
       [selectedDocument]="data.selected.document"
+      [attributesSettings]="data.viewSettings?.attributes"
       [query]="data.query"
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
 
+    <div class="mb-4" *ngIf="data.permissions?.writeWithView">
+      <button type="button"
+              class="btn btn-sm btn-primary"
+              [attr.aria-disabled]="data.creatingDocument"
+              [disabled]="data.creatingDocument"
+              (click)="addDocument()">
+        <i *ngIf="!data.creatingDocument" class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+        <span *ngIf="data.creatingDocument" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+        <span class="font-weight-bold" i18n="@@create.new.document">Create New Record</span>
+      </button>
+    </div>
+
     <div class="card p-4 mb-4" *ngIf="data.selected.collection && data.selected.document">
       <data-resource-detail [resource]="data.selected.collection"
                             [dataResource]="data.selected.document"
                             [query]="data.query"
-                            [permissions]="collectionPermission$ | async"
+                            [settingsQuery]="settingsQuery$ | async"
+                            [settingsStem]="data.selected.collection | detailQueryStem"
+                            [permissions]="data.permissions"
                             (documentSelect)="selectCollectionAndDocument($event)">
       </data-resource-detail>
     </div>

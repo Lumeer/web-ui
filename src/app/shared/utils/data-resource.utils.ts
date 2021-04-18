@@ -20,50 +20,42 @@
 import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
 import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
 import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
-import {AttributeSortType, ViewSettings} from '../../core/store/views/view';
-import {createAttributesMap} from '../../core/store/collections/collection.util';
-import {isArray, objectValues} from './common.utils';
+import {AttributeSortType, AttributesSettings, ResourceAttributeSettings} from '../../core/store/views/view';
+import {isArray, objectsByIdMap, objectValues} from './common.utils';
 import {Constraint, ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {Attribute, Collection} from '../../core/store/collections/collection';
+import {LinkInstance} from '../../core/store/link-instances/link.instance';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {composeViewSettingsLinkTypeCollectionId} from '../settings/settings.util';
 
 export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],
   resourcesMap: Record<string, AttributesResource>,
   type: AttributesResourceType,
-  viewSettings: ViewSettings,
+  attributesSettings: AttributesSettings,
   constraintData: ConstraintData,
   sortDesc?: boolean
 ): T[] {
   const dataResourcesByResource = groupDataResourceByResource(dataResources, type);
-  const viewSettingsAttributes = viewSettings?.attributes;
   const resourcesSettings =
-    type === AttributesResourceType.Collection
-      ? viewSettingsAttributes?.collections
-      : viewSettingsAttributes?.linkTypes || {};
+    type === AttributesResourceType.Collection ? attributesSettings?.collections : attributesSettings?.linkTypes || {};
   const resultDataResources = [];
 
   for (const resourceId of Object.keys(dataResourcesByResource)) {
     const sortSettings = (resourcesSettings?.[resourceId] || []).filter(setting => !!setting.sort);
     const currentDataResources = dataResourcesByResource[resourceId];
-    const attributesMap = createAttributesMap(resourcesMap[resourceId].attributes);
+    const attributesMap = objectsByIdMap(resourcesMap[resourceId].attributes);
 
     if (sortSettings.length) {
-      const sortedDataResources = currentDataResources.sort((a, b) => {
-        for (const sortSetting of sortSettings) {
-          const ascending = sortSetting.sort === AttributeSortType.Ascending;
-          const constraint = attributesMap[sortSetting.attributeId]?.constraint || new UnknownConstraint();
-          const compare =
-            constraint
-              .createDataValue(a.data?.[sortSetting.attributeId], constraintData)
-              .compareTo(constraint.createDataValue(b.data?.[sortSetting.attributeId], constraintData)) *
-            (ascending ? 1 : -1);
-          if (compare !== 0) {
-            return compare;
-          }
-        }
-        // otherwise sort by creation date
-        const value = a.creationDate.getTime() - b.creationDate.getTime();
-        return (value !== 0 ? value : a.id.localeCompare(b.id)) * (sortDesc ? -1 : 1);
-      });
+      const sortedDataResources = sortDataResourcesObjects(
+        currentDataResources,
+        sortSettings,
+        attributesMap,
+        constraintData,
+        sortDesc,
+        dataResource => dataResource
+      );
       resultDataResources.push(...sortedDataResources);
     } else {
       resultDataResources.push(...currentDataResources);
@@ -71,6 +63,120 @@ export function sortDataResourcesByViewSettings<T extends DataResource>(
   }
 
   return resultDataResources;
+}
+
+export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInstance; document?: DocumentModel}>(
+  dataObjects: T[],
+  collection: Collection,
+  linkType: LinkType,
+  attributesSettings: AttributesSettings,
+  constraintData: ConstraintData
+): T[] {
+  const linkTypeSettings = attributesSettings?.linkTypes?.[linkType?.id];
+  const collectionSettings =
+    attributesSettings?.linkTypesCollections?.[composeViewSettingsLinkTypeCollectionId(collection?.id, linkType?.id)];
+
+  const linkTypeSortSettings = (linkTypeSettings || []).filter(setting => !!setting.sort);
+  const collectionSortSettings = (collectionSettings || []).filter(setting => !!setting.sort);
+
+  const linkTypeAttributesMap = objectsByIdMap(linkType?.attributes);
+  const collectionAttributesMap = objectsByIdMap(collection?.attributes);
+
+  return [...(dataObjects || [])].sort((a, b) => {
+    if (linkTypeSortSettings.length) {
+      const compare = compareDataResourcesObjectsBySort(
+        a,
+        b,
+        linkTypeSortSettings,
+        linkTypeAttributesMap,
+        constraintData,
+        false,
+        object => object.linkInstance
+      );
+      if (compare !== 0) {
+        return compare;
+      }
+    }
+
+    if (collectionSortSettings.length) {
+      const compare = compareDataResourcesObjectsBySort(
+        a,
+        b,
+        collectionSortSettings,
+        collectionAttributesMap,
+        constraintData,
+        false,
+        object => object.document
+      );
+      if (compare !== 0) {
+        return compare;
+      }
+    }
+
+    return compareDataResourcesObjectsByCreation(a, b, false, object => object.linkInstance);
+  });
+}
+
+export function sortDataResourcesObjects<T>(
+  objects: T[],
+  sortSettings: ResourceAttributeSettings[],
+  attributesMap: Record<string, Attribute>,
+  constraintData: ConstraintData,
+  sortDesc: boolean,
+  dataResourceCallback: (T) => DataResource
+): T[] {
+  return objects.sort(
+    (a, b) =>
+      compareDataResourcesObjectsBySort(
+        a,
+        b,
+        sortSettings,
+        attributesMap,
+        constraintData,
+        sortDesc,
+        dataResourceCallback
+      ) || compareDataResourcesObjectsByCreation(a, b, sortDesc, dataResourceCallback)
+  );
+}
+
+export function compareDataResourcesObjectsBySort<T>(
+  a: T,
+  b: T,
+  sortSettings: ResourceAttributeSettings[],
+  attributesMap: Record<string, Attribute>,
+  constraintData: ConstraintData,
+  sortDesc: boolean,
+  dataResourceCallback: (T) => DataResource
+): number {
+  const aDataResource = dataResourceCallback(a);
+  const bDataResource = dataResourceCallback(b);
+  for (const sortSetting of sortSettings) {
+    const ascending = sortSetting.sort === AttributeSortType.Ascending;
+    const constraint = attributesMap[sortSetting.attributeId]?.constraint || new UnknownConstraint();
+    const compare =
+      constraint
+        .createDataValue(aDataResource.data?.[sortSetting.attributeId], constraintData)
+        .compareTo(constraint.createDataValue(bDataResource.data?.[sortSetting.attributeId], constraintData)) *
+      (ascending ? 1 : -1);
+    if (compare !== 0) {
+      return compare;
+    }
+  }
+
+  return 0;
+}
+
+export function compareDataResourcesObjectsByCreation<T>(
+  a: T,
+  b: T,
+  sortDesc: boolean,
+  dataResourceCallback: (T) => DataResource
+): number {
+  const aDataResource = dataResourceCallback(a);
+  const bDataResource = dataResourceCallback(b);
+
+  const value = aDataResource.creationDate.getTime() - bDataResource.creationDate.getTime();
+  return (value !== 0 ? value : aDataResource.id.localeCompare(bDataResource.id)) * (sortDesc ? -1 : 1);
 }
 
 export function groupDataResourceByResource<T extends DataResource>(

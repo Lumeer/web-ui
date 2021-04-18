@@ -22,10 +22,11 @@ import {SharedModule} from '../../../shared/shared.module';
 import {DetailPerspectiveComponent} from './detail-perspective.component';
 import {RouterModule} from '@angular/router';
 import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
+import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
 
 @NgModule({
   imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
-  declarations: [DetailPerspectiveComponent],
+  declarations: [DetailPerspectiveComponent, DetailQueryStemPipe],
   exports: [DetailPerspectiveComponent],
 })
 export class DetailPerspectiveModule {}

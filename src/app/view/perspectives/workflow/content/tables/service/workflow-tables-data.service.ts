@@ -908,7 +908,16 @@ export class WorkflowTablesDataService {
 
   public showRowDocumentDetail(row: TableRow, cell?: TableCell) {
     const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
-    this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId, cell, column}));
+    const table = this.stateService.findTable(row?.tableId);
+    this.store$.dispatch(
+      new WorkflowsAction.SetOpenedDocument({
+        documentId: row.documentId,
+        cell,
+        column,
+        collectionId: table?.collectionId,
+        tableId: table?.id,
+      })
+    );
   }
 
   public showAttributeType(column: TableColumn) {
@@ -1036,7 +1045,7 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
-          afterSuccess: documentId => this.onRowCreated(row, data, documentId),
+          afterSuccess: document => this.onRowCreated(row, data, document.id),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );

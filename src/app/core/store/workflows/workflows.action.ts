@@ -81,7 +81,15 @@ export namespace WorkflowsAction {
   export class SetOpenedDocument implements Action {
     public readonly type = WorkflowsActionType.SET_OPENED_DOCUMENT;
 
-    public constructor(public payload: {documentId: string; cell?: TableCell; column?: TableColumn}) {}
+    public constructor(
+      public payload: {
+        documentId: string;
+        cell?: TableCell;
+        column?: TableColumn;
+        collectionId?: string;
+        tableId?: string;
+      }
+    ) {}
   }
 
   export class SetSelectedCell implements Action {

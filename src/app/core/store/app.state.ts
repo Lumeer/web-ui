@@ -53,6 +53,7 @@ import {initialModalsState, ModalsState} from './modals/modals.state';
 import {initialUserPermissionsState, UserPermissionsState} from './user-permissions/user-permissions.state';
 import {DataResourcesState, initialDataResourcesState} from './data-resources/data-resources.state';
 import {AuditLogsState, initialAuditLogsState} from './audit-logs/audit-logs.state';
+import {DetailsState, initialDetailsState} from './details/detail.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -81,6 +82,7 @@ export interface AppState {
   ganttCharts: GanttChartsState;
   kanbans: KanbansState;
   searches: SearchesState;
+  details: DetailsState;
   sequences: SequencesState;
   constraintData: ConstraintDataState;
   publicData: PublicDataState;
@@ -120,6 +122,7 @@ export function initialAppState(): AppState {
     ganttCharts: initialGanttChartsState,
     kanbans: initialKanbansState,
     searches: initialSearchesState,
+    details: initialDetailsState,
     sequences: initialSequencesState,
     constraintData: initialConstraintDataState,
     publicData: initialPublicDataState,

@@ -42,9 +42,7 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
-import {ViewSettings} from '../../../core/store/views/view';
 import {AttributesResourceType} from '../../../core/model/resource';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
@@ -77,7 +75,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public collection$: Observable<Collection>;
   public document$: Observable<DocumentModel>;
   public permissions$: Observable<AllowedPermissions>;
-  public viewSettings$: Observable<ViewSettings>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -94,7 +91,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 

@@ -35,6 +35,9 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesSettings} from '../../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../../settings/settings.util';
+import {objectsByIdMap} from '../../utils/common.utils';
 
 const PAGE_SIZE = 100;
 
@@ -61,6 +64,9 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   public loaded: boolean;
 
   @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Input()
   public resizeable = true;
 
   @Output()
@@ -80,14 +86,27 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   };
 
   public page = 0;
+  public attributes: Attribute[];
 
   public readonly pageSize = PAGE_SIZE;
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection || changes.attributesSettings) {
+      this.attributes = this.createAttributes();
+    }
     if (this.documents && this.selectedDocumentId) {
       this.countPageForDocument(this.selectedDocumentId);
       setTimeout(() => this.scrollToCurrentRow());
     }
+  }
+
+  private createAttributes(): Attribute[] {
+    const settings = this.attributesSettings?.collections?.[this.collection?.id];
+    const attributesMap = objectsByIdMap(this.collection?.attributes);
+    return createAttributesSettingsOrder(this.collection?.attributes, settings)
+      .filter(setting => !setting.hidden)
+      .map(setting => attributesMap[setting.attributeId])
+      .filter(attribute => !!attribute);
   }
 
   public activate(document: DocumentModel) {

@@ -46,6 +46,7 @@ import {findAttribute, getDefaultAttributeId} from '../../../../core/store/colle
 import {User} from '../../../../core/store/users/user';
 
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesSettings} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'document-detail-header',
@@ -65,6 +66,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public resourceType: AttributesResourceType;
 
   @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -81,6 +85,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   @Output()
   public versionClick = new EventEmitter();
+
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
   public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};

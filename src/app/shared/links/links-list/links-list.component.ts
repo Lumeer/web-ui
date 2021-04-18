@@ -63,9 +63,6 @@ export class LinksListComponent implements OnChanges, OnInit {
   public preventEventBubble: boolean;
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
-
-  @Input()
   public allowSelectDocument = true;
 
   @Input()

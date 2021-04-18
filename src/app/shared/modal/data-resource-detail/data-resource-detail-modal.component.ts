@@ -31,28 +31,33 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {KeyCode} from '../../key-code';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
-import {ViewSettings} from '../../../core/store/views/view';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {
+  createFlatCollectionSettingsQueryStem,
+  createFlatLinkTypeSettingsQueryStem,
+  createFlatResourcesSettingsQuery,
+} from '../../../core/store/details/detail.utils';
+import {map} from 'rxjs/operators';
+import {LinkType} from '../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -86,10 +91,12 @@ export class DataResourceDetailModalComponent implements OnInit {
   public performingAction$ = new BehaviorSubject(false);
 
   public query$: Observable<Query>;
+  public settingsQuery$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
   public permissions$: Observable<AllowedPermissions>;
-  public viewSettings$: Observable<ViewSettings>;
+
+  public detailSettingsQueryStem: QueryStem;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
@@ -104,7 +111,10 @@ export class DataResourceDetailModalComponent implements OnInit {
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.settingsQuery$ = combineLatest([
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+    ]).pipe(map(([collections, linkTypes]) => createFlatResourcesSettingsQuery(collections, linkTypes)));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
@@ -117,6 +127,12 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.resource$ = this.selectResource$(resource.id);
     this.dataResource$ = dataResource?.id ? this.selectDataResource$(dataResource.id) : of(dataResource);
     this.permissions$ = this.selectPermissions$(resource);
+
+    if (this.resourceType === AttributesResourceType.Collection) {
+      this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
+    } else if (this.resourceType === AttributesResourceType.LinkType) {
+      this.detailSettingsQueryStem = createFlatLinkTypeSettingsQueryStem(<LinkType>resource);
+    }
 
     this.subscribeExist(resource, dataResource);
     this.currentDataResource = dataResource;

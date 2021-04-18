@@ -1,15 +1,17 @@
 <ng-container
-  *ngIf="{linkTypes: linkTypes$ | async, openedGroups: openedGroups$ | async, collections: collections$ | async, permissions: permissions$ | async} as data">
+  *ngIf="{linkTypes: linkTypes$ | async, collections: collections$ | async, permissions: permissions$ | async} as data">
   <ng-container *ngIf="data.linkTypes?.length > 0; else noLinkTypes">
     <accordion>
-      <ng-container *ngFor="let linkType of data?.linkTypes; trackBy:trackById let idx = index;">
-        <accordion-group panelClass="lmr-accordion" [isOpen]="data.openedGroups[linkType.id]"
+      <ng-container *ngFor="let linkType of data?.linkTypes; trackBy:trackById">
+        <accordion-group panelClass="lmr-accordion"
+                         [isOpen]="!(collapsedLinkTypes | includes:linkType.id)"
+                         [isDisabled]="false"
                          (isOpenChange)="isOpenChanged($event, linkType.id)">
           <div class="header-wrapper" accordion-heading
                *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
-            <div class="mr-2">
-              <i *ngIf="data.openedGroups[linkType.id]" class="fas fa-caret-down"></i>
-              <i *ngIf="!(data.openedGroups[linkType.id])" class="fas fa-caret-right"></i>
+            <div class="mr-2" *ngIf="true">
+              <i *ngIf="!(collapsedLinkTypes | includes:linkType.id)"  class="fas fa-caret-down"></i>
+              <i *ngIf="collapsedLinkTypes | includes:linkType.id"  class="fas fa-caret-right"></i>
             </div>
             <icons-presenter class="d-block mr-1"
                              [colors]="iconData.iconColors.colors"
@@ -29,7 +31,7 @@
             <links-list-table
               *ngIf="linkType | linkTypeOtherCollection:data.collections:collection.id as otherCollection"
               class="d-block mt-2"
-              [visible]="data.openedGroups[linkType.id]"
+              [visible]="!(collapsedLinkTypes | includes:linkType.id)"
               [linkType]="linkType"
               [document]="document"
               [collection]="otherCollection"
@@ -37,10 +39,10 @@
               [query]="query$ | async"
               [allowSelectDocument]="allowSelectDocument"
               [preventEventBubble]="preventEventBubble"
-              [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
-              [viewSettings]="viewSettings"
+              [attributesSettings]="attributesSettings"
               (unLink)="unLinkDocument($event)"
-              (detail)="onSelectDocument($event)">
+              (detail)="onSelectDocument($event)"
+              (attributesSettingsChanged)="attributesSettingsChanged.emit($event)">
             </links-list-table>
           </div>
         </accordion-group>

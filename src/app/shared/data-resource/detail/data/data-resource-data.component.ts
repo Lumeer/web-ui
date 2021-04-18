@@ -92,9 +92,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public editableKeys = false;
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
-
-  @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
   @Output()
@@ -146,14 +143,12 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    const attributeSettings =
-      this.ignoreSettingsOnReadPermission && this.permissions?.read ? [] : this.attributeSettings;
     if (this.shouldRefreshObservables(changes)) {
-      this.dataRowService.init(this.resource, this.dataResource, attributeSettings);
+      this.dataRowService.init(this.resource, this.dataResource, this.attributeSettings);
       this.resource$ = this.selectResource$();
       this.dataResource$ = this.selectDataResource$();
-    } else if (changes.attributesSettings || changes.permissions || changes.ignoreSettingsOnReadPermission) {
-      this.dataRowService.setSettings(attributeSettings);
+    } else if (changes.attributeSettings || changes.permissions || changes.ignoreSettingsOnReadPermission) {
+      this.dataRowService.setSettings(this.attributeSettings);
     }
   }
 

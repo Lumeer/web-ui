@@ -29,8 +29,8 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {ViewSettings} from '../../../core/store/views/view';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {AttributesSettings} from '../../../core/store/views/view';
+import {combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -40,7 +40,7 @@ import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {map, take} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
@@ -64,23 +64,30 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public preventEventBubble: boolean;
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
-
-  @Input()
   public allowSelectDocument = true;
 
   @Input()
-  public viewSettings: ViewSettings;
+  public collapsedLinkTypes: string[];
+
+  @Input()
+  public attributesSettings: AttributesSettings;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+
+  @Output()
+  public hideLink = new EventEmitter<string>();
+
+  @Output()
+  public showLink = new EventEmitter<string>();
+
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
-
-  public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
 
   public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
@@ -103,17 +110,6 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
     ]).pipe(
       map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );
-    this.linkTypes$.pipe(take(1)).subscribe(linkTypes => this.initOpenedGroups(linkTypes));
-  }
-
-  private initOpenedGroups(linkTypes: LinkType[]) {
-    const openedGroups = {...this.openedGroups$.value};
-    for (const linkType of linkTypes) {
-      if (!openedGroups[linkType.id]) {
-        openedGroups[linkType.id] = true;
-      }
-    }
-    this.openedGroups$.next(openedGroups);
   }
 
   public onSetLinks(event: MouseEvent, linkType: LinkType) {
@@ -124,8 +120,12 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
     }
   }
 
-  public isOpenChanged(state: boolean, id: string) {
-    this.openedGroups$.next({...this.openedGroups$.value, [id]: state});
+  public isOpenChanged(opened: boolean, id: string) {
+    if (opened) {
+      this.showLink.emit(id);
+    } else {
+      this.hideLink.emit(id);
+    }
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {

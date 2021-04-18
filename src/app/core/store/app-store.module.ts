@@ -85,6 +85,7 @@ import {DataResourcesEffects} from './data-resources/data-resources.effects';
 import {configuration} from '../../../environments/configuration';
 import {auditLogsReducer} from './audit-logs/audit-logs.reducer';
 import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
+import {detailsReducer} from './details/detail.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -113,6 +114,7 @@ const reducers: ActionReducerMap<AppState> = {
   ganttCharts: ganttChartsReducer,
   kanbans: kanbansReducer,
   searches: searchesReducer,
+  details: detailsReducer,
   sequences: sequencesReducer,
   constraintData: constraintDataReducer,
   publicData: publicDataReducer,

@@ -19,7 +19,7 @@
 
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {act, Actions, createEffect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
@@ -84,7 +84,7 @@ export class DocumentsEffects {
         const query = payload.query;
         const queryDto = convertQueryModelToDto(query);
 
-        return this.searchService.searchDocuments(queryDto, query.includeSubItems, payload.workspace).pipe(
+        return this.searchService.searchDocuments(queryDto, query?.includeSubItems, payload.workspace).pipe(
           map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
           map(documents => new DocumentsAction.GetSuccess({documents, query})),
           catchError(error => of(new DocumentsAction.GetFailure({error, query})))
@@ -154,7 +154,7 @@ export class DocumentsEffects {
                     correlationId: document.correlationId,
                   }),
                   new DocumentsAction.CheckDataHint({document: action.payload.document}),
-                  ...createCallbackActions(action.payload.afterSuccess, document.id),
+                  ...createCallbackActions(action.payload.afterSuccess, document),
                 ];
               }),
               catchError(error =>

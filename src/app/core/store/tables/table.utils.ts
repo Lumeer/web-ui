@@ -26,7 +26,6 @@ import {
 } from '../../../shared/utils/attribute.utils';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {Attribute, Collection} from '../collections/collection';
-import {createAttributesMap} from '../collections/collection.util';
 import {DocumentModel} from '../documents/document.model';
 import {calculateDocumentHierarchyLevel} from '../documents/document.utils';
 import {LinkInstance} from '../link-instances/link.instance';
@@ -41,6 +40,7 @@ import {
   TableConfigRow,
   TableModel,
 } from './table.model';
+import {objectsByIdMap} from '../../../shared/utils/common.utils';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   if (!path || path.length === 0) {
@@ -633,7 +633,7 @@ export function filterTableColumnsByAttributes(
   columns: TableConfigColumn[],
   attributes: Attribute[]
 ): TableConfigColumn[] {
-  const attributesMap = createAttributesMap(attributes);
+  const attributesMap = objectsByIdMap(attributes);
   return filterTableColumnsByAttributesMap(columns, attributesMap);
 }
 
