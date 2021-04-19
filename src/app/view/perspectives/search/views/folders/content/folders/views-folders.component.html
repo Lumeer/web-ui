@@ -1,28 +1,29 @@
-<div cdkDropList
-     cdkDropListSortingDisabled
-     #folderList="cdkDropList"
-     (cdkDropListDropped)="onDropped($event)">
-  <views-folder *ngFor="let folder of viewFolders.folders; trackBy: trackByFolder"
-                class="views-folder d-block"
-                cdkDrag
-                cdkDragDisabled
-                [folder]="folder"
-                [viewSize]="viewSize"
-                (clicked)="folderClick.emit(folder.name)">
+<div *ngFor="let folder of viewFolders.folders; trackBy: trackByFolder"
+     class="position-relative"
+     [class.pb-2]="viewSize !== sizeType.S"
+     [class.pb-1]="viewSize === sizeType.S"
+     (dragenter)="onDragEnter(folder.name)"
+     (dragleave)="onDragLeave(folder.name)"
+     (dragover)="$event.preventDefault()"
+     (drop)="onDrop(folder.name)">
+  <views-folder
+    class="views-folder d-block"
+    [folder]="folder"
+    [class.active]="(draggedFolder$ | async) === folder.name"
+    [viewSize]="viewSize"
+    (clicked)="folderClick.emit(folder.name)">
   </views-folder>
+  <div class="dragging-area position-absolute"></div>
 </div>
-<div cdkDropList
-     cdkDropListSortingDisabled
-     [cdkDropListConnectedTo]="[folderList]"
-     [cdkDropListData]="viewFolders.objects">
-  <view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
-               cdkDrag
-               class="d-block"
-               [permissions]="permissions && permissions[view.id]"
-               [queryData]="queryData"
-               [view]="view"
-               [viewSize]="viewSize"
-               [workspace]="workspace"
-               (favoriteToggle)="favoriteToggle.emit(view)">
-  </view-detail>
-</div>
+<view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
+             draggable="true"
+             (dragstart)="onDragStart(view)"
+             (dragend)="onDragEnd()"
+             class="d-block"
+             [permissions]="permissions && permissions[view.id]"
+             [queryData]="queryData"
+             [view]="view"
+             [viewSize]="viewSize"
+             [workspace]="workspace"
+             (favoriteToggle)="favoriteToggle.emit(view)">
+</view-detail>
