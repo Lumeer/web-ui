@@ -49,6 +49,14 @@ import {
 } from '../../../../shared/utils/data/data-aggregator-util';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
+  if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
+    return false;
+  }
+
+  if (isNullOrUndefined(viewConfig) !== isNullOrUndefined(currentConfig)) {
+    return true;
+  }
+
   if (Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved)) {
     return true;
   }
