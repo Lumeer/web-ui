@@ -340,7 +340,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       return true;
     }
     if (this.tableNewRow?.nativeElement.contains(element)) {
-      return true;
+      return this.tableModel?.newRow?.initialized;
     }
 
     return false;
