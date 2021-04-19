@@ -66,10 +66,6 @@ export function isDetailConfigChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
-  if (isNullOrUndefined(previousConfig)) {
-    return false;
-  }
-
   if (!arrayContainsSameItems(viewConfig?.collapsedLinkTypes, previousConfig?.collapsedLinkTypes)) {
     return true;
   }
