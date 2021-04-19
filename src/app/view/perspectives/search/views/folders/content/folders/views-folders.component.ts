@@ -23,8 +23,9 @@ import {View} from '../../../../../../../core/store/views/view';
 import {QueryData} from '../../../../../../../shared/top-panel/search-box/util/query-data';
 import {SizeType} from '../../../../../../../shared/slider/size/size-type';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
+import {BehaviorSubject} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
 
 @Component({
   selector: 'views-folders',
@@ -57,6 +58,14 @@ export class ViewsFoldersComponent {
   @Output()
   public viewFolderAdded = new EventEmitter<{view: View; folder: string}>();
 
+  public readonly sizeType = SizeType;
+
+  public draggedFolderSubject$ = new BehaviorSubject(null);
+  public draggedFolder$ = this.draggedFolderSubject$.pipe(distinctUntilChanged());
+  public dragging$ = new BehaviorSubject(false);
+
+  private draggingView: View;
+
   public trackByView(index: number, view: View): string {
     return view.id;
   }
@@ -65,12 +74,35 @@ export class ViewsFoldersComponent {
     return folder.name;
   }
 
-  public onDropped(drop: CdkDragDrop<View, any>) {
-    const resultIndex = Math.max(drop.currentIndex - 1, 0);
-    const newFolder = this.viewFolders?.folders?.[resultIndex]?.name;
-    const view = this.viewFolders?.objects?.[drop.previousIndex];
-    if (view && newFolder) {
-      this.viewFolderAdded.emit({view, folder: newFolder});
+  public onDragStart(view: View) {
+    this.draggingView = view;
+    this.dragging$.next(true);
+    this.resetDraggedFolder();
+  }
+
+  public onDragEnd() {
+    this.draggingView = null;
+    this.dragging$.next(false);
+    this.resetDraggedFolder();
+  }
+
+  public onDrop(name: string) {
+    if (this.draggingView) {
+      this.viewFolderAdded.emit({view: this.draggingView, folder: name});
     }
+  }
+
+  public onDragEnter(folder: string) {
+    this.draggedFolderSubject$.next(folder);
+  }
+
+  public onDragLeave(folder: string) {
+    if (this.draggedFolderSubject$.value === folder) {
+      this.resetDraggedFolder();
+    }
+  }
+
+  public resetDraggedFolder() {
+    this.draggedFolderSubject$.next(null);
   }
 }

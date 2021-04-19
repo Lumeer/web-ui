@@ -40,6 +40,7 @@ import {WorkflowTablesStateService} from '../tables/service/workflow-tables-stat
 import {combineLatest, Observable} from 'rxjs';
 import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
 import {map} from 'rxjs/operators';
+import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
@@ -73,7 +74,7 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
     this.currentStem$ = combineLatest([
       this.store$.pipe(select(selectViewCursor)),
       this.stateService.tables$.asObservable(),
-    ]).pipe(map(([cursor, tables]) => viewCursorToWorkflowTable(cursor, tables)?.stem));
+    ]).pipe(map(([cursor, tables]) => queryStemWithoutFilters(viewCursorToWorkflowTable(cursor, tables)?.stem)));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
