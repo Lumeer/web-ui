@@ -136,8 +136,6 @@ export const selectViewConfigChanged = createSelector(
   selectCollectionsDictionary,
   selectLinkTypesDictionary,
   (perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap) =>
-    viewConfig &&
-    perspectiveConfig &&
     isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap)
 );
 

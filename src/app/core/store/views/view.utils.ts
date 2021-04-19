@@ -34,7 +34,7 @@ import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {DataSettings, PerspectiveConfig, ViewConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
@@ -72,6 +72,9 @@ export function isPerspectiveConfigChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
+  if (isNullOrUndefined(viewConfig) || isNullOrUndefined(perspectiveConfig)) {
+    return false;
+  }
   switch (perspective) {
     case Perspective.Table:
       return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap);
