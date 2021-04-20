@@ -34,10 +34,11 @@ export class ResourceAttributeEditablePipe implements PipeTransform {
     resource: AttributesResource,
     attributeId: string,
     permissions: AllowedPermissions,
-    query?: Query
+    query: Query,
+    isTaskDataResource?: boolean
   ): boolean {
     if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
-      return isCollectionAttributeEditable(attributeId, resource as Collection, permissions, query);
+      return isCollectionAttributeEditable(attributeId, resource as Collection, permissions, query, isTaskDataResource);
     } else if (getAttributesResourceType(resource) === AttributesResourceType.LinkType) {
       return isLinkTypeAttributeEditable(attributeId, resource as LinkType, permissions, query);
     }

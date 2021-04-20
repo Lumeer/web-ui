@@ -58,6 +58,8 @@ import {
 } from '../../../core/store/details/detail.utils';
 import {map} from 'rxjs/operators';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {isDocumentMyTaskAssigned} from '../../../core/store/documents/document.utils';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -97,6 +99,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   public permissions$: Observable<AllowedPermissions>;
 
   public detailSettingsQueryStem: QueryStem;
+  public isTaskDataResource$: Observable<boolean>;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
@@ -129,8 +132,13 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.permissions$ = this.selectPermissions$(resource);
 
     if (this.resourceType === AttributesResourceType.Collection) {
+      this.isTaskDataResource$ = this.store$.pipe(
+        select(selectConstraintData),
+        map(constraintData => isDocumentMyTaskAssigned(<DocumentModel>dataResource, resource, constraintData))
+      );
       this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
+      this.isTaskDataResource$ = of(false);
       this.detailSettingsQueryStem = createFlatLinkTypeSettingsQueryStem(<LinkType>resource);
     }
 

@@ -71,6 +71,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   @Input()
   public editableKey = false;
 
+  @Input()
+  public isTaskDataResource: boolean;
+
   @Output()
   public newValue = new EventEmitter<any>();
 
@@ -235,7 +238,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isEditable(): boolean {
-    return this.permissions?.writeWithView && !this.readonly;
+    return (this.isTaskDataResource || this.permissions?.writeWithView) && !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {

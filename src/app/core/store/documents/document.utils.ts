@@ -16,9 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {Collection} from '../collections/collection';
 import {Query} from '../navigation/query/query';
-import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
+import {
+  getQueryFiltersForCollection,
+  getQueryFiltersForLinkType,
+  tasksCollectionsQuery,
+} from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
@@ -34,6 +39,7 @@ import {
   ConstraintType,
   DataValue,
   DateTimeConstraint,
+  filterDocumentsAndLinksByQuery,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 
@@ -240,6 +246,18 @@ export function calculateDocumentHierarchyLevel(
   const document = documentsMap[documentId];
   const parentDocumentId = document?.metaData?.parentId;
   return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
+}
+
+export function isDocumentMyTaskAssigned(
+  document: DocumentModel,
+  collection: Collection,
+  constraintData: ConstraintData
+): boolean {
+  const tasksQuery = tasksCollectionsQuery([collection], {});
+  return (
+    filterDocumentsAndLinksByQuery([document], [collection], [], [], tasksQuery, {}, {}, constraintData).documents
+      .length === 1
+  );
 }
 
 interface CollectionTaskDataMap {
