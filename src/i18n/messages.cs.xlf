@@ -43,13 +43,13 @@
         <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source><target>{VAR_PLURAL, plural, =2 {oba} =3 {všechny} =4 {všechny} other {všech} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source><target>{VAR_PLURAL, plural, =2 {komentáře} =3 {komentáře} =4 {komentáře} other {komentářů} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target>Pouze správce organizace nebo projektu může pozvat kolegy. Prosím požádejte je.</target>
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
@@ -314,11 +314,8 @@
         <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="views.folders.number.views" datatype="html">
         <source>Number of views</source><target>Počet pohledů</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/search/views/folders/content/folders/folder/views-folder.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/folders/content/folders/folder/views-folder.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
 
 
             <trans-unit id="view.share.dialog.title" datatype="html">
@@ -1637,7 +1634,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/copy-text-box/copy-text-box.component.ts</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder" datatype="html">
         <source>Enter attribute name</source><target>Zadejte název atributu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="document.detail.header.createdOn" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit><trans-unit id="document.detail.header.createdOn" datatype="html">
         <source>Created on</source><target>Vytvořeno</target>
 
 
@@ -2723,12 +2720,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="perspective.calendar.config.slotDuration.label" datatype="html">
         <source>Slot duration</source><target>Řádek trvá</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="search.all.tasks" datatype="html">
-        <source> Tasks </source><target>
-          Úkoly
-        </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
         <source>Scroll to Today </source><target>Posunout na dnešek
   </target>
 
@@ -2812,7 +2804,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target>Pomoc</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="help.functionsAndRules" datatype="html">
@@ -3665,10 +3657,10 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">229</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.title" datatype="html">
         <source>Delete this comment?</source><target>Smazat tento komentář?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
         <source>Do you really want to delete this comment?</source><target>Chcete opravdu smazat tento komentář?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">137</context></context-group></trans-unit>
             <trans-unit id="query.item.deleted.file" datatype="html">
                 <source>Deleted table</source>
                 <target>Odstraněná tabulka</target>
@@ -3967,7 +3959,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.header" datatype="html">
         <source>Summary of</source><target>Shrnutí</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="tasks.sample.data.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="search.all.myTasks" datatype="html">
+        <source> My Current Tasks </source><target> Moje aktuální úkoly </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+      </trans-unit><trans-unit id="tasks.sample.data.failure" datatype="html">
         <source>Could not add task table to project</source><target>Nepodařilo se mi do projektu přidat tabulku s úkoly</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/add-button/post-it-collection-add-button.component.ts</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/tasks/content/empty/collections/empty-tasks-collections.component.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.total" datatype="html">
@@ -3994,7 +3992,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="button.send" datatype="html">
                 <source>Send</source>
                 <target>Odeslat</target>

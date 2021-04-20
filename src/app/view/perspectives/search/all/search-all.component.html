@@ -6,8 +6,8 @@
     <ng-container *ngIf="data.hasCollection || data.hasView || data.showTaskTab; else noData">
 
       <ng-container *ngIf="data.showTaskTab">
-        <div class="color-secondary font-capitalize font-weight-bold ml-2" i18n="@@search.all.tasks">
-          Tasks
+        <div class="color-secondary font-capitalize font-weight-bold ml-2" i18n="@@search.all.myTasks">
+          My Current Tasks
         </div>
         <search-tasks [maxLines]="7" [compactEmptyPages]="true"></search-tasks>
       </ng-container>

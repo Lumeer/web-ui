@@ -2183,7 +2183,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
@@ -2866,28 +2866,28 @@
         <source> See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}"/> &gt; </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">57,59</context>
+          <context context-type="linenumber">59,61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dataResource.attribute.placeholder" datatype="html">
         <source>Enter attribute name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.menu.changeType" datatype="html">
@@ -3478,18 +3478,18 @@
           <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="constraint.address.part" datatype="html">
-        <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">56,57</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
         <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.address.part" datatype="html">
+        <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">56,57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.coordinates.description" datatype="html">
@@ -4074,7 +4074,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
@@ -4317,18 +4317,18 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="modal.links.modify.selected" datatype="html">
-        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-          <context context-type="linenumber">18,19</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="modal.links.modify.selected" datatype="html">
+        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18,19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.filter.title" datatype="html">
@@ -4976,14 +4976,14 @@
         <source>Delete this comment?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
         <source>Do you really want to delete this comment?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.detail.comments.new.write" datatype="html">
@@ -7143,8 +7143,8 @@
           <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="search.all.tasks" datatype="html">
-        <source> Tasks </source>
+      <trans-unit id="search.all.myTasks" datatype="html">
+        <source> My Current Tasks </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/all/search-all.component.html</context>
           <context context-type="linenumber">10,11</context>
@@ -7330,7 +7330,7 @@
         <source>Number of views</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/views/folders/content/folders/folder/views-folder.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.link.expand" datatype="html">
