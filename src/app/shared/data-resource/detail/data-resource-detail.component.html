@@ -34,6 +34,7 @@
                         [query]="query"
                         [toolbarRef]="toolbarRef"
                         [preventEventBubble]="preventEventBubble"
+                        [isTaskDataResource]="isTaskDataResource"
                         [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
                         (attributeTypeClick)="onAttributeTypeClick($event)"
                         (attributeFunctionCLick)="onAttributeFunctionClick($event)"
@@ -45,6 +46,7 @@
     </div>
     <comments-panel *ngIf="resource && dataResource?.id"
                     [maxCommentsCount]="1"
+                    [isTaskDataResource]="isTaskDataResource"
                     [permissions]="permissions"
                     [resourceType]="resourceType | attributeResourceTypeToResourceType"
                     [resourceId]="dataResource.id"
@@ -82,6 +84,7 @@
   <ng-container *ngIf="data.selectedTab === detailTabType.Comments">
     <comments-panel *ngIf="resource && dataResource?.id"
                     [permissions]="permissions"
+                    [isTaskDataResource]="isTaskDataResource"
                     [resourceType]="resourceType | attributeResourceTypeToResourceType"
                     [resourceId]="dataResource.id"
                     [startEditing]="data.startEditing"

@@ -28,12 +28,13 @@ export function isCollectionAttributeEditable(
   attributeId: string,
   collection: Collection,
   permissions: AllowedPermissions,
-  query?: Query
+  query?: Query,
+  isTask?: boolean
 ): boolean {
   const attribute = attributeId && (collection?.attributes || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
-    permissions?.writeWithView &&
+    (permissions?.writeWithView || isTask) &&
     !isCollectionAttributeLockedByQuery(query, collection, attributeId)
   );
 }

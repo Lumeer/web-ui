@@ -92,6 +92,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public editableKeys = false;
 
   @Input()
+  public isTaskDataResource: boolean;
+
+  @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
   @Output()

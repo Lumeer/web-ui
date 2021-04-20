@@ -63,6 +63,9 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
   @Input()
   public startEditing: boolean = false;
 
+  @Input()
+  public isTaskDataResource: boolean;
+
   @Output()
   public newCommentClick = new EventEmitter();
 

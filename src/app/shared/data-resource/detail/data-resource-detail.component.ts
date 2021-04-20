@@ -105,6 +105,9 @@ export class DataResourceDetailComponent
   @Input()
   public allowSelectDocument = true;
 
+  @Input()
+  public isTaskDataResource: boolean;
+
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
 
