@@ -13,7 +13,7 @@
     [viewSize]="viewSize"
     (clicked)="folderClick.emit(folder.name)">
   </views-folder>
-  <div class="dragging-area position-absolute"></div>
+  <div *ngIf="dragging$ | async" class="dragging-area position-absolute"></div>
 </div>
 <view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
              draggable="true"
