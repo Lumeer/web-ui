@@ -88,6 +88,7 @@ export namespace WorkflowsAction {
         column?: TableColumn;
         collectionId?: string;
         tableId?: string;
+        attributeId?: string;
       }
     ) {}
   }

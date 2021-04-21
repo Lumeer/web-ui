@@ -73,7 +73,7 @@
                        [collection]="resource"
                        [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
                        [attributesSettings]="data.attributesSettings"
-                       (documentSelect)="documentSelect.emit($event)"
+                       (documentSelect)="onDocumentSelect($event)"
                        (showLink)="onShowLink($event)"
                        (hideLink)="onHideLink($event)"
                        (attributesSettingsChanged)="onAttributesSettingsChanged($event)">

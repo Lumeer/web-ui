@@ -44,7 +44,7 @@ export class WorkflowsEffects {
               linkInstanceId: action.payload.cell?.linkId,
               linkTypeId: action.payload.column?.linkTypeId,
               collectionId: action.payload.column?.collectionId || action.payload.collectionId,
-              attributeId: action.payload.column?.attribute?.id,
+              attributeId: action.payload.column?.attribute?.id || action.payload.attributeId,
               value: action.payload.column?.tableId || action.payload.cell?.tableId || action.payload.tableId,
               sidebar: true,
             },

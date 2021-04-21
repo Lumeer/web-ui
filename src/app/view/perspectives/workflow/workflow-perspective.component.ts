@@ -25,7 +25,7 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ViewConfig} from '../../../core/store/views/view';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -38,6 +38,8 @@ import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'workflow-perspective',
@@ -49,7 +51,8 @@ export class WorkflowPerspectiveComponent
   extends DataPerspectiveComponent<WorkflowConfig>
   implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public selectedDocumentId$: Observable<string>;
+  public selectedDocument$: Observable<DocumentModel>;
+  public selectedCollection$: Observable<Collection>;
   public panelWidth$: Observable<number>;
 
   constructor(protected store$: Store<AppState>) {
@@ -91,8 +94,14 @@ export class WorkflowPerspectiveComponent
 
   public subscribeAdditionalData() {
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
+    const selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
+    this.selectedDocument$ = selectedDocumentId$.pipe(
+      switchMap(documentId => this.store$.pipe(select(selectDocumentById(documentId))))
+    );
+    this.selectedCollection$ = this.selectedDocument$.pipe(
+      switchMap(document => this.store$.pipe(select(selectCollectionById(document?.collectionId))))
+    );
   }
 
   public onConfigChanged(config: WorkflowConfig) {

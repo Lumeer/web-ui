@@ -10,7 +10,7 @@
                         [query]="query"
                         [settingsQuery]="query"
                         [settingsStem]="currentStem$ | async"
-                        [allowSelectDocument]="false"
-                        [permissions]="permissions">
+                        [permissions]="permissions"
+                        (documentSelect)="onDocumentSelect($event)">
   </data-resource-detail>
 </div>
