@@ -336,4 +336,9 @@ export class DataResourceDetailComponent
       );
     }
   }
+
+  public onDocumentSelect(data: {collection: Collection; document: DocumentModel}) {
+    this.documentSelect.emit(data);
+    this.selectTab(DetailTabType.Detail);
+  }
 }

@@ -79,7 +79,10 @@ export class WorkflowContentComponent implements OnChanges {
   public canManageConfig: boolean;
 
   @Input()
-  public selectedDocumentId: string;
+  public selectedDocument: DocumentModel;
+
+  @Input()
+  public selectedCollection: Collection;
 
   @Input()
   public sidebarWidth: number;
@@ -96,22 +99,8 @@ export class WorkflowContentComponent implements OnChanges {
   @Output()
   public sidebarResize = new EventEmitter<number>();
 
-  public selectedDocument: DocumentModel;
-  public selectedCollection: Collection;
-
   public ngOnChanges(changes: SimpleChanges) {
-    this.checkSelectedDocument(changes);
     this.checkConfig();
-  }
-
-  private checkSelectedDocument(changes: SimpleChanges) {
-    if (changes.selectedDocumentId || changes.collections || changes.documents) {
-      this.selectedDocument =
-        this.selectedDocumentId && this.documents.find(document => document.id === this.selectedDocumentId);
-      this.selectedCollection =
-        this.selectedDocument &&
-        this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
-    }
   }
 
   private checkConfig() {

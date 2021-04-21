@@ -15,7 +15,7 @@
                    [viewSettings]="viewSettings"
                    [constraintData]="constraintData"
                    [dataLoaded]="dataLoaded"
-                   [selectedDocumentId]="selectedDocumentId"
+                   [selectedDocumentId]="selectedDocument?.id"
                    (configChange)="configChange.emit($event)">
   </workflow-tables>
 

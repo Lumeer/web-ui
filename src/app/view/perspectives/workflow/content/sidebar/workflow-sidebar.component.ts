@@ -41,6 +41,8 @@ import {combineLatest, Observable} from 'rxjs';
 import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
 import {map} from 'rxjs/operators';
 import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
+import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
+import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
@@ -92,5 +94,15 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
 
   public onCloseClick() {
     this.close.emit();
+  }
+
+  public onDocumentSelect(data: {collection: Collection; document: DocumentModel}) {
+    this.store$.dispatch(
+      new WorkflowsAction.SetOpenedDocument({
+        documentId: data.document.id,
+        collectionId: data.collection.id,
+        attributeId: getDefaultAttributeId(data.collection),
+      })
+    );
   }
 }
