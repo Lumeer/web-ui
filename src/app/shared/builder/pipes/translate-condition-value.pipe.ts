@@ -17,14 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FilterBuilderModule} from './filter-builder/filter-builder.module';
-import {FilterPreviewModule} from './filter-preview/filter-preview.module';
-import {FilterBuilderPipesModule} from './pipes/filter-builder-pipes.module';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {TranslationService} from '../../../core/service/translation.service';
+import {Attribute} from '../../../core/store/collections/collection';
+import {ConstraintConditionValue} from '@lumeer/data-filters';
 
-@NgModule({
-  imports: [CommonModule, FilterBuilderModule, FilterPreviewModule, FilterBuilderPipesModule],
-  exports: [FilterBuilderModule, FilterPreviewModule, FilterBuilderPipesModule],
+@Pipe({
+  name: 'translateConditionValue',
 })
-export class BuilderModule {}
+@Injectable()
+export class TranslateConditionValuePipe implements PipeTransform {
+  constructor(private translationService: TranslationService) {}
+
+  public transform(value: ConstraintConditionValue, attribute: Attribute): string {
+    return this.translationService.translateConstraintConditionValue(value, attribute?.constraint);
+  }
+}
