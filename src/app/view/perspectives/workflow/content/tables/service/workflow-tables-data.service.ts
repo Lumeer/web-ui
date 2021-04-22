@@ -109,7 +109,7 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {selectCurrentView} from '../../../../../../core/store/views/views.state';
-import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, filterDocumentsAndLinksByQuery, UnknownConstraint} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -236,13 +236,33 @@ export class WorkflowTablesDataService {
   ): {tables: WorkflowTable[]; actions: Action[]} {
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
-    const linkInstancesMap = objectsByIdMap(linkInstances);
     return config.stemsConfigs.reduce(
       (result, stemConfig) => {
         const collection = collectionsMap[stemConfig.collection?.resourceId];
         if (!collection) {
           return result;
         }
+
+        // TODO maybe there is some better and more effective way
+        let stemDocuments = documents;
+        let stemLinkInstances = linkInstances;
+        if (config.stemsConfigs.length > 1) {
+          const stemQuery = {...query, stems: [stemConfig.stem]};
+          const result = filterDocumentsAndLinksByQuery(
+            documents,
+            collections,
+            linkTypes,
+            linkInstances,
+            stemQuery,
+            permissions,
+            {},
+            constraintData,
+            viewSettings?.data?.includeSubItems
+          );
+          stemDocuments = result.documents;
+          stemLinkInstances = result.linkInstances;
+        }
+        const linkInstancesMap = objectsByIdMap(stemLinkInstances);
 
         // creating collection columns
         const tableByCollection = currentTables.find(tab => tab.collectionId === collection.id);
@@ -284,7 +304,7 @@ export class WorkflowTablesDataService {
         const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
         this.dataAggregator.updateData(
           collections,
-          documents,
+          stemDocuments,
           linkTypes,
           linkInstances,
           stemConfig.stem,
