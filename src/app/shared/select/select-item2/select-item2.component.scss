@@ -3,3 +3,9 @@
 .empty-text {
   color: $gray-500;
 }
+
+.btn-link:disabled,
+.btn-link.disabled {
+  color: $primary;
+  opacity: 1;
+}
