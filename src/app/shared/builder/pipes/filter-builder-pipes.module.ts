@@ -17,19 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-import {TranslationService} from '../../../../core/service/translation.service';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {ConditionType} from '@lumeer/data-filters';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ConditionNumValuesPipe} from './condition-num-values.pipe';
+import {TranslateConditionPipe} from './translate-condition.pipe';
+import {TranslateConditionValuePipe} from './translate-condition-value.pipe';
+import {ConditionShouldBeItalicPipe} from './condition-should-be-italic.pipe';
 
-@Pipe({
-  name: 'translateCondition',
+@NgModule({
+  declarations: [
+    ConditionNumValuesPipe,
+    ConditionShouldBeItalicPipe,
+    TranslateConditionPipe,
+    TranslateConditionValuePipe,
+  ],
+  exports: [ConditionNumValuesPipe, ConditionShouldBeItalicPipe, TranslateConditionPipe, TranslateConditionValuePipe],
+  imports: [CommonModule],
 })
-@Injectable()
-export class TranslateConditionPipe implements PipeTransform {
-  constructor(private translationService: TranslationService) {}
-
-  public transform(condition: ConditionType, attribute: Attribute): string {
-    return this.translationService.translateQueryCondition(condition, attribute && attribute.constraint);
-  }
-}
+export class FilterBuilderPipesModule {}

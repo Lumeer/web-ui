@@ -52,16 +52,23 @@ import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {filterAttributesByFilters} from '../../utils/attribute.utils';
 import {
+  actionButtonEnabledStats,
+  ActionButtonFiltersStats,
   ActionConstraintConfig,
   ActionDataValue,
   ConstraintData,
   createDataValuesMap,
-  isActionButtonEnabled,
 } from '@lumeer/data-filters';
 import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute-type/form/constraint-config/action/action-constraint.utils';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {Attribute} from '../../../core/store/collections/collection';
 
 const loadingTime = 2000;
+
+export type ActionButtonFiltersStatsWithData = ActionButtonFiltersStats & {
+  constraintData?: ConstraintData;
+  attributesMap?: Record<string, Attribute>;
+};
 
 @Component({
   selector: 'action-data-input',
@@ -92,7 +99,7 @@ export class ActionDataInputComponent implements OnChanges {
   @HostBinding('class.justify-content-center')
   public center: boolean;
 
-  public enabled$: Observable<boolean>;
+  public stats$: Observable<ActionButtonFiltersStatsWithData>;
   public loading$: Observable<boolean>;
   public config$ = new BehaviorSubject<ActionConstraintConfig>(null);
 
@@ -116,7 +123,7 @@ export class ActionDataInputComponent implements OnChanges {
     }
     if (changes.cursor) {
       this.loading$ = this.bindLoading$().pipe(tap(loading => (this.loading = loading)));
-      this.enabled$ = this.bindEnabled$().pipe(tap(enabled => (this.enabled = enabled)));
+      this.stats$ = this.bindStats$().pipe(tap(stats => (this.enabled = stats?.satisfy)));
     }
     if (changes.config) {
       this.config$.next(this.config);
@@ -152,7 +159,7 @@ export class ActionDataInputComponent implements OnChanges {
     return of(false);
   }
 
-  private bindEnabled$(): Observable<boolean> {
+  private bindStats$(): Observable<ActionButtonFiltersStatsWithData> {
     if (this.cursor?.collectionId && this.cursor?.documentId) {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
@@ -181,7 +188,7 @@ export class ActionDataInputComponent implements OnChanges {
       );
     }
 
-    return of(false);
+    return of({});
   }
 
   private checkEnabled(
@@ -190,9 +197,9 @@ export class ActionDataInputComponent implements OnChanges {
     permissions: AllowedPermissions,
     config: ActionConstraintConfig,
     constraintData?: ConstraintData
-  ): boolean {
+  ): ActionButtonFiltersStatsWithData {
     if (!resource || !dataResource) {
-      return false;
+      return {};
     }
     const filters = config.equation?.equations?.map(eq => eq.filter) || [];
     const dataValues = createDataValuesMap(
@@ -201,15 +208,21 @@ export class ActionDataInputComponent implements OnChanges {
       constraintData
     );
     const attributesMap = objectsByIdMap(resource.attributes);
-    return isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
+    return {
+      ...actionButtonEnabledStats(dataValues, attributesMap, permissions, config, constraintData),
+      attributesMap,
+      constraintData,
+    };
   }
 
   public onClick(event: MouseEvent) {
-    preventEvent(event);
-    if (this.value.config?.requiresConfirmation) {
-      this.showConfirmation();
-    } else {
-      this.runRule();
+    if (this.enabled) {
+      preventEvent(event);
+      if (this.value.config?.requiresConfirmation) {
+        this.showConfirmation();
+      } else {
+        this.runRule();
+      }
     }
   }
 

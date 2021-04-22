@@ -17,19 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-import {TranslationService} from '../../../../core/service/translation.service';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {ConstraintConditionValue} from '@lumeer/data-filters';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ActionButtonFiltersStatsWithData} from '../action-data-input.component';
 
-@Pipe({
-  name: 'translateConditionValue',
+@Component({
+  selector: 'action-filters-tooltip',
+  templateUrl: './action-filters-tooltip.component.html',
+  styleUrls: ['./action-filters-tooltip.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-@Injectable()
-export class TranslateConditionValuePipe implements PipeTransform {
-  constructor(private translationService: TranslationService) {}
-
-  public transform(value: ConstraintConditionValue, attribute: Attribute): string {
-    return this.translationService.translateConstraintConditionValue(value, attribute?.constraint);
-  }
+export class ActionFiltersTooltipComponent {
+  @Input()
+  public stats: ActionButtonFiltersStatsWithData;
 }

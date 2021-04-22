@@ -64,6 +64,10 @@ import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe
 import {LinkDataInputComponent} from './link/link-data-input.component';
 import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.component';
 import {ActionDataInputComponent} from './action/action-data-input.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {ActionFiltersTooltipComponent} from './action/tooltip/action-filters-tooltip.component';
+import {FilterBuilderPipesModule} from '../builder/pipes/filter-builder-pipes.module';
+import {ActionFilterPreviewComponent} from './action/tooltip/preview/action-filter-preview.component';
 
 @NgModule({
   imports: [
@@ -78,9 +82,11 @@ import {ActionDataInputComponent} from './action/action-data-input.component';
     GravatarModule,
     TypeaheadModule,
     DropdownModule,
+    TooltipModule,
     QuillModule,
     TextEditorModalModule,
     ReactiveFormsModule,
+    FilterBuilderPipesModule,
   ],
   declarations: [
     DataInputComponent,
@@ -116,6 +122,8 @@ import {ActionDataInputComponent} from './action/action-data-input.component';
     LinkDataInputComponent,
     LinkInputDropdownComponent,
     ActionDataInputComponent,
+    ActionFiltersTooltipComponent,
+    ActionFilterPreviewComponent,
   ],
   exports: [
     DataInputComponent,

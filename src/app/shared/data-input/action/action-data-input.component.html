@@ -1,8 +1,11 @@
-<ng-container *ngIf="{loading: loading$ | async, enabled: enabled$ | async} as data">
+<ng-container *ngIf="{loading: loading$ | async, stats: stats$ | async} as data">
   <button class="btn btn-sm small text-truncate mx-1 text-nowrap"
-          *ngIf="{opacity: (!data.enabled || data.loading) ? 0.5 : 1} as buttonData"
+          *ngIf="{opacity: (!data.stats?.satisfy || data.loading) ? 0.5 : 1} as buttonData"
           [style.background]="value?.config?.background"
-          [disabled]="!data.enabled || data.loading"
+          [class.disabled]="!data.stats?.satisfy || data.loading"
+          [tooltip]="statsTooltip"
+          containerClass="bigger-tooltip"
+          [isDisabled]="data.stats?.satisfy"
           [style.color]="value?.config?.background | contrastColor:null:buttonData.opacity"
           (click)="onClick($event)">
     <span *ngIf="data.loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
@@ -10,4 +13,9 @@
     <ng-container *ngIf="title && icon || !title && !icon">&nbsp;</ng-container>
     <span *ngIf="title">{{title}}</span>
   </button>
+
+  <ng-template #statsTooltip>
+    <action-filters-tooltip [stats]="data.stats"></action-filters-tooltip>
+  </ng-template>
+
 </ng-container>

@@ -23,13 +23,13 @@ import {FilterBuilderComponent} from './filter-builder.component';
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
-import {ConditionShouldBeItalicPipe} from './pipes/condition-should-be-italic.pipe';
 import {InputModule} from '../../input/input.module';
 import {DataPipesModule} from '../../pipes/data/data-pipes.module';
+import {FilterBuilderPipesModule} from '../pipes/filter-builder-pipes.module';
 
 @NgModule({
-  declarations: [FilterBuilderComponent, FilterBuilderContentComponent, ConditionShouldBeItalicPipe],
-  exports: [FilterBuilderComponent, ConditionShouldBeItalicPipe],
-  imports: [CommonModule, DropdownModule, DataInputModule, InputModule, DataPipesModule],
+  declarations: [FilterBuilderComponent, FilterBuilderContentComponent],
+  exports: [FilterBuilderComponent],
+  imports: [CommonModule, DropdownModule, DataInputModule, InputModule, DataPipesModule, FilterBuilderPipesModule],
 })
 export class FilterBuilderModule {}
