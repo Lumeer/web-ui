@@ -146,7 +146,7 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
   }
 
   public showFolder(name: string) {
-    const pathCopy = [...(this.foldersPath || []), name];
+    const pathCopy = [...(this.cleanedPath || []), name];
     this.folderPathChange.emit(pathCopy);
   }
 

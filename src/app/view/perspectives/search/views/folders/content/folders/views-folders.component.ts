@@ -89,6 +89,7 @@ export class ViewsFoldersComponent {
   public onDrop(name: string) {
     if (this.draggingView) {
       this.viewFolderAdded.emit({view: this.draggingView, folder: name});
+      this.onDragEnd();
     }
   }
 
