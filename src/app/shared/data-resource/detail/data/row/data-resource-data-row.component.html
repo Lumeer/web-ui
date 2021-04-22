@@ -35,7 +35,7 @@
                 [focus]="true"
                 [configuration]="configuration"
                 [readonly]="dataInputInfo.readonly"
-                [editableInReadonly]="!data.readonly"
+                [editableInReadonly]="editable"
                 [preventEventBubble]="preventEventBubble"
                 (save)="onNewValue($event)"
                 (dblclick)="onDataInputDblClick($event)"
