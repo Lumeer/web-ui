@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {objectsByIdMap} from '../../../utils/common.utils';
 import {CalendarConfig} from '../../../../core/store/calendars/calendar';
@@ -37,7 +37,7 @@ export class StemCollectionItemsPipe implements PipeTransform {
     config: CalendarConfig,
     collections: Collection[],
     linkTypes: LinkType[],
-    permissions: Record<string, AllowedPermissions>
+    permissions: AllowedPermissionsMap
   ): SelectItemModel[] {
     const linkTypesMap = objectsByIdMap(linkTypes);
     return (query.stems || []).reduce((models, stem, index) => {

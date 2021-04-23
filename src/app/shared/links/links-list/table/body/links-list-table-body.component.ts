@@ -49,6 +49,7 @@ import {generateCorrelationId} from '../../../../utils/resource.utils';
 import {debounceTime} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -99,6 +100,12 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public detail = new EventEmitter<LinkRow>();
 
   @Output()
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
+
+  @Output()
   public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
 
   private dataRowFocusService: DataRowFocusService;
@@ -109,7 +116,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
 
   private attributeEditingSubject = new Subject<{documentId?: string; attributeId?: string}>();
 
-  constructor(private store$: Store<AppState>) {
+  constructor() {
     this.dataRowFocusService = new DataRowFocusService(
       () => this.columns.length,
       () => this.rows.length + this.newRows$.value.length,
@@ -172,10 +179,10 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
       const patchData = {[column.attribute.id]: data.value};
       if (column.collectionId && linkRow.document) {
         const document = {...linkRow.document, data: patchData};
-        this.store$.dispatch(new DocumentsAction.PatchData({document}));
+        this.patchDocumentData.emit(document);
       } else if (column.linkTypeId && linkRow.linkInstance) {
         const linkInstance = {...linkRow.linkInstance, data: patchData};
-        this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+        this.patchLinkData.emit(linkInstance);
       }
     }
   }

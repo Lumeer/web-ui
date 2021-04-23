@@ -22,7 +22,9 @@
            (columnFocus)="onColumnFocus($event)"
            (detail)="onDetail($event)"
            (unlink)="onUnLink($event)"
-           (newLink)="onNewLink($event)">
+           (newLink)="onNewLink($event)"
+           (patchDocumentData)="patchDocumentData.emit($event)"
+           (patchLinkData)="patchLinkData.emit($event)">
     </tbody>
 
   </table>

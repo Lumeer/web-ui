@@ -1,5 +1,5 @@
 <ng-container *ngIf="{comments: comments$ | async} as data">
-  <new-comment *ngIf="permissions?.readWithView || isTaskDataResource"
+  <new-comment *ngIf="permissions?.readWithView"
                [currentUser]="currentUser$ | async"
                [usersMap]="usersMap$ | async"
                [initialComment]="initialComment$ | async"

@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
@@ -55,7 +55,7 @@ export class WorkflowContentComponent implements OnChanges {
   public query: Query;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
   public collections: Collection[];

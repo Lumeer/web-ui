@@ -30,8 +30,8 @@ import {
   TemplateRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
@@ -50,17 +50,16 @@ import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AttributesSettings, ViewConfig} from '../../../core/store/views/view';
+import {AttributesSettings, View, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {filter, map, take} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
   selectLinkInstancesByDocumentIds,
 } from '../../../core/store/link-instances/link-instances.state';
-import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {objectChanged} from '../../utils/common.utils';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {DetailConfig} from '../../../core/store/details/detail';
@@ -68,6 +67,12 @@ import {selectDetailAttributesSettings, selectDetailById} from '../../../core/st
 import * as DetailActions from './../../../core/store/details/detail.actions';
 import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
 import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
+import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import {computeResourcesPermissionsForWorkspace} from '../../utils/permission.utils';
 
 @Component({
   selector: 'data-resource-detail',
@@ -94,9 +99,6 @@ export class DataResourceDetailComponent
   public settingsStem: QueryStem;
 
   @Input()
-  public permissions: AllowedPermissions;
-
-  @Input()
   public toolbarRef: TemplateRef<any>;
 
   @Input()
@@ -106,7 +108,7 @@ export class DataResourceDetailComponent
   public allowSelectDocument = true;
 
   @Input()
-  public isTaskDataResource: boolean;
+  public defaultView: View;
 
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
@@ -120,12 +122,19 @@ export class DataResourceDetailComponent
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
   public attributesSettings$: Observable<AttributesSettings>;
+  public resourcesPermissions$: Observable<{
+    collectionsPermissions: AllowedPermissionsMap;
+    linkTypesPermissions: AllowedPermissionsMap;
+  }>;
+  public linkTypes$: Observable<LinkType[]>;
 
   public resourceType: AttributesResourceType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
   public settingsQuery$ = new BehaviorSubject<Query>({});
+  public defaultView$ = new BehaviorSubject<View>(null);
+  public collectionId$ = new BehaviorSubject<string>(null);
   public readonly detailTabType = DetailTabType;
 
   public commentsCount$: Observable<number>;
@@ -155,6 +164,46 @@ export class DataResourceDetailComponent
 
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
+    this.bindPermissions();
+  }
+
+  private bindPermissions() {
+    this.resourcesPermissions$ = combineLatest([
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectWorkspaceModels)),
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+      this.defaultView$.asObservable(),
+    ]).pipe(
+      map(([user, models, collections, linkTypes, view]) =>
+        computeResourcesPermissionsForWorkspace(
+          user,
+          models?.organization,
+          models?.project,
+          view,
+          collections,
+          linkTypes
+        )
+      )
+    );
+
+    this.linkTypes$ = combineLatest([
+      this.resourcesPermissions$,
+      this.store$.pipe(select(selectAllLinkTypes)),
+      this.collectionId$.asObservable(),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+    ]).pipe(
+      map(
+        ([permissions, linkTypes, collectionId, collectionsMap]) =>
+          (collectionId &&
+            linkTypes
+              .filter(linkType => permissions?.linkTypesPermissions?.[linkType.id]?.readWithView)
+              .filter(linkType => linkType.collectionIds?.includes(collectionId))
+              .map(linkType => mapLinkTypeCollections(linkType, collectionsMap))) ||
+          []
+      ),
+      tap(linkTypes => this.readLinkTypesData(linkTypes))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -166,6 +215,9 @@ export class DataResourceDetailComponent
     }
     if (changes.settingsQuery) {
       this.settingsQuery$.next(this.settingsQuery);
+    }
+    if (changes.defaultView) {
+      this.defaultView$.next(this.defaultView);
     }
   }
 
@@ -182,9 +234,7 @@ export class DataResourceDetailComponent
         select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
         map(links => links?.length || 0)
       );
-      this.store$
-        .pipe(select(selectLinkTypesByCollectionId(this.resource.id)), take(1))
-        .subscribe(linkTypes => this.readLinkTypesData(linkTypes));
+      this.collectionId$.next(this.resource?.id);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
       this.commentsCount$ = this.store$.pipe(
         select(selectLinkInstanceById(this.dataResource.id)),
@@ -192,6 +242,7 @@ export class DataResourceDetailComponent
         map(link => link.commentsCount)
       );
       this.linksCount$ = of(null);
+      this.collectionId$.next(null);
     }
   }
 
@@ -226,6 +277,10 @@ export class DataResourceDetailComponent
     } else {
       this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: this.dataResource.id}));
     }
+  }
+
+  public onUnlink(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: linkInstance.id}));
   }
 
   public onSwitchToTable() {
@@ -340,5 +395,23 @@ export class DataResourceDetailComponent
   public onDocumentSelect(data: {collection: Collection; document: DocumentModel}) {
     this.documentSelect.emit(data);
     this.selectTab(DetailTabType.Detail);
+  }
+
+  public onPatchDocumentData(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
+  public onPatchLinkData(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+  }
+
+  public onCreateLink(data: {document: DocumentModel; linkInstance: LinkInstance}) {
+    this.store$.dispatch(
+      new DocumentsAction.CreateWithLink({
+        document: data.document,
+        linkInstance: data.linkInstance,
+        otherDocumentId: this.dataResource.id,
+      })
+    );
   }
 }

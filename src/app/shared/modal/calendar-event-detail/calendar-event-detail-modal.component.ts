@@ -27,7 +27,7 @@ import {selectAllCollections, selectCollectionById} from '../../../core/store/co
 import {map, take, tap} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
 import {isAllDayEvent, isAllDayEventSingle} from '../../../view/perspectives/calendar/util/calendar-util';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
@@ -87,7 +87,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   public query$: Observable<Query>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   public allDay$ = new BehaviorSubject(false);
   public stemIndex$ = new BehaviorSubject<number>(0);

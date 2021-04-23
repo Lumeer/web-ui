@@ -32,7 +32,7 @@ import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {selectLinkTypesPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -45,7 +45,7 @@ import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/p
 })
 export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
-  public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
+  public linkTypesPermissions$: Observable<AllowedPermissionsMap>;
 
   constructor(protected store$: Store<AppState>) {
     super(store$);

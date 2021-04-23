@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {
   ChartAxis,
@@ -124,7 +124,7 @@ export class ChartDataConverter {
   public updateData(
     collections: Collection[],
     documents: DocumentModel[],
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     query: Query,
     config: ChartConfig,
     linkTypes?: LinkType[],

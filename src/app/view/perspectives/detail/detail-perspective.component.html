@@ -29,7 +29,6 @@
                             [query]="data.query"
                             [settingsQuery]="settingsQuery$ | async"
                             [settingsStem]="data.selected.collection | detailQueryStem"
-                            [permissions]="data.permissions"
                             (documentSelect)="selectCollectionAndDocument($event)">
       </data-resource-detail>
     </div>

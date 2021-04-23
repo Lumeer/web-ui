@@ -28,16 +28,15 @@ import {Project} from '../store/projects/project';
 import {
   managePermissions,
   userIsManagerInWorkspace,
-  userPermissionsInCollectionByView,
   userPermissionsInResource,
 } from '../../shared/utils/resource.utils';
-import {AllowedPermissions, mergeAllowedPermissions} from '../model/allowed-permissions';
+import {AllowedPermissions} from '../model/allowed-permissions';
 import {UserPermissionsAction} from '../store/user-permissions/user-permissions.action';
 import {selectAllViews, selectCurrentView} from '../store/views/views.state';
 import {selectAllCollections} from '../store/collections/collections.state';
 import {selectAllLinkTypes} from '../store/link-types/link-types.state';
-import {getAllCollectionIdsFromQuery} from '../store/navigation/query/query.util';
 import {AppState} from '../store/app.state';
+import {computeResourcesPermissions} from '../../shared/utils/permission.utils';
 
 @Injectable()
 export class PermissionsCheckService {
@@ -77,43 +76,15 @@ export class PermissionsCheckService {
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).subscribe(([currentView, collections, linkTypes]) => {
-      const permissions = (collections || []).reduce((map, collection) => {
-        if (isManager) {
-          return {...map, [collection.id]: managePermissions()};
-        } else if (currentView) {
-          const collectionIdsInView = getAllCollectionIdsFromQuery(currentView.query, linkTypes);
-          const collectionPermissions = userPermissionsInResource(currentUser, collection);
-
-          const viewAllowedPermissions = collectionIdsInView.includes(collection.id)
-            ? userPermissionsInCollectionByView(currentUser, currentView, collection)
-            : {};
-
-          return {
-            ...map,
-            [collection.id]: {
-              ...collectionPermissions,
-              readWithView: viewAllowedPermissions.readWithView || collectionPermissions.read,
-              writeWithView: viewAllowedPermissions.writeWithView || collectionPermissions.write,
-              manageWithView: viewAllowedPermissions.manageWithView || collectionPermissions.manage,
-            },
-          };
-        } else {
-          return {...map, [collection.id]: userPermissionsInResource(currentUser, collection)};
-        }
-      }, {});
-      this.store$.dispatch(new UserPermissionsAction.SetCollectionsPermissions({permissions}));
-
-      const linkTypePermissions = (linkTypes || []).reduce(
-        (map, linkType) => ({
-          ...map,
-          [linkType.id]: mergeAllowedPermissions(
-            permissions[linkType.collectionIds?.[0]],
-            permissions[linkType.collectionIds?.[1]]
-          ),
-        }),
-        {}
+      const {collectionsPermissions, linkTypesPermissions} = computeResourcesPermissions(
+        currentUser,
+        currentView,
+        collections,
+        linkTypes,
+        isManager
       );
-      this.store$.dispatch(new UserPermissionsAction.SetLinkTypesPermissions({permissions: linkTypePermissions}));
+      this.store$.dispatch(new UserPermissionsAction.SetCollectionsPermissions({permissions: collectionsPermissions}));
+      this.store$.dispatch(new UserPermissionsAction.SetLinkTypesPermissions({permissions: linkTypesPermissions}));
     });
   }
 

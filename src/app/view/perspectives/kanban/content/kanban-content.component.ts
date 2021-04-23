@@ -47,7 +47,7 @@ import {debounceTime, filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {View} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
@@ -60,7 +60,7 @@ interface Data {
   linkInstances: LinkInstance[];
   config: KanbanConfig;
   constraintData: ConstraintData;
-  permissions: Record<string, AllowedPermissions>;
+  permissions: AllowedPermissionsMap;
   query: Query;
 }
 
@@ -99,10 +99,10 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public workspace: Workspace;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
-  public linkTypesPermissions: Record<string, AllowedPermissions>;
+  public linkTypesPermissions: AllowedPermissionsMap;
 
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();

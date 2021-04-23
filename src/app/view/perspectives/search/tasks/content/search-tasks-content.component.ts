@@ -44,7 +44,7 @@ import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/docume
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -102,7 +102,7 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public collectionsMap: Record<string, Collection>;
   public allTasksCollections$: Observable<Collection[]>;
 
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   constructor(
     private perspectiveService: PerspectiveService,

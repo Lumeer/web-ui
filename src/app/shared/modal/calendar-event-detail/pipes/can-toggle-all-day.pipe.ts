@@ -24,7 +24,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {uniqueValues} from '../../../utils/array.utils';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {calendarStemConfigIsWritable} from '../../../../view/perspectives/calendar/util/calendar-util';
 import {objectsByIdMap} from '../../../utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
@@ -38,7 +38,7 @@ export class CanToggleAllDayPipe implements PipeTransform {
     stemIndex: number,
     collections: Collection[],
     linkTypes: LinkType[],
-    permissions: Record<string, AllowedPermissions>
+    permissions: AllowedPermissionsMap
   ): boolean {
     const stemConfig = config.stemsConfigs?.[stemIndex];
     const linkTypesMap = objectsByIdMap(linkTypes);

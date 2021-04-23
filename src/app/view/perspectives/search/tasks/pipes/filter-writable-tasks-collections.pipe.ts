@@ -19,13 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'filterWritableTasksCollections',
 })
 export class FilterWritableTasksCollectionsPipe implements PipeTransform {
-  public transform(collections: Collection[], permissions: Record<string, AllowedPermissions>): Collection[] {
+  public transform(collections: Collection[], permissions: AllowedPermissionsMap): Collection[] {
     return (collections || []).filter(
       collection =>
         collection.purpose?.type === CollectionPurposeType.Tasks && permissions?.[collection.id]?.writeWithView

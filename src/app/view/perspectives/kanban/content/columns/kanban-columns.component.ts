@@ -55,7 +55,7 @@ import {generateCorrelationId, getAttributesResourceType} from '../../../../../s
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {groupLinkInstancesByLinkTypes} from '../../../../../core/store/link-instances/link-instance.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
 import {
   createPossibleLinkingDocuments,
@@ -107,10 +107,10 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public canManageConfig: boolean;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
-  public linkTypesPermissions: Record<string, AllowedPermissions>;
+  public linkTypesPermissions: AllowedPermissionsMap;
 
   @Input()
   public query: Query;

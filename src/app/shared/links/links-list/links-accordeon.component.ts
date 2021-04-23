@@ -17,34 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AttributesSettings} from '../../../core/store/views/view';
-import {combineLatest, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {map} from 'rxjs/operators';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
-import {mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {objectChanged, preventEvent} from '../../utils/common.utils';
+import {preventEvent} from '../../utils/common.utils';
 import {ModalService} from '../../modal/modal.service';
 
 @Component({
@@ -53,12 +39,18 @@ import {ModalService} from '../../modal/modal.service';
   styleUrls: ['./links-accordeon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksAccordeonComponent implements OnInit, OnChanges {
+export class LinksAccordeonComponent implements OnInit {
   @Input()
   public collection: Collection;
 
   @Input()
   public document: DocumentModel;
+
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public permissions: AllowedPermissionsMap;
 
   @Input()
   public preventEventBubble: boolean;
@@ -82,11 +74,21 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public showLink = new EventEmitter<string>();
 
   @Output()
+  public unlink = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public createLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+
+  @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
-  public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
 
   public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
@@ -94,22 +96,6 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (objectChanged(changes.collection)) {
-      this.renewSubscriptions();
-    }
-  }
-
-  private renewSubscriptions() {
-    this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
-      this.store$.pipe(select(selectCollectionsDictionary)),
-    ]).pipe(
-      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
-    );
   }
 
   public onSetLinks(event: MouseEvent, linkType: LinkType) {
@@ -129,7 +115,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: linkInstance.id}));
+    this.unlink.emit(linkInstance);
   }
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {

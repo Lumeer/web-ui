@@ -36,8 +36,8 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import * as moment from 'moment';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
   return isAllDayEventSingle(start) && isAllDayEventSingle(end);
@@ -201,7 +201,7 @@ export function getCalendarDefaultStemConfig(
 
 export function calendarStemConfigIsWritable(
   stemConfig: CalendarStemConfig,
-  permissions: Record<string, AllowedPermissions>,
+  permissions: AllowedPermissionsMap,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
   return (

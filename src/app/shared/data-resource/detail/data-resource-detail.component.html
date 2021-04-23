@@ -1,105 +1,111 @@
 <ng-container
   *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
-  constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async} as data">
-  <document-detail-header class="d-block mb-4"
-                          [resource]="resource"
+  constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async,
+  resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async} as data">
+  <ng-container *ngIf="{permissions: resource | dataResourcePermissions: data.resourcesPermissions} as dataResourceData">
+    <document-detail-header class="d-block mb-4"
+                            [resource]="resource"
+                            [dataResource]="dataResource"
+                            [resourceType]="resourceType"
+                            [attributesSettings]="data.attributesSettings"
+                            [constraintData]="data.constraintData"
+                            [permissions]="dataResourceData.permissions"
+                            [workspace]="data.workspace"
+                            (switchToTable)="onSwitchToTable()"
+                            (remove)="onRemove()"
+                            (versionClick)="selectTab(detailTabType.Activity)"
+                            (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
+    </document-detail-header>
+
+    <detail-tabs *ngIf="dataResource?.id"
+                 [showLinks]="resourceType === collectionResourceType"
+                 [activeTab]="data.selectedTab"
+                 [commentsCount]="data.commentsCount"
+                 [linksCount]="linksCount$ | async"
+                 [permissions]="dataResourceData.permissions"
+                 (onTabSelect)="selectTab($event)">
+    </detail-tabs>
+
+    <ng-container *ngIf="data.selectedTab === detailTabType.Detail">
+      <data-resource-data [resource]="resource"
                           [dataResource]="dataResource"
                           [resourceType]="resourceType"
-                          [attributesSettings]="data.attributesSettings"
+                          [permissions]="dataResourceData.permissions"
                           [constraintData]="data.constraintData"
-                          [permissions]="permissions"
                           [workspace]="data.workspace"
+                          [query]="query"
+                          [toolbarRef]="toolbarRef"
+                          [preventEventBubble]="preventEventBubble"
+                          [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
+                          (attributeTypeClick)="onAttributeTypeClick($event)"
+                          (attributeFunctionCLick)="onAttributeFunctionClick($event)"
+                          (removeDocument)="onRemove()"
                           (switchToTable)="onSwitchToTable()"
-                          (remove)="onRemove()"
-                          (versionClick)="selectTab(detailTabType.Activity)"
-                          (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
-  </document-detail-header>
+                          (dataResourceChanged)="dataResourceChanged.emit($event)">
+      </data-resource-data>
+      <div class="my-5">
+      </div>
+      <comments-panel *ngIf="resource && dataResource?.id"
+                      [maxCommentsCount]="1"
+                      [permissions]="dataResourceData.permissions"
+                      [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                      [resourceId]="dataResource.id"
+                      (newCommentClick)="editNewComment()">
+      </comments-panel>
+      <div *ngIf="data.commentsCount > 1">
+        <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
+                i18n="@@document.detail.detail.comments.seeAll"
+                (click)="selectTab(detailTabType.Comments)">
+          See {data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}} {{data.commentsCount}}
+          {data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}} &gt;
+        </button>
+      </div>
+    </ng-container>
 
-  <detail-tabs *ngIf="dataResource?.id"
-               [showLinks]="resourceType === collectionResourceType"
-               [activeTab]="data.selectedTab"
-               [commentsCount]="data.commentsCount"
-               [linksCount]="linksCount$ | async"
-               [permissions]="permissions"
-               (onTabSelect)="selectTab($event)">
-  </detail-tabs>
+    <ng-container *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
+      <div>
+        <links-toolbar class="d-block w-100 text-right" [collection]="resource"></links-toolbar>
+        <links-accordeon class="d-block"
+                         *ngIf="resource && dataResource?.id"
+                         [document]="dataResource"
+                         [preventEventBubble]="preventEventBubble"
+                         [allowSelectDocument]="allowSelectDocument"
+                         [collection]="resource"
+                         [permissions]="data.resourcesPermissions.collectionsPermissions"
+                         [linkTypes]="data.linkTypes"
+                         [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
+                         [attributesSettings]="data.attributesSettings"
+                         (documentSelect)="onDocumentSelect($event)"
+                         (showLink)="onShowLink($event)"
+                         (hideLink)="onHideLink($event)"
+                         (patchDocumentData)="onPatchDocumentData($event)"
+                         (patchLinkData)="onPatchLinkData($event)"
+                         (createLink)="onCreateLink($event)"
+                         (attributesSettingsChanged)="onAttributesSettingsChanged($event)"
+                         (unlink)="onUnlink($event)">
+        </links-accordeon>
+      </div>
+    </ng-container>
 
-  <ng-container *ngIf="data.selectedTab === detailTabType.Detail">
-    <data-resource-data [resource]="resource"
-                        [dataResource]="dataResource"
-                        [resourceType]="resourceType"
-                        [permissions]="permissions"
-                        [constraintData]="data.constraintData"
-                        [workspace]="data.workspace"
-                        [query]="query"
-                        [toolbarRef]="toolbarRef"
-                        [preventEventBubble]="preventEventBubble"
-                        [isTaskDataResource]="isTaskDataResource"
-                        [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
-                        (attributeTypeClick)="onAttributeTypeClick($event)"
-                        (attributeFunctionCLick)="onAttributeFunctionClick($event)"
-                        (removeDocument)="onRemove()"
-                        (switchToTable)="onSwitchToTable()"
-                        (dataResourceChanged)="dataResourceChanged.emit($event)">
-    </data-resource-data>
-    <div class="my-5">
-    </div>
-    <comments-panel *ngIf="resource && dataResource?.id"
-                    [maxCommentsCount]="1"
-                    [isTaskDataResource]="isTaskDataResource"
-                    [permissions]="permissions"
-                    [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                    [resourceId]="dataResource.id"
-                    (newCommentClick)="editNewComment()">
-    </comments-panel>
-    <div *ngIf="data.commentsCount > 1">
-      <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
-              i18n="@@document.detail.detail.comments.seeAll"
-              (click)="selectTab(detailTabType.Comments)">
-        See {data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}} {{data.commentsCount}}
-        {data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}} &gt;
-      </button>
-    </div>
+    <ng-container *ngIf="data.selectedTab === detailTabType.Comments">
+      <comments-panel *ngIf="resource && dataResource?.id"
+                      [permissions]="dataResourceData.permissions"
+                      [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                      [resourceId]="dataResource.id"
+                      [startEditing]="data.startEditing"
+                      (onSaveComment)="startEditing$.next(false)"
+                      (onCancelComment)="startEditing$.next(false)">
+      </comments-panel>
+    </ng-container>
+
+    <ng-container *ngIf="data.selectedTab === detailTabType.Activity && dataResourceData.permissions?.writeWithView">
+      <resource-activity *ngIf="resource && dataResource?.id"
+                         [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                         [resourceId]="dataResource.id"
+                         [parent]="resource">
+      </resource-activity>
+    </ng-container>
+
+    <div class="spacer mb-5"></div>
   </ng-container>
-
-  <ng-container *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
-    <div>
-      <links-toolbar class="d-block w-100 text-right" [collection]="resource"></links-toolbar>
-      <links-accordeon class="d-block"
-                       *ngIf="resource && dataResource?.id"
-                       [document]="dataResource"
-                       [preventEventBubble]="preventEventBubble"
-                       [allowSelectDocument]="allowSelectDocument"
-                       [collection]="resource"
-                       [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
-                       [attributesSettings]="data.attributesSettings"
-                       (documentSelect)="onDocumentSelect($event)"
-                       (showLink)="onShowLink($event)"
-                       (hideLink)="onHideLink($event)"
-                       (attributesSettingsChanged)="onAttributesSettingsChanged($event)">
-      </links-accordeon>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="data.selectedTab === detailTabType.Comments">
-    <comments-panel *ngIf="resource && dataResource?.id"
-                    [permissions]="permissions"
-                    [isTaskDataResource]="isTaskDataResource"
-                    [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                    [resourceId]="dataResource.id"
-                    [startEditing]="data.startEditing"
-                    (onSaveComment)="startEditing$.next(false)"
-                    (onCancelComment)="startEditing$.next(false)">
-    </comments-panel>
-  </ng-container>
-
-  <ng-container *ngIf="data.selectedTab === detailTabType.Activity && permissions?.writeWithView">
-    <resource-activity *ngIf="resource && dataResource?.id"
-                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                       [resourceId]="dataResource.id"
-                       [parent]="resource">
-    </resource-activity>
-  </ng-container>
-
-  <div class="spacer mb-5"></div>
 </ng-container>

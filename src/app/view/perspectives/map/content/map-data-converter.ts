@@ -21,7 +21,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {
   DataObjectAggregator,
@@ -47,7 +47,7 @@ export class MapDataConverter {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     query: Query
   ): MapMarkerData[] {
     this.config = config;

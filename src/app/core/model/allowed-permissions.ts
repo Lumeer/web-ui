@@ -27,6 +27,8 @@ export interface AllowedPermissions {
   share?: boolean;
 }
 
+export type AllowedPermissionsMap = Record<string, AllowedPermissions>;
+
 export function mergeAllowedPermissions(a1: AllowedPermissions, a2: AllowedPermissions): AllowedPermissions {
   if (!a1 || !a2) {
     return a1 || a2;

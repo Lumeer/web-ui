@@ -22,7 +22,6 @@
   <workflow-sidebar class="d-block sidebar mr-1"
                     *ngIf="selectedDocument && selectedCollection"
                     [query]="query"
-                    [permissions]="permissions && permissions[selectedCollection.id]"
                     [collection]="selectedCollection"
                     [document]="selectedDocument"
                     (close)="closeSidebar.emit()">

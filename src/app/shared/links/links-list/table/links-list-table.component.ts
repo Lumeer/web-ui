@@ -56,7 +56,6 @@ import {ModalService} from '../../../modal/modal.service';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {AttributesSettings} from '../../../../core/store/views/view';
 import {
@@ -113,6 +112,15 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   @Output()
   public unLink = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public createLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
 
   @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
@@ -321,18 +329,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       correlationId: generateCorrelationId(),
       data: documentData,
     };
-    this.store$.dispatch(
-      new DocumentsAction.CreateWithLink({
-        document,
-        otherDocumentId: this.document.id,
-        linkInstance: {
-          correlationId,
-          data: linkData,
-          documentIds: [this.document.id, ''], // other will be set after document is created
-          linkTypeId: this.linkType.id,
-        },
-      })
-    );
+    const linkInstance: LinkInstance = {
+      correlationId,
+      data: linkData,
+      documentIds: [this.document.id, ''], // other will be set after document is created
+      linkTypeId: this.linkType.id,
+    };
+    this.createLink.emit({document, linkInstance});
   }
 
   public onAttributeDescription(column: LinkColumn) {

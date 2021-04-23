@@ -26,7 +26,7 @@ import {select, Store} from '@ngrx/store';
 import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {map, switchMap} from 'rxjs/operators';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {ViewConfig} from '../../../core/store/views/view';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -50,7 +50,7 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 export class WorkflowPerspectiveComponent
   extends DataPerspectiveComponent<WorkflowConfig>
   implements OnInit, OnDestroy {
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
   public selectedDocument$: Observable<DocumentModel>;
   public selectedCollection$: Observable<Collection>;
   public panelWidth$: Observable<number>;
