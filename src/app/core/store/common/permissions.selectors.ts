@@ -22,10 +22,14 @@ import {containsSameElements, isArraySubset, uniqueValues} from '../../../shared
 import {hasRoleByPermissions, sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
-import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
+import {
+  selectAllCollections,
+  selectCollectionById,
+  selectCollectionsDictionary,
+} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
 import {filterTaskDocuments, sortDocumentsByCreationDate, sortDocumentsTasks} from '../documents/document.utils';
-import {selectAllDocuments} from '../documents/documents.state';
+import {selectAllDocuments, selectDocumentsByCollectionId} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {Query} from '../navigation/query/query';
@@ -325,6 +329,27 @@ export const selectDocumentsByQueryAndIdsSortedByCreation = (ids: string[]) =>
           constraintData
         ).documents.filter(doc => ids.includes(doc.id))
       )
+  );
+
+export const selectDocumentsAndLinksByCollectionAndQuery = (collectionId: string, query: Query) =>
+  createSelector(
+    selectDocumentsByCollectionId(collectionId),
+    selectCollectionById(collectionId),
+    selectCollectionsPermissions,
+    selectConstraintData,
+    (documents, collection, permissions, constraintData) => {
+      const data = filterDocumentsAndLinksByQuery(
+        documents,
+        [collection],
+        [],
+        [],
+        query,
+        permissions,
+        {},
+        constraintData
+      );
+      return sortDocumentsByCreationDate(data.documents);
+    }
   );
 
 const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean) =>

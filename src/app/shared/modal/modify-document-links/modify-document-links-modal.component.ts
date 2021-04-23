@@ -22,14 +22,14 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Collection} from '../../../core/store/collections/collection';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
 import {filter, map, mergeMap, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {CollectionAttributeFilter, Query} from '../../../core/store/navigation/query/query';
-import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {selectDocumentsAndLinksByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
@@ -86,14 +86,28 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
     this.linkType$ = this.selectLinkType$();
     this.collection$ = this.selectCollection$();
     this.query$ = this.selectQuery$();
-    this.linkInstances$ = this.selectedLinkTypeId$.pipe(
+    this.linkInstances$ = this.selectLinkInstances$();
+    this.documents$ = this.selectDocuments$();
+  }
+
+  private selectLinkInstances$(): Observable<LinkInstance[]> {
+    return this.selectedLinkTypeId$.pipe(
       mergeMap(linkTypeId =>
         this.store$.pipe(select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [this.documentId])))
       )
     );
-    this.documents$ = this.query$.pipe(
-      mergeMap(query => this.store$.pipe(select(selectDocumentsByCustomQuery(query)))),
-      mergeMap(documentsByQuery =>
+  }
+
+  private selectDocuments$(): Observable<DocumentModel[]> {
+    return combineLatest([this.query$, this.linkType$]).pipe(
+      switchMap(([query, linkType]) =>
+        this.store$.pipe(
+          select(
+            selectDocumentsAndLinksByCollectionAndQuery(getOtherLinkedCollectionId(linkType, this.collectionId), query)
+          )
+        )
+      ),
+      switchMap(documentsByQuery =>
         this.selectAlwaysVisibleDocuments$().pipe(
           map(alwaysVisibleDocuments => mergeDocuments(alwaysVisibleDocuments, documentsByQuery))
         )
