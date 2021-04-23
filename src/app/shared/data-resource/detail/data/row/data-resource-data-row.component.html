@@ -1,4 +1,4 @@
-<ng-container *ngIf="{readonly: !isTaskDataResource && !permissions?.writeWithView} as data">
+<ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
 
   <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key">
     {{keyDataValue.value}}
@@ -36,6 +36,8 @@
                 [configuration]="configuration"
                 [readonly]="dataInputInfo.readonly"
                 [editableInReadonly]="editable"
+                [workspace]="workspace"
+                [permissions]="permissions"
                 [preventEventBubble]="preventEventBubble"
                 (save)="onNewValue($event)"
                 (dblclick)="onDataInputDblClick($event)"

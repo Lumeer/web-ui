@@ -52,7 +52,6 @@ import {
   LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
 import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
-import {ModalService} from '../../../modal/modal.service';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
@@ -125,6 +124,15 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
+  @Output()
+  public attributeFunction = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeDescription = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
   public columns$ = new BehaviorSubject<LinkColumn[]>([]);
 
   public rows$: Observable<LinkRow[]>;
@@ -132,7 +140,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private stickyColumnWidth: number;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {
+  constructor(private store$: Store<AppState>) {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
@@ -263,11 +271,27 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   public onAttributeType(column: LinkColumn) {
-    this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
+    this.attributeType.emit({
+      collectionId: column.collectionId,
+      linkTypeId: column.linkTypeId,
+      attributeId: column.attribute.id,
+    });
   }
 
   public onAttributeFunction(column: LinkColumn) {
-    this.modalService.showAttributeFunction(column.attribute.id, column.collectionId, column.linkTypeId);
+    this.attributeFunction.emit({
+      collectionId: column.collectionId,
+      linkTypeId: column.linkTypeId,
+      attributeId: column.attribute.id,
+    });
+  }
+
+  public onAttributeDescription(column: LinkColumn) {
+    this.attributeDescription.emit({
+      collectionId: column.collectionId,
+      linkTypeId: column.linkTypeId,
+      attributeId: column.attribute.id,
+    });
   }
 
   public onColumnFocus(index: number) {
@@ -336,9 +360,5 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       linkTypeId: this.linkType.id,
     };
     this.createLink.emit({document, linkInstance});
-  }
-
-  public onAttributeDescription(column: LinkColumn) {
-    this.modalService.showAttributeDescription(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 }

@@ -44,6 +44,7 @@ import {selectDocumentsByIds} from '../../../core/store/documents/documents.stat
 import {mergeDocuments} from '../../../core/store/documents/document.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {generateCorrelationId} from '../../utils/resource.utils';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -58,6 +59,9 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
 
   @Input()
   public linkTypeIds: string[];
+
+  @Input()
+  public workspace: Workspace;
 
   public selectedLinkTypeId$ = new BehaviorSubject<string>(null);
   public filtersByLinkType$ = new BehaviorSubject<Record<string, CollectionAttributeFilter[]>>({});
@@ -126,7 +130,9 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
         this.store$.pipe(select(selectCollectionById(getOtherLinkedCollectionId(linkType, this.collectionId))))
       ),
       tap(collection =>
-        this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: collection.id}]}}))
+        this.store$.dispatch(
+          new DocumentsAction.Get({query: {stems: [{collectionId: collection.id}]}, workspace: this.workspace})
+        )
       )
     );
   }
@@ -163,6 +169,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
         documentId: this.documentId,
         linkInstances,
         linkTypeId,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })

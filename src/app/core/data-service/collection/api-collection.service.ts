@@ -45,8 +45,10 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection);
   }
 
-  public updateCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return this.httpClient.put<CollectionDto>(`${this.apiPrefix()}/${collection.id}`, collection);
+  public updateCollection(collection: CollectionDto, workspace?: Workspace): Observable<CollectionDto> {
+    return this.httpClient.put<CollectionDto>(`${this.apiPrefix(workspace)}/${collection.id}`, collection, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public updatePurpose(
@@ -94,8 +96,19 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     return this.httpClient.post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
   }
 
-  public updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient.put<AttributeDto>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
+  public updateAttribute(
+    collectionId: string,
+    id: string,
+    attribute: AttributeDto,
+    workspace?: Workspace
+  ): Observable<AttributeDto> {
+    return this.httpClient.put<AttributeDto>(
+      `${this.apiPrefix(workspace)}/${collectionId}/attributes/${id}`,
+      attribute,
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
+    );
   }
 
   public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {

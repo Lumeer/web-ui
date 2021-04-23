@@ -219,7 +219,9 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   public createLinkType(collection: Collection) {
     this.selected.emit();
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
-    this.modalService.showCreateLink([this.collection?.id, collection.id], linkType => this.useLinkType(linkType));
+    this.modalService.showCreateLink([this.collection?.id, collection.id], null, linkType =>
+      this.useLinkType(linkType)
+    );
     this.close();
   }
 

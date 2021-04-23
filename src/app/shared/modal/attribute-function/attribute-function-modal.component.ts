@@ -47,6 +47,7 @@ import {
 } from '../../utils/attribute.utils';
 import {BlocklyRule, Rule} from '../../../core/model/rule';
 import {View} from '../../../core/store/views/view';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -62,6 +63,9 @@ export class AttributeFunctionModalComponent implements OnInit {
 
   @Input()
   public attributeId: string;
+
+  @Input()
+  public workspace: Workspace;
 
   public readonly dialogType = DialogType;
 
@@ -154,6 +158,7 @@ export class AttributeFunctionModalComponent implements OnInit {
         collectionId,
         attributeId: attribute.id,
         attribute,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -168,6 +173,7 @@ export class AttributeFunctionModalComponent implements OnInit {
         linkTypeId,
         attributeId: attribute.id,
         attribute,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -211,6 +217,7 @@ export class AttributeFunctionModalComponent implements OnInit {
       new CollectionsAction.UpsertRule({
         collectionId,
         rule,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -223,6 +230,7 @@ export class AttributeFunctionModalComponent implements OnInit {
       new LinkTypesAction.UpsertRule({
         linkTypeId,
         rule,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })

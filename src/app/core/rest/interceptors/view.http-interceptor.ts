@@ -27,6 +27,8 @@ import {AppState} from '../../store/app.state';
 import {selectWorkspaceWithIds} from '../../store/common/common.selectors';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
+export const viewIdHeader = 'X-Lumeer-View-Id';
+
 @Injectable()
 export class ViewHttpInterceptor implements HttpInterceptor {
   public constructor(private store: Store<AppState>, private configurationService: ConfigurationService) {}
@@ -41,7 +43,7 @@ export class ViewHttpInterceptor implements HttpInterceptor {
       mergeMap(workspace => {
         if (workspace?.viewId) {
           const viewRequest = request.clone({
-            setHeaders: {'X-Lumeer-View-Id': workspace.viewId},
+            setHeaders: {[viewIdHeader]: workspace.viewId},
           });
           return next.handle(viewRequest);
         }

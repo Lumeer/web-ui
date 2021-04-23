@@ -76,7 +76,7 @@ export class LinkInstancesEffects {
         const query = payload.query;
         const queryDto = convertQueryModelToDto(query);
 
-        return this.searchService.searchLinkInstances(queryDto, query.includeSubItems).pipe(
+        return this.searchService.searchLinkInstances(queryDto, query.includeSubItems, payload.workspace).pipe(
           map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
           map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query})),
           catchError(error => of(new LinkInstancesAction.GetFailure({error, query})))
@@ -128,7 +128,7 @@ export class LinkInstancesEffects {
       mergeMap(action => {
         const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
 
-        return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
+        return this.linkInstanceService.createLinkInstance(linkInstanceDto, action.payload.workspace).pipe(
           map(dto => convertLinkInstanceDtoToModel(dto, linkInstanceDto.correlationId)),
           mergeMap(linkInstance => [
             ...createCallbackActions(action.payload.onSuccess, linkInstance.id),
@@ -174,7 +174,7 @@ export class LinkInstancesEffects {
           tap(() => this.store$.dispatch(new LinkInstancesAction.UpdateInternal({linkInstance}))),
           map(originalLinkInstance => ({...originalLinkInstance, correlationId: linkInstance.correlationId})),
           mergeMap(originalLinkInstance =>
-            this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
+            this.linkInstanceService.updateLinkInstance(linkInstanceDto, action.payload.workspace).pipe(
               mergeMap(() => [
                 ...createCallbackActions(action.payload.onSuccess),
                 new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}),
@@ -216,7 +216,7 @@ export class LinkInstancesEffects {
           take(1),
           tap(() => this.store$.dispatch(new LinkInstancesAction.PatchDataInternal({linkInstanceId, data}))),
           mergeMap(originalLinkInstance =>
-            this.linkInstanceService.patchLinkInstanceData(linkInstanceId, data).pipe(
+            this.linkInstanceService.patchLinkInstanceData(linkInstanceId, data, action.payload.workspace).pipe(
               map(dto => convertLinkInstanceDtoToModel(dto)),
               map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
               catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
@@ -244,7 +244,7 @@ export class LinkInstancesEffects {
       mergeMap(action => {
         const originalLinkInstance = action.payload.originalLinkInstance;
         const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
-        return this.linkInstanceService.updateLinkInstanceData(linkInstanceDto).pipe(
+        return this.linkInstanceService.updateLinkInstanceData(linkInstanceDto, action.payload.workspace).pipe(
           map(dto => convertLinkInstanceDtoToModel(dto)),
           map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
           catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
@@ -316,7 +316,7 @@ export class LinkInstancesEffects {
             this.store$.dispatch(new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId}))
           ),
           mergeMap(linkInstance =>
-            this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
+            this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId, action.payload.workspace).pipe(
               mergeMap(() => (action.payload.nextAction ? of(action.payload.nextAction) : EMPTY)),
               catchError(error => of(new LinkInstancesAction.DeleteFailure({error, linkInstance})))
             )
@@ -374,7 +374,7 @@ export class LinkInstancesEffects {
           documentIdsMap,
         };
 
-        return this.linkInstanceService.duplicateLinkInstances(duplicateDto).pipe(
+        return this.linkInstanceService.duplicateLinkInstances(duplicateDto, action.payload.workspace).pipe(
           map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
           mergeMap(linkInstances => [
             new LinkInstancesAction.DuplicateSuccess({linkInstances}),
@@ -417,7 +417,7 @@ export class LinkInstancesEffects {
           createdLinkInstances: linkInstances.map(linkInstance => convertLinkInstanceModelToDto(linkInstance)),
         };
 
-        return this.linkInstanceService.setDocumentLinks(linkTypeId, documentLinksDto).pipe(
+        return this.linkInstanceService.setDocumentLinks(linkTypeId, documentLinksDto, action.payload.workspace).pipe(
           map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
           mergeMap(createdLinkInstances => [
             new LinkInstancesAction.SetDocumentLinksSuccess({
@@ -451,10 +451,12 @@ export class LinkInstancesEffects {
       mergeMap(action => {
         const {linkTypeId, linkInstanceId, attributeId, actionName} = action.payload;
 
-        return this.linkInstanceService.runRule(linkTypeId, linkInstanceId, attributeId, actionName).pipe(
-          mergeMap(() => EMPTY),
-          catchError(error => of(new LinkInstancesAction.RunRuleFailure({...action.payload, error})))
-        );
+        return this.linkInstanceService
+          .runRule(linkTypeId, linkInstanceId, attributeId, actionName, action.payload.workspace)
+          .pipe(
+            mergeMap(() => EMPTY),
+            catchError(error => of(new LinkInstancesAction.RunRuleFailure({...action.payload, error})))
+          );
       })
     )
   );

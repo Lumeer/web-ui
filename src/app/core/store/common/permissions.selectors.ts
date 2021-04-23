@@ -394,7 +394,7 @@ export const selectLinkTypesByCollectionId = (collectionId: string) =>
   );
 
 export const selectLinkTypesByCollectionIds = (collectionIds: string[]) =>
-  createSelector(selectLinkTypesByReadPermission, linkTypes =>
+  createSelector(selectAllLinkTypes, linkTypes =>
     linkTypes.filter(linkType => containsSameElements(linkType.collectionIds, collectionIds))
   );
 

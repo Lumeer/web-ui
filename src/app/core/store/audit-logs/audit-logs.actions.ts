@@ -19,10 +19,11 @@
 
 import {createAction, props} from '@ngrx/store';
 import {AuditLog} from './audit-log.model';
+import {Workspace} from '../navigation/workspace';
 
 export const getByDocument = createAction(
   '[AuditLogs] Get By Document',
-  props<{documentId: string; collectionId: string}>()
+  props<{documentId: string; collectionId: string; workspace?: Workspace}>()
 );
 
 export const getByDocumentSuccess = createAction(
@@ -34,7 +35,7 @@ export const getByDocumentFailure = createAction('[AuditLogs] Get By Document ::
 
 export const revertDocument = createAction(
   '[AuditLogs] Revert Document',
-  props<{documentId: string; collectionId: string; auditLogId: string}>()
+  props<{documentId: string; collectionId: string; auditLogId: string; workspace?: Workspace}>()
 );
 
 export const revertDocumentSuccess = createAction(
@@ -47,7 +48,10 @@ export const revertDocumentFailure = createAction(
   props<{error: any; auditLogId: string}>()
 );
 
-export const getByLink = createAction('[AuditLogs] Get By Link', props<{linkInstanceId: string; linkTypeId: string}>());
+export const getByLink = createAction(
+  '[AuditLogs] Get By Link',
+  props<{linkInstanceId: string; linkTypeId: string; workspace?: Workspace}>()
+);
 
 export const getByLinkSuccess = createAction(
   '[AuditLogs] Get By Link :: Success',
@@ -58,7 +62,7 @@ export const getByLinkFailure = createAction('[AuditLogs] Get By Link :: Failure
 
 export const revertLink = createAction(
   '[AuditLogs] Revert Link',
-  props<{linkInstanceId: string; linkTypeId: string; auditLogId: string}>()
+  props<{linkInstanceId: string; linkTypeId: string; auditLogId: string; workspace?: Workspace}>()
 );
 
 export const revertLinkSuccess = createAction('[AuditLogs] Revert Link :: Success', props<{auditLogId: string}>());

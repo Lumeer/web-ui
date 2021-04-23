@@ -39,6 +39,7 @@ import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'data-resource-data-row',
@@ -55,6 +56,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   @Input()
   public permissions: AllowedPermissions;
+
+  @Input()
+  public workspace: Workspace;
 
   @Input()
   public constraintData: ConstraintData;
@@ -266,7 +270,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isManageable(): boolean {
-    return this.permissions && this.permissions.manageWithView;
+    return this.permissions?.manageWithView;
   }
 
   public focusColumn(column: number) {

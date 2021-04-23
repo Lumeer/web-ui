@@ -73,6 +73,7 @@ import {selectWorkspaceModels} from '../../../core/store/common/common.selectors
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {computeResourcesPermissionsForWorkspace} from '../../utils/permission.utils';
+import {selectCurrentView} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'data-resource-detail',
@@ -128,7 +129,7 @@ export class DataResourceDetailComponent
   }>;
   public linkTypes$: Observable<LinkType[]>;
 
-  public resourceType: AttributesResourceType;
+  public readonly contactUrl: string;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
@@ -136,13 +137,13 @@ export class DataResourceDetailComponent
   public defaultView$ = new BehaviorSubject<View>(null);
   public collectionId$ = new BehaviorSubject<string>(null);
   public readonly detailTabType = DetailTabType;
+  public startEditing$ = new BehaviorSubject<boolean>(false);
 
   public commentsCount$: Observable<number>;
   public linksCount$: Observable<number>;
 
-  public startEditing$ = new BehaviorSubject<boolean>(false);
-
-  public readonly contactUrl: string;
+  public resourceType: AttributesResourceType;
+  private workspace: Workspace;
 
   constructor(
     protected store$: Store<AppState>,
@@ -163,7 +164,10 @@ export class DataResourceDetailComponent
     super.ngOnInit();
 
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.workspace$ = this.store$.pipe(select(selectWorkspace));
+    this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$.asObservable()]).pipe(
+      map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
+      tap(workspace => (this.workspace = workspace))
+    );
     this.bindPermissions();
   }
 
@@ -174,13 +178,14 @@ export class DataResourceDetailComponent
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
       this.defaultView$.asObservable(),
+      this.store$.pipe(select(selectCurrentView)),
     ]).pipe(
-      map(([user, models, collections, linkTypes, view]) =>
+      map(([user, models, collections, linkTypes, defaultView, currentView]) =>
         computeResourcesPermissionsForWorkspace(
           user,
           models?.organization,
           models?.project,
-          view,
+          defaultView || currentView,
           collections,
           linkTypes
         )
@@ -249,19 +254,20 @@ export class DataResourceDetailComponent
   private readLinkTypesData(linkTypes: LinkType[]) {
     const loadingCollections = new Set();
     const loadingLinkTypes = new Set();
+    const workspace = this.workspace;
     linkTypes.forEach(linkType => {
       const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
 
       if (!loadingCollections.has(otherCollectionId)) {
         loadingCollections.add(otherCollectionId);
         const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
-        this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery}));
+        this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery, workspace}));
       }
 
       if (!loadingLinkTypes.has(linkType.id)) {
         loadingLinkTypes.add(linkType.id);
         const query: Query = {stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]};
-        this.store$.dispatch(new LinkInstancesAction.Get({query}));
+        this.store$.dispatch(new LinkInstancesAction.Get({query, workspace}));
       }
     });
   }
@@ -272,15 +278,26 @@ export class DataResourceDetailComponent
         new DocumentsAction.DeleteConfirm({
           collectionId: (<DocumentModel>this.dataResource).collectionId,
           documentId: this.dataResource.id,
+          workspace: this.workspace,
         })
       );
     } else {
-      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: this.dataResource.id}));
+      this.store$.dispatch(
+        new LinkInstancesAction.DeleteConfirm({
+          linkInstanceId: this.dataResource.id,
+          workspace: this.workspace,
+        })
+      );
     }
   }
 
   public onUnlink(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: linkInstance.id}));
+    this.store$.dispatch(
+      new LinkInstancesAction.DeleteConfirm({
+        linkInstanceId: linkInstance.id,
+        workspace: this.workspace,
+      })
+    );
   }
 
   public onSwitchToTable() {
@@ -307,18 +324,38 @@ export class DataResourceDetailComponent
 
   public onAttributeTypeClick(attribute: Attribute) {
     if (this.isCollection) {
-      this.modalService.showAttributeType(attribute.id, this.resource.id);
+      this.showAttributeType(this.resource.id, null, attribute.id);
     } else {
-      this.modalService.showAttributeType(attribute.id, null, this.resource.id);
+      this.showAttributeType(null, this.resource.id, attribute.id);
     }
+  }
+
+  public showAttributeType(collectionId: string, linkTypeId: string, attributeId: string) {
+    this.modalService.showAttributeType(attributeId, collectionId, linkTypeId, this.workspace);
   }
 
   public onAttributeFunctionClick(attribute: Attribute) {
     if (this.isCollection) {
-      this.modalService.showAttributeFunction(attribute.id, this.resource.id);
+      this.showAttributeFunction(this.resource.id, null, attribute.id);
     } else {
-      this.modalService.showAttributeFunction(attribute.id, null, this.resource.id);
+      this.showAttributeFunction(null, this.resource.id, attribute.id);
     }
+  }
+
+  public showAttributeFunction(collectionId: string, linkTypeId: string, attributeId: string) {
+    this.modalService.showAttributeFunction(attributeId, collectionId, linkTypeId, this.workspace);
+  }
+
+  public showAttributeDescription(collectionId: string, linkTypeId: string, attributeId: string) {
+    this.modalService.showAttributeDescription(attributeId, collectionId, linkTypeId, this.workspace);
+  }
+
+  public showModifyLinks(collectionId: string, linkTypeId: string, documentId: string) {
+    this.modalService.showModifyDocumentLinks(documentId, collectionId, linkTypeId, this.workspace);
+  }
+
+  public showCreateLink(ids: [string, string]) {
+    this.modalService.showCreateLink(ids, this.workspace);
   }
 
   public editNewComment() {
@@ -398,11 +435,11 @@ export class DataResourceDetailComponent
   }
 
   public onPatchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.workspace}));
   }
 
   public onPatchLinkData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.workspace}));
   }
 
   public onCreateLink(data: {document: DocumentModel; linkInstance: LinkInstance}) {
@@ -411,6 +448,7 @@ export class DataResourceDetailComponent
         document: data.document,
         linkInstance: data.linkInstance,
         otherDocumentId: this.dataResource.id,
+        workspace: this.workspace,
       })
     );
   }

@@ -2,7 +2,8 @@
   *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
   constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async,
   resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async} as data">
-  <ng-container *ngIf="{permissions: resource | dataResourcePermissions: data.resourcesPermissions} as dataResourceData">
+  <ng-container
+    *ngIf="{permissions: resource | dataResourcePermissions: data.resourcesPermissions} as dataResourceData">
     <document-detail-header class="d-block mb-4"
                             [resource]="resource"
                             [dataResource]="dataResource"
@@ -64,7 +65,12 @@
 
     <ng-container *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
       <div>
-        <links-toolbar class="d-block w-100 text-right" [collection]="resource"></links-toolbar>
+        <links-toolbar class="d-block w-100 text-right"
+                       [collection]="resource"
+                       [permissions]="dataResourceData.permissions"
+                       [collectionsPermissions]="data.resourcesPermissions.collectionsPermissions"
+                       (createLink)="showCreateLink($event)">
+        </links-toolbar>
         <links-accordeon class="d-block"
                          *ngIf="resource && dataResource?.id"
                          [document]="dataResource"
@@ -82,7 +88,11 @@
                          (patchLinkData)="onPatchLinkData($event)"
                          (createLink)="onCreateLink($event)"
                          (attributesSettingsChanged)="onAttributesSettingsChanged($event)"
-                         (unlink)="onUnlink($event)">
+                         (unlink)="onUnlink($event)"
+                         (attributeDescription)="showAttributeDescription($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                         (attributeFunction)="showAttributeFunction($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                         (attributeType)="showAttributeType($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                         (modifyLinks)="showModifyLinks($event.collectionId, $event.linkTypeId, $event.documentId)">
         </links-accordeon>
       </div>
     </ng-container>
@@ -102,7 +112,8 @@
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"
-                         [parent]="resource">
+                         [parent]="resource"
+                         [workspace]="data.workspace">
       </resource-activity>
     </ng-container>
 

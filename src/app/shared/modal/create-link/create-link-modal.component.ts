@@ -32,6 +32,7 @@ import {DialogType} from '../dialog-type';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {minLengthValidator} from '../../../core/validators/custom-validators';
 import {selectLinkTypesByCollectionIds} from '../../../core/store/common/permissions.selectors';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   templateUrl: './create-link-modal.component.html',
@@ -40,6 +41,9 @@ import {selectLinkTypesByCollectionIds} from '../../../core/store/common/permiss
 export class CreateLinkModalComponent implements OnInit {
   @Input()
   public collectionIds: string[];
+
+  @Input()
+  public workspace: Workspace;
 
   @Input()
   public callback: (linkType: LinkType) => void;
@@ -141,6 +145,7 @@ export class CreateLinkModalComponent implements OnInit {
     };
     return new LinkTypesAction.Create({
       linkType,
+      workspace: this.workspace,
       onSuccess: createdLinkType => this.onSuccess(createdLinkType),
       onFailure: () => this.performingAction$.next(false),
     });

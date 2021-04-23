@@ -199,7 +199,13 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.UPSERT_RULE;
 
     public constructor(
-      public payload: {collectionId: string; rule: Rule; onSuccess?: () => void; onFailure?: () => void}
+      public payload: {
+        collectionId: string;
+        rule: Rule;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+        workspace?: Workspace;
+      }
     ) {}
   }
 
@@ -340,6 +346,7 @@ export namespace CollectionsAction {
         attributeId: string;
         attribute: Attribute;
         nextAction?: Action;
+        workspace?: Workspace;
         onSuccess?: (attribute: Attribute) => void;
         onFailure?: (error: any) => void;
       }

@@ -31,7 +31,6 @@ import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {preventEvent} from '../../utils/common.utils';
-import {ModalService} from '../../modal/modal.service';
 
 @Component({
   selector: 'links-accordeon',
@@ -88,10 +87,22 @@ export class LinksAccordeonComponent implements OnInit {
   @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
+  @Output()
+  public attributeFunction = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeDescription = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public modifyLinks = new EventEmitter<{collectionId: string; linkTypeId: string; documentId: string}>();
+
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
 
-  public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -102,7 +113,7 @@ export class LinksAccordeonComponent implements OnInit {
     preventEvent(event);
 
     if (this.collection && this.document) {
-      this.modalService.showModifyDocumentLinks(this.document.id, this.collection.id, linkType.id);
+      this.modifyLinks.emit({collectionId: this.collection.id, linkTypeId: linkType.id, documentId: this.document.id});
     }
   }
 

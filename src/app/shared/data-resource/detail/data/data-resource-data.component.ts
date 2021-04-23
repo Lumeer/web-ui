@@ -150,6 +150,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
     } else if (changes.attributeSettings || changes.permissions || changes.ignoreSettingsOnReadPermission) {
       this.dataRowService.setSettings(this.attributeSettings);
     }
+    if (changes.workspace) {
+      this.dataRowService.setWorkspace(this.workspace);
+    }
   }
 
   private selectResource$(): Observable<AttributesResource> {

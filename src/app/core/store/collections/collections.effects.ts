@@ -250,7 +250,7 @@ export class CollectionsEffects {
 
         const collectionDto = convertCollectionModelToDto({...oldCollection, rules});
 
-        return this.collectionService.updateCollection(collectionDto).pipe(
+        return this.collectionService.updateCollection(collectionDto, action.payload.workspace).pipe(
           map((dto: CollectionDto) => convertCollectionDtoToModel(dto, oldCollection?.correlationId)),
           mergeMap(collection => [
             new CollectionsAction.UpsertRuleSuccess({collection}),
@@ -511,28 +511,30 @@ export class CollectionsEffects {
         const {attributeId, collectionId, onSuccess, onFailure} = action.payload;
         const attributeDto = convertAttributeModelToDto(action.payload.attribute);
 
-        return this.collectionService.updateAttribute(collectionId, attributeId, attributeDto).pipe(
-          map(result => convertAttributeDtoToModel(result)),
-          mergeMap(attribute => {
-            const actions: Action[] = [
-              new CollectionsAction.ChangeAttributeSuccess({collectionId, attributeId, attribute: attribute}),
-            ];
-            if (action.payload.nextAction) {
-              actions.push(action.payload.nextAction);
-            }
-            if (onSuccess) {
-              actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(attribute)}));
-            }
-            return actions;
-          }),
-          catchError(error => {
-            const actions: Action[] = [new CollectionsAction.ChangeAttributeFailure({error})];
-            if (onFailure) {
-              actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
-            }
-            return of(...actions);
-          })
-        );
+        return this.collectionService
+          .updateAttribute(collectionId, attributeId, attributeDto, action.payload.workspace)
+          .pipe(
+            map(result => convertAttributeDtoToModel(result)),
+            mergeMap(attribute => {
+              const actions: Action[] = [
+                new CollectionsAction.ChangeAttributeSuccess({collectionId, attributeId, attribute: attribute}),
+              ];
+              if (action.payload.nextAction) {
+                actions.push(action.payload.nextAction);
+              }
+              if (onSuccess) {
+                actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(attribute)}));
+              }
+              return actions;
+            }),
+            catchError(error => {
+              const actions: Action[] = [new CollectionsAction.ChangeAttributeFailure({error})];
+              if (onFailure) {
+                actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
+              }
+              return of(...actions);
+            })
+          );
       })
     )
   );
