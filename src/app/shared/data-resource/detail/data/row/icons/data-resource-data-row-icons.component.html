@@ -1,4 +1,4 @@
-<ng-container *ngIf="{manage: row.attribute && row.attribute.id && permissions?.manageWithView} as attributeData">
+<ng-container *ngIf="{manage: row.attribute && row.attribute.id && permissions?.manage} as attributeData">
   <i class="fa fa-fw fa-shapes mr-2 clickable text-success button-config"
      aria-hidden="true"
      *ngIf="attributeData.manage"

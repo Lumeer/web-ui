@@ -597,7 +597,7 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      if (!setting.hidden || permissions?.read || permissions?.manageWithView) {
+      if (!setting.hidden || permissions?.read || permissions?.manage) {
         columns.push(column);
       }
       return columns;
@@ -627,7 +627,7 @@ export class WorkflowTablesDataService {
     if (
       !this.isViewActive &&
       isCollection &&
-      permissions.manageWithView &&
+      permissions.manage &&
       !attributeColumns.some(column => !column.attribute)
     ) {
       const lastColumn: TableColumn = {

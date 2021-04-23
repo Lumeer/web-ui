@@ -270,7 +270,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isManageable(): boolean {
-    return this.permissions?.manageWithView;
+    return this.permissions?.manage;
   }
 
   public focusColumn(column: number) {

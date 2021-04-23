@@ -60,7 +60,7 @@ export class WorkflowTablesMenuService {
       {
         id: RowMenuId.Edit,
         title: this.translateRowMenuItem(RowMenuId.Edit),
-        disabled: !permissions?.manageWithView,
+        disabled: !permissions?.manage,
         icons: ['fa fa-edit'],
         shortcut: this.macOS ? '↩' : 'Enter',
         group: 0,
@@ -136,7 +136,7 @@ export class WorkflowTablesMenuService {
       {
         id: HeaderMenuId.Edit,
         title: this.translateHeaderMenuItem(HeaderMenuId.Edit),
-        disabled: !permissions?.manageWithView,
+        disabled: !permissions?.manage,
         icons: ['fa fa-edit'],
         group: 0,
       },
@@ -147,7 +147,7 @@ export class WorkflowTablesMenuService {
         {
           id: HeaderMenuId.Type,
           title: this.translateHeaderMenuItem(HeaderMenuId.Type),
-          disabled: !permissions?.manageWithView,
+          disabled: !permissions?.manage,
           icons: ['fa fa-shapes'],
           group: 0,
         },
@@ -156,14 +156,14 @@ export class WorkflowTablesMenuService {
           title: this.translateHeaderMenuItem(
             column.attribute?.constraint?.type === ConstraintType.Action ? HeaderMenuId.Rule : HeaderMenuId.Function
           ),
-          disabled: !permissions?.manageWithView,
+          disabled: !permissions?.manage,
           icons: ['fa fa-function'],
           group: 0,
         },
         {
           id: HeaderMenuId.Description,
           title: this.translateHeaderMenuItem(HeaderMenuId.Description),
-          disabled: !permissions?.manageWithView,
+          disabled: !permissions?.manage,
           icons: ['fa fa-file-edit'],
           group: 1,
         }
@@ -199,7 +199,7 @@ export class WorkflowTablesMenuService {
       items.push({
         id: HeaderMenuId.Displayed,
         title: this.translateHeaderMenuItem(HeaderMenuId.Displayed),
-        disabled: !permissions?.manageWithView,
+        disabled: !permissions?.manage,
         icons: ['fa fa-check-square'],
         group: 1,
       });
@@ -208,7 +208,7 @@ export class WorkflowTablesMenuService {
     items.push({
       id: HeaderMenuId.AddToLeft,
       title: this.translateHeaderMenuItem(HeaderMenuId.AddToLeft),
-      disabled: !permissions?.manageWithView,
+      disabled: !permissions?.manage,
       icons: ['fa fa-arrow-alt-circle-left'],
       group: 2,
     });
@@ -216,12 +216,12 @@ export class WorkflowTablesMenuService {
     items.push({
       id: HeaderMenuId.AddToRight,
       title: this.translateHeaderMenuItem(HeaderMenuId.AddToRight),
-      disabled: !permissions?.manageWithView,
+      disabled: !permissions?.manage,
       icons: ['fa fa-arrow-alt-circle-right'],
       group: 2,
     });
 
-    if (column.collectionId && otherPermissions?.manageWithView) {
+    if (column.collectionId && otherPermissions?.manage) {
       items.push({
         id: HeaderMenuId.AddLinkColumn,
         title: this.translateHeaderMenuItem(HeaderMenuId.AddLinkColumn),
@@ -244,7 +244,7 @@ export class WorkflowTablesMenuService {
     items.push({
       id: HeaderMenuId.Delete,
       title: this.translateHeaderMenuItem(HeaderMenuId.Delete),
-      disabled: !permissions?.manageWithView,
+      disabled: !permissions?.manage,
       icons: ['far fa-trash-alt text-danger'],
       group: 3,
     });
