@@ -33,7 +33,7 @@ import {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
@@ -89,7 +89,7 @@ interface Data {
   linkTypes: LinkType[];
   linkInstances: LinkInstance[];
   config: GanttChartConfig;
-  permissions: Record<string, AllowedPermissions>;
+  permissions: AllowedPermissionsMap;
   query: Query;
   constraintData: ConstraintData;
   sortDefined: boolean;
@@ -125,7 +125,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public config: GanttChartConfig;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
   public constraintData: ConstraintData;

@@ -29,7 +29,7 @@ import {
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../../core/store/views/view';
 import {
@@ -63,7 +63,7 @@ export class WorkflowTablesStateService {
   private currentQuery: Query;
   private currentViewSettings: ViewSettings;
   private currentConfig: WorkflowConfig;
-  private currentPermissions: Record<string, AllowedPermissions>;
+  private currentPermissions: AllowedPermissionsMap;
   private currentConstraintData: ConstraintData;
 
   public updateData(
@@ -72,7 +72,7 @@ export class WorkflowTablesStateService {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     config: WorkflowConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
@@ -128,7 +128,7 @@ export class WorkflowTablesStateService {
     return this.currentConfig;
   }
 
-  public get permissions(): Record<string, AllowedPermissions> {
+  public get permissions(): AllowedPermissionsMap {
     return this.currentPermissions;
   }
 
@@ -542,7 +542,7 @@ function canEditCell(cell: TableCell, column: TableColumn): boolean {
     return false;
   }
   if (cell.type === TableCellType.Header) {
-    return column.permissions?.manageWithView && !column.creating;
+    return column.permissions?.manage && !column.creating;
   } else if (cell.type === TableCellType.Body || cell.type === TableCellType.NewRow) {
     return column.editable;
   }

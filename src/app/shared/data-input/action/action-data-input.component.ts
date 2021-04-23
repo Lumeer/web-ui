@@ -62,6 +62,7 @@ import {
 import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute-type/form/constraint-config/action/action-constraint.utils';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {Attribute} from '../../../core/store/collections/collection';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 const loadingTime = 2000;
 
@@ -93,6 +94,12 @@ export class ActionDataInputComponent implements OnChanges {
   @Input()
   public configuration: ActionDataInputConfiguration;
 
+  @Input()
+  public workspace: Workspace;
+
+  @Input()
+  public permissions: AllowedPermissions;
+
   @Output()
   public cancel = new EventEmitter();
 
@@ -102,6 +109,7 @@ export class ActionDataInputComponent implements OnChanges {
   public stats$: Observable<ActionButtonFiltersStatsWithData>;
   public loading$: Observable<boolean>;
   public config$ = new BehaviorSubject<ActionConstraintConfig>(null);
+  public overridePermissions$ = new BehaviorSubject<AllowedPermissions>(null);
 
   public title: string;
   public icon: string;
@@ -127,6 +135,9 @@ export class ActionDataInputComponent implements OnChanges {
     }
     if (changes.config) {
       this.config$.next(this.config);
+    }
+    if (changes.permissions) {
+      this.overridePermissions$.next(this.permissions);
     }
     this.title = this.value?.config?.title;
     this.icon = this.value?.config?.icon;
@@ -164,26 +175,28 @@ export class ActionDataInputComponent implements OnChanges {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
+        this.overridePermissions$.asObservable(),
         this.store$.pipe(select(selectCollectionPermissions(this.cursor.collectionId))),
-        this.config$,
+        this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([collection, document, permissions, config, constraintData]) =>
-          this.checkEnabled(collection, document, permissions, config, constraintData)
+        map(([collection, document, overridePermissions, permissions, config, constraintData]) =>
+          this.checkEnabled(collection, document, overridePermissions || permissions, config, constraintData)
         )
       );
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
+        this.overridePermissions$.asObservable(),
         this.store$.pipe(select(selectLinkTypePermissions(this.cursor.linkTypeId))),
-        this.config$,
+        this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([linkType, linkInstance, permissions, config, constraintData]) =>
-          this.checkEnabled(linkType, linkInstance, permissions, config, constraintData)
+        map(([linkType, linkInstance, overridePermissions, permissions, config, constraintData]) =>
+          this.checkEnabled(linkType, linkInstance, overridePermissions || permissions, config, constraintData)
         )
       );
     }
@@ -251,6 +264,7 @@ export class ActionDataInputComponent implements OnChanges {
         documentId: this.cursor.documentId,
         attributeId: this.cursor.attributeId,
         actionName: this.config.title,
+        workspace: this.workspace,
       });
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return new LinkInstancesAction.RunRule({
@@ -258,6 +272,7 @@ export class ActionDataInputComponent implements OnChanges {
         linkInstanceId: this.cursor.linkInstanceId,
         attributeId: this.cursor.attributeId,
         actionName: this.config.title,
+        workspace: this.workspace,
       });
     }
     return null;

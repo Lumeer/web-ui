@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {AllowedPermissions} from '../../model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../model/allowed-permissions';
 
 export enum UserPermissionsActionType {
   SET_ORGANIZATION_PERMISSIONS = '[User Permissions] Set Organization Permissions',
@@ -46,19 +46,19 @@ export namespace UserPermissionsAction {
   export class SetCollectionsPermissions implements Action {
     public readonly type = UserPermissionsActionType.SET_COLLECTIONS_PERMISSIONS;
 
-    public constructor(public payload: {permissions: Record<string, AllowedPermissions>}) {}
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
   }
 
   export class SetLinkTypesPermissions implements Action {
     public readonly type = UserPermissionsActionType.SET_LINK_TYPES_PERMISSIONS;
 
-    public constructor(public payload: {permissions: Record<string, AllowedPermissions>}) {}
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
   }
 
   export class SetViewsPermissions implements Action {
     public readonly type = UserPermissionsActionType.SET_VIEWS_PERMISSIONS;
 
-    public constructor(public payload: {permissions: Record<string, AllowedPermissions>}) {}
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
   }
 
   export class Clear implements Action {

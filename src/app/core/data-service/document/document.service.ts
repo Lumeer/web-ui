@@ -23,27 +23,29 @@ import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class DocumentService {
-  public abstract createDocument(document: DocumentDto): Observable<DocumentDto>;
+  public abstract createDocument(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto>;
 
   public abstract patchDocument(
     collectionId: string,
     documentId: string,
-    document: Partial<DocumentDto>
+    document: Partial<DocumentDto>,
+    workspace?: Workspace
   ): Observable<DocumentDto>;
 
-  public abstract updateDocumentData(document: DocumentDto): Observable<DocumentDto>;
+  public abstract updateDocumentData(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto>;
 
-  public abstract patchDocumentData(document: DocumentDto): Observable<DocumentDto>;
+  public abstract patchDocumentData(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto>;
 
-  public abstract updateDocumentMetaData(document: DocumentDto): Observable<DocumentDto>;
+  public abstract updateDocumentMetaData(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto>;
 
   public abstract patchDocumentMetaData(
     collectionId: string,
     documentId: string,
-    metaData: DocumentMetaDataDto
+    metaData: DocumentMetaDataDto,
+    workspace?: Workspace
   ): Observable<DocumentDto>;
 
-  public abstract removeDocument(collectionId: string, documentId: string): Observable<any>;
+  public abstract removeDocument(collectionId: string, documentId: string, workspace?: Workspace): Observable<any>;
 
   public abstract addFavorite(collectionId: string, documentId: string, workspace?: Workspace): Observable<any>;
 
@@ -51,23 +53,26 @@ export abstract class DocumentService {
 
   public abstract getDocument(collectionId: string, documentId: string): Observable<DocumentDto>;
 
-  public abstract getDocuments(documentsId: string[]): Observable<DocumentDto[]>;
+  public abstract getDocuments(documentsId: string[], workspace?: Workspace): Observable<DocumentDto[]>;
 
   public abstract runRule(
     collectionId: string,
     documentId: string,
     attributeId: string,
-    actionName?: string
+    actionName?: string,
+    workspace?: Workspace
   ): Observable<any>;
 
   public abstract duplicateDocuments(
     collectionId: string,
     documentIds: string[],
-    correlationId?: string
+    correlationId?: string,
+    workspace?: Workspace
   ): Observable<DocumentDto[]>;
 
   public abstract createChain(
     documents: DocumentDto[],
-    linkInstances: LinkInstanceDto[]
+    linkInstances: LinkInstanceDto[],
+    workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>;
 }

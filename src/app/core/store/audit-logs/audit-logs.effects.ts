@@ -36,7 +36,7 @@ export class AuditLogsEffects {
     this.actions$.pipe(
       ofType(AuditLogActions.getByDocument),
       mergeMap(action =>
-        this.service.getByDocument(action.collectionId, action.documentId).pipe(
+        this.service.getByDocument(action.collectionId, action.documentId, action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
           map(auditLogs => AuditLogActions.getByDocumentSuccess({auditLogs, documentId: action.documentId})),
           catchError(error => of(AuditLogActions.getByDocumentFailure({error})))
@@ -60,7 +60,7 @@ export class AuditLogsEffects {
     this.actions$.pipe(
       ofType(AuditLogActions.revertDocument),
       mergeMap(action =>
-        this.service.revertDocument(action.collectionId, action.documentId, action.auditLogId).pipe(
+        this.service.revertDocument(action.collectionId, action.documentId, action.auditLogId, action.workspace).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
           mergeMap(document => [
             new DocumentsAction.RevertData({document}),
@@ -87,7 +87,7 @@ export class AuditLogsEffects {
     this.actions$.pipe(
       ofType(AuditLogActions.getByLink),
       mergeMap(action =>
-        this.service.getByLink(action.linkTypeId, action.linkInstanceId).pipe(
+        this.service.getByLink(action.linkTypeId, action.linkInstanceId, action.workspace).pipe(
           map(dtos => dtos.map(dto => convertAuditLogDtoToModel(dto))),
           map(auditLogs => AuditLogActions.getByLinkSuccess({auditLogs, linkInstanceId: action.linkInstanceId})),
           catchError(error => of(AuditLogActions.getByLinkFailure({error})))
@@ -111,7 +111,7 @@ export class AuditLogsEffects {
     this.actions$.pipe(
       ofType(AuditLogActions.revertLink),
       mergeMap(action =>
-        this.service.revertLink(action.linkTypeId, action.linkInstanceId, action.auditLogId).pipe(
+        this.service.revertLink(action.linkTypeId, action.linkInstanceId, action.auditLogId, action.workspace).pipe(
           map(dto => convertLinkInstanceDtoToModel(dto)),
           mergeMap(linkInstance => [
             new LinkInstancesAction.RevertData({linkInstance}),

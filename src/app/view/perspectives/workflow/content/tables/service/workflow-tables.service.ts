@@ -28,7 +28,7 @@ import {
 } from '../../../../../../shared/table/model/table-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
@@ -327,7 +327,7 @@ export class WorkflowTablesService {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     config: WorkflowConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData

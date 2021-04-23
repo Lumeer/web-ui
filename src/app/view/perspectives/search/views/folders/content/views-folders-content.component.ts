@@ -34,7 +34,7 @@ import {View} from '../../../../../../core/store/views/view';
 import {ViewFavoriteToggleService} from '../../../../../../shared/toggle/view-favorite-toggle.service';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {createObjectFolder, createObjectFolders, ObjectFolders, parseObjectFolder} from './util/object-folders';
 import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
@@ -64,7 +64,7 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
   public workspace: Workspace;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
   public foldersPath: string[];

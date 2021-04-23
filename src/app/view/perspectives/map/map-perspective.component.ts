@@ -47,7 +47,7 @@ import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../cor
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 import {AppState} from '../../../core/store/app.state';
@@ -66,7 +66,7 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
   @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;
 
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, protected store$: Store<AppState>) {
     super(store$);

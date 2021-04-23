@@ -21,7 +21,7 @@ import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {ConstraintData} from '@lumeer/data-filters';
@@ -52,7 +52,7 @@ export abstract class DataPerspectiveComponent<T>
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public canManageConfig$: Observable<boolean>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public constraintData$: Observable<ConstraintData>;
   public dataLoaded$: Observable<boolean>;

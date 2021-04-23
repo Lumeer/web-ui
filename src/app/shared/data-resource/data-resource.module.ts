@@ -27,7 +27,6 @@ import {DocumentDetailHeaderComponent} from './detail/header/document-detail-hea
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {DefaultDataRowPipe} from './detail/header/default-data-row.pipe';
 import {PresenterModule} from '../presenter/presenter.module';
 import {DataResourceDataComponent} from './detail/data/data-resource-data.component';
 import {DataResourceDetailComponent} from './detail/data-resource-detail.component';
@@ -49,6 +48,7 @@ import {DetailSettingsButtonComponent} from './detail/header/settings-button/det
 import {DetailSettingsDropdownComponent} from './detail/header/settings-button/dropdown/detail-settings-dropdown.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
+import {DataResourcePermissionsPipe} from './detail/pipes/data-resource-permissions.pipe';
 
 @NgModule({
   imports: [
@@ -75,7 +75,6 @@ import {AttributesSettingsModule} from '../settings/attributes/attributes-settin
     DataResourceDataComponent,
     DataResourceDataRowComponent,
     DataResourceDataRowIconsComponent,
-    DefaultDataRowPipe,
     DetailTabsComponent,
     LinksToolbarComponent,
     ResourceActivityComponent,
@@ -86,6 +85,7 @@ import {AttributesSettingsModule} from '../settings/attributes/attributes-settin
     AuditLogEntriesComponent,
     DetailSettingsButtonComponent,
     DetailSettingsDropdownComponent,
+    DataResourcePermissionsPipe,
   ],
   exports: [DataResourceDetailComponent],
 })

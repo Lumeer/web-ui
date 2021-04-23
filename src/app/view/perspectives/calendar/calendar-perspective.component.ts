@@ -31,7 +31,7 @@ import {selectCalendarById} from '../../../core/store/calendars/calendars.state'
 import {CalendarConfig} from '../../../core/store/calendars/calendar';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {checkOrTransformCalendarConfig} from './util/calendar-util';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -48,7 +48,7 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
 export class CalendarPerspectiveComponent
   extends DataPerspectiveComponent<CalendarConfig>
   implements OnInit, OnDestroy {
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   constructor(protected store$: Store<AppState>) {
     super(store$);

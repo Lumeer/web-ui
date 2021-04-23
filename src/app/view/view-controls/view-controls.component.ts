@@ -65,7 +65,7 @@ import {objectValues} from '../../shared/utils/common.utils';
 import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
 import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {
   selectCollectionsPermissions,
@@ -112,8 +112,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public viewChanged$: Observable<boolean>;
   public linkTypes$: Observable<LinkType[]>;
   public projectPermissions$: Observable<AllowedPermissions>;
-  public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
-  public viewsPermissions$: Observable<Record<string, AllowedPermissions>>;
+  public collectionsPermissions$: Observable<AllowedPermissionsMap>;
+  public viewsPermissions$: Observable<AllowedPermissionsMap>;
 
   private configChanged: boolean;
   private queryChanged: boolean;

@@ -51,12 +51,14 @@ export class ApiSearchService extends BaseService implements SearchService {
   ): Observable<LinkInstanceDto[]> {
     return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query || {}, {
       params: {subItems: (includeSubItems || false)?.toString()},
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
   public searchDocuments(query: QueryDto, includeSubItems: boolean, workspace?: Workspace): Observable<DocumentDto[]> {
     return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query || {}, {
       params: {subItems: (includeSubItems || false)?.toString()},
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
@@ -68,7 +70,10 @@ export class ApiSearchService extends BaseService implements SearchService {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/documentsAndLinks`,
       query || {},
-      {params: {subItems: (includeSubItems || false)?.toString()}}
+      {
+        params: {subItems: (includeSubItems || false)?.toString()},
+        headers: {...this.workspaceHeaders(workspace)},
+      }
     );
   }
 
@@ -80,7 +85,10 @@ export class ApiSearchService extends BaseService implements SearchService {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/tasks`,
       query || {},
-      {params: {subItems: (includeSubItems || false)?.toString()}}
+      {
+        params: {subItems: (includeSubItems || false)?.toString()},
+        headers: {...this.workspaceHeaders(workspace)},
+      }
     );
   }
 

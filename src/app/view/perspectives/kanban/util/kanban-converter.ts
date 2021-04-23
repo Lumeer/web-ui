@@ -43,7 +43,7 @@ import {
 import {DataAggregator, DataAggregatorAttribute} from '../../../../shared/utils/data/data-aggregator';
 import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
@@ -88,7 +88,7 @@ export class KanbanConverter {
     linkTypes: LinkType[],
     documents: DocumentModel[],
     linkInstances: LinkInstance[],
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     constraintData?: ConstraintData
   ): {config: KanbanConfig; data: KanbanData} {
     this.updateData(collections, linkTypes, documents, linkInstances, constraintData);
@@ -115,7 +115,7 @@ export class KanbanConverter {
 
   private groupDataByColumns(
     config: KanbanConfig,
-    permissions: Record<string, AllowedPermissions>
+    permissions: AllowedPermissionsMap
   ): {
     columnsMap: Record<string, Partial<KanbanDataColumn>>;
     otherColumn: Partial<KanbanDataColumn>;
@@ -336,7 +336,7 @@ export class KanbanConverter {
     return finalConstraint.createDataValue(value, constraintData).serialize();
   }
 
-  private fillCreateResources(config: KanbanConfig, data: KanbanData, permissions: Record<string, AllowedPermissions>) {
+  private fillCreateResources(config: KanbanConfig, data: KanbanData, permissions: AllowedPermissionsMap) {
     const createResources = this.getAllCreateResources(config, permissions);
     data.columns.forEach(column => this.fillCreateResourcesColumn(column, createResources));
     this.fillCreateResourcesColumn(data.otherColumn, createResources);
@@ -374,10 +374,7 @@ export class KanbanConverter {
     }
   }
 
-  private getAllCreateResources(
-    config: KanbanConfig,
-    permissions: Record<string, AllowedPermissions>
-  ): KanbanCreateResource[] {
+  private getAllCreateResources(config: KanbanConfig, permissions: AllowedPermissionsMap): KanbanCreateResource[] {
     const linkTypesMap = objectsByIdMap(this.linkTypes);
     return (config?.stemsConfigs || []).reduce((resources, stemConfig, stemIndex) => {
       const kanbanAttribute = stemConfig.attribute;

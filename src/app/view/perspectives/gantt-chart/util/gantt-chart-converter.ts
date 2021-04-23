@@ -20,7 +20,7 @@
 import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
@@ -111,7 +111,7 @@ export class GanttChartConverter {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     constraintData: ConstraintData,
     query: Query,
     sortDefined?: boolean
@@ -151,7 +151,7 @@ export class GanttChartConverter {
 
   private createGanttOptions(
     config: GanttChartConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     linkTypes: LinkType[]
   ): GanttOptions {
     const linkTypesMap = objectsByIdMap(linkTypes);

@@ -32,7 +32,7 @@ import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {QueryAttribute, queryAttributePermissions} from '../../../core/model/query-attribute';
 import {deepObjectCopy, objectsByIdMap} from '../common.utils';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
   findAttributeConstraint,
   isCollectionAttributeEditable,
@@ -71,7 +71,7 @@ export interface DataObjectInput<T> {
 export class DataObjectAggregator<T> {
   private collectionsMap: Record<string, Collection>;
   private linkTypesMap: Record<string, LinkType>;
-  private permissions: Record<string, AllowedPermissions>;
+  private permissions: AllowedPermissionsMap;
   private query: Query;
 
   private dataAggregator: DataAggregator;
@@ -93,7 +93,7 @@ export class DataObjectAggregator<T> {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     queryStem: QueryStem,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     constraintData?: ConstraintData
   ) {
     this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem, constraintData);

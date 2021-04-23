@@ -22,7 +22,7 @@ import {Workspace} from '../navigation/workspace';
 import {areDataQueriesEqual} from '../navigation/query/query.helper';
 import {Query, QueryStem} from '../navigation/query/query';
 import {isQuerySubset} from '../navigation/query/query.util';
-import {AllowedPermissions} from '../../model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../model/allowed-permissions';
 
 export interface DataQueryPayload {
   query: DataQuery;
@@ -53,8 +53,8 @@ export function shouldLoadByDataQuery(
 export function checkLoadedDataQueryPayload(
   payload: DataQueryPayload,
   publicView: boolean,
-  collectionsPermissions?: Record<string, AllowedPermissions>,
-  linkTypePermissions?: Record<string, AllowedPermissions>
+  collectionsPermissions?: AllowedPermissionsMap,
+  linkTypePermissions?: AllowedPermissionsMap
 ): DataQueryPayload {
   return {
     ...payload,
@@ -64,8 +64,8 @@ export function checkLoadedDataQueryPayload(
 
 function checkLoadedDataQuery(
   query: DataQuery,
-  collectionsPermissions?: Record<string, AllowedPermissions>,
-  linkTypePermissions?: Record<string, AllowedPermissions>,
+  collectionsPermissions?: AllowedPermissionsMap,
+  linkTypePermissions?: AllowedPermissionsMap,
   publicView?: boolean,
   silent?: boolean
 ): Query {
@@ -77,8 +77,8 @@ function checkLoadedDataQuery(
 
 function removeUnneededFilters(
   query: Query,
-  collectionsPermissions?: Record<string, AllowedPermissions>,
-  linkTypePermissions?: Record<string, AllowedPermissions>
+  collectionsPermissions?: AllowedPermissionsMap,
+  linkTypePermissions?: AllowedPermissionsMap
 ): Query {
   const shouldSkipFulltexts =
     query?.stems?.length > 0 &&
@@ -97,8 +97,8 @@ function removeUnneededFilters(
 
 function removeUnneededFiltersFromStem(
   stem: QueryStem,
-  collectionsPermissions?: Record<string, AllowedPermissions>,
-  linkTypePermissions?: Record<string, AllowedPermissions>
+  collectionsPermissions?: AllowedPermissionsMap,
+  linkTypePermissions?: AllowedPermissionsMap
 ): QueryStem {
   return {
     ...stem,

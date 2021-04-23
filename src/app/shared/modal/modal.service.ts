@@ -54,6 +54,7 @@ import {findAttribute} from '../../core/store/collections/collection.util';
 import {AttributeDescriptionModalComponent} from './attribute-description/attribute-description-modal.component';
 import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
 import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -80,12 +81,18 @@ export class ModalService {
     return this.show(ChooseLinkDocumentModalComponent, config);
   }
 
-  public showModifyDocumentLinks(documentId: string, collectionId: string, linkTypeId: string): BsModalRef {
+  public showModifyDocumentLinks(
+    documentId: string,
+    collectionId: string,
+    linkTypeId: string,
+    workspace?: Workspace
+  ): BsModalRef {
     return this.showStaticDialog(
       {
         documentId,
         collectionId,
         linkTypeIds: [linkTypeId],
+        workspace,
       },
       ModifyDocumentLinksModalComponent,
       'modal-xxl'
@@ -153,13 +160,22 @@ export class ModalService {
     return this.showStaticDialog(initialState, ViewSettingsModalComponent);
   }
 
-  public showCreateLink(collectionIds: string[], callback?: (linkType: LinkType) => void): BsModalRef {
-    const initialState = {collectionIds, callback};
+  public showCreateLink(
+    collectionIds: string[],
+    workspace?: Workspace,
+    callback?: (linkType: LinkType) => void
+  ): BsModalRef {
+    const initialState = {collectionIds, workspace, callback};
     return this.showStaticDialog(initialState, CreateLinkModalComponent);
   }
 
-  public showAttributeType(attributeId: string, collectionId: string, linkTypeId?: string): BsModalRef {
-    const initialState = {attributeId, collectionId, linkTypeId};
+  public showAttributeType(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId?: string,
+    workspace?: Workspace
+  ): BsModalRef {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
     return this.showStaticDialog(initialState, AttributeTypeModalComponent);
   }
 
@@ -178,12 +194,17 @@ export class ModalService {
     return modalRef;
   }
 
-  public showAttributeDescription(attributeId: string, collectionId: string, linkTypeId?: string) {
-    const initialState = {attributeId, collectionId, linkTypeId};
+  public showAttributeDescription(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId?: string,
+    workspace?: Workspace
+  ) {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
     return this.showStaticDialog(initialState, AttributeDescriptionModalComponent);
   }
 
-  public showAttributeFunction(attributeId: string, collectionId: string, linkTypeId?: string) {
+  public showAttributeFunction(attributeId: string, collectionId: string, linkTypeId?: string, workspace?: Workspace) {
     const attributesResourceObservable =
       (collectionId && this.store$.pipe(select(selectCollectionById(collectionId)))) ||
       this.store$.pipe(select(selectLinkTypeById(linkTypeId)));
@@ -199,13 +220,18 @@ export class ModalService {
         if (!hasAnyFunction && limits?.functionsPerCollection !== -1 && functions >= limits?.functionsPerCollection) {
           this.notifyFunctionsLimit();
         } else {
-          this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId);
+          this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId, workspace);
         }
       });
   }
 
-  private showAttributeFunctionDialog(attributeId: string, collectionId: string, linkTypeId: string): BsModalRef {
-    const initialState = {attributeId, collectionId, linkTypeId};
+  private showAttributeFunctionDialog(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId: string,
+    workspace?: Workspace
+  ): BsModalRef {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
     const config = {initialState, keyboard: false, class: 'modal-xxl'};
     config['backdrop'] = 'static';
     return this.show(AttributeFunctionModalComponent, config);

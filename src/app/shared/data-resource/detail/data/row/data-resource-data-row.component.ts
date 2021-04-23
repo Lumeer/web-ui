@@ -39,6 +39,7 @@ import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'data-resource-data-row',
@@ -57,6 +58,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   public permissions: AllowedPermissions;
 
   @Input()
+  public workspace: Workspace;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -70,9 +74,6 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   @Input()
   public editableKey = false;
-
-  @Input()
-  public isTaskDataResource: boolean;
 
   @Output()
   public newValue = new EventEmitter<any>();
@@ -238,7 +239,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isEditable(): boolean {
-    return (this.isTaskDataResource || this.permissions?.writeWithView) && !this.readonly;
+    return this.permissions?.writeWithView && !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
@@ -269,7 +270,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isManageable(): boolean {
-    return this.permissions && this.permissions.manageWithView;
+    return this.permissions?.manage;
   }
 
   public focusColumn(column: number) {

@@ -19,14 +19,14 @@
 
 import {AppState} from '../app.state';
 import {createSelector} from '@ngrx/store';
-import {AllowedPermissions} from '../../model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../model/allowed-permissions';
 
 export interface UserPermissionsState {
   organization?: AllowedPermissions;
   project?: AllowedPermissions;
-  collections: Record<string, AllowedPermissions>;
-  linkTypes: Record<string, AllowedPermissions>;
-  views: Record<string, AllowedPermissions>;
+  collections: AllowedPermissionsMap;
+  linkTypes: AllowedPermissionsMap;
+  views: AllowedPermissionsMap;
 }
 
 export const initialUserPermissionsState: UserPermissionsState = {

@@ -21,7 +21,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {CalendarEvent} from './calendar-event';
@@ -63,7 +63,7 @@ export class CalendarConverter {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     constraintData: ConstraintData,
     query: Query
   ): CalendarEvent[] {

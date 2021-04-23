@@ -39,25 +39,45 @@ export class ApiAuditLogService extends BaseService implements AuditLogService {
     super(store$);
   }
 
-  public getByDocument(collectionId: string, documentId: string): Observable<AuditLogDto[]> {
-    return this.httpClient.get<AuditLogDto[]>(this.collectionApiPrefix(documentId, {collectionId}));
+  public getByDocument(collectionId: string, documentId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    return this.httpClient.get<AuditLogDto[]>(this.collectionApiPrefix(documentId, {...workspace, collectionId}), {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
-  public getByLink(linkTypeId: string, linkInstanceId: string): Observable<AuditLogDto[]> {
-    return this.httpClient.get<AuditLogDto[]>(this.linkTypeApiPrefix(linkTypeId, linkInstanceId));
+  public getByLink(linkTypeId: string, linkInstanceId: string, workspace?: Workspace): Observable<AuditLogDto[]> {
+    return this.httpClient.get<AuditLogDto[]>(this.linkTypeApiPrefix(linkTypeId, linkInstanceId, workspace), {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
-  public revertDocument(collectionId: string, documentId: string, auditLogId: string): Observable<DocumentDto> {
+  public revertDocument(
+    collectionId: string,
+    documentId: string,
+    auditLogId: string,
+    workspace?: Workspace
+  ): Observable<DocumentDto> {
     return this.httpClient.post<DocumentDto>(
-      `${this.collectionApiPrefix(documentId, {collectionId})}/${auditLogId}/revert`,
-      {}
+      `${this.collectionApiPrefix(documentId, {...workspace, collectionId})}/${auditLogId}/revert`,
+      {},
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
     );
   }
 
-  public revertLink(linkTypeId: string, linkInstanceId: string, auditLogId: string): Observable<LinkInstanceDto> {
+  public revertLink(
+    linkTypeId: string,
+    linkInstanceId: string,
+    auditLogId: string,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto> {
     return this.httpClient.post<LinkInstanceDto>(
-      `${this.linkTypeApiPrefix(linkTypeId, linkInstanceId)}/${auditLogId}/revert`,
-      {}
+      `${this.linkTypeApiPrefix(linkTypeId, linkInstanceId, workspace)}/${auditLogId}/revert`,
+      {},
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
     );
   }
 

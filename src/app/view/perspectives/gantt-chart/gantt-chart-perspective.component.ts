@@ -31,7 +31,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {GanttChartConfig} from '../../../core/store/gantt-charts/gantt-chart';
 import {selectGanttChartById} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -50,7 +50,7 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
 export class GanttChartPerspectiveComponent
   extends DataPerspectiveComponent<GanttChartConfig>
   implements OnInit, OnDestroy {
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
   public sortDefined$: Observable<boolean>;
 
   constructor(protected store$: Store<AppState>) {

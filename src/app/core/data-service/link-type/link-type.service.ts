@@ -22,11 +22,11 @@ import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class LinkTypeService {
-  public abstract createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto>;
+  public abstract createLinkType(linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto>;
 
   public abstract getLinkType(id: string): Observable<LinkTypeDto>;
 
-  public abstract updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto>;
+  public abstract updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto>;
 
   public abstract deleteLinkType(id: string): Observable<string>;
 
@@ -34,7 +34,12 @@ export abstract class LinkTypeService {
 
   public abstract createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]>;
 
-  public abstract updateAttribute(linkTypeId: string, id: string, attribute: AttributeDto): Observable<AttributeDto>;
+  public abstract updateAttribute(
+    linkTypeId: string,
+    id: string,
+    attribute: AttributeDto,
+    workspace?: Workspace
+  ): Observable<AttributeDto>;
 
   public abstract deleteAttribute(linkTypeId: string, id: string): Observable<any>;
 }

@@ -30,7 +30,7 @@ import {
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CalendarBar, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {calendarStemConfigIsWritable, checkOrTransformCalendarConfig} from '../util/calendar-util';
@@ -62,7 +62,7 @@ interface Data {
   linkTypes: LinkType[];
   linkInstances: LinkInstance[];
   config: CalendarConfig;
-  permissions: Record<string, AllowedPermissions>;
+  permissions: AllowedPermissionsMap;
   query: Query;
   constraintData: ConstraintData;
 }
@@ -95,7 +95,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public config: CalendarConfig;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
   public constraintData: ConstraintData;

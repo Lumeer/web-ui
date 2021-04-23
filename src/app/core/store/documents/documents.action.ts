@@ -124,6 +124,7 @@ export namespace DocumentsAction {
         onSuccess?: (documentId: string) => void;
         onFailure?: () => void;
         afterSuccess?: (document: DocumentModel) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -151,6 +152,7 @@ export namespace DocumentsAction {
         onSuccess?: ({documentId, linkInstanceId}) => void;
         onFailure?: () => void;
         afterSuccess?: ({documentId, linkInstanceId}) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -159,7 +161,12 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.CREATE_CHAIN;
 
     public constructor(
-      public payload: {documents: DocumentModel[]; linkInstances: LinkInstance[]; failureMessage: string}
+      public payload: {
+        documents: DocumentModel[];
+        linkInstances: LinkInstance[];
+        failureMessage: string;
+        workspace?: Workspace;
+      }
     ) {}
   }
 
@@ -172,7 +179,14 @@ export namespace DocumentsAction {
   export class Patch implements Action {
     public readonly type = DocumentsActionType.PATCH;
 
-    public constructor(public payload: {collectionId: string; documentId: string; document: Partial<DocumentModel>}) {}
+    public constructor(
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        document: Partial<DocumentModel>;
+        workspace?: Workspace;
+      }
+    ) {}
   }
 
   export class UpdateSuccess implements Action {
@@ -197,6 +211,7 @@ export namespace DocumentsAction {
         documentIds: string[];
         onSuccess?: (documents: DocumentModel[]) => void;
         onFailure?: (error: any) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -210,13 +225,15 @@ export namespace DocumentsAction {
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
   }
 
   export class UpdateDataInternal implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA_INTERNAL;
 
-    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+    public constructor(
+      public payload: {document: DocumentModel; originalDocument?: DocumentModel; workspace?: Workspace}
+    ) {}
   }
 
   export class RevertData implements Action {
@@ -228,13 +245,15 @@ export namespace DocumentsAction {
   export class PatchData implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
   }
 
   export class PatchDataInternal implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA_INTERNAL;
 
-    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+    public constructor(
+      public payload: {document: DocumentModel; originalDocument?: DocumentModel; workspace?: Workspace}
+    ) {}
   }
 
   export class CheckDataHint implements Action {
@@ -255,7 +274,7 @@ export namespace DocumentsAction {
   export class UpdateMetaData implements Action {
     public readonly type = DocumentsActionType.UPDATE_META_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
   }
 
   export class PatchMetaData implements Action {
@@ -267,6 +286,7 @@ export namespace DocumentsAction {
         documentId: string;
         metaData: DocumentMetaData;
         onSuccess?: (document: DocumentModel) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -274,13 +294,17 @@ export namespace DocumentsAction {
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
-    public constructor(public payload: {collectionId: string; documentId: string; nextAction?: Action}) {}
+    public constructor(
+      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+    ) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: {collectionId: string; documentId: string; nextAction?: Action}) {}
+    public constructor(
+      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+    ) {}
   }
 
   export class DeleteSuccess implements Action {
@@ -357,7 +381,13 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.RUN_RULE;
 
     public constructor(
-      public payload: {collectionId: string; documentId: string; attributeId: string; actionName?: string}
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        attributeId: string;
+        actionName?: string;
+        workspace?: Workspace;
+      }
     ) {}
   }
 

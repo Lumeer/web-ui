@@ -29,7 +29,6 @@ import {
 } from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
@@ -56,9 +55,6 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
 
   @Input()
   public document: DocumentModel;
-
-  @Input()
-  public permissions: AllowedPermissions;
 
   @Input()
   public query: Query;

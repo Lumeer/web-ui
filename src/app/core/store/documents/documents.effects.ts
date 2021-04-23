@@ -142,7 +142,7 @@ export class DocumentsEffects {
           mergeMap(() => {
             const documentDto = convertDocumentModelToDto(action.payload.document);
 
-            return this.documentService.createDocument(documentDto).pipe(
+            return this.documentService.createDocument(documentDto, action.payload.workspace).pipe(
               map(dto => convertDocumentDtoToModel(dto, correlationId)),
               mergeMap(document => {
                 return [
@@ -184,7 +184,7 @@ export class DocumentsEffects {
         } = action.payload;
         const documentDto = convertDocumentModelToDto(document);
 
-        return this.documentService.createDocument(documentDto).pipe(
+        return this.documentService.createDocument(documentDto, action.payload.workspace).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
           mergeMap(newDocument => {
             const linkInstance: LinkInstance = {
@@ -192,7 +192,7 @@ export class DocumentsEffects {
               documentIds: [newDocument.id, otherDocumentId],
             };
             const linkInstanceDto = convertLinkInstanceModelToDto(linkInstance);
-            return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
+            return this.linkInstanceService.createLinkInstance(linkInstanceDto, action.payload.workspace).pipe(
               map(dto => convertLinkInstanceDtoToModel(dto)),
               mergeMap(newLink => [
                 ...createCallbackActions(onSuccess, {documentId: newDocument.id, linkInstanceId: newLink.id}),
@@ -250,7 +250,7 @@ export class DocumentsEffects {
         const documentsDtos = documents.map(document => convertDocumentModelToDto(document));
         const linkInstancesDtos = linkInstances.map(link => convertLinkInstanceModelToDto(link));
 
-        return this.documentService.createChain(documentsDtos, linkInstancesDtos).pipe(
+        return this.documentService.createChain(documentsDtos, linkInstancesDtos, action.payload.workspace).pipe(
           mergeMap(({documents: documentDtos, linkInstances: linkDtos}) => {
             const newDocuments = documentDtos.map(dto => convertDocumentDtoToModel(dto));
             const newLinks = linkDtos.map(dto => convertLinkInstanceDtoToModel(dto));
@@ -275,11 +275,13 @@ export class DocumentsEffects {
           take(1),
           mergeMap(originalDocument => {
             const documentDto = convertDocumentModelToDto(action.payload.document);
-            return this.documentService.patchDocument(collectionId, documentId, documentDto).pipe(
-              map(dto => convertDocumentDtoToModel(dto)),
-              map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
-              catchError(error => of(new DocumentsAction.UpdateFailure({error})))
-            );
+            return this.documentService
+              .patchDocument(collectionId, documentId, documentDto, action.payload.workspace)
+              .pipe(
+                map(dto => convertDocumentDtoToModel(dto)),
+                map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
+                catchError(error => of(new DocumentsAction.UpdateFailure({error})))
+              );
           })
         );
       })
@@ -291,14 +293,16 @@ export class DocumentsEffects {
       ofType<DocumentsAction.Duplicate>(DocumentsActionType.DUPLICATE),
       mergeMap(action => {
         const {collectionId, documentIds, correlationId, onSuccess, onFailure} = action.payload;
-        return this.documentService.duplicateDocuments(collectionId, documentIds, correlationId).pipe(
-          map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto, correlationId))),
-          mergeMap(documents => [
-            new DocumentsAction.DuplicateSuccess({documents}),
-            ...createCallbackActions(onSuccess, documents),
-          ]),
-          catchError(error => emitErrorActions(error, onFailure))
-        );
+        return this.documentService
+          .duplicateDocuments(collectionId, documentIds, correlationId, action.payload.workspace)
+          .pipe(
+            map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto, correlationId))),
+            mergeMap(documents => [
+              new DocumentsAction.DuplicateSuccess({documents}),
+              ...createCallbackActions(onSuccess, documents),
+            ]),
+            catchError(error => emitErrorActions(error, onFailure))
+          );
       })
     )
   );
@@ -433,7 +437,7 @@ export class DocumentsEffects {
       mergeMap(action => {
         const originalDocument = action.payload.originalDocument;
         const documentDto = convertDocumentModelToDto(action.payload.document);
-        return this.documentService.updateDocumentData(documentDto).pipe(
+        return this.documentService.updateDocumentData(documentDto, action.payload.workspace).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
           map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
           catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
@@ -484,7 +488,7 @@ export class DocumentsEffects {
       mergeMap(action => {
         const originalDocument = action.payload.originalDocument;
         const documentDto = convertDocumentModelToDto(action.payload.document);
-        return this.documentService.patchDocumentData(documentDto).pipe(
+        return this.documentService.patchDocumentData(documentDto, action.payload.workspace).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
           mergeMap(document => [
             new DocumentsAction.UpdateSuccess({document, originalDocument}),
@@ -520,19 +524,23 @@ export class DocumentsEffects {
           select(selectDocumentById(documentId)),
           take(1),
           mergeMap(originalDocument => {
-            return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
-              mergeMap(dto => {
-                const document = {...convertDocumentDtoToModel(dto), data: originalDocument.data};
-                const actions: Action[] = [new DocumentsAction.UpdateSuccess({document, originalDocument})];
+            return this.documentService
+              .patchDocumentMetaData(collectionId, documentId, metaData, action.payload.workspace)
+              .pipe(
+                mergeMap(dto => {
+                  const document = {...convertDocumentDtoToModel(dto), data: originalDocument.data};
+                  const actions: Action[] = [new DocumentsAction.UpdateSuccess({document, originalDocument})];
 
-                if (action.payload.onSuccess) {
-                  actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess(document)}));
-                }
+                  if (action.payload.onSuccess) {
+                    actions.push(
+                      new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess(document)})
+                    );
+                  }
 
-                return actions;
-              }),
-              catchError(error => of(new DocumentsAction.UpdateFailure({error})))
-            );
+                  return actions;
+                }),
+                catchError(error => of(new DocumentsAction.UpdateFailure({error})))
+              );
           })
         );
       })
@@ -549,7 +557,7 @@ export class DocumentsEffects {
           take(1),
           mergeMap(originalDocument => {
             const documentDto = convertDocumentModelToDto(document);
-            return this.documentService.updateDocumentMetaData(documentDto).pipe(
+            return this.documentService.updateDocumentMetaData(documentDto, action.payload.workspace).pipe(
               map(
                 dto =>
                   new DocumentsAction.UpdateSuccess({
@@ -569,19 +577,21 @@ export class DocumentsEffects {
     this.actions$.pipe(
       ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE),
       mergeMap(action => {
-        return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
-          map(() => action.payload),
-          mergeMap(payload => {
-            const actions: Action[] = [new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})];
+        return this.documentService
+          .removeDocument(action.payload.collectionId, action.payload.documentId, action.payload.workspace)
+          .pipe(
+            map(() => action.payload),
+            mergeMap(payload => {
+              const actions: Action[] = [new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})];
 
-            if (payload.nextAction) {
-              actions.push(payload.nextAction);
-            }
+              if (payload.nextAction) {
+                actions.push(payload.nextAction);
+              }
 
-            return actions;
-          }),
-          catchError(error => of(new DocumentsAction.DeleteFailure({error})))
-        );
+              return actions;
+            }),
+            catchError(error => of(new DocumentsAction.DeleteFailure({error})))
+          );
       })
     )
   );
@@ -618,9 +628,9 @@ export class DocumentsEffects {
     this.actions$.pipe(
       ofType<DocumentsAction.RunRule>(DocumentsActionType.RUN_RULE),
       mergeMap(action => {
-        const {collectionId, documentId, attributeId, actionName} = action.payload;
+        const {collectionId, documentId, attributeId, actionName, workspace} = action.payload;
 
-        return this.documentService.runRule(collectionId, documentId, attributeId, actionName).pipe(
+        return this.documentService.runRule(collectionId, documentId, attributeId, actionName, workspace).pipe(
           mergeMap(() => EMPTY),
           catchError(error => of(new DocumentsAction.RunRuleFailure({...action.payload, error})))
         );

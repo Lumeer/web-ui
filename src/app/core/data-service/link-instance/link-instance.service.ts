@@ -20,32 +20,50 @@
 import {Observable} from 'rxjs';
 import {LinkInstanceDto, LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
+import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class LinkInstanceService {
-  public abstract getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto>;
+  public abstract getLinkInstance(
+    linkTypeId: string,
+    linkInstanceId: string,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto>;
 
-  public abstract getLinkInstances(linkInstanceIds: string[]): Observable<LinkInstanceDto[]>;
+  public abstract getLinkInstances(linkInstanceIds: string[], workspace?: Workspace): Observable<LinkInstanceDto[]>;
 
-  public abstract updateLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto>;
+  public abstract updateLinkInstance(linkInstance: LinkInstanceDto, workspace?: Workspace): Observable<LinkInstanceDto>;
 
-  public abstract createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto>;
+  public abstract createLinkInstance(linkInstance: LinkInstanceDto, workspace?: Workspace): Observable<LinkInstanceDto>;
 
-  public abstract patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto>;
+  public abstract patchLinkInstanceData(
+    linkInstanceId: string,
+    data: Record<string, any>,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto>;
 
-  public abstract updateLinkInstanceData(linkInstanceDto: LinkInstanceDto): Observable<LinkInstanceDto>;
+  public abstract updateLinkInstanceData(
+    linkInstanceDto: LinkInstanceDto,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto>;
 
-  public abstract deleteLinkInstance(id: string): Observable<string>;
+  public abstract deleteLinkInstance(id: string, workspace?: Workspace): Observable<string>;
 
-  public abstract setDocumentLinks(linkTypeId: string, dto: DocumentLinksDto): Observable<LinkInstanceDto[]>;
+  public abstract setDocumentLinks(
+    linkTypeId: string,
+    dto: DocumentLinksDto,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto[]>;
 
   public abstract duplicateLinkInstances(
-    linkInstanceDuplicate: LinkInstanceDuplicateDto
+    linkInstanceDuplicate: LinkInstanceDuplicateDto,
+    workspace?: Workspace
   ): Observable<LinkInstanceDto[]>;
 
   public abstract runRule(
     linkTypeId: string,
     linkInstanceId: string,
     attributeId: string,
-    actionName?: string
+    actionName?: string,
+    workspace?: Workspace
   ): Observable<any>;
 }

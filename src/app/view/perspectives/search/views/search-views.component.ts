@@ -38,7 +38,7 @@ import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Injectable()
@@ -48,7 +48,7 @@ export abstract class SearchViewsComponent implements OnInit, OnDestroy {
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
   public viewsConfig$: Observable<SearchViewsConfig>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   private config: SearchConfig;
   private searchId: string;

@@ -85,7 +85,7 @@ export class LinkTypesEffects {
       mergeMap(action => {
         const linkTypeDto = convertLinkTypeModelToDto(action.payload.linkType);
 
-        return this.linkTypeService.createLinkType(linkTypeDto).pipe(
+        return this.linkTypeService.createLinkType(linkTypeDto, action.payload.workspace).pipe(
           map(dto => convertLinkTypeDtoToModel(dto, action.payload.linkType.correlationId)),
           mergeMap(linkType => [
             new LinkTypesAction.CreateSuccess({linkType: linkType}),
@@ -155,7 +155,7 @@ export class LinkTypesEffects {
 
         const linkTypeDto = convertLinkTypeModelToDto({...oldLinkType, rules});
 
-        return this.linkTypeService.updateLinkType(linkTypeId, linkTypeDto).pipe(
+        return this.linkTypeService.updateLinkType(linkTypeId, linkTypeDto, action.payload.workspace).pipe(
           map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto, oldLinkType?.correlationId)),
           mergeMap(linkType => [
             new LinkTypesAction.UpsertRuleSuccess({linkType}),
@@ -252,14 +252,16 @@ export class LinkTypesEffects {
         const {attributeId, linkTypeId, onSuccess, onFailure} = action.payload;
         const attributeDto = convertAttributeModelToDto(action.payload.attribute);
 
-        return this.linkTypeService.updateAttribute(linkTypeId, attributeId, attributeDto).pipe(
-          map(dto => convertAttributeDtoToModel(dto)),
-          mergeMap(attribute => [
-            new LinkTypesAction.UpdateAttributeSuccess({linkTypeId, attribute}),
-            ...createCallbackActions(onSuccess, attribute),
-          ]),
-          catchError(error => emitErrorActions(error, onFailure))
-        );
+        return this.linkTypeService
+          .updateAttribute(linkTypeId, attributeId, attributeDto, action.payload.workspace)
+          .pipe(
+            map(dto => convertAttributeDtoToModel(dto)),
+            mergeMap(attribute => [
+              new LinkTypesAction.UpdateAttributeSuccess({linkTypeId, attribute}),
+              ...createCallbackActions(onSuccess, attribute),
+            ]),
+            catchError(error => emitErrorActions(error, onFailure))
+          );
       })
     )
   );

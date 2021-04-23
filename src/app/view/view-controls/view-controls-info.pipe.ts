@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {View} from '../../core/store/views/view';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
@@ -31,8 +31,8 @@ export class ViewControlsInfoPipe implements PipeTransform {
   public transform(
     currentView: View,
     projectPermissions: AllowedPermissions,
-    collectionsPermissions: Record<string, AllowedPermissions>,
-    viewsPermissions: Record<string, AllowedPermissions>,
+    collectionsPermissions: AllowedPermissionsMap,
+    viewsPermissions: AllowedPermissionsMap,
     linkTypes: LinkType[]
   ): {canClone: boolean; canManage: boolean; canShare: boolean} {
     if (!currentView || !currentView.code) {

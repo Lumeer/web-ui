@@ -13,7 +13,6 @@
                           [dataResource]="data.document"
                           [query]="query$ | async"
                           [preventEventBubble]="true"
-                          [permissions]="permissions$ | async"
                           [toolbarRef]="toolbarRef"
                           (dataResourceChanged)="onDocumentChanged($event)"
                           (documentSelect)="selectCollectionAndDocument($event)">

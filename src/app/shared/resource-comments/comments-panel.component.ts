@@ -32,7 +32,7 @@ import {AppState} from '../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {User} from '../../core/store/users/user';
-import {selectAllUsers, selectCurrentUser, selectUsersDictionary} from '../../core/store/users/users.state';
+import {selectCurrentUser, selectUsersDictionary} from '../../core/store/users/users.state';
 import {ResourceCommentsAction} from '../../core/store/resource-comments/resource-comments.action';
 import {ResourceCommentModel} from '../../core/store/resource-comments/resource-comment.model';
 import {selectResourceCommentsByResource} from '../../core/store/resource-comments/resource-comments.state';
@@ -62,9 +62,6 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
 
   @Input()
   public startEditing: boolean = false;
-
-  @Input()
-  public isTaskDataResource: boolean;
 
   @Output()
   public newCommentClick = new EventEmitter();

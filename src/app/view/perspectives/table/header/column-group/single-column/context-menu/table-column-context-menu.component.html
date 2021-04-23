@@ -25,7 +25,7 @@
     </button>
     <hr class="my-2" *ngIf="false && cursor.partIndex === 0">
     <button mat-menu-item
-            [disabled]="!allowedPermissions?.manageWithView"
+            [disabled]="!allowedPermissions?.manage"
             (click)="onClick($event); edit.emit()"
             data-test="table-column-menu-edit-name">
       <i class="fa fa-fw fa-edit mr-1"
@@ -35,7 +35,7 @@
     </button>
     <ng-container *ngIf="attribute.id">
       <button mat-menu-item
-              [disabled]="!allowedPermissions?.manageWithView"
+              [disabled]="!allowedPermissions?.manage"
               (click)="onClick($event); configure.emit()"
               data-test="table-column-menu-change-constraint">
         <i class="fa fa-fw fa-shapes mr-1"
@@ -44,7 +44,7 @@
         <span i18n="@@table.header.menu.changeType">Attribute settings...</span>
       </button>
       <button mat-menu-item
-              [disabled]="!allowedPermissions?.manageWithView"
+              [disabled]="!allowedPermissions?.manage"
               (click)="onClick($event); functionEdit.emit()">
         <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>
         <span *ngIf="attribute?.constraint?.type !== type.Action"
@@ -53,14 +53,14 @@
       </button>
       <hr class="my-2">
       <button mat-menu-item
-              [disabled]="!allowedPermissions?.manageWithView"
+              [disabled]="!allowedPermissions?.manage"
               (click)="onClick($event); descriptionEdit.emit()">
         <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>
         <span i18n="@@table.header.menu.editDescription">Edit description...</span>
       </button>
       <button *ngIf="!defaultAttribute"
               mat-menu-item
-              [disabled]="!allowedPermissions?.manageWithView"
+              [disabled]="!allowedPermissions?.manage"
               (click)="onClick($event); setDefaultAttribute.emit()">
         <i class="fa fa-fw fa-check-square mr-1"
            aria-hidden="true">
@@ -77,7 +77,7 @@
     </button>
     <hr class="my-2">
     <button (click)="onClick($event); addNextColumn()"
-            [disabled]="!allowedPermissions?.manageWithView"
+            [disabled]="!allowedPermissions?.manage"
             mat-menu-item
             data-test="table-column-menu-add-right">
       <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
@@ -86,7 +86,7 @@
       <span i18n="@@table.header.menu.add.column.next">Add column right</span>
     </button>
     <button (click)="onClick($event); addPreviousColumn()"
-            [disabled]="!allowedPermissions?.manageWithView"
+            [disabled]="!allowedPermissions?.manage"
             mat-menu-item
             data-test="table-column-menu-add-left">
       <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
@@ -114,7 +114,7 @@
       <span i18n="@@table.header.menu.hide">Hide column</span>
     </button>
     <button (click)="onClick($event); remove.emit()"
-            [disabled]="!allowedPermissions?.manageWithView"
+            [disabled]="!allowedPermissions?.manage"
             mat-menu-item>
       <i class="far fa-fw fa-trash-alt text-danger mr-1"
          aria-hidden="true">

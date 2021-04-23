@@ -44,8 +44,6 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
 import {AttributesResourceType} from '../../../core/model/resource';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'document-detail-modal',
@@ -74,7 +72,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public query$: Observable<Query>;
   public collection$: Observable<Collection>;
   public document$: Observable<DocumentModel>;
-  public permissions$: Observable<AllowedPermissions>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -101,7 +98,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   private initData() {
     this.collection$ = of(this.collection);
     this.document$ = of(this.document);
-    this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collection?.id)));
 
     this.subscribeExist(this.collection, this.document);
   }

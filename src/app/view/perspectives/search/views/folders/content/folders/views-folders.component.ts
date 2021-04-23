@@ -22,7 +22,7 @@ import {ObjectFolders} from '../util/object-folders';
 import {View} from '../../../../../../../core/store/views/view';
 import {QueryData} from '../../../../../../../shared/top-panel/search-box/util/query-data';
 import {SizeType} from '../../../../../../../shared/slider/size/size-type';
-import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../../../core/model/allowed-permissions';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
@@ -44,7 +44,7 @@ export class ViewsFoldersComponent {
   public viewSize: SizeType;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: AllowedPermissionsMap;
 
   @Input()
   public workspace: Workspace;

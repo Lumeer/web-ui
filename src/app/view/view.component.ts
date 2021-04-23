@@ -149,7 +149,7 @@ export class ViewComponent implements OnInit {
           perspective,
         };
 
-        if (viewByName && (!view.code || view.code !== viewByName.code)) {
+        if (this.viewWithNameAlreadyExists(viewByName, view, currentView?.name)) {
           this.informAboutSameNameView(view);
         } else if (view.code) {
           if (clone) {
@@ -161,6 +161,11 @@ export class ViewComponent implements OnInit {
           this.createView(view);
         }
       });
+  }
+
+  private viewWithNameAlreadyExists(viewByName: View, newView: View, previousName: string): boolean {
+    const nameChanged = newView.name !== previousName;
+    return viewByName && (!newView.code || (newView.code !== viewByName.code && nameChanged));
   }
 
   private getViewByName(viewName: string): Observable<View> {

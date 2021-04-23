@@ -1,6 +1,6 @@
 <ng-container *ngIf="writableCollections$ | async as writableCollections">
   <button type="button"
-          *ngIf="writableCollections.length"
+          *ngIf="(permissions?.manageWithView || permissions?.write) &&  writableCollections.length"
           aria-haspopup="true"
           class="btn btn-sm btn-primary my-2"
           [matMenuTriggerFor]="contextMenu">

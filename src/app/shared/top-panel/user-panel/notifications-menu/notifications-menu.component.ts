@@ -52,7 +52,7 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {Collection} from '../../../../core/store/collections/collection';
-import {selectViewsDictionary, selectViewsDictionaryByCode} from '../../../../core/store/views/views.state';
+import {selectViewsDictionaryByCode} from '../../../../core/store/views/views.state';
 import {selectDocumentsDictionary} from '../../../../core/store/documents/documents.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {View} from '../../../../core/store/views/view';
@@ -60,7 +60,7 @@ import {
   selectCollectionsPermissions,
   selectViewsPermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {ModalService} from '../../../modal/modal.service';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
@@ -277,9 +277,9 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       Organization,
       Collection,
       Record<string, View>,
-      Record<string, AllowedPermissions>,
+      AllowedPermissionsMap,
       Record<string, DocumentModel>,
-      Record<string, AllowedPermissions>
+      AllowedPermissionsMap
     ]
   > {
     return combineLatest([

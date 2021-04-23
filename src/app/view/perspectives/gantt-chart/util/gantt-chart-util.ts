@@ -40,7 +40,7 @@ import {
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {
@@ -232,7 +232,7 @@ export function ganttTaskBarModel(task: GanttTask): GanttChartBarModel {
 
 export function canCreateTaskByStemConfig(
   config: GanttChartStemConfig,
-  permissions: Record<string, AllowedPermissions>,
+  permissions: AllowedPermissionsMap,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
   if (!config.start || !config.end) {
@@ -257,7 +257,7 @@ export function canCreateTaskByStemConfig(
 
 function hasPermissionByConfig(
   config: GanttChartStemConfig,
-  permissions: Record<string, AllowedPermissions>,
+  permissions: AllowedPermissionsMap,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
   let hasPermission = true;

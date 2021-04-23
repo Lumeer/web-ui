@@ -40,6 +40,7 @@ import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 import {selectDetailConfig} from '../details/detail.state';
+import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -73,6 +74,14 @@ export const selectViewsDictionaryByCode = createSelector(selectAllViews, views 
 export const selectCurrentView = createSelector(selectViewCode, selectAllViews, (viewCode, views) =>
   viewCode ? views.find(view => view.code === viewCode) : null
 );
+
+export const selectDefaultDocumentView = (purpose: CollectionPurpose) =>
+  createSelector(selectAllViews, views => {
+    if (purpose?.type === CollectionPurposeType.Tasks && purpose.metaData?.defaultViewCode) {
+      return views.find(view => view.code === purpose.metaData.defaultViewCode);
+    }
+    return null;
+  });
 
 export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 

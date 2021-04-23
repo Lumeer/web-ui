@@ -32,6 +32,7 @@ import {LinkTypesAction} from '../../../core/store/link-types/link-types.action'
 import {KeyCode} from '../../key-code';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AttributeDescriptionContentComponent} from './content/attribute-description-content.component';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'attribute-description-modal',
@@ -47,6 +48,9 @@ export class AttributeDescriptionModalComponent implements OnInit {
 
   @Input()
   public attributeId: string;
+
+  @Input()
+  public workspace: Workspace;
 
   @ViewChild(AttributeDescriptionContentComponent)
   public contentComponent: AttributeDescriptionContentComponent;
@@ -90,6 +94,7 @@ export class AttributeDescriptionModalComponent implements OnInit {
         collectionId,
         attributeId: attribute.id,
         attribute,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -102,6 +107,7 @@ export class AttributeDescriptionModalComponent implements OnInit {
         linkTypeId,
         attributeId: attribute.id,
         attribute,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })

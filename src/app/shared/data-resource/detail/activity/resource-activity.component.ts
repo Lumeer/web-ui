@@ -29,6 +29,7 @@ import {AttributesResource, DataResource} from '../../../../core/model/resource'
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {selectDocumentById} from '../../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
+import {Workspace} from '../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'resource-activity',
@@ -45,13 +46,16 @@ export class ResourceActivityComponent implements OnChanges {
   @Input()
   public parent: AttributesResource;
 
+  @Input()
+  public workspace: Workspace;
+
   public audit$: Observable<AuditLog[]>;
   public dataResource$: Observable<DataResource>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resourceType || changes.resourceId || changes.parent) {
+    if (changes.resourceType || changes.resourceId || changes.parent || changes.workspace) {
       this.subscribeData();
     }
   }
@@ -60,11 +64,23 @@ export class ResourceActivityComponent implements OnChanges {
     if (this.resourceType === ResourceType.Document) {
       this.dataResource$ = this.store$.pipe(select(selectDocumentById(this.resourceId)));
       this.audit$ = this.store$.pipe(select(selectAuditLogsByDocument(this.resourceId)));
-      this.store$.dispatch(AuditLogActions.getByDocument({documentId: this.resourceId, collectionId: this.parent.id}));
+      this.store$.dispatch(
+        AuditLogActions.getByDocument({
+          documentId: this.resourceId,
+          collectionId: this.parent.id,
+          workspace: this.workspace,
+        })
+      );
     } else if (this.resourceType === ResourceType.Link) {
       this.dataResource$ = this.store$.pipe(select(selectLinkInstanceById(this.resourceId)));
       this.audit$ = this.store$.pipe(select(selectAuditLogsByLink(this.resourceId)));
-      this.store$.dispatch(AuditLogActions.getByLink({linkInstanceId: this.resourceId, linkTypeId: this.parent.id}));
+      this.store$.dispatch(
+        AuditLogActions.getByLink({
+          linkInstanceId: this.resourceId,
+          linkTypeId: this.parent.id,
+          workspace: this.workspace,
+        })
+      );
     }
   }
 
@@ -84,12 +100,14 @@ export class ResourceActivityComponent implements OnChanges {
         documentId: this.resourceId,
         collectionId: this.parent.id,
         auditLogId: auditLog.id,
+        workspace: this.workspace,
       });
     } else if (this.resourceType === ResourceType.Link) {
       return AuditLogActions.revertLink({
         linkInstanceId: this.resourceId,
         linkTypeId: this.parent.id,
         auditLogId: auditLog.id,
+        workspace: this.workspace,
       });
     }
     return null;

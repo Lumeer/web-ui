@@ -43,29 +43,55 @@ export class ApiDocumentService extends BaseService implements DocumentService {
     super(store$);
   }
 
-  public createDocument(document: DocumentDto): Observable<DocumentDto> {
-    return this.httpClient.post<DocumentDto>(this.apiPrefix({collectionId: document.collectionId}), document, {
-      headers: {
-        [correlationIdHeaderBackup]: this.appId.getAppId(),
-      },
-    });
+  public createDocument(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto> {
+    return this.httpClient.post<DocumentDto>(
+      this.apiPrefix({
+        ...workspace,
+        collectionId: document.collectionId,
+      }),
+      document,
+      {
+        headers: {
+          ...this.workspaceHeaders(workspace),
+          [correlationIdHeaderBackup]: this.appId.getAppId(),
+        },
+      }
+    );
   }
 
   public patchDocument(
     collectionId: string,
     documentId: string,
-    document: Partial<DocumentDto>
+    document: Partial<DocumentDto>,
+    workspace?: Workspace
   ): Observable<DocumentDto> {
-    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}`, document);
+    return this.httpClient.patch<DocumentDto>(
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/${documentId}`,
+      document,
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
+    );
   }
 
-  public updateDocumentData(document: DocumentDto): Observable<DocumentDto> {
+  public updateDocumentData(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto> {
     return this.httpClient
-      .put<DocumentDto>(`${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`, document.data, {
-        headers: {
-          [correlationIdHeader]: this.appId.getAppId(),
-        },
-      })
+      .put<DocumentDto>(
+        `${this.apiPrefix({
+          ...workspace,
+          collectionId: document.collectionId,
+        })}/${document.id}/data`,
+        document.data,
+        {
+          headers: {
+            ...this.workspaceHeaders(workspace),
+            [correlationIdHeader]: this.appId.getAppId(),
+          },
+        }
+      )
       .pipe(
         map(returnedDocument => {
           return {...returnedDocument, collectionId: document.collectionId};
@@ -73,88 +99,151 @@ export class ApiDocumentService extends BaseService implements DocumentService {
       );
   }
 
-  public patchDocumentData(document: DocumentDto): Observable<DocumentDto> {
+  public patchDocumentData(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto> {
     return this.httpClient.patch<DocumentDto>(
-      `${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/data`,
+      `${this.apiPrefix({...workspace, collectionId: document.collectionId})}/${document.id}/data`,
       document.data,
       {
         headers: {
+          ...this.workspaceHeaders(workspace),
           [correlationIdHeader]: this.appId.getAppId(),
         },
       }
     );
   }
 
-  public updateDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
+  public updateDocumentMetaData(document: DocumentDto, workspace?: Workspace): Observable<DocumentDto> {
     return this.httpClient.put<DocumentDto>(
-      `${this.apiPrefix({collectionId: document.collectionId})}/${document.id}/meta`,
-      document.metaData
+      `${this.apiPrefix({...workspace, collectionId: document.collectionId})}/${document.id}/meta`,
+      document.metaData,
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
     );
   }
 
   public patchDocumentMetaData(
     collectionId: string,
     documentId: string,
-    metaData: DocumentMetaDataDto
+    metaData: DocumentMetaDataDto,
+    workspace?: Workspace
   ): Observable<DocumentDto> {
-    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}/meta`, metaData);
+    return this.httpClient.patch<DocumentDto>(
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/${documentId}/meta`,
+      metaData,
+      {headers: {...this.workspaceHeaders(workspace)}}
+    );
   }
 
-  public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix({collectionId})}/${documentId}`, {
+  public removeDocument(
+    collectionId: string,
+    documentId: string,
+    workspace?: Workspace
+  ): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.apiPrefix({...workspace, collectionId})}/${documentId}`, {
       observe: 'response',
       responseType: 'text',
       headers: {
+        ...this.workspaceHeaders(workspace),
         [correlationIdHeader]: this.appId.getAppId(),
       },
     });
   }
 
   public addFavorite(collectionId: string, documentId: string, workspace?: Workspace): Observable<any> {
-    return this.httpClient.post(`${this.apiPrefix({...workspace, collectionId})}/${documentId}/favorite`, {});
+    return this.httpClient.post(
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/${documentId}/favorite`,
+      {},
+      {headers: {...this.workspaceHeaders(workspace)}}
+    );
   }
 
   public removeFavorite(collectionId: string, documentId: string, workspace?: Workspace): Observable<any> {
-    return this.httpClient.delete(`${this.apiPrefix({...workspace, collectionId})}/${documentId}/favorite`);
+    return this.httpClient.delete(
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/${documentId}/favorite`,
+      {headers: {...this.workspaceHeaders(workspace)}}
+    );
   }
 
-  public getDocument(collectionId: string, documentId: string): Observable<DocumentDto> {
-    return this.httpClient.get<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}`);
+  public getDocument(collectionId: string, documentId: string, workspace?: Workspace): Observable<DocumentDto> {
+    return this.httpClient.get<DocumentDto>(
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/${documentId}`,
+      {headers: {...this.workspaceHeaders(workspace)}}
+    );
   }
 
-  public getDocuments(documentsId: string[]): Observable<DocumentDto[]> {
-    return this.httpClient.post<DocumentDto[]>(`${this.workspaceApiPrefix()}/data/documents`, documentsId);
+  public getDocuments(documentsId: string[], workspace?: Workspace): Observable<DocumentDto[]> {
+    return this.httpClient.post<DocumentDto[]>(`${this.workspaceApiPrefix(workspace)}/data/documents`, documentsId, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public duplicateDocuments(
     collectionId: string,
     documentIds: string[],
-    correlationId?: string
+    correlationId?: string,
+    workspace?: Workspace
   ): Observable<DocumentDto[]> {
-    const options = correlationId ? {headers: {[correlationIdHeader]: correlationId}} : {};
-    return this.httpClient.post<DocumentDto[]>(`${this.apiPrefix({collectionId})}/duplicate`, documentIds, options);
-  }
-
-  public createChain(
-    documents: DocumentDto[],
-    linkInstances: LinkInstanceDto[]
-  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
-    return this.httpClient.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
-      `${this.workspaceApiPrefix()}/data/documentsChain`,
+    const headers = correlationId ? {[correlationIdHeader]: correlationId} : {};
+    return this.httpClient.post<DocumentDto[]>(
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/duplicate`,
+      documentIds,
       {
-        documents,
-        linkInstances,
+        headers: {
+          ...this.workspaceHeaders(workspace),
+          ...headers,
+        },
       }
     );
   }
 
-  public runRule(collectionId: string, documentId: string, attributeId: string, actionName?: string): Observable<any> {
+  public createChain(
+    documents: DocumentDto[],
+    linkInstances: LinkInstanceDto[],
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.httpClient.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+      `${this.workspaceApiPrefix(workspace)}/data/documentsChain`,
+      {
+        documents,
+        linkInstances,
+      },
+      {headers: {...this.workspaceHeaders(workspace)}}
+    );
+  }
+
+  public runRule(
+    collectionId: string,
+    documentId: string,
+    attributeId: string,
+    actionName?: string,
+    workspace?: Workspace
+  ): Observable<any> {
     return this.httpClient.post<any>(
-      `${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}?actionName=${actionName || ''}`,
+      `${this.apiPrefix({
+        ...workspace,
+        collectionId,
+      })}/${documentId}/rule/${attributeId}?actionName=${actionName || ''}`,
       {
         correlationId: this.appId.getAppId(),
         actionName,
-      }
+      },
+      {headers: {...this.workspaceHeaders(workspace)}}
     );
   }
 

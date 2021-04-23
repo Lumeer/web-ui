@@ -32,7 +32,7 @@ import {LinkInstance} from '../../../../../../core/store/link-instances/link.ins
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ResourceAttributeSettings, ViewSettings} from '../../../../../../core/store/views/view';
 import {
@@ -187,7 +187,7 @@ export class WorkflowTablesDataService {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     config: WorkflowConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
@@ -229,7 +229,7 @@ export class WorkflowTablesDataService {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     config: WorkflowConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
@@ -484,7 +484,7 @@ export class WorkflowTablesDataService {
     stemConfig: WorkflowStemConfig,
     currentColumns: TableColumn[],
     collection: Collection,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: AllowedPermissionsMap,
     linkTypesMap: Record<string, LinkType>,
     viewSettings: ViewSettings,
     query: Query,
@@ -597,7 +597,7 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      if (!setting.hidden || permissions?.read || permissions?.manageWithView) {
+      if (!setting.hidden || permissions?.read || permissions?.manage) {
         columns.push(column);
       }
       return columns;
@@ -627,7 +627,7 @@ export class WorkflowTablesDataService {
     if (
       !this.isViewActive &&
       isCollection &&
-      permissions.manageWithView &&
+      permissions.manage &&
       !attributeColumns.some(column => !column.attribute)
     ) {
       const lastColumn: TableColumn = {

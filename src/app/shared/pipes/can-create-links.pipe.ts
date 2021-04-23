@@ -19,14 +19,14 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'canCreateLinks',
 })
 @Injectable({providedIn: 'root'})
 export class CanCreateLinksPipe implements PipeTransform {
-  public transform(linkType: LinkType, collectionsPermissions: Record<string, AllowedPermissions>): boolean {
+  public transform(linkType: LinkType, collectionsPermissions: AllowedPermissionsMap): boolean {
     if (linkType?.collectionIds) {
       const atLeastReadPermission = linkType.collectionIds.some(
         collectionId => collectionsPermissions?.[collectionId]?.readWithView

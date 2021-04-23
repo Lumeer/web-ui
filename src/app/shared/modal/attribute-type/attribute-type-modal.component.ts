@@ -37,6 +37,7 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   templateUrl: './attribute-type-modal.component.html',
@@ -51,6 +52,9 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
 
   @Input()
   public attributeId: string;
+
+  @Input()
+  public workspace: Workspace;
 
   @ViewChild(AttributeTypeFormComponent)
   set content(content: AttributeTypeFormComponent) {
@@ -111,6 +115,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         collectionId,
         attributeId: attribute.id,
         attribute,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -123,6 +128,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         linkTypeId,
         attributeId: attribute.id,
         attribute,
+        workspace: this.workspace,
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })

@@ -39,16 +39,20 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
     super(store$);
   }
 
-  public createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(), linkType);
+  public createLinkType(linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto> {
+    return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(null, workspace), linkType, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public getLinkType(id: string): Observable<LinkTypeDto> {
     return this.httpClient.get<LinkTypeDto>(this.restApiPrefix(id));
   }
 
-  public updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id), linkType);
+  public updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto> {
+    return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id, workspace), linkType, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public deleteLinkType(id: string): Observable<string> {
@@ -64,8 +68,19 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
     return this.httpClient.post<AttributeDto[]>(`${this.restApiPrefix()}/${linkTypeId}/attributes`, attributes);
   }
 
-  public updateAttribute(linkTypeId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient.put<AttributeDto>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`, attribute);
+  public updateAttribute(
+    linkTypeId: string,
+    id: string,
+    attribute: AttributeDto,
+    workspace?: Workspace
+  ): Observable<AttributeDto> {
+    return this.httpClient.put<AttributeDto>(
+      `${this.restApiPrefix(null, workspace)}/${linkTypeId}/attributes/${id}`,
+      attribute,
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
+    );
   }
 
   public deleteAttribute(linkTypeId: string, id: string): Observable<any> {

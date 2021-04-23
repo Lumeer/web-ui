@@ -92,9 +92,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public editableKeys = false;
 
   @Input()
-  public isTaskDataResource: boolean;
-
-  @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
   @Output()
@@ -152,6 +149,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
       this.dataResource$ = this.selectDataResource$();
     } else if (changes.attributeSettings || changes.permissions || changes.ignoreSettingsOnReadPermission) {
       this.dataRowService.setSettings(this.attributeSettings);
+    }
+    if (changes.workspace) {
+      this.dataRowService.setWorkspace(this.workspace);
     }
   }
 

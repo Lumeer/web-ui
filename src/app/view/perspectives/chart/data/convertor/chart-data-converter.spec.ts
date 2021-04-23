@@ -32,7 +32,7 @@ import {
 } from '../../../../../core/store/charts/chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -81,7 +81,7 @@ const collections: Collection[] = [
   },
 ];
 
-const permissions: Record<string, AllowedPermissions> = {C1: {writeWithView: true}};
+const permissions: AllowedPermissionsMap = {C1: {writeWithView: true}};
 
 const query: Query = {stems: [{collectionId: 'C1'}]};
 
@@ -1513,7 +1513,7 @@ describe('Chart data converter linked collections', () => {
       {id: 'l9', linkTypeId: 'LT1', documentIds: ['D3', 'D29'], data: {}},
     ];
     const query3: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1']}]};
-    const permissions3: Record<string, AllowedPermissions> = {C1: {writeWithView: true}, C2: {writeWithView: true}};
+    const permissions3: AllowedPermissionsMap = {C1: {writeWithView: true}, C2: {writeWithView: true}};
 
     const configAvg: ChartConfig = {
       type: ChartType.Line,
