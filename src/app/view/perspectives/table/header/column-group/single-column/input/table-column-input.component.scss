@@ -1,8 +1,11 @@
 :host {
-  display: flex;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto;
 }
 
-input {
+input,
+.title {
   background: unset;
   border: unset;
   font-style: italic;
@@ -11,11 +14,4 @@ input {
   &[readonly] {
     cursor: default;
   }
-}
-
-.title {
-  padding: 1px 2px;
-  display: flex;
-  align-items: center;
-  font-style: italic;
 }
