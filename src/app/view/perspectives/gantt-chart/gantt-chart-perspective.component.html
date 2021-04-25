@@ -1,8 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else notDisplayable">
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
-  canManageConfig: canManageConfig$ | async, linkTypes: linkTypes$ | async,
-  query: query$ | async, documentsAndLinks: documentsAndLinks$ | async} as data">
+  canManageConfig: canManageConfig$ | async, linkTypes: linkTypes$ | async, query: query$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig && data.config"
                          [collapsed]="!(sidebarOpened$ | async)"
@@ -25,14 +24,13 @@
                        [collections]="data.collections"
                        [ganttChartId]="perspectiveId$ | async"
                        [permissions]="permissions$ | async"
-                       [documents]="data.documentsAndLinks.documents"
+                       [data]="data$ | async"
                        [linkTypes]="data.linkTypes"
                        [dataLoaded]="dataLoaded$ | async"
-                       [linkInstances]="data.documentsAndLinks.linkInstances"
                        [config]="data.config"
                        [constraintData]="constraintData$ | async"
                        [query]="data.query"
-                       [sortDefined]="sortDefined$ | async"
+                       [settings]="viewSettings$ | async"
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"

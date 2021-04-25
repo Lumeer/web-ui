@@ -35,7 +35,7 @@ import {Collection} from '../../core/store/collections/collection';
 import {
   selectCollectionsByQueryWithoutLinks,
   selectCollectionsByReadPermission,
-  selectDocumentsByCustomQuerySorted,
+  selectDocumentsAndLinksByCollectionAndQuery,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {
@@ -99,7 +99,9 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
     let loaded$: Observable<boolean>;
     if (this.selectedCollection && this.query) {
       const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
-      documents$ = this.store$.pipe(select(selectDocumentsByCustomQuerySorted(collectionQuery)));
+      documents$ = this.store$.pipe(
+        select(selectDocumentsAndLinksByCollectionAndQuery(this.selectedCollection.id, collectionQuery))
+      );
       loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
     } else {
       documents$ = of([]);

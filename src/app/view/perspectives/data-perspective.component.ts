@@ -37,6 +37,7 @@ import {
   selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDataByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../core/store/common/permissions.selectors';
 import {selectCollectionsPermissions} from '../../core/store/user-permissions/user-permissions.state';
@@ -67,10 +68,9 @@ export abstract class DataPerspectiveComponent<T>
     super(store$);
   }
 
-  protected abstract subscribeDocumentsAndLinks$(): Observable<{
-    documents: DocumentModel[];
-    linkInstances: LinkInstance[];
-  }>;
+  protected subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
+    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+  }
 
   protected subscribeData$(): Observable<DocumentsAndLinksData> {
     return this.store$.pipe(select(selectDataByQuery));

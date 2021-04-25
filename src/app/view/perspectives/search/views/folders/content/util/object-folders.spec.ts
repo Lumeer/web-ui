@@ -41,7 +41,7 @@ describe('Create object folders', () => {
     expect(createObjectFolders(objects).objects).toHaveSize(2);
   });
 
-  fit('create simple folders', () => {
+  it('create simple folders', () => {
     const objects: ObjectWithFolders[] = [
       {folders: ['a ', 'b']},
       {folders: ['a ', ' a', ' a']},
@@ -58,7 +58,7 @@ describe('Create object folders', () => {
     expect(objectFolders.folders[1].objects).toHaveSize(2);
   });
 
-  fit('create nested folders', () => {
+  it('create nested folders', () => {
     const objects: ObjectWithFolders[] = [
       {folders: ['a/b/c ', 'b/c', 'b']},
       {folders: ['a///b/c ', ' a/ /b/c', 'a', 'a/c']},

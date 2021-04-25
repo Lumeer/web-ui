@@ -21,24 +21,19 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
-import {distinctUntilChanged, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {GanttChartConfig} from '../../../core/store/gantt-charts/gantt-chart';
 import {selectGanttChartById} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
-import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
@@ -50,16 +45,8 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
 export class GanttChartPerspectiveComponent
   extends DataPerspectiveComponent<GanttChartConfig>
   implements OnInit, OnDestroy {
-  public permissions$: Observable<AllowedPermissionsMap>;
-  public sortDefined$: Observable<boolean>;
-
   constructor(protected store$: Store<AppState>) {
     super(store$);
-  }
-
-  public ngOnInit() {
-    super.ngOnInit();
-    this.subscribeAdditionalData();
   }
 
   public checkOrTransformConfig(
@@ -75,10 +62,6 @@ export class GanttChartPerspectiveComponent
     this.store$.dispatch(new GanttChartAction.AddGanttChart({ganttChart: {id: perspectiveId, config}}));
   }
 
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-  }
-
   public subscribeConfig$(perspectiveId: string): Observable<GanttChartConfig> {
     return this.store$.pipe(
       select(selectGanttChartById(perspectiveId)),
@@ -88,15 +71,6 @@ export class GanttChartPerspectiveComponent
 
   public getConfig(viewConfig: ViewConfig): GanttChartConfig {
     return viewConfig?.ganttChart;
-  }
-
-  private subscribeAdditionalData() {
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.sortDefined$ = this.store$.pipe(
-      select(selectViewSettings),
-      map(settings => viewAttributeSettingsSortDefined(settings)),
-      distinctUntilChanged()
-    );
   }
 
   public onConfigChanged(config: GanttChartConfig) {

@@ -19,8 +19,6 @@
 
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {
@@ -53,6 +51,7 @@ import {
   ConstraintData,
   ConstraintType,
   DataValue,
+  DocumentsAndLinksData,
   NumberConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
@@ -87,9 +86,8 @@ interface PivotConfigData {
 
 export class PivotDataConverter {
   private collections: Collection[];
-  private documents: DocumentModel[];
   private linkTypes: LinkType[];
-  private linkInstances: LinkInstance[];
+  private data: DocumentsAndLinksData;
   private config: PivotStemConfig;
   private constraintData?: ConstraintData;
 
@@ -128,35 +126,32 @@ export class PivotDataConverter {
 
   private updateData(
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     constraintData: ConstraintData
   ) {
     this.collections = collections;
-    this.documents = documents;
     this.linkTypes = linkTypes;
-    this.linkInstances = linkInstances;
+    this.data = data;
     this.constraintData = constraintData;
   }
 
   public transform(
     config: PivotConfig,
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     query: Query,
     constraintData?: ConstraintData
   ): PivotData {
-    this.updateData(collections, documents, linkTypes, linkInstances, constraintData);
+    this.updateData(collections, linkTypes, data, constraintData);
 
     const {stemsConfigs, stems} = this.filterEmptyConfigs(config, query);
 
     const mergeData = this.createPivotMergeData(config.mergeTables, stemsConfigs, stems);
     const ableToMerge = mergeData.length <= 1;
-    const data = this.mergePivotData(mergeData);
-    return {data: data, constraintData, ableToMerge, mergeTables: config.mergeTables};
+    const pivotData = this.mergePivotData(mergeData);
+    return {data: pivotData, constraintData, ableToMerge, mergeTables: config.mergeTables};
   }
 
   private filterEmptyConfigs(config: PivotConfig, query: Query): {stemsConfigs: PivotStemConfig[]; stems: QueryStem[]} {
@@ -215,13 +210,13 @@ export class PivotDataConverter {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
       const queryStem = queryStems[i];
-
+      const stemData = this.data?.dataByStems?.[i];
       this.config = config;
       this.dataAggregator.updateData(
         this.collections,
-        this.documents,
+        stemData?.documents || [],
         this.linkTypes,
-        this.linkInstances,
+        stemData?.linkInstances || [],
         queryStem,
         this.constraintData
       );
@@ -328,11 +323,12 @@ export class PivotDataConverter {
   private convertValueAttributes(configs: PivotStemConfig[], stems: QueryStem[]): PivotStemData {
     const data = configs.reduce(
       (allData, config, index) => {
+        const stemData = this.data?.dataByStems?.[index];
         this.dataAggregator.updateData(
           this.collections,
-          this.documents,
+          stemData?.documents || [],
           this.linkTypes,
-          this.linkInstances,
+          stemData?.linkInstances || [],
           stems[index],
           this.constraintData
         );
@@ -381,9 +377,9 @@ export class PivotDataConverter {
 
   private findDataResourcesByPivotAttribute(pivotAttribute: PivotAttribute): DataResource[] {
     if (pivotAttribute.resourceType === AttributesResourceType.Collection) {
-      return (this.documents || []).filter(document => document.collectionId === pivotAttribute.resourceId);
+      return (this.data?.uniqueDocuments || []).filter(document => document.collectionId === pivotAttribute.resourceId);
     } else if (pivotAttribute.resourceType === AttributesResourceType.LinkType) {
-      return (this.linkInstances || []).filter(link => link.linkTypeId === pivotAttribute.resourceId);
+      return (this.data?.uniqueLinkInstances || []).filter(link => link.linkTypeId === pivotAttribute.resourceId);
     }
     return [];
   }

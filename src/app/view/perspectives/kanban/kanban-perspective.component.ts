@@ -35,9 +35,6 @@ import {selectWorkspaceWithIds} from '../../../core/store/common/common.selector
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {selectLinkTypesPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -61,10 +58,6 @@ export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanC
       select(selectKanbanById(perspectiveId)),
       map(entity => entity?.config)
     );
-  }
-
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
   }
 
   public configChanged(perspectiveId: string, config: KanbanConfig) {

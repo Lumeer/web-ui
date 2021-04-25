@@ -1,16 +1,15 @@
-<ng-container *ngIf="{documentsAndLinks: documentsAndLinks$ | async, config: config$ | async} as data">
-  <kanban-content *ngIf="data.config"
-                  [config]="data.config"
-                  [collections]="collections$ | async"
-                  [linkTypes]="linkTypes$ | async"
-                  [documents]="data.documentsAndLinks.documents"
-                  [constraintData]="constraintData$ | async"
-                  [canManageConfig]="canManageConfig$ | async"
-                  [query]="query$ | async"
-                  [permissions]="permissions$ | async"
-                  [linkTypesPermissions]="linkTypesPermissions$ | async"
-                  [workspace]="workspace$ | async"
-                  [linkInstances]="data.documentsAndLinks.linkInstances"
-                  (configChange)="onConfigChanged($event)">
-  </kanban-content>
-</ng-container>
+<kanban-content *ngIf="config$ | async as config"
+                [config]="config"
+                [collections]="collections$ | async"
+                [linkTypes]="linkTypes$ | async"
+                [data]="data$ | async"
+                [constraintData]="constraintData$ | async"
+                [canManageConfig]="canManageConfig$ | async"
+                [query]="query$ | async"
+                [settings]="viewSettings$ | async"
+                [permissions]="permissions$ | async"
+                [linkTypesPermissions]="linkTypesPermissions$ | async"
+                [workspace]="workspace$ | async"
+                (configChange)="onConfigChanged($event)"
+                (sidebarToggle)="onSidebarToggle()">
+</kanban-content>

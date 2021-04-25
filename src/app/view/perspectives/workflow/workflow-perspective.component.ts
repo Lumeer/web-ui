@@ -88,10 +88,6 @@ export class WorkflowPerspectiveComponent
     this.store$.dispatch(new WorkflowsAction.AddWorkflow({workflow: {id: perspectiveId, config}}));
   }
 
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-  }
-
   public subscribeAdditionalData() {
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     const selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));

@@ -26,6 +26,7 @@ import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from './kanban-converter';
 import {AttributesResourceType} from '../../../../core/model/resource';
+import {DocumentsAndLinksData} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {
@@ -103,6 +104,22 @@ const collections: Collection[] = [
   },
 ];
 
+const stem = {collectionId: collections[0].id};
+const stem2 = {collectionId: collections[1].id};
+
+const data: DocumentsAndLinksData = {
+  uniqueDocuments: documents,
+  uniqueLinkInstances: [],
+  dataByStems: [
+    {stem, documents: documents.filter(document => document.collectionId === stem.collectionId), linkInstances: []},
+    {
+      stem: stem2,
+      documents: documents.filter(document => document.collectionId === stem2.collectionId),
+      linkInstances: [],
+    },
+  ],
+};
+
 describe('Kanban converter', () => {
   let constraintReadableFormatter: SelectItemWithConstraintFormatter;
   let converter: KanbanConverter;
@@ -131,7 +148,7 @@ describe('Kanban converter', () => {
 
   it('should create empty columns', () => {
     const config: KanbanConfig = {columns: [], stemsConfigs: []};
-    const buildConfig = converter.convert(config, collections, [], documents, [], {});
+    const buildConfig = converter.convert(config, collections, [], data, {}, {});
     expect(buildConfig.config.columns).toEqual([]);
     expect(buildConfig.config.stemsConfigs).toEqual([]);
     expect(buildConfig.data.otherColumn.cards).toEqual([]);
@@ -153,7 +170,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.convert(config, collections, [], documents, [], {});
+    const buildConfig = converter.convert(config, collections, [], data, {}, {});
     expect(buildConfig.config.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass']);
     expect(buildConfig.data.columns[0].cards.map(card => card.dataResource.id)).toEqual(['D1', 'D4']);
     expect(buildConfig.data.columns[1].cards.map(card => card.dataResource.id)).toEqual(['D2']);
@@ -188,7 +205,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.convert(config, collections, [], documents, [], {});
+    const buildConfig = converter.convert(config, collections, [], data, {}, {});
     expect(buildConfig.config.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass', 'LMR']);
     expect(buildConfig.data.columns[0].cards.map(card => card.dataResource.id)).toEqual(['D1', 'D4', 'D9']);
     expect(buildConfig.data.columns[1].cards.map(card => card.dataResource.id)).toEqual(['D2', 'D6']);
@@ -241,7 +258,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.convert(previousConfig, collections, [], documents, [], {});
+    const buildConfig = converter.convert(previousConfig, collections, [], data, {}, {});
     expect(buildConfig.config.columns.map(c => c.title)).toEqual(['LMR', 'Glass', 'Dance', 'Sport']);
     expect(buildConfig.data.columns[0].cards.map(card => card.dataResource.id)).toEqual(['D7', 'D10']);
     expect(buildConfig.data.columns[1].cards.map(card => card.dataResource.id)).toEqual(['D3', 'D5', 'D8']);
