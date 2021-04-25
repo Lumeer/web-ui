@@ -41,12 +41,11 @@ import {WorkflowTablesDataService} from './workflow-tables-data.service';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -323,9 +322,8 @@ export class WorkflowTablesService {
 
   public onUpdateData(
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     config: WorkflowConfig,
     permissions: AllowedPermissionsMap,
     query: Query,
@@ -334,9 +332,8 @@ export class WorkflowTablesService {
   ) {
     this.dataService.createAndSyncTables(
       collections,
-      documents,
       linkTypes,
-      linkInstances,
+      data,
       config,
       permissions,
       query,

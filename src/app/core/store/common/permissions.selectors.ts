@@ -17,7 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {createSelector} from '@ngrx/store';
-import {filterDocumentsAndLinksByQuery} from '@lumeer/data-filters';
+import {
+  DocumentsAndLinksData,
+  DocumentsAndLinksStemData,
+  filterDocumentsAndLinksByQuery,
+  filterDocumentsAndLinksDataByQuery,
+} from '@lumeer/data-filters';
 import {containsSameElements, isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {hasRoleByPermissions, sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
@@ -198,6 +203,70 @@ export const selectDocumentsAndLinksByQuery = createSelector(
       constraintData,
       includeChildren
     )
+);
+
+export const selectDataByQuery = createSelector(
+  selectDocumentsByReadPermission,
+  selectCollectionsByReadPermission,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
+  selectViewQuery,
+  selectViewSettings,
+  selectResourcesPermissions,
+  selectConstraintData,
+  (
+    documents,
+    collections,
+    linkTypes,
+    linkInstances,
+    query,
+    viewSettings,
+    permissions,
+    constraintData
+  ): DocumentsAndLinksData =>
+    filterDocumentsAndLinksDataByQuery(
+      documents,
+      collections,
+      linkTypes,
+      linkInstances,
+      query,
+      permissions.collections,
+      permissions.linkTypes,
+      constraintData,
+      viewSettings?.data?.includeSubItems
+    )
+);
+
+export const selectDataByQuerySorted = createSelector(
+  selectDataByQuery,
+  selectAllCollections,
+  selectAllLinkTypes,
+  selectViewSettings,
+  selectConstraintData,
+  (data, collections, linkTypes, viewSettings, constraintData): DocumentsAndLinksData => {
+    const collectionsMap = objectsByIdMap(collections);
+    const linkTypesMap = objectsByIdMap(linkTypes);
+
+    const dataByStemsSorted: DocumentsAndLinksStemData[] = (data.dataByStems || []).map(dataByStem => ({
+      ...dataByStem,
+      documents: sortDataResourcesByViewSettings(
+        dataByStem.documents,
+        collectionsMap,
+        AttributesResourceType.Collection,
+        viewSettings?.attributes,
+        constraintData
+      ),
+      linkInstances: sortDataResourcesByViewSettings(
+        dataByStem.linkInstances,
+        linkTypesMap,
+        AttributesResourceType.LinkType,
+        viewSettings?.attributes,
+        constraintData
+      ),
+    }));
+
+    return {...data, dataByStems: dataByStemsSorted};
+  }
 );
 
 export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query) =>
