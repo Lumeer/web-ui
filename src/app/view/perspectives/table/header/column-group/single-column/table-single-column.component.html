@@ -20,6 +20,7 @@
                         [edited]="state.edited"
                         [initialized]="attribute | entityCreated"
                         [value]="state.lastName"
+                        [attribute]="attribute"
                         (valueChange)="onValueChange($event)"
                         (save)="onSave($event)"
                         (cancel)="onCancel()"
