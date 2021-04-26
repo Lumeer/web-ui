@@ -30,7 +30,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, of, combineLatest} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
@@ -53,7 +53,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {AttributesSettings, View, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
   selectLinkInstancesByDocumentIds,
@@ -131,12 +131,14 @@ export class DataResourceDetailComponent
 
   public readonly contactUrl: string;
   public readonly collectionResourceType = AttributesResourceType.Collection;
+  public readonly detailTabType = DetailTabType;
 
   public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
   public settingsQuery$ = new BehaviorSubject<Query>({});
   public defaultView$ = new BehaviorSubject<View>(null);
+  public overrideSettings$ = new BehaviorSubject<AttributesSettings>(null);
+  public settingsStem$ = new BehaviorSubject<QueryStem>(null);
   public collectionId$ = new BehaviorSubject<string>(null);
-  public readonly detailTabType = DetailTabType;
   public startEditing$ = new BehaviorSubject<boolean>(false);
 
   public commentsCount$: Observable<number>;
@@ -168,6 +170,7 @@ export class DataResourceDetailComponent
       map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
       tap(workspace => (this.workspace = workspace))
     );
+
     this.bindPermissions();
   }
 
@@ -216,7 +219,7 @@ export class DataResourceDetailComponent
       this.bindData();
     }
     if (changes.settingsStem) {
-      this.attributesSettings$ = this.store$.pipe(select(selectDetailAttributesSettings(this.settingsStem)));
+      this.settingsStem$.next(this.settingsStem);
     }
     if (changes.settingsQuery) {
       this.settingsQuery$.next(this.settingsQuery);
@@ -249,6 +252,19 @@ export class DataResourceDetailComponent
       this.linksCount$ = of(null);
       this.collectionId$.next(null);
     }
+
+    this.attributesSettings$ = combineLatest([this.overrideSettings$, this.defaultView$, this.settingsStem$]).pipe(
+      switchMap(([overrideSettings, defaultView, settingsStem]) => {
+        if (overrideSettings) {
+          return of(overrideSettings);
+        } else if (defaultView?.config?.detail) {
+          const stemsConfigs = defaultView.config.detail.stemsConfigs || [];
+          const stemConfig = stemsConfigs.find(config => config.stem?.collectionId === this.collectionId$.value);
+          return of(stemConfig?.attributesSettings);
+        }
+        return this.store$.pipe(select(selectDetailAttributesSettings(settingsStem)));
+      })
+    );
   }
 
   private readLinkTypesData(linkTypes: LinkType[]) {
@@ -418,7 +434,9 @@ export class DataResourceDetailComponent
   }
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
-    if (this.settingsStem) {
+    if (this.defaultView) {
+      this.overrideSettings$.next(attributesSettings);
+    } else if (this.settingsStem) {
       this.store$.dispatch(
         DetailActions.setStemAttributes({
           stem: this.settingsStem,
