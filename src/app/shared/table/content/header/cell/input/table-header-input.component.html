@@ -1,6 +1,6 @@
 <input *ngIf="!edited; else editableInput"
        [value]="value"
-       [title]="column.attribute | attributeTitle : column.name"
+       [title]="column.attribute | attributeTitle : column.name : true"
        [class.text-default-attribute]="default"
        [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
        class="w-100 p-0"

@@ -1,7 +1,11 @@
 <ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
 
-  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key">
-    {{keyDataValue.value}}
+  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center data-input key">
+    <span class="font-italic">{{keyDataValue.value}}</span>
+    <div *ngIf="row?.attribute?.description" class="ml-1 text-muted font-normal"
+         [tooltip]="row?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
+      <i class="far fa-question-circle font-normal"></i>
+    </div>
   </div>
 
   <ng-template #editableKeyInput>

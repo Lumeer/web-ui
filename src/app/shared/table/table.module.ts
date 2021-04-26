@@ -51,6 +51,7 @@ import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 import {DirectivesModule} from '../directives/directives.module';
 import {MenuModule} from '../menu/menu.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import {ResourceCommentsModule} from '../resource-comments/resource-comments.mod
     DocumentHintsModule,
     MenuModule,
     ResourceCommentsModule,
+    TooltipModule,
   ],
   exports: [TableComponent],
 })

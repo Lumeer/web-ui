@@ -90,6 +90,12 @@ import {PrintTextBlocklyComponent} from './blocks/print-text-blockly-component';
 import {FormatCurrencyBlocklyComponent} from './blocks/format-currency-blockly-component';
 import {TranslationService} from '../../../core/service/translation.service';
 import {BlockCommentBlocklyComponent} from './blocks/block-comment-blockly-component';
+import {IsArrayBlocklyComponent} from './blocks/is-array-blockly-component';
+import {IsBooleanBlocklyComponent} from './blocks/is-boolean-blockly-component';
+import {IsNumberBlocklyComponent} from './blocks/is-number-blockly-component';
+import {IsStringBlocklyComponent} from './blocks/is-string-blockly-component';
+import {CountOccurrencesBlocklyComponent} from './blocks/count-occurrences-blockly-component';
+import {FilterObjectsBlocklyComponent} from './blocks/filter-objects-blockly-component';
 
 declare var Blockly: any;
 
@@ -208,6 +214,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new UnescapeHtmlBlocklyComponent(this.blocklyUtils),
       new FormatCurrencyBlocklyComponent(this.blocklyUtils, this.translationService),
       new BlockCommentBlocklyComponent(this.blocklyUtils),
+      new IsArrayBlocklyComponent(this.blocklyUtils),
+      new IsBooleanBlocklyComponent(this.blocklyUtils),
+      new IsNumberBlocklyComponent(this.blocklyUtils),
+      new IsStringBlocklyComponent(this.blocklyUtils),
+      new CountOccurrencesBlocklyComponent(this.blocklyUtils),
+      new FilterObjectsBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

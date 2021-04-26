@@ -49,4 +49,8 @@
 
 .data-input.key::ng-deep > * > * {
   font-style: italic !important;
+
+  &.font-normal {
+    font-style: normal !important;
+  }
 }

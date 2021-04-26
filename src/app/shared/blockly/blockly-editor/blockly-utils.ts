@@ -96,6 +96,12 @@ export class BlocklyUtils {
   public static readonly GET_PARENT_DOCUMENT = 'get_parent_document';
   public static readonly GET_CHILD_DOCUMENTS = 'get_child_documents';
   public static readonly IS_EMPTY = 'is_empty';
+  public static readonly IS_ARRAY = 'is_array';
+  public static readonly IS_STRING = 'is_string';
+  public static readonly IS_NUMBER = 'is_number';
+  public static readonly IS_BOOLEAN = 'is_boolean';
+  public static readonly COUNT_OCCURRENCES = 'count_occurrences';
+  public static readonly FILTER_OBJECTS = 'filter_objects';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
   public static readonly PRINT_TEXT = 'print_text';
