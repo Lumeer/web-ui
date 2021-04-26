@@ -1,9 +1,10 @@
-<input *ngIf="!edited; else editableInput"
-       [value]="value"
-       [class.text-default-attribute]="default"
-       class="w-100"
-       data-test="table-column-input"
-       readonly>
+<div *ngIf="!edited; else editableInput"
+     [class.text-default-attribute]="default"
+     class="flex-grow-1 title text-truncate"
+     data-test="table-column-input">{{value}}</div>
+<div class="small" *ngIf="attribute?.description && !edited" [tooltip]="attribute | attributeTitle"
+     adaptivePosition="false" placement="top"><i class="far fa-question-circle ml-1"></i>
+</div>
 
 <ng-template #editableInput>
   <input #textInput

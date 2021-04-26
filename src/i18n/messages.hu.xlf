@@ -46,7 +46,7 @@
 			<trans-unit datatype="html" id="4608931d14dacf46c6e70c357d1bb3f9e62b6043">
 				<source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All}}</source>
 				<target>{VAR_PLURAL, plural, =2 {Összes} =3 {Összes} =4 {Összes} other {Összes} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="4be44482feb952b217f702aaf0bad3536a4d03ad">
 				<source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source>
 				<target>A minimális szöveghossznak
@@ -61,7 +61,7 @@
 			<trans-unit datatype="html" id="69f13ce4389d17c6a63e46717c0692901221b2eb">
 				<source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}}</source>
 				<target>{VAR_PLURAL, select, =2 {Megjegyzések} =3 {Megjegyzések} =4 {Megjegyzések} other {Megjegyzések} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5">
 				<source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source>
 				<target>{VAR_SELECT, select, organization {Szervezet} project ({Projekt} other {} }</target>
@@ -231,6 +231,18 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-siblings-blockly-component.ts</context>
           <context context-type="linenumber">32</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isArray" datatype="html">
+        <source>Returns true if the input is an array (incl. an empty array).</source><target>Igaz értéket ad vissza, ha a bemenet tömb (beleértve egy üres tömböt).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-array-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isBoolean" datatype="html">
+        <source>Returns true if the input is a boolean.</source><target>Igaz értéket ad vissza, ha a bemenet logikai érték.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-boolean-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
       </trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.createDocumentBlock2">
 				<source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</source>
@@ -308,7 +320,19 @@
 			<trans-unit datatype="html" id="blockly.tooltip.isNotEmpty">
 				<source>Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</source>
 				<target>Igaz értéket ad vissza, ha a bemenet nem nulla, meghatározatlan, üres karakterlánc, tömb, objektum vagy üres értéket tartalmazó tömb.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="blockly.tooltip.isNumber" datatype="html">
+        <source>Returns true if the input is a number.</source><target>Igaz értéket ad vissza, ha a bemenet szám.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-number-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isString" datatype="html">
+        <source>Returns true if the input is a string (incl. an empty string).</source><target>Ha az input karakterlánc (beleértve egy üres karakterláncot is), akkor igaz értéket ad vissza.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-string-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.isoToDateBlock">
 				<source>Converts date in an ISO string (from stored data) to the date object.</source>
 				<target>A dátumot ISO-karakterláncban (a tárolt adatokból) dátumobjektummá alakítja.</target>
@@ -382,7 +406,7 @@
 			<trans-unit datatype="html" id="button.close">
 				<source>Close</source>
 				<target>Bezár</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.continue">
 				<source>Continue</source>
 				<target>Folytat</target>
@@ -390,7 +414,7 @@
 			<trans-unit datatype="html" id="button.create">
 				<source>Create</source>
 				<target>Létrehoz</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.discard">
 				<source>Discard</source>
 				<target>Elvet</target>
@@ -545,7 +569,7 @@
         <source>Confirmation</source><target>Megerősítés</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/action/action-data-input.component.ts</context><context context-type="linenumber">217</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/confirmation/action-constraint-confirmation-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/action/action-data-input.component.ts</context><context context-type="linenumber">243</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/confirmation/action-constraint-confirmation-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collapsible-sidebar.expand-button">
 				<source>Expand</source>
 				<target>Kiterjeszt</target>
@@ -573,11 +597,11 @@
 			<trans-unit datatype="html" id="collection.change.attribute.fail">
 				<source>Could not change the attribute</source>
 				<target>Nem lehet módosítani a tulajdonságot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">545</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">547</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.change.permission.fail">
 				<source>Could not change the table permissions</source>
 				<target>Nem lehet módosítani a tábla engedélyeit</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">626</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">628</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.attributes">
 				<source> Attributes </source>
 				<target>Tulajdonságok</target>
@@ -825,7 +849,7 @@
 			<trans-unit datatype="html" id="collection.remove.attribute.fail">
 				<source>Could not delete the attribute</source>
 				<target>Nem lehetett törölni a tulajdonságot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">585</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">587</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.remove.favorite.fail">
 				<source>Could not remove the table from favorites</source>
 				<target>Nem lehet eltávolítani a táblázatot a kedvencekből</target>
@@ -833,7 +857,7 @@
 			<trans-unit datatype="html" id="collection.runRule.fail">
 				<source>Could not run the selected automation for the whole table</source>
 				<target>Nem futtatható a kijelölt szabály a teljes táblázatban</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">651</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">653</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.settings.records.count">
 				<source>Number of records</source>
 				<target>Rekordok száma</target>
@@ -1491,15 +1515,15 @@
 			<trans-unit datatype="html" id="dataResource.attribute.placeholder">
 				<source>Enter attribute name</source>
 				<target>Tulajdonság nevének megadása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">128</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="dataResource.detail.attribute.remove.confirm">
 				<source>Are you sure you want to delete this row?</source>
 				<target>Biztosan törlöd ezt a sort?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">200</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">212</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="dataResource.runRule.fail">
 				<source>Could not run the selected automation</source>
 				<target>A kijelölt szabály nem futtatható.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">636</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">467</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">646</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="default">
 				<source>Default</source>
 				<target>Alapértelmezett</target>
@@ -1595,7 +1619,7 @@
 			<trans-unit datatype="html" id="document.add.favorite.fail">
 				<source>Could not add the record to favorites</source>
 				<target>Nem lehetett hozzáadni a rekordot a kedvencekhez</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">351</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">355</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.create.fail">
 				<source>Could not create the record</source>
 				<target>Nem lehet létrehozni a rekordot</target>
@@ -1607,24 +1631,24 @@
 			<trans-unit datatype="html" id="document.delete.dialog.message">
 				<source>Do you really want to delete this record?</source>
 				<target>Biztosan törölni szeretnéd ezt a rekordot?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">594</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">604</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.delete.dialog.title">
 				<source>Delete record</source>
 				<target>Rekord törlése</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">593</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">603</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.delete.fail">
 				<source>Could not delete the record</source>
 				<target>Nem lehet törölni a rekordot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">611</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">621</context></context-group></trans-unit>
 
 			<trans-unit datatype="html" id="document.detail.comments.commentRemove.message">
 				<source>Do you really want to delete this comment?</source>
 				<target>Biztosan törli ezt a megjegyzést?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">137</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.comments.commentRemove.title">
 				<source>Delete this comment?</source>
 				<target>Törli ezt a megjegyzést?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/comments-panel.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.comments.empty">
 				<source> No comments yet. Write the first one! </source>
 				<target>Még nincs hozzászólás. Írd meg az elsőt!</target>
@@ -1644,7 +1668,7 @@
 					<x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
 					<x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/>
 					></target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/data-resource-detail.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.favorite.add">
 				<source>Add to favorites</source>
 				<target>Hozzáadás a kedvencekhez</target>
@@ -1681,18 +1705,12 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.title" datatype="html">
         <source>Revert changes?</source><target>Visszavonja a változásokat?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit><trans-unit id="audit.revert.confirm.message" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.message" datatype="html">
         <source>Do you really want to revert the latest changes?</source>
 		<target>Tényleg vissza akarja állítani a legújabb változtatásokat?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.header.updatedOn">
 				<source>Updated on</source>
 				<target>Frissítve:</target>
@@ -1700,7 +1718,7 @@
 			<trans-unit datatype="html" id="document.detail.links.noLinks">
 				<source>There are no links.</source>
 				<target>Nincsenek linkek.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.detail.remove">
 				<source>Remove Record</source>
 				<target>Rekord eltávolítása</target>
@@ -1734,11 +1752,11 @@
 			<trans-unit datatype="html" id="document.remove.favorite.fail">
 				<source>Could not remove the record from favorites</source>
 				<target>Nem lehetett eltávolítani a rekordot a kedvencekből</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">383</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">387</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="document.update.fail">
 				<source>Could not update the record</source>
 				<target>Nem lehetett frissíteni a rekordot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">394</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">398</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="documents.get.fail">
 				<source>Could not get records</source>
 				<target>Nem lehet lekérni a rekordokat</target>
@@ -1838,11 +1856,11 @@
 			<trans-unit datatype="html" id="function.create.serviceLimits">
 				<source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
 				<target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet. Szeretne most frissíteni az Üzleti verzióra?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">230</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">256</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="function.create.serviceLimits.noRights">
 				<source>You can have only a single function per table/link type in the Free Plan.</source>
 				<target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">236</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">262</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="gantt.perspective.task.create.title">
 				<source>New task</source>
 				<target>Új tevékenység</target>
@@ -2305,6 +2323,19 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/block-comment-blockly-component.ts</context>
           <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.countOccurrences" datatype="html">
+        <source>Counts the occurrences of a given string in an array.</source><target>Megszámolja egy adott karakterlánc előfordulását egy tömbben.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/count-occurrences-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.field.placeholder.value" datatype="html">
+        <source>value</source><target>érték</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/count-occurrences-blockly-component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/filter-objects-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
 			<trans-unit datatype="html" id="modal.kanban.chooseDocument.description">
@@ -3544,7 +3575,7 @@
 				<trans-unit datatype="html" id="resource.delete.dialog.title">
 					<source>Delete?</source>
 					<target>Törlöd?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">201</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">213</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.description">
 					<source>Fill in description</source>
 					<target>Leírás kitöltése</target>
@@ -3845,7 +3876,7 @@
 				<trans-unit datatype="html" id="serviceLimits.trial">
 					<source>Free Service</source>
 					<target>Ingyenes szolgáltatás</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">336</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">235</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">336</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">261</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="session.expired.message">
 					<source> You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons. Click Continue to log in again. </source>
 					<target>Inaktív voltál
@@ -3939,7 +3970,7 @@
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
         <source>Add/Remove links</source><target>Linkek hozzáadása/eltávolítása</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.body.row.copy.value">
 					<source>Copy value</source>
 					<target>Érték másolása</target>
@@ -3987,11 +4018,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">969</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">989</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">968</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">988</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>
@@ -4003,7 +4034,7 @@
 				<trans-unit datatype="html" id="table.header.column.settings">
 					<source>Column settings...</source>
 					<target>Oszlopbeállítások...</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.column.sort.toggle">
 					<source>Toggle sort</source>
 					<target>Rendezés váltása</target>
@@ -4620,15 +4651,15 @@
 				<trans-unit datatype="html" id="view.dialog.clone.clone">
 					<source>Make a copy</source>
 					<target>Másolat készítése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">198</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.dialog.clone.message">
 					<source>Do you want to make a copy of the view or rename the existing one?</source>
 					<target>Másolatot szeretnél készíteni a nézetről, vagy átnevezed a meglévőt?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">192</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">197</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.dialog.clone.update">
 					<source>Rename</source>
 					<target>Átnevez</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">194</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">199</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.discard.changes.message">
 					<source>The view was changed. Do you want to save the changes?</source>
 					<target>A nézet megváltozott. Mented a módosításokat?</target>
@@ -4647,11 +4678,11 @@
 				<trans-unit datatype="html" id="view.name.exists">
 					<source>View already exist</source>
 					<target>A nézet már létezik</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">174</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">179</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.name.exists.message">
 					<source>Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?</source>
 					<target>Tényleg ezt {create, select, 0 {nézetnév módosítása} 1 {nézet létrehozása ugyanazzal a névvel} } akarod?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">176</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/view.component.ts</context><context context-type="linenumber">181</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.not.exist">
 					<source>View does not exist! </source>
 					<target>A nézet nem létezik!</target>
@@ -4772,6 +4803,15 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/escape-html-blockly-component.ts</context>
           <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.filterObjects" datatype="html">
+        <source>Filters object in an array by having the given key equal to a given value.</source><target>Szűrők objektum egy tömbben úgy, hogy az adott kulcs megegyezik egy adott értékkel.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/filter-objects-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.field.placeholder.key" datatype="html">
+        <source>key</source><target>kulcs</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/filter-objects-blockly-component.ts</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.navigateBlock">

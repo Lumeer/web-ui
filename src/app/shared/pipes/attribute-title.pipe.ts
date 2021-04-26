@@ -25,9 +25,13 @@ import {isNotNullOrUndefined} from '../utils/common.utils';
   name: 'attributeTitle',
 })
 export class AttributeTitlePipe implements PipeTransform {
-  public transform(attribute: Attribute, backupValue: string = ''): string {
+  public transform(attribute: Attribute, backupValue: string = '', skipDescription = false): string {
     if (isNotNullOrUndefined(attribute)) {
-      return attribute.description ? attribute.description + ': ' + attribute.name : attribute.name;
+      return attribute.description
+        ? skipDescription
+          ? ''
+          : attribute.description + ': ' + attribute.name
+        : attribute.name;
     }
     return backupValue;
   }
