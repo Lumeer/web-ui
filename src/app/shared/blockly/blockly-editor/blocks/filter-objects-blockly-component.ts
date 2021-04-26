@@ -24,11 +24,15 @@ declare var Blockly: any;
 
 export class FilterObjectsBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
+  private fieldKey: string;
+  private fieldValue: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
     this.tooltip = $localize`:@@blockly.tooltip.filterObjects:Filters object in an array by having the given key equal to a given value.`;
+    this.fieldKey = $localize`:@@blockly.field.placeholder.key:key`;
+    this.fieldValue = $localize`:@@blockly.field.placeholder.value:value`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -47,12 +51,12 @@ export class FilterObjectsBlocklyComponent extends BlocklyComponent {
             {
               type: 'field_input',
               name: 'KEY',
-              text: 'key',
+              text: this_.fieldKey,
             },
             {
               type: 'field_input',
               name: 'VALUE',
-              text: 'value',
+              text: this_.fieldValue,
             },
             {
               type: 'input_value',

@@ -24,11 +24,13 @@ declare var Blockly: any;
 
 export class CountOccurrencesBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
+  private fieldValue: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
     this.tooltip = $localize`:@@blockly.tooltip.countOccurrences:Counts the occurrences of a given string in an array.`;
+    this.fieldValue = $localize`:@@blockly.field.placeholder.value:value`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -47,7 +49,7 @@ export class CountOccurrencesBlocklyComponent extends BlocklyComponent {
             {
               type: 'field_input',
               name: 'NEEDLE',
-              text: 'value',
+              text: this_.fieldValue,
             },
             {
               type: 'input_value',
