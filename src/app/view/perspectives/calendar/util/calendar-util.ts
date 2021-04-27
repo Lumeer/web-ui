@@ -44,7 +44,13 @@ export function isAllDayEvent(start: Date, end: Date): boolean {
 }
 
 export function isAllDayEventSingle(date: Date): boolean {
-  return date && date.getHours() === 0 && date.getMinutes() === 0 && date.getHours() === 0 && date.getMinutes() === 0;
+  return (
+    isDateValid(date) &&
+    date.getHours() === 0 &&
+    date.getMinutes() === 0 &&
+    date.getHours() === 0 &&
+    date.getMinutes() === 0
+  );
 }
 
 export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfig: CalendarConfig): boolean {

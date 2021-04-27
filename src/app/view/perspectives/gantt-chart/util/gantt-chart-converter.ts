@@ -154,7 +154,6 @@ export class GanttChartConverter {
     }
 
     const options = this.createGanttOptions(config, permissions, linkTypes);
-
     this.convertCount++;
     return {options, tasks};
   }

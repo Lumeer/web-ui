@@ -241,6 +241,8 @@ export class KanbanConverter {
                 columnsAggregated[stringValue].constraint || aggregationConstraint;
             }
           } else {
+            otherColumn.constraint = otherColumn.constraint || constraint;
+
             otherColumn.cards.push(
               ...dataResources
                 .filter(dataResource => !this.dataResourceIsAlreadyInColumn(dataResource, resourceType, otherColumn))
@@ -305,7 +307,7 @@ export class KanbanConverter {
         );
       });
 
-      const otherConstraint = otherColumn.constraint || new UnknownConstraint();
+      const otherConstraint = otherAggregated.constraint || new UnknownConstraint();
       otherColumn.summary = formatAggregatedValue(
         otherAggregated,
         config.aggregation,
@@ -542,15 +544,7 @@ function createKanbanData(
           id: getColumnIdOrGenerate(currentColumn),
           title,
           width: getColumnSizeTypeWidth(currentConfig.columnSize),
-          cards: sortDataResourcesObjectsByViewSettings(
-            cards,
-            settings,
-            collections,
-            linkTypes,
-            constraintData,
-            card => card.dataResource,
-            card => card.resource
-          ),
+          cards: sortCards(cards, settings, collections, linkTypes, constraintData),
           createdFromAttributes: mergeKanbanAttributes(
             createdFromAttributes || [],
             currentColumn.createdFromAttributes
@@ -570,15 +564,7 @@ function createKanbanData(
       id: generateId(),
       title,
       width: getColumnSizeTypeWidth(currentConfig.columnSize),
-      cards: sortDataResourcesObjectsByViewSettings(
-        cards,
-        settings,
-        collections,
-        linkTypes,
-        constraintData,
-        card => card.dataResource,
-        card => card.resource
-      ),
+      cards: sortCards(cards, settings, collections, linkTypes, constraintData),
       createdFromAttributes,
       constraint,
       summary,
@@ -589,13 +575,32 @@ function createKanbanData(
     stemsConfigs: currentConfig?.stemsConfigs,
     columns: newColumns,
     otherColumn: {
+      constraint: otherColumn.constraint,
       createdFromAttributes: otherColumn.createdFromAttributes,
-      cards: otherColumn.cards,
+      cards: sortCards(otherColumn.cards, settings, collections, linkTypes, constraintData),
       summary: otherColumn.summary,
       id: getColumnIdOrGenerate(currentConfig?.otherColumn),
       width: getColumnSizeTypeWidth(currentConfig?.columnSize),
     },
   };
+}
+
+function sortCards(
+  cards: KanbanCard[],
+  settings: ViewSettings,
+  collections: Collection[],
+  linkTypes: LinkType[],
+  constraintData: ConstraintData
+): KanbanCard[] {
+  return sortDataResourcesObjectsByViewSettings(
+    cards,
+    settings,
+    collections,
+    linkTypes,
+    constraintData,
+    card => card.dataResource,
+    card => card.resource
+  );
 }
 
 function mergeKanbanAttributes(attributes: KanbanAttribute[], otherAttributes: KanbanAttribute[]): KanbanAttribute[] {
