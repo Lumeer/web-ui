@@ -7,7 +7,7 @@
 
   <ng-container
     *ngIf="{selectedCell: selectedCell$ | async, editedCell: editedCell$ | async, tables: tables$ | async} as data">
-    <div *ngFor="let stemConfig of config.stemsConfigs; trackBy:trackByStem; let index = index;">
+    <div *ngFor="let stemConfig of config | filterUniqueStemsConfigs; trackBy:trackByStem; let index = index;">
 
       <workflow-toolbar class="mb-2" [config]="stemConfig"
                         [class.mb-3]="data?.tables?.length > 1"

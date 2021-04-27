@@ -23,12 +23,11 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
 import {checkOrTransformWorkflowConfig} from '../../../../core/store/workflows/workflow.utils';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowTablesService} from './tables/service/workflow-tables.service';
 import {WorkflowTablesStateService} from './tables/service/workflow-tables-state.service';
 import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
@@ -64,10 +63,7 @@ export class WorkflowContentComponent implements OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
-
-  @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public config: WorkflowConfig;

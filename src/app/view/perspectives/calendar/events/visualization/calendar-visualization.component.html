@@ -1,4 +1,5 @@
 <full-calendar #calendar
                class="h-100"
+               (dblclick)="$event.stopPropagation(); $event.preventDefault();"
                [options]="calendarOptions">
 </full-calendar>

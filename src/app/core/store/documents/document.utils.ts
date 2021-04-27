@@ -18,11 +18,11 @@
  */
 
 import {Collection} from '../collections/collection';
-import {Query} from '../navigation/query/query';
+import {Query, QueryStem} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
-  tasksCollectionsQuery,
+  queryStemsAreSame,
 } from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
@@ -39,9 +39,25 @@ import {
   ConstraintType,
   DataValue,
   DateTimeConstraint,
-  filterDocumentsAndLinksByQuery,
+  DocumentsAndLinksData,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {LinkInstance} from '../link-instances/link.instance';
+
+export function getDocumentsAndLinksByStemData(
+  data: DocumentsAndLinksData,
+  stem: QueryStem
+): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
+  const stemsData = (data?.dataByStems || []).filter(dataByStem => queryStemsAreSame(dataByStem.stem, stem));
+  return stemsData.reduce(
+    (documentsAndLinks, stemData) => {
+      documentsAndLinks.documents.push(...stemData.documents);
+      documentsAndLinks.linkInstances.push(...stemData.linkInstances);
+      return documentsAndLinks;
+    },
+    {documents: [], linkInstances: []}
+  );
+}
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -246,18 +262,6 @@ export function calculateDocumentHierarchyLevel(
   const document = documentsMap[documentId];
   const parentDocumentId = document?.metaData?.parentId;
   return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
-}
-
-export function isDocumentMyTaskAssigned(
-  document: DocumentModel,
-  collection: Collection,
-  constraintData: ConstraintData
-): boolean {
-  const tasksQuery = tasksCollectionsQuery([collection], {});
-  return (
-    filterDocumentsAndLinksByQuery([document], [collection], [], [], tasksQuery, {}, {}, constraintData).documents
-      .length === 1
-  );
 }
 
 interface CollectionTaskDataMap {

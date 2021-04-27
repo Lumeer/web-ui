@@ -37,7 +37,7 @@ import {
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
-  uniqueStems,
+  queryStemWithoutFilters,
 } from '../navigation/query/query.util';
 
 export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentConfig: WorkflowConfig): boolean {
@@ -67,7 +67,7 @@ function checkOrTransformWorkflowStemsConfig(
   linkTypes: LinkType[]
 ): WorkflowStemConfig[] {
   const stemsConfigsCopy = [...stemsConfigs];
-  return uniqueStems(query?.stems).reduce<WorkflowStemConfig[]>((newConfigs, stem) => {
+  return (query?.stems || []).reduce<WorkflowStemConfig[]>((newConfigs, stem) => {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
@@ -75,7 +75,7 @@ function checkOrTransformWorkflowStemsConfig(
       newConfigs.push(checkOrTransformWorkflowStemConfig(stemConfig[0], stem, collections, linkTypes));
     } else {
       newConfigs.push({
-        stem,
+        stem: queryStemWithoutFilters(stem),
         collection: {resourceId: stem.collectionId, resourceIndex: 0, resourceType: AttributesResourceType.Collection},
       });
     }
@@ -92,7 +92,7 @@ function checkOrTransformWorkflowStemConfig(
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   return {
     ...stemConfig,
-    stem,
+    stem: queryStemWithoutFilters(stem),
     collection: checkOrTransformQueryResource(stemConfig.collection, attributesResourcesOrder),
     attribute: checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder),
   };
@@ -154,4 +154,13 @@ function cleanWorkflowColumns(config: WorkflowConfig): WorkflowColumnsSettings {
   });
 
   return columns;
+}
+
+export function filterUniqueWorkflowConfigStems(config: WorkflowConfig): WorkflowStemConfig[] {
+  return (config.stemsConfigs || []).reduce<WorkflowStemConfig[]>((stemsConfigs, currentConfig) => {
+    if (!stemsConfigs.some(stemConfig => queryStemsAreSame(stemConfig.stem, currentConfig.stem))) {
+      stemsConfigs.push(currentConfig);
+    }
+    return stemsConfigs;
+  }, []);
 }

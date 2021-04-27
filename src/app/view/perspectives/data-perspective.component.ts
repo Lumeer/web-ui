@@ -24,7 +24,7 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {Query} from '../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
@@ -36,6 +36,8 @@ import {selectConstraintData} from '../../core/store/constraint-data/constraint-
 import {
   selectCanManageViewConfig,
   selectCollectionsByQuery,
+  selectDataByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../core/store/common/permissions.selectors';
 import {selectCollectionsPermissions} from '../../core/store/user-permissions/user-permissions.state';
@@ -54,6 +56,7 @@ export abstract class DataPerspectiveComponent<T>
   public canManageConfig$: Observable<boolean>;
   public permissions$: Observable<AllowedPermissionsMap>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public data$: Observable<DocumentsAndLinksData>;
   public constraintData$: Observable<ConstraintData>;
   public dataLoaded$: Observable<boolean>;
   public viewSettings$: Observable<ViewSettings>;
@@ -65,10 +68,13 @@ export abstract class DataPerspectiveComponent<T>
     super(store$);
   }
 
-  protected abstract subscribeDocumentsAndLinks$(): Observable<{
-    documents: DocumentModel[];
-    linkInstances: LinkInstance[];
-  }>;
+  protected subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
+    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+  }
+
+  protected subscribeData$(): Observable<DocumentsAndLinksData> {
+    return this.store$.pipe(select(selectDataByQuery));
+  }
 
   public ngOnInit() {
     super.ngOnInit();
@@ -92,6 +98,7 @@ export abstract class DataPerspectiveComponent<T>
 
   private subscribeData() {
     this.documentsAndLinks$ = this.subscribeDocumentsAndLinks$();
+    this.data$ = this.subscribeData$();
     this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));

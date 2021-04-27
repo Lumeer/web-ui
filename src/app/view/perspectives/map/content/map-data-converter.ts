@@ -18,9 +18,7 @@
  */
 
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {
@@ -30,6 +28,7 @@ import {
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {mapMarkerDataId} from './map-content.utils';
+import {DocumentsAndLinksData} from '@lumeer/data-filters';
 
 enum DataObjectInfoKeyType {
   Color = 'color',
@@ -44,20 +43,27 @@ export class MapDataConverter {
   public convert(
     config: MapConfig,
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     permissions: AllowedPermissionsMap,
     query: Query
   ): MapMarkerData[] {
     this.config = config;
 
-    const data = (query?.stems || []).reduce((allData, stem, index) => {
-      this.dataObjectAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, permissions);
+    const mapData = (query?.stems || []).reduce((allData, stem, index) => {
+      const stemData = data.dataByStems?.[index];
+      this.dataObjectAggregator.updateData(
+        collections,
+        stemData?.documents || [],
+        linkTypes,
+        stemData?.linkInstances || [],
+        stem,
+        permissions
+      );
       allData.push(...this.convertByStem(index));
       return allData;
     }, []);
-    return filterUniqueData(data);
+    return filterUniqueData(mapData);
   }
 
   private convertByStem(index: number): MapMarkerData[] {

@@ -30,7 +30,7 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {UnknownConstraint} from '@lumeer/data-filters';
+import {DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},
@@ -265,6 +265,12 @@ const linkTypes: LinkType[] = [
 
 const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
+const data: DocumentsAndLinksData = {
+  uniqueLinkInstances: linkInstances,
+  uniqueDocuments: documents,
+  dataByStems: [{stem: query.stems[0], documents, linkInstances}],
+};
+
 describe('Pivot data converter', () => {
   let constraintReadableFormatter: SelectItemWithConstraintFormatter;
   let dataConverter: PivotDataConverter;
@@ -293,7 +299,7 @@ describe('Pivot data converter', () => {
 
   it('should return empty data', () => {
     const config: PivotConfig = {stemsConfigs: [{rowAttributes: [], columnAttributes: [], valueAttributes: []}]};
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data).toEqual([]);
   });
 
@@ -309,7 +315,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'a',
@@ -352,7 +358,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {
@@ -400,7 +406,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {
@@ -439,7 +445,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'abc',
@@ -489,7 +495,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {
@@ -557,7 +563,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'abc',

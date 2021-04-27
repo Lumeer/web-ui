@@ -18,7 +18,6 @@
  */
 
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   KanbanAggregation,
   KanbanAttribute,
@@ -28,7 +27,6 @@ import {
   KanbanStemConfig,
   KanbanValueType,
 } from '../../../../core/store/kanbans/kanban';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals, isNotNullOrUndefined, objectsByIdMap} from '../../../../shared/utils/common.utils';
@@ -56,9 +54,12 @@ import {
   ConstraintData,
   ConstraintType,
   DateTimeConstraintConfig,
+  DocumentsAndLinksData,
   SelectConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {ViewSettings} from '../../../../core/store/views/view';
+import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
 
 interface AggregatedColumnData {
   count: number;
@@ -71,9 +72,8 @@ const COLUMN_WIDTH = 300;
 export class KanbanConverter {
   private dataAggregator: DataAggregator;
   private collections: Collection[];
-  private documents: DocumentModel[];
+  private data: DocumentsAndLinksData;
   private linkTypes: LinkType[];
-  private linkInstances: LinkInstance[];
   private constraintData: ConstraintData;
 
   constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
@@ -86,30 +86,36 @@ export class KanbanConverter {
     config: KanbanConfig,
     collections: Collection[],
     linkTypes: LinkType[],
-    documents: DocumentModel[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     permissions: AllowedPermissionsMap,
+    settings: ViewSettings,
     constraintData?: ConstraintData
   ): {config: KanbanConfig; data: KanbanData} {
-    this.updateData(collections, linkTypes, documents, linkInstances, constraintData);
+    this.updateData(collections, linkTypes, data, constraintData);
     const {columnsMap, otherColumn} = this.groupDataByColumns(config, permissions);
 
-    const data = createKanbanData(config, columnsMap, otherColumn, collections, linkTypes);
-    this.fillCreateResources(config, data, permissions);
-    return {data, config: pickKanbanConfigFromData(config, data)};
+    const kanbanData = createKanbanData(
+      config,
+      columnsMap,
+      otherColumn,
+      collections,
+      linkTypes,
+      settings,
+      constraintData
+    );
+    this.fillCreateResources(config, kanbanData, permissions);
+    return {data: kanbanData, config: pickKanbanConfigFromData(config, kanbanData)};
   }
 
   private updateData(
     collections: Collection[],
     linkTypes: LinkType[],
-    documents: DocumentModel[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     constraintData?: ConstraintData
   ) {
     this.collections = collections;
     this.linkTypes = linkTypes;
-    this.documents = documents;
-    this.linkInstances = linkInstances;
+    this.data = data;
     this.constraintData = constraintData;
   }
 
@@ -143,11 +149,13 @@ export class KanbanConverter {
         stemConfig.aggregation &&
         findConstraintByQueryAttribute(stemConfig.aggregation, this.collections, this.linkTypes);
 
+      const stemData = this.data?.dataByStems?.[stemIndex];
+
       this.dataAggregator.updateData(
         this.collections,
-        this.documents,
+        stemData?.documents || [],
         this.linkTypes,
-        this.linkInstances,
+        stemData?.linkInstances || [],
         stemConfig.stem,
         this.constraintData
       );
@@ -233,6 +241,8 @@ export class KanbanConverter {
                 columnsAggregated[stringValue].constraint || aggregationConstraint;
             }
           } else {
+            otherColumn.constraint = otherColumn.constraint || constraint;
+
             otherColumn.cards.push(
               ...dataResources
                 .filter(dataResource => !this.dataResourceIsAlreadyInColumn(dataResource, resourceType, otherColumn))
@@ -297,7 +307,7 @@ export class KanbanConverter {
         );
       });
 
-      const otherConstraint = otherColumn.constraint || new UnknownConstraint();
+      const otherConstraint = otherAggregated.constraint || new UnknownConstraint();
       otherColumn.summary = formatAggregatedValue(
         otherAggregated,
         config.aggregation,
@@ -511,7 +521,9 @@ function createKanbanData(
   columnsMap: Record<string, Partial<KanbanDataColumn>>,
   otherColumn: Partial<KanbanDataColumn>,
   collections: Collection[],
-  linkTypes: LinkType[]
+  linkTypes: LinkType[],
+  settings: ViewSettings,
+  constraintData: ConstraintData
 ): KanbanData {
   let newColumnsTitles = Object.keys(columnsMap);
   const selectedAttributes = (currentConfig.stemsConfigs || [])
@@ -532,7 +544,7 @@ function createKanbanData(
           id: getColumnIdOrGenerate(currentColumn),
           title,
           width: getColumnSizeTypeWidth(currentConfig.columnSize),
-          cards,
+          cards: sortCards(cards, settings, collections, linkTypes, constraintData),
           createdFromAttributes: mergeKanbanAttributes(
             createdFromAttributes || [],
             currentColumn.createdFromAttributes
@@ -552,7 +564,7 @@ function createKanbanData(
       id: generateId(),
       title,
       width: getColumnSizeTypeWidth(currentConfig.columnSize),
-      cards,
+      cards: sortCards(cards, settings, collections, linkTypes, constraintData),
       createdFromAttributes,
       constraint,
       summary,
@@ -563,13 +575,32 @@ function createKanbanData(
     stemsConfigs: currentConfig?.stemsConfigs,
     columns: newColumns,
     otherColumn: {
+      constraint: otherColumn.constraint,
       createdFromAttributes: otherColumn.createdFromAttributes,
-      cards: otherColumn.cards,
+      cards: sortCards(otherColumn.cards, settings, collections, linkTypes, constraintData),
       summary: otherColumn.summary,
       id: getColumnIdOrGenerate(currentConfig?.otherColumn),
       width: getColumnSizeTypeWidth(currentConfig?.columnSize),
     },
   };
+}
+
+function sortCards(
+  cards: KanbanCard[],
+  settings: ViewSettings,
+  collections: Collection[],
+  linkTypes: LinkType[],
+  constraintData: ConstraintData
+): KanbanCard[] {
+  return sortDataResourcesObjectsByViewSettings(
+    cards,
+    settings,
+    collections,
+    linkTypes,
+    constraintData,
+    card => card.dataResource,
+    card => card.resource
+  );
 }
 
 function mergeKanbanAttributes(attributes: KanbanAttribute[], otherAttributes: KanbanAttribute[]): KanbanAttribute[] {

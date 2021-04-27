@@ -19,12 +19,10 @@
 
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
-import {CalendarEvent} from './calendar-event';
+import {CalendarEvent, CalendarMetaData} from './calendar-event';
 import {isArray, isDateValid, isNotNullOrUndefined, unescapeHtml} from '../../../../shared/utils/common.utils';
 import {
   DataObjectAggregator,
@@ -39,9 +37,8 @@ import {
 } from '../../../../shared/utils/date.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
-import {generateId} from '../../../../shared/utils/resource.utils';
 import * as moment from 'moment';
-import {Constraint, ConstraintData, ConstraintType} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, ConstraintType, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
@@ -60,9 +57,8 @@ export class CalendarConverter {
   public convert(
     config: CalendarConfig,
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     permissions: AllowedPermissionsMap,
     constraintData: ConstraintData,
     query: Query
@@ -70,12 +66,13 @@ export class CalendarConverter {
     this.config = config;
     this.constraintData = constraintData;
 
-    return (query?.stems || []).reduce((allEvents, stem, index) => {
+    const events = (query?.stems || []).reduce((allEvents, stem, index) => {
+      const stemData = data.dataByStems?.[index];
       this.dataObjectAggregator.updateData(
         collections,
-        documents,
+        stemData?.documents || [],
         linkTypes,
-        linkInstances,
+        stemData?.linkInstances || [],
         stem,
         permissions,
         constraintData
@@ -83,6 +80,7 @@ export class CalendarConverter {
       allEvents.push(...this.convertByStem(index));
       return allEvents;
     }, []);
+    return filterUniqueEvents(events);
   }
 
   private convertByStem(index: number): CalendarEvent[] {
@@ -164,10 +162,19 @@ export class CalendarConverter {
       for (let i = 0; i < titles.length; i++) {
         const titleFormatted = nameConstraint.createDataValue(titles[i], this.constraintData).title();
 
+        const extendedProps: CalendarMetaData = {
+          startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
+          endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
+          nameDataId: nameDataResource?.id,
+          stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
+          stemIndex,
+          dataResourcesChain: item.dataResourcesChain,
+        };
+
         const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
+        const eventGroupId = groupId(item);
         const event: CalendarEvent = {
-          id: generateId(),
-          groupId: groupId(item),
+          id: eventUniqueId(extendedProps, eventGroupId),
           title: titleFormatted,
           start: interval.start,
           end: interval.end,
@@ -177,14 +184,7 @@ export class CalendarConverter {
           allDay,
           startEditable: startEditable && startPermission?.writeWithView,
           durationEditable: interval.end && stemConfig.end && endEditable && endPermission?.writeWithView,
-          extendedProps: {
-            startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
-            endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
-            nameDataId: nameDataResource?.id,
-            stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
-            stemIndex,
-            dataResourcesChain: item.dataResourcesChain,
-          },
+          extendedProps,
         };
 
         if (stemConfig.group) {
@@ -200,6 +200,26 @@ export class CalendarConverter {
       return events;
     }, []);
   }
+}
+
+function eventUniqueId(metadata: CalendarMetaData, groupId: string): string {
+  const stemConfig = metadata.stemConfig;
+  const attributesId = `${stemConfig.name?.attributeId}:${stemConfig.start?.attributeId}:${stemConfig.end?.attributeId}`;
+  return `${groupId}:${attributesId}`;
+}
+
+function filterUniqueEvents(events: CalendarEvent[]): CalendarEvent[] {
+  const usedIds = new Set();
+  const filteredEvents = [];
+  for (const event of events) {
+    if (usedIds.has(event.id)) {
+      continue;
+    }
+    usedIds.add(event.id);
+    filteredEvents.push(event);
+  }
+
+  return filteredEvents;
 }
 
 function createInterval(

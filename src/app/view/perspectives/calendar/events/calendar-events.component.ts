@@ -43,7 +43,6 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {CalendarConverter} from '../util/calendar-converter';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
-import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-chart';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
 import * as moment from 'moment';
@@ -52,15 +51,15 @@ import {
   ConstraintType,
   DataValue,
   DateTimeConstraint,
+  DocumentsAndLinksData,
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
+  data: DocumentsAndLinksData;
   config: CalendarConfig;
   permissions: AllowedPermissionsMap;
   query: Query;
@@ -86,10 +85,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
-
-  @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public config: CalendarConfig;
@@ -150,9 +146,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     return this.converter.convert(
       config,
       data.collections,
-      data.documents,
       data.linkTypes,
-      data.linkInstances,
+      data.data,
       data.permissions,
       data.constraintData,
       data.query
@@ -161,21 +156,19 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (
-      (changes.documents ||
-        changes.config ||
+      (changes.config ||
         changes.collections ||
         changes.linkTypes ||
-        changes.linkInstances ||
+        changes.data ||
         changes.permissions ||
         changes.query ||
         changes.constraintData) &&
       this.config
     ) {
       this.dataSubject.next({
-        documents: this.documents,
-        linkInstances: this.linkInstances,
         linkTypes: this.linkTypes,
         collections: this.collections,
+        data: this.data,
         permissions: this.permissions,
         config: this.config,
         query: this.query,
@@ -259,7 +252,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private patchDate(
     date: Date,
-    model: GanttChartBarModel,
+    model: CalendarBar,
     patchData: Record<string, any>,
     dataResource: DataResource = null,
     subtractDay?: boolean
@@ -275,7 +268,10 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
 
     const dataValue: DataValue = constraint.createDataValue(momentDate.toDate(), this.constraintData);
-    if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
+    if (
+      !dataResource ||
+      dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId], this.constraintData)) !== 0
+    ) {
       patchData[model.attributeId] = dataValue.serialize();
     }
   }
@@ -283,7 +279,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   private getPatchData(
     patchDataArray: PatchData[],
     dataResource: DataResource,
-    model: GanttChartBarModel
+    model: CalendarBar
   ): Record<string, any> {
     const patchDataObject = patchDataArray.find(
       patchData => patchData.dataResource.id === dataResource.id && patchData.resourceType === model.resourceType
@@ -370,9 +366,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private getDataResource(id: string, type: AttributesResourceType): DataResource {
     if (type === AttributesResourceType.Collection) {
-      return (this.documents || []).find(document => document.id === id);
+      return (this.data.uniqueDocuments || []).find(document => document.id === id);
     } else if (type === AttributesResourceType.LinkType) {
-      return (this.linkInstances || []).find(linkInstance => linkInstance.id === id);
+      return (this.data.uniqueLinkInstances || []).find(linkInstance => linkInstance.id === id);
     }
 
     return null;

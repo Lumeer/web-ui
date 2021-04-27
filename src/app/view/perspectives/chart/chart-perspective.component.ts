@@ -23,15 +23,13 @@ import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
-import {distinctUntilChanged, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {ChartConfig} from '../../../core/store/charts/chart';
 import {selectChartById} from '../../../core/store/charts/charts.state';
 import {ViewConfig} from '../../../core/store/views/view';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ChartDataComponent} from './data/chart-data.component';
 import {checkOrTransformChartConfig} from './visualizer/chart-util';
 import {DataPerspectiveComponent} from '../data-perspective.component';
@@ -75,13 +73,6 @@ export class ChartPerspectiveComponent extends DataPerspectiveComponent<ChartCon
 
   public getConfig(viewConfig: ViewConfig): ChartConfig {
     return viewConfig?.chart;
-  }
-
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(
-      select(selectDocumentsAndLinksByQuerySorted),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
   }
 
   public onConfigChanged(config: ChartConfig) {

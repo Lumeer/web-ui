@@ -28,7 +28,6 @@ import {
 } from '../../../../../../shared/table/model/table-model';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../../core/store/views/view';
@@ -42,13 +41,12 @@ import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-
 import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -58,8 +56,7 @@ export class WorkflowTablesStateService {
 
   private currentCollectionsMap: Record<string, Collection>;
   private currentLinkTypesMap: Record<string, LinkType>;
-  private currentDocuments: DocumentModel[];
-  private currentLinkInstances: LinkInstance[];
+  private currentData: DocumentsAndLinksData;
   private currentQuery: Query;
   private currentViewSettings: ViewSettings;
   private currentConfig: WorkflowConfig;
@@ -68,9 +65,8 @@ export class WorkflowTablesStateService {
 
   public updateData(
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     config: WorkflowConfig,
     permissions: AllowedPermissionsMap,
     query: Query,
@@ -79,8 +75,7 @@ export class WorkflowTablesStateService {
   ) {
     this.currentCollectionsMap = objectsByIdMap(collections);
     this.currentLinkTypesMap = objectsByIdMap(linkTypes);
-    this.currentDocuments = documents;
-    this.currentLinkInstances = linkInstances;
+    this.currentData = data;
     this.currentConfig = config;
     this.currentPermissions = permissions;
     this.currentQuery = query;
@@ -140,12 +135,8 @@ export class WorkflowTablesStateService {
     return this.currentViewSettings;
   }
 
-  public get documents(): DocumentModel[] {
-    return this.currentDocuments;
-  }
-
-  public get linkInstances(): LinkInstance[] {
-    return this.currentLinkInstances;
+  public get data(): DocumentsAndLinksData {
+    return this.currentData;
   }
 
   public columns(tableId: string): TableColumn[] {

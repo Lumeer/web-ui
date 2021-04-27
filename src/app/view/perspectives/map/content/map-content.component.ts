@@ -53,14 +53,13 @@ import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {AppState} from '../../../../core/store/app.state';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
+  data: DocumentsAndLinksData;
   config: MapConfig;
   permissions: AllowedPermissionsMap;
   query: Query;
@@ -80,10 +79,7 @@ export class MapContentComponent implements OnInit, OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public documents: DocumentModel[];
-
-  @Input()
-  public linkInstances: LinkInstance[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public constraintData: ConstraintData;
@@ -126,33 +122,23 @@ export class MapContentComponent implements OnInit, OnChanges {
       this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
     }
 
-    return this.converter.convert(
-      config,
-      data.collections,
-      data.documents,
-      data.linkTypes,
-      data.linkInstances,
-      data.permissions,
-      data.query
-    );
+    return this.converter.convert(config, data.collections, data.linkTypes, data.data, data.permissions, data.query);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (
-      (changes.documents ||
-        changes.collections ||
+      (changes.collections ||
         changes.linkTypes ||
-        changes.linkInstances ||
+        changes.data ||
         changes.permissions ||
         changes.query ||
         this.mapConfigChanged(changes.map)) &&
       this.map?.config
     ) {
       this.dataSubject$.next({
-        documents: this.documents,
-        linkInstances: this.linkInstances,
-        linkTypes: this.linkTypes,
         collections: this.collections,
+        linkTypes: this.linkTypes,
+        data: this.data,
         permissions: this.permissions,
         config: this.map.config,
         query: this.query,

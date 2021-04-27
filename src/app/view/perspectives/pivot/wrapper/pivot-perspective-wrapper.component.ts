@@ -28,9 +28,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {PivotDataConverter} from '../util/pivot-data-converter';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';
@@ -41,14 +39,13 @@ import {DataAggregationType} from '../../../../shared/utils/data/data-aggregatio
 import {checkOrTransformPivotConfig} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
+  data: DocumentsAndLinksData;
   query: Query;
   constraintData: ConstraintData;
   config: PivotConfig;
@@ -65,13 +62,10 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   public collections: Collection[];
 
   @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public linkTypes: LinkType[];
-
-  @Input()
-  public linkInstances: LinkInstance[];
 
   @Input()
   public query: Query;
@@ -128,9 +122,8 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
     return this.pivotTransformer.transform(
       data.config,
       data.collections,
-      data.documents,
       data.linkTypes,
-      data.linkInstances,
+      data.data,
       data.query,
       data.constraintData
     );
@@ -153,20 +146,18 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   private checkData(changes: SimpleChanges) {
     if (
-      changes.documents ||
+      changes.data ||
       changes.config ||
       changes.collections ||
       changes.linkTypes ||
-      changes.linkInstances ||
       changes.query ||
       changes.constraintData
     ) {
       this.dataSubject.next({
-        documents: this.documents,
         config: this.config,
         collections: this.collections,
         linkTypes: this.linkTypes,
-        linkInstances: this.linkInstances,
+        data: this.data,
         query: this.query,
         constraintData: this.constraintData,
       });

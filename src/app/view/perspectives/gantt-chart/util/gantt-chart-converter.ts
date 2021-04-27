@@ -21,7 +21,7 @@ import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, Gantt
 import * as moment from 'moment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -31,7 +31,6 @@ import {
   GanttChartConfig,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -66,14 +65,20 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DocumentsAndLinksData,
   PercentageConstraintConfig,
   SelectConstraint,
   UnknownConstraint,
   UserConstraint,
 } from '@lumeer/data-filters';
 import {Configuration} from '../../../../../environments/configuration-type';
+import {ViewSettings} from '../../../../core/store/views/view';
+import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
+import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
 
 export interface GanttTaskMetadata {
+  dataResource: DataResource;
+  resource: AttributesResource;
   nameDataId: string;
   startDataId: string;
   endDataId: string;
@@ -108,23 +113,23 @@ export class GanttChartConverter {
   public convert(
     config: GanttChartConfig,
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     permissions: AllowedPermissionsMap,
-    constraintData: ConstraintData,
     query: Query,
-    sortDefined?: boolean
+    settings: ViewSettings,
+    constraintData: ConstraintData
   ): {options: GanttOptions; tasks: GanttTask[]} {
     this.config = config;
     this.constraintData = constraintData;
 
-    let tasks = (query?.stems || []).reduce((allTasks, stem, index) => {
+    let tasks = (query?.stems || []).reduce<GanttTask[]>((allTasks, stem, index) => {
+      const stemData = data.dataByStems?.[index];
       this.dataObjectAggregator.updateData(
         collections,
-        documents,
+        stemData?.documents || [],
         linkTypes,
-        linkInstances,
+        stemData?.linkInstances || [],
         stem,
         permissions,
         constraintData
@@ -133,12 +138,22 @@ export class GanttChartConverter {
       return allTasks;
     }, []);
 
-    if (!sortDefined) {
+    if (viewAttributeSettingsSortDefined(settings)) {
+      tasks = sortDataResourcesObjectsByViewSettings(
+        tasks,
+        settings,
+        collections,
+        linkTypes,
+        constraintData,
+        task => task.metadata.dataResource,
+        task => task.metadata.resource,
+        (a, b) => this.compareTasks(a, b)
+      );
+    } else {
       tasks = tasks.sort((t1, t2) => this.compareTasks(t1, t2));
     }
 
     const options = this.createGanttOptions(config, permissions, linkTypes);
-
     this.convertCount++;
     return {options, tasks};
   }
@@ -278,6 +293,10 @@ export class GanttChartConverter {
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
     const endConstraint = stemConfig.end && this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
+    const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
+    const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
+    const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
+
     const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = dataObjectsInfo.reduce((map, item) => {
       const nameDataResource = item.objectDataResources[DataObjectInfoKeyType.Name];
@@ -369,6 +388,8 @@ export class GanttChartConverter {
       }
 
       const metadata: GanttTaskMetadata = {
+        dataResource: nameDataResource || (interval ? endDataResource : startDataResource),
+        resource: nameResource || (interval ? endResource : startResource),
         nameDataId: nameDataResource?.id,
         startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
         endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,

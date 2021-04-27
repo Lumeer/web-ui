@@ -70,6 +70,7 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DocumentsAndLinksData,
   filterDocumentsAndLinksByStem,
   UnknownConstraint,
 } from '@lumeer/data-filters';
@@ -95,13 +96,10 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public kanbanData: KanbanData;
 
   @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public linkTypes: LinkType[];
-
-  @Input()
-  public linkInstances: LinkInstance[];
 
   @Input()
   public canManageConfig: boolean;
@@ -268,7 +266,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
           dataResourceChain => !!dataResourceChain.linkInstanceId
         );
         const linkInstance =
-          linkInstanceChain && (this.linkInstances || []).find(li => li.id === linkInstanceChain.linkInstanceId);
+          linkInstanceChain &&
+          (this.data?.uniqueLinkInstances || []).find(li => li.id === linkInstanceChain.linkInstanceId);
         if (linkInstance) {
           chain[chainRange[chainRange.length - 2]] = linkInstance;
         }
@@ -438,9 +437,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   private getPipelineDocuments(pipelineIndex: number, stem: QueryStem): DocumentModel[] {
     const {pipelineDocuments} = filterDocumentsAndLinksByStem(
       this.collections,
-      groupDocumentsByCollection(this.documents),
+      groupDocumentsByCollection(this.data?.uniqueDocuments),
       this.linkTypes,
-      groupLinkInstancesByLinkTypes(this.linkInstances),
+      groupLinkInstancesByLinkTypes(this.data?.uniqueLinkInstances),
       this.permissions,
       this.linkTypesPermissions,
       this.constraintData,
@@ -535,7 +534,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       const {linkInstanceId, documentId, otherDocumentIds} = createPossibleLinkingDocumentsByChains(
         kanbanCard.dataResourcesChain,
         dataResourcesChains,
-        this.linkInstances
+        this.data?.uniqueLinkInstances
       );
       if (otherDocumentIds.length === 1) {
         this.updateLinkDocuments.emit({linkInstanceId, documentIds: [documentId, otherDocumentIds[0]]});
@@ -635,7 +634,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       isNotNullOrUndefined(previousValue) &&
       isArray(documentValue)
     ) {
-      const changedIndex = documentValue.findIndex(value => value === previousValue);
+      const changedIndex = documentValue.findIndex(value => String(value) === String(previousValue));
       const newArray = [...documentValue];
       if (!newArray.includes(newValue)) {
         newArray[changedIndex] = newValue;

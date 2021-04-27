@@ -23,11 +23,7 @@ import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {debounceTime, filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
-import {
-  selectCollectionsInQuery,
-  selectDocumentsAndLinksByQuerySorted,
-} from '../../../core/store/common/permissions.selectors';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+import {selectCollectionsInQuery} from '../../../core/store/common/permissions.selectors';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
@@ -45,7 +41,6 @@ import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.utils';
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
@@ -137,10 +132,6 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
     return this.selectMapDefaultConfigId$().pipe(
       mergeMap(collectionId => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Map, collectionId))))
     );
-  }
-
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
   }
 
   private checkConfigSnapshot(config: MapConfig) {

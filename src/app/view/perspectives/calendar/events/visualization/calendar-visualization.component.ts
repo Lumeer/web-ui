@@ -295,7 +295,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     }
   }
 
-  public onEventClick(data: {event: CalendarEvent}) {
+  public onEventClick(data: {event: CalendarEvent; jsEvent: MouseEvent}) {
     this.eventClick.emit(data.event);
   }
 

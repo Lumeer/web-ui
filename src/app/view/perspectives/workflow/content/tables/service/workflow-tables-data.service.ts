@@ -83,7 +83,10 @@ import {
   selectWorkflowSelectedDocumentId,
 } from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
-import {generateDocumentDataByResourceQuery} from '../../../../../../core/store/documents/document.utils';
+import {
+  generateDocumentDataByResourceQuery,
+  getDocumentsAndLinksByStemData,
+} from '../../../../../../core/store/documents/document.utils';
 import {
   computeTableHeight,
   createAggregatedLinkingDocumentsIds,
@@ -109,7 +112,8 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {selectCurrentView} from '../../../../../../core/store/views/views.state';
-import {Constraint, ConstraintData, filterDocumentsAndLinksByQuery, UnknownConstraint} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
+import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/workflows/workflow.utils';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -169,9 +173,8 @@ export class WorkflowTablesDataService {
     ) {
       this.createAndSyncTables(
         this.stateService.collections,
-        this.stateService.documents,
         this.stateService.linkTypes,
-        this.stateService.linkInstances,
+        this.stateService.data,
         this.stateService.config,
         this.stateService.permissions,
         this.stateService.query,
@@ -183,9 +186,8 @@ export class WorkflowTablesDataService {
 
   public createAndSyncTables(
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     config: WorkflowConfig,
     permissions: AllowedPermissionsMap,
     query: Query,
@@ -195,9 +197,8 @@ export class WorkflowTablesDataService {
     const currentTables = this.stateService.tables;
     this.stateService.updateData(
       collections,
-      documents,
       linkTypes,
-      linkInstances,
+      data,
       config,
       permissions,
       query,
@@ -208,9 +209,8 @@ export class WorkflowTablesDataService {
     const {tables, actions} = this.createTablesAndSyncActions(
       currentTables,
       collections,
-      documents,
       linkTypes,
-      linkInstances,
+      data,
       config,
       permissions,
       query,
@@ -225,9 +225,8 @@ export class WorkflowTablesDataService {
   public createTablesAndSyncActions(
     currentTables: TableModel[],
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     config: WorkflowConfig,
     permissions: AllowedPermissionsMap,
     query: Query,
@@ -236,32 +235,17 @@ export class WorkflowTablesDataService {
   ): {tables: WorkflowTable[]; actions: Action[]} {
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
-    return config.stemsConfigs.reduce(
-      (result, stemConfig) => {
+    return filterUniqueWorkflowConfigStems(config).reduce(
+      (result, stemConfig, index) => {
         const collection = collectionsMap[stemConfig.collection?.resourceId];
         if (!collection) {
           return result;
         }
 
-        // TODO maybe there is some better and more effective way
-        let stemDocuments = documents;
-        let stemLinkInstances = linkInstances;
-        if (config.stemsConfigs.length > 1) {
-          const stemQuery = {...query, stems: [stemConfig.stem]};
-          const result = filterDocumentsAndLinksByQuery(
-            documents,
-            collections,
-            linkTypes,
-            linkInstances,
-            stemQuery,
-            permissions,
-            {},
-            constraintData,
-            viewSettings?.data?.includeSubItems
-          );
-          stemDocuments = result.documents;
-          stemLinkInstances = result.linkInstances;
-        }
+        const {documents: stemDocuments, linkInstances: stemLinkInstances} = getDocumentsAndLinksByStemData(
+          data,
+          stemConfig.stem
+        );
         const linkInstancesMap = objectsByIdMap(stemLinkInstances);
 
         // creating collection columns
@@ -306,7 +290,7 @@ export class WorkflowTablesDataService {
           collections,
           stemDocuments,
           linkTypes,
-          linkInstances,
+          stemLinkInstances,
           stemConfig.stem,
           constraintData
         );

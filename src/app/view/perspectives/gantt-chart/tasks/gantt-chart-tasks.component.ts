@@ -78,21 +78,22 @@ import {
   ConstraintType,
   DataValue,
   DateTimeConstraint,
+  DocumentsAndLinksData,
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {ViewSettings} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
+  data: DocumentsAndLinksData;
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
   config: GanttChartConfig;
   permissions: AllowedPermissionsMap;
   query: Query;
   constraintData: ConstraintData;
-  sortDefined: boolean;
+  settings: ViewSettings;
 }
 
 interface PatchData {
@@ -113,13 +114,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public collections: Collection[];
 
   @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public linkTypes: LinkType[];
-
-  @Input()
-  public linkInstances: LinkInstance[];
 
   @Input()
   public config: GanttChartConfig;
@@ -143,7 +141,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public dataLoaded: boolean;
 
   @Input()
-  public sortDefined: boolean;
+  public settings: ViewSettings;
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
@@ -213,13 +211,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return this.converter.convert(
       config,
       data.collections,
-      data.documents,
       data.linkTypes,
-      data.linkInstances,
+      data.data,
       data.permissions || {},
-      data.constraintData,
       data.query,
-      data.sortDefined
+      data.settings,
+      data.constraintData
     );
   }
 
@@ -227,14 +224,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (this.shouldConvertData(changes)) {
       this.dataSubject.next({
         collections: this.collections,
-        documents: this.documents,
         linkTypes: this.linkTypes,
-        linkInstances: this.linkInstances,
+        data: this.data,
         permissions: this.permissions,
         config: this.config,
+        settings: this.settings,
         query: this.query,
         constraintData: this.constraintData,
-        sortDefined: this.sortDefined,
       });
     }
   }
@@ -243,13 +239,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return (
       this.dataLoaded &&
       (changes.dataLoaded ||
-        changes.documents ||
-        changes.sortDefined ||
+        changes.data ||
+        changes.settings ||
         (changes.config && this.configChanged(changes.config)) ||
         changes.collections ||
         changes.permissions ||
         changes.linkTypes ||
-        changes.linkInstances ||
         changes.query ||
         changes.constraintData) &&
       !!this.config
@@ -338,7 +333,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const {linkInstanceId, documentId, otherDocumentIds} = createLinkDocumentsData(
       task,
       this.tasks,
-      this.linkInstances
+      this.data?.uniqueLinkInstances
     );
 
     if (linkInstanceId && documentId && (otherDocumentIds || []).length > 0) {
@@ -471,9 +466,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   private getDataResource(id: string, type: AttributesResourceType): DataResource {
     if (type === AttributesResourceType.Collection) {
-      return (this.documents || []).find(document => document.id === id);
+      return (this.data?.uniqueDocuments || []).find(document => document.id === id);
     } else if (type === AttributesResourceType.LinkType) {
-      return (this.linkInstances || []).find(linkInstance => linkInstance.id === id);
+      return (this.data?.uniqueLinkInstances || []).find(linkInstance => linkInstance.id === id);
     }
 
     return null;
@@ -496,8 +491,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onAddDependency(data: {fromId: string; toId: string}) {
-    const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
-    const documentTo = (this.documents || []).find(document => document.id === data.toId);
+    const documentFrom = (this.data?.uniqueDocuments || []).find(document => document.id === data.fromId);
+    const documentTo = (this.data?.uniqueDocuments || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
       return;
     }
@@ -507,8 +502,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onRemoveDependency(data: {fromId: string; toId: string}) {
-    const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
-    const documentTo = (this.documents || []).find(document => document.id === data.toId);
+    const documentFrom = (this.data?.uniqueDocuments || []).find(document => document.id === data.fromId);
+    const documentTo = (this.data?.uniqueDocuments || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
       return;
     }

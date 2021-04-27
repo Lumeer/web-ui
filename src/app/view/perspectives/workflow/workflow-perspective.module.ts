@@ -43,6 +43,7 @@ import {LinksListModule} from '../../../shared/links/links-list/links-list.modul
 import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
 import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
+import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.pipe';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import {PresenterModule} from '../../../shared/presenter/presenter.module';
     WorkflowSidebarComponent,
     WorkflowTablesIdsPipe,
     WorkflowTableTitleComponent,
+    FilterUniqueStemsConfigsPipe,
   ],
   imports: [
     CommonModule,
