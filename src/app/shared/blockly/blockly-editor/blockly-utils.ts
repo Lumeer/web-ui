@@ -916,6 +916,7 @@ export class BlocklyUtils {
                 check: [
                   linkType.collectionIds[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX,
                   linkType.collectionIds[1] + BlocklyUtils.DOCUMENT_VAR_SUFFIX,
+                  BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN,
                 ],
               },
             ],
