@@ -5,7 +5,7 @@
           [class.disabled]="!data.stats?.satisfy || data.loading"
           [tooltip]="statsTooltip"
           containerClass="bigger-tooltip"
-          [isDisabled]="data.stats?.satisfy || (!cursor.documentId && !cursor.linkInstanceId)"
+          [isDisabled]="data.stats?.satisfy || !(!!cursor?.documentId && !!cursor?.linkInstanceId)"
           [style.color]="value?.config?.background | contrastColor:null:buttonData.opacity"
           (click)="onClick($event)">
     <span *ngIf="data.loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
