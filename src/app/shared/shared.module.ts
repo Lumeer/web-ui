@@ -59,6 +59,7 @@ import {RedDotModule} from './red-dot/red-dot.module';
 import {MenuModule} from './menu/menu.module';
 import {ButtonModule} from './button/button.module';
 import {LoadingModule} from './loading/loading.module';
+import {ProgressModule} from './progress/progress.module';
 
 @NgModule({
   imports: [
@@ -99,6 +100,7 @@ import {LoadingModule} from './loading/loading.module';
     RedDotModule,
     MenuModule,
     ButtonModule,
+    ProgressModule,
   ],
   declarations: [PerspectiveDirective, ResourceHeaderComponent, TourComponent],
   exports: [
@@ -143,6 +145,7 @@ import {LoadingModule} from './loading/loading.module';
     RedDotModule,
     MenuModule,
     ButtonModule,
+    ProgressModule,
   ],
 })
 export class SharedModule {}

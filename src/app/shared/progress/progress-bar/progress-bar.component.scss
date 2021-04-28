@@ -1,0 +1,9 @@
+@import '~src/styles/variables';
+
+:host {
+  border-radius: 5px;
+  overflow: hidden;
+  width: 100%;
+  display: block;
+  background: $gray-400;
+}

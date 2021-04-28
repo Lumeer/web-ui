@@ -1,4 +1,11 @@
+<progress-bar *ngIf="isProgressStyle"
+              [color]="value?.config?.color"
+              [style.height.px]="15"
+              [value]="numericValue">
+</progress-bar>
+
 <input #percentageInput
+       *ngIf="!isProgressStyle"
        [title]="value | formatDataValueTitle"
        [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        type="text"
