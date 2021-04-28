@@ -62,5 +62,12 @@
                        [value]="dataValue">
     </action-data-input>
 
+    <percentage-data-input *ngSwitchCase="constraintType.Percentage"
+                           [readonly]="true"
+                           [style.width.px]="100"
+                           [commonConfiguration]="commonConfiguration"
+                           [value]="dataValue">
+    </percentage-data-input>
+
   </ng-container>
 </ng-template>

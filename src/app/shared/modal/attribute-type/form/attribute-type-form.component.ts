@@ -169,6 +169,8 @@ export class AttributeTypeFormComponent implements OnChanges {
           decimals: this.configForm.get(PercentageConstraintFormControl.Decimals).value,
           minValue: this.configForm.get(PercentageConstraintFormControl.MinValue).value,
           maxValue: this.configForm.get(PercentageConstraintFormControl.MaxValue).value,
+          style: this.configForm.get(PercentageConstraintFormControl.Style).value,
+          color: this.configForm.get(PercentageConstraintFormControl.Color).value,
         };
       case ConstraintType.Select:
         const displayValues = this.configForm.get(SelectConstraintFormControl.DisplayValues).value;

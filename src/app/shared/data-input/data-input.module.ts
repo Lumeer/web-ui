@@ -68,6 +68,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {ActionFiltersTooltipComponent} from './action/tooltip/action-filters-tooltip.component';
 import {FilterBuilderPipesModule} from '../builder/pipes/filter-builder-pipes.module';
 import {ActionFilterPreviewComponent} from './action/tooltip/preview/action-filter-preview.component';
+import {ProgressModule} from '../progress/progress.module';
 
 @NgModule({
   imports: [
@@ -87,6 +88,7 @@ import {ActionFilterPreviewComponent} from './action/tooltip/preview/action-filt
     TextEditorModalModule,
     ReactiveFormsModule,
     FilterBuilderPipesModule,
+    ProgressModule,
   ],
   declarations: [
     DataInputComponent,

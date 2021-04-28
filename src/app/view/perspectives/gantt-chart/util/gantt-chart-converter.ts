@@ -233,8 +233,7 @@ export class GanttChartConverter {
     if (model) {
       const resource = this.dataObjectAggregator.getResource(model);
       background = shadeColor((<Collection>resource).color, 0.5);
-      const attribute = resource && findAttribute(resource.attributes, model.attributeId);
-      title = attribute && attribute.name;
+      title = findAttribute(resource?.attributes, model.attributeId)?.name;
     }
     return {
       background,

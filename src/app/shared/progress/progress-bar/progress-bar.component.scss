@@ -1,0 +1,8 @@
+@import '~src/styles/variables';
+
+:host {
+  border-radius: 5px;
+  width: 100%;
+  display: block;
+  background: $gray-400;
+}

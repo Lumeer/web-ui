@@ -58,6 +58,8 @@ import {RouterModule} from '@angular/router';
 import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
 import {ActionConstraintConfirmationFormComponent} from './form/constraint-config/action/confirmation/action-constraint-confirmation-form.component';
 import {InputModule} from '../../input/input.module';
+import {PercentageConstraintConfigStyleComponent} from './form/constraint-config/percentage/style/percentage-constraint-config-style.component';
+import {ProgressModule} from '../../progress/progress.module';
 
 @NgModule({
   declarations: [
@@ -86,6 +88,7 @@ import {InputModule} from '../../input/input.module';
     CollectionSettingsPathPipe,
     ActionConstraintConfigEmptyComponent,
     ActionConstraintConfirmationFormComponent,
+    PercentageConstraintConfigStyleComponent,
   ],
   imports: [
     CommonModule,
@@ -103,6 +106,7 @@ import {InputModule} from '../../input/input.module';
     FilterBuilderModule,
     RouterModule,
     InputModule,
+    ProgressModule,
   ],
   exports: [AttributeTypeModalComponent],
 })

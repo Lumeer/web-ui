@@ -43,6 +43,7 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  PercentageConstraint,
   SelectConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
@@ -291,6 +292,8 @@ export class DataObjectAggregator<T> {
       } else {
         return '#ea9999';
       }
+    } else if (constraint?.type === ConstraintType.Percentage) {
+      return (<PercentageConstraint>constraint).config?.color;
     }
 
     const colorConstraint = new ColorConstraint({});
