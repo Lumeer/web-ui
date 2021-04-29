@@ -121,6 +121,9 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
         blocklyResultTimestamp: [
           this.rule.type === RuleType.Blockly ? this.rule.configuration.blocklyResultTimestamp : '',
         ],
+        blocklyRecursive: [
+          this.rule.type === RuleType.Blockly ? (this.rule.configuration.blocklyRecursive ? true : false) : false,
+        ],
       }),
     });
     this.form.setValidators(this.formValidator());

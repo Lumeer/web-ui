@@ -85,6 +85,7 @@ export class AttributeFunctionModalComponent implements OnInit {
     editable: new FormControl(),
     display: new FormControl(),
     dryRun: new FormControl(),
+    recursive: new FormControl(),
   });
   public resource: AttributesResource;
 
@@ -201,6 +202,7 @@ export class AttributeFunctionModalComponent implements OnInit {
         blocklyJs: this.form.value.js,
         blocklyXml: this.form.value.xml,
         blocklyDryRun: this.form.value.dryRun,
+        blocklyRecursive: this.form.value.recursive,
       },
     };
 

@@ -133,6 +133,10 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
     return this.form.controls.display;
   }
 
+  public get recursiveControl(): AbstractControl {
+    return this.form.controls.recursive;
+  }
+
   public onJsUpdate(js: string) {
     this.jsControl.patchValue(js);
   }

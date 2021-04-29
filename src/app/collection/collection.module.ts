@@ -49,9 +49,10 @@ import {CollectionPurposeSelectComponent} from './settings/tab/purpose/content/s
 import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/form/collection-purpose-form.component';
 import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
 import {DataInputModule} from '../shared/data-input/data-input.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
-  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule],
+  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule],
   declarations: [
     AttributeFilterPipe,
     LinkTypeFilterPipe,
