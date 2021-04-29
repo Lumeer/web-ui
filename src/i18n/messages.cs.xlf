@@ -469,7 +469,33 @@
           Pokud nechcete zaokrouhlovat, ponechejte pole prázdné.
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="constraint.percentage.display.label" datatype="html">
+        <source> Display </source><target> Zobrazení </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.percentage.display.progress.color" datatype="html">
+        <source>Choose progress color</source><target>Zvolte barvu ukazatele</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="6162693758764653365" datatype="html">
+        <source>Text</source><target>Text</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">constraint.config.percentage.display.text</note>
+      </trans-unit><trans-unit id="3289318978924506385" datatype="html">
+        <source>Progress Bar</source><target>Ukazatel průběhu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">constraint.config.percentage.display.progress</note>
+      </trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
         <source> Keeps a predefined set of valid values from which one can be selected. At least one value must be configured. </source><target>
     Nabízí na výběr jednu z alespoň dvou nastavených hodnot.
   </target>
@@ -1572,12 +1598,12 @@
                 <source>Delete this column?</source>
                 <target state="final">Smazat sloupec?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">988</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">972</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
                 <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
                 <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v tabulce.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">989</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">973</context></context-group></trans-unit><trans-unit id="table.header.menu.changeAttribute" datatype="html">
         <source>Attribute settings...</source><target>Nastavení attributu...</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context><context context-type="linenumber">260</context></context-group></trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
@@ -1674,10 +1700,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
         <source>Remove options</source><target>Odstranit možnosti?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">266</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.message" datatype="html">
         <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source><target>Měníte hodnotu možnosti, která může být již použitá v záznamech. To způsobí, že tyto záznamy nebudou mít platnou hodnotu. Chcete pokračovat?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit><trans-unit id="constraint.action.title.default" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">267</context></context-group></trans-unit><trans-unit id="constraint.action.title.default" datatype="html">
         <source>Action</source><target>Akce</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="constraint.action.confirmation.placeholder" datatype="html">
@@ -3859,7 +3885,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/pipes/sort/sort-type-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="perspective.gantt.create.task.failure" datatype="html">
         <source>Could not create task</source><target>Úkol nelze vytvořit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
         <source>Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color}}</source><target>Vyberte {emptyProperty, select, name {Název} start {Začátek} end {Konec} progress {Průběh} category {Kategorie} subCategory {Podkategorie} color {Barva} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-bar-empty-value.pipe.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="ganttChart.bar.placeholder" datatype="html">
@@ -3871,17 +3897,14 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/pipes/gantt-chart-mode-text.pipe.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="gantt.perspective.task.create.title" datatype="html">
         <source>New task</source><target>Nový úkol</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">188</context></context-group></trans-unit><trans-unit id="perspective.kanban.create.card.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">186</context></context-group></trans-unit><trans-unit id="perspective.kanban.create.card.failure" datatype="html">
         <source>Could not create card</source><target>Nemohu vytvořit kartu</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">231</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">229</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
         <source>Could not move card</source><target>Kartu nelze přesunout</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
-          <context context-type="linenumber">602</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.config.collection.resource.empty" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">601</context></context-group></trans-unit><trans-unit id="kanban.config.collection.resource.empty" datatype="html">
         <source>Select table or link</source><target>Vyberte si tabulku nebo vazbu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="kanban.config.collection.attribute.empty" datatype="html">
@@ -3963,7 +3986,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
         <source>{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}</source><target>{aggregation, select, sum {Součet} min {Minimum z} max {Maximum z} avg {Průměr z} count {Počet} unique {Unikátních} median {Medián z}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.summary.header" datatype="html">
         <source>Summary of</source><target>Shrnutí</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="search.all.myTasks" datatype="html">
@@ -4318,7 +4341,7 @@
         <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}</source><target>{VAR_SELECT, select, AUTO_LINK {Automatická vazba} BLOCKLY {Blockly} ZAPIER {Zapier} }</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context><context context-type="linenumber">263</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.on" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context><context context-type="linenumber">266</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.on" datatype="html">
         <source>on</source><target>při</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.timing.create" datatype="html">
@@ -4397,7 +4420,27 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.editAutomation.message" datatype="html">
         <source>Edit Automation Code:</source><target>Vytvořte kód automatizace:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.automations.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive" datatype="html">
+        <source>Recursive</source><target>Rekurzivní</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive.tooltip" datatype="html">
+        <source>Trigger also on changes made by other automations</source><target>Spouštět také při změnách vyvolaných jinými automatizacemi</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.automations.empty" datatype="html">
         <source> There are no automations yet. Create some by clicking on the button below! </source><target>
     Nemáte ještě žádné automatizace. Vytvořte ji pomocí tlačítka níže!
   </target>
@@ -4408,7 +4451,7 @@
         </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="table.header.menu.editDescription" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="table.header.menu.editDescription" datatype="html">
         <source>Edit description...</source><target>Upravit popis...</target>
 
 
@@ -4879,14 +4922,14 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.remove.title" datatype="html">
         <source>Delete this automation?</source><target>Smazat automatizaci?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">151</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">151</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.remove.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">152</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">151</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.remove.message" datatype="html">
         <source>Do you really want to delete this automation?</source><target>Chcete skutečně odstranit tuto automatizaci?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">152</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.remove.message.used" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">153</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.remove.message.used" datatype="html">
         <source>This automation is being used in an action button.</source><target>Tato automatizace je používána v některém akčním tlačítku.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">155</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">155</context></context-group></trans-unit><trans-unit id="tasks.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">156</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">155</context></context-group></trans-unit><trans-unit id="tasks.type" datatype="html">
         <source>{type, select, None {Generic} Tasks {Tasks}}</source>
         <target>{type, select, None {Obecná} Tasks {Úkoly} }</target>
 
