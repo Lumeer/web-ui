@@ -86,6 +86,7 @@ export type BlocklyRuleConfiguration = {
   blocklyResultTimestamp: number;
   blocklyDryRun: boolean;
   blocklyDryRunResult: string;
+  blocklyRecursive: boolean;
 };
 
 export type ZapierRuleConfiguration = {

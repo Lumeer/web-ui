@@ -8,6 +8,13 @@
     </div>
     <div class="flex-grow-1 text-right">
       <div class="custom-control custom-checkbox mr-3 d-inline-block">
+        <input class="custom-control-input" type="checkbox" formControlName="blocklyRecursive" id="blocklyRecursive">
+        <label class="custom-control-label" for="blocklyRecursive">
+          <span i18n="@@collection.config.tab.rules.blockly.recursive">Recursive</span>
+          <i class="far fa-question-circle ml-1" tooltip="Trigger also on changes made by other automations" i18n-tooltip="@@collection.config.tab.rules.blockly.recursive.tooltip"></i>
+        </label>
+      </div>
+      <div class="custom-control custom-checkbox mr-3 d-inline-block">
         <input class="custom-control-input" type="checkbox" formControlName="blocklyDryRun" id="blocklyDryRun">
         <label class="custom-control-label" for="blocklyDryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
           Dry Run

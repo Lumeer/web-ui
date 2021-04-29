@@ -58,6 +58,7 @@ export class AttributeFunctionContentComponent implements OnInit {
       js: this.attributeFunction?.js,
       xml: this.attributeFunction?.xml,
       dryRun: this.attributeFunction?.dryRun,
+      recursive: this.attributeFunction?.recursive,
       editable: this.attribute?.function?.editable || false,
     });
   }

@@ -8,6 +8,15 @@
       </label>
     </div>
     <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="!isFunction">
+      <input class="custom-control-input" type="checkbox" [checked]="recursiveControl.value"
+             (change)="recursiveControl.patchValue($event.target.checked)" id="recursive">
+      <label class="custom-control-label" for="recursive">
+        <span i18n="@@collection.config.tab.rules.blockly.recursive">Recursive</span>
+        <i class="far fa-question-circle ml-1" tooltip="Trigger also on changes made by other automations" i18n-tooltip="@@collection.config.tab.rules.blockly.recursive.tooltip"></i>
+      </label>
+    </div>
+
+    <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="!isFunction">
       <input class="custom-control-input" type="checkbox" [checked]="dryRunControl.value"
              (change)="dryRunControl.patchValue($event.target.checked)" id="dryRun">
       <label class="custom-control-label" for="dryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">

@@ -58,6 +58,7 @@ export function attributeRuleFunction(attribute: Attribute, rules?: Rule[]): Att
       timestamp: rule.configuration.blocklyResultTimestamp,
       dryRun: rule.configuration.blocklyDryRun,
       dryRunResult: rule.configuration.blocklyDryRunResult,
+      recursive: rule.configuration.blocklyRecursive,
     };
   }
   return null;

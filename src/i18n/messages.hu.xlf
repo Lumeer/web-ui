@@ -9,7 +9,7 @@
 			<trans-unit datatype="html" id="perspective.gantt.create.task.failure">
 				<source>Could not create task</source>
 				<target>Nem lehet létrehozni a feladatot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context><context context-type="linenumber">123</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0">
 				<source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
 				<target>{VAR_SELECT, select, w {w (hét)} d {d (nap)} h {h (óra)} m {m (perc)} s {s (másodperc)} }</target>
@@ -675,11 +675,31 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.blockly.dryRun">
 				<source> Dry Run </source>
 				<target>Száraz futás</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.blockly.editAutomation.message">
 				<source>Edit Automation Code:</source>
 				<target>Automatizálási kód szerkesztése:</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive" datatype="html">
+        <source>Recursive</source><target>Rekurzív</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.recursive.tooltip" datatype="html">
+        <source>Trigger also on changes made by other automations</source><target>Indítsa el a többi automatizálás által végrehajtott változásokat is</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.blockly.info">
 				<source> Develop any automation from custom blocks. Triggers automatically upon record update or manually via an action button. </source>
 				<target>Bármely automatizálás fejlesztése az egyedi blokkokból. Automatikusan aktiválódik a frissítés rögzítésekor vagy manuálisan egy műveletgombon keresztül.</target>
@@ -703,15 +723,15 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.remove.message">
 				<source>Do you really want to delete this automation?</source>
 				<target>Biztosan törlöd ezt a szabályt?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">152</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">153</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.remove.message.used">
 				<source>This automation is being used in an action button.</source>
 				<target>Ez a szabály műveletgombban használatos.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">155</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">155</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">156</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">155</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.remove.title">
 				<source>Delete this automation?</source>
 				<target>Törlöd ezt a szabályt?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">151</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">151</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">152</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">151</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.rule.update">
 				<source>Save Changes</source>
 				<target>Változtatások mentése</target>
@@ -754,7 +774,7 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.type">
 				<source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}</source>
 				<target>{VAR_SELECT, select, AUTO_LINK {Automatizált Link} BLOCKLY {Blockly} ZAPIER {Zapier} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context><context context-type="linenumber">263</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context><context context-type="linenumber">266</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.upgradePlan">
 				<source>Upgrade to Business Plan!</source>
 				<target>Frissítsen üzleti tervre!</target>
@@ -1341,7 +1361,33 @@
 			<trans-unit datatype="html" id="constraint.percentage.decimals.description">
 				<source> Leave empty for no rounding. </source>
 				<target>Hagyd üresen, kerekítés nélkül.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="constraint.percentage.display.label" datatype="html">
+        <source> Display </source><target> Kijelző </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.percentage.display.progress.color" datatype="html">
+        <source>Choose progress color</source><target>Válassza a haladás színét</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="6162693758764653365" datatype="html">
+        <source>Text</source><target>Szöveg</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">constraint.config.percentage.display.text</note>
+      </trans-unit><trans-unit id="3289318978924506385" datatype="html">
+        <source>Progress Bar</source><target>Fejlődésmutató</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">constraint.config.percentage.display.progress</note>
+      </trans-unit>
 			<trans-unit datatype="html" id="constraint.percentage.decimals.label">
 				<source> Round to no. of decimal digits (0-10): </source>
 				<target>Kerekítsd tizedesjegyre (0-10):</target>
@@ -1365,11 +1411,11 @@
 			<trans-unit datatype="html" id="constraint.select.modify.value.message">
 				<source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
 				<target>Egy olyan beállítás értékét módosítod, amely csak egyes rekordokban használható. Ezzel érvénytelenné teszed a rekordok értékét. Folytatod?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">267</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.select.modify.value.title">
 				<source>Remove options</source>
 				<target>Eltávolítod a beállításokat?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">264</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">266</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.select.multi.label">
 				<source>Allow select multiple values</source>
 				<target>Több érték kijelölésének engedélyezése</target>
@@ -1864,7 +1910,7 @@
 			<trans-unit datatype="html" id="gantt.perspective.task.create.title">
 				<source>New task</source>
 				<target>Új tevékenység</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">188</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context><context context-type="linenumber">186</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="ganttChart.bar.placeholder">
 				<source>{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color}}</source>
 				<target>{barProperty, select, name {Név} start {Kezdet} end {Befejezés} progress {Folyamat} category {Kategória} subCategory {Alkategória} color {Szín} }</target>
@@ -3038,13 +3084,10 @@
 				<trans-unit datatype="html" id="perspective.kanban.create.card.failure">
 					<source>Could not create card</source>
 					<target>Nem lehet létrehozni a kártyát</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">231</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">229</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
         <source>Could not move card</source><target>Nem sikerült áthelyezni a kártyát</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
-          <context context-type="linenumber">602</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">601</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.map.config.position.saved">
 					<source> Save map position to view </source>
 					<target>Térképpozíció mentése a megtekintéshez</target>
@@ -3137,7 +3180,7 @@
 				<trans-unit datatype="html" id="perspective.pivot.data.aggregation">
 					<source>{aggregation, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of}}</source>
 					<target>{aggregation, select, sum {Összege a} min {minimuma a} max {maximuma a} avg {Átlagos} darabszám {Darabszám} egyedi {Egyedi a} mediánja {Medián} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">113</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context><context context-type="linenumber">107</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.table.empty.description">
 					<source> Please make sure your query results in some data (by switching to the Detail view for example). Also check your pivot table configuration in the sidebar on the left. </source>
 					<target>Győződj meg arról, hogy a lekérdezésed bizonyos adatokat eredményez (például a Részletek nézetre való váltással). Ellenőrizd a pivot tábla konfigurációját is a bal oldali oldalsávon.</target>
@@ -4018,11 +4061,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">989</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">973</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">988</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">972</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>

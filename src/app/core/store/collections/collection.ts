@@ -43,6 +43,7 @@ export interface AttributeFunction {
   editable?: boolean;
   dryRun?: boolean;
   dryRunResult?: string;
+  recursive?: boolean;
 }
 
 export interface Collection extends Resource {

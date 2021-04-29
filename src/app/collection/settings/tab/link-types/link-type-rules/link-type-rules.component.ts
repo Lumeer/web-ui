@@ -125,6 +125,7 @@ export class LinkTypeRulesComponent implements OnInit {
         blocklyJs: '',
         blocklyXml: '',
         blocklyResultTimestamp: 0,
+        blocklyRecursive: false,
       },
     };
   }

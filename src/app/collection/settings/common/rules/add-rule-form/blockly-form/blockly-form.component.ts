@@ -88,6 +88,10 @@ export class BlocklyFormComponent implements OnInit {
     return this.form.get('blocklyResultTimestamp').value;
   }
 
+  public get blocklyRecursive(): string {
+    return this.form.get('blocklyRecursive').value;
+  }
+
   public display(type: BlocklyDebugDisplay) {
     if (type !== BlocklyDebugDisplay.DisplayNone && this.displayDebug === type) {
       this.display(BlocklyDebugDisplay.DisplayNone);
