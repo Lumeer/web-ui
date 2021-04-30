@@ -5,39 +5,31 @@
 
   <span class="title" [innerHTML]="title"></span>
 
-  <div class="body p-3 h-100"
-       *ngIf="{resources: resources$ | async, dataResources: dataResources$ | async, selectedResource: selectedResource$ | async} as data">
+  <div class="body h-100"
+       *ngIf="{resources: resources$ | async, dataResources: dataResources$ | async, selectedDataResource: selectedDataResource$ | async} as data">
     <ng-container *ngIf=" data.resources.length || data.dataResources.length; else noData">
 
-      <div>
-        <div class="d-flex flex-row flex-nowrap align-items-center" *ngIf="hasDuplicates">
-          <label class="switch">
-            <input type="checkbox" #duplicates [checked]="showDuplicates$ | async"
-                   (change)="showDuplicates$.next($event.target.checked)">
-            <span class="slider round" (click)="$event.stopPropagation()"></span>
-          </label>
-          <span class="pl-2 cursor-pointer user-select-none" i18n="@@dialog.dataResources.config.duplicates"
-                (click)="duplicates.click()">Show duplicates</span>
-        </div>
-      </div>
-
-      <div>
-        <preview-results-tabs *ngIf="data.resources.length > 1"
-                              class="d-block mt-3"
+      <data-resources-preview *ngIf="!data.selectedDataResource"
+                              class="h-100 p-3"
+                              @enterRightAnimation
+                              [constraintData]="constraintData$ | async"
+                              [dataResources]="data.dataResources"
                               [resources]="data.resources"
-                              [selectedId]="data.selectedResource?.id"
-                              (selectResource)="onSelectResource($event)">
-        </preview-results-tabs>
-      </div>
-      <preview-results-table class="mt-2 overflow-hidden results-table"
-                             [dataResources]="data.dataResources"
-                             [resource]="data.selectedResource"
-                             [selectedId]="selectedDataResourceId$ | async"
-                             [loaded]="true"
-                             [resizeable]="false"
-                             [constraintData]="constraintData$ | async"
-                             (selectDataResource)="onSelectDataResource($event)">
-      </preview-results-table>
+                              [showDuplicates]="showDuplicates$ | async"
+                              [hasDuplicates]="hasDuplicates"
+                              [selectedResource]="selectedResource$ | async"
+                              (selectDataResource)="onSelectDataResource($event)"
+                              (selectResource)="onSelectResource($event)"
+                              (showDuplicatesChange)="showDuplicates$.next($event)">
+      </data-resources-preview>
+      <data-resources-detail *ngIf="data.selectedDataResource"
+                             class="h-100 py-3"
+                             @enterLeftAnimation
+                             [resource]="selectedResource$ | async"
+                             [dataResource]="data.selectedDataResource"
+                             (routingPerformed)="hideDialog()"
+                             (back)="resetSelectedDataResource()">
+      </data-resources-detail>
     </ng-container>
   </div>
 
@@ -48,5 +40,7 @@
 </modal-wrapper>
 
 <ng-template #noData>
-  <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+  <div class="text-center p-5">
+    <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+  </div>
 </ng-template>

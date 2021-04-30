@@ -24,10 +24,13 @@ import {PipesModule} from '../../pipes/pipes.module';
 import {DataResourcesDetailModalComponent} from './data-resources-detail-modal.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PreviewResultsModule} from '../../preview-results/preview-results.module';
+import {DataResourcesPreviewComponent} from './preview/data-resources-preview.component';
+import {DataResourceModule} from '../../data-resource/data-resource.module';
+import {DataResourcesDetailComponent} from './detail/data-resources-detail.component';
 
 @NgModule({
-  declarations: [DataResourcesDetailModalComponent],
-  imports: [CommonModule, SelectModule, PipesModule, ModalWrapperModule, PreviewResultsModule],
+  declarations: [DataResourcesDetailModalComponent, DataResourcesPreviewComponent, DataResourcesDetailComponent],
+  imports: [CommonModule, SelectModule, PipesModule, ModalWrapperModule, PreviewResultsModule, DataResourceModule],
   exports: [DataResourcesDetailModalComponent],
 })
 export class DataResourcesDetailModalModule {}

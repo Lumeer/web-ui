@@ -24,34 +24,14 @@ import {LoadingState} from '../../../../core/model/loading-state';
 import {BehaviorSubject} from 'rxjs';
 import {createTagsFromTemplates} from '../model/templates-util';
 import {AbstractControl, FormGroup} from '@angular/forms';
+import {enterLeftAnimation, enterRightAnimation} from '../../../animations';
 
 @Component({
   selector: 'create-project-templates',
   templateUrl: './create-project-templates.component.html',
   styleUrls: ['./create-project-templates.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('enterLeftAnimation', [
-      transition(':enter', [
-        style({transform: 'translateX(100%)', opacity: 0.6}),
-        animate('150ms', style({transform: 'translateX(0)', opacity: 1})),
-      ]),
-      transition(':leave', [
-        style({transform: 'translateX(0)', opacity: 1}),
-        animate('150ms', style({transform: 'translateX(100%)', opacity: 0.6})),
-      ]),
-    ]),
-    trigger('enterRightAnimation', [
-      transition(':enter', [
-        style({transform: 'translateX(-100%)', opacity: 0.6}),
-        animate('150ms', style({transform: 'translateX(0)', opacity: 1})),
-      ]),
-      transition(':leave', [
-        style({transform: 'translateX(0)', opacity: 1}),
-        animate('150ms', style({transform: 'translateX(-100%)', opacity: 0.6})),
-      ]),
-    ]),
-  ],
+  animations: [enterLeftAnimation, enterRightAnimation],
 })
 export class CreateProjectTemplatesComponent implements OnInit, OnChanges {
   @Input()

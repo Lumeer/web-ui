@@ -675,8 +675,8 @@ describe('Pivot data converter', () => {
     expect(pivotData.data[0].values).toEqual([
       [2, 2, 1, 7, 6, 2],
       [6, 4, 2, 6, 6, 1],
-      [undefined, undefined, undefined, 16, 6, 5],
-      [31, 20, 2, undefined, undefined, undefined],
+      [undefined, undefined, undefined, 16, 6, 6],
+      [31, 20, 3, undefined, undefined, undefined],
     ]);
     expect(pivotData.data[0].valueTitles).toEqual(valueTitles);
   });

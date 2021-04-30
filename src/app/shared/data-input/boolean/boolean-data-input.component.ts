@@ -53,6 +53,9 @@ export class BooleanDataInputComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
   public label: string;
 
+  @Input()
+  public editableInReadonly: boolean;
+
   @Output()
   public valueChange = new EventEmitter<DataValue>();
 
@@ -99,8 +102,10 @@ export class BooleanDataInputComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private onClick(event: MouseEvent) {
-    preventEvent(event);
-    this.toggleValue();
+    if (this.editableInReadonly) {
+      preventEvent(event);
+      this.toggleValue();
+    }
   }
 
   private toggleValue(action?: DataInputSaveAction) {
@@ -109,16 +114,22 @@ export class BooleanDataInputComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onDivClick(event: MouseEvent) {
-    event.preventDefault();
+    if (this.editableInReadonly) {
+      event.preventDefault();
+    }
   }
 
   public onInputClick(event: MouseEvent) {
-    // label click is propagated instead
-    event.preventDefault();
-    event.stopPropagation();
+    if (this.editableInReadonly) {
+      // label click is propagated instead
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 
   public onLabelClick(event: MouseEvent) {
-    event.preventDefault();
+    if (this.editableInReadonly) {
+      event.preventDefault();
+    }
   }
 }

@@ -16,6 +16,7 @@
                       [value]="dataValue"
                       [class.justify-content-center]="configuration?.boolean?.center"
                       [class.cursor-pointer]="!readonly"
+                      [editableInReadonly]="editableInReadonly"
                       (dblclick)="$event.stopPropagation()"
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValueWithAction($event)"

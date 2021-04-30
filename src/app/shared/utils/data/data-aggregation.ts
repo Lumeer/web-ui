@@ -80,7 +80,7 @@ export function aggregateDataValues(
       return notNullConstraint.unique(values);
     case DataAggregationType.Join:
       const uniqueFormattedValues = uniqueValues(
-        values.map(value => notNullConstraint.createDataValue(value, constraintData).format())
+        values.map(value => notNullConstraint.createDataValue(value, constraintData).format()).filter(value => !!value)
       );
       return uniqueFormattedValues.join(', ');
     default:

@@ -58,6 +58,14 @@ export const selectLinkTypeByIdWithCollections = (linkTypeId: string) =>
     return linkType ? mapLinkTypeCollections(linkType, collectionsMap) : linkType;
   });
 
+export const selectLinkTypeByIdsWithCollections = (linkTypeIds: string[]) =>
+  createSelector(selectLinkTypesDictionary, selectCollectionsDictionary, (linkTypesMap, collectionsMap) =>
+    linkTypeIds
+      .map(linkTypeId => linkTypesMap[linkTypeId])
+      .filter(linkType => !!linkType)
+      .map(linkType => mapLinkTypeCollections(linkType, collectionsMap))
+  );
+
 export const selectLinkTypeAttributeById = (linkTypeId: string, attributeId: string) =>
   createSelector(selectLinkTypeById(linkTypeId), linkType =>
     linkType?.attributes?.find(attribute => attribute.id === attributeId)

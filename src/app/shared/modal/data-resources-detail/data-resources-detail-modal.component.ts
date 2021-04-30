@@ -17,30 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {DialogType} from '../dialog-type';
-import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
 import {map, switchMap} from 'rxjs/operators';
-import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {uniqueValues} from '../../utils/array.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getDataResourcesDataIds} from '../../utils/data-resource.utils';
-import {selectLinkTypeByIds} from '../../../core/store/link-types/link-types.state';
+import {selectAllLinkTypes, selectLinkTypeByIdsWithCollections} from '../../../core/store/link-types/link-types.state';
 import {attributesResourcesAreSame, getAttributesResourceType} from '../../utils/resource.utils';
 import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
 import {selectLinkInstancesByIds} from '../../../core/store/link-instances/link-instances.state';
 import {groupLinkInstancesByLinkTypes} from '../../../core/store/link-instances/link-instance.utils';
+import {enterLeftAnimation, enterRightAnimation} from '../../animations';
+import {Query} from '../../../core/store/navigation/query/query';
+import {selectViewQuery} from '../../../core/store/views/views.state';
+import {KeyCode} from '../../key-code';
+import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
   templateUrl: './data-resources-detail-modal.component.html',
-  styleUrls: ['./data-resources-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [enterLeftAnimation, enterRightAnimation],
 })
 export class DataResourcesDetailModalComponent implements OnInit {
   @Input()
@@ -52,20 +57,29 @@ export class DataResourcesDetailModalComponent implements OnInit {
   public hasDuplicates: boolean;
 
   public selectedResourceSubject$ = new BehaviorSubject<AttributesResource>(null);
-  public selectedDataResourceId$ = new BehaviorSubject<string>(null);
+  public selectedDataResourceIdSubject$ = new BehaviorSubject<string>(null);
   public showDuplicates$ = new BehaviorSubject(true);
 
   public selectedResource$: Observable<AttributesResource>;
+  public selectedDataResource$: Observable<DataResource>;
   public resources$: Observable<AttributesResource[]>;
   public dataResources$: Observable<DataResource[]>;
   public constraintData$: Observable<ConstraintData>;
+  public query$: Observable<Query>;
 
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  private initialModalsCount: number;
+
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private bsModalService: BsModalService
+  ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.initialModalsCount = this.bsModalService.getModalsCount();
 
     const {documentIds: allDocumentIds, linkInstanceIds: allLinkInstanceIds} = getDataResourcesDataIds(
       this.dataResources
@@ -102,7 +116,7 @@ export class DataResourcesDetailModalComponent implements OnInit {
 
     const linkTypes$ = linkInstancesMap$.pipe(
       map(linkInstancesMap => Object.keys(linkInstancesMap)),
-      switchMap(linkTypeIds => this.store$.pipe(select(selectLinkTypeByIds(linkTypeIds))))
+      switchMap(linkTypeIds => this.store$.pipe(select(selectLinkTypeByIdsWithCollections(linkTypeIds))))
     );
 
     this.resources$ = combineLatest([collections$, linkTypes$]).pipe(
@@ -125,6 +139,12 @@ export class DataResourcesDetailModalComponent implements OnInit {
         return of([]);
       })
     );
+
+    this.selectedDataResource$ = combineLatest([this.dataResources$, this.selectedDataResourceIdSubject$]).pipe(
+      map(([dataResources, selectedDataResourceId]) =>
+        dataResources.find(dataResource => dataResource.id === selectedDataResourceId)
+      )
+    );
   }
 
   public hideDialog() {
@@ -132,10 +152,22 @@ export class DataResourcesDetailModalComponent implements OnInit {
   }
 
   public onSelectDataResource(dataResource: DataResource) {
-    this.selectedDataResourceId$.next(dataResource.id);
+    this.selectedDataResourceIdSubject$.next(dataResource.id);
   }
 
   public onSelectResource(resource: AttributesResource) {
     this.selectedResourceSubject$.next(resource);
+  }
+
+  public resetSelectedDataResource() {
+    this.selectedDataResourceIdSubject$.next(null);
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    // when another dialog is presented in top of this dialog, we don't want to listen on escape events
+    if (event.code === KeyCode.Escape && this.initialModalsCount >= this.bsModalService.getModalsCount()) {
+      this.hideDialog();
+    }
   }
 }
