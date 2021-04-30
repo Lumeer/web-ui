@@ -5,19 +5,19 @@
       <ng-container *ngIf="data.collections.length > 1 || data.documentsData.documents.length > 0; else noData">
         <preview-results-tabs
           *ngIf="data.collections.length > 1"
-          [collections]="data.collections"
-          [selectedCollection]="selectedCollection?.id"
-          (selectCollection)="setActiveCollection($event)">
+          [resources]="data.collections"
+          [selectedId]="selectedCollection?.id"
+          (selectResource)="setActiveCollection($event)">
         </preview-results-tabs>
         <preview-results-table
           *ngIf="selectedCollection"
-          [documents]="data.documentsData.documents | documentsByCollection:selectedCollection?.id"
-          [selectedDocumentId]="selectedDocument?.id"
+          [dataResources]="data.documentsData.documents | documentsByCollection:selectedCollection?.id"
+          [selectedId]="selectedDocument?.id"
           [loaded]="data.documentsData.loaded"
           [attributesSettings]="attributesSettings"
-          [collection]="selectedCollection"
+          [resource]="selectedCollection"
           [constraintData]="constraintData$ | async"
-          (selectDocument)="setActiveDocument($event)">
+          (selectDataResource)="setActiveDocument($event)">
         </preview-results-table>
 
       </ng-container>

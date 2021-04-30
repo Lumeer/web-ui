@@ -19,17 +19,15 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PipesModule} from '../pipes/pipes.module';
-import {PreviewResultsComponent} from './preview-results.component';
-import {PreviewResultsTableComponent} from './preview-results-table/preview-results-table.component';
-import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
-import {DataInputModule} from '../data-input/data-input.module';
-import {WarningMessageModule} from '../warning-message/warning-message.module';
-import {PresenterModule} from '../presenter/presenter.module';
+import {SelectModule} from '../../select/select.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {DataResourcesDetailModalComponent} from './data-resources-detail-modal.component';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {PreviewResultsModule} from '../../preview-results/preview-results.module';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, PipesModule, WarningMessageModule, PresenterModule],
-  declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
-  exports: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
+  declarations: [DataResourcesDetailModalComponent],
+  imports: [CommonModule, SelectModule, PipesModule, ModalWrapperModule, PreviewResultsModule],
+  exports: [DataResourcesDetailModalComponent],
 })
-export class PreviewResultsModule {}
+export class DataResourcesDetailModalModule {}

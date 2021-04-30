@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
@@ -45,7 +45,6 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {
   Constraint,
   ConstraintData,
@@ -55,6 +54,7 @@ import {
   NumberConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -87,6 +87,8 @@ interface PivotConfigData {
 export class PivotDataConverter {
   private collections: Collection[];
   private linkTypes: LinkType[];
+  private collectionsAttributesMap: Record<string, Record<string, Attribute>>;
+  private linkTypesAttributesMap: Record<string, Record<string, Attribute>>;
   private data: DocumentsAndLinksData;
   private config: PivotStemConfig;
   private constraintData?: ConstraintData;
@@ -132,6 +134,8 @@ export class PivotDataConverter {
   ) {
     this.collections = collections;
     this.linkTypes = linkTypes;
+    this.collectionsAttributesMap = attributesResourcesAttributesMap(collections);
+    this.linkTypesAttributesMap = attributesResourcesAttributesMap(linkTypes);
     this.data = data;
     this.constraintData = constraintData;
   }
@@ -346,15 +350,23 @@ export class PivotDataConverter {
 
         allData.aggregations = [...(valueAttributes || []).map(valueAttribute => valueAttribute.aggregation)];
 
-        const values = (valueAttributes || []).map(valueAttribute => {
-          const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
-          const attribute = this.findAttributeByPivotAttribute(valueAttribute);
-          return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
-        });
+        const {values, dataResources} = (valueAttributes || []).reduce(
+          (aggregator, valueAttribute, index) => {
+            const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
+            const attribute = this.findAttributeByPivotAttribute(valueAttribute);
+            const value = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+            aggregator.values.push(value);
+            aggregator.dataResources.push(dataResources);
+            return aggregator;
+          },
+          {values: [], dataResources: []}
+        );
+
         allData.values.push(...values);
+        allData.dataResources.push(...dataResources);
         return allData;
       },
-      {titles: [], constraints: [], headers: [], values: [], valueTypes: [], aggregations: []}
+      {titles: [], constraints: [], headers: [], values: [], dataResources: [], valueTypes: [], aggregations: []}
     );
 
     return {
@@ -362,6 +374,7 @@ export class PivotDataConverter {
       rowHeaders: [],
       valueTitles: data.titles,
       values: [data.values],
+      dataResources: [data.dataResources],
       valuesConstraints: data.constraints,
       valueTypes: data.valueTypes,
       valueAggregations: data.aggregations,
@@ -408,9 +421,10 @@ export class PivotDataConverter {
       valueTitles
     );
 
-    const values = this.initValues(rowData.maxIndex + 1, columnData.maxIndex + 1);
+    const values = this.initMatrix<number>(rowData.maxIndex + 1, columnData.maxIndex + 1);
+    const dataResources = this.initMatrix<DataResource[]>(rowData.maxIndex + 1, columnData.maxIndex + 1);
     if ((valueAttributes || []).length > 0) {
-      this.fillValues(values, rowData.headers, columnData.headers, valueAttributes, aggregatedData);
+      this.fillValues(values, dataResources, rowData.headers, columnData.headers, valueAttributes, aggregatedData);
     }
 
     const valueAggregations = (valueAttributes || []).map(valueAttribute => valueAttribute.aggregation);
@@ -423,6 +437,7 @@ export class PivotDataConverter {
       columnHeaders: columnData.headers,
       valueTitles,
       values,
+      dataResources,
       valuesConstraints,
       valueAggregations,
 
@@ -620,7 +635,7 @@ export class PivotDataConverter {
     return `${valueAggregationTitle} ${attributeName || ''}`.trim();
   }
 
-  private initValues(rows: number, columns: number): number[][] {
+  private initMatrix<T>(rows: number, columns: number): T[][] {
     const matrix = [];
     for (let i = 0; i < rows; i++) {
       matrix[i] = [];
@@ -634,20 +649,29 @@ export class PivotDataConverter {
 
   private fillValues(
     values: number[][],
+    dataResources: DataResource[][][],
     rowHeaders: PivotDataHeader[],
     columnHeaders: PivotDataHeader[],
     valueAttributes: PivotValueAttribute[],
     aggregatedData: AggregatedMapData
   ) {
     if (rowHeaders.length > 0) {
-      this.iterateThroughRowHeaders(values, rowHeaders, columnHeaders, valueAttributes, aggregatedData.map);
+      this.iterateThroughRowHeaders(
+        values,
+        dataResources,
+        rowHeaders,
+        columnHeaders,
+        valueAttributes,
+        aggregatedData.map
+      );
     } else {
-      this.iterateThroughColumnHeaders(values, columnHeaders, 0, valueAttributes, aggregatedData.map);
+      this.iterateThroughColumnHeaders(values, dataResources, columnHeaders, 0, valueAttributes, aggregatedData.map);
     }
   }
 
   private iterateThroughRowHeaders(
     values: number[][],
+    dataResources: DataResource[][][],
     rowHeaders: PivotDataHeader[],
     columnHeaders: PivotDataHeader[],
     valueAttributes: PivotValueAttribute[],
@@ -657,15 +681,30 @@ export class PivotDataConverter {
       const rowHeaderMap = currentMap[rowHeader.title] || {};
 
       if (rowHeader.children) {
-        this.iterateThroughRowHeaders(values, rowHeader.children, columnHeaders, valueAttributes, rowHeaderMap);
+        this.iterateThroughRowHeaders(
+          values,
+          dataResources,
+          rowHeader.children,
+          columnHeaders,
+          valueAttributes,
+          rowHeaderMap
+        );
       } else if (isNotNullOrUndefined(rowHeader.targetIndex) && columnHeaders.length > 0) {
-        this.iterateThroughColumnHeaders(values, columnHeaders, rowHeader.targetIndex, valueAttributes, rowHeaderMap);
+        this.iterateThroughColumnHeaders(
+          values,
+          dataResources,
+          columnHeaders,
+          rowHeader.targetIndex,
+          valueAttributes,
+          rowHeaderMap
+        );
       }
     }
   }
 
   private iterateThroughColumnHeaders(
     values: number[][],
+    dataResources: DataResource[][][],
     columnHeaders: PivotDataHeader[],
     rowIndex: number,
     valueAttributes: PivotValueAttribute[],
@@ -675,6 +714,7 @@ export class PivotDataConverter {
       if (columnHeader.children) {
         this.iterateThroughColumnHeaders(
           values,
+          dataResources,
           columnHeader.children,
           rowIndex,
           valueAttributes,
@@ -687,41 +727,40 @@ export class PivotDataConverter {
 
         if (valueAttributes.length) {
           const valueIndex = columnHeader.targetIndex % valueAttributes.length;
-          values[rowIndex][columnHeader.targetIndex] = this.aggregateValue(
+          const {value, dataResources: aggregatedDataResources} = this.aggregateValue(
             valueAttributes[valueIndex],
             aggregatedDataValues
           );
+          values[rowIndex][columnHeader.targetIndex] = value;
+          dataResources[rowIndex][columnHeader.targetIndex] = aggregatedDataResources;
         }
       }
     }
   }
 
-  private aggregateValue(valueAttribute: PivotValueAttribute, aggregatedDataValues: AggregatedDataValues[]): any {
+  private aggregateValue(
+    valueAttribute: PivotValueAttribute,
+    aggregatedDataValues: AggregatedDataValues[]
+  ): {value?: any; dataResources?: DataResource[]} {
     const aggregatedDataValue = (aggregatedDataValues || []).find(
       agg => agg.resourceId === valueAttribute.resourceId && agg.type === valueAttribute.resourceType
     );
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.pivotAttributeAttribute(valueAttribute);
-      return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+      const value = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
+      return {value, dataResources};
     }
 
-    return null;
+    return {};
   }
 
   private findAttributeByPivotAttribute(valueAttribute: PivotAttribute): Attribute {
-    const resource = this.findResourceByPivotAttribute(valueAttribute);
-    return findAttribute(resource && resource.attributes, valueAttribute.attributeId);
-  }
-
-  private findResourceByPivotAttribute(valueAttribute: PivotAttribute): AttributesResource {
     if (valueAttribute.resourceType === AttributesResourceType.Collection) {
-      return (this.collections || []).find(collection => collection.id === valueAttribute.resourceId);
+      return this.collectionsAttributesMap?.[valueAttribute.resourceId]?.[valueAttribute.attributeId];
     } else if (valueAttribute.resourceType === AttributesResourceType.LinkType) {
-      return (this.linkTypes || []).find(linkType => linkType.id === valueAttribute.resourceId);
+      return this.linkTypesAttributesMap?.[valueAttribute.resourceId]?.[valueAttribute.attributeId];
     }
-
-    return null;
   }
 }
 

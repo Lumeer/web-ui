@@ -41,6 +41,7 @@ import {AttributeDescriptionModalModule} from './attribute-description/attribute
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
 import {ViewModalModule} from './view-modal/view-modal.module';
 import {TextInputModalModule} from './text-input/text-input-modal.module';
+import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import {TextInputModalModule} from './text-input/text-input-modal.module';
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
     ViewModalModule,
+    DataResourcesDetailModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -91,6 +93,7 @@ import {TextInputModalModule} from './text-input/text-input-modal.module';
     UserSettingsModalModule,
     ModifyDocumentLinksModalModule,
     ViewModalModule,
+    DataResourcesDetailModalModule,
   ],
 })
 export class ModalModule {}

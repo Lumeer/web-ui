@@ -966,7 +966,7 @@ describe('Chart data converter linked collections', () => {
     ]);
   });
 
-  fit('should return linked data without linked name sum aggregation sorted desc', () => {
+  it('should return linked data without linked name sum aggregation sorted desc', () => {
     const config: ChartConfig = {
       type: ChartType.Line,
       axes: {

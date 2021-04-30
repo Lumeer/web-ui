@@ -26,7 +26,8 @@ import {Permission} from '../../core/store/permissions/permissions';
 import {Project} from '../../core/store/projects/project';
 import {User} from '../../core/store/users/user';
 import {View} from '../../core/store/views/view';
-import {Collection} from '../../core/store/collections/collection';
+import {Attribute, Collection} from '../../core/store/collections/collection';
+import {objectsByIdMap} from './common.utils';
 
 export function hasRoleByPermissions(role: Role, permissions: AllowedPermissions): boolean {
   switch (role) {
@@ -179,6 +180,19 @@ export function getAttributesResourceType(attributesResource: AttributesResource
     return AttributesResourceType.LinkType;
   }
   return AttributesResourceType.Collection;
+}
+
+export function attributesResourcesAreSame(a1: AttributesResource, a2: AttributesResource): boolean {
+  return a1 && a2 && a1.id === a2.id && getAttributesResourceType(a1) === getAttributesResourceType(a2);
+}
+
+export function attributesResourcesAttributesMap(
+  resources: AttributesResource[]
+): Record<string, Record<string, Attribute>> {
+  return (resources || []).reduce(
+    (map, resource) => ({...map, [resource.id]: objectsByIdMap(resource.attributes)}),
+    {}
+  );
 }
 
 export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources: T[]): T[] {

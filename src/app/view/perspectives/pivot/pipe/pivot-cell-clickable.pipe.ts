@@ -17,27 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {AttributesResource} from '../../../core/model/resource';
+import {Pipe, PipeTransform} from '@angular/core';
+import {PivotTableCell} from '../util/pivot-table';
 
-@Component({
-  selector: 'preview-results-tabs',
-  templateUrl: './preview-results-tabs.component.html',
-  styleUrls: ['./preview-results-tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'pivotCellClickable',
 })
-export class PreviewResultsTabsComponent {
-  @Input()
-  public resources: AttributesResource[];
-
-  @Input()
-  public selectedId: string;
-
-  @Output()
-  public selectResource = new EventEmitter<AttributesResource>();
-
-  public setActiveResource(resource: AttributesResource) {
-    this.selectedId = resource.id;
-    this.selectResource.emit(resource);
+export class PivotCellClickablePipe implements PipeTransform {
+  public transform(cell: PivotTableCell): boolean {
+    return !cell.isHeader && cell.dataResources?.length > 0;
   }
 }

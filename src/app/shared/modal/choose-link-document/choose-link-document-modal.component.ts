@@ -34,9 +34,11 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataResource} from '../../../core/model/resource';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
+  styleUrls: ['./choose-link-document-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChooseLinkDocumentModalComponent implements OnInit {
@@ -126,8 +128,8 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
     this.hideDialog();
   }
 
-  public onSelectDocument(document: DocumentModel) {
-    this.selectedDocumentId$.next(document.id);
+  public onSelectDocument(dataResource: DataResource) {
+    this.selectedDocumentId$.next(dataResource.id);
   }
 
   public onSelectCollection(collection: Collection) {

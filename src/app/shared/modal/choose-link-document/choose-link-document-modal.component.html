@@ -7,30 +7,32 @@
 
   <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a record</span>
 
-  <div class="body p-3">
-    <div *ngIf="data.collections.length && data.documents.length; else noData">
+  <div class="body p-3 h-100">
+    <ng-container *ngIf="data.collections.length && data.documents.length; else noData">
       <div class="text-muted text-center"
            i18n="@@modal.kanban.chooseDocument.description">
         Select to which record you want to link the new one.
       </div>
 
-      <preview-results-tabs
-        *ngIf="data.collections.length > 1"
-        class="d-block mt-2"
-        [collections]="data.collections"
-        [selectedCollection]="data.selectedCollectionId"
-        (selectCollection)="onSelectCollection($event)">
-      </preview-results-tabs>
-      <preview-results-table class="d-block mt-2"
-                             [documents]="data.documents | documentsByCollection:data.selectedCollectionId"
-                             [collection]="data.collections | collectionById:data.selectedCollectionId"
-                             [selectedDocumentId]="selectedDocumentId$ | async"
+      <div>
+        <preview-results-tabs
+          *ngIf="data.collections.length > 1"
+          class="d-block mt-2"
+          [resources]="data.collections"
+          [selectedId]="data.selectedCollectionId"
+          (selectResource)="onSelectCollection($event)">
+        </preview-results-tabs>
+      </div>
+      <preview-results-table class="mt-2 overflow-hidden results-table"
+                             [dataResources]="data.documents | documentsByCollection:data.selectedCollectionId"
+                             [resource]="data.collections | collectionById:data.selectedCollectionId"
+                             [selectedId]="selectedDocumentId$ | async"
                              [loaded]="true"
                              [resizeable]="false"
                              [constraintData]="constraintData$ | async"
-                             (selectDocument)="onSelectDocument($event)">
+                             (selectDataResource)="onSelectDocument($event)">
       </preview-results-table>
-    </div>
+    </ng-container>
   </div>
 
   <span class="button-cancel">

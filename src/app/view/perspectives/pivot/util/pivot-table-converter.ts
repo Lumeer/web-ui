@@ -42,6 +42,7 @@ import {
   PercentageConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {DataResource} from '../../../../core/model/resource';
 
 interface HeaderGroupInfo {
   background: string;
@@ -70,6 +71,7 @@ export class PivotTableConverter {
 
   private data: PivotStemData;
   private values: any[][];
+  private dataResources: DataResource[][][];
   private constraintData: ConstraintData;
   private rowLevels: number;
   private rowsTransformationArray: number[];
@@ -104,6 +106,7 @@ export class PivotTableConverter {
     this.valueTypeInfo = getValuesTypeInfo(data.values, data.valueTypes, numberOfSums);
     this.data = preparePivotData(data, this.constraintData, this.valueTypeInfo);
     this.values = data.values || [];
+    this.dataResources = data.dataResources || [];
     this.rowLevels = (data.rowShowSums || []).length;
     this.columnLevels = (data.columnShowSums || []).length + (data.hasAdditionalColumnLevel ? 1 : 0);
     const hasValue = (data.valueTitles || []).length > 0;
@@ -241,11 +244,13 @@ export class PivotTableConverter {
       for (let column = 0; column < this.columnsTransformationArray.length; column++) {
         const columnIndexInCells = this.columnsTransformationArray[column];
         if (isNotNullOrUndefined(columnIndexInCells)) {
-          const value = this.data.values[row][column];
+          const value = this.values[row][column];
+          const dataResources = this.dataResources?.[row]?.[column] || [];
           const formattedValue = this.formatValueByValueType(value, this.getValueIndexForColumns([column]));
           const stringValue = isNotNullOrUndefined(formattedValue) ? String(formattedValue) : '';
           cells[rowIndexInCells][columnIndexInCells] = {
             value: stringValue,
+            dataResources,
             rowSpan: 1,
             colSpan: 1,
             cssClass: PivotTableConverter.dataClass,
@@ -325,11 +330,12 @@ export class PivotTableConverter {
     for (let column = 0; column < this.columnsTransformationArray.length; column++) {
       const columnIndexInCells = this.columnsTransformationArray[column];
       if (isNotNullOrUndefined(columnIndexInCells)) {
-        const values = this.getGroupedValuesForRowsAndCols(rows, [column]);
+        const {values, dataResources} = this.getGroupedValuesForRowsAndCols(rows, [column]);
         const aggregatedValue = aggregateDataValues(this.aggregationByColumns([column]), values);
         const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, rows, [column]);
         cells[rowIndexInCells][columnIndexInCells] = {
           value: String(formattedValue),
+          dataResources,
           colSpan: 1,
           rowSpan: 1,
           cssClass: PivotTableConverter.groupDataClass,
@@ -340,14 +346,19 @@ export class PivotTableConverter {
     }
   }
 
-  private getGroupedValuesForRowsAndCols(rows: number[], columns: number[]): any[] {
+  private getGroupedValuesForRowsAndCols(
+    rows: number[],
+    columns: number[]
+  ): {values: any[]; dataResources: DataResource[]} {
     const values = [];
+    const dataResources = [];
     for (const row of rows) {
       for (const column of columns) {
         values.push(this.values[row][column]);
+        dataResources.push(...(this.dataResources?.[row]?.[column] || []));
       }
     }
-    return values;
+    return {values, dataResources};
   }
 
   private fillCellsByColumns(cells: PivotTableCell[][]): HeaderGroupInfo[] {
@@ -462,11 +473,12 @@ export class PivotTableConverter {
     for (let row = 0; row < this.rowsTransformationArray.length; row++) {
       const rowIndexInCells = this.rowsTransformationArray[row];
       if (isNotNullOrUndefined(rowIndexInCells)) {
-        const values = this.getGroupedValuesForRowsAndCols([row], columns);
+        const {values, dataResources} = this.getGroupedValuesForRowsAndCols([row], columns);
         const aggregatedValue = aggregateDataValues(this.aggregationByColumns(columns), values);
         const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, [row], columns);
         cells[rowIndexInCells][columnIndexInCells] = {
           value: String(formattedValue),
+          dataResources,
           colSpan: 1,
           rowSpan: 1,
           cssClass: PivotTableConverter.groupDataClass,
@@ -489,11 +501,13 @@ export class PivotTableConverter {
       for (let row = 0; row < this.rowsTransformationArray.length; row++) {
         const rowIndexInCells = this.rowsTransformationArray[row];
         if (isNotNullOrUndefined(rowIndexInCells)) {
-          const value = this.data.values[row][column];
+          const value = this.values[row][column];
+          const dataResources = this.dataResources?.[row]?.[column] || [];
           const formattedValue = this.formatValueByValueType(value, this.getValueIndexForColumns([column]));
           const stringValue = isNotNullOrUndefined(formattedValue) ? String(formattedValue) : '';
           cells[rowIndexInCells][columnIndexInCells] = {
             value: stringValue,
+            dataResources,
             rowSpan: 1,
             colSpan: 1,
             cssClass: PivotTableConverter.dataClass,
@@ -522,11 +536,12 @@ export class PivotTableConverter {
               rowGroupInfo.indexes,
               columnGroupsInfo[j].indexes
             );
-            const values = this.getGroupedValuesForRowsAndCols(rowsIndexes, columnsIndexes);
+            const {values, dataResources} = this.getGroupedValuesForRowsAndCols(rowsIndexes, columnsIndexes);
             const aggregatedValue = aggregateDataValues(this.aggregationByColumns(columnsIndexes), values);
             const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, rowsIndexes, columnsIndexes);
             cells[i][j] = {
               value: String(formattedValue),
+              dataResources,
               colSpan: 1,
               rowSpan: 1,
               cssClass: PivotTableConverter.groupDataClass,
@@ -597,6 +612,7 @@ export class PivotTableConverter {
           const isDataClass = this.rowsTransformationArray.includes(i) && this.columnsTransformationArray.includes(j);
           matrix[i][j] = {
             value: '',
+            dataResources: [],
             cssClass: isDataClass ? PivotTableConverter.dataClass : PivotTableConverter.groupDataClass,
             rowSpan: 1,
             colSpan: 1,
