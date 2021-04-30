@@ -45,6 +45,7 @@ import {AsAttributeResourcePipe} from './pipes/as-attribute-resource.pipe';
 import {LinksCountPipe} from './pipes/links-count.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {SortLinkRowsPipe} from './pipes/sort-link-rows.pipe';
+import {LinkTablesAccordeonComponent} from './link-tables-accordeon.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import {SortLinkRowsPipe} from './pipes/sort-link-rows.pipe';
     AsAttributeResourcePipe,
     LinksCountPipe,
     SortLinkRowsPipe,
+    LinkTablesAccordeonComponent,
   ],
   imports: [
     CommonModule,
@@ -77,6 +79,6 @@ import {SortLinkRowsPipe} from './pipes/sort-link-rows.pipe';
     MatMenuModule,
     TooltipModule,
   ],
-  exports: [LinksAccordeonComponent],
+  exports: [LinksAccordeonComponent, LinkTablesAccordeonComponent],
 })
 export class LinksListModule {}

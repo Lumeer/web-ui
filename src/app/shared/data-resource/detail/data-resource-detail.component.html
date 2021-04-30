@@ -20,9 +20,11 @@
 
     <detail-tabs *ngIf="dataResource?.id"
                  [showLinks]="resourceType === collectionResourceType"
+                 [showTables]="resourceType === linkTypeResourceType"
                  [activeTab]="data.selectedTab"
                  [commentsCount]="data.commentsCount"
                  [linksCount]="linksCount$ | async"
+                 [documentsCount]="documentsCount$ | async"
                  [permissions]="dataResourceData.permissions"
                  (onTabSelect)="selectTab($event)">
     </detail-tabs>
@@ -63,38 +65,58 @@
       </div>
     </ng-container>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
-      <div>
-        <links-toolbar class="d-block w-100 text-right"
+    <div *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
+      <links-toolbar class="d-block w-100 text-right"
+                     [collection]="resource"
+                     [permissions]="dataResourceData.permissions"
+                     [collectionsPermissions]="data.resourcesPermissions.collectionsPermissions"
+                     (createLink)="showCreateLink($event)">
+      </links-toolbar>
+      <links-accordeon class="d-block"
+                       *ngIf="resource && dataResource?.id"
+                       [document]="dataResource"
+                       [preventEventBubble]="preventEventBubble"
+                       [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
-                       [permissions]="dataResourceData.permissions"
-                       [collectionsPermissions]="data.resourcesPermissions.collectionsPermissions"
-                       (createLink)="showCreateLink($event)">
-        </links-toolbar>
-        <links-accordeon class="d-block"
-                         *ngIf="resource && dataResource?.id"
-                         [document]="dataResource"
-                         [preventEventBubble]="preventEventBubble"
-                         [allowSelectDocument]="allowSelectDocument"
-                         [collection]="resource"
-                         [permissions]="data.resourcesPermissions.collectionsPermissions"
-                         [linkTypes]="data.linkTypes"
-                         [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
-                         [attributesSettings]="data.attributesSettings"
-                         (documentSelect)="onDocumentSelect($event)"
-                         (showLink)="onShowLink($event)"
-                         (hideLink)="onHideLink($event)"
-                         (patchDocumentData)="onPatchDocumentData($event)"
-                         (patchLinkData)="onPatchLinkData($event)"
-                         (createLink)="onCreateLink($event)"
-                         (attributesSettingsChanged)="onAttributesSettingsChanged($event)"
-                         (unlink)="onUnlink($event)"
-                         (attributeDescription)="showAttributeDescription($event.collectionId, $event.linkTypeId, $event.attributeId)"
-                         (attributeFunction)="showAttributeFunction($event.collectionId, $event.linkTypeId, $event.attributeId)"
-                         (attributeType)="showAttributeType($event.collectionId, $event.linkTypeId, $event.attributeId)"
-                         (modifyLinks)="showModifyLinks($event.collectionId, $event.linkTypeId, $event.documentId)">
-        </links-accordeon>
-      </div>
+                       [permissions]="data.resourcesPermissions.collectionsPermissions"
+                       [linkTypes]="data.linkTypes"
+                       [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
+                       [attributesSettings]="data.attributesSettings"
+                       (documentSelect)="onDocumentSelect($event)"
+                       (showLink)="onShowLink($event)"
+                       (hideLink)="onHideLink($event)"
+                       (patchDocumentData)="onPatchDocumentData($event)"
+                       (patchLinkData)="onPatchLinkData($event)"
+                       (createLink)="onCreateLink($event)"
+                       (attributesSettingsChanged)="onAttributesSettingsChanged($event)"
+                       (unlink)="onUnlink($event)"
+                       (attributeDescription)="showAttributeDescription($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                       (attributeFunction)="showAttributeFunction($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                       (attributeType)="showAttributeType($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                       (modifyLinks)="showModifyLinks($event.collectionId, $event.linkTypeId, $event.documentId)">
+      </links-accordeon>
+    </div>
+
+    <ng-container *ngIf="data.selectedTab === detailTabType.Tables && resourceType === linkTypeResourceType">
+      <link-tables-accordeon class="d-block"
+                             *ngIf="resource && dataResource?.id"
+                             [linkInstance]="dataResource"
+                             [linkType]="resource"
+                             [preventEventBubble]="preventEventBubble"
+                             [allowSelectDocument]="allowSelectDocument"
+                             [permissions]="data.resourcesPermissions.collectionsPermissions"
+                             [collapsedCollections]="data.detailConfig?.collapsedCollections"
+                             [attributesSettings]="data.attributesSettings"
+                             (documentSelect)="onDocumentSelect($event)"
+                             (showCollection)="onShowCollection($event)"
+                             (hideCollection)="onHideCollection($event)"
+                             (patchDocumentData)="onPatchDocumentData($event)"
+                             (attributesSettingsChanged)="onAttributesSettingsChanged($event)"
+                             (attributeDescription)="showAttributeDescription($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                             (attributeFunction)="showAttributeFunction($event.collectionId, $event.linkTypeId, $event.attributeId)"
+                             (attributeType)="showAttributeType($event.collectionId, $event.linkTypeId, $event.attributeId)">
+      </link-tables-accordeon>
+
     </ng-container>
 
     <ng-container *ngIf="data.selectedTab === detailTabType.Comments">

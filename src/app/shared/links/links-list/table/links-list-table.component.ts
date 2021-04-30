@@ -51,7 +51,7 @@ import {
   getOtherLinkedDocumentIds,
   LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
-import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
@@ -80,10 +80,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public linkType: LinkType;
 
   @Input()
+  public collection: Collection;
+
+  @Input()
   public document: DocumentModel;
 
   @Input()
-  public collection: Collection;
+  public linkInstance: LinkInstance;
 
   @Input()
   public query: Query;
@@ -95,7 +98,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public preventEventBubble: boolean;
 
   @Input()
-  public allowSelectDocument: boolean;
+  public allowSelect: boolean;
+
+  @Input()
+  public allowCreate: boolean;
+
+  @Input()
+  public allowUnlink: boolean;
 
   @Input()
   public attributesSettings: AttributesSettings;
@@ -157,7 +166,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       this.mergeColumns();
     }
 
-    if (objectChanged(changes.linkType) || objectChanged(changes.document)) {
+    if (objectChanged(changes.linkType) || objectChanged(changes.document) || objectChanged(changes.linkInstance)) {
       this.rows$ = this.selectLinkRows$();
     }
 
@@ -220,6 +229,11 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       return this.store$.pipe(
         select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])),
         switchMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
+      );
+    } else if (this.linkInstance && this.document) {
+      return this.store$.pipe(
+        select(selectDocumentById(this.document.id)),
+        map(document => [{linkInstance: this.linkInstance, document}])
       );
     }
 

@@ -20,15 +20,15 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
-import {map} from 'rxjs/operators';
+import {selectAllCollections, selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
+import {map, tap} from 'rxjs/operators';
 import {
   createFlatCollectionSettingsQueryStem,
   createFlatLinkTypeSettingsQueryStem,
@@ -36,6 +36,8 @@ import {
 } from '../../../../core/store/details/detail.utils';
 import {getAttributesResourceType} from '../../../utils/resource.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'data-resources-detail',
@@ -56,8 +58,8 @@ export class DataResourcesDetailComponent implements OnInit {
   @Output()
   public back = new EventEmitter();
 
-  public selectedResource$ = new BehaviorSubject<AttributesResource>(null);
-  public selectedDataResource$ = new BehaviorSubject<DataResource>(null);
+  public selectedResource$: Observable<AttributesResource>;
+  public selectedDataResource$: Observable<DataResource>;
 
   public query$: Observable<Query>;
   public settingsQuery$: Observable<Query>;
@@ -81,14 +83,30 @@ export class DataResourcesDetailComponent implements OnInit {
   }
 
   private select(dataResource: DataResource, resource: AttributesResource) {
-    this.selectedResource$.next(resource);
-    this.selectedDataResource$.next(dataResource);
-
     const resourceType = getAttributesResourceType(resource);
+    this.selectedResource$ = this.selectResource$(resource.id, resourceType);
+    this.selectedDataResource$ = this.selectDataResource$(dataResource.id, resourceType).pipe(
+      tap(dataResource => !dataResource && this.back.emit())
+    );
+
     if (resourceType === AttributesResourceType.Collection) {
       this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
     } else {
       this.detailSettingsQueryStem = createFlatLinkTypeSettingsQueryStem(<LinkType>resource);
     }
+  }
+
+  private selectResource$(id: string, resourceType: AttributesResourceType): Observable<AttributesResource> {
+    if (resourceType === AttributesResourceType.Collection) {
+      return this.store$.pipe(select(selectCollectionById(id)));
+    }
+    return this.store$.pipe(select(selectLinkTypeById(id)));
+  }
+
+  private selectDataResource$(id: string, resourceType: AttributesResourceType): Observable<DataResource> {
+    if (resourceType === AttributesResourceType.Collection) {
+      return this.store$.pipe(select(selectDocumentById(id)));
+    }
+    return this.store$.pipe(select(selectLinkInstanceById(id)));
   }
 }

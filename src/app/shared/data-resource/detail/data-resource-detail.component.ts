@@ -52,7 +52,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AttributesSettings, View, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
@@ -131,6 +131,7 @@ export class DataResourceDetailComponent
 
   public readonly contactUrl: string;
   public readonly collectionResourceType = AttributesResourceType.Collection;
+  public readonly linkTypeResourceType = AttributesResourceType.LinkType;
   public readonly detailTabType = DetailTabType;
 
   public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
@@ -143,6 +144,7 @@ export class DataResourceDetailComponent
 
   public commentsCount$: Observable<number>;
   public linksCount$: Observable<number>;
+  public documentsCount$: Observable<number>;
 
   public resourceType: AttributesResourceType;
   private workspace: Workspace;
@@ -242,12 +244,17 @@ export class DataResourceDetailComponent
         select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
         map(links => links?.length || 0)
       );
+      this.documentsCount$ = of(null);
       this.collectionId$.next(this.resource?.id);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
-      this.commentsCount$ = this.store$.pipe(
-        select(selectLinkInstanceById(this.dataResource.id)),
+      const linkInstance$ = this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)));
+      this.commentsCount$ = linkInstance$.pipe(
         filter(link => !!link),
         map(link => link.commentsCount)
+      );
+      this.documentsCount$ = linkInstance$.pipe(
+        switchMap(link => this.store$.pipe(select(selectDocumentsByIds(link?.documentIds || [])))),
+        map(documents => documents.length)
       );
       this.linksCount$ = of(null);
       this.collectionId$.next(null);
@@ -397,6 +404,24 @@ export class DataResourceDetailComponent
       DetailActions.addCollapsedLink({
         detailId: this.perspectiveId$.value,
         linkTypeId,
+      })
+    );
+  }
+
+  public onShowCollection(collectionId: string) {
+    this.store$.dispatch(
+      DetailActions.removeCollapsedCollection({
+        detailId: this.perspectiveId$.value,
+        collectionId,
+      })
+    );
+  }
+
+  public onHideCollection(collectionId: string) {
+    this.store$.dispatch(
+      DetailActions.addCollapsedCollection({
+        detailId: this.perspectiveId$.value,
+        collectionId,
       })
     );
   }

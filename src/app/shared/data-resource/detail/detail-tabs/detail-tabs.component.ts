@@ -32,13 +32,19 @@ export class DetailTabsComponent {
   public activeTab: DetailTabType;
 
   @Input()
-  public showLinks: boolean = true;
+  public showLinks: boolean;
+
+  @Input()
+  public showTables: boolean;
 
   @Input()
   public commentsCount: number;
 
   @Input()
   public linksCount: number;
+
+  @Input()
+  public documentsCount: number;
 
   @Input()
   public permissions: AllowedPermissions;

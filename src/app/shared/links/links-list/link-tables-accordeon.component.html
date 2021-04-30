@@ -1,0 +1,41 @@
+<accordion *ngIf="{documentByCollection: documentByCollectionMap$ | async} as data">
+  <accordion-group *ngFor="let collection of collections$ | async; trackBy:trackById"
+                   panelClass="lmr-accordion"
+                   [isOpen]="!(collapsedCollections | includes:collection.id)"
+                   [isDisabled]="false"
+                   (isOpenChange)="isOpenChanged($event, collection.id)">
+    <div class="header-wrapper" accordion-heading>
+      <div class="mr-2">
+        <i *ngIf="!(collapsedCollections | includes:collection.id)" class="fas fa-caret-down"></i>
+        <i *ngIf="collapsedCollections | includes:collection.id" class="fas fa-caret-right"></i>
+      </div>
+      <icons-presenter class="d-block mr-1"
+                       [colors]="[collection.color]"
+                       [icons]="[collection.icon]">
+      </icons-presenter>
+      <div class="font-weight-bold text-truncate mr-2" [title]="collection.name">{{collection.name}}</div>
+    </div>
+    <div>
+      <links-list-table
+        class="d-block mt-2"
+        [visible]="!(collapsedCollections | includes:collection.id)"
+        [document]="data.documentByCollection[collection.id]"
+        [linkInstance]="linkInstance"
+        [collection]="collection"
+        [permissions]="permissions && permissions[collection.id]"
+        [query]="query$ | async"
+        [allowSelect]="allowSelectDocument"
+        [allowUnlink]="false"
+        [allowCreate]="false"
+        [preventEventBubble]="preventEventBubble"
+        [attributesSettings]="attributesSettings"
+        (detail)="onSelectDocument($event)"
+        (patchDocumentData)="patchDocumentData.emit($event)"
+        (attributesSettingsChanged)="attributesSettingsChanged.emit($event)"
+        (attributeDescription)="attributeDescription.emit($event)"
+        (attributeFunction)="attributeFunction.emit($event)"
+        (attributeType)="attributeType.emit($event)">
+      </links-list-table>
+    </div>
+  </accordion-group>
+</accordion>
