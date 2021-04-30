@@ -20,7 +20,8 @@
 import {isNotNullOrUndefined} from '../common.utils';
 import {DataResource} from '../../../core/model/resource';
 import {Attribute} from '../../../core/store/collections/collection';
-import {Constraint, UnknownConstraint} from '@lumeer/data-filters';
+import {Constraint, ConstraintData, UnknownConstraint} from '@lumeer/data-filters';
+import {uniqueValues} from '../array.utils';
 
 export enum DataAggregationType {
   Sum = 'sum',
@@ -30,6 +31,7 @@ export enum DataAggregationType {
   Count = 'count',
   Unique = 'unique',
   Median = 'median',
+  Join = 'join',
 }
 
 export const defaultDataAggregationType = Object.values(DataAggregationType)[0];
@@ -48,7 +50,7 @@ export function aggregateDataResources(
     return null;
   }
 
-  const values = (dataResources || []).map(resource => resource.data[attribute.id]);
+  const values = (dataResources || []).map(resource => resource.data?.[attribute.id]);
   return aggregateDataValues(aggregation, values, attribute.constraint, onlyNumeric);
 }
 
@@ -56,7 +58,8 @@ export function aggregateDataValues(
   aggregation: DataAggregationType,
   values: any[],
   constraint?: Constraint,
-  onlyNumeric?: boolean
+  onlyNumeric?: boolean,
+  constraintData?: ConstraintData
 ): any {
   const nonNullValues = (values || []).filter(value => isNotNullOrUndefined(value));
   const notNullConstraint = constraint || new UnknownConstraint();
@@ -72,9 +75,14 @@ export function aggregateDataValues(
     case DataAggregationType.Median:
       return notNullConstraint.median(nonNullValues, onlyNumeric);
     case DataAggregationType.Count:
-      return notNullConstraint.count(nonNullValues);
+      return notNullConstraint.count(values);
     case DataAggregationType.Unique:
-      return notNullConstraint.unique(nonNullValues);
+      return notNullConstraint.unique(values);
+    case DataAggregationType.Join:
+      const uniqueFormattedValues = uniqueValues(
+        values.map(value => notNullConstraint.createDataValue(value, constraintData).format())
+      );
+      return uniqueFormattedValues.join(', ');
     default:
       return notNullConstraint.sum(nonNullValues, onlyNumeric);
   }

@@ -32,7 +32,7 @@ export class AggregationSelectItemsPipe implements PipeTransform {
 
   private dataAggregationName(type: DataAggregationType): string {
     return parseSelectTranslation(
-      $localize`:@@perspective.chart.config.aggregation.name:{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median}}`,
+      $localize`:@@perspective.chart.config.aggregation.name:{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }`,
       {type}
     );
   }

@@ -37,9 +37,9 @@ import {
   isValueAggregation,
 } from '../../../../shared/utils/data/data-aggregation';
 import {
-  AggregatedMapData,
   AggregatedDataMap,
   AggregatedDataValues,
+  AggregatedMapData,
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../shared/utils/data/data-aggregator';
@@ -55,6 +55,7 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {attributesResourcesAttributesMap} from '../../../../shared/utils/resource.utils';
+import {flattenValues, uniqueValues} from '../../../../shared/utils/array.utils';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -748,6 +749,12 @@ export class PivotDataConverter {
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
       const attribute = this.pivotAttributeAttribute(valueAttribute);
+      if (valueAttribute.aggregation === DataAggregationType.Join) {
+        // values will be joined in pivot-table-converter
+        const values = (dataResources || []).map(resource => resource.data?.[attribute.id]);
+        return {value: uniqueValues(flattenValues(values)), dataResources};
+      }
+
       const value = aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
       return {value, dataResources};
     }
