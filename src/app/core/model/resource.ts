@@ -28,6 +28,7 @@ export interface Resource {
   color?: string;
   icon?: string;
   version?: number;
+  priority?: number;
   description?: string;
   permissions?: Permissions;
 

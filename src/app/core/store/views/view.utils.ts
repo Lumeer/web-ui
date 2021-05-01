@@ -23,7 +23,7 @@ import {
 } from '../../../view/perspectives/calendar/util/calendar-util';
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
-import {Perspective} from '../../../view/perspectives/perspective';
+import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {createChartSaveConfig, isChartConfigChanged} from '../charts/chart.util';
 import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
@@ -32,7 +32,7 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {DataSettings, PerspectiveConfig, ViewConfig, ViewSettings} from './view';
+import {DataSettings, PerspectiveConfig, View, ViewConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
@@ -188,4 +188,19 @@ export function createSaveViewSettings(
       attributes: createSaveAttributesSettings(settings.attributes, query, collectionsMap, linkTypesMap),
     }
   );
+}
+
+export function getViewColor(view: View, collections: Collection[]): string {
+  return view?.color || defaultViewColorFromQuery(view, collections);
+}
+
+function defaultViewColorFromQuery(view: View, collections: Collection[]): string {
+  const firstStemCollectionId = view?.query?.stems?.[0]?.collectionId;
+  return (
+    (firstStemCollectionId && collections.find(collection => collection.id === firstStemCollectionId)?.color) || ''
+  );
+}
+
+export function getViewIcon(view: View): string {
+  return view?.icon || perspectiveIconsMap[view?.perspective] || '';
 }

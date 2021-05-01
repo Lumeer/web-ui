@@ -23,10 +23,10 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {map, startWith} from 'rxjs/operators';
 import {View} from '../../../../../core/store/views/view';
-import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {PublicScriptType} from './public-script-type';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'project-template-script',
@@ -45,7 +45,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   public views: View[];
 
   @Input()
-  public queryData: QueryData;
+  public collections: Collection[];
 
   public readonly scriptType = PublicScriptType;
 

@@ -10,7 +10,7 @@
     <div class="mr-3">
       <i [ngClass]="viewSize | viewIconSize"
          class="fa-fw {{icon}} align-self-center"
-         [ngStyle]="viewSize === sizeType.L ? {} : {color: queryItems | queryColor}"
+         [style.color]="view | viewColor:queryData?.collections"
          aria-hidden="true">
       </i>
     </div>

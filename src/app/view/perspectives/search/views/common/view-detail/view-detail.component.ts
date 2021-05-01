@@ -28,7 +28,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import {perspectiveIconsMap} from '../../../../perspective';
 import {View} from '../../../../../../core/store/views/view';
 import {QueryData} from '../../../../../../shared/top-panel/search-box/util/query-data';
 import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
@@ -37,6 +36,7 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {getViewIcon} from '../../../../../../core/store/views/view.utils';
 
 @Component({
   selector: 'view-detail',
@@ -44,7 +44,7 @@ import {Workspace} from '../../../../../../core/store/navigation/workspace';
   styleUrls: ['./view-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViewDetailComponent implements OnInit, OnChanges {
+export class ViewDetailComponent implements OnChanges {
   @Input()
   public view: View;
 
@@ -72,16 +72,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
 
   public constructor(private modalService: ModalService) {}
 
-  public ngOnInit() {
-    this.createQueryItems();
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.queryData || changes.view) {
       this.createQueryItems();
     }
     if (changes.view) {
-      this.icon = perspectiveIconsMap[this.view?.perspective] || '';
+      this.icon = getViewIcon(this.view);
     }
     if (changes.view || changes.workspace) {
       this.path = ['/w', this.workspace?.organizationCode, this.workspace?.projectCode, 'view', {vc: this.view.code}];

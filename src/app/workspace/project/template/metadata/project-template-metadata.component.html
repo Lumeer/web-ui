@@ -76,7 +76,7 @@
 
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <select-item class="p-0"
-                     [items]="views | viewsSelectItems:queryData"
+                     [items]="views | viewsSelectItems:collections"
                      emptyValue="Select view"
                      i18n-emptyValue="@@projects.tab.template.metadata.defaultView.empty"
                      [removable]="true"
@@ -127,7 +127,7 @@
   <div class="mt-5" formGroupName="script" *ngIf="isPublicControl.value">
     <project-template-script [formGroup]="scriptFormGroup"
                              [views]="views"
-                             [queryData]="queryData"
+                             [collections]="collections"
                              [workspace]="workspace">
     </project-template-script>
   </div>

@@ -21,16 +21,14 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {View} from '../../../core/store/views/view';
-import {combineLatest, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
 import {selectViewsByReadSorted} from '../../../core/store/common/permissions.selectors';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {map} from 'rxjs/operators';
-import {QueryData} from '../../../shared/top-panel/search-box/util/query-data';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {Collection} from '../../../core/store/collections/collection';
 
 @Component({
   selector: 'project-template',
@@ -41,7 +39,7 @@ import {selectWorkspaceWithIds} from '../../../core/store/common/common.selector
 export class ProjectTemplateComponent implements OnInit {
   public views$: Observable<View[]>;
   public project$: Observable<Project>;
-  public queryData$: Observable<QueryData>;
+  public collections$: Observable<Collection[]>;
   public workspace$: Observable<Workspace>;
 
   constructor(private store$: Store<AppState>) {}
@@ -50,9 +48,6 @@ export class ProjectTemplateComponent implements OnInit {
     this.views$ = this.store$.pipe(select(selectViewsByReadSorted));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-    this.queryData$ = combineLatest([
-      this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-    ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
+    this.collections$ = this.store$.pipe(select(selectAllCollections));
   }
 }

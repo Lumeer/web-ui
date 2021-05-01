@@ -45,7 +45,7 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../model/allowed-permissions';
 import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 

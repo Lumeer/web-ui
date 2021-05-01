@@ -1,11 +1,11 @@
-<bookmark-toolbar [additionalClasses]="['mt-5']">
-  <ng-container *ngFor="let view of (views$ | async | arrayReverse)">
-    <bookmark *ngIf="{queryItems: view.query | queryItems:(queryData$ | async)} as data"
-              [color]="data.queryItems | queryColor"
-              [icon]="view.perspective | perspectiveIcon"
-              [link]="(view | viewLink:workspace)">
+<bookmark-toolbar [additionalClasses]="['mt-5']" *ngIf="{queryData: queryData$ | async} as data">
+  <ng-container *ngFor="let view of (views$ | async)">
+    <bookmark [color]="view| viewColor:data.queryData?.collections"
+              [icon]="view | viewIcon"
+              [link]="view | viewLink:workspace">
       {{view.name}}
-      <i *ngIf="data.queryItems | containsDeletedQueryItem" class="fa fa-exclamation-triangle text-warning ml-1"
+      <i *ngIf="(view.query | queryItems:data.queryData) | containsDeletedQueryItem"
+         class="fa fa-exclamation-triangle text-warning ml-1"
          title="View is not valid because some of the resources were deleted"
          i18n-title="@@view.detail.warning.deleted"></i>
     </bookmark>

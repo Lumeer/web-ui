@@ -9,6 +9,32 @@
 <form [formGroup]="form">
 
   <div class="form-group row">
+
+    <label class="col-form-label col-2 mb-2">
+          <span i18n="@@resource.new.dialog.icon.label">
+            Icon:
+          </span>
+    </label>
+
+    <div class="col-8 d-block mb-3 text-center cursor-pointer" (click)="pickerComponent.toggle()">
+      <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)
+      </div>
+      <i class="fa-fw {{ iconControl.value }} fa-3x"
+         [style.color]="colorControl.value" #pickerOrigin></i>
+      <icon-color-picker #pickerComponent
+                         [origin]="pickerOrigin"
+                         [color]="colorControl.value"
+                         [icon]="iconControl.value"
+                         (preview)="onIconColorChange($event)"
+                         (selected)="onIconColorChange($event)"
+                         (cancel)="onIconColorChange($event)">
+      </icon-color-picker>
+    </div>
+
+    <div class="col-2"></div>
+  </div>
+
+  <div class="form-group row">
     <label class="col-12 col-form-label"
            i18n="@@resource.new.dialog.name.label"
            for="name">Name:</label>
@@ -27,6 +53,30 @@
 
   <div class="form-group row mt-3">
     <label class="col-12 col-form-label"
+           i18n="@@view.modal.settings.priority"
+           for="priority">Priority:</label>
+
+    <div class="col-12">
+      <input type="number"
+             id="priority"
+             formControlName="priority"
+             class="form-control"
+             integer
+             i18n-placeholder="@@view.modal.settings.priority.placeholder"
+             placeholder="Enter any number">
+    </div>
+    <small class="col-12 text-danger mt-1" *ngIf="priorityControl.errors?.invalid"
+           i18n="@@view.modal.settings.priority.invalid">Number is not valid</small>
+    <small class="col-12 text-danger mt-1" *ngIf="priorityControl.errors?.invalidRange"
+           i18n="@@view.modal.settings.priority.invalidRange">Number is not from valid range ({{minInteger}} - {{maxInteger}})</small>
+    <div class="col-12 mt-1 text-muted small"
+         i18n="@@view.modal.settings.priority.help">By default, views are sorted by last used. Setting an priority
+      overrides the default behavior. A higher priority means that the view will be above others.
+    </div>
+  </div>
+
+  <div class="form-group row mt-3">
+    <label class="col-12 col-form-label"
            i18n="@@view.modal.settings.folders"
            for="name">Folders:</label>
 
@@ -41,7 +91,8 @@
       </input-tags>
     </div>
     <div class="col-12 mt-1 text-muted small"
-           i18n="@@view.modal.settings.folders.help">Use "/" to create nested folders i.e "Folder/Subfolder"</div>
+         i18n="@@view.modal.settings.folders.help">Use "/" to create nested folders i.e "Folder/Subfolder"
+    </div>
   </div>
 
 </form>

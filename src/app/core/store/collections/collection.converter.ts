@@ -44,6 +44,7 @@ export function convertCollectionDtoToModel(
     description: dto.description,
     color: dto.color,
     icon: dto.icon,
+    priority: dto.priority,
     attributes: !preventSortAttributes
       ? attributes.sort((a, b) => +a.id?.substring(1) - +b.id?.substring(1))
       : attributes,
@@ -71,6 +72,7 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     description: model.description,
     color: model.color,
     icon: model.icon,
+    priority: model.priority,
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
     permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
     rules: convertRulesToDto(model.rules),

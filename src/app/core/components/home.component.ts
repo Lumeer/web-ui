@@ -25,10 +25,10 @@ import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {selectAllOrganizationsSorted, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
 import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectAllProjects, selectProjectsLoaded} from '../store/projects/projects.state';
+import {selectAllProjectsSorted, selectProjectsLoaded} from '../store/projects/projects.state';
 import {DefaultWorkspace} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
 import {NotificationService} from '../notifications/notification.service';
@@ -171,7 +171,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       }),
       filter(loaded => loaded),
-      switchMap(() => this.store$.select(selectAllOrganizations))
+      switchMap(() => this.store$.select(selectAllOrganizationsSorted))
     );
   }
 
@@ -186,7 +186,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ]).pipe(
       filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
       switchMap(([organizations]) =>
-        this.store$.select(selectAllProjects).pipe(map((projects: Project[]) => ({organizations, projects})))
+        this.store$.select(selectAllProjectsSorted).pipe(map((projects: Project[]) => ({organizations, projects})))
       )
     );
   }

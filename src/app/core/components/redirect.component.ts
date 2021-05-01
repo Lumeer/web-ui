@@ -23,7 +23,7 @@ import {combineLatest, Observable, of} from 'rxjs';
 import {catchError, first, map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
 import {Organization} from '../store/organizations/organization';
 import {select, Store} from '@ngrx/store';
-import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {selectAllOrganizationsSorted, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {WorkspaceSelectService} from '../service/workspace-select.service';
 import {AppState} from '../store/app.state';
@@ -155,7 +155,7 @@ export class RedirectComponent implements OnInit {
         }
       }),
       skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectAllOrganizations))),
+      mergeMap(() => this.store$.pipe(select(selectAllOrganizationsSorted))),
       first()
     );
   }

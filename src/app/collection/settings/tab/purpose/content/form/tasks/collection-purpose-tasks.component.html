@@ -155,7 +155,7 @@
     </label>
 
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
-      <select-item [items]=" viewsByCollection$ | async | viewsSelectItems:(queryData$ | async)"
+      <select-item [items]="viewsByCollection$ | async | viewsSelectItems:(collections$ | async)"
                    class="w-100"
                    buttonClasses="w-100"
                    emptyValue="Select view"
