@@ -105,6 +105,8 @@ import {AttributeTitlePipe} from './attribute-title.pipe';
 import {ModifyAttributeForQueryFilterPipe} from './modify-attribute-for-query-filter.pipe';
 import {StateListDataValuePipe} from './state-list-data-value.pipe';
 import {CanCreateLinksPipe} from './can-create-links.pipe';
+import {ViewIconPipe} from './view-icon.pipe';
+import {ViewColorPipe} from './view-color.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -194,6 +196,8 @@ import {CanCreateLinksPipe} from './can-create-links.pipe';
     ModifyAttributeForQueryFilterPipe,
     StateListDataValuePipe,
     CanCreateLinksPipe,
+    ViewIconPipe,
+    ViewColorPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -282,6 +286,8 @@ import {CanCreateLinksPipe} from './can-create-links.pipe';
     ModifyAttributeForQueryFilterPipe,
     StateListDataValuePipe,
     CanCreateLinksPipe,
+    ViewIconPipe,
+    ViewColorPipe,
   ],
 })
 export class PipesModule {}

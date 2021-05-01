@@ -28,9 +28,10 @@ import {AppState} from '../../../../core/store/app.state';
 import {KeyCode} from '../../../key-code';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {notEmptyValidator} from '../../../../core/validators/custom-validators';
-import {selectAllViews, selectViewById} from '../../../../core/store/views/views.state';
+import {integerValidator, notEmptyValidator} from '../../../../core/validators/custom-validators';
+import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views/views.state';
 import {map, tap} from 'rxjs/operators';
+import {perspectiveIconsMap} from '../../../../view/perspectives/perspective';
 
 @Component({
   templateUrl: './view-settings-modal.component.html',
@@ -62,12 +63,15 @@ export class ViewSettingsModalComponent implements OnInit {
       tap(view => (this.view = view))
     );
     this.views$ = this.store$.pipe(
-      select(selectAllViews),
+      select(selectAllViewsSorted),
       map(views => views.filter(view => view.id !== this.view?.id))
     );
 
     this.form = this.fb.group({
       name: [this.view.name, notEmptyValidator()],
+      icon: [this.view.icon || perspectiveIconsMap[this.view?.perspective]],
+      color: [this.view.color],
+      priority: [this.view.priority, integerValidator()],
       folders: this.fb.array(this.view.folders || []),
     });
   }

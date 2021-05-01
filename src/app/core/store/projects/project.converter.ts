@@ -30,6 +30,7 @@ export class ProjectConverter {
       name: dto.name,
       icon: dto.icon,
       color: dto.color,
+      priority: dto.priority,
       description: dto.description,
       correlationId: correlationId,
       collectionsCount: dto.collectionsCount,
@@ -50,6 +51,7 @@ export class ProjectConverter {
       name: project.name || '',
       icon: project.icon,
       color: project.color,
+      priority: project.priority,
       description: project.description || '',
       templateMetadata:
         (project.templateMetadata && {

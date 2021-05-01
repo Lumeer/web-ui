@@ -22,6 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {Organization} from './organization';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
 
 export interface OrganizationsState extends EntityState<Organization> {
   organizationCodes: string[];
@@ -41,6 +42,9 @@ export const selectOrganizationsState = (state: AppState) => state.organizations
 export const selectAllOrganizations = createSelector(
   selectOrganizationsState,
   organizationsAdapter.getSelectors().selectAll
+);
+export const selectAllOrganizationsSorted = createSelector(selectAllOrganizations, organizations =>
+  sortResourcesByOrder(organizations)
 );
 export const selectOrganizationsDictionary = createSelector(
   selectOrganizationsState,

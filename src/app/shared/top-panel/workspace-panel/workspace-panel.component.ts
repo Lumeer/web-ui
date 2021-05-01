@@ -27,6 +27,7 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
 import {
   selectAllOrganizations,
+  selectAllOrganizationsSorted,
   selectOrganizationByWorkspace,
 } from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
@@ -69,7 +70,7 @@ export class WorkspacePanelComponent implements OnInit {
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
-    this.organizations$ = this.store$.pipe(select(selectAllOrganizations));
+    this.organizations$ = this.store$.pipe(select(selectAllOrganizationsSorted));
     this.projects$ = this.store$.pipe(select(selectProjectsForWorkspace));
   }
 

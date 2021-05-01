@@ -41,6 +41,7 @@ import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
+import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -62,6 +63,7 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
 export const selectViewsState = (state: AppState) => state.views;
 
 export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
+export const selectAllViewsSorted = createSelector(selectAllViews, views => sortResourcesByFavoriteAndLastUsed(views));
 export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
 export const selectViewByCode = (code: string) =>
   createSelector(selectAllViews, views => views.find(view => view.code === code));

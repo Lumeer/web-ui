@@ -25,6 +25,7 @@ import {selectOrganizationByWorkspace} from '../organizations/organizations.stat
 import {Project} from './project';
 import {LoadingState} from '../../model/loading-state';
 import {selectPublicProjectId} from '../public-data/public-data.state';
+import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
 
 export interface ProjectsState extends EntityState<Project> {
   projectCodes: {[organizationId: string]: string[]};
@@ -46,6 +47,9 @@ export const initialProjectsState: ProjectsState = projectsAdapter.getInitialSta
 
 export const selectProjectsState = (state: AppState) => state.projects;
 export const selectAllProjects = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectAll);
+
+export const selectAllProjectsSorted = createSelector(selectAllProjects, projects => sortResourcesByOrder(projects));
+
 export const selectProjectsDictionary = createSelector(
   selectProjectsState,
   projectsAdapter.getSelectors().selectEntities
@@ -63,7 +67,9 @@ export const selectProjectsForWorkspace = createSelector(
   selectAllProjects,
   selectOrganizationByWorkspace,
   (projects, organization) => {
-    return organization ? projects.filter(project => project.organizationId === organization.id) : [];
+    return sortResourcesByOrder(
+      organization ? projects.filter(project => project.organizationId === organization.id) : []
+    );
   }
 );
 
@@ -82,7 +88,7 @@ export const selectProjectByWorkspace = createSelector(
 
 export const selectProjectsByOrganizationId = id =>
   createSelector(selectAllProjects, projects => {
-    return projects.filter(project => project.organizationId === id);
+    return sortResourcesByOrder(projects.filter(project => project.organizationId === id));
   });
 
 export const selectProjectByOrganizationAndCode = (organizationId: string, projectCode: string) =>

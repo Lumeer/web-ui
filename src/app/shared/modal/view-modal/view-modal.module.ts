@@ -39,6 +39,8 @@ import {DataInputModule} from '../../data-input/data-input.module';
 import {ViewHeaderComponent} from './header/view-header.component';
 import {ViewSettingsModalBodyComponent} from './settings/body/view-settings-modal-body.component';
 import {ViewsUniqueFoldersPipe} from './settings/pipes/views-unique-folders.pipe';
+import {PickerModule} from '../../picker/picker.module';
+import {DirectivesModule} from '../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import {ViewsUniqueFoldersPipe} from './settings/pipes/views-unique-folders.pipe
     UsersModule,
     DropdownModule,
     DataInputModule,
+    DirectivesModule,
+    PickerModule,
   ],
   exports: [ShareViewModalComponent, ViewSettingsModalComponent],
 })

@@ -37,7 +37,27 @@ export class ViewSettingsModalBodyComponent {
   @Output()
   public delete = new EventEmitter();
 
+  public readonly minInteger = Number.MIN_SAFE_INTEGER;
+  public readonly maxInteger = Number.MAX_SAFE_INTEGER;
+
   public get nameControl(): AbstractControl {
     return this.form.controls.name;
+  }
+
+  public get priorityControl(): AbstractControl {
+    return this.form.controls.priority;
+  }
+
+  public get iconControl(): AbstractControl {
+    return this.form.controls.icon;
+  }
+
+  public get colorControl(): AbstractControl {
+    return this.form.controls.color;
+  }
+
+  public onIconColorChange(data: {icon: string; color: string}) {
+    this.iconControl.patchValue(data.icon);
+    this.colorControl.patchValue(data.color);
   }
 }

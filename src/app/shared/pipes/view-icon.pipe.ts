@@ -19,19 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {View} from '../../core/store/views/view';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {getViewColor, getViewIcon} from '../../core/store/views/view.utils';
-import {Collection} from '../../core/store/collections/collection';
+import {getViewIcon} from '../../core/store/views/view.utils';
 
 @Pipe({
-  name: 'viewsSelectItems',
+  name: 'viewIcon',
 })
-export class ViewsSelectItemsPipe implements PipeTransform {
-  public transform(views: View[], collections: Collection[]): SelectItemModel[] {
-    return views?.map(view => this.viewSelectItem(view, collections)) || [];
-  }
-
-  private viewSelectItem(view: View, collections: Collection[]): SelectItemModel {
-    return {id: view.code, value: view.name, icons: [getViewIcon(view)], iconColors: [getViewColor(view, collections)]};
+export class ViewIconPipe implements PipeTransform {
+  public transform(view: View): string {
+    return getViewIcon(view);
   }
 }

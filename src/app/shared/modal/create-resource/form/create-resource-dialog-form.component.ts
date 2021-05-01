@@ -59,16 +59,13 @@ export class CreateResourceDialogFormComponent implements OnInit {
 
   public subscriptions = new Subscription();
 
-  public readonly iconChooserLabel: string;
   private readonly colors = Colors.palette;
 
   constructor(
     private fb: FormBuilder,
     private projectValidators: ProjectValidators,
     private organizationValidators: OrganizationValidators
-  ) {
-    this.iconChooserLabel = $localize`:@@resource.new.dialog.icon.label.hint:(click the icon to change it)`;
-  }
+  ) {}
 
   public ngOnInit() {
     this.createForm();

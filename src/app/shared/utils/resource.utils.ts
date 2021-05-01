@@ -27,7 +27,7 @@ import {Project} from '../../core/store/projects/project';
 import {User} from '../../core/store/users/user';
 import {View} from '../../core/store/views/view';
 import {Attribute, Collection} from '../../core/store/collections/collection';
-import {objectsByIdMap} from './common.utils';
+import {isNotNullOrUndefined, objectsByIdMap} from './common.utils';
 
 export function hasRoleByPermissions(role: Role, permissions: AllowedPermissions): boolean {
   switch (role) {
@@ -198,6 +198,15 @@ export function attributesResourcesAttributesMap(
 export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources: T[]): T[] {
   return [...(resources || [])].sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
+      if (isNotNullOrUndefined(a.priority) || isNotNullOrUndefined(b.priority)) {
+        const aOrder = a.priority ?? Number.MIN_SAFE_INTEGER;
+        const bOrder = b.priority ?? Number.MIN_SAFE_INTEGER;
+        const diff = bOrder - aOrder;
+        if (diff !== 0) {
+          return diff;
+        }
+      }
+
       if (a.lastTimeUsed && b.lastTimeUsed) {
         return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
       } else if (a.lastTimeUsed && !b.lastTimeUsed) {
@@ -208,6 +217,14 @@ export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources
       return b.id.localeCompare(a.id);
     }
     return a.favorite ? -1 : 1;
+  });
+}
+
+export function sortResourcesByOrder<T extends Resource>(resources: T[]): T[] {
+  return [...(resources || [])].sort((a, b) => {
+    const aOrder = a.priority ?? Number.MIN_SAFE_INTEGER;
+    const bOrder = b.priority ?? Number.MIN_SAFE_INTEGER;
+    return bOrder - aOrder;
   });
 }
 

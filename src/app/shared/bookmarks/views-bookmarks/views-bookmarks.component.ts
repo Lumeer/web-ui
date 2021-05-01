@@ -27,7 +27,7 @@ import {selectAllCollections} from '../../../core/store/collections/collections.
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {selectAllViews} from '../../../core/store/views/views.state';
+import {selectAllViewsSorted} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'views-bookmarks',
@@ -45,7 +45,7 @@ export class ViewsBookmarksComponent implements OnInit {
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(
-      select(selectAllViews),
+      select(selectAllViewsSorted),
       map(views => views.filter(view => view.favorite))
     );
     this.queryData$ = combineLatest([

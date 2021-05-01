@@ -7,7 +7,7 @@
       <ng-container *ngFor="let cell of row">
         <td *ngIf="cell && {hasValue: cell | pivotTableCellHasValue} as cellData"
             class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}} text-truncate"
-            [style.max-width.px]="200"
+            [style.max-width.px]="300"
             [rowSpan]="cell.rowSpan"
             [colSpan]="cell.colSpan"
             [ngClass]="cell.cssClass"

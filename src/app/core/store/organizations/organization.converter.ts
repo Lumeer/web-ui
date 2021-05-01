@@ -29,6 +29,7 @@ export class OrganizationConverter {
       name: dto.name,
       icon: dto.icon,
       color: dto.color,
+      priority: dto.priority,
       description: dto.description,
       correlationId: correlationId,
       nonRemovable: dto.nonRemovable,
@@ -43,6 +44,7 @@ export class OrganizationConverter {
       name: organization.name,
       icon: organization.icon,
       color: organization.color,
+      priority: organization.priority,
       description: organization.description,
     };
   }
