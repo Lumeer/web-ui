@@ -77,6 +77,8 @@
     [linkTypeId]="linkTypeId"
     [constraintData]="constraintData"
     [origin]="element"
-    (useHint)="onUseHint()">
+    (useHint)="onUseHint()"
+    (createLink)="createLink.emit($event)"
+    (updateLink)="updateLink.emit($event)">
   </document-hints>
 </ng-container>

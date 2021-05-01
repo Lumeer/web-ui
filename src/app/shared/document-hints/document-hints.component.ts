@@ -31,7 +31,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
@@ -39,7 +39,6 @@ import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {Query} from '../../core/store/navigation/query/query';
 import {User} from '../../core/store/users/user';
@@ -48,7 +47,7 @@ import {Direction} from '../direction';
 import {DropdownPosition} from '../dropdown/dropdown-position';
 import {DropdownComponent} from '../dropdown/dropdown.component';
 import {DocumentHintColumn} from './document-hint-column';
-import {getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
+import {getOtherLinkedDocumentId, LinkInstance} from '../../core/store/link-instances/link.instance';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.utils';
@@ -108,6 +107,12 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   @Output()
   public useHint = new EventEmitter<{document: DocumentModel; external: boolean}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -204,17 +209,14 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     }
   }
 
-  public createLink(document: DocumentModel, data: Record<string, any> = {}) {
-    this.store$.dispatch(
-      new LinkInstancesAction.Create({
-        linkInstance: {
-          correlationId: this.correlationId,
-          linkTypeId: this.linkTypeId,
-          documentIds: [this.linkedDocumentId, document.id],
-          data,
-        },
-      })
-    );
+  public emitCreateLink(document: DocumentModel, data: Record<string, any> = {}) {
+    const linkInstance: LinkInstance = {
+      correlationId: this.correlationId,
+      linkTypeId: this.linkTypeId,
+      documentIds: [this.linkedDocumentId, document.id],
+      data,
+    };
+    this.createLink.emit({linkInstance});
   }
 
   public moveSelection(direction: Direction) {
@@ -282,7 +284,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
       if (this.linkInstanceId) {
         this.createLinkWithExistingLinkData(document);
       } else {
-        this.createLink(document);
+        this.emitCreateLink(document);
       }
     } else {
       this.close();
@@ -310,7 +312,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
         if (oldDocument && Object.keys(oldDocument?.data || {}).length === 0) {
           nextAction = new DocumentsAction.Delete({documentId: oldDocument.id, collectionId: oldDocument.collectionId});
         }
-        this.store$.dispatch(new LinkInstancesAction.Update({linkInstance, nextAction}));
+        this.updateLink.emit({linkInstance, nextAction});
       });
   }
 

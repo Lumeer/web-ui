@@ -1,9 +1,10 @@
 <modal-wrapper
   [dialogType]="dialogType.Primary"
   (onClose)="hideDialog()"
+  [customHeader]="true"
   [showSubmit]="false">
 
-  <span class="title" [innerHTML]="title"></span>
+  <div class="custom-header text-truncate p-3 bg-primary text-white w-100 rounded-top h5" [innerHTML]="title"></div>
 
   <div class="body h-100"
        *ngIf="{resources: resources$ | async, dataResources: dataResources$ | async, selectedDataResource: selectedDataResource$ | async} as data">

@@ -8,7 +8,8 @@
                         (edit)="onEdit()">
   </table-data-cell-menu>
 
-  <ng-container *ngIf="{editable: data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query} as dataInputData">
+  <ng-container
+    *ngIf="{editable: data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query} as dataInputData">
     <ng-container
       *ngIf="data.attribute | dataInputEditInfo:data.dataValue:dataInputData.editable: (editing$ | async) as dataInputInfo">
 
@@ -61,7 +62,9 @@
       [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
       [dataValue]="editedValue"
       [origin]="element"
-      (useHint)="onUseDocumentHint()">
+      (useHint)="onUseDocumentHint()"
+      (createLink)="onCreateLink($event)"
+      (updateLink)="onUpdateLink($event)">
     </document-hints>
   </ng-container>
 </ng-container>

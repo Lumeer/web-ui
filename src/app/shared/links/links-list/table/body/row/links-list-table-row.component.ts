@@ -40,6 +40,8 @@ import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {Action} from '@ngrx/store';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -107,6 +109,12 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   @Output()
   public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;

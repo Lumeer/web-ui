@@ -25,7 +25,7 @@ import {Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
@@ -82,7 +82,13 @@ export class LinksAccordeonComponent implements OnInit {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
-  public createLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+  public createDocumentWithLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();

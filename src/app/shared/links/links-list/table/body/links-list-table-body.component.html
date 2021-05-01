@@ -30,6 +30,8 @@
       (columnEdit)="onColumnEdit(row, $event)"
       (detail)="detail.emit(row)"
       (unLink)="unlink.emit(row)"
-      (newLink)="newLink.emit($event)">
+      (newLink)="newLink.emit($event)"
+      (createLink)="createLink.emit($event)"
+      (updateLink)="updateLink.emit($event)">
   </tr>
 </ng-container>

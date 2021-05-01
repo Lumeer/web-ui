@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   TemplateRef,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -485,12 +485,26 @@ export class DataResourceDetailComponent
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.workspace}));
   }
 
-  public onCreateLink(data: {document: DocumentModel; linkInstance: LinkInstance}) {
+  public onCreateDocumentWithLink(data: {document: DocumentModel; linkInstance: LinkInstance}) {
     this.store$.dispatch(
       new DocumentsAction.CreateWithLink({
         document: data.document,
         linkInstance: data.linkInstance,
         otherDocumentId: this.dataResource.id,
+        workspace: this.workspace,
+      })
+    );
+  }
+
+  public onCreateLink(data: {linkInstance: LinkInstance}) {
+    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: data.linkInstance, workspace: this.workspace}));
+  }
+
+  public onUpdateLink(data: {linkInstance: LinkInstance; nextAction?: Action}) {
+    this.store$.dispatch(
+      new LinkInstancesAction.Update({
+        linkInstance: data.linkInstance,
+        nextAction: data.nextAction,
         workspace: this.workspace,
       })
     );

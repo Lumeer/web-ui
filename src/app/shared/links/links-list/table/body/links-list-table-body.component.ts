@@ -46,6 +46,7 @@ import {debounceTime} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {Action} from '@ngrx/store';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -109,6 +110,12 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
 
   @Output()
   public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   private dataRowFocusService: DataRowFocusService;
 

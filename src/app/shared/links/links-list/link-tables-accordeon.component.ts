@@ -25,7 +25,7 @@ import {Observable, of} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
@@ -33,7 +33,8 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {objectChanged} from '../../utils/common.utils';
 import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'link-tables-accordeon',
@@ -87,6 +88,12 @@ export class LinkTablesAccordeonComponent implements OnChanges {
   @Output()
   public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
 
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
+
   public collections$: Observable<Collection[]>;
   public documentByCollectionMap$: Observable<Record<string, DocumentModel>>;
   public query$: Observable<Query>;
@@ -107,7 +114,8 @@ export class LinkTablesAccordeonComponent implements OnChanges {
     if (this.linkType && this.linkInstance) {
       this.collections$ = this.store$.pipe(select(selectCollectionsByIds(this.linkType.collectionIds)));
       this.documentByCollectionMap$ = this.store$.pipe(
-        select(selectDocumentsByIds(this.linkInstance.documentIds)),
+        select(selectLinkInstanceById(this.linkInstance?.id)),
+        switchMap(linkInstance => this.store$.pipe(select(selectDocumentsByIds(linkInstance.documentIds)))),
         map(documents => groupDocumentsByCollection(documents)),
         // we know that there is only one document per collection
         map(documentsMap =>
