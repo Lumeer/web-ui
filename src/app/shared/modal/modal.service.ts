@@ -55,6 +55,7 @@ import {AttributeDescriptionModalComponent} from './attribute-description/attrib
 import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
 import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -148,6 +149,15 @@ export class ModalService {
       class: 'modal-lg',
     };
     return this.show(DataResourceDetailModalComponent, config);
+  }
+
+  public showDataResourcesDetail(dataResources: DataResource[], title: string): BsModalRef {
+    const config = {
+      initialState: {dataResources, title},
+      keyboard: true,
+      class: 'modal-lg modal-xxl-height',
+    };
+    return this.show(DataResourcesDetailModalComponent, config);
   }
 
   public showShareView(view: View): BsModalRef {

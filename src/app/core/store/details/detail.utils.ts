@@ -31,7 +31,6 @@ import {
   queryStemsAreSame,
   queryStemWithoutFilters,
 } from '../navigation/query/query.util';
-import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function modifyDetailPerspectiveQuery(query: Query, collections: Collection[]): Query {
   if (queryIsEmpty(query)) {
@@ -66,7 +65,10 @@ export function isDetailConfigChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
-  if (!arrayContainsSameItems(viewConfig?.collapsedLinkTypes, previousConfig?.collapsedLinkTypes)) {
+  if (
+    !arrayContainsSameItems(viewConfig?.collapsedLinkTypes, previousConfig?.collapsedLinkTypes) ||
+    !arrayContainsSameItems(viewConfig?.collapsedCollections, previousConfig?.collapsedCollections)
+  ) {
     return true;
   }
 

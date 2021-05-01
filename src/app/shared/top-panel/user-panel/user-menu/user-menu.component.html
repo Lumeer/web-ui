@@ -53,7 +53,7 @@
           <span i18n="@@menu.applicationTour">Application Tour</span>
         </button>
         <button mat-menu-item
-                *ngIf="!data.currentUser.hints.applicationHints"
+                *ngIf="data.currentUser.hints.applicationHints === false"
                 (click)="onHintsToggle(true)"
                 title="Show Hints"
                 i18n-title="@@menu.hintsEnable">
@@ -62,7 +62,7 @@
              aria-hidden="true"></i>&nbsp;
           <span i18n="@@menu.hintsEnable">Show Hints</span>
         </button>
-        <button mat-menu-item *ngIf="!!data.currentUser.hints.applicationHints"
+        <button mat-menu-item *ngIf="data.currentUser.hints.applicationHints !== false"
                 (click)="onHintsToggle(false)"
                 title="Hide Hints"
                 i18n-title="@@menu.hintsDisable">

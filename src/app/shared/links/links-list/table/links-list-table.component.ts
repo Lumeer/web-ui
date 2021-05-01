@@ -43,15 +43,18 @@ import {
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
+import {Action, select, Store} from '@ngrx/store';
+import {
+  selectLinkInstanceById,
+  selectLinkInstancesByTypeAndDocuments,
+} from '../../../../core/store/link-instances/link-instances.state';
 import {map, switchMap} from 'rxjs/operators';
 import {
   getOtherLinkedDocumentId,
   getOtherLinkedDocumentIds,
   LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
-import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
@@ -80,10 +83,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public linkType: LinkType;
 
   @Input()
+  public collection: Collection;
+
+  @Input()
   public document: DocumentModel;
 
   @Input()
-  public collection: Collection;
+  public linkInstance: LinkInstance;
 
   @Input()
   public query: Query;
@@ -95,7 +101,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public preventEventBubble: boolean;
 
   @Input()
-  public allowSelectDocument: boolean;
+  public allowSelect: boolean;
+
+  @Input()
+  public allowCreate: boolean;
+
+  @Input()
+  public allowUnlink: boolean;
 
   @Input()
   public attributesSettings: AttributesSettings;
@@ -119,7 +131,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
-  public createLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+  public createDocumentWithLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
@@ -157,7 +175,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       this.mergeColumns();
     }
 
-    if (objectChanged(changes.linkType) || objectChanged(changes.document)) {
+    if (objectChanged(changes.linkType) || objectChanged(changes.document) || objectChanged(changes.linkInstance)) {
       this.rows$ = this.selectLinkRows$();
     }
 
@@ -220,6 +238,17 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       return this.store$.pipe(
         select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])),
         switchMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
+      );
+    } else if (this.linkInstance && this.document) {
+      return this.store$.pipe(
+        select(selectLinkInstanceById(this.linkInstance.id)),
+        switchMap(linkInstance => {
+          const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
+          return this.store$.pipe(
+            select(selectDocumentById(otherDocumentId)),
+            map(document => [{linkInstance: linkInstance, document}])
+          );
+        })
       );
     }
 
@@ -359,6 +388,6 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       documentIds: [this.document.id, ''], // other will be set after document is created
       linkTypeId: this.linkType.id,
     };
-    this.createLink.emit({document, linkInstance});
+    this.createDocumentWithLink.emit({document, linkInstance});
   }
 }

@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   TemplateRef,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -52,7 +52,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AttributesSettings, View, ViewConfig} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
@@ -131,6 +131,7 @@ export class DataResourceDetailComponent
 
   public readonly contactUrl: string;
   public readonly collectionResourceType = AttributesResourceType.Collection;
+  public readonly linkTypeResourceType = AttributesResourceType.LinkType;
   public readonly detailTabType = DetailTabType;
 
   public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
@@ -143,6 +144,7 @@ export class DataResourceDetailComponent
 
   public commentsCount$: Observable<number>;
   public linksCount$: Observable<number>;
+  public documentsCount$: Observable<number>;
 
   public resourceType: AttributesResourceType;
   private workspace: Workspace;
@@ -242,12 +244,17 @@ export class DataResourceDetailComponent
         select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
         map(links => links?.length || 0)
       );
+      this.documentsCount$ = of(null);
       this.collectionId$.next(this.resource?.id);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
-      this.commentsCount$ = this.store$.pipe(
-        select(selectLinkInstanceById(this.dataResource.id)),
+      const linkInstance$ = this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)));
+      this.commentsCount$ = linkInstance$.pipe(
         filter(link => !!link),
         map(link => link.commentsCount)
+      );
+      this.documentsCount$ = linkInstance$.pipe(
+        switchMap(link => this.store$.pipe(select(selectDocumentsByIds(link?.documentIds || [])))),
+        map(documents => documents.length)
       );
       this.linksCount$ = of(null);
       this.collectionId$.next(null);
@@ -401,6 +408,24 @@ export class DataResourceDetailComponent
     );
   }
 
+  public onShowCollection(collectionId: string) {
+    this.store$.dispatch(
+      DetailActions.removeCollapsedCollection({
+        detailId: this.perspectiveId$.value,
+        collectionId,
+      })
+    );
+  }
+
+  public onHideCollection(collectionId: string) {
+    this.store$.dispatch(
+      DetailActions.addCollapsedCollection({
+        detailId: this.perspectiveId$.value,
+        collectionId,
+      })
+    );
+  }
+
   protected selectViewQuery$(): Observable<Query> {
     return this.settingsQuery$.asObservable();
   }
@@ -460,12 +485,26 @@ export class DataResourceDetailComponent
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.workspace}));
   }
 
-  public onCreateLink(data: {document: DocumentModel; linkInstance: LinkInstance}) {
+  public onCreateDocumentWithLink(data: {document: DocumentModel; linkInstance: LinkInstance}) {
     this.store$.dispatch(
       new DocumentsAction.CreateWithLink({
         document: data.document,
         linkInstance: data.linkInstance,
         otherDocumentId: this.dataResource.id,
+        workspace: this.workspace,
+      })
+    );
+  }
+
+  public onCreateLink(data: {linkInstance: LinkInstance}) {
+    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: data.linkInstance, workspace: this.workspace}));
+  }
+
+  public onUpdateLink(data: {linkInstance: LinkInstance; nextAction?: Action}) {
+    this.store$.dispatch(
+      new LinkInstancesAction.Update({
+        linkInstance: data.linkInstance,
+        nextAction: data.nextAction,
         workspace: this.workspace,
       })
     );

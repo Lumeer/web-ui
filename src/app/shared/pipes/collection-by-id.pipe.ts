@@ -25,6 +25,6 @@ import {Collection} from '../../core/store/collections/collection';
 })
 export class CollectionByIdPipe implements PipeTransform {
   public transform(collections: Collection[], collectionId: string): Collection {
-    return collections && collections.find(collection => collection.id === collectionId);
+    return collections?.find(collection => collection.id === collectionId);
   }
 }

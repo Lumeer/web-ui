@@ -301,3 +301,37 @@ export function createSuggestionDataValues<T extends DataValue>(
 
   return objectValues(dataValuesMap).sort((a, b) => a.format().localeCompare(b.format()));
 }
+
+export function getDataResourceType(dataResource: DataResource): AttributesResourceType {
+  if ((<DocumentModel>dataResource)?.collectionId) {
+    return AttributesResourceType.Collection;
+  } else if ((<LinkInstance>dataResource)?.linkTypeId) {
+    return AttributesResourceType.LinkType;
+  }
+  return null;
+}
+
+export function getDataResourceResourceId(dataResource: DataResource): string {
+  return (<DocumentModel>dataResource)?.collectionId || (<LinkInstance>dataResource)?.linkTypeId;
+}
+
+export function getDataResourcesDataIds(
+  dataResources: DataResource[]
+): {collectionIds: string[]; linkTypeIds: string[]; documentIds: string[]; linkInstanceIds: string[]} {
+  const collectionIds = [];
+  const linkTypeIds = [];
+  const documentIds = [];
+  const linkInstanceIds = [];
+
+  for (const dataResource of dataResources || []) {
+    const type = getDataResourceType(dataResource);
+    if (type === AttributesResourceType.Collection) {
+      collectionIds.push(getDataResourceResourceId(dataResource));
+      documentIds.push(dataResource.id);
+    } else if (type === AttributesResourceType.LinkType) {
+      linkTypeIds.push(getDataResourceResourceId(dataResource));
+      linkInstanceIds.push(dataResource.id);
+    }
+  }
+  return {collectionIds, linkTypeIds, linkInstanceIds, documentIds};
+}

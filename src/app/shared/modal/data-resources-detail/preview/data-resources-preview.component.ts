@@ -17,40 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DetailTabType} from '../detail-tab-type';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {AttributesResource, DataResource} from '../../../../core/model/resource';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
-  selector: 'detail-tabs',
-  templateUrl: './detail-tabs.component.html',
-  styleUrls: ['./detail-tabs.component.scss'],
+  selector: 'data-resources-preview',
+  templateUrl: './data-resources-preview.component.html',
+  styleUrls: ['./data-resources-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailTabsComponent {
+export class DataResourcesPreviewComponent {
   @Input()
-  public activeTab: DetailTabType;
+  public showDuplicates: boolean;
 
   @Input()
-  public showLinks: boolean;
+  public hasDuplicates: boolean;
 
   @Input()
-  public showTables: boolean;
+  public resources: AttributesResource[];
 
   @Input()
-  public commentsCount: number;
+  public dataResources: DataResource[];
 
   @Input()
-  public linksCount: number;
+  public selectedResource: AttributesResource;
 
   @Input()
-  public documentsCount: number;
-
-  @Input()
-  public permissions: AllowedPermissions;
-
-  public readonly detailTabTypes = DetailTabType;
+  public constraintData: ConstraintData;
 
   @Output()
-  public onTabSelect = new EventEmitter<DetailTabType>();
+  public showDuplicatesChange = new EventEmitter<boolean>();
+
+  @Output()
+  public selectResource = new EventEmitter<AttributesResource>();
+
+  @Output()
+  public selectDataResource = new EventEmitter<DataResource>();
 }

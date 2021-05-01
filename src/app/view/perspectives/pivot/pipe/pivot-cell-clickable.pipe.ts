@@ -18,22 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {DataAggregationType} from '../utils/data/data-aggregation';
-import {parseSelectTranslation} from '../utils/translation.utils';
+import {PivotTableCell} from '../util/pivot-table';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'pivotCellClickable',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: this.dataAggregationName(aggregation)}));
-  }
-
-  private dataAggregationName(type: DataAggregationType): string {
-    return parseSelectTranslation(
-      $localize`:@@perspective.chart.config.aggregation.name:{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }`,
-      {type}
-    );
+export class PivotCellClickablePipe implements PipeTransform {
+  public transform(cell: PivotTableCell): boolean {
+    return !cell.isHeader && cell.dataResources?.length > 0;
   }
 }

@@ -37,10 +37,6 @@ import {LinkRow} from '../../model/link-row';
 import {LinksListTableRowComponent} from './row/links-list-table-row.component';
 import {DataRowFocusService} from '../../../../data/data-row-focus-service';
 import {HiddenInputComponent} from '../../../../input/hidden-input/hidden-input.component';
-import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -50,6 +46,7 @@ import {debounceTime} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {Action} from '@ngrx/store';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -82,7 +79,13 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public preventEventBubble: boolean;
 
   @Input()
-  public allowSelectDocument: boolean;
+  public allowSelect: boolean;
+
+  @Input()
+  public allowCreate: boolean;
+
+  @Input()
+  public allowUnlink: boolean;
 
   @ViewChildren('tableRow')
   public tableRows: QueryList<LinksListTableRowComponent>;
@@ -107,6 +110,12 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
 
   @Output()
   public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   private dataRowFocusService: DataRowFocusService;
 
@@ -144,10 +153,12 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   }
 
   private checkNewRow() {
-    if (this.permissions?.writeWithView) {
+    if (this.permissions?.writeWithView && this.allowCreate) {
       if (this.newRows$.value.length === 0) {
         this.newRows$.next([{correlationId: generateCorrelationId()}]);
       }
+    } else {
+      this.newRows$.next([]);
     }
   }
 

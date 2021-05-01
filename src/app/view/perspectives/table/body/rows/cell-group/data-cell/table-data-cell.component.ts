@@ -823,4 +823,17 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.editing$.next(false);
     }
   }
+
+  public onCreateLink(data: {linkInstance: LinkInstance}) {
+    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: data.linkInstance}));
+  }
+
+  public onUpdateLink(data: {linkInstance: LinkInstance; nextAction?: Action}) {
+    this.store$.dispatch(
+      new LinkInstancesAction.Update({
+        linkInstance: data.linkInstance,
+        nextAction: data.nextAction,
+      })
+    );
+  }
 }

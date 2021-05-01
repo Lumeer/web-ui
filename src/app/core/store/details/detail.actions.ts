@@ -42,6 +42,16 @@ export const removeCollapsedLink = createAction(
   props<{detailId: string; linkTypeId: string}>()
 );
 
+export const addCollapsedCollection = createAction(
+  '[Detail] Add Collapsed Collection',
+  props<{detailId: string; collectionId: string}>()
+);
+
+export const removeCollapsedCollection = createAction(
+  '[Detail] Remove Collapsed Collection',
+  props<{detailId: string; collectionId: string}>()
+);
+
 export const setStemAttributes = createAction(
   '[Detail] Set Stem Attributes',
   props<{detailId: string; stem: QueryStem; attributes: AttributesSettings}>()

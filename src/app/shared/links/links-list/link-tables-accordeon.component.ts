@@ -17,36 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AttributesSettings} from '../../../core/store/views/view';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectAllCollections} from '../../../core/store/collections/collections.state';
+import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {preventEvent} from '../../utils/common.utils';
+import {objectChanged} from '../../utils/common.utils';
+import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
+import {map, switchMap} from 'rxjs/operators';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
-  selector: 'links-accordeon',
-  templateUrl: './links-accordeon.component.html',
+  selector: 'link-tables-accordeon',
+  templateUrl: './link-tables-accordeon.component.html',
   styleUrls: ['./links-accordeon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksAccordeonComponent implements OnInit {
+export class LinkTablesAccordeonComponent implements OnChanges {
   @Input()
-  public collection: Collection;
+  public linkType: LinkType;
 
   @Input()
-  public document: DocumentModel;
-
-  @Input()
-  public linkTypes: LinkType[];
+  public linkInstance: LinkInstance;
 
   @Input()
   public permissions: AllowedPermissionsMap;
@@ -58,7 +59,7 @@ export class LinksAccordeonComponent implements OnInit {
   public allowSelectDocument = true;
 
   @Input()
-  public collapsedLinkTypes: string[];
+  public collapsedCollections: string[];
 
   @Input()
   public attributesSettings: AttributesSettings;
@@ -67,28 +68,13 @@ export class LinksAccordeonComponent implements OnInit {
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   @Output()
-  public hideLink = new EventEmitter<string>();
+  public hideCollection = new EventEmitter<string>();
 
   @Output()
-  public showLink = new EventEmitter<string>();
-
-  @Output()
-  public unlink = new EventEmitter<LinkInstance>();
+  public showCollection = new EventEmitter<string>();
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
-
-  @Output()
-  public patchLinkData = new EventEmitter<LinkInstance>();
-
-  @Output()
-  public createDocumentWithLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
-
-  @Output()
-  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
-
-  @Output()
-  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   @Output()
   public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
@@ -103,43 +89,64 @@ export class LinksAccordeonComponent implements OnInit {
   public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
 
   @Output()
-  public modifyLinks = new EventEmitter<{collectionId: string; linkTypeId: string; documentId: string}>();
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   public collections$: Observable<Collection[]>;
+  public documentByCollectionMap$: Observable<Record<string, DocumentModel>>;
   public query$: Observable<Query>;
 
   public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.collections$ = this.store$.pipe(select(selectAllCollections));
   }
 
-  public onSetLinks(event: MouseEvent, linkType: LinkType) {
-    preventEvent(event);
+  public ngOnChanges(changes: SimpleChanges) {
+    if (objectChanged(changes.linkType) || objectChanged(changes.linkInstance)) {
+      this.subscribeCollections();
+    }
+  }
 
-    if (this.collection && this.document) {
-      this.modifyLinks.emit({collectionId: this.collection.id, linkTypeId: linkType.id, documentId: this.document.id});
+  public subscribeCollections() {
+    if (this.linkType && this.linkInstance) {
+      this.collections$ = this.store$.pipe(select(selectCollectionsByIds(this.linkType.collectionIds)));
+      this.documentByCollectionMap$ = this.store$.pipe(
+        select(selectLinkInstanceById(this.linkInstance?.id)),
+        switchMap(linkInstance => this.store$.pipe(select(selectDocumentsByIds(linkInstance.documentIds)))),
+        map(documents => groupDocumentsByCollection(documents)),
+        // we know that there is only one document per collection
+        map(documentsMap =>
+          Object.keys(documentsMap).reduce(
+            (resultMap, collectionId) => ({
+              ...resultMap,
+              [collectionId]: documentsMap[collectionId]?.[0],
+            }),
+            {}
+          )
+        )
+      );
+    } else {
+      this.collections$ = of([]);
+      this.documentByCollectionMap$ = of({});
     }
   }
 
   public isOpenChanged(opened: boolean, id: string) {
     if (opened) {
-      this.showLink.emit(id);
+      this.showCollection.emit(id);
     } else {
-      this.hideLink.emit(id);
+      this.hideCollection.emit(id);
     }
-  }
-
-  public unLinkDocument(linkInstance: LinkInstance) {
-    this.unlink.emit(linkInstance);
   }
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {
     this.documentSelect.emit(data);
   }
 
-  public trackById(index: number, linkType: LinkType): string {
-    return linkType.id;
+  public trackById(index: number, collection: Collection): string {
+    return collection.id;
   }
 }

@@ -28,6 +28,7 @@ export interface Detail {
 export interface DetailConfig {
   stemsConfigs?: DetailStemConfig[];
   collapsedLinkTypes?: string[];
+  collapsedCollections?: string[];
 }
 
 export interface DetailStemConfig {

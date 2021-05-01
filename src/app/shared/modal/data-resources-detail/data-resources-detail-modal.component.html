@@ -1,0 +1,47 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="hideDialog()"
+  [customHeader]="true"
+  [showSubmit]="false">
+
+  <div class="custom-header text-truncate p-3 bg-primary text-white w-100 rounded-top h5" [innerHTML]="title"></div>
+
+  <div class="body h-100"
+       *ngIf="{resources: resources$ | async, dataResources: dataResources$ | async, selectedDataResource: selectedDataResource$ | async} as data">
+    <ng-container *ngIf=" data.resources.length || data.dataResources.length; else noData">
+
+      <data-resources-preview *ngIf="!data.selectedDataResource"
+                              class="h-100 p-3"
+                              @enterRightAnimation
+                              [constraintData]="constraintData$ | async"
+                              [dataResources]="data.dataResources"
+                              [resources]="data.resources"
+                              [showDuplicates]="showDuplicates$ | async"
+                              [hasDuplicates]="hasDuplicates"
+                              [selectedResource]="selectedResource$ | async"
+                              (selectDataResource)="onSelectDataResource($event)"
+                              (selectResource)="onSelectResource($event)"
+                              (showDuplicatesChange)="showDuplicates$.next($event)">
+      </data-resources-preview>
+      <data-resources-detail *ngIf="data.selectedDataResource"
+                             class="h-100 py-3"
+                             @enterLeftAnimation
+                             [resource]="selectedResource$ | async"
+                             [dataResource]="data.selectedDataResource"
+                             (routingPerformed)="hideDialog()"
+                             (back)="resetSelectedDataResource()">
+      </data-resources-detail>
+    </ng-container>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+</modal-wrapper>
+
+<ng-template #noData>
+  <div class="text-center p-5">
+    <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+  </div>
+</ng-template>

@@ -142,7 +142,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private createDataValue(value?: any, typed?: boolean): DataValue {
-    const constraint = (this.row.attribute && this.row.attribute.constraint) || new UnknownConstraint();
+    const constraint = this.row.attribute?.constraint || new UnknownConstraint();
     if (typed) {
       return constraint.createInputDataValue(value, this.row.value, this.constraintData);
     }

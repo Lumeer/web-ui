@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Collection} from '../../../core/store/collections/collection';
+import {AttributesResource} from '../../../core/model/resource';
 
 @Component({
   selector: 'preview-results-tabs',
@@ -28,16 +28,16 @@ import {Collection} from '../../../core/store/collections/collection';
 })
 export class PreviewResultsTabsComponent {
   @Input()
-  public collections: Collection[];
+  public resources: AttributesResource[];
 
   @Input()
-  public selectedCollection: string;
+  public selectedId: string;
 
   @Output()
-  public selectCollection = new EventEmitter<Collection>();
+  public selectResource = new EventEmitter<AttributesResource>();
 
-  public setActiveCollection(collection: Collection) {
-    this.selectedCollection = collection.id;
-    this.selectCollection.emit(collection);
+  public setActiveResource(resource: AttributesResource) {
+    this.selectedId = resource.id;
+    this.selectResource.emit(resource);
   }
 }

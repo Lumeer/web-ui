@@ -17,14 +17,18 @@
            [linkType]="linkType"
            [collection]="collection"
            [document]="document"
-           [allowSelectDocument]="allowSelectDocument"
+           [allowSelect]="allowSelect"
+           [allowCreate]="allowCreate"
+           [allowUnlink]="allowUnlink"
            [preventEventBubble]="preventEventBubble"
            (columnFocus)="onColumnFocus($event)"
            (detail)="onDetail($event)"
            (unlink)="onUnLink($event)"
            (newLink)="onNewLink($event)"
            (patchDocumentData)="patchDocumentData.emit($event)"
-           (patchLinkData)="patchLinkData.emit($event)">
+           (patchLinkData)="patchLinkData.emit($event)"
+           (createLink)="createLink.emit($event)"
+           (updateLink)="updateLink.emit($event)">
     </tbody>
 
   </table>

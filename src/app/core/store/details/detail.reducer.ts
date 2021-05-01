@@ -24,6 +24,7 @@ import {QueryStem} from '../navigation/query/query';
 import {AttributesSettings} from '../views/view';
 import {areQueryStemsEqual} from '../navigation/query/query.helper';
 import {uniqueValues} from '../../../shared/utils/array.utils';
+import {DetailConfig} from './detail';
 
 export const detailsReducer = createReducer(
   initialDetailsState,
@@ -32,9 +33,17 @@ export const detailsReducer = createReducer(
   on(DetailActions.setStemAttributes, (state, action) =>
     setStemAttributes(state, action.detailId, action.stem, action.attributes)
   ),
-  on(DetailActions.addCollapsedLink, (state, action) => addCollapsedLink(state, action.detailId, action.linkTypeId)),
+  on(DetailActions.addCollapsedLink, (state, action) =>
+    addCollapsed(state, action.detailId, action.linkTypeId, 'collapsedLinkTypes')
+  ),
   on(DetailActions.removeCollapsedLink, (state, action) =>
-    removeCollapsedLink(state, action.detailId, action.linkTypeId)
+    removeCollapsed(state, action.detailId, action.linkTypeId, 'collapsedLinkTypes')
+  ),
+  on(DetailActions.addCollapsedCollection, (state, action) =>
+    addCollapsed(state, action.detailId, action.collectionId, 'collapsedCollections')
+  ),
+  on(DetailActions.removeCollapsedCollection, (state, action) =>
+    removeCollapsed(state, action.detailId, action.collectionId, 'collapsedCollections')
   ),
   on(DetailActions.setConfig, (state, action) =>
     detailsAdapter.updateOne({id: action.detailId, changes: {config: action.config}}, state)
@@ -61,13 +70,13 @@ function setStemAttributes(
   return state;
 }
 
-function addCollapsedLink(state: DetailsState, detailId: string, linkTypeId: string) {
+function addCollapsed(state: DetailsState, detailId: string, objectId: string, param: keyof DetailConfig) {
   const detail = state.entities[detailId];
   if (detail) {
-    const collapsedLinkTypes = [...(detail.config?.collapsedLinkTypes || [])];
-    collapsedLinkTypes.push(linkTypeId);
+    const collapsedIds = [...(detail.config?.[param] || [])];
+    collapsedIds.push(objectId);
     return detailsAdapter.updateOne(
-      {id: detailId, changes: {config: {...detail.config, collapsedLinkTypes: uniqueValues(collapsedLinkTypes)}}},
+      {id: detailId, changes: {config: {...detail.config, [param]: uniqueValues(collapsedIds)}}},
       state
     );
   }
@@ -75,13 +84,17 @@ function addCollapsedLink(state: DetailsState, detailId: string, linkTypeId: str
   return state;
 }
 
-function removeCollapsedLink(state: DetailsState, detailId: string, linkTypeId: string) {
+function removeCollapsed(state: DetailsState, detailId: string, objectId: string, param: keyof DetailConfig) {
   const detail = state.entities[detailId];
   if (detail) {
-    const collapsedLinkTypes = (detail.config?.collapsedLinkTypes || []).filter(
-      hiddenLinkType => hiddenLinkType !== linkTypeId
+    const collapsedIds = [...(detail.config?.[param] || [])].filter(collapsedId => collapsedId !== objectId);
+    return detailsAdapter.updateOne(
+      {
+        id: detailId,
+        changes: {config: {...detail.config, [param]: collapsedIds}},
+      },
+      state
     );
-    return detailsAdapter.updateOne({id: detailId, changes: {config: {...detail.config, collapsedLinkTypes}}}, state);
   }
 
   return state;

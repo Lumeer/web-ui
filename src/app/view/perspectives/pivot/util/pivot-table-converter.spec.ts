@@ -35,6 +35,7 @@ describe('Pivot table converter', () => {
           rowHeaders: [],
           columnHeaders: [],
           values: [],
+          dataResources: [],
           rowSorts: [],
           rowShowSums: [],
           columnSorts: [],
@@ -58,6 +59,7 @@ describe('Pivot table converter', () => {
             {title: 'C', targetIndex: 2, color: undefined, isValueHeader: false},
           ],
           values: [[10, 20, 30]],
+          dataResources: [],
           rowShowSums: [],
           columnShowSums: [],
           hasAdditionalColumnLevel: true,
@@ -101,6 +103,7 @@ describe('Pivot table converter', () => {
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: '10',
+      dataResources: [],
       rowSpan: 1,
       colSpan: 1,
       isHeader: false,
@@ -108,6 +111,7 @@ describe('Pivot table converter', () => {
     });
     expect(pivotTable.cells[1][1]).toEqual({
       value: '20',
+      dataResources: [],
       rowSpan: 1,
       colSpan: 1,
       isHeader: false,
@@ -115,6 +119,7 @@ describe('Pivot table converter', () => {
     });
     expect(pivotTable.cells[1][2]).toEqual({
       value: '30',
+      dataResources: [],
       rowSpan: 1,
       colSpan: 1,
       isHeader: false,
@@ -156,6 +161,7 @@ describe('Pivot table converter', () => {
           ],
           columnHeaders: [],
           values: [],
+          dataResources: [],
           rowShowSums: [true, true],
           columnShowSums: [],
           hasAdditionalColumnLevel: false,
@@ -347,6 +353,7 @@ describe('Pivot table converter', () => {
             },
           ],
           values: [],
+          dataResources: [],
           columnShowSums: [true, true],
           rowShowSums: [],
         },
@@ -539,6 +546,7 @@ describe('Pivot table converter', () => {
             [1, 9],
             [null, 4],
           ],
+          dataResources: [],
           rowShowSums: [true, true],
           columnShowSums: [],
           hasAdditionalColumnLevel: true,
@@ -640,6 +648,7 @@ describe('Pivot table converter', () => {
             ['10%', '90%'],
             [null, '40%'],
           ],
+          dataResources: [],
           valuesConstraints: [
             new PercentageConstraint({} as PercentageConstraintConfig),
             new PercentageConstraint({} as PercentageConstraintConfig),
@@ -711,6 +720,7 @@ describe('Pivot table converter', () => {
             },
           ],
           values: [[1, 5, 6, 2, null, 1, 4, 5, null]],
+          dataResources: [],
           rowShowSums: [],
           columnShowSums: [true],
           hasAdditionalColumnLevel: true,
@@ -854,6 +864,7 @@ describe('Pivot table converter', () => {
             [2, 4, 7, 1, 3],
             [1, 0, 1, 1, 2],
           ],
+          dataResources: [],
           rowShowSums: [false, true],
           columnShowSums: [true, true],
         },

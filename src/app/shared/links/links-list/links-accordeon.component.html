@@ -7,7 +7,7 @@
                      (isOpenChange)="isOpenChanged($event, linkType.id)">
       <div class="header-wrapper" accordion-heading
            *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
-        <div class="mr-2" *ngIf="true">
+        <div class="mr-2">
           <i *ngIf="!(collapsedLinkTypes | includes:linkType.id)" class="fas fa-caret-down"></i>
           <i *ngIf="collapsedLinkTypes | includes:linkType.id" class="fas fa-caret-right"></i>
         </div>
@@ -35,14 +35,18 @@
           [collection]="otherCollection"
           [permissions]="permissions && permissions[otherCollection.id]"
           [query]="query$ | async"
-          [allowSelectDocument]="allowSelectDocument"
+          [allowSelect]="allowSelectDocument"
+          [allowUnlink]="true"
+          [allowCreate]="true"
           [preventEventBubble]="preventEventBubble"
           [attributesSettings]="attributesSettings"
           (unLink)="unLinkDocument($event)"
           (detail)="onSelectDocument($event)"
           (patchDocumentData)="patchDocumentData.emit($event)"
           (patchLinkData)="patchLinkData.emit($event)"
+          (createDocumentWithLink)="createDocumentWithLink.emit($event)"
           (createLink)="createLink.emit($event)"
+          (updateLink)="updateLink.emit($event)"
           (attributesSettingsChanged)="attributesSettingsChanged.emit($event)"
           (attributeDescription)="attributeDescription.emit($event)"
           (attributeFunction)="attributeFunction.emit($event)"

@@ -49,7 +49,6 @@ const documents: DocumentModel[] = [
   {collectionId: 'C3', id: 'D33', data: {a1: 'vuw'}},
   {collectionId: 'C3', id: 'D34', data: {a1: 'vuw'}},
   {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
-  {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
   {collectionId: 'C3', id: 'D36', data: {a1: 'xyz'}},
 
   {collectionId: 'C4', id: 'D41', data: {a1: 2, a2: 3}},
@@ -344,6 +343,7 @@ describe('Pivot data converter', () => {
     ]);
     expect(pivotData.data[0].columnHeaders).toEqual([]);
     expect(pivotData.data[0].values).toEqual([[undefined], [undefined], [undefined]]);
+    expect(pivotData.data[0].dataResources).toEqual([[undefined], [undefined], [undefined]]);
   });
 
   it('should return by one column', () => {
@@ -379,6 +379,7 @@ describe('Pivot data converter', () => {
       },
     ]);
     expect(pivotData.data[0].values).toEqual([[undefined, undefined]]);
+    expect(pivotData.data[0].dataResources).toEqual([[undefined, undefined]]);
   });
 
   it('should return by two values', () => {
@@ -423,6 +424,14 @@ describe('Pivot data converter', () => {
       },
     ]);
     expect(pivotData.data[0].values).toEqual([[46, -10]]);
+    expect(pivotData.data[0].dataResources[0][0]).toHaveSize(9);
+    expect(pivotData.data[0].dataResources[0][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D42', 'D43', 'D44', 'D45', 'D46', 'D47', 'D48', 'D49'])
+    );
+    expect(pivotData.data[0].dataResources[0][1]).toHaveSize(9);
+    expect(pivotData.data[0].dataResources[0][1].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D42', 'D43', 'D44', 'D45', 'D46', 'D47', 'D48', 'D49'])
+    );
   });
 
   it('should return by row and value', () => {
@@ -472,7 +481,14 @@ describe('Pivot data converter', () => {
         isValueHeader: true,
       },
     ]);
+
     expect(pivotData.data[0].values).toEqual([[37], [31]]);
+    expect(pivotData.data[0].dataResources[0][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D41', 'D42', 'D43', 'D43', 'D44', 'D43', 'D44', 'D43', 'D44', 'D45', 'D46'])
+    );
+    expect(pivotData.data[0].dataResources[1][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D47', 'D48', 'D49'])
+    );
   });
 
   it('should return by column and value', () => {
@@ -481,7 +497,7 @@ describe('Pivot data converter', () => {
         {
           rowAttributes: [],
           columnAttributes: [
-            {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
+            {resourceId: 'C2', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
           ],
           valueAttributes: [
             {
@@ -504,7 +520,7 @@ describe('Pivot data converter', () => {
         color: undefined,
         constraint: new UnknownConstraint(),
         isValueHeader: false,
-        attributeName: collections[0].attributes[0].name,
+        attributeName: collections[1].attributes[0].name,
       },
       {
         title: 'c',
@@ -512,7 +528,7 @@ describe('Pivot data converter', () => {
         color: undefined,
         constraint: new UnknownConstraint(),
         isValueHeader: false,
-        attributeName: collections[0].attributes[0].name,
+        attributeName: collections[1].attributes[0].name,
       },
       {
         title: 'b',
@@ -520,10 +536,19 @@ describe('Pivot data converter', () => {
         color: undefined,
         constraint: new UnknownConstraint(),
         isValueHeader: false,
-        attributeName: collections[0].attributes[0].name,
+        attributeName: collections[1].attributes[0].name,
       },
     ]);
     expect(pivotData.data[0].values).toEqual([[-4, 9, -13]]);
+    expect(pivotData.data[0].dataResources[0][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D43', 'D44'])
+    );
+    expect(pivotData.data[0].dataResources[0][1].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D42', 'D43', 'D47', 'D48', 'D49'])
+    );
+    expect(pivotData.data[0].dataResources[0][2].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D43', 'D44', 'D43', 'D44', 'D45', 'D46'])
+    );
   });
 
   it('should return by two rows, column and three values', () => {
@@ -650,8 +675,8 @@ describe('Pivot data converter', () => {
     expect(pivotData.data[0].values).toEqual([
       [2, 2, 1, 7, 6, 2],
       [6, 4, 2, 6, 6, 1],
-      [null, null, null, 16, 6, 5],
-      [31, 20, 2, null, null, null],
+      [undefined, undefined, undefined, 16, 6, 6],
+      [31, 20, 3, undefined, undefined, undefined],
     ]);
     expect(pivotData.data[0].valueTitles).toEqual(valueTitles);
   });

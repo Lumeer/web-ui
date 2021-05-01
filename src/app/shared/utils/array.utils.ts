@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals, isNotNullOrUndefined} from './common.utils';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from './common.utils';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -82,6 +82,17 @@ export function shiftArrayFromIndex<T>(array: T[], fromIndex: number): T[] {
 
 export function uniqueValues<T>(array: T[]): T[] {
   return Array.from(new Set(array));
+}
+
+export function flattenValues<T>(array: any[]): T[] {
+  return (array || []).reduce((flatArray, val) => {
+    if (isArray(val)) {
+      flatArray.push(...val);
+    } else {
+      flatArray.push(val);
+    }
+    return flatArray;
+  }, []);
 }
 
 export function uniqueArrays<T>(arrays: T[][]): T[][] {
