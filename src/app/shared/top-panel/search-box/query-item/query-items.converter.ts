@@ -48,6 +48,7 @@ export function convertQueryItemsToQueryModel(queryItems: QueryItem[]): Query {
     switch (queryItem.type) {
       case QueryItemType.Collection:
         query.stems.push({
+          id: (queryItem as CollectionQueryItem).stemId,
           collectionId: (queryItem as CollectionQueryItem).collection.id,
           linkTypeIds: [],
           filters: [],
@@ -101,7 +102,7 @@ export class QueryItemsConverter {
     }
 
     return [
-      this.createCollectionItem(stem.collectionId),
+      this.createCollectionItem(stem.collectionId, stem.id),
       ...this.createLinkItems(stem.linkTypeIds, skipDeleted),
       ...this.createAttributeItems(stem, skipDeleted),
       ...this.createDocumentItems(stem.documentIds, skipDeleted),
@@ -114,10 +115,10 @@ export class QueryItemsConverter {
     return (this.data.collections || []).find(col => col.id === collectionId);
   }
 
-  public createCollectionItem(collectionId: string): QueryItem {
+  public createCollectionItem(collectionId: string, stemId: string): QueryItem {
     const collection = this.findCollection(collectionId);
     if (collection) {
-      return new CollectionQueryItem(collection);
+      return new CollectionQueryItem(collection, stemId);
     }
     return new DeletedQueryItem(QueryItemType.Collection);
   }
@@ -147,9 +148,9 @@ export class QueryItemsConverter {
 
   private findCollectionsForLinkType(linkType: LinkType): {collection1: Collection; collection2: Collection} {
     const collection1 =
-      linkType && (this.data.collections || []).find(collection => collection.id === linkType.collectionIds[0]);
+      linkType && (this.data.collections || []).find(collection => collection.id === linkType.collectionIds?.[0]);
     const collection2 =
-      linkType && (this.data.collections || []).find(collection => collection.id === linkType.collectionIds[1]);
+      linkType && (this.data.collections || []).find(collection => collection.id === linkType.collectionIds?.[1]);
     return {collection1, collection2};
   }
 

@@ -54,6 +54,7 @@ export function convertQueryModelToDto(model: Query): QueryDto {
 
 function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
   return {
+    id: dto.id,
     collectionId: dto.collectionId,
     documentIds: dto.documentIds,
     linkTypeIds: dto.linkTypeIds,
@@ -64,6 +65,7 @@ function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
 
 function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
   return {
+    id: model.id,
     collectionId: model.collectionId,
     documentIds: model.documentIds,
     linkTypeIds: model.linkTypeIds,
@@ -156,6 +158,7 @@ export function normalizeQueryModel(query: Query): Query {
 
 export function normalizeQueryStem(stem: QueryStem): QueryStem {
   return {
+    id: stem.id,
     collectionId: stem.collectionId,
     documentIds: stem.documentIds || [],
     filters: (stem.filters || []).map(filter => normalizeFilter(filter)),

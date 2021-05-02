@@ -9,15 +9,17 @@
            class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
            [style.width.px]="1"
            formArrayName="queryItems">
-        <query-item *ngFor="let queryItem of queryItems$ | async; trackBy:trackByTypeAndText; let itemIndex = index;"
-                    [queryItemForm]="queryItemsControl.at(itemIndex)"
-                    [queryItem]="queryItem"
-                    [constraintData]="constraintData"
-                    [readonly]="!(queryItem | isQueryItemEditable:data.canManageConfig:data.currentView?.query)"
-                    (change)="onQueryItemsChanged()"
-                    (remove)="onRemoveQueryItem(itemIndex)"
-                    (focusInput)="searchInput.focusInput()"
-                    class="d-inline-flex mt-1 ml-1 align-items-center">
+        <query-item
+          *ngFor="let queryItemData of queryItems$ | async | createCompactQueryItems:(expandedStemIds$ | async):(collapseStemIds$ | async); trackBy:trackByTypeAndText"
+          [queryItemForm]="queryItemsControl.at(queryItemData.realIndex)"
+          [queryItem]="queryItemData.queryItem"
+          [constraintData]="constraintData"
+          [readonly]="!(queryItemData.queryItem | isQueryItemEditable:data.canManageConfig:data.currentView?.query)"
+          (change)="onQueryItemsChanged()"
+          (remove)="onRemoveQueryItem(queryItemData.realIndex)"
+          (focusInput)="searchInput.focusInput()"
+          (toggleExpand)="onToggleExpandStem($event)"
+          class="d-inline-flex mt-1 ml-1 align-items-center">
         </query-item>
 
         <search-input #searchInput

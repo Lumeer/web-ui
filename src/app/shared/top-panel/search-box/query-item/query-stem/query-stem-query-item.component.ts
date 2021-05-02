@@ -17,28 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../../../../core/store/collections/collection';
-import {QueryItem} from './query-item';
-import {QueryItemType} from './query-item-type';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {QueryStemQueryItem} from '../model/query-stem-query-item';
 
-export class CollectionQueryItem implements QueryItem {
-  public type = QueryItemType.Collection;
+@Component({
+  selector: 'query-stem-query-item',
+  templateUrl: './query-stem-query-item.component.html',
+  styleUrls: ['../query-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class QueryStemQueryItemComponent {
+  @Input()
+  public queryItem: QueryStemQueryItem;
 
-  public constructor(public collection: Collection, public stemId: string) {}
+  @Input()
+  public readonly: boolean;
 
-  public get text(): string {
-    return this.collection.name;
+  @Output()
+  public toggleExpand = new EventEmitter<string>();
+
+  public onExpand() {
+    this.toggleExpand.emit(this.queryItem.id);
   }
 
-  public get value(): string {
-    return this.collection.id;
-  }
-
-  public get icons(): string[] {
-    return [this.collection.icon];
-  }
-
-  public get colors(): string[] {
-    return [this.collection.color];
+  public onCollapse() {
+    this.toggleExpand.emit(this.queryItem.id);
   }
 }

@@ -1,0 +1,35 @@
+<div [style.background-color]="queryItem | queryItemBackground"
+     [style.border-color]="queryItem | queryItemBorder:true"
+     class="query-item px-1 d-flex align-items-center h-100">
+  <icons-presenter [colors]="queryItem.colors"
+                   [icons]="queryItem.icons">
+  </icons-presenter>
+
+  <span [title]="queryItem | queryItemText"
+        class="mx-1 font-weight-bold text-truncate">
+    {{queryItem | queryItemText | truncate:30}}
+  </span>
+
+  <span *ngIf="queryItem.linksCount" class="ml-2"
+        title="Number of links" i18n-title="@@links.count">
+    <span>{{queryItem.linksCount}}</span>&nbsp;<i class="far fa-link "></i>
+  </span>
+
+  <span *ngIf="queryItem.filtersCount" class="ml-2"
+        title="Number of filters" i18n-title="@@filters.count">
+    <span>{{queryItem.filtersCount}}</span>&nbsp;<i class="far fa-filter"></i>
+  </span>
+
+  <i *ngIf="queryItem.linksCount > 0 || queryItem.filtersCount > 0"
+     (click)="onExpand()"
+     class="ml-3 mr-1 fas fa-chevron-right cursor-pointer"
+     title="Expand links and filters" i18n-title="@@query.item.stem.expand">
+  </i>
+
+  <i *ngIf="queryItem.linksCount === 0 && queryItem.filtersCount === 0"
+     (click)="onCollapse()"
+     class="ml-3 mr-1 fas fa-chevron-left cursor-pointer"
+     title="Collapse links and filters" i18n-title="@@query.item.stem.collapse">
+  </i>
+
+</div>

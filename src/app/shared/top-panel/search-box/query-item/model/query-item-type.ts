@@ -20,6 +20,7 @@
 export enum QueryItemType {
   Attribute = 'Attribute',
   Collection = 'Collection',
+  QueryStem = 'QueryStem',
   Document = 'Document',
   Fulltext = 'Fulltext',
   Link = 'Link',

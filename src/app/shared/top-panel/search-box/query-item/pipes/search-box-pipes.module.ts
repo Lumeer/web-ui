@@ -31,6 +31,7 @@ import {QueryItemFormPipe} from './query-item-form.pipe';
 import {QueryItemCollectionIdPipe} from './query-item-collection-id.pipe';
 import {QueryItemLinkTypeIdPipe} from './query-item-link-type-id.pipe';
 import {IsQueryItemEditablePipe} from './is-query-item-editable.pipe';
+import {CreateCompactQueryItemsPipe} from './create-compact-query-items.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -46,6 +47,7 @@ import {IsQueryItemEditablePipe} from './is-query-item-editable.pipe';
     QueryItemCollectionIdPipe,
     QueryItemLinkTypeIdPipe,
     IsQueryItemEditablePipe,
+    CreateCompactQueryItemsPipe,
   ],
   exports: [
     IsAttributeItemPipe,
@@ -59,6 +61,7 @@ import {IsQueryItemEditablePipe} from './is-query-item-editable.pipe';
     QueryItemCollectionIdPipe,
     QueryItemLinkTypeIdPipe,
     IsQueryItemEditablePipe,
+    CreateCompactQueryItemsPipe,
   ],
 })
 export class SearchBoxPipesModule {}

@@ -25,7 +25,7 @@ import {Attribute, Collection} from '../store/collections/collection';
 import {combineLatest, Observable, of} from 'rxjs';
 import {selectAllViews} from '../store/views/views.state';
 import {map} from 'rxjs/operators';
-import {sortResourcesLastUsed} from '../../shared/utils/resource.utils';
+import {generateId, sortResourcesLastUsed} from '../../shared/utils/resource.utils';
 import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
 import {LinkType} from '../store/link-types/link.type';
 import {selectAllLinkTypes} from '../store/link-types/link-types.state';
@@ -607,7 +607,7 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       const viewSuggestion = <ViewSuggestion>suggestion;
       return new ViewQueryItem(viewSuggestion.view, viewSuggestion.collection);
     case SuggestionType.Collection:
-      return new CollectionQueryItem((<CollectionSuggestion>suggestion).collection);
+      return new CollectionQueryItem((<CollectionSuggestion>suggestion).collection, generateId());
     case SuggestionType.LinkType:
       return new LinkQueryItem((<LinkTypeSuggestion>suggestion).linkType);
     case SuggestionType.Attribute:

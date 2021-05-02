@@ -55,8 +55,10 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
+import {CollectionQueryItem} from './query-item/model/collection.query-item';
 
-const allowAutomaticSubmission = true;
+const ALLOW_AUTOMATIC_SUBMISSION = true;
+const MIN_ITEMS_TO_COLLAPSE = 6;
 
 @Component({
   selector: 'search-box',
@@ -67,6 +69,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public currentView$ = new BehaviorSubject<View>(null);
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
   public form$ = new BehaviorSubject<FormGroup>(null);
+  public expandedStemIds$ = new BehaviorSubject<string[]>([]);
+  public collapseStemIds$ = new BehaviorSubject<string[]>([]);
 
   public users$: Observable<User[]>;
   public constraintData$: Observable<ConstraintData>;
@@ -84,6 +88,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private perspective: Perspective;
   private currentUser: User;
   private queryData: QueryData;
+  private lastCheckedViewId: string;
 
   constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
 
@@ -105,16 +110,24 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = combineLatest([this.store$.pipe(select(selectViewQuery)), this.loadData()])
+    const querySubscription = combineLatest([
+      this.store$.pipe(select(selectViewQuery)),
+      this.store$.pipe(select(selectCurrentView)),
+      this.loadData(),
+    ])
       .pipe(
         debounceTime(100),
         withLatestFrom(this.router.events.pipe(startWith(null))),
-        map(([[query, data], event]) => ({query, data, event})),
+        map(([[query, currentView, data], event]) => ({query, currentView, data, event})),
         filter(({query, event}) => !!query && (!event || event instanceof NavigationEnd)),
         tap(({data}) => (this.queryData = data)),
-        map(({query, data}) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query}))
+        map(({query, currentView, data}) => ({
+          queryItems: new QueryItemsConverter(data).fromQuery(query, true),
+          query,
+          currentView,
+        }))
       )
-      .subscribe(({queryItems, query}) => {
+      .subscribe(({queryItems, query, currentView}) => {
         if (this.itemsChanged(queryItems)) {
           this.initForm(queryItems);
 
@@ -123,9 +136,25 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
             this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
           }
         }
+        this.checkShouldCollapseInitially(queryItems, currentView?.id);
         this.queryItems$.next(queryItems);
       });
     this.subscriptions.add(querySubscription);
+  }
+
+  private checkShouldCollapseInitially(queryItems: QueryItem[], viewId: string) {
+    if (viewId && this.lastCheckedViewId !== viewId) {
+      const shouldCollapse = queryItems.length >= MIN_ITEMS_TO_COLLAPSE;
+      if (shouldCollapse) {
+        const collectionItems = queryItems
+          .filter(queryItem => queryItem.type === QueryItemType.Collection)
+          .map(queryItem => (<CollectionQueryItem>queryItem).stemId);
+        this.collapseStemIds$.next(collectionItems);
+      } else {
+        this.collapseStemIds$.next([]);
+      }
+    }
+    this.lastCheckedViewId = viewId;
   }
 
   private subscribeToNavigation() {
@@ -152,14 +181,23 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       debounceTime(100),
       filter(([, , collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([collections, linkTypes]) => ({
-        collections: collections.filter(collection => collection && collection.id),
-        linkTypes: linkTypes.filter(linkType => linkType && linkType.id),
+        collections: collections.filter(collection => !!collection?.id),
+        linkTypes: linkTypes.filter(linkType => !!linkType?.id),
       }))
     );
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public onToggleExpandStem(stemId: string) {
+    const expanded = [...this.expandedStemIds$.value];
+    if (expanded.includes(stemId)) {
+      this.expandedStemIds$.next(expanded.filter(id => id !== stemId));
+    } else {
+      this.expandedStemIds$.next([...expanded, stemId]);
+    }
   }
 
   public onAddQueryItem(queryItem: QueryItem) {
@@ -193,7 +231,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onQueryItemsChanged() {
-    if (allowAutomaticSubmission && this.form$.getValue().valid) {
+    if (ALLOW_AUTOMATIC_SUBMISSION && this.form$.getValue().valid) {
       this.onSearch();
     }
   }
@@ -263,7 +301,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  public trackByTypeAndText(index: number, queryItem: QueryItem) {
-    return queryItem.type.toString() + queryItem.text;
+  public trackByTypeAndText(index: number, data: {queryItem: QueryItem}) {
+    return data.queryItem.type.toString() + data.queryItem.value;
   }
 }
