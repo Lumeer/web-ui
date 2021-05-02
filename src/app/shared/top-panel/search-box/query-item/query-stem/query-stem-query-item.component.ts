@@ -23,7 +23,7 @@ import {QueryStemQueryItem} from '../model/query-stem-query-item';
 @Component({
   selector: 'query-stem-query-item',
   templateUrl: './query-stem-query-item.component.html',
-  styleUrls: ['../query-item.component.scss'],
+  styleUrls: ['../query-item.component.scss', 'query-stem-query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QueryStemQueryItemComponent {
@@ -32,6 +32,9 @@ export class QueryStemQueryItemComponent {
 
   @Input()
   public readonly: boolean;
+
+  @Output()
+  public remove = new EventEmitter();
 
   @Output()
   public toggleExpand = new EventEmitter<string>();

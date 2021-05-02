@@ -3,7 +3,8 @@
   <query-stem-query-item *ngSwitchCase="queryItemType.QueryStem"
                          [readonly]="readonly"
                          [queryItem]="queryItem"
-                         (toggleExpand)="toggleExpand.emit($event)">
+                         (toggleExpand)="toggleExpand.emit($event)"
+                         (remove)="remove.emit($event)">
 
   </query-stem-query-item>
 

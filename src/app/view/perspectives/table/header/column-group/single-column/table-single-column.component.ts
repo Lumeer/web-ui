@@ -226,8 +226,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
       this.lastName$.next(lastName);
       this.renameAttribute(this.attribute, lastName);
     } else {
-      const previousName = this.lastName$.value;
-      this.lastName$.next(this.attribute?.name || previousName);
+      const previousName = this.attribute?.name || this.lastName$.value;
+      this.lastName$.next(previousName);
       if (lastName !== previousName) {
         this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name: lastName}));
       }
