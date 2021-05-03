@@ -89,6 +89,10 @@ export class SimpleQueryItemComponent implements OnInit {
     return this.queryItemForm?.controls?.condition;
   }
 
+  public get fromSuggestionControl(): AbstractControl {
+    return this.queryItemForm?.controls?.fromSuggestion;
+  }
+
   public get conditionValuesControl(): FormArray {
     return this.queryItemForm?.controls?.conditionValues as FormArray;
   }
@@ -107,7 +111,8 @@ export class SimpleQueryItemComponent implements OnInit {
   }
 
   public ngOnInit() {
-    if (this.isAttributeType() && this.queryItem.fromSuggestion) {
+    if (this.isAttributeType() && this.fromSuggestionControl?.value) {
+      this.fromSuggestionControl.setValue(false);
       setTimeout(() => this.filterBuilderComponent?.open());
     }
   }
