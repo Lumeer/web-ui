@@ -10,7 +10,7 @@
            [style.width.px]="1"
            formArrayName="queryItems">
         <query-item
-          *ngFor="let queryItemData of queryItems$ | async | createCompactQueryItems:(searchBoxData$ | async); trackBy:trackByTypeAndText"
+          *ngFor="let queryItemData of queryItems$ | async | createCompactQueryItems:(searchBoxData$ | async); trackBy:trackByQueryItem"
           [queryItemForm]="queryItemsControl.at(queryItemData.realIndex)"
           [queryItem]="queryItemData.queryItem"
           [constraintData]="constraintData"

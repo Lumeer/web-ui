@@ -25,7 +25,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 export class LinkQueryItem implements QueryItem {
   public type = QueryItemType.Link;
 
-  public constructor(public linkType: LinkType) {}
+  public constructor(public stemId: string, public linkType: LinkType) {}
 
   public get icons(): string[] {
     return (

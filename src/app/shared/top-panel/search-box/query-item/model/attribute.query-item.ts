@@ -28,6 +28,7 @@ export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
 
   public constructor(
+    public stemId: string,
     public collection: Collection,
     public attribute: Attribute,
     public condition?: ConditionType,

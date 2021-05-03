@@ -3,7 +3,8 @@
   [origin]="origin"
   [showBackdrop]="false"
   [closeOnClickOutside]="true"
-  [pushOnScreen]="true">
+  [pushOnScreen]="true"
+  (onCloseByClickOutside)="onCloseByClickOutside.emit()">
 
   <div class="card suggestions">
     <ng-container *ngIf="suggestions.length; else noSuggestions">

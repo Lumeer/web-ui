@@ -660,14 +660,15 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       const viewSuggestion = <ViewSuggestion>suggestion;
       return new ViewQueryItem(viewSuggestion.view, viewSuggestion.collection);
     case SuggestionType.Collection:
-      return new CollectionQueryItem((<CollectionSuggestion>suggestion).collection, generateId());
+      return new CollectionQueryItem(generateId(), (<CollectionSuggestion>suggestion).collection);
     case SuggestionType.LinkType:
-      return new LinkQueryItem((<LinkTypeSuggestion>suggestion).linkType);
+      return new LinkQueryItem(generateId(), (<LinkTypeSuggestion>suggestion).linkType);
     case SuggestionType.Attribute:
       const attributeSuggestion = <AttributeSuggestion>suggestion;
       const attributeCondition = initialConditionType(attributeSuggestion.attribute.constraint);
       const attributeValues = initialConditionValues(attributeCondition, attributeSuggestion.attribute.constraint);
       return new AttributeQueryItem(
+        generateId(),
         attributeSuggestion.collection,
         attributeSuggestion.attribute,
         attributeCondition,
@@ -679,6 +680,7 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       const linkCondition = initialConditionType(linkSuggestion.attribute.constraint);
       const linkValues = initialConditionValues(linkCondition, linkSuggestion.attribute.constraint);
       return new LinkAttributeQueryItem(
+        generateId(),
         linkSuggestion.linkType,
         linkSuggestion.attribute,
         linkCondition,

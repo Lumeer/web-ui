@@ -63,6 +63,9 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   @Output()
   public useSuggestion = new EventEmitter<QueryItem>();
 
+  @Output()
+  public onCloseByClickOutside = new EventEmitter();
+
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 

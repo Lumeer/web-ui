@@ -49,7 +49,11 @@ import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {isNullOrUndefined} from '../../utils/common.utils';
-import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
+import {
+  addQueryItemWithRelatedItems,
+  findQueryStemIdByIndex,
+  removeQueryItemWithRelatedItems,
+} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -172,8 +176,31 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onAddQueryItem(queryItem: QueryItem) {
-    const newQueryItems = addQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), queryItem);
+    const {stemIndex, items: newQueryItems} = addQueryItemWithRelatedItems(
+      this.queryData,
+      this.queryItems$.getValue(),
+      queryItem
+    );
+    this.expandStemByStemIndex(stemIndex);
     this.afterAddedQueryItem(newQueryItems);
+  }
+
+  public onAddQueryItemToStem(queryItem: QueryItem, stemIndex: number, stemId: string) {
+    const newQueryItems = addQueryItemWithRelatedItems(
+      this.queryData,
+      this.queryItems$.getValue(),
+      queryItem,
+      stemIndex
+    ).items;
+    this.searchBoxService.expand(stemId);
+    this.afterAddedQueryItem(newQueryItems);
+  }
+
+  private expandStemByStemIndex(stemIndex: number) {
+    const stemId = findQueryStemIdByIndex(this.queryItems$.value, stemIndex);
+    if (stemId) {
+      this.searchBoxService.expand(stemId);
+    }
   }
 
   private afterAddedQueryItem(newQueryItems: QueryItem[]) {
@@ -182,17 +209,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       this.initForm(newQueryItems);
       this.onQueryItemsChanged();
     }
-  }
-
-  public onAddQueryItemToStem(queryItem: QueryItem, stemIndex: number, stemId: string) {
-    this.searchBoxService.expand(stemId);
-    const newQueryItems = addQueryItemWithRelatedItems(
-      this.queryData,
-      this.queryItems$.getValue(),
-      queryItem,
-      stemIndex
-    );
-    this.afterAddedQueryItem(newQueryItems);
   }
 
   public onStemTextChanged(data: {text: string; stemId: string}) {
@@ -291,7 +307,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  public trackByTypeAndText(index: number, data: {queryItem: QueryItem}) {
-    return data.queryItem.type.toString() + data.queryItem.value;
+  public trackByQueryItem(index: number, data: {queryItem: QueryItem}) {
+    return index.toString();
   }
 }

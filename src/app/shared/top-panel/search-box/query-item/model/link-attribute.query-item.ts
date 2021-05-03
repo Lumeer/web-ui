@@ -29,6 +29,7 @@ export class LinkAttributeQueryItem implements QueryItem {
   public type = QueryItemType.LinkAttribute;
 
   public constructor(
+    public stemId: string,
     public linkType: LinkType,
     public attribute: Attribute,
     public condition?: ConditionType,

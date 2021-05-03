@@ -21,7 +21,7 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {QueryItem} from '../query-item/model/query-item';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {map} from 'rxjs/operators';
+import {map, withLatestFrom} from 'rxjs/operators';
 import {selectCurrentView} from '../../../../core/store/views/views.state';
 import {QueryItemType} from '../query-item/model/query-item-type';
 import {CollectionQueryItem} from '../query-item/model/collection.query-item';
@@ -56,10 +56,9 @@ export class SearchBoxService {
       }))
     );
 
-    combineLatest([
-      this.queryItems$,
-      this.store$.pipe(select(selectCurrentView)),
-    ]).subscribe(([queryItems, currentView]) => this.checkShouldCollapseInitially(queryItems, currentView?.id));
+    this.queryItems$
+      .pipe(withLatestFrom(this.store$.pipe(select(selectCurrentView))))
+      .subscribe(([queryItems, currentView]) => this.checkShouldCollapseInitially(queryItems, currentView?.id));
   }
 
   private checkShouldCollapseInitially(queryItems: QueryItem[], viewId: string) {

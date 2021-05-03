@@ -22,7 +22,7 @@ import {convertQueryModelToString} from '../../../../core/store/navigation/query
 import {QueryData} from '../util/query-data';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {CollectionQueryItem} from './model/collection.query-item';
-import {DocumentQueryItem} from './model/documents.query-item';
+import {DocumentQueryItem} from './model/document.query-item';
 import {FulltextQueryItem} from './model/fulltext.query-item';
 import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
@@ -103,7 +103,7 @@ export class QueryItemsConverter {
 
     return [
       this.createCollectionItem(stem.collectionId, stem.id),
-      ...this.createLinkItems(stem.linkTypeIds, skipDeleted),
+      ...this.createLinkItems(stem.linkTypeIds, stem.id, skipDeleted),
       ...this.createAttributeItems(stem, skipDeleted),
       ...this.createDocumentItems(stem.documentIds, skipDeleted),
     ].filter(
@@ -118,12 +118,12 @@ export class QueryItemsConverter {
   public createCollectionItem(collectionId: string, stemId: string): QueryItem {
     const collection = this.findCollection(collectionId);
     if (collection) {
-      return new CollectionQueryItem(collection, stemId);
+      return new CollectionQueryItem(stemId, collection);
     }
-    return new DeletedQueryItem(QueryItemType.Collection);
+    return new DeletedQueryItem(stemId, QueryItemType.Collection);
   }
 
-  private createLinkItems(linkTypeIds: string[], skipDeleted: boolean): QueryItem[] {
+  private createLinkItems(linkTypeIds: string[], stemId: string, skipDeleted: boolean): QueryItem[] {
     const items = [];
     for (const linkTypeId of linkTypeIds || []) {
       const linkType = this.findLinkType(linkTypeId);
@@ -133,9 +133,9 @@ export class QueryItemsConverter {
       }
 
       if (collection1 && collection2) {
-        items.push(new LinkQueryItem({...linkType, collections: [collection1, collection2]}));
+        items.push(new LinkQueryItem(stemId, {...linkType, collections: [collection1, collection2]}));
       } else if (!skipDeleted) {
-        items.push(new DeletedQueryItem(QueryItemType.Link));
+        items.push(new DeletedQueryItem(stemId, QueryItemType.Link));
       }
     }
 
@@ -175,9 +175,11 @@ export class QueryItemsConverter {
         for (const filter of collectionFilters) {
           const attribute = collection && collection.attributes.find(attr => attr.id === filter.attributeId);
           if (attribute) {
-            items.push(new AttributeQueryItem(collection, attribute, filter.condition, filter.conditionValues));
+            items.push(
+              new AttributeQueryItem(stem.id, collection, attribute, filter.condition, filter.conditionValues)
+            );
           } else if (!skipDeleted) {
-            items.push(new DeletedQueryItem(QueryItemType.Attribute));
+            items.push(new DeletedQueryItem(stem.id, QueryItemType.Attribute));
           }
         }
       }
@@ -196,6 +198,7 @@ export class QueryItemsConverter {
           if (attribute) {
             items.push(
               new LinkAttributeQueryItem(
+                stem.id,
                 {...linkType, collections: [collection1, collection2]},
                 attribute,
                 filter.condition,
@@ -203,7 +206,7 @@ export class QueryItemsConverter {
               )
             );
           } else if (!skipDeleted) {
-            items.push(new DeletedQueryItem(QueryItemType.LinkAttribute));
+            items.push(new DeletedQueryItem(stem.id, QueryItemType.LinkAttribute));
           }
         }
       }

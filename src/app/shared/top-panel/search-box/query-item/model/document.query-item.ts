@@ -25,7 +25,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 export class DocumentQueryItem implements QueryItem {
   public type = QueryItemType.Document;
 
-  public constructor(public document: DocumentModel) {
+  public constructor(public stemId: string, public document: DocumentModel) {
     // TODO use collection for icon and color
   }
 

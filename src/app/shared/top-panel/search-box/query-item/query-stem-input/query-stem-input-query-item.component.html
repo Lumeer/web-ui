@@ -19,7 +19,8 @@
                       [suggestByItems]="true"
                       [restrictedTypes]="restrictedItemTypes"
                       [text]="suggesting ? (text || '') : null"
-                      (useSuggestion)="onUseSuggestion($event)">
+                      (useSuggestion)="onUseSuggestion($event)"
+                      (onCloseByClickOutside)="searchInput.blur()">
   </search-suggestions>
 
 </ng-container>

@@ -21,7 +21,7 @@ import {QueryItem} from '../query-item/model/query-item';
 import {QueryItemType} from '../query-item/model/query-item-type';
 import {LinkQueryItem} from '../query-item/model/link.query-item';
 import {AttributeQueryItem} from '../query-item/model/attribute.query-item';
-import {DocumentQueryItem} from '../query-item/model/documents.query-item';
+import {DocumentQueryItem} from '../query-item/model/document.query-item';
 import {QueryData} from './query-data';
 import {CollectionQueryItem} from '../query-item/model/collection.query-item';
 import {convertQueryItemsToQueryModel, QueryItemsConverter} from '../query-item/query-items.converter';
@@ -37,23 +37,23 @@ export function addQueryItemWithRelatedItems(
   queryData: QueryData,
   queryItems: QueryItem[],
   queryItem: QueryItem,
-  stemIndex?: number
-): QueryItem[] {
+  overrideStemIndex?: number
+): {stemIndex?: number; items: QueryItem[]} {
   switch (queryItem.type) {
     case QueryItemType.Collection:
-      return addItemBeforeFulltexts(queryItems, queryItem);
+      return {items: addItemBeforeFulltexts(queryItems, queryItem)};
     case QueryItemType.Link:
-      return addLinkItem(queryData, queryItems, queryItem as LinkQueryItem, stemIndex);
+      return addLinkItem(queryData, queryItems, queryItem as LinkQueryItem, overrideStemIndex);
     case QueryItemType.Attribute:
-      return addAttributeItem(queryData, queryItems, queryItem as AttributeQueryItem, stemIndex);
+      return addAttributeItem(queryData, queryItems, queryItem as AttributeQueryItem, overrideStemIndex);
     case QueryItemType.LinkAttribute:
-      return addLinkAttributeItem(queryData, queryItems, queryItem as LinkAttributeQueryItem, stemIndex);
+      return addLinkAttributeItem(queryData, queryItems, queryItem as LinkAttributeQueryItem, overrideStemIndex);
     case QueryItemType.Document:
-      return addDocumentItem(queryData, queryItems, queryItem as DocumentQueryItem, stemIndex);
+      return addDocumentItem(queryData, queryItems, queryItem as DocumentQueryItem, overrideStemIndex);
     case QueryItemType.Fulltext:
-      return addItemToEnd(queryItems, queryItem);
+      return {items: addItemToEnd(queryItems, queryItem)};
     case QueryItemType.View:
-      return addItemToEnd(queryItems, queryItem);
+      return {items: addItemToEnd(queryItems, queryItem)};
   }
 }
 
@@ -78,7 +78,7 @@ function addLinkItem(
   queryItems: QueryItem[],
   linkItem: LinkQueryItem,
   overrideStemIndex?: number
-): QueryItem[] {
+): {stemIndex?: number; items: QueryItem[]} {
   const query = convertQueryItemsToQueryModel(queryItems);
   const linkType = linkItem.linkType;
   const stemIndex = overrideStemIndex ?? findStemIndexForLinkTypeToJoin(query, linkType, queryData.linkTypes);
@@ -93,7 +93,7 @@ function addLinkItem(
     query.stems.push({collectionId: linkType.collectionIds[0], linkTypeIds: [linkType.id]});
   }
 
-  return new QueryItemsConverter(queryData).fromQuery(query);
+  return {stemIndex, items: new QueryItemsConverter(queryData).fromQuery(query)};
 }
 
 export function findQueryStemIdByIndex(queryItems: QueryItem[], index: number): string {
@@ -106,7 +106,7 @@ function addAttributeItem(
   queryItems: QueryItem[],
   attributeItem: AttributeQueryItem,
   overrideStemIndex?: number
-): QueryItem[] {
+): {stemIndex?: number; items: QueryItem[]} {
   const query = convertQueryItemsToQueryModel(queryItems);
   const collectionId = attributeItem.collection.id;
   const attributeFilter = attributeItem.getAttributeFilter();
@@ -122,12 +122,13 @@ function addAttributeItem(
     query.stems.push({collectionId, filters: [attributeFilter]});
   }
 
-  return new QueryItemsConverter(queryData).fromQuery(query).map(item => {
+  const items = new QueryItemsConverter(queryData).fromQuery(query).map(item => {
     if (item.type === attributeItem.type && item.value === attributeItem.value) {
       item.fromSuggestion = attributeItem.fromSuggestion;
     }
     return item;
   });
+  return {stemIndex, items};
 }
 
 function addLinkAttributeItem(
@@ -135,7 +136,7 @@ function addLinkAttributeItem(
   queryItems: QueryItem[],
   attributeItem: LinkAttributeQueryItem,
   overrideStemIndex?: number
-): QueryItem[] {
+): {stemIndex?: number; items: QueryItem[]} {
   const query = convertQueryItemsToQueryModel(queryItems);
   const linkTypeId = attributeItem.linkType.id;
   const linkAttributeFilter = attributeItem.getLinkAttributeFilter();
@@ -170,12 +171,13 @@ function addLinkAttributeItem(
     }
   }
 
-  return new QueryItemsConverter(queryData).fromQuery(query).map(item => {
+  const items = new QueryItemsConverter(queryData).fromQuery(query).map(item => {
     if (item.type === attributeItem.type && item.value === attributeItem.value) {
       item.fromSuggestion = attributeItem.fromSuggestion;
     }
     return item;
   });
+  return {stemIndex, items};
 }
 
 function addDocumentItem(
@@ -183,7 +185,7 @@ function addDocumentItem(
   queryItems: QueryItem[],
   documentItem: DocumentQueryItem,
   overrideStemIndex?: number
-): QueryItem[] {
+): {stemIndex?: number; items: QueryItem[]} {
   const query = convertQueryItemsToQueryModel(queryItems);
   const {id, collectionId} = documentItem.document;
   const stemIndex = overrideStemIndex ?? findStemIndexForCollection(query, collectionId, queryData.linkTypes);
@@ -198,7 +200,7 @@ function addDocumentItem(
     query.stems.push({collectionId, documentIds: [id]});
   }
 
-  return new QueryItemsConverter(queryData).fromQuery(query);
+  return {stemIndex, items: new QueryItemsConverter(queryData).fromQuery(query)};
 }
 
 export function removeQueryItemWithRelatedItems(

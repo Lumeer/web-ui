@@ -58,6 +58,10 @@ export class QueryStemQueryItem implements QueryItem {
     return this.linkItems.length;
   }
 
+  public get stemId(): string {
+    return this.mainStemItem().stemId;
+  }
+
   public get filtersCount(): number {
     return this.attributeItems.length;
   }
