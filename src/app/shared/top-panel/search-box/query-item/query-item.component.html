@@ -3,10 +3,15 @@
   <query-stem-query-item *ngSwitchCase="queryItemType.QueryStem"
                          [readonly]="readonly"
                          [queryItem]="queryItem"
-                         (toggleExpand)="toggleExpand.emit($event)"
+                         (toggleExpand)="stemToggle.emit($event)"
                          (remove)="remove.emit($event)">
-
   </query-stem-query-item>
+
+  <query-stem-input-query-item *ngSwitchCase="queryItemType.QueryStemInput"
+                               [queryItem]="queryItem"
+                               (addQueryItem)="onQueryItemAdd($event)"
+                               (textChange)="onTextChange($event)">
+  </query-stem-input-query-item>
 
   <simple-query-item *ngSwitchDefault
                      [constraintData]="constraintData"

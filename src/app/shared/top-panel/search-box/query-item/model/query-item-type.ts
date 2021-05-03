@@ -21,6 +21,7 @@ export enum QueryItemType {
   Attribute = 'Attribute',
   Collection = 'Collection',
   QueryStem = 'QueryStem',
+  QueryStemInput = 'QueryStemInput',
   Document = 'Document',
   Fulltext = 'Fulltext',
   Link = 'Link',

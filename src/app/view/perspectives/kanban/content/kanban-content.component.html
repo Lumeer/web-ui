@@ -1,6 +1,6 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
   <collapsible-sidebar *ngIf="canManageConfig"
-                       [collapsed]="!(sidebarOpened$ | async)"
+                       [collapsed]="!sidebarOpened"
                        (toggle)="sidebarToggle.emit()">
     <kanban-config
       class="d-block m-3"
@@ -8,7 +8,7 @@
       [linkTypes]="linkTypes"
       [config]="config"
       [query]="query"
-      [visible]="sidebarOpened$ | async"
+      [visible]="sidebarOpened"
       (configChange)="onConfigChanged($event, true)"
       [constraintData]="constraintData">
     </kanban-config>

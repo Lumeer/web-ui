@@ -10,7 +10,7 @@
            [style.width.px]="1"
            formArrayName="queryItems">
         <query-item
-          *ngFor="let queryItemData of queryItems$ | async | createCompactQueryItems:(expandedStemIds$ | async):(collapseStemIds$ | async); trackBy:trackByTypeAndText"
+          *ngFor="let queryItemData of queryItems$ | async | createCompactQueryItems:(searchBoxData$ | async); trackBy:trackByTypeAndText"
           [queryItemForm]="queryItemsControl.at(queryItemData.realIndex)"
           [queryItem]="queryItemData.queryItem"
           [constraintData]="constraintData"
@@ -18,7 +18,9 @@
           (change)="onQueryItemsChanged()"
           (remove)="onRemoveQueryItem(queryItemData.realIndex)"
           (focusInput)="searchInput.focusInput()"
-          (toggleExpand)="onToggleExpandStem($event)"
+          (stemToggle)="onToggleExpandStem($event)"
+          (stemTextChange)="onStemTextChanged($event)"
+          (stemQueryItemAdd)="onAddQueryItemToStem($event.item, queryItemData.stemIndex, $event.stemId)"
           class="d-inline-flex mt-1 ml-1 align-items-center">
         </query-item>
 

@@ -26,23 +26,27 @@ import {combineLatest, Observable, of} from 'rxjs';
 import {selectAllViews} from '../store/views/views.state';
 import {map} from 'rxjs/operators';
 import {generateId, sortResourcesLastUsed} from '../../shared/utils/resource.utils';
-import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
+import {
+  selectAllCollections,
+  selectCollectionsByIds,
+  selectCollectionsDictionary,
+} from '../store/collections/collections.state';
 import {LinkType} from '../store/link-types/link.type';
-import {selectAllLinkTypes} from '../store/link-types/link-types.state';
+import {selectAllLinkTypes, selectLinkTypesByIds} from '../store/link-types/link-types.state';
 import {QueryItem} from '../../shared/top-panel/search-box/query-item/model/query-item';
 import {ViewQueryItem} from '../../shared/top-panel/search-box/query-item/model/view.query-item';
 import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/link.query-item';
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {arrayIntersection, createRange, flattenMatrix} from '../../shared/utils/array.utils';
-import {getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
+import {arrayIntersection, createRange, flattenMatrix, uniqueValues} from '../../shared/utils/array.utils';
+import {collectionIdsChainForStem, getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {objectValues} from '../../shared/utils/common.utils';
 import {initialConditionType, initialConditionValues, removeAccentFromString} from '@lumeer/data-filters';
-import {selectCollectionsByQuery, selectLinkTypesInQuery} from '../store/common/permissions.selectors';
+import {convertQueryItemsToQueryModel} from '../../shared/top-panel/search-box/query-item/query-items.converter';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -140,9 +144,14 @@ interface FullTextSuggestion extends ObjectSuggestion {
 export class SuggestionsService {
   constructor(private store$: Store<AppState>) {}
 
-  public suggest(text: string, queryItems: QueryItem[], restrictedMode: boolean): Observable<QueryItem[]> {
+  public suggest(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean,
+    restrictedTypes: QueryItemType[]
+  ): Observable<QueryItem[]> {
     const textWithoutAccent = removeAccentFromString(text);
-    return this.selectObjectsSorted(text, restrictedMode).pipe(
+    return this.selectObjectsSorted(text, queryItems, suggestByItems, restrictedTypes).pipe(
       map(suggestions => this.addScoreByCurrentItems(suggestions, textWithoutAccent, queryItems || [])),
       map(suggestions => this.filterAndSortSuggestions(suggestions)),
       map(suggestions => this.sliceTopSuggestions(suggestions, textWithoutAccent, queryItems)),
@@ -150,15 +159,30 @@ export class SuggestionsService {
     );
   }
 
-  private selectObjectsSorted(text: string, restrictedMode: boolean): Observable<ObjectSuggestion[]> {
+  private selectObjectsSorted(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean,
+    restrictedTypes: QueryItemType[]
+  ): Observable<ObjectSuggestion[]> {
     const textWithoutAccent = removeAccentFromString(text);
     return combineLatest([
-      this.selectViewsSuggestions$(textWithoutAccent, restrictedMode),
-      this.selectCollectionsSuggestions$(textWithoutAccent, restrictedMode),
-      this.selectAttributesSuggestions$(textWithoutAccent, restrictedMode),
-      this.selectLinkTypesSuggestions$(textWithoutAccent, restrictedMode),
-      this.selectLinkAttributesSuggestions$(textWithoutAccent, restrictedMode),
-      this.selectFullTextsSuggestions(text),
+      !restrictedTypes?.includes(QueryItemType.View)
+        ? this.selectViewsSuggestions$(textWithoutAccent, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Collection)
+        ? this.selectCollectionsSuggestions$(textWithoutAccent, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Attribute)
+        ? this.selectAttributesSuggestions$(textWithoutAccent, queryItems, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Link)
+        ? this.selectLinkTypesSuggestions$(textWithoutAccent, queryItems, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.LinkAttribute)
+        ? this.selectLinkAttributesSuggestions$(textWithoutAccent, queryItems, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Fulltext) ? this.selectFullTextsSuggestions(text) : of([]),
     ]).pipe(map(suggestions => flattenMatrix<ObjectSuggestion>(suggestions)));
   }
 
@@ -283,8 +307,8 @@ export class SuggestionsService {
     return this.filterAndSortSuggestions(slicedSuggestions);
   }
 
-  private selectViewsSuggestions$(text: string, restrictedMode: boolean): Observable<ViewSuggestion[]> {
-    if (restrictedMode) {
+  private selectViewsSuggestions$(text: string, suggestByItems: boolean): Observable<ViewSuggestion[]> {
+    if (suggestByItems) {
       return of([]);
     }
     return combineLatest([
@@ -309,8 +333,8 @@ export class SuggestionsService {
     );
   }
 
-  private selectCollectionsSuggestions$(text: string, restrictedMode: boolean): Observable<CollectionSuggestion[]> {
-    if (restrictedMode) {
+  private selectCollectionsSuggestions$(text: string, suggestByItems: boolean): Observable<CollectionSuggestion[]> {
+    if (suggestByItems) {
       return of([]);
     }
     return this.store$.pipe(
@@ -331,11 +355,18 @@ export class SuggestionsService {
     );
   }
 
-  private selectAttributesSuggestions$(text: string, restrictedMode: boolean): Observable<AttributeSuggestion[]> {
-    const collectionObservable$ = restrictedMode
-      ? this.store$.pipe(select(selectCollectionsByQuery))
+  private selectAttributesSuggestions$(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean
+  ): Observable<AttributeSuggestion[]> {
+    const collectionIds = (queryItems || [])
+      .filter(queryItem => queryItem.type === QueryItemType.Collection)
+      .map(queryItem => (<CollectionQueryItem>queryItem).collection?.id);
+    const collectionsObservable$ = suggestByItems
+      ? this.store$.pipe(select(selectCollectionsByIds(uniqueValues(collectionIds))))
       : this.store$.pipe(select(selectAllCollections));
-    return collectionObservable$.pipe(
+    return collectionsObservable$.pipe(
       map(collections => {
         const sortedCollections = sortResourcesLastUsed<Collection>(collections).slice(0, lastUsedThreshold);
         const attributesOrder = createAttributesOrder(collections).slice(0, mostUsedThreshold);
@@ -365,15 +396,15 @@ export class SuggestionsService {
     );
   }
 
-  private selectLinkTypesSuggestions$(text: string, restrictedMode: boolean): Observable<LinkTypeSuggestion[]> {
-    if (restrictedMode) {
-      return of([]);
-    }
-
-    return combineLatest([
-      this.store$.pipe(select(selectCollectionsDictionary)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-    ]).pipe(
+  private selectLinkTypesSuggestions$(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean
+  ): Observable<LinkTypeSuggestion[]> {
+    const linkTypesObservable$ = suggestByItems
+      ? this.selectLinkTypesByLastCollectionId$(queryItems)
+      : this.store$.pipe(select(selectAllLinkTypes));
+    return combineLatest([this.store$.pipe(select(selectCollectionsDictionary)), linkTypesObservable$]).pipe(
       map(([collectionsMap, linkTypes]) => {
         const linkTypesWithCollections = linkTypes.map(linkType => mapLinkType(linkType, collectionsMap));
         const sortedCollections = sortResourcesLastUsed(objectValues(collectionsMap)).slice(0, lastUsedThreshold);
@@ -396,12 +427,34 @@ export class SuggestionsService {
     );
   }
 
+  private selectLinkTypesByLastCollectionId$(queryItems: QueryItem[]): Observable<LinkType[]> {
+    const query = convertQueryItemsToQueryModel(queryItems);
+    return this.store$.pipe(
+      select(selectAllLinkTypes),
+      map(linkTypes => {
+        const lastCollectionIds = (query.stems || []).reduce((ids, stem) => {
+          const collectionIdsChain = collectionIdsChainForStem(stem, linkTypes);
+          const lastCollectionId = collectionIdsChain[collectionIdsChain.length - 1];
+          if (lastCollectionId && !ids.includes(lastCollectionId)) {
+            ids.push(lastCollectionId);
+          }
+          return ids;
+        }, []);
+        return linkTypes.filter(linkType => arrayIntersection(linkType.collectionIds, lastCollectionIds).length > 0);
+      })
+    );
+  }
+
   private selectLinkAttributesSuggestions$(
     text: string,
-    restrictedMode: boolean
+    queryItems: QueryItem[],
+    suggestByItems: boolean
   ): Observable<LinkAttributeSuggestion[]> {
-    const linkTypesObservable$ = restrictedMode
-      ? this.store$.pipe(select(selectLinkTypesInQuery))
+    const linkTypeIds = (queryItems || [])
+      .filter(queryItem => queryItem.type === QueryItemType.Link)
+      .map(queryItem => (<LinkQueryItem>queryItem).linkType?.id);
+    const linkTypesObservable$ = suggestByItems
+      ? this.store$.pipe(select(selectLinkTypesByIds(uniqueValues(linkTypeIds))))
       : this.store$.pipe(select(selectAllLinkTypes));
     return combineLatest([this.store$.pipe(select(selectCollectionsDictionary)), linkTypesObservable$]).pipe(
       map(([collectionsMap, linkTypes]) => {

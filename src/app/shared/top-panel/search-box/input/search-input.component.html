@@ -13,7 +13,8 @@
 <search-suggestions [queryItems]="queryItems"
                     class="cursor-default"
                     [origin]="hostElement"
-                    [restrictedMode]="restrictedMode"
+                    [suggestByItems]="restrictedMode"
+                    [restrictedTypes]="restrictedMode ? restrictedItemTypes : []"
                     [text]="suggesting ? (text || '') : null"
                     (useSuggestion)="onUseSuggestion($event)">
 </search-suggestions>

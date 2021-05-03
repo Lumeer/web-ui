@@ -36,19 +36,20 @@ import {LinkAttributeQueryItem} from '../query-item/model/link-attribute.query-i
 export function addQueryItemWithRelatedItems(
   queryData: QueryData,
   queryItems: QueryItem[],
-  queryItem: QueryItem
+  queryItem: QueryItem,
+  stemIndex?: number
 ): QueryItem[] {
   switch (queryItem.type) {
     case QueryItemType.Collection:
       return addItemBeforeFulltexts(queryItems, queryItem);
     case QueryItemType.Link:
-      return addLinkItem(queryData, queryItems, queryItem as LinkQueryItem);
+      return addLinkItem(queryData, queryItems, queryItem as LinkQueryItem, stemIndex);
     case QueryItemType.Attribute:
-      return addAttributeItem(queryData, queryItems, queryItem as AttributeQueryItem);
+      return addAttributeItem(queryData, queryItems, queryItem as AttributeQueryItem, stemIndex);
     case QueryItemType.LinkAttribute:
-      return addLinkAttributeItem(queryData, queryItems, queryItem as LinkAttributeQueryItem);
+      return addLinkAttributeItem(queryData, queryItems, queryItem as LinkAttributeQueryItem, stemIndex);
     case QueryItemType.Document:
-      return addDocumentItem(queryData, queryItems, queryItem as DocumentQueryItem);
+      return addDocumentItem(queryData, queryItems, queryItem as DocumentQueryItem, stemIndex);
     case QueryItemType.Fulltext:
       return addItemToEnd(queryItems, queryItem);
     case QueryItemType.View:
@@ -72,10 +73,15 @@ function addItemToEnd(queryItems: QueryItem[], queryItem: QueryItem): QueryItem[
   return addQueryItemAtIndex(queryItems, queryItem, queryItems.length);
 }
 
-function addLinkItem(queryData: QueryData, queryItems: QueryItem[], linkItem: LinkQueryItem): QueryItem[] {
+function addLinkItem(
+  queryData: QueryData,
+  queryItems: QueryItem[],
+  linkItem: LinkQueryItem,
+  overrideStemIndex?: number
+): QueryItem[] {
   const query = convertQueryItemsToQueryModel(queryItems);
   const linkType = linkItem.linkType;
-  const stemIndex = findStemIndexForLinkTypeToJoin(query, linkType, queryData.linkTypes);
+  const stemIndex = overrideStemIndex ?? findStemIndexForLinkTypeToJoin(query, linkType, queryData.linkTypes);
   if (stemIndex >= 0) {
     const stem = query.stems[stemIndex];
     if (stem.linkTypeIds) {
@@ -90,15 +96,21 @@ function addLinkItem(queryData: QueryData, queryItems: QueryItem[], linkItem: Li
   return new QueryItemsConverter(queryData).fromQuery(query);
 }
 
+export function findQueryStemIdByIndex(queryItems: QueryItem[], index: number): string {
+  const query = convertQueryItemsToQueryModel(queryItems);
+  return query.stems?.[index]?.id;
+}
+
 function addAttributeItem(
   queryData: QueryData,
   queryItems: QueryItem[],
-  attributeItem: AttributeQueryItem
+  attributeItem: AttributeQueryItem,
+  overrideStemIndex?: number
 ): QueryItem[] {
   const query = convertQueryItemsToQueryModel(queryItems);
   const collectionId = attributeItem.collection.id;
   const attributeFilter = attributeItem.getAttributeFilter();
-  const stemIndex = findStemIndexForCollection(query, collectionId, queryData.linkTypes);
+  const stemIndex = overrideStemIndex ?? findStemIndexForCollection(query, collectionId, queryData.linkTypes);
   if (stemIndex >= 0) {
     const stem = query.stems[stemIndex];
     if (stem.filters) {
@@ -121,12 +133,13 @@ function addAttributeItem(
 function addLinkAttributeItem(
   queryData: QueryData,
   queryItems: QueryItem[],
-  attributeItem: LinkAttributeQueryItem
+  attributeItem: LinkAttributeQueryItem,
+  overrideStemIndex?: number
 ): QueryItem[] {
   const query = convertQueryItemsToQueryModel(queryItems);
   const linkTypeId = attributeItem.linkType.id;
   const linkAttributeFilter = attributeItem.getLinkAttributeFilter();
-  const stemIndex = findStemIndexForLinkType(query, linkTypeId);
+  const stemIndex = overrideStemIndex ?? findStemIndexForLinkType(query, linkTypeId);
   if (stemIndex >= 0) {
     const stem = query.stems[stemIndex];
     if (stem.linkFilters) {
@@ -165,10 +178,15 @@ function addLinkAttributeItem(
   });
 }
 
-function addDocumentItem(queryData: QueryData, queryItems: QueryItem[], documentItem: DocumentQueryItem): QueryItem[] {
+function addDocumentItem(
+  queryData: QueryData,
+  queryItems: QueryItem[],
+  documentItem: DocumentQueryItem,
+  overrideStemIndex?: number
+): QueryItem[] {
   const query = convertQueryItemsToQueryModel(queryItems);
   const {id, collectionId} = documentItem.document;
-  const stemIndex = findStemIndexForCollection(query, collectionId, queryData.linkTypes);
+  const stemIndex = overrideStemIndex ?? findStemIndexForCollection(query, collectionId, queryData.linkTypes);
   if (stemIndex >= 0) {
     const stem = query.stems[stemIndex];
     if (stem.documentIds) {

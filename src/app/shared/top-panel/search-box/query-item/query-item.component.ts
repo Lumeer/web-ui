@@ -52,7 +52,21 @@ export class QueryItemComponent {
   public focusInput = new EventEmitter();
 
   @Output()
-  public toggleExpand = new EventEmitter();
+  public stemToggle = new EventEmitter<string>();
+
+  @Output()
+  public stemTextChange = new EventEmitter<{stemId: string; text: string}>();
+
+  @Output()
+  public stemQueryItemAdd = new EventEmitter<{stemId: string; item: QueryItem}>();
 
   public readonly queryItemType = QueryItemType;
+
+  public onTextChange(text: string) {
+    this.stemTextChange.emit({stemId: this.queryItem.stemId, text});
+  }
+
+  public onQueryItemAdd(item: QueryItem) {
+    this.stemQueryItemAdd.emit({stemId: this.queryItem.stemId, item});
+  }
 }

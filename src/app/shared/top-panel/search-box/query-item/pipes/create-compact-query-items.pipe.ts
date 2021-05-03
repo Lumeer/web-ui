@@ -20,8 +20,11 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
-import {QueryStemQueryItem} from '../model/query-stem-query-item';
+import {QueryStemQueryItem} from '../model/query-stem.query-item';
 import {CollectionQueryItem} from '../model/collection.query-item';
+import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
+import {findLastIndex} from '../../../../utils/common.utils';
+import {SearchBoxData} from '../../util/search-box.service';
 
 @Pipe({
   name: 'createCompactQueryItems',
@@ -29,13 +32,33 @@ import {CollectionQueryItem} from '../model/collection.query-item';
 export class CreateCompactQueryItemsPipe implements PipeTransform {
   public transform(
     queryItems: QueryItem[],
-    expandedStemIds: string[],
-    initialCollapseStemIds: string[]
+    data: SearchBoxData
   ): {queryItem: QueryItem; realIndex: number; stemIndex: number}[] {
     const resultData = [];
-    let stemIndex = 0;
+    let stemIndex = -1;
+    let currentStemId: string;
     for (let i = 0; i < queryItems.length; i++) {
       if (queryItems[i].type === QueryItemType.Collection) {
+        {
+          // handle previous query stem
+          let startStemIndex = findLastIndex(queryItems.slice(0, i), item => item.type === QueryItemType.Collection);
+          if (startStemIndex === -1) {
+            startStemIndex = 0;
+          }
+
+          // add plus button for previous query stem
+          if (currentStemId) {
+            const text = data.stemTextsMap?.[currentStemId] || '';
+            resultData.push({
+              queryItem: new QueryStemInputQueryItem(currentStemId, text, queryItems.slice(startStemIndex, i)),
+              stemIndex,
+              realIndex: i,
+            });
+          }
+        }
+
+        stemIndex++;
+
         let endStemIndex = queryItems
           .slice(i + 1, queryItems.length)
           .findIndex(item => item.type === QueryItemType.Collection || item.type === QueryItemType.Fulltext);
@@ -45,11 +68,11 @@ export class CreateCompactQueryItemsPipe implements PipeTransform {
           endStemIndex += i + 1;
         }
 
-        const stemId = (<CollectionQueryItem>queryItems[i]).stemId;
-        if (!initialCollapseStemIds?.includes(stemId) || endStemIndex - i === 1) {
+        currentStemId = (<CollectionQueryItem>queryItems[i]).stemId;
+        if (!data?.collapsibleStemIds?.includes(currentStemId) || endStemIndex - i === 1) {
           // there is nothing to expand/collapse
           resultData.push({queryItem: queryItems[i], stemIndex, realIndex: i});
-        } else if (expandedStemIds?.includes(stemId)) {
+        } else if (data?.expandedStemIds?.includes(currentStemId)) {
           const stemQueryItem = new QueryStemQueryItem([queryItems[i]]);
           resultData.push({queryItem: stemQueryItem, stemIndex, realIndex: i});
         } else {
@@ -57,8 +80,6 @@ export class CreateCompactQueryItemsPipe implements PipeTransform {
           resultData.push({queryItem: stemQueryItem, stemIndex, realIndex: i});
           i += endStemIndex - i - 1;
         }
-
-        stemIndex++;
       } else {
         resultData.push({queryItem: queryItems[i], stemIndex, realIndex: i});
       }

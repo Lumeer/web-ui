@@ -17,22 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {isNotNullOrUndefined} from '../utils/common.utils';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-@Pipe({
-  name: 'attributeTitle',
-})
-export class AttributeTitlePipe implements PipeTransform {
-  public transform(attribute: Attribute, backupValue: string = '', skipDescription = false): string {
-    if (isNotNullOrUndefined(attribute)) {
-      return attribute.description
-        ? skipDescription
-          ? ''
-          : `${attribute.name}: ${attribute.description}`
-        : attribute.name;
-    }
-    return backupValue;
+export class QueryStemInputQueryItem implements QueryItem {
+  public type = QueryItemType.QueryStemInput;
+
+  public constructor(public stemId: string, public text: string, public stemItems: QueryItem[]) {}
+
+  public get value(): string {
+    return this.text;
   }
 }

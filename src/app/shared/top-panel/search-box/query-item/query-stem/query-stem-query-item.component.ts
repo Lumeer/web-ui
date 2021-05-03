@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {QueryStemQueryItem} from '../model/query-stem-query-item';
+import {QueryStemQueryItem} from '../model/query-stem.query-item';
 
 @Component({
   selector: 'query-stem-query-item',

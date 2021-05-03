@@ -22,6 +22,7 @@ import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 export interface QueryItem {
   text: string;
+  stemId?: string;
   icons?: string[];
   colors?: string[];
   condition?: ConditionType;
