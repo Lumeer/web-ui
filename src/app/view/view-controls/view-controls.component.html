@@ -18,6 +18,7 @@
 
             <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
                     class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
+                    [disabled]="view && !state.permissions.canManage"
                     (click)="onPerspectiveChooserClick($event)">
               <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
               <span class="ml-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>

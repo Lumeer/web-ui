@@ -20,20 +20,20 @@
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {CollectionQueryItem} from './collection.query-item';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
-export class DeletedQueryItem implements QueryItem {
-  public type = QueryItemType.Deleted;
-  public forType: QueryItemType;
+export class DocumentQueryItem implements QueryItem {
+  public type = QueryItemType.Document;
 
-  public constructor(public stemId: string, forType: QueryItemType) {
-    this.forType = forType;
+  public constructor(public stemId: string, public document: DocumentModel) {
+    // TODO use collection for icon and color
   }
 
   public get value(): string {
-    return '';
+    return this.document.id;
   }
 
   public get text(): string {
-    return '';
+    return this.document.id;
   }
 }

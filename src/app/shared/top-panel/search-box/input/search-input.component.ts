@@ -66,6 +66,7 @@ export class SearchInputComponent {
 
   public readonly emptyPlaceholder: string;
   public readonly placeholder: string;
+  public readonly restrictedItemTypes = [QueryItemType.View, QueryItemType.Collection, QueryItemType.Link];
 
   public suggesting: boolean;
   public text = '';

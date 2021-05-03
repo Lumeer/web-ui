@@ -17,44 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {QueryItem} from './model/query-item';
-import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
+import {ConstraintData} from '@lumeer/data-filters';
 import {QueryItemType} from './model/query-item-type';
-import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
-import {AttributeQueryItem} from './model/attribute.query-item';
-import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
-import {Attribute} from '../../../../core/store/collections/collection';
-import {modifyAttributeForQueryFilter} from '../../../utils/attribute.utils';
-import {
-  ConditionType,
-  conditionTypeNumberOfInputs,
-  ConditionValue,
-  ConstraintData,
-  ConstraintType,
-} from '@lumeer/data-filters';
 
 @Component({
   selector: 'query-item',
   templateUrl: './query-item.component.html',
-  styleUrls: ['./query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryItemComponent implements OnInit, OnChanges {
+export class QueryItemComponent {
   @Input()
   public queryItem: QueryItem;
 
@@ -76,89 +51,22 @@ export class QueryItemComponent implements OnInit, OnChanges {
   @Output()
   public focusInput = new EventEmitter();
 
-  @HostBinding('class.cursor-pointer')
-  public cursorPointer: boolean;
+  @Output()
+  public stemToggle = new EventEmitter<string>();
 
-  @ViewChild(FilterBuilderComponent)
-  public filterBuilderComponent: FilterBuilderComponent;
+  @Output()
+  public stemTextChange = new EventEmitter<{stemId: string; text: string}>();
 
-  public readonly constraintType = ConstraintType;
+  @Output()
+  public stemQueryItemAdd = new EventEmitter<{stemId: string; item: QueryItem}>();
 
-  public attribute: Attribute;
+  public readonly queryItemType = QueryItemType;
 
-  constructor(public hostElement: ElementRef) {}
-
-  public get conditionControl(): AbstractControl {
-    return this.queryItemForm?.controls?.condition;
+  public onTextChange(text: string) {
+    this.stemTextChange.emit({stemId: this.queryItem.stemId, text});
   }
 
-  public get conditionValuesControl(): FormArray {
-    return this.queryItemForm?.controls?.conditionValues as FormArray;
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    this.cursorPointer = this.isAttributeType();
-    this.attribute = this.createAndModifyConstraint();
-  }
-
-  private createAndModifyConstraint(): Attribute {
-    return modifyAttributeForQueryFilter(
-      (<AttributeQueryItem>this.queryItem)?.attribute || (<LinkAttributeQueryItem>this.queryItem)?.attribute
-    );
-  }
-
-  public ngOnInit() {
-    if (this.isAttributeType() && this.queryItem.fromSuggestion) {
-      setTimeout(() => this.filterBuilderComponent?.open());
-    }
-  }
-
-  private isAttributeType(): boolean {
-    const type = this.queryItem && this.queryItem.type;
-    return [QueryItemType.Attribute, QueryItemType.LinkAttribute].includes(type);
-  }
-
-  @HostListener('click')
-  public onClick() {
-    if (!this.filterBuilderComponent || !this.isAttributeType()) {
-      return;
-    }
-    this.filterBuilderComponent.toggle();
-  }
-
-  public onRemove() {
-    this.remove.emit();
-  }
-
-  public isFormValid(): boolean {
-    if (this.readonly || !this.queryItemForm) {
-      return true;
-    }
-    return this.queryItemForm.valid;
-  }
-
-  public onQueryItemChanged() {
-    if (this.isFormValid()) {
-      this.change.emit();
-    }
-  }
-
-  public onConditionChange(data: {condition: ConditionType; values: ConditionValue[]}) {
-    if (!this.queryItemForm) {
-      return;
-    }
-    const numInputs = conditionTypeNumberOfInputs(data.condition);
-    this.queryItem.condition = data.condition;
-    this.queryItem.conditionValues = (data.values || []).slice(0, numInputs);
-    this.queryItemForm.patchValue({
-      condition: data.condition,
-      conditionValues: data.values,
-    });
-
-    this.onQueryItemChanged();
-  }
-
-  public onFinishBuilderEditing() {
-    this.focusInput.emit();
+  public onQueryItemAdd(item: QueryItem) {
+    this.stemQueryItemAdd.emit({stemId: this.queryItem.stemId, item});
   }
 }

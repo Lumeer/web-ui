@@ -85,6 +85,9 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public canManageConfig: boolean;
 
   @Input()
+  public sidebarOpened: boolean;
+
+  @Input()
   public query: Query;
 
   @Input()
@@ -110,7 +113,6 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
 
   private readonly converter: KanbanConverter;
 
-  public sidebarOpened$ = new BehaviorSubject(false);
   public data$ = new BehaviorSubject<KanbanData>(null);
 
   private dataSubject = new BehaviorSubject<Data>(null);

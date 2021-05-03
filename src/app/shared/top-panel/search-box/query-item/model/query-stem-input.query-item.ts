@@ -19,21 +19,13 @@
 
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionQueryItem} from './collection.query-item';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
-export class DocumentQueryItem implements QueryItem {
-  public type = QueryItemType.Document;
+export class QueryStemInputQueryItem implements QueryItem {
+  public type = QueryItemType.QueryStemInput;
 
-  public constructor(public document: DocumentModel) {
-    // TODO use collection for icon and color
-  }
+  public constructor(public stemId: string, public text: string, public stemItems: QueryItem[]) {}
 
   public get value(): string {
-    return this.document.id;
-  }
-
-  public get text(): string {
-    return this.document.id;
+    return this.text;
   }
 }

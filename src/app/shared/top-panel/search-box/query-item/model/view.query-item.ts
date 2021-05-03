@@ -59,6 +59,10 @@ export class ViewQueryItem implements QueryItem {
     return this.view.code;
   }
 
+  public get stemId(): string {
+    return null;
+  }
+
   public dependsOn(queryItem: QueryItem): boolean {
     return false;
   }

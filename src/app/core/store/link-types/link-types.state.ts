@@ -22,7 +22,6 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {LinkType} from './link.type';
 import {selectCollectionsDictionary} from '../collections/collections.state';
-import {Collection} from '../collections/collection';
 import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
 
 export interface LinkTypesState extends EntityState<LinkType> {
@@ -47,7 +46,7 @@ export const selectLinkTypesLoaded = createSelector(selectLinkTypesState, linkTy
 export const selectLinkTypeById = (linkTypeId: string) =>
   createSelector(selectLinkTypesDictionary, linkTypesMap => linkTypesMap[linkTypeId]);
 
-export const selectLinkTypeByIds = (linkTypeIds: string[]) =>
+export const selectLinkTypesByIds = (linkTypeIds: string[]) =>
   createSelector(selectLinkTypesDictionary, linkTypesMap =>
     linkTypeIds.map(linkTypeId => linkTypesMap[linkTypeId]).filter(linkType => !!linkType)
   );

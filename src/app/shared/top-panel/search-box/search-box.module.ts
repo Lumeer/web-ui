@@ -40,6 +40,9 @@ import {ShouldShowAttributesSettingsPipe} from './settings-button/should-show-at
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
 import {SettingsModule} from '../../settings/settings.module';
 import {ShouldShowSettingsPipe} from './settings-button/should-show-settings.pipe';
+import {SimpleQueryItemComponent} from './query-item/simple/simple-query-item.component';
+import {QueryStemQueryItemComponent} from './query-item/query-stem/query-stem-query-item.component';
+import {QueryStemInputQueryItemComponent} from './query-item/query-stem-input/query-stem-input-query-item.component';
 
 @NgModule({
   imports: [
@@ -67,6 +70,9 @@ import {ShouldShowSettingsPipe} from './settings-button/should-show-settings.pip
     SettingsButtonComponent,
     ShouldShowAttributesSettingsPipe,
     ShouldShowSettingsPipe,
+    SimpleQueryItemComponent,
+    QueryStemQueryItemComponent,
+    QueryStemInputQueryItemComponent,
   ],
   exports: [SearchBoxComponent, QueryItemComponent, SearchBoxPipesModule],
 })

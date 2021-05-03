@@ -3,17 +3,24 @@
   [origin]="origin"
   [showBackdrop]="false"
   [closeOnClickOutside]="true"
-  [pushOnScreen]="true">
+  [pushOnScreen]="true"
+  (onCloseByClickOutside)="onCloseByClickOutside.emit()">
 
   <div class="card suggestions">
-    <search-suggestion-item *ngFor="let suggestion of suggestions; let suggestionIndex = index"
-                            class="dropdown-item d-flex justify-content-between cursor-pointer"
-                            [class.selected]="suggestionIndex === (selectedIndex$ | async)"
-                            [suggestion]="suggestion"
-                            [text]="text"
-                            (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
-                            (click)="onUseSuggestion(suggestion, $event)">
-    </search-suggestion-item>
+    <ng-container *ngIf="suggestions.length; else noSuggestions">
+      <search-suggestion-item *ngFor="let suggestion of suggestions; let suggestionIndex = index"
+                              class="dropdown-item d-flex justify-content-between cursor-pointer"
+                              [class.selected]="suggestionIndex === (selectedIndex$ | async)"
+                              [suggestion]="suggestion"
+                              [text]="text"
+                              (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
+                              (click)="onUseSuggestion(suggestion, $event)">
+      </search-suggestion-item>
+    </ng-container>
   </div>
 
 </dropdown>
+
+<ng-template #noSuggestions>
+  <div class="dropdown-item font-italic font-weight-light text-muted" i18n="@@search.empty">Nothing found</div>
+</ng-template>

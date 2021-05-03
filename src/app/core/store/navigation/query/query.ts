@@ -27,6 +27,7 @@ export interface Query {
 }
 
 export interface QueryStem {
+  id?: string;
   collectionId: string;
   linkTypeIds?: string[];
   documentIds?: string[];

@@ -28,6 +28,7 @@ export interface ShortenedQuery {
 }
 
 export interface ShortenedQueryStem {
+  i: string; // id
   c: string; // collectionId
   l: string[]; // linkTypeIds
   d: string[]; // documentIds
@@ -67,6 +68,7 @@ export function shortenQuery(query: Query): ShortenedQuery {
 
 function shortenQueryStem(stem: QueryStem): ShortenedQueryStem {
   return {
+    i: stem.id,
     c: stem.collectionId,
     l: stem.linkTypeIds,
     d: stem.documentIds,
@@ -108,6 +110,7 @@ export function prolongQuery(query: ShortenedQuery): Query {
 
 function prolongQueryStem(stem: ShortenedQueryStem): QueryStem {
   return {
+    id: stem.i,
     collectionId: stem.c,
     linkTypeIds: stem.l,
     documentIds: stem.d,

@@ -72,6 +72,7 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
           condition: new FormControl(queryItem.condition),
           conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
           constraintType: new FormControl(queryItemConstraintType(queryItem)),
+          fromSuggestion: new FormControl(queryItem.fromSuggestion),
         },
         attributeQueryValidator
       );

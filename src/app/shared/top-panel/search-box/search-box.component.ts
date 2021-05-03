@@ -23,7 +23,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {debounceTime, filter, map, startWith, tap, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map, skip, startWith, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
@@ -41,7 +41,7 @@ import {
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {isQueryItemIsEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
-import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
@@ -49,14 +49,19 @@ import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {isNullOrUndefined} from '../../utils/common.utils';
-import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
+import {
+  addQueryItemWithRelatedItems,
+  findQueryStemIdByIndex,
+  removeQueryItemWithRelatedItems,
+} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
+import {SearchBoxData, SearchBoxService} from './util/search-box.service';
 
-const allowAutomaticSubmission = true;
+const ALLOW_AUTOMATIC_SUBMISSION = true;
 
 @Component({
   selector: 'search-box',
@@ -73,6 +78,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public perspective$: Observable<Perspective>;
   public query$: Observable<Query>;
   public canManageConfig$: Observable<boolean>;
+  public searchBoxData$: Observable<SearchBoxData>;
 
   public queryItemsControl: FormArray;
 
@@ -82,10 +88,13 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private organization: Organization;
   private project: Project;
   private perspective: Perspective;
-  private currentUser: User;
   private queryData: QueryData;
+  private searchBoxService: SearchBoxService;
 
-  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
+  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {
+    const queryItemsObservable$ = this.queryItems$.pipe(skip(1));
+    this.searchBoxService = new SearchBoxService(store$, queryItemsObservable$);
+  }
 
   public ngOnInit() {
     this.initForm();
@@ -97,10 +106,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.perspective$ = this.store$.pipe(select(selectPerspective));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.searchBoxData$ = this.searchBoxService.data$;
   }
 
   private subscribeViewData() {
-    this.subscriptions.add(this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user)));
     this.subscriptions.add(this.store$.pipe(select(selectCurrentView)).subscribe(view => this.currentView$.next(view)));
   }
 
@@ -152,8 +161,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       debounceTime(100),
       filter(([, , collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([collections, linkTypes]) => ({
-        collections: collections.filter(collection => collection && collection.id),
-        linkTypes: linkTypes.filter(linkType => linkType && linkType.id),
+        collections: collections.filter(collection => !!collection?.id),
+        linkTypes: linkTypes.filter(linkType => !!linkType?.id),
       }))
     );
   }
@@ -162,13 +171,48 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  public onToggleExpandStem(stemId: string) {
+    this.searchBoxService.toggleExpand(stemId);
+  }
+
   public onAddQueryItem(queryItem: QueryItem) {
-    const newQueryItems = addQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), queryItem);
+    const {stemIndex, items: newQueryItems} = addQueryItemWithRelatedItems(
+      this.queryData,
+      this.queryItems$.getValue(),
+      queryItem
+    );
+    this.expandStemByStemIndex(stemIndex);
+    this.afterAddedQueryItem(newQueryItems);
+  }
+
+  public onAddQueryItemToStem(queryItem: QueryItem, stemIndex: number, stemId: string) {
+    const newQueryItems = addQueryItemWithRelatedItems(
+      this.queryData,
+      this.queryItems$.getValue(),
+      queryItem,
+      stemIndex
+    ).items;
+    this.searchBoxService.expand(stemId);
+    this.afterAddedQueryItem(newQueryItems);
+  }
+
+  private expandStemByStemIndex(stemIndex: number) {
+    const stemId = findQueryStemIdByIndex(this.queryItems$.value, stemIndex);
+    if (stemId) {
+      this.searchBoxService.expand(stemId);
+    }
+  }
+
+  private afterAddedQueryItem(newQueryItems: QueryItem[]) {
     if (!this.showView(newQueryItems)) {
       this.queryItems$.next(newQueryItems);
       this.initForm(newQueryItems);
       this.onQueryItemsChanged();
     }
+  }
+
+  public onStemTextChanged(data: {text: string; stemId: string}) {
+    this.searchBoxService.changeText(data.stemId, data.text);
   }
 
   public onRemoveLastQueryItem(canManageConfig: boolean) {
@@ -193,7 +237,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onQueryItemsChanged() {
-    if (allowAutomaticSubmission && this.form$.getValue().valid) {
+    if (ALLOW_AUTOMATIC_SUBMISSION && this.form$.getValue().valid) {
       this.onSearch();
     }
   }
@@ -263,7 +307,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
-  public trackByTypeAndText(index: number, queryItem: QueryItem) {
-    return queryItem.type.toString() + queryItem.text;
+  public trackByQueryItem(index: number, data: {queryItem: QueryItem}) {
+    return `${data.queryItem.stemId || ''}:${data.queryItem.type}:${data.queryItem.value}`;
   }
 }
