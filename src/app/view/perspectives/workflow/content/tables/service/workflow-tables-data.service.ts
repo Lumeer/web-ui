@@ -33,7 +33,7 @@ import {LinkInstancesAction} from '../../../../../../core/store/link-instances/l
 import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ResourceAttributeSettings, ViewSettings} from '../../../../../../core/store/views/view';
 import {
   TABLE_COLUMN_WIDTH,
@@ -75,7 +75,11 @@ import {
 } from '../../../../../../core/model/query-attribute';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
-import {queryStemsAreSame} from '../../../../../../core/store/navigation/query/query.util';
+import {
+  filterQueryByStem,
+  getQueryFiltersForResource,
+  queryStemsAreSame,
+} from '../../../../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals, isArray, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {
@@ -112,8 +116,17 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {selectCurrentView} from '../../../../../../core/store/views/views.state';
-import {Constraint, ConstraintData, DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
+import {
+  ConditionType,
+  ConditionValue,
+  Constraint,
+  ConstraintData,
+  DocumentsAndLinksData,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/workflows/workflow.utils';
+import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
+import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -257,6 +270,7 @@ export class WorkflowTablesDataService {
           permissions,
           linkTypesMap
         );
+        const queryByStem = filterQueryByStem(query, stemConfig.stem);
         const {
           columns: collectionColumns,
           actions: collectionActions,
@@ -269,7 +283,7 @@ export class WorkflowTablesDataService {
           permissions,
           linkTypesMap,
           viewSettings,
-          query,
+          queryByStem,
           linkPermissions
         );
 
@@ -281,7 +295,7 @@ export class WorkflowTablesDataService {
           linkType,
           linkPermissions,
           viewSettings,
-          query
+          queryByStem
         );
 
         // aggregate documents and links to create rows
@@ -540,7 +554,10 @@ export class WorkflowTablesDataService {
     );
     const mappedUncreatedColumns: Record<string, TableColumn> = {};
 
-    const color = isCollection ? (<Collection>resource).color : null;
+    const filters = getQueryFiltersForResource(query, resource.id, resourceType);
+    const originalColor = isCollection ? (<Collection>resource).color : null;
+    const color = columnBackgroundColor(originalColor);
+    const newColumnColor = columnBackgroundColor(originalColor, true);
     const attributeColumns = createAttributesSettingsOrder(resource.attributes, attributeSettings).reduce<
       TableColumn[]
     >((columns, setting) => {
@@ -569,6 +586,7 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         color,
+        filters: filters.filter(f => f.attributeId === attribute.id),
         default: attribute.id === defaultAttributeId,
         hidden: setting.hidden,
         permissions: permissions,
@@ -590,7 +608,7 @@ export class WorkflowTablesDataService {
     const syncActions = [];
     const columnNames = (resource.attributes || []).map(attribute => attribute.name);
     for (let i = 0; i < currentColumns?.length; i++) {
-      const column = {...currentColumns[i], color};
+      const column = {...currentColumns[i], color: newColumnColor};
       if (!column.attribute) {
         attributeColumns.splice(i, 0, mappedUncreatedColumns[column.id] || column);
         if (mappedUncreatedColumns[column.id]) {
@@ -620,9 +638,10 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         editable: true,
+        filters: [],
         width: TABLE_COLUMN_WIDTH,
         permissions,
-        color,
+        color: newColumnColor,
         menuItems: [],
       };
       lastColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, lastColumn, true));
@@ -652,8 +671,9 @@ export class WorkflowTablesDataService {
         editable: true,
         permissions,
         width: TABLE_COLUMN_WIDTH,
-        color: null,
+        color: columnBackgroundColor(null),
         menuItems: [],
+        filters: [],
       };
       lastColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, lastColumn, true));
       return lastColumn;
@@ -774,6 +794,95 @@ export class WorkflowTablesDataService {
         linkType,
       })
     );
+  }
+
+  public removeFilter(column: TableColumn, index: number) {
+    const table = this.stateService.findTableByColumn(column);
+    const query = this.stateService.query;
+    const stemsCopy = [...(query.stems || [])];
+
+    const {stemIndex, numFiltersBefore} = this.findStemIndexForFilter(table, stemsCopy, index);
+
+    const filtersParam: keyof QueryStem = table.collectionId ? 'filters' : 'linkFilters';
+    if (stemIndex >= 0) {
+      const finalIndex = index - numFiltersBefore;
+      const stemCopy = {...stemsCopy[stemIndex]};
+
+      const filtersCopy = [...stemCopy[filtersParam]];
+      filtersCopy.splice(finalIndex, 1);
+      stemCopy[filtersParam] = filtersCopy as any;
+
+      stemsCopy[stemIndex] = stemCopy;
+
+      this.store$.dispatch(new NavigationAction.SetQuery({query: {...query, stems: stemsCopy}}));
+    }
+  }
+
+  public changeFilter(
+    column: TableColumn,
+    index: number,
+    condition: ConditionType,
+    conditionValues: ConditionValue[],
+    isNew?: boolean
+  ) {
+    const table = this.stateService.findTableByColumn(column);
+    const query = this.stateService.query;
+    const stemsCopy = [...(query.stems || [])];
+
+    const {stemIndex, numFiltersBefore} = this.findStemIndexForFilter(table, stemsCopy, index, isNew);
+
+    const filtersParam: keyof QueryStem = table.collectionId ? 'filters' : 'linkFilters';
+    if (stemIndex >= 0) {
+      const finalIndex = index - numFiltersBefore;
+      const stemCopy = {...stemsCopy[stemIndex]};
+
+      const filtersCopy = [...stemCopy[filtersParam]];
+      if (isNew) {
+        filtersCopy.push({
+          collectionId: table.collectionId,
+          linkTypeId: table.linkTypeId,
+          attributeId: column.attribute.id,
+          condition,
+          conditionValues,
+        });
+      } else {
+        filtersCopy[finalIndex] = {...filtersCopy[finalIndex], condition, conditionValues};
+      }
+
+      stemCopy[filtersParam] = filtersCopy as any;
+
+      stemsCopy[stemIndex] = stemCopy;
+
+      this.store$.dispatch(new NavigationAction.SetQuery({query: {...query, stems: stemsCopy}}));
+    }
+  }
+
+  private findStemIndexForFilter(
+    table: WorkflowTable,
+    queryStems: QueryStem[],
+    index: number,
+    findLastSuitable?: boolean
+  ): {stemIndex: number; numFiltersBefore: number} {
+    // table can be merged with multiple stems so we need to find stem index which contains desired filter to change/remove/add
+    let numFiltersBefore = 0;
+    let stemIndex = -1;
+    const filtersParam: keyof QueryStem = table.collectionId ? 'filters' : 'linkFilters';
+    for (let i = 0; i < queryStems.length; i++) {
+      const stem = queryStems[i];
+      if (queryStemsAreSame(stem, table.stem)) {
+        const filters = stem[filtersParam] || [];
+        if (index < filters.length + numFiltersBefore) {
+          stemIndex = i;
+          break;
+        } else {
+          numFiltersBefore += filters.length;
+          if (findLastSuitable) {
+            stemIndex = i;
+          }
+        }
+      }
+    }
+    return {stemIndex, numFiltersBefore};
   }
 
   public hideColumn(column: TableColumn) {

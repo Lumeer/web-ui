@@ -61,7 +61,7 @@ import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
 import {APP_NAME_SELECTOR} from '../../../../../core/constants';
 import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
 
 @Component({
@@ -244,6 +244,20 @@ export class WorkflowTablesComponent implements OnChanges {
 
   public onColumnSortChanged(data: {column: TableColumn; type: AttributeSortType | null}) {
     this.tablesService.onColumnSortChanged(data.column, data.type);
+  }
+
+  public onColumnFilterChanged(data: {
+    column: TableColumn;
+    index: number;
+    condition: ConditionType;
+    values: ConditionValue[];
+    new?: boolean;
+  }) {
+    this.tablesService.onColumnFilterChanged(data.column, data.index, data.condition, data.values, data.new);
+  }
+
+  public onColumnFilterRemoved(data: {column: TableColumn; index: number}) {
+    this.tablesService.onColumnFilterRemoved(data.column, data.index);
   }
 
   public onStemConfigChange(newStemConfig: WorkflowStemConfig, index: number) {

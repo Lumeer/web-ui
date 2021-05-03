@@ -179,6 +179,21 @@ export function queryItemsColor(queryItems: QueryItem[]): string {
   return queryItems[0].colors[0];
 }
 
+export function filterQueryByStem(query: Query, filterStem: QueryStem): Query {
+  if (!query || !filterStem) {
+    return query;
+  }
+  const stems = query.stems?.filter(stem => queryStemsAreSame(stem, filterStem));
+  return {...query, stems};
+}
+
+export function getQueryFiltersForResource(query: Query, id: string, type: AttributesResourceType): AttributeFilter[] {
+  return (query?.stems || []).reduce((filters, stem) => {
+    filters.push(...getQueryStemFiltersForResource(stem, id, type));
+    return filters;
+  }, []);
+}
+
 export function getQueryStemFiltersForResource(
   stem: QueryStem,
   id: string,
@@ -350,10 +365,14 @@ export function queryStemWithoutFilters(stem: QueryStem): QueryStem {
   return stem && {...stem, filters: [], linkFilters: []};
 }
 
+export function queryStemWithoutFiltersAndId(stem: QueryStem): QueryStem {
+  return stem && {...queryStemWithoutFilters(stem), id: undefined};
+}
+
 export function queryStemsAreSame(s1: QueryStem, s2: QueryStem): boolean {
   return deepObjectsEquals(
-    normalizeQueryStem(queryStemWithoutFilters(s1)),
-    normalizeQueryStem(queryStemWithoutFilters(s2))
+    normalizeQueryStem(queryStemWithoutFiltersAndId(s1)),
+    normalizeQueryStem(queryStemWithoutFiltersAndId(s2))
   );
 }
 

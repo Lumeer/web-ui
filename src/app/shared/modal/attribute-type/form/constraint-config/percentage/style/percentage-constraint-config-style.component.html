@@ -6,7 +6,7 @@
     <div *ngFor="let item of items" class="card p-3"
          [class.active]="data.selected === item.style"
          (click)="onSelect(item.style)">
-      <i *ngIf="data.selected === item.style" class="indicator fas fa-check-circle text-success"></i>
+      <i *ngIf="data.selected === item.style" class="indicator fas fa-check text-success"></i>
       <div>
         <span class="font-weight-bold">{{item.title}}</span>
         <i *ngIf="item.style === style.ProgressBar && data.selected === style.ProgressBar"

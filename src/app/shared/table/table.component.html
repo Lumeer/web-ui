@@ -26,6 +26,8 @@
              (moveColumn)="onMoveColumn($event)"
              (onCancel)="onHeaderCancel($event)"
              (sortChanged)="columnSortChanged.emit($event)"
+             (filterChange)="columnFilterChange.emit($event)"
+             (filterRemove)="columnFilterRemove.emit($event)"
              (onRename)="columnRename.emit($event)"
              (menuSelected)="columnMenuSelected.emit($event)"
              (hiddenMenuSelected)="columnHiddenMenuSelected.emit($event)">

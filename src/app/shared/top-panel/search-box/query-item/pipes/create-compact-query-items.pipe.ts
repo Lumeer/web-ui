@@ -69,16 +69,16 @@ export class CreateCompactQueryItemsPipe implements PipeTransform {
         }
 
         currentStemId = (<CollectionQueryItem>queryItems[i]).stemId;
-        if (!data?.collapsibleStemIds?.includes(currentStemId) || endStemIndex - i === 1) {
+        if (endStemIndex - i === 1) {
           // there is nothing to expand/collapse
           resultData.push({queryItem: queryItems[i], stemIndex, realIndex: i});
-        } else if (data?.expandedStemIds?.includes(currentStemId)) {
-          const stemQueryItem = new QueryStemQueryItem([queryItems[i]]);
-          resultData.push({queryItem: stemQueryItem, stemIndex, realIndex: i});
-        } else {
+        } else if (data?.collapsedStemIds?.includes(currentStemId)) {
           const stemQueryItem = new QueryStemQueryItem(queryItems.slice(i, endStemIndex));
           resultData.push({queryItem: stemQueryItem, stemIndex, realIndex: i});
           i += endStemIndex - i - 1;
+        } else {
+          const stemQueryItem = new QueryStemQueryItem([queryItems[i]]);
+          resultData.push({queryItem: stemQueryItem, stemIndex, realIndex: i});
         }
       } else {
         resultData.push({queryItem: queryItems[i], stemIndex, realIndex: i});

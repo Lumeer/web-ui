@@ -52,6 +52,10 @@ import {DirectivesModule} from '../directives/directives.module';
 import {MenuModule} from '../menu/menu.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {CellFilterBuilderComponent} from './content/header/cell/filter-builder/cell-filter-builder.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {FilterBuilderModule} from '../builder/filter-builder/filter-builder.module';
+import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.module';
 
 @NgModule({
   declarations: [
@@ -75,6 +79,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     TableNewRowComponent,
     DocumentHintsColumnsPipe,
     CalculateHintsOffsetPipe,
+    CellFilterBuilderComponent,
   ],
   imports: [
     CommonModule,
@@ -90,6 +95,9 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     MenuModule,
     ResourceCommentsModule,
     TooltipModule,
+    DropdownModule,
+    FilterBuilderModule,
+    FilterPreviewModule,
   ],
   exports: [TableComponent],
 })

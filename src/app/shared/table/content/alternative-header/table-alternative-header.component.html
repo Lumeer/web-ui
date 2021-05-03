@@ -1,7 +1,7 @@
 <div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable [id]="scrollId">
   <ng-container *ngFor="let group of columnGroups; let last = last; let first = first; trackBy:trackByColumn">
     <div class="header-cell table-cell"
-         [style.background]="group.color | columnBackground:(group.column && !group.column.attribute)"
+         [style.background]="group.color"
          [style.margin-left.px]="first ? 1 : 0"
          [style.height.px]="tableRowHeight"
          [style.width.px]="first && !last ? group.width - 1 : group.width"

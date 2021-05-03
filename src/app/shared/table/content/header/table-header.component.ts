@@ -37,6 +37,7 @@ import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} fro
 import {AttributeSortType} from '../../../../core/store/views/view';
 import {computeElementPositionInParent} from '../../../utils/common.utils';
 import {MenuItem} from '../../../menu/model/menu-item';
+import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 @Component({
   selector: '[table-header]',
@@ -83,6 +84,18 @@ export class TableHeaderComponent implements OnChanges {
 
   @Output()
   public sortChanged = new EventEmitter<{column: TableColumn; type: AttributeSortType | null}>();
+
+  @Output()
+  public filterRemove = new EventEmitter<{column: TableColumn; index: number}>();
+
+  @Output()
+  public filterChange = new EventEmitter<{
+    column: TableColumn;
+    index: number;
+    condition: ConditionType;
+    values: ConditionValue[];
+    new?: boolean;
+  }>();
 
   @ViewChildren('resizeHandle')
   public handlerElements: QueryList<ElementRef>;
@@ -225,5 +238,16 @@ export class TableHeaderComponent implements OnChanges {
     if (column) {
       this.sortChanged.emit({column, type});
     }
+  }
+
+  public onFilterRemove(column: TableColumn, index: number) {
+    this.filterRemove.emit({column, index});
+  }
+
+  public onFilterChange(
+    column: TableColumn,
+    data: {index: number; condition: ConditionType; values: ConditionValue[]; new?: boolean}
+  ) {
+    this.filterChange.emit({column, ...data});
   }
 }

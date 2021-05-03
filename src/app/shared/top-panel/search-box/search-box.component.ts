@@ -308,6 +308,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public trackByQueryItem(index: number, data: {queryItem: QueryItem}) {
-    return `${data.queryItem.stemId || ''}:${data.queryItem.type}:${data.queryItem.value}`;
+    return `${data.queryItem.stemId || ''}:${data.queryItem.type}:${data.queryItem.text}`;
   }
 }
