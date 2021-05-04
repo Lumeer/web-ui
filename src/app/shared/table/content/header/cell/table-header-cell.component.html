@@ -2,10 +2,14 @@
   <div class="header-content h-100"
        (contextmenu)="onContextMenu($event)">
 
-    <div #filterElement>
-      <i *ngIf="column.attribute" class="fas fa-filter text-muted mr-1 cursor-pointer"
-         (click)="onFilterClick($event)" (dblclick)="$event.stopPropagation(); $event.preventDefault()">
-      </i>
+    <div #filterElement
+         class="filter-icon-wrapper mr-2 cursor-pointer"
+         [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
+         (click)="onFilterClick($event)"
+         (dblclick)="$event.stopPropagation(); $event.preventDefault()">
+      <i *ngIf="column.attribute" class="fas fa-filter icon"
+         [ngClass]="column.sort || column.filters.length ? 'text-success': 'text-muted'"></i>
+      <span class="count" *ngIf="column.filters.length">{{column.filters.length}}</span>
     </div>
 
     <table-header-input

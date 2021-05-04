@@ -47,8 +47,8 @@ import {modifyAttributeForQueryFilter} from '../../../../../utils/attribute.util
 
 @Component({
   selector: 'cell-filter-builder',
-  styleUrls: ['./cell-filter-builder.component.scss'],
   templateUrl: './cell-filter-builder.component.html',
+  styleUrls: ['./cell-filter-builder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CellFilterBuilderComponent implements OnChanges {
