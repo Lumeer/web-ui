@@ -92,17 +92,21 @@ export function isQueryItemEditable(
   }
 
   const queryItem = queryItems[index];
+  const stemIndex = getStemIndexForQueryItems(index, queryItems);
   const sameItemsInStem = findSameItemsCountInStem(index, queryItems);
+  const stem = viewQuery?.stems?.[stemIndex];
+  const stemIndexQuery: Query = {stems: [stem].filter(s => !!s)};
 
   if (queryItem.type === QueryItemType.Attribute) {
     const collectionFilter = (<AttributeQueryItem>queryItem).getAttributeFilter();
-    const sameFilters = getQueryFiltersForCollection(viewQuery, collectionFilter.collectionId).filter(currentFilter =>
-      deepObjectsEquals(collectionFilter, currentFilter)
-    );
+    const sameFilters = getQueryFiltersForCollection(
+      stemIndexQuery,
+      collectionFilter.collectionId
+    ).filter(currentFilter => deepObjectsEquals(collectionFilter, currentFilter));
     return sameFilters.length <= sameItemsInStem;
   } else if (queryItem.type === QueryItemType.LinkAttribute) {
     const linkFilter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();
-    const sameFilters = getQueryFiltersForLinkType(viewQuery, linkFilter.linkTypeId).filter(currentFilter =>
+    const sameFilters = getQueryFiltersForLinkType(stemIndexQuery, linkFilter.linkTypeId).filter(currentFilter =>
       deepObjectsEquals(linkFilter, currentFilter)
     );
     return sameFilters.length <= sameItemsInStem;
@@ -113,6 +117,10 @@ export function isQueryItemEditable(
   }
 
   return false;
+}
+
+function getStemIndexForQueryItems(to: number, queryItems: QueryItem[]): number {
+  return queryItems.slice(0, to + 1).filter(item => item.type === QueryItemType.Collection).length - 1;
 }
 
 function findSameItemsCountInStem(to: number, queryItems: QueryItem[]): number {
