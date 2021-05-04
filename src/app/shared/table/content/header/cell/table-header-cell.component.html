@@ -8,8 +8,7 @@
          (click)="onFilterClick($event)"
          (dblclick)="$event.stopPropagation(); $event.preventDefault()">
       <i *ngIf="column.attribute" class="fas fa-filter icon"
-         [ngClass]="column.sort || column.filters.length ? 'text-success': 'text-muted'"></i>
-      <span class="count" *ngIf="column.filters.length">{{column.filters.length}}</span>
+         [ngClass]="column.sort || column.filters.length ? 'text-primary': 'text-muted'"></i>
     </div>
 
     <table-header-input
