@@ -140,8 +140,8 @@ export class DataResourceDetailModalComponent implements OnInit {
   private subscribeExist(resource: AttributesResource, dataResource: DataResource) {
     this.dataExistSubscription.unsubscribe();
     this.dataExistSubscription = combineLatest([
-      resource.id ? this.selectResource$(resource.id) : of(true),
-      dataResource.id ? this.selectDataResource$(dataResource.id) : of(true),
+      resource?.id ? this.selectResource$(resource.id) : of(true),
+      dataResource?.id ? this.selectDataResource$(dataResource.id) : of(true),
     ]).subscribe(([currentResource, currentDataResource]) => {
       if (!currentResource || !currentDataResource) {
         this.hideDialog();

@@ -40,7 +40,7 @@ import {
   QueryItemsConverter,
 } from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {isQueryItemIsEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
+import {isQueryItemEditable, queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
@@ -218,8 +218,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public onRemoveLastQueryItem(canManageConfig: boolean) {
     const lastIndex = this.queryItems$.value.length - 1;
     if (lastIndex >= 0) {
-      const queryItem = this.queryItems$.value[lastIndex];
-      if (isQueryItemIsEditable(queryItem, canManageConfig, this.currentView$.value?.query)) {
+      if (isQueryItemEditable(lastIndex, this.queryItems$.value, canManageConfig, this.currentView$.value?.query)) {
         this.onRemoveQueryItem(lastIndex);
       }
     }

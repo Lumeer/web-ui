@@ -62,6 +62,7 @@ export class WorkflowTablesStateService {
   private currentConfig: WorkflowConfig;
   private currentPermissions: AllowedPermissionsMap;
   private currentConstraintData: ConstraintData;
+  private currentCanManageConfig: boolean;
 
   public updateData(
     collections: Collection[],
@@ -71,7 +72,8 @@ export class WorkflowTablesStateService {
     permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
-    constraintData: ConstraintData
+    constraintData: ConstraintData,
+    canManageConfig: boolean
   ) {
     this.currentCollectionsMap = objectsByIdMap(collections);
     this.currentLinkTypesMap = objectsByIdMap(linkTypes);
@@ -81,6 +83,7 @@ export class WorkflowTablesStateService {
     this.currentQuery = query;
     this.currentViewSettings = viewSettings;
     this.currentConstraintData = constraintData;
+    this.currentCanManageConfig = canManageConfig;
   }
 
   public setTables(tables: WorkflowTable[]) {
@@ -129,6 +132,10 @@ export class WorkflowTablesStateService {
 
   public get constraintData(): ConstraintData {
     return this.currentConstraintData;
+  }
+
+  public get canManageConfig(): boolean {
+    return this.currentCanManageConfig;
   }
 
   public get viewSettings(): ViewSettings {

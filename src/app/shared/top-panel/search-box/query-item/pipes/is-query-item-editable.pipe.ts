@@ -20,13 +20,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {QueryItem} from '../model/query-item';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {isQueryItemIsEditable} from '../../../../../core/store/navigation/query/query.util';
+import {isQueryItemEditable} from '../../../../../core/store/navigation/query/query.util';
 
 @Pipe({
   name: 'isQueryItemEditable',
 })
 export class IsQueryItemEditablePipe implements PipeTransform {
-  public transform(queryItem: QueryItem, canManageConfig: boolean, viewQuery: Query): boolean {
-    return isQueryItemIsEditable(queryItem, canManageConfig, viewQuery);
+  public transform(index: number, queryItems: QueryItem[], canManageConfig: boolean, viewQuery: Query): boolean {
+    return isQueryItemEditable(index, queryItems, canManageConfig, viewQuery);
   }
 }

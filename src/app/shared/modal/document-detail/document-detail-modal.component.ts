@@ -105,8 +105,8 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   private subscribeExist(collection: Collection, document: DocumentModel) {
     this.dataExistSubscription.unsubscribe();
     this.dataExistSubscription = combineLatest([
-      (collection.id && this.store$.pipe(select(selectCollectionById(collection.id)))) || of(true),
-      (document.id && this.store$.pipe(select(selectDocumentById(document.id)))) || of(true),
+      (collection?.id && this.store$.pipe(select(selectCollectionById(collection.id)))) || of(true),
+      (document?.id && this.store$.pipe(select(selectDocumentById(document.id)))) || of(true),
     ]).subscribe(([currentCollection, currentDocument]) => {
       if (!currentCollection || !currentDocument) {
         this.hideDialog();

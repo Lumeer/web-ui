@@ -342,7 +342,8 @@ export class WorkflowTablesService {
     permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
-    constraintData: ConstraintData
+    constraintData: ConstraintData,
+    canManageConfig: boolean
   ) {
     this.dataService.createAndSyncTables(
       collections,
@@ -352,7 +353,8 @@ export class WorkflowTablesService {
       permissions,
       query,
       viewSettings,
-      constraintData
+      constraintData,
+      canManageConfig
     );
   }
 

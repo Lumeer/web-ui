@@ -30,7 +30,6 @@ import {
 } from '@angular/core';
 import {AttributeSortType} from '../../../../../../core/store/views/view';
 import {
-  AttributeFilter,
   ConditionType,
   ConditionValue,
   ConstraintData,
@@ -44,6 +43,7 @@ import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
 import {FilterBuilderContentComponent} from '../../../../../builder/filter-builder/content/filter-builder-content.component';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {modifyAttributeForQueryFilter} from '../../../../../utils/attribute.utils';
+import {ColumnFilter} from '../../../../model/table-column';
 
 @Component({
   selector: 'cell-filter-builder',
@@ -62,7 +62,7 @@ export class CellFilterBuilderComponent implements OnChanges {
   public sort: AttributeSortType;
 
   @Input()
-  public filters: AttributeFilter[];
+  public filters: ColumnFilter[];
 
   @Input()
   public collectionId: string;

@@ -48,6 +48,8 @@ import {DataQuery} from '../../../model/data-query';
 import {AllowedPermissionsMap} from '../../../model/allowed-permissions';
 import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
+import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
+import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -79,26 +81,76 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   }
 }
 
-export function isQueryItemIsEditable(queryItem: QueryItem, canManageConfig: boolean, viewQuery: Query): boolean {
+export function isQueryItemEditable(
+  index: number,
+  queryItems: QueryItem[],
+  canManageConfig: boolean,
+  viewQuery: Query
+): boolean {
   if (canManageConfig) {
     return true;
   }
 
+  const queryItem = queryItems[index];
+  const sameItemsInStem = findSameItemsCountInStem(index, queryItems);
+
   if (queryItem.type === QueryItemType.Attribute) {
-    const filter = (<AttributeQueryItem>queryItem).getAttributeFilter();
-    const currentFilters = getQueryFiltersForCollection(viewQuery, filter.collectionId);
-    return !currentFilters.some(currentFilter => deepObjectsEquals(filter, currentFilter));
+    const collectionFilter = (<AttributeQueryItem>queryItem).getAttributeFilter();
+    const sameFilters = getQueryFiltersForCollection(viewQuery, collectionFilter.collectionId).filter(currentFilter =>
+      deepObjectsEquals(collectionFilter, currentFilter)
+    );
+    return sameFilters.length <= sameItemsInStem;
   } else if (queryItem.type === QueryItemType.LinkAttribute) {
-    const filter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();
-    const currentFilters = getQueryFiltersForLinkType(viewQuery, filter.linkTypeId);
-    return !currentFilters.some(currentFilter => deepObjectsEquals(filter, currentFilter));
+    const linkFilter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();
+    const sameFilters = getQueryFiltersForLinkType(viewQuery, linkFilter.linkTypeId).filter(currentFilter =>
+      deepObjectsEquals(linkFilter, currentFilter)
+    );
+    return sameFilters.length <= sameItemsInStem;
   } else if (queryItem.type === QueryItemType.Collection) {
     const collectionId = (<CollectionQueryItem>queryItem).collection?.id;
-    const baseCollectionIds = getBaseCollectionIdsFromQuery(viewQuery);
-    return !baseCollectionIds.includes(collectionId);
+    const sameCollectionIds = getBaseCollectionIdsFromQuery(viewQuery).filter(id => collectionId === id);
+    return sameCollectionIds.length <= sameItemsInStem;
   }
 
   return false;
+}
+
+function findSameItemsCountInStem(to: number, queryItems: QueryItem[]): number {
+  let count = 0;
+  const queryItem = queryItems[to];
+  for (let i = to - 1; i >= 0; i--) {
+    if (queryItems[i].type === QueryItemType.Collection) {
+      break;
+    }
+    if (queryItemsAreSame(queryItems[i], queryItem)) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function queryItemsAreSame(q1: QueryItem, q2: QueryItem): boolean {
+  if (q1.type !== q2.type) {
+    return false;
+  }
+  switch (q1.type) {
+    case QueryItemType.Collection:
+      return (<CollectionQueryItem>q1).collection.id === (<CollectionQueryItem>q2).collection.id;
+    case QueryItemType.Link:
+      return (<LinkQueryItem>q1).linkType.id === (<LinkQueryItem>q2).linkType.id;
+    case QueryItemType.Attribute:
+      return deepObjectsEquals(
+        (<AttributeQueryItem>q1).getAttributeFilter(),
+        (<AttributeQueryItem>q2).getAttributeFilter()
+      );
+    case QueryItemType.LinkAttribute:
+      return deepObjectsEquals(
+        (<LinkAttributeQueryItem>q1).getLinkAttributeFilter(),
+        (<LinkAttributeQueryItem>q2).getLinkAttributeFilter()
+      );
+    case QueryItemType.Fulltext:
+      return (<FulltextQueryItem>q1).value === (<FulltextQueryItem>q2).value;
+  }
 }
 
 function queryItemConstraintType(queryItem: QueryItem): ConstraintType {

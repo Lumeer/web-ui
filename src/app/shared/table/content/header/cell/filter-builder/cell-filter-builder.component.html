@@ -35,7 +35,9 @@
                       [condition]="filter.condition"
                       [attribute]="filterAttribute">
       </filter-preview>
-      <i class="far fa-trash text-danger" (click)="onRemove(index)"></i>
+      <div>
+        <i *ngIf="filter.deletable" class="far fa-trash text-danger" (click)="onRemove(index)"></i>
+      </div>
     </div>
     <div class="px-2">
       <button class="btn btn-link px-0 small mx-1" (click)="$event.stopPropagation(); onNewFilter()">
