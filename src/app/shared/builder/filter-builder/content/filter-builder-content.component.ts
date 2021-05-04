@@ -23,7 +23,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -55,8 +54,9 @@ import {
   templateUrl: './filter-builder-content.component.html',
   styleUrls: ['./filter-builder-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-row flex-nowrap'},
 })
-export class FilterBuilderContentComponent implements OnInit, OnChanges {
+export class FilterBuilderContentComponent implements OnChanges {
   @Input()
   public attribute: Attribute;
 
@@ -92,10 +92,6 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
 
   constructor(private translationService: TranslationService) {}
 
-  public ngOnInit() {
-    this.initFocusedItem();
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute) {
       this.createItems();
@@ -106,6 +102,7 @@ export class FilterBuilderContentComponent implements OnInit, OnChanges {
     if (changes.selectedCondition) {
       this.numInputs = conditionTypeNumberOfInputs(this.selectedCondition);
       this.ngForIndexes = createRange(0, this.numInputs);
+      this.initFocusedItem();
     }
   }
 

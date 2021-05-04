@@ -46,7 +46,7 @@ import {TableColumn} from './model/table-column';
 import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
-import {ConstraintData, ConstraintType} from '@lumeer/data-filters';
+import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'lmr-table',
@@ -87,6 +87,18 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public columnMenuSelected = new EventEmitter<{column: TableColumn; item: MenuItem}>();
+
+  @Output()
+  public columnFilterRemove = new EventEmitter<{column: TableColumn; index: number}>();
+
+  @Output()
+  public columnFilterChange = new EventEmitter<{
+    column: TableColumn;
+    index: number;
+    condition: ConditionType;
+    values: ConditionValue[];
+    new?: boolean;
+  }>();
 
   @Output()
   public columnHiddenMenuSelected = new EventEmitter<TableColumn[]>();

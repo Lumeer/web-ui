@@ -45,7 +45,7 @@ import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -129,6 +129,20 @@ export class WorkflowTablesService {
 
   public onColumnSortChanged(column: TableColumn, sort: AttributeSortType) {
     this.dataService.changeSort(column, sort);
+  }
+
+  public onColumnFilterRemoved(column: TableColumn, index: number) {
+    this.dataService.removeFilter(column, index);
+  }
+
+  public onColumnFilterChanged(
+    column: TableColumn,
+    index: number,
+    condition: ConditionType,
+    values: ConditionValue[],
+    isNew?: boolean
+  ) {
+    this.dataService.changeFilter(column, index, condition, values, isNew);
   }
 
   public onColumnMenuSelected(column: TableColumn, item: MenuItem) {

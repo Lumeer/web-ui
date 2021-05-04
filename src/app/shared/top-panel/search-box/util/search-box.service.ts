@@ -29,16 +29,14 @@ import {CollectionQueryItem} from '../query-item/model/collection.query-item';
 const MIN_ITEMS_TO_COLLAPSE = 6;
 
 export interface SearchBoxData {
-  expandedStemIds: string[];
-  collapsibleStemIds: string[];
+  collapsedStemIds: string[];
   stemTextsMap: Record<string, string>;
 }
 
 export class SearchBoxService {
   public data$: Observable<SearchBoxData>;
 
-  private expandedStemIds$ = new BehaviorSubject<string[]>([]);
-  private collapsibleStemIds$ = new BehaviorSubject<string[]>([]);
+  private collapsedStemIds$ = new BehaviorSubject<string[]>([]);
   private stemTextsMap$ = new BehaviorSubject<Record<string, string>>({});
 
   private lastCheckedViewId: string;
@@ -48,10 +46,9 @@ export class SearchBoxService {
   }
 
   private subscribeData() {
-    this.data$ = combineLatest([this.expandedStemIds$, this.collapsibleStemIds$, this.stemTextsMap$]).pipe(
-      map(([expandedStemIds, collapsibleStemIds, stemTextsMap]) => ({
-        expandedStemIds,
-        collapsibleStemIds,
+    this.data$ = combineLatest([this.collapsedStemIds$, this.stemTextsMap$]).pipe(
+      map(([collapsedStemIds, stemTextsMap]) => ({
+        collapsedStemIds,
         stemTextsMap,
       }))
     );
@@ -68,27 +65,27 @@ export class SearchBoxService {
         const collectionItems = queryItems
           .filter(queryItem => queryItem.type === QueryItemType.Collection)
           .map(queryItem => (<CollectionQueryItem>queryItem).stemId);
-        this.collapsibleStemIds$.next(collectionItems);
+        this.collapsedStemIds$.next(collectionItems);
       } else {
-        this.collapsibleStemIds$.next([]);
+        this.collapsedStemIds$.next([]);
       }
     }
     this.lastCheckedViewId = viewId;
   }
 
   public expand(stemId: string) {
-    const expanded = [...this.expandedStemIds$.value];
-    if (!expanded.includes(stemId)) {
-      this.expandedStemIds$.next([...expanded, stemId]);
+    const collapsed = [...this.collapsedStemIds$.value];
+    if (collapsed.includes(stemId)) {
+      this.collapsedStemIds$.next(collapsed.filter(id => id !== stemId));
     }
   }
 
   public toggleExpand(stemId: string) {
-    const expanded = [...this.expandedStemIds$.value];
-    if (expanded.includes(stemId)) {
-      this.expandedStemIds$.next(expanded.filter(id => id !== stemId));
+    const collapsed = [...this.collapsedStemIds$.value];
+    if (collapsed.includes(stemId)) {
+      this.collapsedStemIds$.next(collapsed.filter(id => id !== stemId));
     } else {
-      this.expandedStemIds$.next([...expanded, stemId]);
+      this.collapsedStemIds$.next([...collapsed, stemId]);
     }
   }
 

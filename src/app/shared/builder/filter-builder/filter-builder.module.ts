@@ -29,7 +29,7 @@ import {FilterBuilderPipesModule} from '../pipes/filter-builder-pipes.module';
 
 @NgModule({
   declarations: [FilterBuilderComponent, FilterBuilderContentComponent],
-  exports: [FilterBuilderComponent],
+  exports: [FilterBuilderComponent, FilterBuilderContentComponent],
   imports: [CommonModule, DropdownModule, DataInputModule, InputModule, DataPipesModule, FilterBuilderPipesModule],
 })
 export class FilterBuilderModule {}

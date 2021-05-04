@@ -18,7 +18,21 @@
  */
 
 import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
-import {hex2rgba} from './html-modifier';
+import {hex2rgba, shadeColor, stripedBackground} from './html-modifier';
+
+export const DEFAULT_COLOR = '#ffffff';
+export const DEFAULT_STRIPED_COLOR = '#eeeeee';
+
+export function columnBackgroundColor(color: string, unsaved?: boolean): string {
+  const shadedColor = color ? shadeColor(color, 0.5) : DEFAULT_COLOR;
+  const stripeColor = color ? shadeColor(shadedColor, 0.25) : DEFAULT_STRIPED_COLOR;
+
+  if (unsaved) {
+    return stripedBackground(shadedColor, stripeColor);
+  }
+
+  return shadedColor;
+}
 
 export function contrastColor(color: string, returnCodes?: {dark: string; light: string}, opacity?: number): string {
   if (!color) {

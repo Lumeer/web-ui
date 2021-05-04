@@ -75,6 +75,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input()
   public pushOnScreen = false;
 
+  @Input()
+  public static = true;
+
   @Output()
   public onClose = new EventEmitter();
 
@@ -219,6 +222,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   public updatePosition() {
     if (this.overlayRef) {
       this.overlayRef.updatePosition();
+      this.syncSizes();
     }
   }
 
@@ -233,7 +237,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private syncMaxHeight() {
-    if (!this.overlayRef?.overlayElement?.children.item(0)) {
+    if (!this.static || !this.overlayRef?.overlayElement?.children.item(0)) {
       return;
     }
 

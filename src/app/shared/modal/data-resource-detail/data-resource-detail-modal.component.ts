@@ -125,7 +125,7 @@ export class DataResourceDetailModalComponent implements OnInit {
 
     if (this.resourceType === AttributesResourceType.Collection) {
       this.dataResourceDefaultView$ = this.resource$.pipe(
-        switchMap(resource => this.store$.pipe(select(selectDefaultDocumentView((<Collection>resource).purpose))))
+        switchMap(resource => this.store$.pipe(select(selectDefaultDocumentView((<Collection>resource)?.purpose))))
       );
       this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
     } else if (this.resourceType === AttributesResourceType.LinkType) {

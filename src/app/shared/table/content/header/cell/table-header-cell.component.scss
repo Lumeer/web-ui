@@ -8,8 +8,29 @@
 
 .header-content {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: min-content 1fr min-content;
   align-items: center;
+}
+
+.filter-icon-wrapper {
+  position: relative;
+
+  .icon {
+    font-size: 80%;
+  }
+
+  .count {
+    padding: 0 0.25rem;
+    position: absolute;
+    border-radius: 50%;
+    font-size: 0.5rem;
+    top: -2px;
+    left: 0.5rem;
+    background: $primary;
+    color: white;
+    line-height: 0.8rem;
+    min-width: 0.8rem;
+  }
 }
 
 .icons {
