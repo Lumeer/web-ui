@@ -46,9 +46,9 @@ export const selectWorkspaceWithIds = createSelector(
     const view = views.find(v => v.code === workspace.viewCode);
     return {
       ...workspace,
-      organizationId: (organization && organization.id) || '',
-      projectId: (project && project.id) || '',
-      viewId: (view && view.id) || '',
+      organizationId: organization?.id || '',
+      projectId: project?.id || '',
+      viewId: view?.id || '',
     };
   }
 );

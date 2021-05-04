@@ -31,7 +31,7 @@ import {userHasManageRoleInResource} from '../utils/resource.utils';
 import {Organization} from '../../core/store/organizations/organization';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
-import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
@@ -165,9 +165,11 @@ export class ModalService {
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
   }
 
-  public showViewSettings(view: View): BsModalRef {
-    const initialState = {view};
-    return this.showStaticDialog(initialState, ViewSettingsModalComponent);
+  public showViewSettings(view: View) {
+    this.store$.pipe(select(selectAllCollections), take(1)).subscribe(collections => {
+      const initialState = {view, collections};
+      this.showStaticDialog(initialState, ViewSettingsModalComponent);
+    });
   }
 
   public showCreateLink(

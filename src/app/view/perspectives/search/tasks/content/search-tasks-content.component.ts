@@ -53,6 +53,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {selectTasksCollections} from '../../../../../core/store/common/permissions.selectors';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'search-tasks-content',
@@ -91,6 +92,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
 
   @Input()
   public compactEmptyPages: boolean;
+
+  @Input()
+  public views: View[];
 
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();

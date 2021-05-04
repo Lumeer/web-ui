@@ -41,7 +41,38 @@ import {
 } from '../navigation/query/query.util';
 
 export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentConfig: WorkflowConfig): boolean {
-  return !deepObjectsEquals(createWorkflowSaveConfig(previousConfig), createWorkflowSaveConfig(currentConfig));
+  const previous = createWorkflowSaveConfig(previousConfig);
+  const current = createWorkflowSaveConfig(currentConfig);
+
+  if (workflowStemsConfigsChanged(previous?.stemsConfigs || [], current?.stemsConfigs || [])) {
+    return true;
+  }
+
+  if (!deepObjectsEquals(previous?.columns, current?.columns)) {
+    return true;
+  }
+
+  if (!deepObjectsEquals(previous?.tables, current?.tables)) {
+    return true;
+  }
+
+  return false;
+}
+
+function workflowStemsConfigsChanged(c1: WorkflowStemConfig[], c2: WorkflowStemConfig[]): boolean {
+  if (c1.length !== c2.length) {
+    return true;
+  }
+
+  return c1.some((config, index) => workflowStemConfigsChanged(config, c2[index]));
+}
+
+function workflowStemConfigsChanged(c1: WorkflowStemConfig, c2: WorkflowStemConfig): boolean {
+  return (
+    !queryStemsAreSame(c1.stem, c2.stem) ||
+    !deepObjectsEquals(c1.collection, c2.collection) ||
+    !deepObjectsEquals(c1.attribute, c2.attribute)
+  );
 }
 
 export function checkOrTransformWorkflowConfig(

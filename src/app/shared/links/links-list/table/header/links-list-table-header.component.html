@@ -39,7 +39,7 @@
                             (attributeDescription)="onAttributeDescription(index)">
     </links-list-header-menu>
   </th>
-  <th class="border-0 bg-white fixed-header" *ngIf="permissions?.read && permissions?.writeWithView">&nbsp;</th>
+  <th class="border-0 bg-white fixed-header" *ngIf="permissions?.readWithView || permissions?.writeWithView">&nbsp;</th>
 </tr>
 <div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
      [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.5rem)'" cdkDragLockAxis="x" cdkDrag

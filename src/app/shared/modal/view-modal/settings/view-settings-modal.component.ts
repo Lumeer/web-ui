@@ -31,7 +31,8 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {integerValidator, notEmptyValidator} from '../../../../core/validators/custom-validators';
 import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views/views.state';
 import {map, tap} from 'rxjs/operators';
-import {perspectiveIconsMap} from '../../../../view/perspectives/perspective';
+import {Collection} from '../../../../core/store/collections/collection';
+import {getViewColor, getViewIcon} from '../../../../core/store/views/view.utils';
 
 @Component({
   templateUrl: './view-settings-modal.component.html',
@@ -40,6 +41,9 @@ import {perspectiveIconsMap} from '../../../../view/perspectives/perspective';
 export class ViewSettingsModalComponent implements OnInit {
   @Input()
   public view: View;
+
+  @Input()
+  public collections: Collection[];
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -69,8 +73,8 @@ export class ViewSettingsModalComponent implements OnInit {
 
     this.form = this.fb.group({
       name: [this.view.name, notEmptyValidator()],
-      icon: [this.view.icon || perspectiveIconsMap[this.view?.perspective]],
-      color: [this.view.color],
+      icon: [getViewIcon(this.view)],
+      color: [getViewColor(this.view, this.collections)],
       priority: [this.view.priority, integerValidator()],
       folders: this.fb.array(this.view.folders || []),
     });
