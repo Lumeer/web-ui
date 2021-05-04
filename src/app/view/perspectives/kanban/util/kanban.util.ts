@@ -36,6 +36,7 @@ import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
+  queryStemWithoutFiltersAndId,
 } from '../../../../core/store/navigation/query/query.util';
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 import {SizeType} from '../../../../shared/slider/size/size-type';
@@ -98,7 +99,7 @@ function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsCo
 function normalizeStemConfig(config: KanbanStemConfig): KanbanStemConfig {
   return {
     ...config,
-    stem: config.stem && normalizeQueryStem(config.stem),
+    stem: config.stem && queryStemWithoutFiltersAndId(normalizeQueryStem(config.stem)),
     doneColumnTitles: config.doneColumnTitles || [],
   };
 }

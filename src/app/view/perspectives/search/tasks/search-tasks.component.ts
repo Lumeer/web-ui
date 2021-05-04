@@ -38,11 +38,12 @@ import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selec
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
-import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {selectAllViews, selectViewQuery, selectViewsDictionary} from '../../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {View} from '../../../../core/store/views/view';
 
 const PAGE_SIZE = 50;
 
@@ -64,6 +65,7 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public loaded$: Observable<boolean>;
   public query$: Observable<Query>;
+  public views$: Observable<View[]>;
   public workspace$: Observable<Workspace>;
 
   private searchId: string;
@@ -80,6 +82,7 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.views$ = this.store$.pipe(select(selectAllViews));
     this.documents$ = this.subscribeDocuments$();
 
     this.subscribeSearchId();

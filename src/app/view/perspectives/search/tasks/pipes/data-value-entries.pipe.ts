@@ -25,6 +25,9 @@ import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 import {Constraint, ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {TaskAttributes} from '../model/task-attributes';
+import {ResourceAttributeSettings, View} from '../../../../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
+import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 
 @Pipe({
   name: 'dataValueEntries',
@@ -34,15 +37,19 @@ export class DataValueEntriesPipe implements PipeTransform {
     document: DocumentModel,
     collection: Collection,
     taskAttributes: TaskAttributes,
+    views: View[],
     constraintData: ConstraintData,
     config: SearchDocumentsConfig
   ): {label?: string; attributeId: string; isDefault?: boolean; dataValue: DataValue; constraint: Constraint}[] {
     const expanded =
       config?.size === SizeType.L || config?.size === SizeType.XL || (config?.expandedIds || []).includes(document.id);
     const defaultAttributeId = getDefaultAttributeId(collection);
-    return (collection.attributes || [])
-      .filter(attribute => !taskAttributes?.usedAttributes?.has(attribute.id))
-      .reduce((array, attribute) => {
+    const collectionSettings = this.findAttributesSettings(collection, views);
+    const attributesMap = objectsByIdMap(collection.attributes);
+    return createAttributesSettingsOrder(collection.attributes, collectionSettings)
+      .filter(setting => !setting.hidden && !taskAttributes?.usedAttributes?.has(setting.attributeId))
+      .reduce((array, setting) => {
+        const attribute = attributesMap[setting.attributeId];
         const constraint: Constraint = attribute.constraint || new UnknownConstraint();
 
         // showing disabled buttons doesn't make sense
@@ -64,5 +71,13 @@ export class DataValueEntriesPipe implements PipeTransform {
 
         return array;
       }, []);
+  }
+
+  private findAttributesSettings(collection: Collection, views: View[]): ResourceAttributeSettings[] {
+    const defaultViewCode = collection.purpose?.metaData?.defaultViewCode;
+    const defaultView = defaultViewCode && views.find(view => view.code === defaultViewCode);
+    const stemsConfigs = defaultView?.config?.detail?.stemsConfigs || [];
+    const stemConfig = stemsConfigs.find(config => config.stem?.collectionId === collection.id);
+    return stemConfig?.attributesSettings?.collections?.[collection.id];
   }
 }

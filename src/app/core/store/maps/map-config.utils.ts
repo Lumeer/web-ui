@@ -27,6 +27,7 @@ import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
+  queryStemsAreSame,
 } from '../navigation/query/query.util';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {ConstraintType} from '@lumeer/data-filters';
@@ -79,7 +80,16 @@ function mapStemConfigsChanged(c1: MapStemConfig[], c2: MapStemConfig[]): boolea
 }
 
 function mapStemConfigChanged(config: MapStemConfig, mapStemConfig: MapStemConfig) {
-  return !deepObjectsEquals(config, mapStemConfig);
+  if (!queryStemsAreSame(config?.stem, mapStemConfig?.stem)) {
+    return true;
+  }
+  if (!deepObjectsEquals(config?.color, mapStemConfig?.color)) {
+    return true;
+  }
+  if (!deepObjectsEquals(config?.attributes, mapStemConfig?.attributes)) {
+    return true;
+  }
+  return false;
 }
 
 export function checkOrTransformMapConfig(

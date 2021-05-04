@@ -19,13 +19,13 @@
 
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
 import {selectViewQuery} from '../store/views/views.state';
 import {filter, switchMap} from 'rxjs/operators';
-import {queryIsNotEmpty} from '../store/navigation/query/query.util';
-import {selectPerspective} from '../store/navigation/navigation.state';
+import {isNavigatingToOtherWorkspace, queryIsNotEmpty} from '../store/navigation/query/query.util';
+import {selectNavigation, selectPerspective} from '../store/navigation/navigation.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {selectTasksQuery} from '../store/common/permissions.selectors';
 
@@ -42,16 +42,20 @@ export class FileAttachmentsService implements OnDestroy {
   private subscribeToQuery(): Subscription {
     return this.store$
       .pipe(
-        select(selectPerspective),
-        switchMap(perspective => {
-          if (perspective === Perspective.Search) {
+        select(selectNavigation),
+        switchMap(navigation => {
+          if (isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace)) {
+            return of(null);
+          }
+          if (navigation.perspective === Perspective.Search) {
             return this.store$.pipe(select(selectTasksQuery));
           }
           return this.store$.pipe(
             select(selectViewQuery),
             filter(query => queryIsNotEmpty(query))
           );
-        })
+        }),
+        filter(query => !!query)
       )
       .subscribe(query => this.store$.dispatch(new FileAttachmentsAction.GetByQuery({query})));
   }

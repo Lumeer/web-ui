@@ -79,7 +79,7 @@ export class NavigationEffects {
 
         const [url] = previousUrl.split('?', 2);
         const queryParams = this.router.parseUrl(previousUrl).queryParams;
-        return new RouterAction.Go({path: [url], queryParams});
+        return new RouterAction.Go({path: splitUrlParts(url), queryParams});
       })
     )
   );
@@ -165,6 +165,17 @@ export class NavigationEffects {
     private router: Router,
     private store$: Store<AppState>
   ) {}
+}
+
+function splitUrlParts(url: string): any[] {
+  const urlSegments = url.split('/');
+
+  if (urlSegments.length > 5 && urlSegments[1] === 'w' && urlSegments[4].startsWith('view;vc=')) {
+    const viewSegments = urlSegments[4].split(';', 2);
+    const viewCode = viewSegments[1].substring(3); // vc=viewCode
+    return ['/', ...urlSegments.slice(1, 4), 'view', {vc: viewCode}, ...urlSegments.slice(5)];
+  }
+  return [url];
 }
 
 function newQueryAction(query: Query): Action {

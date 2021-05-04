@@ -193,6 +193,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onEditorCreated(editor: any) {
+    editor.root.addEventListener('blur', () => this.onBlur());
     editor.setSelection(Number.MAX_SAFE_INTEGER);
 
     const isMultiLine = editor.root.childElementCount > 1;
@@ -257,7 +258,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onBlur(data: {editor: any; source: string}) {
+  public onBlur() {
     this.removeKeyDownListener();
     if (this.preventSave) {
       this.preventSave = false;
