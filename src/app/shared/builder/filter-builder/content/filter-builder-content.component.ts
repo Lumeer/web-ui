@@ -102,6 +102,8 @@ export class FilterBuilderContentComponent implements OnChanges {
     if (changes.selectedCondition) {
       this.numInputs = conditionTypeNumberOfInputs(this.selectedCondition);
       this.ngForIndexes = createRange(0, this.numInputs);
+    }
+    if (changes.attribute || changes.selectedCondition) {
       this.initFocusedItem();
     }
   }

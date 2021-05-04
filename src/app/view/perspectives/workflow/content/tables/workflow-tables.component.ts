@@ -137,7 +137,8 @@ export class WorkflowTablesComponent implements OnChanges {
       changes.data ||
       changes.linkTypes ||
       changes.config ||
-      changes.constraintData
+      changes.constraintData ||
+      changes.canManageConfig
     ) {
       this.tablesService.onUpdateData(
         this.collections,
@@ -147,7 +148,8 @@ export class WorkflowTablesComponent implements OnChanges {
         this.permissions,
         this.query,
         this.viewSettings,
-        this.constraintData
+        this.constraintData,
+        this.canManageConfig
       );
     }
   }

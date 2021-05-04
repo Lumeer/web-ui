@@ -4,11 +4,16 @@
       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
       [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"
-      scope="col" title="{{column.attribute | attributeTitle}}" #tableHeader
+      [title]="column.attribute | attributeTitle:'':true"
+      scope="col" #tableHeader
       (contextmenu)="onContextMenu(index, $event)">
     <div class="d-flex flex-nowrap flex-row align-items-center">
       <div class="flex-grow-1 overflow-hidden">{{column.attribute.name}}</div>
 
+      <div *ngIf="column?.attribute?.description" class="ml-1"
+           [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
+        <i class="far fa-question-circle ml-1"></i>
+      </div>
       <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
         <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
              (click)="onContextMenu(index, $event)">

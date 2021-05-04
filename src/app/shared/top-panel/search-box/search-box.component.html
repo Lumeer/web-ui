@@ -4,17 +4,17 @@
         [formGroup]="form"
         class="d-flex">
     <ng-container
-      *ngIf="{canManageConfig: canManageConfig$ | async, query: query$ | async, perspective: perspective$ | async, currentView: currentView$ | async} as data">
+      *ngIf="{canManageConfig: canManageConfig$ | async, query: query$ | async, perspective: perspective$ | async, currentView: currentView$ | async, queryItems: queryItems$ | async} as data">
       <div *ngIf="constraintData$ | async as constraintData"
            class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
            [style.width.px]="1"
            formArrayName="queryItems">
         <query-item
-          *ngFor="let queryItemData of queryItems$ | async | createCompactQueryItems:(searchBoxData$ | async); trackBy:trackByQueryItem"
+          *ngFor="let queryItemData of data.queryItems | createCompactQueryItems:(searchBoxData$ | async); trackBy:trackByQueryItem"
           [queryItemForm]="queryItemsControl.at(queryItemData.realIndex)"
           [queryItem]="queryItemData.queryItem"
           [constraintData]="constraintData"
-          [readonly]="!(queryItemData.queryItem | isQueryItemEditable:data.canManageConfig:data.currentView?.query)"
+          [readonly]="!(queryItemData.realIndex | isQueryItemEditable:data.queryItems:data.canManageConfig:data.currentView?.query)"
           (change)="onQueryItemsChanged()"
           (remove)="onRemoveQueryItem(queryItemData.realIndex)"
           (focusInput)="searchInput.focusInput()"
@@ -25,7 +25,7 @@
         </query-item>
 
         <search-input #searchInput
-                      [queryItems]="queryItems$ | async"
+                      [queryItems]="data.queryItems"
                       [restrictedMode]="!data.canManageConfig"
                       (addQueryItem)="onAddQueryItem($event)"
                       (removeQueryItem)="onRemoveLastQueryItem(data.canManageConfig)"

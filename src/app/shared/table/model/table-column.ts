@@ -51,6 +51,10 @@ export interface TableColumn {
   menuItems: MenuItem[];
 }
 
+export interface ColumnFilter extends AttributeFilter {
+  deletable: boolean;
+}
+
 export function columnConstraint(column: TableColumn): Constraint {
   return column.attribute?.constraint || new UnknownConstraint();
 }

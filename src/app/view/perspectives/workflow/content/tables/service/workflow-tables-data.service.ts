@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
-import {TableColumn} from '../../../../../../shared/table/model/table-column';
+import {ColumnFilter, TableColumn} from '../../../../../../shared/table/model/table-column';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
@@ -34,7 +34,12 @@ import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/oper
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {AttributeSortType, ResourceAttributeSettings, ViewSettings} from '../../../../../../core/store/views/view';
+import {
+  AttributeSortType,
+  ResourceAttributeSettings,
+  View,
+  ViewSettings,
+} from '../../../../../../core/store/views/view';
 import {
   TABLE_COLUMN_WIDTH,
   TABLE_ROW_HEIGHT,
@@ -138,7 +143,7 @@ import {NavigationAction} from '../../../../../../core/store/navigation/navigati
 export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {};
   private pendingCorrelationIds: string[] = [];
-  private isViewActive: boolean;
+  private currentView: View;
   private dataAggregator: DataAggregator;
 
   constructor(
@@ -152,7 +157,7 @@ export class WorkflowTablesDataService {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
-    this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.isViewActive = !!view));
+    this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.currentView = view));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -198,7 +203,8 @@ export class WorkflowTablesDataService {
         this.stateService.permissions,
         this.stateService.query,
         viewSettings,
-        this.stateService.constraintData
+        this.stateService.constraintData,
+        this.stateService.canManageConfig
       );
     }
   }
@@ -211,7 +217,8 @@ export class WorkflowTablesDataService {
     permissions: AllowedPermissionsMap,
     query: Query,
     viewSettings: ViewSettings,
-    constraintData: ConstraintData
+    constraintData: ConstraintData,
+    canManageConfig: boolean
   ) {
     const currentTables = this.stateService.tables;
     this.stateService.updateData(
@@ -222,7 +229,8 @@ export class WorkflowTablesDataService {
       permissions,
       query,
       viewSettings,
-      constraintData
+      constraintData,
+      canManageConfig
     );
 
     const {tables, actions} = this.createTablesAndSyncActions(
@@ -592,7 +600,7 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         color,
-        filters: filters.filter(f => f.attributeId === attribute.id),
+        filters: this.createColumnFilters(filters, attribute, query.stems[0], resource.id, resourceType),
         default: attribute.id === defaultAttributeId,
         hidden: setting.hidden,
         permissions: permissions,
@@ -633,7 +641,7 @@ export class WorkflowTablesDataService {
     }
 
     if (
-      !this.isViewActive &&
+      !this.currentView &&
       isCollection &&
       permissions.manage &&
       !attributeColumns.some(column => !column.attribute)
@@ -655,6 +663,32 @@ export class WorkflowTablesDataService {
     }
 
     return {columns: attributeColumns, actions: syncActions};
+  }
+
+  private createColumnFilters(
+    allFilters: AttributeFilter[],
+    attribute: Attribute,
+    stem: QueryStem,
+    resourceId: string,
+    resourceType: AttributesResourceType
+  ): ColumnFilter[] {
+    if (allFilters.length === 0) {
+      return [];
+    }
+    const attributeFilters = allFilters.filter(filter => filter.attributeId === attribute.id);
+    if (this.stateService.canManageConfig || !this.currentView) {
+      return attributeFilters.map(filter => ({...filter, deletable: true}));
+    }
+
+    const currentViewSameStems = this.currentView?.query?.stems?.filter(s => queryStemsAreSame(s, stem)) || [];
+    const currentViewFilters = getQueryFiltersForResource({stems: currentViewSameStems}, resourceId, resourceType);
+    return attributeFilters.map((filter, index) => {
+      const sameFiltersBefore = attributeFilters.slice(0, index).filter(f => deepObjectsEquals(f, filter)).length;
+      const sameStemFilters = currentViewFilters.filter(f => deepObjectsEquals(f, filter)).length;
+      const deletable = sameFiltersBefore >= sameStemFilters;
+
+      return {...filter, deletable};
+    });
   }
 
   public createEmptyLinkColumn(table: WorkflowTable): TableColumn {

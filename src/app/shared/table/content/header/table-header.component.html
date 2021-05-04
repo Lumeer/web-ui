@@ -17,7 +17,8 @@
       (mousedown)="onMouseDown($event)"
       [style.width.px]="group.width"
       [style.height.px]="tableRowHeight"
-      scope="col" title="{{group.column?.name || group.column?.attribute?.name}}"
+      [title]="group.column?.attribute | attributeTitle:group.column?.name:!columnData.editing"
+      scope="col"
       (click)="onHeaderClick(group.column)"
       (dblclick)="onHeaderDoubleClick(group.column)">
       <table-header-cell *ngIf="index !== dragData.index"
