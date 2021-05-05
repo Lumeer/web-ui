@@ -38,7 +38,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
@@ -105,7 +105,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
     if (changes.value && this.value) {
       this.date = this.value.toDate?.();
       this.options = createDateTimeOptions(this.value.config?.format);
-      this.dateTimeInput.nativeElement.value = this.value.format();
+      if (this.readonly) {
+        checkDataInputElementValue(this.dateTimeInput?.nativeElement, this.value);
+      }
     }
   }
 

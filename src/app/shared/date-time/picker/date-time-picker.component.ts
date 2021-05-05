@@ -179,7 +179,10 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     if (date && (!this.hasTimeOptions || !this.dateControl.value)) {
       parsedDate.setHours(0, 0, 0, 0);
     }
-    this.dateControl.setValue(parsedDate);
+    const currentDate = <Date>this.dateControl.value;
+    if (parsedDate?.getTime() !== currentDate?.getTime()) {
+      this.dateControl.setValue(parsedDate);
+    }
   }
 
   public onCancel(event?: MouseEvent) {

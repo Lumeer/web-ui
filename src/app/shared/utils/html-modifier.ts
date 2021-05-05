@@ -41,6 +41,15 @@ export function setCursorAtDataInputEnd(element: HTMLInputElement, dataValue: Da
   element.focus();
 }
 
+export function checkDataInputElementValue(element: HTMLInputElement, dataValue: DataValue) {
+  if (element && dataValue) {
+    const value = dataValue.format();
+    if (element.value !== value) {
+      element.value = value;
+    }
+  }
+}
+
 export function shadeColor(color: string, percent: number): string {
   if (color) {
     const f = parseInt(color.slice(1), 16),

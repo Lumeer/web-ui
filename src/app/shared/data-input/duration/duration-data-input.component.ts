@@ -30,7 +30,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {KeyCode} from '../../key-code';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -85,6 +85,9 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
     }
     if (changes.value && this.value) {
       this.valid = this.value.isValid();
+      if (this.readonly) {
+        checkDataInputElementValue(this.durationInput?.nativeElement, this.value);
+      }
     }
   }
 
