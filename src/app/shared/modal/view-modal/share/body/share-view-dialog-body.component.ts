@@ -39,8 +39,14 @@ import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {UserRolesInResourcePipe} from '../../../../pipes/user-roles-in-resource.pipe';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {isNullOrUndefined} from '../../../../utils/common.utils';
-import {generateCorrelationId, userCanReadWorkspace, userIsManagerInWorkspace} from '../../../../utils/resource.utils';
+import {
+  generateCorrelationId,
+  userCanReadWorkspace,
+  userHasRoleInResource,
+  userIsManagerInWorkspace,
+} from '../../../../utils/resource.utils';
 import {containsSameElements} from '../../../../utils/array.utils';
+import {Role} from '../../../../../core/model/role';
 
 @Component({
   selector: 'share-view-dialog-body',
@@ -268,6 +274,8 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   private checkCanAddNewUsers() {
-    this.canAddNewUsers = userIsManagerInWorkspace(this.currentUser, this.organization, this.project);
+    this.canAddNewUsers =
+      userIsManagerInWorkspace(this.currentUser, this.organization, this.project) ||
+      userHasRoleInResource(this.currentUser, this.view, Role.Manage);
   }
 }
