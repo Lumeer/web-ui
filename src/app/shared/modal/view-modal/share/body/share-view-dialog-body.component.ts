@@ -242,7 +242,6 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     initialUserPermissions: Record<string, string[]>,
     currentUserPermissions: Record<string, string[]>
   ): boolean {
-    C;
     if (!initialUserPermissions || !currentUserPermissions) {
       return false;
     }
