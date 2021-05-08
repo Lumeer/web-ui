@@ -107,6 +107,8 @@ export class BlocklyUtils {
   public static readonly PRINT_TEXT = 'print_text';
   public static readonly SEND_EMAIL = 'send_email';
   public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
+  public static readonly NAVIGATE_TO_VIEW_BY_ID = 'navigate_to_view_by_id';
+  public static readonly SHARE_VIEW = 'share_view';
   public static readonly STRING_REPLACE = 'string_replace';
   public static readonly LOOP_BREAK = 'loop_break';
   public static readonly LOOP_CONTINUE = 'loop_continue';

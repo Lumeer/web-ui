@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {COLOR_SUCCESS} from '../../../../core/constants';
+import {COLOR_AMBER} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {BlocklyComponent} from './blockly-component';
 import {View} from '../../../../core/store/views/view';
@@ -62,7 +62,7 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
             },
           ],
           output: '',
-          colour: COLOR_SUCCESS,
+          colour: COLOR_AMBER,
           tooltip: this_.tooltip,
           helpUrl: '',
         });
@@ -76,10 +76,6 @@ export class ReadDocumentsBlocklyComponent extends BlocklyComponent {
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
-  }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return '<xml><block type="' + BlocklyUtils.READ_DOCUMENTS + '"></block></xml>';
   }
 
   public onWorkspaceChange(workspace, changeEvent) {

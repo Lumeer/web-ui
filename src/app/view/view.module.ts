@@ -27,9 +27,10 @@ import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
 import {PerspectivesOptionsPipe} from './view-controls/perspectives-options.pipe';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, RouterModule, SharedModule, ViewRoutingModule],
+  imports: [BrowserModule, FormsModule, RouterModule, SharedModule, ViewRoutingModule, TooltipModule],
   declarations: [
     ViewComponent,
     ViewControlsComponent,

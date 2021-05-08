@@ -96,6 +96,8 @@ import {IsNumberBlocklyComponent} from './blocks/is-number-blockly-component';
 import {IsStringBlocklyComponent} from './blocks/is-string-blockly-component';
 import {CountOccurrencesBlocklyComponent} from './blocks/count-occurrences-blockly-component';
 import {FilterObjectsBlocklyComponent} from './blocks/filter-objects-blockly-component';
+import {NavigateByIdBlocklyComponent} from './blocks/navigate-by-id-blockly-component';
+import {ShareViewBlocklyComponent} from './blocks/share-view-blockly-component';
 
 declare var Blockly: any;
 
@@ -204,6 +206,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new ReadDocumentsBlocklyComponent(this.blocklyUtils, this.views),
       new SendEmailBlocklyComponent(this.blocklyUtils),
       new NavigateBlocklyComponent(this.blocklyUtils, this.views),
+      new NavigateByIdBlocklyComponent(this.blocklyUtils),
+      new ShareViewBlocklyComponent(this.blocklyUtils),
       new GetSiblingsBlocklyComponent(this.blocklyUtils, this.linkTypes),
       new GetParentDocumentBlocklyComponent(this.blocklyUtils),
       new GetChildDocumentsBlocklyComponent(this.blocklyUtils),

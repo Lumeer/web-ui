@@ -882,7 +882,7 @@ export class PusherService implements OnDestroy {
                 data.object?.message,
                 this.userNotificationTitle.error,
                 [this.dismissButton],
-                'error'
+                'danger'
               );
               break;
           }
