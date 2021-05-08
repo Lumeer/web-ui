@@ -85,7 +85,7 @@
             <span i18n="@@button.share"
                   tooltip="To share a view, first set its name and save it using the controls to the left."
                   i18n-tooltip="@@view.share.disabled.tooltip"
-                  [tooltipEnable]="!(view.code && state.permissions.canShare)">Share</span>
+                  [tooltipEnable]="!view.code && !state.permissions.canShare">Share</span>
           </button>
         </div>
       </div>
