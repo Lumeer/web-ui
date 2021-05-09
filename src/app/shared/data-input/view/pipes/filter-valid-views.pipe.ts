@@ -18,27 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DropdownOption} from '../../../dropdown/options/dropdown-option';
-import {sortObjectsByScore} from '../../../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/data-filters';
 import {View} from '../../../../core/store/views/view';
-import {Collection} from '../../../../core/store/collections/collection';
-import {getViewColor, getViewIcon} from '../../../../core/store/views/view.utils';
 
 @Pipe({
-  name: 'filterViews',
+  name: 'filterValidViews',
 })
-export class FilterViewsPipe implements PipeTransform {
-  public transform(views: View[], text: string, collectionsMap: Record<string, Collection>): DropdownOption[] {
-    const filteredUsersOptions = (views || [])
-      .filter(view => removeAccentFromString(view.name).includes(removeAccentFromString(text)))
-      .map(view => ({
-        value: view.id,
-        displayValue: view.name,
-        icons: [getViewIcon(view)],
-        iconColors: [getViewColor(view, collectionsMap)],
-      }));
-
-    return sortObjectsByScore<DropdownOption>(filteredUsersOptions, text, ['displayValue', 'value']);
+export class FilterValidViewsPipe implements PipeTransform {
+  public transform(views: View[]): View[] {
+    return views?.filter(view => !!view.name);
   }
 }

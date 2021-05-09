@@ -73,6 +73,7 @@ import {ViewDataInputComponent} from './view/view-data-input.component';
 import {FilterViewsPipe} from './view/pipes/filter-views.pipe';
 import {ViewsIdsPipe} from './view/pipes/views-ids.pipe';
 import {RouterModule} from '@angular/router';
+import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
 
 @NgModule({
   imports: [
@@ -132,6 +133,7 @@ import {RouterModule} from '@angular/router';
     ActionFiltersTooltipComponent,
     ActionFilterPreviewComponent,
     FilterViewsPipe,
+    FilterValidViewsPipe,
     ViewsIdsPipe,
     ViewDataInputComponent,
   ],

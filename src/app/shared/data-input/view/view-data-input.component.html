@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
-     *ngIf="{selectedViews: selectedViews$ | async, collectionsMap: collectionsMap$ | async, workspace: workspace$ | async} as data"
+     *ngIf="{selectedViews: selectedViews$ | async | filterValidViews, collectionsMap: collectionsMap$ | async, workspace: workspace$ | async} as data"
      [title]="value | formatDataValueTitle"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
