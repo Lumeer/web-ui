@@ -27,7 +27,8 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {getViewIcon} from '../../../../../../core/store/views/view.utils';
+import {getViewColor, getViewIcon} from '../../../../../../core/store/views/view.utils';
+import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'view-detail',
@@ -58,6 +59,7 @@ export class ViewDetailComponent implements OnChanges {
 
   public readonly sizeType = SizeType;
 
+  public color: string;
   public icon: string;
   public path: any[];
 
@@ -66,6 +68,7 @@ export class ViewDetailComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.queryData || changes.view) {
       this.createQueryItems();
+      this.color = getViewColor(this.view, objectsByIdMap(this.queryData?.collections));
     }
     if (changes.view) {
       this.icon = getViewIcon(this.view);

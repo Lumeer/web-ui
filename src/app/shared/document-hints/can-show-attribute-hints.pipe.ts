@@ -27,6 +27,7 @@ const NO_HINTS_CONSTRAINT_TYPES = [
   ConstraintType.Boolean,
   ConstraintType.DateTime,
   ConstraintType.Select,
+  ConstraintType.View,
   ConstraintType.User,
   ConstraintType.Files,
 ];

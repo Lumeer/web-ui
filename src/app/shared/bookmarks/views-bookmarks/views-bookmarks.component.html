@@ -1,6 +1,6 @@
-<bookmark-toolbar [additionalClasses]="['mt-5']" *ngIf="{queryData: queryData$ | async} as data">
+<bookmark-toolbar [additionalClasses]="['mt-5']" *ngIf="{queryData: queryData$ | async, collectionsMap: collectionsMap$ | async} as data">
   <ng-container *ngFor="let view of (views$ | async)">
-    <bookmark [color]="view| viewColor:data.queryData?.collections"
+    <bookmark [color]="view| viewColor:data.collectionsMap"
               [icon]="view | viewIcon"
               [link]="view | viewLink:workspace">
       {{view.name}}

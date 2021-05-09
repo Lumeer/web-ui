@@ -1,0 +1,45 @@
+<div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
+     *ngIf="{selectedViews: selectedViews$ | async, collectionsMap: collectionsMap$ | async, workspace: workspace$ | async} as data"
+     [title]="value | formatDataValueTitle"
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
+
+  <ng-container *ngIf="multi || readonly">
+    <ng-container
+      *ngFor="let view of data.selectedViews; trackBy:trackByView; let first = first; let last = last">
+      <i class="fa-fw mr-1" [ngClass]="view | viewIcon"
+         [class.ml-1]="first"
+         [class.ml-2]="!first"
+         [style.color]="view | viewColor:data.collectionsMap">
+      </i>
+      <a data-test="view-data-input" class="d-inline-block view"
+         [class.color-inherit]="commonConfiguration?.inheritColor"
+         [target]="newWindow ? '_blank' : null"
+         [routerLink]="view | viewLink:data.workspace">{{view.name}}</a>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+    <input #textInput
+           [(ngModel)]="name"
+           (blur)="onBlur()"
+           (focus)="onFocused()"
+           (ngModelChange)="onInputChange()"
+           [class.ml-1]="data.selectedViews.length > 0"
+           [spellcheck]="false"
+           [ngClass]="inputClass"
+           class="border-0 w-100 h-100 bg-transparent"
+           type="text">
+
+    <options-dropdown [options]="views | filterViews:name:data.collectionsMap"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [highlightedText]="name"
+                      [multiSelect]="multi"
+                      [selectedValues]="multi ? (data.selectedViews | viewsIds) : []"
+                      [firstItemActive]="!multi && name?.length > 0"
+                      (selectOption)="onSelectOption($event)">
+    </options-dropdown>
+  </ng-container>
+
+</div>

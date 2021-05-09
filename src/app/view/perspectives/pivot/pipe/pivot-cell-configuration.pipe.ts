@@ -26,7 +26,7 @@ import {ConstraintType} from '@lumeer/data-filters';
   name: 'pivotCellConfiguration',
 })
 export class PivotCellConfigurationPipe implements PipeTransform {
-  public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40}};
+  public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40, inheritColor: true}};
 
   public transform(cell: PivotTableCell): DataInputConfiguration {
     const constraintType = cell?.constraint?.type;

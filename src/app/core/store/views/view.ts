@@ -32,14 +32,14 @@ import {WorkflowConfig} from '../workflows/workflow';
 import {DetailConfig} from '../details/detail';
 
 export interface View extends Resource {
-  perspective: Perspective;
-  query: Query;
-  config: ViewConfig;
+  perspective?: Perspective;
+  query?: Query;
+  config?: ViewConfig;
   settings?: ViewSettings;
   authorRights?: Record<string, string[]>;
   lastTimeUsed?: Date;
   favorite?: boolean;
-  folders: string[];
+  folders?: string[];
 }
 
 export interface ViewConfig {

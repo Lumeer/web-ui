@@ -33,6 +33,7 @@ import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views
 import {map, tap} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
 import {getViewColor, getViewIcon} from '../../../../core/store/views/view.utils';
+import {objectsByIdMap} from '../../../utils/common.utils';
 
 @Component({
   templateUrl: './view-settings-modal.component.html',
@@ -74,7 +75,7 @@ export class ViewSettingsModalComponent implements OnInit {
     this.form = this.fb.group({
       name: [this.view.name, notEmptyValidator()],
       icon: [getViewIcon(this.view)],
-      color: [getViewColor(this.view, this.collections)],
+      color: [getViewColor(this.view, objectsByIdMap(this.collections))],
       priority: [this.view.priority, integerValidator()],
       folders: this.fb.array(this.view.folders || []),
     });

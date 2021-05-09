@@ -48,7 +48,7 @@ export class AttributeTypeSelectComponent implements OnInit {
       .map(type => ({
         id: type,
         value: parseSelectTranslation(
-          $localize`:@@constraint.type:{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}`,
+          $localize`:@@constraint.type:{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} View {View}}`,
           {type}
         ),
         icons: [constraintIconsMap[type]],

@@ -189,16 +189,13 @@ export function createSaveViewSettings(
     }
   );
 }
-
-export function getViewColor(view: View, collections: Collection[]): string {
-  return view?.color || defaultViewColorFromQuery(view, collections);
+export function getViewColor(view: View, collectionsMap: Record<string, Collection>): string {
+  return view?.color || defaultViewColorFromQuery(view, collectionsMap);
 }
 
-function defaultViewColorFromQuery(view: View, collections: Collection[]): string {
+function defaultViewColorFromQuery(view: View, collectionsMap: Record<string, Collection>): string {
   const firstStemCollectionId = view?.query?.stems?.[0]?.collectionId;
-  return (
-    (firstStemCollectionId && collections.find(collection => collection.id === firstStemCollectionId)?.color) || ''
-  );
+  return (firstStemCollectionId && collectionsMap?.[firstStemCollectionId]?.color) || '';
 }
 
 export function getViewIcon(view: View): string {

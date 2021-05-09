@@ -107,6 +107,7 @@ import {StateListDataValuePipe} from './state-list-data-value.pipe';
 import {CanCreateLinksPipe} from './can-create-links.pipe';
 import {ViewIconPipe} from './view-icon.pipe';
 import {ViewColorPipe} from './view-color.pipe';
+import {ViewLinkPipe} from './view-link.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -198,6 +199,7 @@ import {ViewColorPipe} from './view-color.pipe';
     CanCreateLinksPipe,
     ViewIconPipe,
     ViewColorPipe,
+    ViewLinkPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -288,6 +290,7 @@ import {ViewColorPipe} from './view-color.pipe';
     CanCreateLinksPipe,
     ViewIconPipe,
     ViewColorPipe,
+    ViewLinkPipe,
   ],
 })
 export class PipesModule {}

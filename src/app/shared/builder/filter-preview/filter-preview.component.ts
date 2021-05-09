@@ -42,7 +42,7 @@ export class FilterPreviewComponent {
   public conditionValues: ConditionValue[];
 
   public readonly configuration: DataInputConfiguration = {
-    common: {inline: true, skipValidation: true},
+    common: {inline: true, skipValidation: true, inheritColor: true},
     color: {limitWidth: true},
   };
 }

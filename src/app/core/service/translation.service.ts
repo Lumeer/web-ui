@@ -64,6 +64,7 @@ export class TranslationService {
       case ConstraintType.Address:
         return this.translateConditionByText(condition);
       case ConstraintType.Select:
+      case ConstraintType.View:
       case ConstraintType.User:
         return this.translateConditionByUserAndSelect(condition);
       case ConstraintType.Number:

@@ -126,8 +126,7 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private optionValue(index: number): any {
-    const option = (this.options || [])[index];
-    return option && option.value;
+    return (this.options || [])[index]?.value;
   }
 
   private shouldResetActiveItem(changes: SimpleChanges): boolean {

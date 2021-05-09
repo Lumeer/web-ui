@@ -39,6 +39,7 @@ export const constraintTypesMap = {
   [ConstraintType.Text]: ConstraintType.Text,
   [ConstraintType.Unknown]: ConstraintType.Unknown,
   [ConstraintType.User]: ConstraintType.User,
+  [ConstraintType.View]: ConstraintType.View,
 };
 
 export const constraintIconsMap = {
@@ -61,6 +62,7 @@ export const constraintIconsMap = {
   [ConstraintType.Text]: 'fas fa-font',
   [ConstraintType.Unknown]: 'fas fa-times',
   [ConstraintType.User]: 'fas fa-user',
+  [ConstraintType.View]: 'fas fa-eye',
 };
 
 export function isConstraintTypeEnabled(type: string | ConstraintType): boolean {
@@ -80,6 +82,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.Text:
     case ConstraintType.Unknown:
     case ConstraintType.User:
+    case ConstraintType.View:
       return true;
     default:
       return false;

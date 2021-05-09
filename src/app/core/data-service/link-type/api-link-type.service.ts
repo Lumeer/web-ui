@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -60,8 +60,7 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
   }
 
   public getLinkTypes(workspace?: Workspace): Observable<LinkTypeDto[]> {
-    const queryParams = new HttpParams().set('fromViews', 'true');
-    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace), {params: queryParams});
+    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace));
   }
 
   public createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {

@@ -69,6 +69,10 @@ import {ActionFiltersTooltipComponent} from './action/tooltip/action-filters-too
 import {FilterBuilderPipesModule} from '../builder/pipes/filter-builder-pipes.module';
 import {ActionFilterPreviewComponent} from './action/tooltip/preview/action-filter-preview.component';
 import {ProgressModule} from '../progress/progress.module';
+import {ViewDataInputComponent} from './view/view-data-input.component';
+import {FilterViewsPipe} from './view/pipes/filter-views.pipe';
+import {ViewsIdsPipe} from './view/pipes/views-ids.pipe';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -89,6 +93,7 @@ import {ProgressModule} from '../progress/progress.module';
     ReactiveFormsModule,
     FilterBuilderPipesModule,
     ProgressModule,
+    RouterModule,
   ],
   declarations: [
     DataInputComponent,
@@ -126,6 +131,9 @@ import {ProgressModule} from '../progress/progress.module';
     ActionDataInputComponent,
     ActionFiltersTooltipComponent,
     ActionFilterPreviewComponent,
+    FilterViewsPipe,
+    ViewsIdsPipe,
+    ViewDataInputComponent,
   ],
   exports: [
     DataInputComponent,
@@ -141,6 +149,7 @@ import {ProgressModule} from '../progress/progress.module';
     ConstraintClassPipe,
     FilterUsersPipe,
     ActionDataInputComponent,
+    ViewDataInputComponent,
   ],
 })
 export class DataInputModule {}

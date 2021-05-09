@@ -64,6 +64,7 @@ import {
   EquationOperator,
   SelectConstraintConfig,
 } from '@lumeer/data-filters';
+import {ViewConstraintFormControl} from './constraint-config/view/view-constraint-form-control';
 
 @Component({
   selector: 'attribute-type-form',
@@ -213,6 +214,11 @@ export class AttributeTypeFormComponent implements OnChanges {
           confirmationTitle: requiresConfirmation
             ? this.configForm.get(ActionConstraintFormControl.ConfirmationTitle).value?.trim()
             : null,
+        };
+      case ConstraintType.View:
+        return {
+          multi: this.configForm.get(ViewConstraintFormControl.Multi).value,
+          openInNewWindow: this.configForm.get(ViewConstraintFormControl.OpenInNewWindow).value,
         };
       default:
         return null;

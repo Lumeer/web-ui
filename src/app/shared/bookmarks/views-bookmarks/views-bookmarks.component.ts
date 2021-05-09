@@ -23,11 +23,12 @@ import {View} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {QueryData} from '../../top-panel/search-box/util/query-data';
-import {selectAllCollections} from '../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectAllViewsSorted} from '../../../core/store/views/views.state';
+import {Collection} from '../../../core/store/collections/collection';
 
 @Component({
   selector: 'views-bookmarks',
@@ -40,6 +41,7 @@ export class ViewsBookmarksComponent implements OnInit {
 
   public views$: Observable<View[]>;
   public queryData$: Observable<QueryData>;
+  public collectionsMap$: Observable<Record<string, Collection>>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -48,6 +50,7 @@ export class ViewsBookmarksComponent implements OnInit {
       select(selectAllViewsSorted),
       map(views => views.filter(view => view.favorite))
     );
+    this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
     this.queryData$ = combineLatest([
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),

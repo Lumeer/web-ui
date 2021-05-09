@@ -34,6 +34,8 @@ import {
   UserConstraint,
   UserConstraintConfig,
   UserDataValue,
+  ViewConstraint,
+  ViewConstraintConfig,
 } from '@lumeer/data-filters';
 
 @Pipe({
@@ -50,7 +52,10 @@ export class StateListConstraintPipe implements PipeTransform {
       return null;
     }
     const constraint = findAttributeConstraint(attributes, attributeId) || new UnknownConstraint();
-    if (constraint?.type === ConstraintType.Select) {
+    if (constraint?.type === ConstraintType.View) {
+      const viewConfig = <ViewConstraintConfig>{...constraint.config, multi: true};
+      return {constraint: new ViewConstraint(viewConfig), constraintData};
+    } else if (constraint?.type === ConstraintType.Select) {
       const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
       return {constraint: new SelectConstraint(selectConfig), constraintData};
     } else if (constraint?.type === ConstraintType.User) {
