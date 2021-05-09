@@ -510,6 +510,7 @@ export class GanttChartConverter {
     switch (finalConstraint.type) {
       case ConstraintType.Select:
       case ConstraintType.User:
+      case ConstraintType.View:
       case ConstraintType.Boolean:
         return dataValue.serialize();
       default:

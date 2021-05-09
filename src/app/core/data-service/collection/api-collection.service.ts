@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
@@ -78,8 +78,7 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
   }
 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
-    const queryParams = new HttpParams().append('fromViews', 'true');
-    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace), {params: queryParams});
+    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace));
   }
 
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {

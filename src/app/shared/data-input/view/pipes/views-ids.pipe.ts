@@ -18,17 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../core/store/views/view';
-import {Workspace} from '../../../core/store/navigation/workspace';
+import {View} from '../../../../core/store/views/view';
 
 @Pipe({
-  name: 'viewLink',
+  name: 'viewsIds',
 })
-export class ViewLinkPipe implements PipeTransform {
-  public transform(view: View, workspace: Workspace): any[] {
-    if (!view || !workspace) {
-      return null;
-    }
-    return ['/w', workspace.organizationCode, workspace.projectCode, 'view', {vc: view.code}];
+export class ViewsIdsPipe implements PipeTransform {
+  public transform(views: View[]): string[] {
+    return (views || []).map(view => view.id);
   }
 }

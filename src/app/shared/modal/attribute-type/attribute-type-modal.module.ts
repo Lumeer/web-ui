@@ -60,6 +60,7 @@ import {ActionConstraintConfirmationFormComponent} from './form/constraint-confi
 import {InputModule} from '../../input/input.module';
 import {PercentageConstraintConfigStyleComponent} from './form/constraint-config/percentage/style/percentage-constraint-config-style.component';
 import {ProgressModule} from '../../progress/progress.module';
+import {ViewConstraintConfigFormComponent} from './form/constraint-config/view/view-constraint-config-form.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import {ProgressModule} from '../../progress/progress.module';
     ActionConstraintConfigEmptyComponent,
     ActionConstraintConfirmationFormComponent,
     PercentageConstraintConfigStyleComponent,
+    ViewConstraintConfigFormComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,11 @@
+input {
+  min-width: 50px;
+}
+
+.view {
+  line-height: 1.1rem;
+}
+
+input:focus {
+  outline: none;
+}

@@ -26,7 +26,7 @@ import {Collection} from '../../core/store/collections/collection';
   name: 'viewColor',
 })
 export class ViewColorPipe implements PipeTransform {
-  public transform(view: View, collections: Collection[]): string {
-    return getViewColor(view, collections);
+  public transform(view: View, collectionsMap: Record<string, Collection>): string {
+    return getViewColor(view, collectionsMap);
   }
 }

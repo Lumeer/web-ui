@@ -46,6 +46,12 @@
                                [form]="form">
   </user-constraint-config-form>
 
+
+  <view-constraint-config-form *ngSwitchCase="constraintTypes.View"
+                               [config]="config"
+                               [form]="form">
+  </view-constraint-config-form>
+
   <action-constraint-config-form *ngSwitchCase="constraintTypes.Action"
                                  [config]="config"
                                  [form]="form"

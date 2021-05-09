@@ -630,7 +630,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   ): any {
     if (
       constraint &&
-      (constraint.type === ConstraintType.Select || constraint.type === ConstraintType.User) &&
+      (constraint.type === ConstraintType.Select ||
+        constraint.type === ConstraintType.User ||
+        constraint.type === ConstraintType.View) &&
       isNotNullOrUndefined(previousValue) &&
       isArray(documentValue)
     ) {

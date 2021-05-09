@@ -31,7 +31,7 @@ export class ConstraintTypeIconTitlePipe implements PipeTransform {
     }
 
     return parseSelectTranslation(
-      $localize`:@@constraint.type.icon.title:{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color}}`,
+      $localize`:@@constraint.type.icon.title:{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} View {View}}`,
       {constraintType: constraint.type}
     );
   }

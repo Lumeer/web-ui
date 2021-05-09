@@ -28,6 +28,8 @@ import {
   SelectConstraintConfig,
   UserConstraint,
   UserConstraintConfig,
+  ViewConstraint,
+  ViewConstraintConfig,
 } from '@lumeer/data-filters';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
@@ -253,6 +255,10 @@ export function modifyAttributeForQueryFilter(attribute: Attribute): Attribute {
 
   const constraint = attribute.constraint;
   switch (constraint.type) {
+    case ConstraintType.View:
+      const viewConfig = <ViewConstraintConfig>{...constraint.config, multi: true};
+      const viewConstraint = new ViewConstraint(viewConfig);
+      return {...attribute, constraint: viewConstraint};
     case ConstraintType.Select:
       const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
       const selectConstraint = new SelectConstraint(selectConfig);

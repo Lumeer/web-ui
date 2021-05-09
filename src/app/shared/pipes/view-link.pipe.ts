@@ -19,25 +19,16 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {View} from '../../core/store/views/view';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {getViewColor, getViewIcon} from '../../core/store/views/view.utils';
-import {Collection} from '../../core/store/collections/collection';
-import {objectsByIdMap} from '../utils/common.utils';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Pipe({
-  name: 'viewsSelectItems',
+  name: 'viewLink',
 })
-export class ViewsSelectItemsPipe implements PipeTransform {
-  public transform(views: View[], collections: Collection[]): SelectItemModel[] {
-    return views?.map(view => this.viewSelectItem(view, objectsByIdMap(collections))) || [];
-  }
-
-  private viewSelectItem(view: View, collectionsMap: Record<string, Collection>): SelectItemModel {
-    return {
-      id: view.code,
-      value: view.name,
-      icons: [getViewIcon(view)],
-      iconColors: [getViewColor(view, collectionsMap)],
-    };
+export class ViewLinkPipe implements PipeTransform {
+  public transform(view: View, workspace: Workspace): any[] {
+    if (!view || !workspace) {
+      return null;
+    }
+    return ['/w', workspace.organizationCode, workspace.projectCode, 'view', {vc: view.code}];
   }
 }

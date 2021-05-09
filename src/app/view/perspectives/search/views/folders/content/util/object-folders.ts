@@ -25,7 +25,7 @@ export interface ObjectFolders<T extends ObjectFoldersType> {
   name?: string;
 }
 
-export type ObjectFoldersType = {folders: string[]};
+export type ObjectFoldersType = {folders?: string[]};
 
 export function getAllObjectFoldersObjects<T extends ObjectFoldersType>(folders: ObjectFolders<T>): T[] {
   return [...(folders?.objects || []), ...getObjectFoldersObjects(folders?.folders)];

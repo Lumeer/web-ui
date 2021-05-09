@@ -17,27 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createSelector} from '@ngrx/store';
-import {ConstraintData} from '@lumeer/data-filters';
-import {AppState} from '../app.state';
-import {selectAllUsers, selectCurrentUser} from '../users/users.state';
-import {selectAllViews} from '../views/views.state';
-
-export type ConstraintDataState = Partial<ConstraintData>;
-
-export const initialConstraintDataState: ConstraintDataState = {};
-
-export const selectConstraintDataState = (state: AppState) => state.constraintData;
-
-export const selectConstraintData = createSelector(
-  selectConstraintDataState,
-  selectAllUsers,
-  selectAllViews,
-  selectCurrentUser,
-  (state, users, views, currentUser) => ({
-    ...state,
-    users,
-    views,
-    currentUser,
-  })
-);
+export enum ViewConstraintFormControl {
+  Multi = 'multi',
+  OpenInNewWindow = 'openInNewWindow',
+}

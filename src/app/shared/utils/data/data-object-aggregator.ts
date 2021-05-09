@@ -46,7 +46,10 @@ import {
   PercentageConstraint,
   SelectConstraint,
   UnknownConstraint,
+  ViewConstraint,
 } from '@lumeer/data-filters';
+import {View} from '../../../core/store/views/view';
+import {getViewColor} from '../../../core/store/views/view.utils';
 
 export interface DataObjectInfo<T> {
   objectDataResources: Record<DataObjectInfoKey, DataResource>;
@@ -74,6 +77,7 @@ export class DataObjectAggregator<T> {
   private linkTypesMap: Record<string, LinkType>;
   private permissions: AllowedPermissionsMap;
   private query: Query;
+  private constraintData: ConstraintData;
 
   private dataAggregator: DataAggregator;
 
@@ -101,6 +105,7 @@ export class DataObjectAggregator<T> {
     this.collectionsMap = objectsByIdMap(collections);
     this.linkTypesMap = objectsByIdMap(linkTypes);
     this.permissions = permissions;
+    this.constraintData = constraintData;
     this.query = {stems: [queryStem]};
   }
 
@@ -279,7 +284,10 @@ export class DataObjectAggregator<T> {
   }
 
   private parseColor(constraint: Constraint, values: any[]): string {
-    if (constraint?.type === ConstraintType.Select) {
+    if (constraint?.type === ConstraintType.View) {
+      const views = (<ViewConstraint>constraint).createDataValue(values, this.constraintData).views;
+      return views?.map(view => getViewColor(<View>view, this.collectionsMap)).filter(color => !!color)?.[0];
+    } else if (constraint?.type === ConstraintType.Select) {
       for (let i = 0; i < values.length; i++) {
         const options = (<SelectConstraint>constraint).createDataValue(values[i]).options;
         if (options.length > 0 && options[0].background) {

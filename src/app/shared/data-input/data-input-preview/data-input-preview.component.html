@@ -42,6 +42,14 @@
                      class="w-100">
     </user-data-input>
 
+    <view-data-input *ngSwitchCase="constraintType.View"
+                     [focus]="false"
+                     [readonly]="true"
+                     [commonConfiguration]="commonConfiguration"
+                     [value]="dataValue"
+                     class="w-100">
+    </view-data-input>
+
     <files-data-input *ngSwitchCase="constraintType.Files"
                       [focus]="false"
                       [readonly]="true"
