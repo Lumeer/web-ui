@@ -118,7 +118,7 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      this.selectedViews$.next(this.value.views || []);
+      this.selectedViews$.next(this.value.validViews || []);
       this.views = this.value.constraintData?.views || [];
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
