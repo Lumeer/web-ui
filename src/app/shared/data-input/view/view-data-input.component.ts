@@ -47,6 +47,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {deepObjectsEquals} from '../../utils/common.utils';
 
 @Component({
   selector: 'view-data-input',
@@ -118,7 +119,7 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      this.selectedViews$.next(this.value.validViews || []);
+      this.selectedViews$.next(this.value.views || []);
       this.views = this.value.constraintData?.views || [];
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
@@ -223,7 +224,7 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
         [...this.selectedViews$.value, selectedUser].filter(view => !!view).map(view => view.id)
       );
       const dataValue = this.value.copy(viewIds);
-      this.save.emit({action, dataValue});
+      this.emitSave(dataValue, action);
       return;
     }
 
@@ -242,7 +243,15 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   private saveValueByOption(action: DataInputSaveAction, option: DropdownOption) {
     const view = option && (this.views || []).find(v => v.id === option.value);
     const dataValue = this.value.copy(view?.id || '');
-    this.save.emit({action, dataValue});
+    this.emitSave(dataValue, action);
+  }
+
+  private emitSave(dataValue: ViewDataValue, action: DataInputSaveAction) {
+    if (deepObjectsEquals(dataValue.serialize(), this.value.serialize())) {
+      this.cancel.emit();
+    } else {
+      this.save.emit({action, dataValue});
+    }
   }
 
   private resetSearchInput() {
