@@ -20,24 +20,16 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_AMBER} from '../../../../core/constants';
-import {View} from '../../../../core/store/views/view';
 
 declare var Blockly: any;
 
-export class NavigateBlocklyComponent extends BlocklyComponent {
+export class NavigateByIdBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
-  private viewOptions = [];
   private windowOptions: string[];
   private sidebarOptions: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, private views: View[]) {
+  public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
-
-    views.forEach(view => this.viewOptions.push([view.name.replace(/ /g, '\u00A0'), view.id]));
-
-    if (this.viewOptions.length === 0) {
-      this.viewOptions.push(['?', '']);
-    }
 
     this.tooltip = $localize`:@@blockly.tooltip.navigateBlock:Opens the given view and record. It can open the view in the same browser tab or in a new one. Where possible (e.g. Workflow), a sidebar can be opened.`;
 
@@ -52,19 +44,15 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.NAVIGATE_TO_VIEW] = {
+    Blockly.Blocks[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.NAVIGATE_TO_VIEW,
-          message0: '%{BKY_BLOCK_NAVIGATE_TO_VIEW}', // navigate to view %1 %2 in %3 browser tab %4 with the sidebar %5 %6 and focus on record %7
+          type: BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID,
+          message0: '%{BKY_BLOCK_NAVIGATE_TO_VIEW_BY_ID}', // navigate to view %1 in %2 browser tab %3 with the sidebar %4 %5 and focus on record %6
           args0: [
             {
-              type: 'field_dropdown',
+              type: 'input_value',
               name: 'VIEW_ID',
-              options: this_.viewOptions,
-            },
-            {
-              type: 'input_dummy',
               align: 'RIGHT',
             },
             {
@@ -105,8 +93,8 @@ export class NavigateBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.NAVIGATE_TO_VIEW] = function (block) {
-      const viewId = block.getFieldValue('VIEW_ID') || null;
+    Blockly.JavaScript[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = function (block) {
+      const viewId = Blockly.JavaScript.valueToCode(block, 'VIEW_ID', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const newWindow = block.getFieldValue('NEW_WINDOW') || false;
       const sidebar = block.getFieldValue('SIDEBAR') || false;
       const document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;

@@ -10,14 +10,14 @@
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <span *ngIf="queryItem.linksCount" class="ml-2 icon-wrapper" title="Number of links" i18n-title="@@links.count">
-    <i class="far fa-link icon"></i>
-    <span class="count">{{queryItem.linksCount}}</span>
+  <span *ngIf="queryItem.linksCount" class="small ml-2 icon-wrapper" title="Number of links" i18n-title="@@links.count">
+    <i class="fal fa-link icon"></i>
+    <span class="count" [style.background-color]="queryItem | queryItemForeground">{{queryItem.linksCount}}</span>
   </span>
 
-  <span *ngIf="queryItem.filtersCount" class="ml-2 icon-wrapper" title="Number of filters" i18n-title="@@filters.count">
-    <i class="far fa-filter icon"></i>
-    <span class="count">{{queryItem.filtersCount}}</span>
+  <span *ngIf="queryItem.filtersCount" class="small ml-2-5 icon-wrapper" title="Number of filters" i18n-title="@@filters.count">
+    <i class="fal fa-filter icon"></i>
+    <span class="count" [style.background-color]="queryItem | queryItemForeground">{{queryItem.filtersCount}}</span>
   </span>
 
   <i *ngIf="!readonly && queryItem.linksCount === 0 && queryItem.filtersCount === 0"
