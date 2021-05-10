@@ -3931,7 +3931,7 @@
         <source>Show range slider</source><target>Zobrazit výběr rozsahu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source><target>{type, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} median {Medián} }</target>
+        <source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source><target>{type, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} median {Medián} join {Spojení} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="user.permission.humanName" datatype="html">
         <source>{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned}}</source><target>{role, select, READ {Čtenář} MANAGE {Tvůrce} WRITE {Autor} EMPTY {Bez role} }</target>

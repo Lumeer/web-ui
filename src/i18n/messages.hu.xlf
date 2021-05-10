@@ -3025,7 +3025,7 @@
 				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">147</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.chart.config.aggregation.name">
 					<source>{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} join {Join} }</source>
-					<target>{type, select, sum {Összeg} avg {Átlag} min {Minimum} max {Maximum} count {Számol} unique {Egyedi} median {Medián} }</target>
+					<target>{type, select, sum {Összeg} avg {Átlag} min {Minimum} max {Maximum} count {Számol} unique {Egyedi} median {Medián} join {Egyesít} }</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/aggregation-select-items.pipe.ts</context><context context-type="linenumber">35</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.chart.config.axis.color">
 					<source>Color</source>
