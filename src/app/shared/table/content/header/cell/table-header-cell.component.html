@@ -3,12 +3,12 @@
        (contextmenu)="onContextMenu($event)">
 
     <div #filterElement
-         class="filter-icon-wrapper mr-2 cursor-pointer"
+         class="filter-icon-wrapper mr-1 cursor-pointer"
          [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
          (click)="onFilterClick($event)"
          (dblclick)="$event.stopPropagation(); $event.preventDefault()">
       <i *ngIf="column.attribute" class="fas fa-filter icon"
-         [ngClass]="column.sort || column.filters.length ? 'text-primary': 'text-muted'"></i>
+         [ngClass]="column.sort || column.filters.length ? 'text-primary': 'color-gray-600'"></i>
     </div>
 
     <table-header-input
@@ -17,6 +17,8 @@
       [restrictedNames]="restrictedNames"
       [offsetHorizontal]="offsetHorizontal"
       [default]="column.default"
+      [class.uninitialized-column]="!column?.attribute?.id"
+      [class.focused]="focused"
       [value]="editing && (editingValue | isNotNullOrUndefined) ? editingValue : column.name || column.attribute?.name"
       (save)="onHeaderSave($event)"
       (cancel)="onHeaderCancel()">

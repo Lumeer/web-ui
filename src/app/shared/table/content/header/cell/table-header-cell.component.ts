@@ -53,6 +53,9 @@ export class TableHeaderCellComponent {
   @Input()
   public offsetHorizontal: boolean;
 
+  @Input()
+  public focused: boolean;
+
   @Output()
   public onCancel = new EventEmitter();
 

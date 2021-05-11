@@ -28,6 +28,7 @@
                          [column]="group.column"
                          [hiddenColumns]="group.hiddenColumns"
                          [restrictedNames]="columnGroups | columnHeaderRestrictedNames:index"
+                         [focused]="selectedCell | tableCellSelected:group.column:cellType"
                          (onCancel)="onHeaderCancel(group.column)"
                          (newName)="onHeaderSave(group.column, $event)"
                          (sortChanged)="onSortChanged(group.column, $event)"

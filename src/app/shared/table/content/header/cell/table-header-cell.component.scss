@@ -38,5 +38,11 @@
 }
 
 .fa-caret-down {
-  color: $secondary;
+  color: $gray-700;
+}
+
+::ng-deep {
+  .uninitialized-column:not(.focused) input {
+    color: $dark !important;
+  }
 }
