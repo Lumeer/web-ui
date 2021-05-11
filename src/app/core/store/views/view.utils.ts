@@ -122,11 +122,14 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
 /**
  * Creates perspective config with modifications before saving in a view
  */
-export function createViewSaveConfig(perspective: Perspective, config: ViewConfig): ViewConfig {
+export function createViewSaveConfig(perspective: Perspective, config: ViewConfig, currentView: View): ViewConfig {
   return getPerspectiveSavedPerspectives(perspective).reduce(
     (savedConfig, savedPerspective) => ({
       ...savedConfig,
-      [savedPerspective]: createPerspectiveSaveConfig(savedPerspective, config?.[savedPerspective]),
+      [savedPerspective]: createPerspectiveSaveConfig(
+        savedPerspective,
+        config?.[savedPerspective] || currentView?.config?.[savedPerspective]
+      ),
     }),
     {}
   );
