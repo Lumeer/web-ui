@@ -526,15 +526,9 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="settings" datatype="html">
         <source>Settings</source><target>Beállítások</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.remove">
 				<source>Delete</source>
 				<target>Eltávolít</target>
@@ -584,7 +578,7 @@
 			<trans-unit datatype="html" id="button.share">
 				<source>Share</source>
 				<target>Megoszt</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.yes">
 				<source>Yes</source>
 				<target>Igen</target>
@@ -1361,7 +1355,7 @@
 			<trans-unit datatype="html" id="constraint.number.currency.select">
 				<source>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}</source>
 				<target>{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukrajna - ₴ (UAH)} tr-TR {Törökország - ₺ (TRY)} en-MT {Málta - € (EUR)} en-IE {Írország - € (EUR)} da-DK {Dánia - kr (DKK)} de-CH {Svájc - CHF} en-NZ {Új Zéland - $ (NZD)} fr-CA {Kanada - $ (CAD)} sv-SE {Svédország - kr (SEK)} nb-NO {Norvégia - kr (NOK)} fi-FI {Finnország - € (EUR)} he-IL {Izrael - ₪ (ILS)} es-ES {Spanyolország - € (EUR)} fr-FR {Franciaország - € (EUR)} it-IT {Olaszország - € (EUR)} en-GB {Egyesült Királyság - £ (GBP)} pt-PT {Portugália - € (EUR)} pl-PL {Lengyelország - zł (PLN)} cs-CZ {Csehország - Kč (CZK)} sk-SK {Szlovákia - € (EUR)} hu-HU {Magyarország - Ft (HUF)} de-AT {Ausztria - € (EUR)} de-DE {Németország - € (EUR)} en-US {Amerikai Egyesült Államok - $ (USD)} pt-BR {Brazília - R$ (BRL)} zh-TW {Tajvan - NT$ (TWD)} nl-NL {Hollandia - € (EUR)} zh-CN {Kína - ¥ (CNY)} ru-RU {Oroszország - ₽ (RUB)} ja-JP {Japán - ¥ (JPY)} en-AU {Ausztrália - $ (AUD)} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.number.decimals.description">
 				<source> Leave empty for no rounding. </source>
 				<target>Hagyd üresen, kerekítés nélkül.</target>
@@ -1459,11 +1453,11 @@
 			<trans-unit datatype="html" id="constraint.select.modify.value.message">
 				<source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source>
 				<target>Egy olyan beállítás értékét módosítod, amely csak egyes rekordokban használható. Ezzel érvénytelenné teszed a rekordok értékét. Folytatod?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">267</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">273</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.select.modify.value.title">
 				<source>Remove options</source>
 				<target>Eltávolítod a beállításokat?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">266</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">272</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.select.multi.label">
 				<source>Allow select multiple values</source>
 				<target>Több érték kijelölésének engedélyezése</target>
@@ -1527,8 +1521,8 @@
 				<target>Minimális hossz</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.type.icon.title">
-				<source>{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color}}</source>
-				<target>{constraintType, select, Text {Szöveg} Number {Szám} Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Coordinates {Hely} DateTime {Dátum és idő} Duration {Időtartam} Email {E-mail} Function {Funkció} Image {Kép} Link {Link} Percentage {Százalák} Rating {Értékelés} Select {Kiválasztás} Tag {Címke} User {Felhasználó választás} Color {Szín} }</target>
+				<source>{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} View {View}}</source>
+				<target>{constraintType, select, Text {Szöveg} Number {Szám} Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Coordinates {Hely} DateTime {Dátum és idő} Duration {Időtartam} Email {E-mail} Function {Funkció} Image {Kép} Link {Link} Percentage {Százalák} Rating {Értékelés} Select {Kiválasztás} Tag {Címke} User {Felhasználó választás} Color {Szín} View {Nézet}}</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.user.description">
 				<source> Allows you to specify a colleague by email. You may allow only registered users or any valid email. </source>
@@ -1545,7 +1539,25 @@
 			<trans-unit datatype="html" id="constraint.user.onlyIcon.label">
 				<source>Display user name / email</source>
 				<target>Felhasználónév / e-mail megjelenítése</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/user/user-constraint-config-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="constraint.view.description" datatype="html">
+        <source> Allows you to choose views and navigate to them with ease. </source><target> Lehetővé teszi a nézetek kiválasztását és azok navigálását. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/view/view-constraint-config-form.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.view.multi.label" datatype="html">
+        <source>Allow select multiple views</source><target>Több nézet kiválasztásának engedélyezése</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/view/view-constraint-config-form.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.view.newWindow.label" datatype="html">
+        <source>Open view in new window</source><target>Nézet megnyitása új ablakban</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/view/view-constraint-config-form.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="copy">
 				<source>Copy</source>
 				<target>Másol</target>
@@ -1884,8 +1896,8 @@
         </context-group>
       </trans-unit>
 			<trans-unit datatype="html" id="constraint.type">
-				<source>{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}</source>
-				<target>{type, select, Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Color {Szín} Coordinates {Koordináták} DateTime {Dátum} FileAttachment {Csatolt fájl} Duration {Időtartam} None {Egyik sem} Number {Szám} Percentage {Százalék} Link {Link} Select {Kiválasztás} Text {Szöveg} User {Felhasználó} }</target>
+				<source>{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} View {View}}</source>
+				<target>{type, select, Address {Cím} Boolean {Jelölőnégyzet} Action {Akció} Color {Szín} Coordinates {Koordináták} DateTime {Dátum} FileAttachment {Csatolt fájl} Duration {Időtartam} None {Egyik sem} Number {Szám} Percentage {Százalék} Link {Link} Select {Kiválasztás} Text {Szöveg} User {Felhasználó} View {Nézet}}</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context><context context-type="linenumber">51</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="file.attachment.delete.confirm.message">
 				<source>Do you really want to permanently delete this file?</source>
@@ -3530,27 +3542,27 @@
 				<trans-unit datatype="html" id="query.filter.condition.constraint.date">
 					<source>{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, eq {Van} neq {Nincs} gt {Utána} lt {Előtte} gte {Benne van vagy utána} lte {Benne van vagy előtte} between {Közte van} notBetween {Nincs közte} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">125</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">126</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.number">
 					<source>{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, between {Tartomány} notBetween {Nem a tartományból} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">118</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">119</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.select">
 					<source>{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}</source>
 					<target>{condition, select, eq {Benne van} neq {Nincs egy sem} in {Bent} nin {Nincs egy sem} hasAll {Mindegyik van} hasSome {Néhány van} empty {Üres} notEmpty {Nem üres} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">89</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">90</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.constraint.text">
 					<source>{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled}}</source>
 					<target>{condition, select, eq {Van} neq {Nincs} contains {Tartalmazza} notContains {Nem tartalmazza} startsWith {Kezdődik a} endsWith {Végződik a} in {Benne van} nin {Nincs benne} empty {Üres} notEmpty {Nem üres} enabled {Engedélyezett} disabled {Nem engedélyezett} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">97</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.date">
 					<source>{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}</source>
 					<target>{condition, select, today {Ma} yesterday {Tegnap} tomorrow {Holnap} thisWeek {Ez a hét} thisMonth {Eza hónap} lastWeek {Múlt hét} lastMonth {Múlt hónap} nextMonth {Következő hónap} nextWeek {Következő hét} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">147</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">148</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.filter.condition.value.constraint.user">
 					<source>{type, select, currentUser {Current User}}</source>
 					<target>{type, select, currentUser {Jelenlegi felhasználó} }</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">154</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/service/translation.service.ts</context><context context-type="linenumber">155</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="query.item.button.remove">
 					<source>Delete query item</source>
 					<target>Lekérdezési elem eltávolítása</target>
@@ -4171,7 +4183,7 @@
 				<trans-unit datatype="html" id="table.header.column.settings">
 					<source>Column settings...</source>
 					<target>Oszlopbeállítások...</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
 				
 				<trans-unit datatype="html" id="table.header.menu.add.column">
 					<source> Add a new column </source>
@@ -4778,7 +4790,7 @@
 				<trans-unit datatype="html" id="view.detail.warning.deleted">
 					<source>View is not valid because some of the resources were deleted</source>
 					<target>A nézet nem érvényes, mert néhány forrás törölve lett</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/bookmarks/views-bookmarks/views-bookmarks.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/bookmarks/views-bookmarks/views-bookmarks.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="view.dialog.clone.clone">
 					<source>Make a copy</source>
 					<target>Másolat készítése</target>
@@ -4802,7 +4814,7 @@
 				<trans-unit datatype="html" id="view.favorite">
 					<source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
 					<target><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Eltávolítás a kedvencekből' : 'Hozzáadás a kedvencekhez'}}"/></target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="views.folders.number.views" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="views.folders.number.views" datatype="html">
         <source>Number of views</source><target>Megtekintések száma</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/folders/content/folders/folder/views-folder.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
@@ -4911,11 +4923,11 @@
 				<trans-unit datatype="html" id="views.delete.message">
 					<source>Do you really want to permanently delete this view?</source>
 					<target>Biztosan véglegesen törlöd ezt a nézetet?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="views.delete.title">
 					<source>Delete view?</source>
 					<target>Törlöd a nézetet?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="views.get.fail">
 					<source>Could not get views</source>
 					<target>Nem lehet nézeteket szerezni</target>
