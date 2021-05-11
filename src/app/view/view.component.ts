@@ -144,7 +144,7 @@ export class ViewComponent implements OnInit {
           ...currentView,
           query,
           name,
-          config: createViewSaveConfig(perspective, config),
+          config: createViewSaveConfig(perspective, config, currentView),
           settings,
           perspective,
         };
