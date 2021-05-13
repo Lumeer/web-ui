@@ -14,7 +14,7 @@
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
           [class.editing]="data.editing && !group.column?.attribute?.constraint?.isDirectlyEditable"
-          [class.affected]="editedCell | tableCellEdited:group.column:cellType:row: true"
+          [class.affected]="editedCell | tableCellAffected:group.column:cellType:row"
           [class.cursor-pointer]="group.column?.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"
@@ -42,7 +42,7 @@
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
         <div class="detail-trigger small pl-1 pr-1 cursor-pointer"
-             *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
+             *ngIf="row.documentId && !data.editing && group.column && group.column.id === detailColumnId"
              [class.has-comments]="row.commentsCount"
              (click)="onDetailClick($event)"
              (dblclick)="$event.preventDefault(); $event.stopPropagation()">

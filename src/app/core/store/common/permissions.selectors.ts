@@ -211,18 +211,18 @@ export const selectDataByQuery = createSelector(
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectViewQuery,
-  selectViewSettings,
   selectResourcesPermissions,
   selectConstraintData,
+  selectDataSettingsIncludeSubItems,
   (
     documents,
     collections,
     linkTypes,
     linkInstances,
     query,
-    viewSettings,
     permissions,
-    constraintData
+    constraintData,
+    includeSubItems
   ): DocumentsAndLinksData =>
     filterDocumentsAndLinksDataByQuery(
       documents,
@@ -233,7 +233,7 @@ export const selectDataByQuery = createSelector(
       permissions.collections,
       permissions.linkTypes,
       constraintData,
-      viewSettings?.data?.includeSubItems
+      includeSubItems
     )
 );
 

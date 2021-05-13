@@ -9,18 +9,18 @@
        *ngIf="{constraintData: constraintData$ | async} as data">
 
     <div class="btn-group mb-3 sort" role="group">
-      <button type="button" class="btn card sort-item" (click)="sortChanged.emit(null)"
+      <button type="button" class="btn card sort-item" (click)="onSortChanged(null)"
               [class.active]="!sort">
         <i class="far fa-align-left"></i><span i18n="@@table.cell.sort.none">None</span>
         <i *ngIf="!sort" class="active-icon fas fa-check text-success"></i>
       </button>
       <button type="button" class="btn card sort-item"
-              (click)="sortChanged.emit(sortType.Ascending)"
+              (click)="onSortChanged(sortType.Ascending)"
               [class.active]="sort === sortType.Ascending">
         <i class="far fa-sort-amount-down-alt"></i><span i18n="@@table.cell.sort.ascending">Ascending</span>
         <i *ngIf="sort === sortType.Ascending" class="active-icon fas fa-check text-success"></i>
       </button>
-      <button type="button" class="btn card sort-item" (click)="sortChanged.emit(sortType.Descending)"
+      <button type="button" class="btn card sort-item" (click)="onSortChanged(sortType.Descending)"
               [class.active]="sort === sortType.Descending">
         <i class="far fa-sort-amount-up"></i><span i18n="@@table.cell.sort.descending">Descending</span>
         <i *ngIf="sort === sortType.Descending" class="active-icon fas fa-check text-success"></i>

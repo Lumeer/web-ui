@@ -17,77 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {CdkScrollable} from '@angular/cdk/scrolling';
-import {EditedTableCell, SelectedTableCell, TableCellType} from '../model/table-model';
-import {TableColumn, TableColumnGroup} from '../model/table-column';
-import {DataInputSaveAction} from '../../data-input/data-input-save-action';
-import {TableNewRow, TableRow} from '../model/table-row';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {MenuItem} from '../../menu/model/menu-item';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'table-new-row',
   templateUrl: './table-new-row.component.html',
-  styleUrls: ['./table-new-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableNewRowComponent {
-  @Input()
-  public newRow: TableNewRow;
-
-  @Input()
-  public columnGroups: TableColumnGroup[];
-
-  @Input()
-  public constraintData: ConstraintData;
-
-  @Input()
-  public selectedCell: SelectedTableCell;
-
-  @Input()
-  public editedCell: EditedTableCell;
-
-  @Input()
-  public scrollId: string;
-
-  @Input()
-  public collectionId: string;
-
-  @Input()
-  public linkTypeId: string;
-
-  @Input()
-  public scrollOffset: number;
-
   @Output()
   public onNewRowClick = new EventEmitter();
-
-  @Output()
-  public onClick = new EventEmitter<string>();
-
-  @Output()
-  public onDoubleClick = new EventEmitter<string>();
-
-  @Output()
-  public onCancel = new EventEmitter<string>();
-
-  @Output()
-  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
-
-  @Output()
-  public linkedDocumentSelect = new EventEmitter<DocumentModel>();
-
-  @Output()
-  public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: MenuItem}>();
-
-  @ViewChild(CdkScrollable, {static: false})
-  set content(content: CdkScrollable) {
-    if (this.scrollOffset && content) {
-      content.scrollTo({left: this.scrollOffset});
-    }
-  }
-
-  public readonly cellType = TableCellType.NewRow;
 }

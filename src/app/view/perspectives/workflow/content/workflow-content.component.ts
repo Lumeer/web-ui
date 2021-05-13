@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
@@ -25,8 +25,6 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
-import {checkOrTransformWorkflowConfig} from '../../../../core/store/workflows/workflow.utils';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {WorkflowTablesService} from './tables/service/workflow-tables.service';
 import {WorkflowTablesStateService} from './tables/service/workflow-tables-state.service';
@@ -46,7 +44,7 @@ import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-ke
     WorkflowTablesKeyboardService,
   ],
 })
-export class WorkflowContentComponent implements OnChanges {
+export class WorkflowContentComponent {
   @Input()
   public viewSettings: ViewSettings;
 
@@ -94,16 +92,4 @@ export class WorkflowContentComponent implements OnChanges {
 
   @Output()
   public sidebarResize = new EventEmitter<number>();
-
-  public ngOnChanges(changes: SimpleChanges) {
-    this.checkConfig();
-  }
-
-  private checkConfig() {
-    const previousConfig = {...this.config};
-    this.config = checkOrTransformWorkflowConfig(this.config, this.query, this.collections, this.linkTypes);
-    if (!deepObjectsEquals(previousConfig, this.config)) {
-      this.configChange.emit(this.config);
-    }
-  }
 }

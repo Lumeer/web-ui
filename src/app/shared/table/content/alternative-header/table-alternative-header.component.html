@@ -7,7 +7,7 @@
          [style.width.px]="first && !last ? group.width - 1 : group.width"
          [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
          [class.editing]="editedCell | tableCellEdited:group.column:cellType"
-         [class.affected]="editedCell | tableCellEdited:group.column:cellType:null:false"
+         [class.affected]="editedCell | tableCellAffected:group.column:cellType:null"
          [class.creating]="group.column?.creating"
          [style.min-width.px]="first && !last ? group.width - 1 : group.width">
       <table-header-cell [editing]="false"

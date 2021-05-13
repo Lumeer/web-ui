@@ -36,7 +36,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {filter, throttleTime} from 'rxjs/operators';
-import {TableNewRow, TableRow} from './model/table-row';
+import {TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
 import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
@@ -159,6 +159,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
   public scrollOffsetLeft: number;
+  public toolbarHeight: number;
 
   private scrollOffsetTop: number;
   private subscriptions = new Subscription();
@@ -182,6 +183,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
       this.detailColumnId = this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
+      this.toolbarHeight = this.tableModel.newRow ? this.tableModel.newRow.height + 1 : 0;
     }
   }
 
@@ -249,13 +251,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public onNewRowNewValue(row: TableNewRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
-    const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
-    if (row && column) {
-      this.rowNewValue.emit({...data, row, column, cellType: TableCellType.NewRow});
-    }
-  }
-
   public onBodyCellClick(row: TableRow, columnId: string) {
     this.cellClick.emit({
       tableId: this.tableModel.id,
@@ -302,45 +297,12 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.cellCancel.emit({cell: {tableId: this.tableModel.id, columnId, type: TableCellType.Header}});
   }
 
-  public onNewRowCellClick(columnId: string) {
-    this.cellClick.emit({
-      tableId: this.tableModel.id,
-      rowId: this.tableModel.newRow.id,
-      columnId,
-      type: TableCellType.NewRow,
-    });
-  }
-
-  public onNewRowCellDoubleClick(columnId: string) {
-    this.cellDoubleClick.emit({
-      tableId: this.tableModel.id,
-      rowId: this.tableModel.newRow.id,
-      columnId,
-      type: TableCellType.NewRow,
-    });
-  }
-
-  public onNewRowCancel(columnId: string) {
-    this.cellCancel.emit({
-      cell: {
-        tableId: this.tableModel.id,
-        rowId: this.tableModel.newRow.id,
-        columnId,
-        type: TableCellType.NewRow,
-      },
-    });
-  }
-
   public onScroll() {
     this.scrollCheckSubject.next();
   }
 
   public onBodyMenuSelected(data: {row: TableRow; column: TableColumn; item: MenuItem}) {
     this.rowMenuSelected.emit({...data, cellType: TableCellType.Body});
-  }
-
-  public onNewRowMenuSelected(data: {row: TableRow; column: TableColumn; item: MenuItem}) {
-    this.rowMenuSelected.emit({...data, cellType: TableCellType.NewRow});
   }
 
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
@@ -352,7 +314,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       return true;
     }
     if (this.tableNewRow?.nativeElement.contains(element)) {
-      return this.tableModel?.newRow?.initialized;
+      return true;
     }
 
     return false;

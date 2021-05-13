@@ -86,24 +86,22 @@ export class WorkflowTablesMenuService {
       group: 0,
     });
 
-    if (row.documentId) {
-      if (linked) {
-        items.push({
-          id: RowMenuId.Unlink,
-          title: this.translateRowMenuItem(RowMenuId.Unlink),
-          disabled: !permissions?.writeWithView,
-          icons: ['fa fa-unlink text-warning'],
-          group: 1,
-        });
-      } else {
-        items.push({
-          id: RowMenuId.Delete,
-          title: this.translateRowMenuItem(RowMenuId.Delete),
-          disabled: !permissions?.writeWithView,
-          icons: ['far fa-trash-alt text-danger'],
-          group: 1,
-        });
-      }
+    if (row.documentId && linked) {
+      items.push({
+        id: RowMenuId.Unlink,
+        title: this.translateRowMenuItem(RowMenuId.Unlink),
+        disabled: !permissions?.writeWithView,
+        icons: ['fa fa-unlink text-warning'],
+        group: 1,
+      });
+    } else {
+      items.push({
+        id: RowMenuId.Delete,
+        title: this.translateRowMenuItem(RowMenuId.Delete),
+        disabled: row.documentId ? !permissions?.writeWithView : false,
+        icons: ['far fa-trash-alt text-danger'],
+        group: 1,
+      });
     }
 
     return items;
@@ -279,9 +277,9 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Delete:
         return $localize`:@@table.header.menu.remove:Delete column`;
       case HeaderMenuId.AddToLeft:
-        return $localize`:@@table.header.menu.add.column.next:Add column right`;
-      case HeaderMenuId.AddToRight:
         return $localize`:@@table.header.menu.add.column.previous:Add column left`;
+      case HeaderMenuId.AddToRight:
+        return $localize`:@@table.header.menu.add.column.next:Add column right`;
       case HeaderMenuId.AddLinkColumn:
         return $localize`:@@table.header.menu.add.linkColumn:Add Link column`;
       default:

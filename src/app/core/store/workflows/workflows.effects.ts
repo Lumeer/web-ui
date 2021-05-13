@@ -61,7 +61,9 @@ export class WorkflowsEffects {
         const {cell, column} = action.payload;
         const cursor = workflowCellToViewCursor(cell, column);
         cursor && (cursor.sidebar = viewCursor?.sidebar);
-        if (cursor && !deepObjectsEquals(cursor, viewCursor)) {
+        if (!cursor) {
+          return of(new NavigationAction.SetViewCursor({cursor: {}}));
+        } else if (!deepObjectsEquals(cursor, viewCursor)) {
           return of(new NavigationAction.SetViewCursor({cursor}));
         }
 

@@ -12,7 +12,7 @@
                                class="invisible-scroll-y"
                                [id]="scrollId"
                                (scroll)="onScroll()"
-                               [style.height]="tableModel.newRow ? 'calc(100% - ' + (tableModel.newRow.height + 1) + 'px)' : '100%'"
+                               [style.height]="tableModel.newRow ? 'calc(100% - ' + (toolbarHeight) + 'px)' : '100%'"
                                [disabled]="scrollDisabled$ | async"
                                [columns]="tableModel.columns">
     <table #table class="table lmr-table position-relative">
@@ -55,23 +55,10 @@
       </tbody>
     </table>
   </cdk-virtual-scroll-viewport>
-  <table-new-row *ngIf="tableModel.newRow"
+  <table-new-row *ngIf="tableModel?.newRow"
+                 class="d-block"
                  #tableNewRow
-                 [newRow]="tableModel.newRow"
-                 [columnGroups]="data.columnGroups"
-                 [scrollId]="scrollId"
-                 [selectedCell]="selectedCell"
-                 [editedCell]="editedCell"
-                 [collectionId]="tableModel.collectionId"
-                 [linkTypeId]="tableModel.linkTypeId"
-                 [constraintData]="constraintData"
-                 [scrollOffset]="scrollOffsetLeft"
-                 (onNewRowClick)="rowNewClick.emit()"
-                 (onClick)="onNewRowCellClick($event)"
-                 (onCancel)="onNewRowCancel($event)"
-                 (onDoubleClick)="onNewRowCellDoubleClick($event)"
-                 (newValue)="onNewRowNewValue(tableModel.newRow, $event)"
-                 (linkedDocumentSelect)="onRowLinkedDocumentSelect(tableModel.newRow, $event)"
-                 (menuSelected)="onNewRowMenuSelected($event)">
+                 [style.height.px]="toolbarHeight"
+                 (onNewRowClick)="rowNewClick.emit()">
   </table-new-row>
 </ng-container>
