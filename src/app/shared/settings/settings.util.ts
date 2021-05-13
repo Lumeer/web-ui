@@ -94,6 +94,20 @@ export function viewAttributeSettingsChanged(
   );
 }
 
+export function viewAttributeSettingsSortChanged(
+  previousSettings: AttributesSettings,
+  currentSettings: AttributesSettings
+): boolean {
+  return (
+    viewResourceAttributesSortSettingsChanged(previousSettings?.collections, currentSettings?.collections) ||
+    viewResourceAttributesSortSettingsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes) ||
+    viewResourceAttributesSortSettingsChanged(
+      previousSettings?.linkTypesCollections,
+      currentSettings?.linkTypesCollections
+    )
+  );
+}
+
 function viewResourceAttributesSettingsChanged(
   previousSettings: Record<string, ResourceAttributeSettings[]>,
   currentSettings: Record<string, ResourceAttributeSettings[]>,
@@ -107,6 +121,18 @@ function viewResourceAttributesSettingsChanged(
     const currentOrder = createAttributesSettingsOrder(attributes, currentSettings?.[key]);
 
     return !deepArrayEquals(previousOrder, currentOrder);
+  });
+}
+
+function viewResourceAttributesSortSettingsChanged(
+  previousSettings: Record<string, ResourceAttributeSettings[]>,
+  currentSettings: Record<string, ResourceAttributeSettings[]>
+): boolean {
+  return Object.keys(currentSettings || {}).some(key => {
+    const previousAttributeSettings = previousSettings?.[key]?.map(val => val.sort);
+    const currentAttributeSettings = currentSettings?.[key]?.map(val => val.sort);
+
+    return !deepArrayEquals(previousAttributeSettings, currentAttributeSettings);
   });
 }
 

@@ -36,7 +36,11 @@ import {DataSettings, PerspectiveConfig, View, ViewConfig, ViewSettings} from '.
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
-import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
+import {
+  createSaveAttributesSettings,
+  viewAttributeSettingsChanged,
+  viewAttributeSettingsSortChanged,
+} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
 import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
@@ -175,6 +179,10 @@ export function viewSettingsChanged(
   );
 }
 
+export function viewSettingsSortChanged(previousSettings: ViewSettings, currentSettings: ViewSettings): boolean {
+  return viewAttributeSettingsSortChanged(previousSettings?.attributes, currentSettings?.attributes);
+}
+
 export function viewDataSettingsChanged(previousSettings: DataSettings, currentSettings: DataSettings): boolean {
   return !!previousSettings?.includeSubItems !== !!currentSettings?.includeSubItems;
 }
@@ -192,6 +200,7 @@ export function createSaveViewSettings(
     }
   );
 }
+
 export function getViewColor(view: View, collectionsMap: Record<string, Collection>): string {
   return view?.color || defaultViewColorFromQuery(view, collectionsMap);
 }

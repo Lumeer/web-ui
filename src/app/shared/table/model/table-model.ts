@@ -18,7 +18,7 @@
  */
 
 import {TableColumn} from './table-column';
-import {TableNewRow, TableRow} from './table-row';
+import {TableRow} from './table-row';
 
 export const TABLE_ROW_HEIGHT = 37;
 export const TABLE_COLUMN_WIDTH = 130;
@@ -31,7 +31,7 @@ export interface TableModel {
   linkTypeId?: string;
   columns: TableColumn[];
   rows: TableRow[];
-  newRow?: TableNewRow;
+  newRow?: TableRow;
 }
 
 export interface SelectedTableCell extends TableCell {}
@@ -52,6 +52,5 @@ export interface TableCell {
 export enum TableCellType {
   Header = 'header',
   Body = 'body',
-  NewRow = 'newRow',
   Footer = 'footer',
 }

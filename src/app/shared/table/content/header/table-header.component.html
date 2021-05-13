@@ -5,8 +5,8 @@
       cdkDrag
       [cdkDragDisabled]="!group.column"
       [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
-      [class.editing]="editedCell | tableCellEdited:group.column:cellType"
-      [class.affected]="editedCell | tableCellEdited:group.column:cellType:null:true"
+      [class.editing]="columnData.editing"
+      [class.affected]="editedCell | tableCellAffected:group.column:cellType:null"
       [class.dragging]="dragData.index === index"
       [class.creating]="group.column?.creating"
       [style.background]="group.color"

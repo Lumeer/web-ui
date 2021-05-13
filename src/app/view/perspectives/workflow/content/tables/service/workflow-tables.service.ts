@@ -32,7 +32,7 @@ import {AllowedPermissionsMap} from '../../../../../../core/model/allowed-permis
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
-import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
@@ -56,18 +56,13 @@ export class WorkflowTablesService {
     private keyboardService: WorkflowTablesKeyboardService,
     private dataService: WorkflowTablesDataService
   ) {
-    this.stateService.selectedCell$
-      .pipe(
-        skip(1),
-        distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
-      )
-      .subscribe(() => {
-        if (this.isSelected()) {
-          this.hiddenComponent()?.focus();
-        } else {
-          this.hiddenComponent()?.blur();
-        }
-      });
+    this.stateService.selectedCell$.pipe(skip(1)).subscribe(() => {
+      if (this.isSelected()) {
+        this.hiddenComponent()?.focus();
+      } else {
+        this.hiddenComponent()?.blur();
+      }
+    });
   }
 
   public get selectedCell$(): Observable<SelectedTableCell> {
@@ -232,8 +227,8 @@ export class WorkflowTablesService {
   ) {
     if (row.documentId) {
       this.dataService.saveRowNewValue(row, column, value);
-    } else if (cellType === TableCellType.NewRow) {
-      this.dataService.createNewDocument(<TableNewRow>row, column, value);
+    } else {
+      this.dataService.createNewDocument(row, column, value);
     }
 
     const cell: TableCell = {

@@ -76,11 +76,17 @@ export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInst
   collection: Collection,
   linkType: LinkType,
   attributesSettings: AttributesSettings,
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  composed = true
 ): T[] {
   const linkTypeSettings = attributesSettings?.linkTypes?.[linkType?.id];
-  const collectionSettings =
-    attributesSettings?.linkTypesCollections?.[composeViewSettingsLinkTypeCollectionId(collection?.id, linkType?.id)];
+  let collectionSettings;
+  if (composed) {
+    collectionSettings =
+      attributesSettings?.linkTypesCollections?.[composeViewSettingsLinkTypeCollectionId(collection?.id, linkType?.id)];
+  } else {
+    collectionSettings = attributesSettings?.collections?.[collection?.id];
+  }
 
   const linkTypeSortSettings = (linkTypeSettings || []).filter(setting => !!setting.sort);
   const collectionSortSettings = (collectionSettings || []).filter(setting => !!setting.sort);
@@ -119,7 +125,7 @@ export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInst
       }
     }
 
-    return compareDataResourcesObjectsByCreation(a, b, false, object => object.linkInstance);
+    return compareDataResourcesObjectsByCreation(a, b, false, object => object.linkInstance || object.document);
   });
 }
 

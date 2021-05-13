@@ -37,7 +37,7 @@ import {
   objectsByIdMap,
   objectValues,
 } from '../../../../../../shared/utils/common.utils';
-import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
@@ -45,7 +45,6 @@ import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
-import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 @Injectable()
@@ -282,11 +281,7 @@ export class WorkflowTablesStateService {
   public moveSelectionDownFromEdited() {
     const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell);
     if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
-      if (tableHasNewRowPresented(this.tables[tableIndex])) {
-        this.selectCell(tableIndex, null, columnIndex, TableCellType.NewRow);
-      } else {
-        this.setSelectedCell(this.editedCell);
-      }
+      this.setSelectedCell(this.editedCell);
     } else {
       this.selectCell(tableIndex, rowIndex + 1, columnIndex);
       this.resetEditedCell();
@@ -329,23 +324,12 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private setNewRowProperty(tableId: string, properties: Partial<Record<keyof TableNewRow, any>>) {
-    const newTables = [...this.tables];
-    const tableIndex = newTables.findIndex(table => table.id === tableId);
-    const newRow = newTables[tableIndex]?.newRow;
-    if (tableIndex !== -1 && newRow) {
-      newTables[tableIndex] = {...newTables[tableIndex], newRow: setObjectProperties(newRow, properties)};
-
-      this.setTables(newTables);
-    }
-  }
-
-  private setRowProperty(tableId: string, row: TableRow, properties: Partial<Record<keyof TableRow, any>>) {
+  private setRowProperty(tableId: string, rowId: string, properties: Partial<Record<keyof TableRow, any>>) {
     const newTables = [...this.tables];
     const tableIndex = newTables.findIndex(table => table.id === tableId);
     if (tableIndex !== -1) {
       const rows = [...newTables[tableIndex].rows];
-      const rowIndex = rows.findIndex(r => r.id === row.id);
+      const rowIndex = rows.findIndex(r => r.id === rowId);
       if (rowIndex !== -1) {
         rows[rowIndex] = setObjectProperties(rows[rowIndex], properties);
         newTables[tableIndex] = {...newTables[tableIndex], rows};
@@ -403,11 +387,7 @@ export class WorkflowTablesStateService {
   }
 
   public setRowValue(row: TableRow, column: TableColumn, value: any) {
-    this.setRowProperty(column.tableId, row, {[`data.${column.id}`]: value});
-  }
-
-  public setNewRowValue(column: TableColumn, value: any) {
-    this.setNewRowProperty(column.tableId, {[`data.${column.id}`]: value});
+    this.setRowProperty(column.tableId, row.id, {[`data.${column.id}`]: value});
   }
 
   public removeRow(row: TableRow) {
@@ -433,20 +413,31 @@ export class WorkflowTablesStateService {
     this.setColumnProperty(table, column, {creating: false});
   }
 
-  public initiateNewRow(tableId: string, linkedDocumentId?: string) {
-    this.setNewRowProperty(tableId, {initialized: true, linkedDocumentId});
+  public addRow(tableId: string, newRow: TableRow) {
+    const tableIndex = this.findTableIndexById(tableId);
+    if (tableIndex >= 0) {
+      const table = this.tables[tableIndex];
+      const newTables = [...this.tables];
+      const rows = [...newTables[tableIndex].rows, newRow];
+      newTables[tableIndex] = {...newTables[tableIndex], rows};
+
+      this.setTables(newTables);
+
+      const columnIndex = table.columns.findIndex(column => column.default);
+      setTimeout(() => this.selectCell(tableIndex, rows.length - 1, Math.max(columnIndex, 0)));
+    }
   }
 
   public startRowCreatingWithValue(row: TableRow, column: TableColumn, value: any) {
-    this.setNewRowProperty(row.tableId, {creating: true, [`data.${column.id}`]: value});
+    this.setRowProperty(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
   }
 
   public startRowCreating(row: TableRow, data: Record<string, any>, documentId: string) {
-    this.setNewRowProperty(row.tableId, {creating: true, data, documentId});
+    this.setRowProperty(row.tableId, row.id, {creating: true, data, documentId});
   }
 
   public endRowCreating(row: TableRow) {
-    this.setNewRowProperty(row.tableId, {creating: false});
+    this.setRowProperty(row.tableId, row.id, {creating: false});
   }
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {
@@ -541,7 +532,7 @@ function canEditCell(cell: TableCell, column: TableColumn): boolean {
   }
   if (cell.type === TableCellType.Header) {
     return column.permissions?.manage && !column.creating;
-  } else if (cell.type === TableCellType.Body || cell.type === TableCellType.NewRow) {
+  } else if (cell.type === TableCellType.Body) {
     return column.editable;
   }
   return false;

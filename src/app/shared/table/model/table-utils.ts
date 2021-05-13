@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType, TableModel} from './table-model';
+import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType} from './table-model';
 import {columnConstraint, TableColumn, TableColumnGroup} from './table-column';
 import {TableRow} from './table-row';
 import {TableColumnType, TableConfigPart} from '../../../core/store/tables/table.model';
@@ -63,38 +63,55 @@ export function isTableCellSelected(
   if (!selectedCell || !column || selectedCell.type !== type) {
     return false;
   }
-  if (type === TableCellType.Header || type === TableCellType.Footer || type === TableCellType.NewRow) {
+  if (type === TableCellType.Header || type === TableCellType.Footer) {
     return selectedCell.columnId === column.id && selectedCell.tableId === column.tableId;
   }
 
   return selectedCell.columnId === column.id && selectedCell.rowId === row?.id && selectedCell.tableId === row?.tableId;
 }
 
-export function isTableCellEdited(
+export function isTableCellAffected(
   editedCell: TableCell,
   column: TableColumn,
   type: TableCellType,
-  row: TableRow,
-  affected: boolean
+  row: TableRow
 ): boolean {
   if (!editedCell || !column || editedCell.type !== type) {
     return false;
   }
 
-  const tableCondition = affected ? editedCell.tableId !== column.tableId : editedCell.tableId === column.tableId;
+  const tableCondition = editedCell.tableId !== column.tableId;
   switch (type) {
     case TableCellType.Header:
       return editedCell.columnId === column.id && tableCondition;
-    case TableCellType.NewRow:
-      return editedCell.columnId === column.id && editedCell.tableId === column.tableId;
     case TableCellType.Body:
-      const bodyCondition =
-        editedCell.columnId === column.id && (affected ? editedCell.rowId !== row?.id : editedCell.rowId === row?.id);
+      const bodyCondition = editedCell.columnId === column.id && editedCell.rowId !== row?.id;
       if (column.collectionId) {
         return editedCell.documentId === row?.documentId && bodyCondition && tableCondition;
       } else {
         return editedCell.linkId === row?.linkInstanceId && bodyCondition && tableCondition;
       }
+    default:
+      return false;
+  }
+}
+
+export function isTableCellEdited(
+  editedCell: TableCell,
+  column: TableColumn,
+  type: TableCellType,
+  row: TableRow
+): boolean {
+  if (!editedCell || !column || editedCell.type !== type) {
+    return false;
+  }
+
+  const tableCondition = editedCell.tableId === column.tableId;
+  switch (type) {
+    case TableCellType.Header:
+      return editedCell.columnId === column.id && tableCondition;
+    case TableCellType.Body:
+      return editedCell.columnId === column.id && editedCell.rowId === row?.id && tableCondition;
     default:
       return false;
   }
@@ -110,10 +127,6 @@ export function numberOfOtherColumnsBefore(index: number, columns: TableColumn[]
     return columns.slice(0, index).filter(col => !col.attribute || !!col.linkTypeId).length;
   }
   return columns.slice(0, index).filter(col => !col.attribute || !!col.collectionId).length;
-}
-
-export function tableHasNewRowPresented(table: TableModel): boolean {
-  return table.newRow?.initialized;
 }
 
 export function isTablePartEmpty(part: TableConfigPart): boolean {

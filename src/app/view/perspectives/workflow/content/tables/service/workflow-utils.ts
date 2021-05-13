@@ -28,12 +28,12 @@ import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../sha
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
 import {TABLE_ROW_HEIGHT, TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
+import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
@@ -44,14 +44,23 @@ import {ConstraintData} from '@lumeer/data-filters';
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
 export interface PendingRowUpdate {
-  row?: TableRow;
-  newRow?: TableNewRow;
+  row: TableRow;
   value: any;
 }
 
-export function computeTableHeight(numberOfRows: number, newRow?: TableNewRow): number {
-  // + 1 for borders
-  return (numberOfRows + 1) * TABLE_ROW_HEIGHT + 1 + (newRow?.height ? newRow.height + 1 : 0);
+export function computeTableHeight(rows: TableRow[], newRow: TableRow, maxRows?: number): number {
+  const trimmedRows = rows.slice(0, maxRows || rows.length);
+  // header + border
+  let additionalHeight = TABLE_ROW_HEIGHT + 1;
+  if (newRow?.height) {
+    // + border
+    additionalHeight += newRow.height + 1;
+  }
+  if (trimmedRows.length === 0) {
+    additionalHeight += TABLE_ROW_HEIGHT;
+  }
+
+  return trimmedRows.reduce((height, row) => height + row.height, additionalHeight);
 }
 
 export function createRowData(
@@ -64,9 +73,7 @@ export function createRowData(
   return columns.reduce(
     (result, column) => {
       if (column.attribute) {
-        const pendingRowUpdate = pendingColumnValues?.[column.id]?.find(
-          pending => (pending.row || pending.newRow).id === row.id
-        );
+        const pendingRowUpdate = pendingColumnValues?.[column.id]?.find(pending => pending.row.id === row.id);
         const currentValue =
           pendingRowUpdate?.value || (overrideColumn?.id === column.id ? value : row.data[column.id]);
         if (column.collectionId) {
@@ -81,7 +88,7 @@ export function createRowData(
   );
 }
 
-export function createEmptyNewRow(tableId: string): TableNewRow {
+export function createEmptyNewRow(tableId: string): TableRow {
   const id = generateId();
   return {
     id,
@@ -215,26 +222,16 @@ export function createAggregatedLinkingDocumentsIds(item: AggregatedDataItem, ch
 export function createRowObjectsFromAggregated(
   parentItem: AggregatedDataItem,
   item: AggregatedDataItem,
-  collectionsMap: Record<string, Collection>,
+  collection: Collection,
+  linkType: LinkType,
   linkInstancesMap: Record<string, LinkInstance>,
   viewSettings: ViewSettings,
   constraintData: ConstraintData
 ): {document: DocumentModel; linkInstance?: LinkInstance}[] {
   const documents = <DocumentModel[]>item.dataResources || [];
-  const sortedDocuments = sortDataResourcesByViewSettings<DocumentModel>(
-    documents,
-    collectionsMap,
-    AttributesResourceType.Collection,
-    viewSettings?.attributes,
-    constraintData
-  );
-  return sortedDocuments.reduce(
-    (rowData, document) => {
-      const chainIndex = documents.findIndex(doc => doc === document);
-      const chain = [
-        ...(parentItem.dataResourcesChains?.[chainIndex] || []),
-        ...(item.dataResourcesChains?.[chainIndex] || []),
-      ];
+  const objects = documents.reduce(
+    (rowData, document, index) => {
+      const chain = [...(parentItem.dataResourcesChains?.[index] || []), ...(item.dataResourcesChains?.[index] || [])];
       let linkInstance: LinkInstance;
       if (chain?.length > 1) {
         // documentIds and linkInstanceIds are in sequence
@@ -254,6 +251,8 @@ export function createRowObjectsFromAggregated(
     },
     {data: [], ids: new Set()}
   ).data;
+
+  return sortDataObjectsByViewSettings(objects, collection, linkType, viewSettings?.attributes, constraintData, false);
 }
 
 export function createRowValues(data: Record<string, any>, columnIdsMap: Record<string, string>): Record<string, any> {
@@ -278,7 +277,7 @@ export function createPendingColumnValuesByRow(pendingValues: Record<string, Pen
   return Object.keys(pendingValues).reduce((result, columnId) => {
     const updates = pendingValues[columnId];
     for (const update of updates) {
-      const row = update.row || update.newRow;
+      const row = update.row;
       if (!result[row.id]) {
         result[row.id] = {};
       }

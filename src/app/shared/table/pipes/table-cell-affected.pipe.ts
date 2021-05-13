@@ -17,24 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableModel} from '../../../../shared/table/model/table-model';
-import {DataResource} from '../../../../core/model/resource';
-import {QueryStem} from '../../../../core/store/navigation/query/query';
-import {Constraint, DataValue} from '@lumeer/data-filters';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TableCell, TableCellType} from '../model/table-model';
+import {TableColumn} from '../model/table-column';
+import {TableRow} from '../model/table-row';
+import {isTableCellAffected} from '../model/table-utils';
 
-export interface WorkflowTable extends TableModel {
-  title?: WorkflowTableTitle;
-  stem: QueryStem;
-  height: number;
-  minHeight: number;
-  width: number;
-  linkingDocumentIds?: string[];
-  linkingCollectionId?: string;
-}
-
-export interface WorkflowTableTitle {
-  value: any;
-  dataValue: DataValue;
-  constraint: Constraint;
-  dataResources: DataResource[];
+@Pipe({
+  name: 'tableCellAffected',
+})
+export class TableCellAffectedPipe implements PipeTransform {
+  public transform(cell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {
+    return isTableCellAffected(cell, column, type, row);
+  }
 }

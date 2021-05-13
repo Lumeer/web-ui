@@ -149,6 +149,12 @@ export class CellFilterBuilderComponent implements OnChanges {
     this.close();
   }
 
+  public onSortChanged(sort: AttributeSortType | null) {
+    if (sort !== this.sort) {
+      this.sortChanged.emit(sort);
+    }
+  }
+
   public onNewFilter() {
     const condition = initialConditionType(this.attribute?.constraint);
     const values = initialConditionValues(condition, this.attribute?.constraint);

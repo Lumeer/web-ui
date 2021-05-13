@@ -56,6 +56,7 @@ import {CellFilterBuilderComponent} from './content/header/cell/filter-builder/c
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {FilterBuilderModule} from '../builder/filter-builder/filter-builder.module';
 import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.module';
+import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {FilterPreviewModule} from '../builder/filter-preview/filter-preview.modu
     TableRowDataCursorPipe,
     TableCellSelectedPipe,
     TableCellEditedPipe,
+    TableCellAffectedPipe,
     TableBodyCellSelectedPipe,
     TableHeaderInputComponent,
     TableHeaderCellComponent,
