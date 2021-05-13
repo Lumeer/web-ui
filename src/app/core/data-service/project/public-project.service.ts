@@ -109,6 +109,10 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return of();
   }
 
+  public downloadRawContent(organizationId: string, projectId: string): Observable<any> {
+    return of();
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }

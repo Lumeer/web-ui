@@ -365,6 +365,51 @@ export class ProjectsEffects {
     )
   );
 
+  public downloadRawContent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ProjectsAction.DownloadRawContent>(ProjectsActionType.DOWNLOAD_RAW_CONTENT),
+      mergeMap(action => {
+        const {organizationId, projectId} = action.payload;
+        return this.projectService.downloadRawContent(organizationId, projectId).pipe(
+          mergeMap(data =>
+            of(new ProjectsAction.DownloadRawContentSuccess({data, projectName: action.payload.projectName}))
+          ),
+          catchError(error => of(new ProjectsAction.DownloadRawContentFailure({error})))
+        );
+      })
+    )
+  );
+
+  public downloadRawContentSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<ProjectsAction.DownloadRawContentSuccess>(ProjectsActionType.DOWNLOAD_RAW_CONTENT_SUCCESS),
+        tap(action => {
+          //const blob = new Blob([action.payload.data.body], { type: 'application/json' });
+          const url = window.URL.createObjectURL(action.payload.data.body);
+          const link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', action.payload.projectName || 'project.json');
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+      ),
+    {dispatch: false}
+  );
+
+  public downloadRawContentFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ProjectsAction.DownloadRawContentFailure>(ProjectsActionType.DOWNLOAD_RAW_CONTENT_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@project.downloadRawContent.fail:Could not download project data`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
   public changePermission$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),

@@ -23,6 +23,7 @@ import {Project} from './project';
 import {Workspace} from '../navigation/workspace';
 import {NavigationExtras} from '@angular/router';
 import {SampleDataType} from '../../model/sample-data-type';
+import {HttpResponse} from '@angular/common/http';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -70,6 +71,10 @@ export enum ProjectsActionType {
   DISMISS_WARNING_MESSAGE = '[Projects] Dismiss Warning Message',
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
+
+  DOWNLOAD_RAW_CONTENT = '[Projects] Download Raw Content',
+  DOWNLOAD_RAW_CONTENT_SUCCESS = '[Projects] Download Raw Content :: Success',
+  DOWNLOAD_RAW_CONTENT_FAILURE = '[Projects] Download Raw Content :: Failure',
 }
 
 export namespace ProjectsAction {
@@ -290,6 +295,24 @@ export namespace ProjectsAction {
     public constructor(public payload: {nextAction?: Action}) {}
   }
 
+  export class DownloadRawContent implements Action {
+    public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT;
+
+    public constructor(public payload: {organizationId: string; projectId: string; projectName?: string}) {}
+  }
+
+  export class DownloadRawContentFailure implements Action {
+    public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class DownloadRawContentSuccess implements Action {
+    public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT_SUCCESS;
+
+    public constructor(public payload: {data: HttpResponse<Blob>; projectName?: string}) {}
+  }
+
   export type All =
     | Get
     | GetSingle
@@ -315,6 +338,9 @@ export namespace ProjectsAction {
     | ApplyTemplateFailure
     | DeleteSampleData
     | DeleteSampleDataFailure
+    | DownloadRawContent
+    | DownloadRawContentFailure
+    | DownloadRawContentSuccess
     | GetTemplates
     | GetTemplatesSuccess
     | GetTemplatesFailure

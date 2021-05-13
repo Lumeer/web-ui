@@ -48,4 +48,6 @@ export abstract class ProjectService extends PermissionService {
   public abstract updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto>;
 
   public abstract deleteSampleData(organizationId: string, projectId: string, confirmation: string): Observable<any>;
+
+  public abstract downloadRawContent(organizationId: string, projectId: string): Observable<any>;
 }
