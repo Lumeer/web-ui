@@ -33,12 +33,13 @@
   </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
-    <i *ngIf="!resource.nonRemovable" class="far fa-fw fa-trash-alt text-danger mr-3 cursor-pointer"
-       (click)="onDelete()"
-       title="Delete" i18n-title="@@resource.settings.delete"
-       aria-hidden="true"></i>
     <ng-content></ng-content>
-
+    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger">
+      <i *ngIf="!resource.nonRemovable" class="far fa-fw fa-trash-alt"
+         (click)="onDelete()"
+         [title]="deleteTitle"
+         aria-hidden="true"></i>
+    </div>
   </div>
 
 </div>

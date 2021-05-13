@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
 import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
+import {parseSelectTranslation} from '../../utils/translation.utils';
 
 @Component({
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
   styleUrls: ['./resource-header.component.scss'],
 })
-export class ResourceHeaderComponent {
+export class ResourceHeaderComponent implements OnInit {
   @Input()
   public resourceType: ResourceType;
 
@@ -60,6 +61,8 @@ export class ResourceHeaderComponent {
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public isDuplicate: boolean;
+
+  public deleteTitle: string;
 
   private shouldEmitFirstLine: boolean;
 
@@ -173,5 +176,12 @@ export class ResourceHeaderComponent {
 
   public onIconColorSubmit(data: {icon: string; color: string}) {
     this.colorIconChange.emit(data);
+  }
+
+  public ngOnInit(): void {
+    this.deleteTitle = parseSelectTranslation(
+      $localize`:@@resource.settings.deleteResource.title:Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}`,
+      {resourceType: this.resourceType}
+    );
   }
 }

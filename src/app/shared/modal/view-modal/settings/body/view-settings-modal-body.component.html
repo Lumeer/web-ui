@@ -17,8 +17,7 @@
     </label>
 
     <div class="col-8 d-block mb-3 text-center cursor-pointer" (click)="pickerComponent.toggle()">
-      <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)
-      </div>
+      <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)</div>
       <i class="fa-fw {{ iconControl.value }} fa-3x"
          [style.color]="colorControl.value" #pickerOrigin></i>
       <icon-color-picker #pickerComponent

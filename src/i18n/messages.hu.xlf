@@ -202,7 +202,7 @@
 			<trans-unit datatype="html" id="ba1f0128edbddbedec519987d91131b95cf7b6c8">
 				<source>{VAR_SELECT, select, organization {code} project {code} collection {name}}</source>
 				<target>{VAR_SELECT, select, organization {kód} project {kód} collection {név} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.dropdown.ops.dateChangeBlock">
 				<source>add,subtract,set</source>
 				<target>hozzáadni,elvonni, beállítani</target>
@@ -480,51 +480,36 @@
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="view.modal.settings.name.notEmpty" datatype="html">
         <source>View name can not be empty</source><target>A nézet neve nem lehet üres</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority" datatype="html">
         <source>Priority:</source><target>Prioritás:</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.priority.placeholder" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.placeholder" datatype="html">
         <source>Enter any number</source><target>Írjon be bármilyen számot</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.priority.invalid" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.invalid" datatype="html">
         <source>Number is not valid</source><target>A szám érvénytelen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
         <source>Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</source>
 		<target>A szám nem az érvényes tartományba esik (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.priority.help" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.help" datatype="html">
         <source>By default, views are sorted by last used. Setting an priority overrides the default behavior. A higher priority means that the view will be above others. </source>
 		<target>A nézetek a legutóbb használt sorrend szerint vannak rendezve. A prioritás megadásával magasabbra kerülnek a listán. A magasabb prioritás azt jelenti, hogy a nézet mások fölött lesz. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
-          <context context-type="linenumber">73,75</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.modal.settings.folders" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders" datatype="html">
         <source>Folders:</source><target>Mappák:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.placeholder" datatype="html">
         <source>Enter folder name and press Enter</source><target>Írja be a mappa nevét, és nyomja meg az Enter billentyűt</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.remove" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.remove" datatype="html">
         <source>Remove folder</source><target>Mappa eltávolítása</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders.help" datatype="html">
         <source>Use "/" to create nested folders i.e "Folder/Subfolder" </source><target>A "/" használatával hozhat létre beágyazott mappákat, azaz "Mappa/Almappa"</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="settings" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="settings" datatype="html">
         <source>Settings</source><target>Beállítások</target>
         
         
@@ -1849,7 +1834,7 @@
 				<source>Links</source>
 				<target>Linkek</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="document.detail.tabs.tables" datatype="html">
-        <source>Links</source><target>Linkek</target>
+        <source>Tables</source><target>Linkek</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/detail/detail-tabs/detail-tabs.component.html</context>
           <context context-type="linenumber">23</context>
@@ -2556,11 +2541,8 @@
 					<target>Nincs engedélyed a szervezet elérésére</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="project.settings.collections.deleteSampleData" datatype="html">
         <source>Delete sample data from the project</source><target>Törölje a minta adatokat a projektből</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="organization.serviceLimits.get.fail">
 					<source>Could not read information about your service level and subscription</source>
 					<target>Nem lehetett olvasni a szolgáltatási szinttel és az előfizetéssel kapcsolatos információkat</target>
@@ -3302,7 +3284,7 @@
 				<trans-unit datatype="html" id="project.copy.fail">
 					<source>Could not copy project</source>
 					<target>A projekt nem másolható</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">511</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.create.fail">
 					<source>Could not create the project</source>
 					<target>Nem lehetett létrehozni a projektet</target>
@@ -3314,11 +3296,11 @@
 				<trans-unit datatype="html" id="project.delete.dialog.message">
 					<source>Do you really want to permanently delete this project?</source>
 					<target>Biztosan véglegesen törlöd ezt a projektet?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.delete.dialog.title">
 					<source>Delete project?</source>
 					<target>Törlöd a projektet?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.delete.fail">
 					<source>Could not delete the project</source>
 					<target>Nem lehetett törölni a projektet</target>
@@ -3328,6 +3310,12 @@
           <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
           <context context-type="linenumber">362</context>
         </context-group>
+      </trans-unit><trans-unit id="project.downloadRawContent.fail" datatype="html">
+        <source>Could not download project data</source><target>Nem sikerült letölteni a projekt tartalmát</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
+          <context context-type="linenumber">404</context>
+        </context-group>
       </trans-unit>
 				<trans-unit datatype="html" id="project.not.exist">
 					<source>Project does not exist</source>
@@ -3336,7 +3324,7 @@
 				<trans-unit datatype="html" id="project.permission.change.fail">
 					<source>Could not change the project permissions</source>
 					<target>Nem lehet módosítani a projekt engedélyeit</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">403</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">445</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.permission.missing">
 					<source>You do not have permission to access this project</source>
 					<target>Nincs engedélyed a projekt eléréséhez</target>
@@ -3344,7 +3332,13 @@
 				<trans-unit datatype="html" id="project.settings.collections.count">
 					<source>Number of tables</source>
 					<target>Táblázatok száma</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="project.settings.collections.downloadContent" datatype="html">
+        <source>Download project content</source><target>Töltse le a projekt tartalmát</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="project.settings.sequence.info1">
 					<source>The sequences listed here can be used in Table automations and Attribute functions.</source>
 					<target>Az itt felsorolt szekvenciák a Tábla automatizálásokban és a Tulajdonság funkciókban használhatóak.</target>
@@ -3362,41 +3356,32 @@
 				<trans-unit datatype="html" id="project.settings.tab.sequences">
 					<source>Sequences</source>
 					<target>Sorrendek</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.settings.tab.template">
 					<source>Publish Project</source>
 					<target>Projekt közzététele</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source><target>Minden mintaprojekt bejegyzések véglegesen törlésre kerül. A folytatáshoz írja be a FENNTARTVA TISZTÍT szót.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.deleteSamples.dialog.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.title" datatype="html">
         <source>Do you want to erase all sample data in the project?</source><target>Törli a projekt összes mintadatát?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.deleteSamples.dialog.placeholder" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.placeholder" datatype="html">
         <source>PERMANENTLY CLEAN</source><target>FENNTARTVA TISZTÍT</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">80</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.settings.tab.users">
 					<source>Users</source>
 					<target>Felhasználók</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.settings.users.count">
 					<source>Number of users</source>
 					<target>Felhasználók száma</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.template.apply.fail">
 					<source>Could not add template to project</source>
 					<target>Nem lehet sablont hozzáadni a projekthez</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">427</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">469</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.update.fail">
 					<source>Could not update the project</source>
 					<target>Nem lehetett frissíteni a projektet</target>
@@ -3716,7 +3701,7 @@
 				<trans-unit datatype="html" id="resource.description">
 					<source>Fill in description</source>
 					<target>Leírás kitöltése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/content/attribute-description-content.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/content/attribute-description-content.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.detail.organization.configure">
 					<source>Configure</source>
 					<target>Konfigurál</target>
@@ -3784,11 +3769,11 @@
 				<trans-unit datatype="html" id="resource.new.dialog.name.label">
 					<source>Name:</source>
 					<target>Név:</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/name-input/resource-name-input.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/name-input/resource-name-input.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.new.dialog.name.placeholder">
 					<source>Enter name</source>
 					<target>Név megadása</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/name-input/resource-name-input.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/name-input/resource-name-input.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.new.dialog.project.subtitle">
 					<source>Create a new project in organization:</source>
 					<target>Új projekt létrehozása a szervezetben:</target>
@@ -3821,11 +3806,18 @@
 				<trans-unit datatype="html" id="resource.postit.code">
 					<source>Set code</source>
 					<target>Kód beállítása</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">150</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">153</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.postit.name">
 					<source>Fill in name</source>
 					<target>Név kitöltése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">154</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
+        <source>Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</source>
+		<target>Véglegesen távolítsa el ezt a {resourceType, select, organization {szervezetet} project {projektet} collection {táblázatot} link {linket} view {nézetet} document {rekordot}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="resource.rule.update.fail">
 					<source>Could not save automation</source>
 					<target>Nem tudja menteni a szabályt</target>
@@ -3834,17 +3826,14 @@
 					<source>Back to App</source>
 					<target>Vissza az alkalmazáshoz</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
-				<trans-unit datatype="html" id="resource.settings.delete">
-					<source>Delete</source>
-					<target>Töröl</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit>
+				
 				<trans-unit datatype="html" id="resource.value.error.duplicity">
 					<source> This <x id="ICU" equiv-text="{resourceType, select, organization {code} project {code} collection {name}}"/> is already taken. Try another one!
 </source>
 					<target>Ez
 						<x id="ICU" equiv-text="{resourceType, select, organization {...} project {...} collection {...}}"/>
 						már foglalt. Próbálkozz egy másikkal!</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resourceComment.create.fail">
 					<source>Could not save the comment</source>
 					<target>A megjegyzés nem menthető</target>

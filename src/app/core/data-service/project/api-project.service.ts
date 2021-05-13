@@ -94,6 +94,13 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     return this.httpClient.delete(`${this.apiPrefix(organizationId, projectId)}/sample-data`, {params: {confirmation}});
   }
 
+  public downloadRawContent(organizationId: string, projectId: string): Observable<HttpResponse<Blob>> {
+    return this.httpClient.get(`${this.apiPrefix(organizationId, projectId)}/raw`, {
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }
