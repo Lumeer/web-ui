@@ -747,9 +747,7 @@ export class WorkflowTablesDataService {
         const currentRow = rowsMap[objectCorrelationId || objectId] || rowsMap[objectId];
         const documentData = createRowValues(object.document.data, columnIdsMap);
         const linkData = createRowValues(object.linkInstance?.data, linkColumnIdsMap);
-        const pendingData = currentRow?.creating // TODO check pending data
-          ? pendingColumnValuesByRow[objectCorrelationId]
-          : (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
+        const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
         const id = currentRow?.id || objectCorrelationId || generateId();
         const row: TableRow = {
           id,
@@ -1036,12 +1034,12 @@ export class WorkflowTablesDataService {
     for (const update of this.pendingColumnValues[column.id] || []) {
       if (update.row) {
         const freshRow = this.stateService?.findTableRow(update.row.tableId, update.row.id) || update.row;
-        this.patchColumnData(freshRow, newColumn, update.value);
-        deleteRows.push(freshRow.id);
-      } else {
-        // TODO New row
-        // const freshRow = this.stateService?.findTable(update.newRow.tableId)?.newRow || update.newRow;
-        // this.createDocument(freshRow, newColumn, update.value);
+        if (freshRow.documentId) {
+          this.patchColumnData(freshRow, newColumn, update.value);
+          deleteRows.push(freshRow.id);
+        } else {
+          this.createDocument(freshRow, newColumn, update.value);
+        }
       }
     }
 
