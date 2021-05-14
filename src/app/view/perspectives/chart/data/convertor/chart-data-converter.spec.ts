@@ -147,9 +147,9 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: undefined,
       points: [
-        {id: null, x: 'Dance', y: null, color: '#ffffff', title: null, xTitle: 'Dance', size: null, xSort: undefined},
-        {id: null, x: 'Glass', y: null, color: '#ffffff', title: null, xTitle: 'Glass', size: null, xSort: undefined},
-        {id: null, x: 'Sport', y: null, color: '#ffffff', title: null, xTitle: 'Sport', size: null, xSort: undefined},
+        {id: null, x: 'Dance', y: null, color: '#ffffff', title: null, xTitle: 'Dance', size: null, xSort: 'Dance'},
+        {id: null, x: 'Glass', y: null, color: '#ffffff', title: null, xTitle: 'Glass', size: null, xSort: 'Glass'},
+        {id: null, x: 'Sport', y: null, color: '#ffffff', title: null, xTitle: 'Sport', size: null, xSort: 'Sport'},
       ],
       draggable: false,
       color: '#ffffff',
@@ -233,7 +233,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '7',
           size: null,
-          xSort: undefined,
+          xSort: 'Dance',
         },
         {
           id: null,
@@ -243,7 +243,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '51',
           size: null,
-          xSort: undefined,
+          xSort: 'Glass',
         },
         {
           id: null,
@@ -253,7 +253,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '3',
           size: null,
-          xSort: undefined,
+          xSort: 'Sport',
         },
       ],
       name: ' ',
@@ -282,7 +282,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '7',
           size: null,
-          xSort: undefined,
+          xSort: 'Dance',
         },
         {
           id: null,
@@ -292,7 +292,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '7',
           size: null,
-          xSort: undefined,
+          xSort: 'Glass',
         },
         {
           id: null,
@@ -302,7 +302,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '0',
           size: null,
-          xSort: undefined,
+          xSort: 'Sport',
         },
       ],
     };
@@ -325,7 +325,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '7',
           size: null,
-          xSort: undefined,
+          xSort: 'Dance',
         },
         {
           id: null,
@@ -335,7 +335,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '51',
           size: null,
-          xSort: undefined,
+          xSort: 'Glass',
         },
         {
           id: null,
@@ -345,7 +345,7 @@ describe('Chart data converter single collection', () => {
           color: 'rgba(255,255,255,1)',
           title: '3',
           size: null,
-          xSort: undefined,
+          xSort: 'Sport',
         },
       ],
     };
@@ -395,7 +395,7 @@ describe('Chart data converter single collection', () => {
         color: 'rgba(255,255,255,1)',
         title: '7',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: null,
@@ -405,7 +405,7 @@ describe('Chart data converter single collection', () => {
         color: 'rgba(255,255,255,1)',
         title: '51',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
       {
         id: null,
@@ -415,7 +415,7 @@ describe('Chart data converter single collection', () => {
         color: 'rgba(255,255,255,1)',
         title: '3',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ];
     const points2: ChartPoint[] = [
@@ -427,7 +427,7 @@ describe('Chart data converter single collection', () => {
         color: 'rgba(255,255,255,1)',
         title: 'Salt',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: 'D5',
@@ -437,7 +437,7 @@ describe('Chart data converter single collection', () => {
         color: 'rgba(255,255,255,1)',
         title: 'Vibes',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
       {
         id: null,
@@ -447,7 +447,7 @@ describe('Chart data converter single collection', () => {
         color: 'rgba(255,255,255,1)',
         title: 'Mama',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ];
 
@@ -931,7 +931,7 @@ describe('Chart data converter linked collections', () => {
         title: '428',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: null,
@@ -941,7 +941,7 @@ describe('Chart data converter linked collections', () => {
         title: '1420',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
       {
         id: null,
@@ -951,7 +951,7 @@ describe('Chart data converter linked collections', () => {
         title: '680',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Lmr',
       },
       {
         id: null,
@@ -961,7 +961,7 @@ describe('Chart data converter linked collections', () => {
         title: '1808',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ]);
   });
@@ -1044,7 +1044,7 @@ describe('Chart data converter linked collections', () => {
         title: 'Zas',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: null,
@@ -1054,7 +1054,7 @@ describe('Chart data converter linked collections', () => {
         title: 'Zlom',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
       {
         id: null,
@@ -1064,7 +1064,7 @@ describe('Chart data converter linked collections', () => {
         title: 'Zet',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Lmr',
       },
       {
         id: null,
@@ -1074,7 +1074,7 @@ describe('Chart data converter linked collections', () => {
         title: 'Zet',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ];
 
@@ -1121,7 +1121,7 @@ describe('Chart data converter linked collections', () => {
         title: '8',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: null,
@@ -1131,9 +1131,9 @@ describe('Chart data converter linked collections', () => {
         title: '1',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
-      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null, xSort: undefined},
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null, xSort: 'Lmr'},
       {
         id: null,
         x: 'Sport',
@@ -1142,7 +1142,7 @@ describe('Chart data converter linked collections', () => {
         title: '1',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ]);
   });
@@ -1184,7 +1184,7 @@ describe('Chart data converter linked collections', () => {
         title: '312',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: null,
@@ -1194,7 +1194,7 @@ describe('Chart data converter linked collections', () => {
         title: '333',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
       {
         id: null,
@@ -1204,7 +1204,7 @@ describe('Chart data converter linked collections', () => {
         title: '333',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Lmr',
       },
       {
         id: null,
@@ -1214,7 +1214,7 @@ describe('Chart data converter linked collections', () => {
         title: '333',
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ]);
   });
@@ -1256,7 +1256,7 @@ describe('Chart data converter linked collections', () => {
         title: String(428 / 4),
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Dance',
       },
       {
         id: null,
@@ -1266,7 +1266,7 @@ describe('Chart data converter linked collections', () => {
         title: String(1420 / 14),
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Glass',
       },
       {
         id: null,
@@ -1276,7 +1276,7 @@ describe('Chart data converter linked collections', () => {
         title: String(680 / 9),
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Lmr',
       },
       {
         id: null,
@@ -1286,7 +1286,7 @@ describe('Chart data converter linked collections', () => {
         title: String(1808 / 21),
         color: 'rgba(18,52,86,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Sport',
       },
     ]);
   });
@@ -1334,7 +1334,7 @@ describe('Chart data converter linked collections', () => {
       title: '667',
       color: 'rgba(188,188,188,1)',
       size: null,
-      xSort: undefined,
+      xSort: 'Sport',
     });
     expect(chartData.sets[1].points).toContain({
       id: 'D21',
@@ -1344,7 +1344,7 @@ describe('Chart data converter linked collections', () => {
       title: '8',
       color: 'rgba(188,188,188,0.86)',
       size: null,
-      xSort: undefined,
+      xSort: 'Sport',
     });
     expect(chartData.sets[2].points).toContain({
       id: null,
@@ -1354,7 +1354,7 @@ describe('Chart data converter linked collections', () => {
       title: '9',
       color: 'rgba(188,188,188,0.72)',
       size: null,
-      xSort: undefined,
+      xSort: 'Sport',
     });
     expect(chartData.sets[3].points).toContain({
       id: 'D23',
@@ -1364,7 +1364,7 @@ describe('Chart data converter linked collections', () => {
       title: '8',
       color: 'rgba(188,188,188,0.58)',
       size: null,
-      xSort: undefined,
+      xSort: 'Sport',
     });
     expect(chartData.sets[4].points).toContain({
       id: null,
@@ -1374,7 +1374,7 @@ describe('Chart data converter linked collections', () => {
       title: '667',
       color: 'rgba(188,188,188,0.44)',
       size: null,
-      xSort: undefined,
+      xSort: 'Sport',
     });
     expect(chartData.sets[5].points).toContain({
       id: 'D23',
@@ -1384,7 +1384,7 @@ describe('Chart data converter linked collections', () => {
       title: '8',
       color: 'rgba(188,188,188,0.3)',
       size: null,
-      xSort: undefined,
+      xSort: 'Sport',
     });
   });
   it('should return data with from linked attributes', () => {
@@ -1430,7 +1430,7 @@ describe('Chart data converter linked collections', () => {
       title: '777',
       color: 'rgba(18,52,86,1)',
       size: null,
-      xSort: undefined,
+      xSort: 'Lmx',
     });
     expect(chartData.sets[1].points).toContain({
       id: null,
@@ -1440,7 +1440,7 @@ describe('Chart data converter linked collections', () => {
       title: '270',
       color: 'rgba(18,52,86,0.825)',
       size: null,
-      xSort: undefined,
+      xSort: 'Lmp',
     });
     expect(chartData.sets[2].points).toContain({
       id: null,
@@ -1450,7 +1450,7 @@ describe('Chart data converter linked collections', () => {
       title: '131',
       color: 'rgba(18,52,86,0.65)',
       size: null,
-      xSort: undefined,
+      xSort: 'Lpr',
     });
     expect(chartData.sets[3].points).toContain({
       id: null,
@@ -1460,7 +1460,7 @@ describe('Chart data converter linked collections', () => {
       title: '777',
       color: 'rgba(18,52,86,0.475)',
       size: null,
-      xSort: undefined,
+      xSort: 'Lxx',
     });
     expect(chartData.sets[4].points).toContain({
       id: null,
@@ -1470,7 +1470,7 @@ describe('Chart data converter linked collections', () => {
       title: '951',
       color: 'rgba(18,52,86,0.3)',
       size: null,
-      xSort: undefined,
+      xSort: 'Lop',
     });
   });
 
@@ -1548,7 +1548,7 @@ describe('Chart data converter linked collections', () => {
         title: '60%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Kubo',
       },
       {
         id: null,
@@ -1558,7 +1558,7 @@ describe('Chart data converter linked collections', () => {
         title: '30%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Martin',
       },
       {
         id: null,
@@ -1568,7 +1568,7 @@ describe('Chart data converter linked collections', () => {
         title: '25%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Tomas',
       },
     ];
     converter.updateData(
@@ -1597,7 +1597,7 @@ describe('Chart data converter linked collections', () => {
         title: '120%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Kubo',
       },
       {
         id: null,
@@ -1607,7 +1607,7 @@ describe('Chart data converter linked collections', () => {
         title: '90%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Martin',
       },
       {
         id: null,
@@ -1617,7 +1617,7 @@ describe('Chart data converter linked collections', () => {
         title: '100%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Tomas',
       },
     ];
     const chartDataSum = converter.convert(configSum);
@@ -1637,7 +1637,7 @@ describe('Chart data converter linked collections', () => {
         title: '80%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Kubo',
       },
       {
         id: null,
@@ -1647,7 +1647,7 @@ describe('Chart data converter linked collections', () => {
         title: '50%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Martin',
       },
       {
         id: null,
@@ -1657,7 +1657,7 @@ describe('Chart data converter linked collections', () => {
         title: '40%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Tomas',
       },
     ];
     const chartDataMax = converter.convert(configMax);
@@ -1677,7 +1677,7 @@ describe('Chart data converter linked collections', () => {
         title: '40%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Kubo',
       },
       {
         id: null,
@@ -1687,7 +1687,7 @@ describe('Chart data converter linked collections', () => {
         title: '10%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Martin',
       },
       {
         id: null,
@@ -1697,7 +1697,7 @@ describe('Chart data converter linked collections', () => {
         title: '10%',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Tomas',
       },
     ];
     const chartDataMin = converter.convert(configMin);
@@ -1717,7 +1717,7 @@ describe('Chart data converter linked collections', () => {
         title: '2',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Kubo',
       },
       {
         id: null,
@@ -1727,7 +1727,7 @@ describe('Chart data converter linked collections', () => {
         title: '3',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Martin',
       },
       {
         id: null,
@@ -1737,7 +1737,7 @@ describe('Chart data converter linked collections', () => {
         title: '4',
         color: 'rgba(255,255,255,1)',
         size: null,
-        xSort: undefined,
+        xSort: 'Tomas',
       },
     ];
     const chartDataCount = converter.convert(configCount);
