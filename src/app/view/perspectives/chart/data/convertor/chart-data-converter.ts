@@ -378,7 +378,7 @@ export class ChartDataConverter {
     const yAxis = config.axes?.[yAxisType]?.axis;
 
     if (!xAxis || !yAxis) {
-      return this.convertAxisSimple(yAxisType, xAxis, yAxis, config.sort?.axis);
+      return this.convertAxisSimple(yAxisType, xAxis, yAxis, config.sort?.axis || xAxis);
     }
 
     return this.convertAxisWithAggregation(config, yAxisType);
@@ -544,7 +544,7 @@ export class ChartDataConverter {
     const xAxis = xAxisConfig?.axis;
     const yAxisConfig = config.axes?.[yAxisType];
     const yAxis = yAxisConfig?.axis;
-    const sortAxis = config.sort?.axis;
+    const sortAxis = config.sort?.axis || xAxis;
     const yConstraint = this.constraintAxisConfig(yAxisConfig);
     const xConstraint = this.constraintAxisConfig(xAxisConfig);
     const sizeConstraint = this.constraintForAxis(yAxisConfig?.size);
