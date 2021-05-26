@@ -42,7 +42,7 @@
 }
 
 ::ng-deep {
-  .uninitialized-column:not(.focused) input {
+  .uninitialized-column:not(.focused) input:not(.editable) {
     color: $dark !important;
   }
 }

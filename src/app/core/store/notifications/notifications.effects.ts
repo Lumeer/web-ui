@@ -130,7 +130,9 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.ExistingAttributeWarning>(NotificationsActionType.EXISTING_ATTRIBUTE_WARNING),
         tap(action => {
-          const message = $localize`:@@warning.attribute.nameExisting:I am sorry, the attribute name '${action.payload.name}:name:' already exists.`;
+          const message = action.payload.name
+            ? $localize`:@@warning.attribute.nameExisting:I am sorry, the attribute '${action.payload.name}:name:' already exists.`
+            : $localize`:@@warning.attribute.nameEmpty:I am sorry, the attribute name must not be empty.`;
 
           this.notificationService.warning(message);
         })
@@ -143,7 +145,9 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.ExistingLinkWarning>(NotificationsActionType.EXISTING_LINK_WARNING),
         tap(action => {
-          const message = $localize`:@@warning.link.nameExisting:I am sorry, the link name '${action.payload.name}:name:' already exists.`;
+          const message = action.payload.name
+            ? $localize`:@@warning.link.nameExisting:I am sorry, the link '${action.payload.name}:name:' already exists.`
+            : $localize`:@@warning.link.nameEmpty:I am sorry, the link name must not be empty.`;
 
           this.notificationService.warning(message);
         })
