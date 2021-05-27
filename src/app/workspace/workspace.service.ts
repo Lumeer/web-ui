@@ -148,9 +148,7 @@ export class WorkspaceService {
     return this.organizationService.getOrganizationByCode(code).pipe(
       map(organization => OrganizationConverter.fromDto(organization)),
       tap(organization => this.store$.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
-      catchError(() => {
-        return of(undefined);
-      })
+      catchError(() => of(undefined))
     );
   }
 
@@ -177,9 +175,7 @@ export class WorkspaceService {
     return this.projectService.getProjectByCode(orgId, projCode).pipe(
       map(project => ProjectConverter.fromDto(project, orgId)),
       tap(project => this.store$.dispatch(new ProjectsAction.GetOneSuccess({project}))),
-      catchError(() => {
-        return of(undefined);
-      })
+      catchError(() => of(undefined))
     );
   }
 }

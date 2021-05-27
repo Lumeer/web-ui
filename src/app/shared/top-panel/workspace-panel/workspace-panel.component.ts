@@ -26,7 +26,6 @@ import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
 import {
-  selectAllOrganizations,
   selectAllOrganizationsSorted,
   selectOrganizationByWorkspace,
 } from '../../../core/store/organizations/organizations.state';

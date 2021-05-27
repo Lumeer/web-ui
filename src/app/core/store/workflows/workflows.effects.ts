@@ -48,6 +48,7 @@ export class WorkflowsEffects {
               value: action.payload.column?.tableId || action.payload.cell?.tableId || action.payload.tableId,
               sidebar: true,
             },
+            nextAction: action.payload.nextAction,
           })
       )
     )
@@ -61,12 +62,11 @@ export class WorkflowsEffects {
         const {cell, column} = action.payload;
         const cursor = workflowCellToViewCursor(cell, column);
         cursor && (cursor.sidebar = viewCursor?.sidebar);
-        if (!cursor) {
-          return of(new NavigationAction.SetViewCursor({cursor: {}}));
-        } else if (!deepObjectsEquals(cursor, viewCursor)) {
+        if (cursor && !deepObjectsEquals(cursor, viewCursor)) {
           return of(new NavigationAction.SetViewCursor({cursor}));
+        } else if (!cursor && !viewCursor?.sidebar) {
+          return of(new NavigationAction.SetViewCursor({cursor: {}}));
         }
-
         return EMPTY;
       })
     )

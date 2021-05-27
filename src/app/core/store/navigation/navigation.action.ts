@@ -60,7 +60,7 @@ export namespace NavigationAction {
   export class SetViewCursor implements Action {
     public readonly type = NavigationActionType.SET_VIEW_CURSOR;
 
-    public constructor(public payload: {cursor: ViewCursor}) {}
+    public constructor(public payload: {cursor: ViewCursor; nextAction?: Action}) {}
   }
 
   export class SetPerspectiveSettings implements Action {

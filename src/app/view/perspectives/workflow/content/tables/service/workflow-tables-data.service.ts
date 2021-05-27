@@ -138,6 +138,7 @@ import {
 import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/workflows/workflow.utils';
 import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
+import {CommonAction} from '../../../../../../core/store/common/common.action';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -1074,7 +1075,7 @@ export class WorkflowTablesDataService {
     }
   }
 
-  public showRowDocumentDetail(row: TableRow, cell?: TableCell) {
+  public showRowDocumentDetail(row: TableRow, cell?: TableCell, resetSelection?: boolean) {
     const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
     const table = this.stateService.findTable(row?.tableId);
     this.store$.dispatch(
@@ -1084,6 +1085,9 @@ export class WorkflowTablesDataService {
         column,
         collectionId: table?.collectionId,
         tableId: table?.id,
+        nextAction: resetSelection
+          ? new CommonAction.ExecuteCallback({callback: () => this.stateService.resetSelectedCell()})
+          : null,
       })
     );
   }
@@ -1426,12 +1430,14 @@ export class WorkflowTablesDataService {
   public copyRowValue(row: TableRow, column: TableColumn) {
     if (row && column?.attribute) {
       if (row.documentId) {
+        if (column.collectionId) {
+          this.copyValueService.copyDocumentValue(row.documentId, column.collectionId, column.attribute.id);
+        } else if (column.linkTypeId) {
+          this.copyValueService.copyLinkValue(row.linkInstanceId, column.linkTypeId, column.attribute.id);
+        }
+      } else {
         const value = row.data?.[column.id];
         this.copyValueService.copy(value);
-      } else if (column.collectionId) {
-        this.copyValueService.copyDocumentValue(row.documentId, column.collectionId, column.attribute.id);
-      } else if (column.linkTypeId) {
-        this.copyValueService.copyLinkValue(row.linkInstanceId, column.linkTypeId, column.attribute.id);
       }
     }
   }
