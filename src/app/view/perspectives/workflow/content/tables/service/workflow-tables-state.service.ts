@@ -198,11 +198,15 @@ export class WorkflowTablesStateService {
   }
 
   public resetSelectedCell() {
-    this.selectedCell$.next(null);
+    if (this.isSelected()) {
+      this.selectedCell$.next(null);
+    }
   }
 
   public resetEditedCell() {
-    this.editedCell$.next(null);
+    if (this.isEditing()) {
+      this.editedCell$.next(null);
+    }
   }
 
   public setEditedCell(cell: TableCell, inputValue?: any) {

@@ -108,6 +108,7 @@ export class NavigationEffects {
               replaceUrl: true,
               queryParamsHandling: 'merge',
             },
+            nextActions: action.payload.nextAction ? [action.payload.nextAction] : [],
           })
       )
     )

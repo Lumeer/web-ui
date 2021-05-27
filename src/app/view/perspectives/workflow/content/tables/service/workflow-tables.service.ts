@@ -34,7 +34,7 @@ import {AttributeSortType, ViewSettings} from '../../../../../../core/store/view
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
-import {distinctUntilChanged, skip} from 'rxjs/operators';
+import {skip} from 'rxjs/operators';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './workflow-tables-data.service';
@@ -43,7 +43,6 @@ import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service'
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
-import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
@@ -114,8 +113,7 @@ export class WorkflowTablesService {
   }
 
   public onRowDetail(row: TableRow) {
-    this.dataService.showRowDocumentDetail(row);
-    this.stateService.resetSelectedCell();
+    this.dataService.showRowDocumentDetail(row, null, true);
   }
 
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {

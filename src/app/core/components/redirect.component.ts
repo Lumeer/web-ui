@@ -31,6 +31,7 @@ import {NotificationsAction} from '../store/notifications/notifications.action';
 import {TemplateService} from '../rest/template.service';
 import {OrganizationService} from '../data-service';
 import {OrganizationConverter} from '../store/organizations/organization.converter';
+import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
 
 @Component({
   template: '',
@@ -133,16 +134,17 @@ export class RedirectComponent implements OnInit {
     this.router.navigate(['/'], {replaceUrl: true}).then(() => then?.());
   }
 
-  private getWritableOrganizationsForTemplate(templateCode: string): Observable<Organization[] | null> {
+  private getWritableOrganizationsForTemplate(templateCode: string): Observable<Organization[]> {
     return this.templateService.getTemplateByCode(templateCode).pipe(
       mergeMap(template => this.getWritableOrganizations(template.templateMetadata.organizationId, template.id)),
       catchError(() => of([]))
     );
   }
 
-  private getWritableOrganizations(organizationId: string, projectId: string): Observable<Organization[] | null> {
+  private getWritableOrganizations(organizationId: string, projectId: string): Observable<Organization[]> {
     return this.organizationService.getWritableOrganizations(organizationId, projectId).pipe(
       map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
+      map(organizations => sortResourcesByOrder(organizations)),
       catchError(() => of([]))
     );
   }

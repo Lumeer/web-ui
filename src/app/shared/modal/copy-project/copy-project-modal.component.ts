@@ -32,6 +32,7 @@ import {ProjectsAction} from '../../../core/store/projects/projects.action';
 import {CreateProjectService} from '../../../core/service/create-project.service';
 import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 import {PublicProjectService} from '../../../core/data-service/project/public-project.service';
+import {sortResourcesByOrder} from '../../utils/resource.utils';
 
 @Component({
   templateUrl: './copy-project-modal.component.html',
@@ -99,7 +100,7 @@ export class CopyProjectModalComponent implements OnInit, OnDestroy {
 
     this.store$.dispatch(
       new OrganizationsAction.Choose({
-        organizations: this.organizations,
+        organizations: sortResourcesByOrder(this.organizations),
         initialCode: copyProject.code,
         copyProject,
         onClose$: this.onClose$,
