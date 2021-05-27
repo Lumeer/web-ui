@@ -29,6 +29,7 @@ export function convertResourceCommentDtoToModel(
     id: dto.id,
     resourceType: resourceTypesMap[dto.resourceType?.toLowerCase()],
     resourceId: dto.resourceId,
+    parentId: dto.parentId,
     metaData: dto.metaData,
     creationDate: new Date(dto.creationDate),
     updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
@@ -48,6 +49,7 @@ export function convertResourceCommentModelToDto(
     correlationId: model.correlationId,
     resourceType: model.resourceType.toUpperCase(),
     resourceId: model.resourceId,
+    parentId: model.parentId,
     metaData: model.metaData,
     comment: model.comment,
   };

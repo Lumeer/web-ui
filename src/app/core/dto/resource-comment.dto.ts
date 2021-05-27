@@ -22,6 +22,7 @@ export interface ResourceCommentDto {
   correlationId?: string;
   resourceType: string;
   resourceId: string;
+  parentId?: string;
   creationDate?: number;
   updateDate?: number;
   author?: string;
