@@ -393,65 +393,68 @@ export class BlocklyUtils {
   }
 
   public setterAndGetterOutputType(parentBlock: any, block: any, skipDisconnect = false) {
-    const options = parentBlock.getField('ATTR').getOptions();
-    const originalLength = options.length;
-    const blockOutputType = this.getOutputConnectionCheck(block);
+    if (isNotNullOrUndefined(parentBlock.getField('ATTR'))) {
+      const options = parentBlock.getField('ATTR').getOptions();
+      const originalLength = options.length;
+      const blockOutputType = this.getOutputConnectionCheck(block);
 
-    let attributes: Attribute[];
-    let defaultAttributeId = '';
-    if (
-      parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
-      parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE ||
-      (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
-    ) {
-      const linkType = this.getLinkType(blockOutputType.split('_')[0]);
-      attributes = linkType.attributes;
-    } else if (
-      parentBlock.type === BlocklyUtils.GET_ATTRIBUTE ||
-      parentBlock.type === BlocklyUtils.SET_ATTRIBUTE ||
-      (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
-    ) {
-      const collection = this.getCollection(blockOutputType.split('_')[0]);
-      attributes = collection.attributes;
-      defaultAttributeId = collection.defaultAttributeId;
-    }
-
-    let defaultValue = '',
-      defaultText = '';
-    attributes.forEach(attribute => {
-      options.push([attribute.name, attribute.id]);
-      if (attribute.id === defaultAttributeId) {
-        defaultValue = attribute.id;
-        defaultText = attribute.name;
+      let attributes: Attribute[];
+      let defaultAttributeId = '';
+      if (
+        parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
+        parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE ||
+        (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+      ) {
+        const linkType = this.getLinkType(blockOutputType.split('_')[0]);
+        attributes = linkType.attributes;
+      } else if (
+        parentBlock.type === BlocklyUtils.GET_ATTRIBUTE ||
+        parentBlock.type === BlocklyUtils.SET_ATTRIBUTE ||
+        (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE &&
+          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
+      ) {
+        const collection = this.getCollection(blockOutputType.split('_')[0]);
+        attributes = collection.attributes;
+        defaultAttributeId = collection.defaultAttributeId;
       }
-    });
 
-    if (!defaultValue && attributes && attributes.length > 0) {
-      defaultValue = attributes[0].id;
-      defaultText = attributes[0].name;
-    }
+      let defaultValue = '',
+        defaultText = '';
+      attributes.forEach(attribute => {
+        options.push([attribute.name, attribute.id]);
+        if (attribute.id === defaultAttributeId) {
+          defaultValue = attribute.id;
+          defaultText = attribute.name;
+        }
+      });
 
-    parentBlock.getField('ATTR').setValue(defaultValue);
-
-    // force attribute name render when the same value was already selected
-    parentBlock.getField('ATTR').text_ = defaultText;
-    parentBlock.getField('ATTR').forceRerender();
-    options.splice(0, originalLength);
-
-    if (parentBlock.type === BlocklyUtils.GET_ATTRIBUTE || parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
-      const newType =
-        block.type.endsWith(BlocklyUtils.GET_HIERARCHY_SIBLINGS) ||
-        block.type.endsWith(BlocklyUtils.GET_CHILD_DOCUMENTS) ||
-        block.type.endsWith(BlocklyUtils.GET_SIBLINGS) ||
-        block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
-        block.type.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
-          ? ['Array']
-          : ['', 'Number', 'String', 'Boolean', 'Colour'];
-      const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
-      if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
-        this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+      if (!defaultValue && attributes && attributes.length > 0) {
+        defaultValue = attributes[0].id;
+        defaultText = attributes[0].name;
       }
-      parentBlock.outputConnection.check_ = newType;
+
+      parentBlock.getField('ATTR').setValue(defaultValue);
+
+      // force attribute name render when the same value was already selected
+      parentBlock.getField('ATTR').text_ = defaultText;
+      parentBlock.getField('ATTR').forceRerender();
+      options.splice(0, originalLength);
+
+      if (parentBlock.type === BlocklyUtils.GET_ATTRIBUTE || parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
+        const newType =
+          block.type.endsWith(BlocklyUtils.GET_HIERARCHY_SIBLINGS) ||
+          block.type.endsWith(BlocklyUtils.GET_CHILD_DOCUMENTS) ||
+          block.type.endsWith(BlocklyUtils.GET_SIBLINGS) ||
+          block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
+          block.type.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
+            ? ['Array']
+            : ['', 'Number', 'String', 'Boolean', 'Colour'];
+        const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
+        if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
+          this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+        }
+        parentBlock.outputConnection.check_ = newType;
+      }
     }
   }
 
@@ -464,7 +467,8 @@ export class BlocklyUtils {
         child =>
           (child.type?.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX) &&
             child.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) ||
-          child.type === BlocklyUtils.GET_PARENT_DOCUMENT
+          child.type === BlocklyUtils.GET_PARENT_DOCUMENT ||
+          child.type === BlocklyUtils.GET_LINK_DOCUMENT
       );
 
       // search for all variable setters connected to document variables and set the variable type accordingly
@@ -484,6 +488,18 @@ export class BlocklyUtils {
                 this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
                 block.inputList[0].fieldRow[1].variableTypes = [variable.type];
               }
+            } else if (children[idx].type === BlocklyUtils.GET_LINK_DOCUMENT) {
+              const outputType = this.getOutputConnectionCheck(children[idx]);
+              const [collectionId] = outputType.split('_');
+
+              // the variable already existed and its type changed
+              if (variable.type !== collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
+                // disconnect and dispose all variable getters because they now have wrong name, color and icon
+                this.disposeVariableGetters(workspace, variable);
+              }
+
+              this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+              block.inputList[0].fieldRow[1].variableTypes = [variable.type];
             } else {
               const [, , collectionId] = children[idx].type.split('_');
               this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
@@ -502,13 +518,7 @@ export class BlocklyUtils {
 
             if (variable.type !== collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
               // disconnect and dispose all variable getters because they now have wrong name, color and icon
-              this.forEachVariableGetter(workspace, variable, innerBlock => {
-                if (innerBlock.outputConnection) {
-                  this.tryDisconnect(innerBlock, innerBlock.outputConnection);
-                }
-
-                setTimeout(() => innerBlock.dispose());
-              });
+              this.disposeVariableGetters(workspace, variable);
 
               // update variable type
               this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
@@ -533,6 +543,17 @@ export class BlocklyUtils {
           }
         }
       }
+    });
+  }
+
+  private disposeVariableGetters(workspace, variable) {
+    // disconnect and dispose all variable getters because they now have wrong name, color and icon
+    this.forEachVariableGetter(workspace, variable, innerBlock => {
+      if (innerBlock.outputConnection) {
+        this.tryDisconnect(innerBlock, innerBlock.outputConnection);
+      }
+
+      setTimeout(() => innerBlock.dispose());
     });
   }
 

@@ -684,7 +684,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           const linkedBlock = block.outputConnection.targetConnection.getSourceBlock();
 
           if (linkedBlock) {
-            this.blocklyUtils.setterAndGetterOutputType(linkedBlock, block);
+            if (linkedBlock.type === BlocklyUtils.VARIABLES_SET) {
+              this.blocklyUtils.checkVariablesType(changeEvent, workspace);
+            } else {
+              this.blocklyUtils.setterAndGetterOutputType(linkedBlock, block);
+            }
           }
         }
       }
