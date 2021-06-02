@@ -678,7 +678,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         changeEvent.element === 'field' &&
         changeEvent.name === 'COLLECTION'
       ) {
-        block.outputConnection.check_ = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+        block.outputConnection.check_ =
+          changeEvent.newValue === '?'
+            ? BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN
+            : changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
 
         if (block.outputConnection?.targetConnection) {
           const linkedBlock = block.outputConnection.targetConnection.getSourceBlock();
@@ -704,6 +707,16 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const block = workspace.getBlockById(changeEvent.blockId);
       const blockOutputType = this.blocklyUtils.getOutputConnectionCheck(block);
       const parentBlock = workspace.getBlockById(changeEvent.newParentId);
+
+      // variable getter being connected to get document via link
+      if (
+        block.type === BlocklyUtils.VARIABLES_GET &&
+        parentBlock.type?.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX)
+      ) {
+        if (!blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+          this.blocklyUtils.tryDisconnect(block, block.outputConnection);
+        }
+      }
 
       // is it a document being connected to ...
       if (blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
@@ -868,11 +881,15 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           // reset list of collections upon disconnection
           if (
             parentBlock.type === BlocklyUtils.GET_LINK_DOCUMENT &&
-            (isNullOrUndefined(parentBlock.getInput('COLLECTION').connection) ||
-              parentBlock.getInput('COLLECTION').connection.targetConnection === null)
+            (isNullOrUndefined(parentBlock.getInput('LINK').connection) ||
+              parentBlock.getInput('LINK').connection.targetConnection === null)
           ) {
             parentBlock.setOutput(true, BlocklyUtils.UNKNOWN);
             this.blocklyUtils.resetOptions(parentBlock, 'COLLECTION');
+
+            if (isNotNullOrUndefined(parentBlock.outputConnection)) {
+              this.blocklyUtils.tryDisconnect(parentBlock, parentBlock.outputConnection);
+            }
           }
 
           // might be a disconnection of document from variable
