@@ -103,6 +103,7 @@ export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBl
       if (isNotNullOrUndefined(block) && block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
         const linkTypeId = block.getField('LINKTYPE').value_;
         block.setOutput(true, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
+        this.blocklyUtils.checkVariablesType(changeEvent, workspace);
       }
     }
   }
