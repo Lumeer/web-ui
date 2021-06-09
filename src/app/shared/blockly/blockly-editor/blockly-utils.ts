@@ -363,6 +363,8 @@ export class BlocklyUtils {
 
   public setLinkDocumentOutputType(parentBlock: any, block: any) {
     const options = parentBlock.getField('COLLECTION').getOptions();
+    const originalValue = parentBlock.getField('COLLECTION').getValue();
+    let originalValuePresent = false;
     const originalLength = options.length;
     const blockOutputType = this.getOutputConnectionCheck(block);
     const linkTypeId = blockOutputType.split('_')[0];
@@ -371,9 +373,13 @@ export class BlocklyUtils {
     linkType.collectionIds.forEach(collectionId => {
       const collection = this.getCollection(collectionId);
       options.push([collection.name, collection.id]);
+
+      if (collection.id === originalValue) {
+        originalValuePresent = true;
+      }
     });
 
-    const firstCollection = this.getCollection(linkType.collectionIds[0]);
+    const firstCollection = this.getCollection(originalValuePresent ? originalValue : linkType.collectionIds[0]);
     const firstCollectionId = firstCollection.id;
     const firstCollectionName = firstCollection.name;
 
