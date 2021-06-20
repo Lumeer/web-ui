@@ -3,20 +3,23 @@
          *ngIf="{columns: columns$ | async, constraintData: constraintData$ | async} as data">
     <thead links-list-table-header
            [columns]="data.columns"
-           [permissions]="permissions"
+           [collectionPermissions]="collectionPermissions"
+           [linkTypePermissions]="linkTypePermissions"
            (resizeColumn)="onResizeColumn($event)"
            (attributeType)="onAttributeType($event)"
            (attributeFunction)="onAttributeFunction($event)"
            (attributeDescription)="onAttributeDescription($event)">
     </thead>
     <tbody links-list-table-body
-           [permissions]="permissions"
+           [collectionPermissions]="collectionPermissions"
+           [linkTypePermissions]="linkTypePermissions"
            [columns]="data.columns"
            [constraintData]="data.constraintData"
            [rows]="rows$ | async | sortLinkRows:collection:linkType:attributesSettings:data.constraintData"
            [linkType]="linkType"
            [collection]="collection"
            [document]="document"
+           [currentUser]="currentUser$ | async"
            [allowSelect]="allowSelect"
            [allowCreate]="allowCreate"
            [allowUnlink]="allowUnlink"

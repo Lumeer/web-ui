@@ -26,7 +26,7 @@ import {catchError, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {WorkspaceService} from '../workspace.service';
-import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
+import {userCanManageProjectDetail} from '../../shared/utils/permission.utils';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
@@ -54,7 +54,7 @@ export class ProjectSettingsGuard implements CanActivate {
           return of(false);
         }
 
-        if (!userIsManagerInWorkspace(user, organization, project)) {
+        if (!userCanManageProjectDetail(organization, project, user)) {
           this.dispatchErrorActionsNotPermission();
           return of(false);
         }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {DataRow} from '../../../../../data/data-row.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {ConstraintType} from '@lumeer/data-filters';
@@ -27,7 +27,7 @@ import {ConstraintType} from '@lumeer/data-filters';
   templateUrl: './data-resource-data-row-icons.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataResourceDataRowIconsComponent {
+export class DataResourceDataRowIconsComponent implements OnChanges {
   @Input()
   public row: DataRow;
 
@@ -44,6 +44,16 @@ export class DataResourceDataRowIconsComponent {
   public delete = new EventEmitter();
 
   public readonly type = ConstraintType;
+
+  public canEditType: boolean;
+  public canEditAutomation: boolean;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.permissions) {
+      this.canEditType = this.permissions?.roles?.AttributeEdit;
+      this.canEditType = this.permissions?.roles?.TechConfig;
+    }
+  }
 
   public onDelete() {
     this.delete.emit();

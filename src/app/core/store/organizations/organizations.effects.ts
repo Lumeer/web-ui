@@ -33,7 +33,7 @@ import {OrganizationsAction, OrganizationsActionType} from './organizations.acti
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
 import {OrganizationDto, PermissionDto} from '../../dto';
 import {PermissionType} from '../permissions/permissions';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
 import {ServiceLimitsAction} from './service-limits/service-limits.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
@@ -281,7 +281,7 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
       mergeMap(action => {
         const workspace = action.payload.workspace;
-        const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
+        const dtos = action.payload.permissions.map(permission => convertPermissionModelToDto(permission));
 
         let observable: Observable<PermissionDto>;
         if (action.payload.type === PermissionType.Users) {

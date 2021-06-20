@@ -26,6 +26,7 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -69,6 +70,8 @@ import {
 import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResourceType} from '../../../../core/model/resource';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
 
 const columnWidth = 100;
 
@@ -78,7 +81,7 @@ const columnWidth = 100;
   styleUrls: ['./links-list-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableComponent implements OnChanges, AfterViewInit {
+export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
   public linkType: LinkType;
 
@@ -95,7 +98,10 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public query: Query;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public collectionPermissions: AllowedPermissions;
+
+  @Input()
+  public linkTypePermissions: AllowedPermissions;
 
   @Input()
   public preventEventBubble: boolean;
@@ -155,11 +161,15 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   public rows$: Observable<LinkRow[]>;
   public constraintData$: Observable<ConstraintData>;
+  public currentUser$: Observable<User>;
 
   private stickyColumnWidth: number;
 
-  constructor(private store$: Store<AppState>) {
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -198,7 +208,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.linkType?.attributes, setting.attributeId);
-        const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.permissions, this.query);
+        const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.linkTypePermissions, this.query);
         const width = setting.width || columnWidth;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
@@ -216,7 +226,12 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
-        const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
+        const editable = isCollectionAttributeEditable(
+          attribute.id,
+          this.collection,
+          this.collectionPermissions,
+          this.query
+        );
         const width = setting.width || columnWidth;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.collectionId === this.collection.id && c.attribute.id === attribute.id

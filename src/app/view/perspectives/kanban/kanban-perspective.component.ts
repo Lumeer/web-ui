@@ -32,8 +32,6 @@ import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
-import {selectLinkTypesPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
@@ -42,7 +40,6 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
 })
 export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
-  public linkTypesPermissions$: Observable<AllowedPermissionsMap>;
 
   constructor(protected store$: Store<AppState>) {
     super(store$);
@@ -79,7 +76,6 @@ export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanC
 
   private subscribeAdditionalData() {
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-    this.linkTypesPermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
   }
 
   public onConfigChanged(config: KanbanConfig) {

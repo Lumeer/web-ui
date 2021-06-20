@@ -19,26 +19,22 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Role} from '../../core/model/role';
+import {RoleType} from '../../core/model/role-type';
 
 @Pipe({
   name: 'roleIcon',
 })
 export class RoleIconPipe implements PipeTransform {
-  public transform(role: Role): string {
+  public transform(role: RoleType): string {
     switch (role) {
-      case Role.Read:
+      case RoleType.Read:
         return 'fa-book';
-      case Role.Manage:
+      case RoleType.Manage:
         return 'fa-cog';
-      case Role.Write:
+      case RoleType.DataContribute:
         return 'fa-pencil';
-      case Role.Clone:
-        return 'fa-clone';
-      case Role.Comment:
+      case RoleType.CommentContribute:
         return 'fa-comment-alt';
-      case Role.Share:
-        return 'fa-share-square';
       default:
         return '';
     }

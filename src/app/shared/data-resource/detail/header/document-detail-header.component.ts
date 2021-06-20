@@ -77,6 +77,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public user: User;
+
   @Output()
   public switchToTable = new EventEmitter();
 

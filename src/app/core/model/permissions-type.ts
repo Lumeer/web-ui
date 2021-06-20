@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const enum Role {
-  Read = 'READ',
-  Manage = 'MANAGE',
-  Write = 'WRITE',
-  Share = 'SHARE',
-  Clone = 'CLONE',
-  Comment = 'COMMENT',
-  Empty = 'EMPTY',
+export enum PermissionsType {
+  Custom = 'Custom',
+  Merge = 'Merge',
 }
 
-export const allRoles = [Role.Read, Role.Manage, Role.Write, Role.Share, Role.Clone, Role.Comment, Role.Empty];
+export const permissionsTypesMap: Record<string, PermissionsType> = {
+  [PermissionsType.Custom]: PermissionsType.Custom,
+  [PermissionsType.Merge]: PermissionsType.Merge,
+};

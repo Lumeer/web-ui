@@ -108,9 +108,13 @@ import {CanCreateLinksPipe} from './can-create-links.pipe';
 import {ViewIconPipe} from './view-icon.pipe';
 import {ViewColorPipe} from './view-color.pipe';
 import {ViewLinkPipe} from './view-link.pipe';
+import {DataResourceIsWritablePipe} from './data-resource/data-resource-is-writable.pipe';
+import {DataResourceIsDeletablePipe} from './data-resource/data-resource-is-deletable.pipe';
+import {DataResourceIsReadablePipe} from './data-resource/data-resource-is-readable.pipe';
+import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
 
 @NgModule({
-  imports: [CommonModule, DataPipesModule],
+  imports: [CommonModule, DataPipesModule, DataResourcesPipesModule],
   declarations: [
     LightenColorPipe,
     IconsPipe,
@@ -229,6 +233,7 @@ import {ViewLinkPipe} from './view-link.pipe';
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
     DataPipesModule,
+    DataResourcesPipesModule,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,

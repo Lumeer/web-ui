@@ -17,30 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {RoleType} from './role-type';
+
 export interface AllowedPermissions {
-  readWithView?: boolean;
-  writeWithView?: boolean;
-  manageWithView?: boolean;
-  read?: boolean;
-  write?: boolean;
-  manage?: boolean;
-  share?: boolean;
+  roles?: Record<RoleType, boolean>;
+  rolesWithView?: Record<RoleType, boolean>;
 }
 
 export type AllowedPermissionsMap = Record<string, AllowedPermissions>;
 
-export function mergeAllowedPermissions(a1: AllowedPermissions, a2: AllowedPermissions): AllowedPermissions {
-  if (!a1 || !a2) {
-    return a1 || a2;
-  }
-
-  return {
-    manage: a1.manage && a2.manage,
-    manageWithView: a1.manageWithView && a2.manageWithView,
-    read: a1.read && a2.read,
-    readWithView: a1.readWithView && a2.readWithView,
-    write: a1.write && a2.write,
-    writeWithView: a1.writeWithView && a2.writeWithView,
-    share: a1.share && a2.share,
-  };
+export interface ResourcesPermissions {
+  collections: AllowedPermissionsMap;
+  linkTypes: AllowedPermissionsMap;
 }

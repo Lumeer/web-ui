@@ -18,7 +18,7 @@
  */
 
 import {ProjectDto} from '../../dto';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {Project} from './project';
 
 export class ProjectConverter {
@@ -35,7 +35,7 @@ export class ProjectConverter {
       correlationId: correlationId,
       collectionsCount: dto.collectionsCount,
       nonRemovable: dto.nonRemovable,
-      permissions: PermissionsConverter.fromDto(dto.permissions),
+      permissions: convertPermissionsDtoToModel(dto.permissions),
       version: dto.version,
       templateMetadata: dto.templateMetadata && {
         ...dto.templateMetadata,

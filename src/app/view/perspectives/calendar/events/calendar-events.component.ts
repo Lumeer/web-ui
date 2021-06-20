@@ -30,7 +30,7 @@ import {
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CalendarBar, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {calendarStemConfigIsWritable, checkOrTransformCalendarConfig} from '../util/calendar-util';
@@ -61,7 +61,7 @@ interface Data {
   linkTypes: LinkType[];
   data: DocumentsAndLinksData;
   config: CalendarConfig;
-  permissions: AllowedPermissionsMap;
+  permissions: ResourcesPermissions;
   query: Query;
   constraintData: ConstraintData;
 }
@@ -91,7 +91,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public config: CalendarConfig;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public constraintData: ConstraintData;
@@ -180,9 +180,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private isSomeStemConfigWritable(): boolean {
     const linkTypesMap = objectsByIdMap(this.linkTypes);
-    return (this.config?.stemsConfigs || []).some(config =>
-      calendarStemConfigIsWritable(config, this.permissions, linkTypesMap)
-    );
+    return (this.config?.stemsConfigs || []).some(config => calendarStemConfigIsWritable(config, this.permissions));
   }
 
   public onRangeChanged(data: {newMode: CalendarMode; newDate: Date}) {

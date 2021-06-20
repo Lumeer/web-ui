@@ -21,9 +21,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {objectsByIdMap} from '../../../utils/common.utils';
 import {CalendarConfig} from '../../../../core/store/calendars/calendar';
 import {calendarStemConfigIsWritable} from '../../../../view/perspectives/calendar/util/calendar-util';
 import {collectionSelectItem} from '../../../select/select-item.utils';
@@ -37,13 +36,12 @@ export class StemCollectionItemsPipe implements PipeTransform {
     config: CalendarConfig,
     collections: Collection[],
     linkTypes: LinkType[],
-    permissions: AllowedPermissionsMap
+    permissions: ResourcesPermissions
   ): SelectItemModel[] {
-    const linkTypesMap = objectsByIdMap(linkTypes);
     return (query.stems || []).reduce((models, stem, index) => {
       const calendarStemConfig = config?.stemsConfigs?.[index];
       const collection = (collections || []).find(coll => coll.id === stem.collectionId);
-      if (collection && calendarStemConfigIsWritable(calendarStemConfig, permissions, linkTypesMap)) {
+      if (collection && calendarStemConfigIsWritable(calendarStemConfig, permissions)) {
         models.push(collectionSelectItem(collection, () => index));
       }
       return models;

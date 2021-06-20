@@ -34,7 +34,7 @@ import {Query} from '../../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/view';
-import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {WorkflowTablesService} from './service/workflow-tables.service';
 import {
@@ -78,7 +78,7 @@ export class WorkflowTablesComponent implements OnChanges {
   public query: Query;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public collections: Collection[];

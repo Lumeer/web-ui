@@ -19,7 +19,7 @@
 
 import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
@@ -104,7 +104,7 @@ export function createEmptyNewRow(tableId: string): TableRow {
 export function createLinkTypeData(
   stemConfig: WorkflowStemConfig,
   collections: Collection[],
-  permissions: AllowedPermissionsMap,
+  permissions: ResourcesPermissions,
   linkTypesMap: Record<string, LinkType>
 ): {linkType?: LinkType; permissions?: AllowedPermissions} {
   if (isLinkedOrGroupedConfig(stemConfig)) {
@@ -121,8 +121,7 @@ export function createLinkTypeData(
         resourceId: linkType.id,
         resourceType: AttributesResourceType.LinkType,
       },
-      permissions,
-      linkTypesMap
+      permissions
     );
     return {linkType, permissions: linkTypePermissions};
   }

@@ -124,6 +124,7 @@ import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
+import {RoleType} from '../../model/role-type';
 
 @Injectable()
 export class TablesEffects {
@@ -634,7 +635,7 @@ export class TablesEffects {
             const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
             return this.store$.pipe(
               select(selectCollectionPermissions(collectionId)),
-              map(permissions => permissions?.writeWithView),
+              map(permissions => permissions?.roles?.DataContribute),
               distinctUntilChanged(),
               mergeMap(canCreateDocuments => {
                 const {cursor} = action.payload;

@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../utils/resource.utils';
 
@@ -26,15 +26,12 @@ import {getAttributesResourceType} from '../../../utils/resource.utils';
   name: 'dataResourcePermissions',
 })
 export class DataResourcePermissionsPipe implements PipeTransform {
-  public transform(
-    resource: AttributesResource,
-    permissions: {collectionsPermissions: AllowedPermissionsMap; linkTypesPermissions: AllowedPermissionsMap}
-  ): AllowedPermissions {
+  public transform(resource: AttributesResource, permissions: ResourcesPermissions): AllowedPermissions {
     const type = getAttributesResourceType(resource);
     if (type === AttributesResourceType.Collection) {
-      return permissions?.collectionsPermissions?.[resource.id];
+      return permissions?.collections?.[resource.id];
     } else if (type === AttributesResourceType.LinkType) {
-      return permissions?.linkTypesPermissions?.[resource.id];
+      return permissions?.linkTypes?.[resource.id];
     }
     return {};
   }

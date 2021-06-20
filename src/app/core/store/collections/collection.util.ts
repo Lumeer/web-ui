@@ -33,7 +33,7 @@ export function isCollectionAttributeEditable(
   const attribute = attributeId && (collection?.attributes || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
-    permissions?.writeWithView &&
+    (permissions?.rolesWithView?.DataWrite || permissions?.rolesWithView?.DataContribute) &&
     !isCollectionAttributeLockedByQuery(query, collection, attributeId)
   );
 }
@@ -62,7 +62,7 @@ export function isLinkTypeAttributeEditable(
   const attribute = attributeId && (linkType?.attributes || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
-    permissions?.writeWithView &&
+    (permissions?.rolesWithView?.DataWrite || permissions?.rolesWithView?.DataContribute) &&
     !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId)
   );
 }
@@ -90,7 +90,9 @@ export function isAttributeEditableWithQuery(
   }
 
   return (
-    isAttributeEditable(attribute) && permissions?.writeWithView && !isAttributeLockedByFilters(filters, attribute.id)
+    isAttributeEditable(attribute) &&
+    (permissions?.rolesWithView?.DataWrite || permissions?.rolesWithView?.DataContribute) &&
+    !isAttributeLockedByFilters(filters, attribute.id)
   );
 }
 

@@ -20,7 +20,7 @@
 import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
@@ -41,7 +41,6 @@ import {
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
-  objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
@@ -115,7 +114,7 @@ export class GanttChartConverter {
     collections: Collection[],
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     query: Query,
     settings: ViewSettings,
     constraintData: ConstraintData
@@ -153,7 +152,7 @@ export class GanttChartConverter {
       tasks = tasks.sort((t1, t2) => this.compareTasks(t1, t2));
     }
 
-    const options = this.createGanttOptions(config, permissions, linkTypes);
+    const options = this.createGanttOptions(config, permissions);
     this.convertCount++;
     return {options, tasks};
   }
@@ -164,14 +163,9 @@ export class GanttChartConverter {
     return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
   }
 
-  private createGanttOptions(
-    config: GanttChartConfig,
-    permissions: AllowedPermissionsMap,
-    linkTypes: LinkType[]
-  ): GanttOptions {
-    const linkTypesMap = objectsByIdMap(linkTypes);
+  private createGanttOptions(config: GanttChartConfig, permissions: ResourcesPermissions): GanttOptions {
     const createTasks = (config.stemsConfigs || []).some(stemConfig =>
-      canCreateTaskByStemConfig(stemConfig, permissions, linkTypesMap)
+      canCreateTaskByStemConfig(stemConfig, permissions)
     );
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),

@@ -25,18 +25,17 @@ import {selectWorkspaceModels} from '../store/common/common.selectors';
 import {User} from '../store/users/user';
 import {Organization} from '../store/organizations/organization';
 import {Project} from '../store/projects/project';
-import {
-  managePermissions,
-  userIsManagerInWorkspace,
-  userPermissionsInResource,
-} from '../../shared/utils/resource.utils';
-import {AllowedPermissions} from '../model/allowed-permissions';
 import {UserPermissionsAction} from '../store/user-permissions/user-permissions.action';
 import {selectAllViews, selectCurrentView} from '../store/views/views.state';
 import {selectAllCollections} from '../store/collections/collections.state';
 import {selectAllLinkTypes} from '../store/link-types/link-types.state';
 import {AppState} from '../store/app.state';
-import {computeResourcesPermissions} from '../../shared/utils/permission.utils';
+import {
+  computeResourcesPermissions,
+  userPermissionsInOrganization,
+  userPermissionsInProject,
+  userPermissionsInView,
+} from '../../shared/utils/permission.utils';
 
 @Injectable()
 export class PermissionsCheckService {
@@ -59,29 +58,26 @@ export class PermissionsCheckService {
   }
 
   private checkWorkspacePermissions(currentUser: User, organization: Organization, project: Project) {
-    const isManager = userIsManagerInWorkspace(currentUser, organization, project);
-    const organizationPermissions = userPermissionsInResource(currentUser, organization);
+    const organizationPermissions = userPermissionsInOrganization(organization, currentUser);
     this.store$.dispatch(new UserPermissionsAction.SetOrganizationPermissions({permissions: organizationPermissions}));
 
-    const projectPermissions: AllowedPermissions = isManager
-      ? managePermissions()
-      : userPermissionsInResource(currentUser, project);
+    const projectPermissions = userPermissionsInProject(organization, project, currentUser);
     this.store$.dispatch(new UserPermissionsAction.SetProjectPermissions({permissions: projectPermissions}));
   }
 
   private checkResourcesPermissions(currentUser: User, organization: Organization, project: Project): Subscription {
-    const isManager = userIsManagerInWorkspace(currentUser, organization, project);
     return combineLatest([
       this.store$.pipe(select(selectCurrentView)),
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).subscribe(([currentView, collections, linkTypes]) => {
-      const {collectionsPermissions, linkTypesPermissions} = computeResourcesPermissions(
-        currentUser,
+      const {collections: collectionsPermissions, linkTypes: linkTypesPermissions} = computeResourcesPermissions(
+        organization,
+        project,
         currentView,
         collections,
         linkTypes,
-        isManager
+        currentUser
       );
       this.store$.dispatch(new UserPermissionsAction.SetCollectionsPermissions({permissions: collectionsPermissions}));
       this.store$.dispatch(new UserPermissionsAction.SetLinkTypesPermissions({permissions: linkTypesPermissions}));
@@ -89,12 +85,11 @@ export class PermissionsCheckService {
   }
 
   private checkViewsPermissions(currentUser: User, organization: Organization, project: Project): Subscription {
-    const isManager = userIsManagerInWorkspace(currentUser, organization, project);
     return this.store$.pipe(select(selectAllViews)).subscribe(views => {
       const permissions = (views || []).reduce(
         (map, view) => ({
           ...map,
-          [view.id]: isManager ? managePermissions() : userPermissionsInResource(currentUser, view),
+          [view.id]: userPermissionsInView(organization, project, view, currentUser),
         }),
         {}
       );

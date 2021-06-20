@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../../core/store/users/user';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
-import {userIsManagerInWorkspace} from '../../../../utils/resource.utils';
+import {userCanReadAllInWorkspace} from '../../../../utils/permission.utils';
 
 @Pipe({
   name: 'canRemoveUser',
@@ -31,6 +31,6 @@ export class CanRemoveUserPipe implements PipeTransform {
     if (user.id === currentUser.id) {
       return false;
     }
-    return !userIsManagerInWorkspace(user, organization, project);
+    return !userCanReadAllInWorkspace(organization, project, user);
   }
 }

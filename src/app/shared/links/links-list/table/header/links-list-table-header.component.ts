@@ -47,7 +47,10 @@ export class LinksListTableHeaderComponent {
   public columns: LinkColumn[];
 
   @Input()
-  public permissions: AllowedPermissions;
+  public collectionPermissions: AllowedPermissions;
+
+  @Input()
+  public linkTypePermissions: AllowedPermissions;
 
   @Output()
   public resizeColumn = new EventEmitter<{index: number; width: number}>();

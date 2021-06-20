@@ -35,7 +35,7 @@ import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionType} from '../permissions/permissions';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {Attribute, Collection} from './collection';
@@ -595,7 +595,7 @@ export class CollectionsEffects {
       ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
       mergeMap(action => {
         const workspace = action.payload.workspace;
-        const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
+        const dtos = action.payload.permissions.map(permission => convertPermissionModelToDto(permission));
 
         let observable: Observable<PermissionDto>;
         if (action.payload.type === PermissionType.Users) {

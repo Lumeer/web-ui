@@ -28,7 +28,7 @@ import {NotificationsAction} from '../../core/store/notifications/notifications.
 import {Organization} from '../../core/store/organizations/organization';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {WorkspaceService} from '../workspace.service';
-import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {userCanManageOrganizationDetail} from '../../shared/utils/permission.utils';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -48,7 +48,7 @@ export class OrganizationSettingsGuard implements CanActivate {
           return false;
         }
 
-        if (!userHasManageRoleInResource(user, organization)) {
+        if (!userCanManageOrganizationDetail(organization, user)) {
           this.dispatchErrorActionsNotPermission();
           return false;
         }

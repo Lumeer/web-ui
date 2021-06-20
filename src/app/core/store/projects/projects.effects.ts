@@ -34,7 +34,7 @@ import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
 import {UsersAction} from '../users/users.action';
@@ -415,7 +415,7 @@ export class ProjectsEffects {
       ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
       mergeMap(action => {
         const {workspace, projectId, permissions, type, currentPermissions} = action.payload;
-        const dtos = permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
+        const dtos = permissions.map(permission => convertPermissionModelToDto(permission));
 
         let observable: Observable<PermissionDto>;
         if (action.payload.type === PermissionType.Users) {

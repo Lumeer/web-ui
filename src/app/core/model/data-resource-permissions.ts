@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SuggestionType} from './suggestion-type';
-
-export interface SuggestionQueryDto {
-  text: string;
-  type: SuggestionType;
-  priorityCollectionIds: string[];
+export interface DataResourcePermissions {
+  read?: boolean;
+  edit?: boolean;
+  delete?: boolean;
 }

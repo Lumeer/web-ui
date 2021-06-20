@@ -1,6 +1,7 @@
-<ng-container *ngIf="writableCollections$ | async as writableCollections">
+<ng-container
+  *ngIf="{collections: collections$ | async, projectPermissions: projectPermissions$ | async} as data">
   <button type="button"
-          *ngIf="(permissions?.manageWithView || permissions?.write) &&  writableCollections.length"
+          *ngIf="data.projectPermissions?.roles?.LinkContribute && canLinkCollection && data.collections.length"
           aria-haspopup="true"
           class="btn btn-sm btn-primary my-2"
           [matMenuTriggerFor]="contextMenu">
@@ -10,7 +11,7 @@
 
   <mat-menu #contextMenu="matMenu">
 
-    <button *ngFor="let collection of writableCollections"
+    <button *ngFor="let collection of data.collections"
             mat-menu-item
             (click)="onUseCollection(collection)">
       <icons-presenter [colors]="[collection.color]"

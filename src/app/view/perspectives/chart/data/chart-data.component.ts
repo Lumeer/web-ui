@@ -34,7 +34,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ChartAxisSettings, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
@@ -54,7 +54,7 @@ interface Data {
   documents: DocumentModel[];
   linkTypes: LinkType[];
   linkInstances: LinkInstance[];
-  permissions: AllowedPermissionsMap;
+  permissions: ResourcesPermissions;
   query: Query;
   config: ChartConfig;
   updateType: UpdateType;
@@ -88,7 +88,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public linkInstances: LinkInstance[];
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public query: Query;

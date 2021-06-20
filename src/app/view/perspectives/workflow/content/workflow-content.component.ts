@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -52,7 +52,7 @@ export class WorkflowContentComponent {
   public query: Query;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public collections: Collection[];

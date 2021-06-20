@@ -39,14 +39,14 @@ import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {UserRolesInResourcePipe} from '../../../../pipes/user-roles-in-resource.pipe';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {isNullOrUndefined} from '../../../../utils/common.utils';
+import {generateCorrelationId} from '../../../../utils/resource.utils';
+import {containsSameElements} from '../../../../utils/array.utils';
+import {RoleType} from '../../../../../core/model/role-type';
 import {
-  generateCorrelationId,
+  userCanReadAllInWorkspace,
   userCanReadWorkspace,
   userHasRoleInResource,
-  userIsManagerInWorkspace,
-} from '../../../../utils/resource.utils';
-import {containsSameElements} from '../../../../utils/array.utils';
-import {Role} from '../../../../../core/model/role';
+} from '../../../../utils/permission.utils';
 
 @Component({
   selector: 'share-view-dialog-body',
@@ -105,12 +105,12 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.users || changes.organization || changes.project) {
       this.usersWithReadPermission =
-        this.users?.filter(user => userCanReadWorkspace(user, this.organization, this.project)) || [];
+        this.users?.filter(user => userCanReadWorkspace(this.organization, this.project, user)) || [];
     }
     if (this.currentUser && this.organization && this.project && this.view) {
       this.initUsers(this.currentUser, this.organization, this.project);
     }
-    if (changes.organization && changes.project && changes.currentUser) {
+    if (changes.organization || changes.project || changes.currentUser) {
       this.checkCanAddNewUsers();
     }
   }
@@ -163,7 +163,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   private initUsers(currentUser: User, organization: Organization, project: Project) {
     for (const user of this.users || []) {
-      if (userIsManagerInWorkspace(user, organization, project) || user.id === currentUser.id) {
+      if (userCanReadAllInWorkspace(organization, project, user) || user.id === currentUser.id) {
         this.addUserToStaticIfNotPresented(user, organization, project);
       } else if ((this.view.permissions?.users || []).find(u => u.id === user.id)) {
         this.addUserToChangeableIfNotPresented(user, organization, project);
@@ -207,9 +207,10 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     const newUsers = this.newUsers$.getValue();
     const changeableUsers = this.changeableUsers$.getValue();
 
-    const changeablePermissions: Permission[] = Object.keys(userRoles)
-      .filter(id => changeableUsers.find(user => user.id === id))
-      .map(id => ({id, roles: userRoles[id]}));
+    const changeablePermissions: Permission[] = [];
+    // TODO Object.keys(userRoles)
+    // .filter(id => changeableUsers.find(user => user.id === id))
+    // .map(id => ({id, roles: userRoles[id]}));
 
     const staticPermissions = this.staticUsers
       .map(user => this.getUserPermissionsInView(user))
@@ -274,8 +275,12 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   private checkCanAddNewUsers() {
-    this.canAddNewUsers =
-      userIsManagerInWorkspace(this.currentUser, this.organization, this.project) ||
-      userHasRoleInResource(this.currentUser, this.view, Role.Manage);
+    this.canAddNewUsers = userHasRoleInResource(
+      this.organization,
+      this.project,
+      this.view,
+      this.currentUser,
+      RoleType.Manage
+    );
   }
 }

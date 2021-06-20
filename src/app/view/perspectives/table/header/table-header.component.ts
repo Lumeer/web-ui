@@ -35,7 +35,8 @@ import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
-import {selectCollectionsByReadPermission} from '../../../../core/store/common/permissions.selectors';
+import {selectReadableCollections} from '../../../../core/store/common/permissions.selectors';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'table-header',
@@ -55,6 +56,7 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   public embedded: boolean;
 
   public hasCollectionToLink$: Observable<boolean>;
+  public canCreateLinks$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
   public constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
@@ -65,8 +67,12 @@ export class TableHeaderComponent implements OnInit, OnChanges {
 
   private bindCollectionHasToLink() {
     this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+      select(selectReadableCollections),
       map(collections => collections.length > 1)
+    );
+    this.canCreateLinks$ = this.store$.pipe(
+      select(selectProjectPermissions),
+      map(permissions => permissions?.roles?.LinkContribute)
     );
   }
 

@@ -32,7 +32,7 @@ import {LinkInstance} from '../../../../../../core/store/link-instances/link.ins
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
   AttributeSortType,
@@ -139,6 +139,7 @@ import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/work
 import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 import {CommonAction} from '../../../../../../core/store/common/common.action';
+import {RoleType} from '../../../../../../core/model/role-type';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -217,7 +218,7 @@ export class WorkflowTablesDataService {
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
     config: WorkflowConfig,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
@@ -261,7 +262,7 @@ export class WorkflowTablesDataService {
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
     config: WorkflowConfig,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
@@ -269,7 +270,7 @@ export class WorkflowTablesDataService {
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
     return filterUniqueWorkflowConfigStems(config).reduce(
-      (result, stemConfig, index) => {
+      (result, stemConfig) => {
         const collection = collectionsMap[stemConfig.collection?.resourceId];
         if (!collection) {
           return result;
@@ -301,7 +302,6 @@ export class WorkflowTablesDataService {
           currentCollectionColumns,
           collection,
           permissions,
-          linkTypesMap,
           viewSettings,
           queryByStem,
           linkPermissions
@@ -496,13 +496,12 @@ export class WorkflowTablesDataService {
     stemConfig: WorkflowStemConfig,
     currentColumns: TableColumn[],
     collection: Collection,
-    permissions: AllowedPermissionsMap,
-    linkTypesMap: Record<string, LinkType>,
+    permissions: ResourcesPermissions,
     viewSettings: ViewSettings,
     query: Query,
     linkTypePermissions: AllowedPermissions
   ): {columns: TableColumn[]; actions: Action[]; permissions: AllowedPermissions} {
-    const collectionPermissions = queryAttributePermissions(stemConfig.collection, permissions, linkTypesMap);
+    const collectionPermissions = queryAttributePermissions(stemConfig.collection, permissions);
     const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
 
     return {
@@ -613,7 +612,7 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      if (!setting.hidden || permissions?.read || permissions?.manage) {
+      if (!setting.hidden || permissions?.roles?.Read) {
         columns.push(column);
       }
       return columns;
@@ -643,7 +642,7 @@ export class WorkflowTablesDataService {
     if (
       !this.currentView &&
       isCollection &&
-      permissions.manage &&
+      permissions.roles?.AttributeEdit &&
       !attributeColumns.some(column => !column.attribute)
     ) {
       const lastColumn: TableColumn = {
@@ -784,7 +783,9 @@ export class WorkflowTablesDataService {
       .filter(row => !!row);
 
     let newRow: TableRow;
-    const canCreateNewRow = linkPermissions ? linkPermissions.writeWithView : collectionPermissions.writeWithView;
+    const canCreateNewRow = linkPermissions
+      ? linkPermissions.rolesWithView?.DataContribute
+      : collectionPermissions.rolesWithView?.[RoleType.DataContribute];
     if (canCreateNewRow) {
       newRow = createEmptyNewRow(tableId);
       newRow.documentMenuItems = this.menuService.createRowMenu(collectionPermissions, newRow);

@@ -47,6 +47,7 @@ import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -61,7 +62,13 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public collectionPermissions: AllowedPermissions;
+
+  @Input()
+  public linkTypePermissions: AllowedPermissions;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public rows: LinkRow[];
@@ -153,7 +160,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   }
 
   private checkNewRow() {
-    if (this.permissions?.writeWithView && this.allowCreate) {
+    if (this.linkTypePermissions?.rolesWithView?.DataContribute && this.allowCreate) {
       if (this.newRows$.value.length === 0) {
         this.newRows$.next([{correlationId: generateCorrelationId()}]);
       }

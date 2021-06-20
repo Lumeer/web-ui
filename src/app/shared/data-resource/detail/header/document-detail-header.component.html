@@ -38,7 +38,7 @@
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
-      <detail-settings-button *ngIf="permissions?.manageWithView"
+      <detail-settings-button *ngIf="permissions?.rolesWithView?.PerspectiveConfig"
                               [style.line-height.px]="0"
                               class="mr-2"
                               [resource]="resource"
@@ -48,13 +48,14 @@
       </detail-settings-button>
       <i class="{{tableIcon}} mr-2 clickable"
          aria-hidden="true"
-         *ngIf="permissions?.read"
+         *ngIf="permissions?.roles?.Read"
          tooltip="Switch to Table perspective"
          i18n-tooltip="@@document.detail.switch.table"
          title="Switch to Table perspective"
          i18n-title="@@document.detail.switch.table"
          (click)="onSwitchToTable()"></i>
-      <ng-container *ngIf="permissions?.read && resourceType === collectionResourceType && document">
+      <ng-container
+        *ngIf="(dataResource | dataResourceIsReadable:resource:permissions:user) && resourceType === collectionResourceType && document">
         <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
@@ -71,7 +72,7 @@
       </ng-container>
       <i class="far fa-fw fa-trash-alt text-danger clickable"
          aria-hidden="true"
-         *ngIf="permissions?.writeWithView && resourceType === collectionResourceType"
+         *ngIf="(dataResource | dataResourceIsDeletable:resource:permissions:user) && resourceType === collectionResourceType"
          title="Remove Record"
          i18n-title="@@document.detail.remove"
          tooltip="Remove Record"
@@ -80,7 +81,7 @@
       ></i>
       <i class="fas fa-fw fa-unlink text-warning clickable"
          aria-hidden="true"
-         *ngIf="permissions?.writeWithView  && resourceType !== collectionResourceType"
+         *ngIf="(dataResource | dataResourceIsDeletable:resource:permissions:user) && resourceType !== collectionResourceType"
          title="Unlink"
          i18n-title="@@link.detail.unlink"
          tooltip="Unlink"

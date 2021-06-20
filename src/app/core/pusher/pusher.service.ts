@@ -23,7 +23,6 @@ import Pusher from 'pusher-js';
 import {of, timer} from 'rxjs';
 import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AuthService} from '../../auth/auth.service';
-import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType, resourceTypesMap} from '../model/resource-type';
 import {AppState} from '../store/app.state';
@@ -40,7 +39,6 @@ import {selectLinkInstanceById} from '../store/link-instances/link-instances.sta
 import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
-import {NotificationsAction} from '../store/notifications/notifications.action';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
 import {ContactsAction} from '../store/organizations/contact/contacts.action';
 import {Organization} from '../store/organizations/organization';
@@ -81,6 +79,7 @@ import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cu
 import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {PrintService} from '../service/print.service';
+import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -181,11 +180,10 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Organization:update', data => {
       if (data.id === this.getCurrentOrganizationId()) {
-        this.checkIfUserGainManage(data);
-        this.checkIfUserLostManage(data, ResourceType.Organization);
+        this.checkIfUserGainReadAll(data, ResourceType.Organization);
       }
       this.getOrganization(data.id, oldOrganization => {
-        const oldCode = oldOrganization && oldOrganization.code;
+        const oldCode = oldOrganization?.code;
         this.store$.dispatch(
           new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data), oldCode})
         );
@@ -197,11 +195,10 @@ export class PusherService implements OnDestroy {
         map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
         map((newOrganization: Organization) => {
           if (data.id === this.getCurrentOrganizationId()) {
-            this.checkIfUserGainManage(newOrganization);
-            this.checkIfUserLostManage(newOrganization, ResourceType.Organization);
+            this.checkIfUserGainReadAll(newOrganization, ResourceType.Organization);
           }
           this.getOrganization(data.id, oldOrganization => {
-            const oldCode = oldOrganization && oldOrganization.code;
+            const oldCode = oldOrganization?.code;
             this.store$.dispatch(new OrganizationsAction.UpdateSuccess({organization: newOrganization, oldCode}));
           });
         }),
@@ -226,30 +223,18 @@ export class PusherService implements OnDestroy {
       .subscribe(oldOrganization => action(oldOrganization));
   }
 
-  private checkIfUserGainManage(resource: Organization | Project) {
-    const hasManage = userHasManageRoleInResource(this.user, resource);
-    const hadManageInOrg = userHasManageRoleInResource(this.user, this.currentOrganization);
-    const hadManageInProj = userHasManageRoleInResource(this.user, this.currentProject);
+  private checkIfUserGainReadAll(resource: Organization | Project, type: ResourceType) {
+    const hasReadAll =
+      type == ResourceType.Organization
+        ? userCanReadAllInOrganization(resource, this.user)
+        : userCanReadAllInWorkspace(this.currentOrganization, resource, this.user);
+    const hasReadAllInWorkspace = userCanReadAllInWorkspace(this.currentOrganization, this.currentProject, this.user);
 
-    if (hasManage && !hadManageInOrg && !hadManageInProj) {
+    if (hasReadAll && !hasReadAllInWorkspace) {
       this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));
       this.store$.dispatch(new CollectionsAction.Get({force: true}));
       this.store$.dispatch(new LinkTypesAction.Get({force: true}));
       this.store$.dispatch(new ViewsAction.Get({force: true}));
-    }
-  }
-
-  private checkIfUserLostManage(resource: Organization | Project, type: ResourceType) {
-    const hasManage = userHasManageRoleInResource(this.user, resource);
-    const hadManageInOrg = userHasManageRoleInResource(this.user, this.currentOrganization);
-    const hadManageInProj = userHasManageRoleInResource(this.user, this.currentProject);
-
-    if (
-      !hasManage &&
-      hadManageInOrg !== hadManageInProj &&
-      ((type === ResourceType.Organization && hadManageInOrg) || (type === ResourceType.Project && hadManageInProj))
-    ) {
-      this.store$.dispatch(new NotificationsAction.ForceRefresh());
     }
   }
 
@@ -265,8 +250,7 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Project:update', data => {
       this.getProject(data.object.id, oldProject => {
         if (data.object.id === this.getCurrentProjectId()) {
-          this.checkIfUserGainManage(data.object);
-          this.checkIfUserLostManage(data.object, ResourceType.Project);
+          this.checkIfUserGainReadAll(data.object, ResourceType.Project);
         }
         const oldCode = oldProject && oldProject.code;
         this.store$.dispatch(
@@ -284,8 +268,7 @@ export class PusherService implements OnDestroy {
           map((dto: ProjectDto) => ProjectConverter.fromDto(dto, data.organizationId)),
           map((newProject: Project) => {
             if (data.id === this.getCurrentProjectId()) {
-              this.checkIfUserGainManage(newProject);
-              this.checkIfUserLostManage(newProject, ResourceType.Project);
+              this.checkIfUserGainReadAll(newProject, ResourceType.Project);
             }
             const oldCode = oldProject && oldProject.code;
             this.store$.dispatch(new ProjectsAction.UpdateSuccess({project: newProject, oldCode}));

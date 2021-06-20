@@ -18,7 +18,7 @@
  */
 
 import {OrganizationDto} from '../../dto';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {Organization} from './organization';
 
 export class OrganizationConverter {
@@ -33,7 +33,7 @@ export class OrganizationConverter {
       description: dto.description,
       correlationId: correlationId,
       nonRemovable: dto.nonRemovable,
-      permissions: PermissionsConverter.fromDto(dto.permissions),
+      permissions: convertPermissionsDtoToModel(dto.permissions),
       version: dto.version,
     };
   }

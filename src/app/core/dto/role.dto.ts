@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {RoleDto} from './role.dto';
-
-export interface PermissionDto {
-  id: string;
-  roles: RoleDto[];
+export interface RoleDto {
+  type: string;
+  transitive: boolean;
 }

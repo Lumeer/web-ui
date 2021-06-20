@@ -17,12 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionDto, LinkTypeDto, ViewDto} from '.';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {DataResourceIsWritablePipe} from './data-resource-is-writable.pipe';
+import {DataResourceIsDeletablePipe} from './data-resource-is-deletable.pipe';
+import {DataResourceIsReadablePipe} from './data-resource-is-readable.pipe';
+import {DataResourcePermissionsPipe} from './data-resource-permissions.pipe';
 
-export interface SuggestionsDto {
-  attributes: CollectionDto[];
-  collections: CollectionDto[];
-  views: ViewDto[];
-  linkTypes: LinkTypeDto[];
-  linkAttributes: LinkTypeDto[];
-}
+@NgModule({
+  imports: [CommonModule],
+  declarations: [
+    DataResourceIsWritablePipe,
+    DataResourceIsDeletablePipe,
+    DataResourceIsReadablePipe,
+    DataResourcePermissionsPipe,
+  ],
+  exports: [
+    DataResourceIsWritablePipe,
+    DataResourceIsDeletablePipe,
+    DataResourceIsReadablePipe,
+    DataResourcePermissionsPipe,
+  ],
+})
+export class DataResourcesPipesModule {}

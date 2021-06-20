@@ -31,7 +31,7 @@ import {NavigationAction} from '../navigation/navigation.action';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {Permission, PermissionType} from '../permissions/permissions';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionDtoToModel, convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {View} from './view';
 import {
@@ -67,6 +67,7 @@ import {UsersAction} from '../users/users.action';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as DetailActions from './../details/detail.actions';
 import {getPerspectiveSavedPerspectives} from './view.utils';
+import {roleTypesMap} from '../../model/role-type';
 
 @Injectable()
 export class ViewsEffects {
@@ -355,11 +356,11 @@ export class ViewsEffects {
         return this.addUserToWorkspace(newUsers, newUsersRoles).pipe(
           mergeMap(newPermissions => {
             const permissionsDto: PermissionDto[] = [...permissions, ...newPermissions].map(model =>
-              PermissionsConverter.toPermissionDto(model)
+              convertPermissionModelToDto(model)
             );
             return this.viewService.updateUserPermission(viewId, permissionsDto);
           }),
-          map(dtos => dtos.map(dto => PermissionsConverter.fromPermissionDto(dto))),
+          map(dtos => dtos.map(dto => convertPermissionDtoToModel(dto))),
           concatMap(newPermissions =>
             of(
               new ViewsAction.SetPermissionsSuccess({viewId, permissions: newPermissions, type: PermissionType.Users}),
@@ -397,7 +398,8 @@ export class ViewsEffects {
       map(users =>
         users.map((user, index) => {
           const correlationId = newUsers[index].correlationId;
-          const roles = newUsersRoles[correlationId];
+          // TODO just workaround for now
+          const roles = newUsersRoles[correlationId].map(role => ({type: roleTypesMap[role]}));
           return {id: user.id, roles};
         })
       )

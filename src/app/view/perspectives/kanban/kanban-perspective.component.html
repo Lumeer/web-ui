@@ -9,7 +9,6 @@
                 [sidebarOpened]="sidebarOpened$ | async"
                 [settings]="viewSettings$ | async"
                 [permissions]="permissions$ | async"
-                [linkTypesPermissions]="linkTypesPermissions$ | async"
                 [workspace]="workspace$ | async"
                 (configChange)="onConfigChanged($event)"
                 (sidebarToggle)="onSidebarToggle()">

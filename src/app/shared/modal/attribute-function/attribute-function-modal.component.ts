@@ -28,7 +28,7 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 import {map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {
-  selectCollectionsByReadPermission,
+  selectReadableCollections,
   selectLinkTypesByCollectionId,
   selectViewsByRead,
 } from '../../../core/store/common/permissions.selectors';
@@ -92,7 +92,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByReadPermission));
+    this.collections$ = this.store$.pipe(select(selectReadableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
 
     if (this.collectionId) {

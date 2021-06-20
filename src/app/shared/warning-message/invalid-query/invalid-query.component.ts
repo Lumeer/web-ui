@@ -22,10 +22,7 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
-import {
-  selectCollectionsByReadPermission,
-  selectCollectionsInQuery,
-} from '../../../core/store/common/permissions.selectors';
+import {selectReadableCollections, selectCollectionsInQuery} from '../../../core/store/common/permissions.selectors';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
@@ -61,14 +58,14 @@ export class InvalidQueryComponent implements OnInit {
       select(selectViewQuery),
       mergeMap(query =>
         queryIsEmptyExceptPagination(query)
-          ? this.store$.pipe(select(selectCollectionsByReadPermission))
+          ? this.store$.pipe(select(selectReadableCollections))
           : this.store$.pipe(select(selectCollectionsInQuery))
       ),
       map(collections => sortResourcesByFavoriteAndLastUsed(collections))
     );
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.hasCollection$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+      select(selectReadableCollections),
       map(collections => collections?.length > 0)
     );
   }

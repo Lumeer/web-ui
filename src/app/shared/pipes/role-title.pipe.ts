@@ -19,14 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {Role} from '../../core/model/role';
+import {RoleType} from '../../core/model/role-type';
 import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'roleTitle',
 })
 export class RoleTitlePipe implements PipeTransform {
-  public transform(role: Role): string {
+  public transform(role: RoleType): string {
     return parseSelectTranslation(
       $localize`:@@user.permission.icon:{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share}}`,
       {role}

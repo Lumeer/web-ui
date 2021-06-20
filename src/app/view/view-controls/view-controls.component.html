@@ -1,7 +1,7 @@
 <ng-container
   *ngIf="{permissions: view | viewControlsInfo:(projectPermissions$ | async):(collectionsPermissions$ | async):(viewsPermissions$ | async):(linkTypes$ | async), viewChanged: viewChanged$ | async} as state">
   <ng-container
-    *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
+    *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canSave)} as buttonsData">
     <form class="view-controls-grid">
       <div class="perspective d-flex align-items-center justify-content-start">
         <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">
@@ -18,7 +18,7 @@
 
             <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
                     class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
-                    [disabled]="view?.id && !state.permissions.canManage"
+                    [disabled]="view?.id && !state.permissions.canConfig"
                     (click)="onPerspectiveChooserClick($event)">
               <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
               <span class="ml-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
@@ -30,7 +30,7 @@
               [origin]="perspectiveElement"
               [options]="perspectives | sortPerspectives | perspectivesOptions"
               [highlightedValue]="perspective"
-              (selectOption)="onSelectPerspective($event.value, state.permissions.canManage)">
+              (selectOption)="onSelectPerspective($event.value, state.permissions.canConfig)">
             </options-dropdown>
 
           </ng-container>
@@ -55,11 +55,11 @@
         <input #viewNameInput
                [class.font-italic]="!view.code || view.name !== name"
                [value]="name"
-               [disabled]="view && !state.permissions.canManage"
+               [disabled]="view && !state.permissions.canSave"
                (input)="onNameInput(viewNameInput.value)"
                id="viewName"
                name="viewName"
-               (blur)="onInputBlur(state.permissions.canManage)"
+               (blur)="onInputBlur(state.permissions.canSave)"
                (keyup)="onViewNameKeyPress(!buttonsData.disabled, $event, state.permissions.canClone, viewNameInput)"
                type="text"
                class="form-control"
@@ -90,7 +90,7 @@
         </div>
       </div>
     </form>
-    <div *ngIf="state.viewChanged && state.permissions.canManage"
+    <div *ngIf="state.viewChanged && state.permissions.canSave"
          class="small text-right text-warning">
       <i class="far fa-exclamation-triangle mr-1 text-warning"
          title="Changes are not saved yet!" i18n-title="@@view.changes.not.saved">

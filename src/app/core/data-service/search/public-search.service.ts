@@ -21,10 +21,9 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Workspace} from '../../store/navigation/workspace';
-import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
-import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
+import {DocumentDto, LinkInstanceDto, QueryDto} from '../../dto';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {SearchService} from './search.service';
@@ -38,10 +37,6 @@ export class PublicSearchService extends BaseService implements SearchService {
     private configurationService: ConfigurationService
   ) {
     super(store$);
-  }
-
-  public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
-    return of({attributes: [], collections: [], linkAttributes: [], linkTypes: [], views: []});
   }
 
   public searchLinkInstances(

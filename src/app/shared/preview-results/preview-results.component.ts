@@ -34,7 +34,7 @@ import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
   selectCollectionsByQueryWithoutLinks,
-  selectCollectionsByReadPermission,
+  selectReadableCollections,
   selectDocumentsAndLinksByCollectionAndQuery,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
@@ -107,7 +107,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
       documents$ = of([]);
       if (queryIsEmpty(this.query) || queryContainsOnlyFulltexts(this.query)) {
         loaded$ = combineLatest([
-          this.store$.pipe(select(selectCollectionsByReadPermission)),
+          this.store$.pipe(select(selectReadableCollections)),
           this.store$.pipe(select(selectQueryDocumentsLoaded(this.query))),
         ]).pipe(map(([collections, loaded]) => collections.length === 0 || loaded));
       } else {

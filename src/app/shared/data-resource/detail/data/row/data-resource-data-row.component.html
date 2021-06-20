@@ -1,66 +1,63 @@
-<ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
-
-  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center data-input key">
-    <span class="font-italic">{{keyDataValue.value}}</span>
-    <div *ngIf="row?.attribute?.description" class="ml-1 text-muted font-normal"
-         [tooltip]="row?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
-      <i class="far fa-question-circle font-normal"></i>
-    </div>
+<div *ngIf="!editableKey; else editableKeyInput"
+     class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center data-input key">
+  <span class="font-italic">{{keyDataValue.value}}</span>
+  <div *ngIf="row?.attribute?.description" class="ml-1 text-muted font-normal"
+       [tooltip]="row?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
+    <i class="far fa-question-circle font-normal"></i>
   </div>
+</div>
 
-  <ng-template #editableKeyInput>
-    <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center" >
-      <data-input class="h-100 w-100 p-1 data-input key"
-                  [cursor]="cursor"
-                  [focus]="true"
-                  [readonly]="!(keyEditing$ | async)"
-                  [dataValue]="keyDataValue"
-                  [placeholder]="placeholder"
-                  [preventEventBubble]="preventEventBubble"
-                  [suggestions]="unusedAttributes | attributesToDataSuggestions"
-                  (save)="onNewKey($event)"
-                  (dblclick)="onKeyInputDblClick($event)"
-                  (cancel)="onKeyInputCancel()"
-                  (click)="onKeyFocus()"
-                  (clickOutside)="onKeyInputCancel()"
-                  [class.editing]="keyEditing$ | async"
-                  [class.cursor-pointer]="!data.readonly"
-                  [class.read-only]="data.readonly">
-      </data-input>
-    </div>
-  </ng-template>
-
-  <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center"
-       *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async) as dataInputInfo">
-    <data-input class="h-100 w-100 p-1 data-input value"
-                [constraint]="row.attribute?.constraint"
+<ng-template #editableKeyInput>
+  <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+    <data-input class="h-100 w-100 p-1 data-input key"
                 [cursor]="cursor"
-                [dataValue]="dataValue"
                 [focus]="true"
-                [configuration]="configuration"
-                [readonly]="dataInputInfo.readonly"
-                [editableInReadonly]="editable"
-                [workspace]="workspace"
-                [permissions]="permissions"
+                [readonly]="!(keyEditing$ | async)"
+                [dataValue]="keyDataValue"
+                [placeholder]="placeholder"
                 [preventEventBubble]="preventEventBubble"
-                (save)="onNewValue($event)"
-                (dblclick)="onDataInputDblClick($event)"
-                (cancel)="onDataInputCancel()"
-                (click)="onValueFocus()"
-                (valueChange)="onValueEdit($event)"
-                (clickOutside)="onDataInputCancel()"
-                [class.editing]="(editing$ | async) && !row.attribute?.constraint?.isDirectlyEditable"
-                [class.cursor-pointer]="!dataInputInfo.readonly"
-                [class.read-only]="dataInputInfo.readonly">
+                [suggestions]="unusedAttributes | attributesToDataSuggestions"
+                (save)="onNewKey($event)"
+                (dblclick)="onKeyInputDblClick($event)"
+                (cancel)="onKeyInputCancel()"
+                (click)="onKeyFocus()"
+                (clickOutside)="onKeyInputCancel()"
+                [class.editing]="keyEditing$ | async"
+                [class.cursor-pointer]="!readonly"
+                [class.read-only]="readonly">
     </data-input>
   </div>
+</ng-template>
 
-  <data-resource-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center"
-                                [row]="row"
-                                [permissions]="permissions"
-                                (delete)="deleteRow.emit()"
-                                (attributeFunctionClick)="attributeFunctionClick.emit()"
-                                (attributeTypeClick)="attributeTypeClick.emit()">
-  </data-resource-data-row-icons>
+<div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center"
+     *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async) as dataInputInfo">
+  <data-input class="h-100 w-100 p-1 data-input value"
+              [constraint]="row.attribute?.constraint"
+              [cursor]="cursor"
+              [dataValue]="dataValue"
+              [focus]="true"
+              [configuration]="configuration"
+              [readonly]="dataInputInfo.readonly"
+              [editableInReadonly]="editable"
+              [workspace]="workspace"
+              [permissions]="permissions"
+              [preventEventBubble]="preventEventBubble"
+              (save)="onNewValue($event)"
+              (dblclick)="onDataInputDblClick($event)"
+              (cancel)="onDataInputCancel()"
+              (click)="onValueFocus()"
+              (valueChange)="onValueEdit($event)"
+              (clickOutside)="onDataInputCancel()"
+              [class.editing]="(editing$ | async) && !row.attribute?.constraint?.isDirectlyEditable"
+              [class.cursor-pointer]="!dataInputInfo.readonly"
+              [class.read-only]="dataInputInfo.readonly">
+  </data-input>
+</div>
 
-</ng-container>
+<data-resource-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center"
+                              [row]="row"
+                              [permissions]="permissions"
+                              (delete)="deleteRow.emit()"
+                              (attributeFunctionClick)="attributeFunctionClick.emit()"
+                              (attributeTypeClick)="attributeTypeClick.emit()">
+</data-resource-data-row-icons>

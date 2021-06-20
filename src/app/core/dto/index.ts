@@ -31,8 +31,6 @@ export {PermissionsDto} from './permissions.dto';
 export {ProjectDto} from './project.dto';
 export {QueryDto} from './query.dto';
 export {ResourceDto} from './resource.dto';
-export {SuggestionType} from './suggestion-type';
-export {SuggestionsDto} from './suggestions.dto';
 export {UserSettings} from './user.settings';
 export {UserDto} from './user.dto';
 export {ViewDto} from './view.dto';

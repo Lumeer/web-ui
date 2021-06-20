@@ -31,11 +31,12 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
 import {map, mergeMap, take} from 'rxjs/operators';
-import {Role} from '../../model/role';
+import {RoleType} from '../../model/role-type';
 import {selectViewByCode} from '../../store/views/views.state';
 import {convertViewModelToDto} from '../../store/views/view.converter';
 import {selectPublicProject} from '../../store/projects/projects.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {viewRoleTypes} from '../../store/views/view';
 
 @Injectable()
 export class PublicViewService extends BaseService implements ViewService {
@@ -136,5 +137,5 @@ export class PublicViewService extends BaseService implements ViewService {
 }
 
 function setViewPermission(dto: ViewDto, editable?: boolean): ViewDto {
-  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? [Role.Read, Role.Write, Role.Manage] : [Role.Read]);
+  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? viewRoleTypes : [RoleType.Read]);
 }

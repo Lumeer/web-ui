@@ -31,7 +31,6 @@ import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   MapConfig,
   MapMarkerData,
@@ -44,8 +43,7 @@ import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {MapDataConverter} from './map-data-converter';
 import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
@@ -61,7 +59,7 @@ interface Data {
   linkTypes: LinkType[];
   data: DocumentsAndLinksData;
   config: MapConfig;
-  permissions: AllowedPermissionsMap;
+  permissions: ResourcesPermissions;
   query: Query;
 }
 
@@ -85,7 +83,7 @@ export class MapContentComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public query: Query;

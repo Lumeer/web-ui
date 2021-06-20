@@ -1,7 +1,7 @@
 <ng-container
   *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
   constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async,
-  resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async} as data">
+  resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async, currentUser: currentUser$ | async} as data">
   <ng-container
     *ngIf="{permissions: resource | dataResourcePermissions: data.resourcesPermissions} as dataResourceData">
     <document-detail-header class="d-block mb-4"
@@ -12,6 +12,7 @@
                             [constraintData]="data.constraintData"
                             [permissions]="dataResourceData.permissions"
                             [workspace]="data.workspace"
+                            [user]="data.currentUser"
                             (switchToTable)="onSwitchToTable()"
                             (remove)="onRemove()"
                             (versionClick)="selectTab(detailTabType.Activity)"
@@ -21,11 +22,11 @@
     <detail-tabs *ngIf="dataResource?.id"
                  [showLinks]="resourceType === collectionResourceType"
                  [showTables]="resourceType === linkTypeResourceType"
+                 [showActivity]="dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser"
                  [activeTab]="data.selectedTab"
                  [commentsCount]="data.commentsCount"
                  [linksCount]="linksCount$ | async"
                  [documentsCount]="documentsCount$ | async"
-                 [permissions]="dataResourceData.permissions"
                  (onTabSelect)="selectTab($event)">
     </detail-tabs>
 
@@ -37,6 +38,7 @@
                           [constraintData]="data.constraintData"
                           [workspace]="data.workspace"
                           [query]="query"
+                          [user]="data.currentUser"
                           [toolbarRef]="toolbarRef"
                           [preventEventBubble]="preventEventBubble"
                           [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
@@ -69,7 +71,6 @@
       <links-toolbar class="d-block w-100 text-right"
                      [collection]="resource"
                      [permissions]="dataResourceData.permissions"
-                     [collectionsPermissions]="data.resourcesPermissions.collectionsPermissions"
                      (createLink)="showCreateLink($event)">
       </links-toolbar>
       <links-accordeon class="d-block"
@@ -78,7 +79,7 @@
                        [preventEventBubble]="preventEventBubble"
                        [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
-                       [permissions]="data.resourcesPermissions.collectionsPermissions"
+                       [permissions]="data.resourcesPermissions"
                        [linkTypes]="data.linkTypes"
                        [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
                        [attributesSettings]="data.attributesSettings"
@@ -99,14 +100,14 @@
       </links-accordeon>
     </div>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Tables && resourceType === linkTypeResourceType">
+    <ng-container *ngIf="data.selectedTab === detailTabType.Tables">
       <link-tables-accordeon class="d-block"
                              *ngIf="resource && dataResource?.id"
                              [linkInstance]="dataResource"
                              [linkType]="resource"
                              [preventEventBubble]="preventEventBubble"
                              [allowSelectDocument]="allowSelectDocument"
-                             [permissions]="data.resourcesPermissions.collectionsPermissions"
+                             [permissions]="data.resourcesPermissions"
                              [collapsedCollections]="data.detailConfig?.collapsedCollections"
                              [attributesSettings]="data.attributesSettings"
                              (documentSelect)="onDocumentSelect($event)"
@@ -134,7 +135,7 @@
       </comments-panel>
     </ng-container>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Activity && dataResourceData.permissions?.writeWithView">
+    <ng-container *ngIf="data.selectedTab === detailTabType.Activity">
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"

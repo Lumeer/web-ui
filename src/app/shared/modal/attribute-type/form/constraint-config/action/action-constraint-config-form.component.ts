@@ -35,7 +35,7 @@ import {Rule, RuleType} from '../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {IconColorPickerComponent} from '../../../../../picker/icon-color/icon-color-picker.component';
-import {Role} from '../../../../../../core/model/role';
+import {RoleType} from '../../../../../../core/model/role-type';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {ActionConstraintConfig, ConstraintType} from '@lumeer/data-filters';
@@ -138,7 +138,7 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   }
 
   private addPermissionsForm() {
-    this.form.addControl(ActionConstraintFormControl.Role, new FormControl(this.config?.role || Role.Read));
+    this.form.addControl(ActionConstraintFormControl.Role, new FormControl(this.config?.role || RoleType.Read));
   }
 
   private addButtonForms() {

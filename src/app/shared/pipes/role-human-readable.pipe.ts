@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Role} from '../../core/model/role';
+import {RoleType} from '../../core/model/role-type';
 import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
@@ -26,14 +26,14 @@ import {parseSelectTranslation} from '../utils/translation.utils';
 })
 export class RoleHumanReadablePipe implements PipeTransform {
   public transform(roles: string[]): string {
-    let roleText = Role.Empty;
+    let roleText = RoleType.Empty;
 
-    if (roles.findIndex(role => role === Role.Manage) >= 0) {
-      roleText = Role.Manage;
-    } else if (roles.findIndex(role => role === Role.Write) >= 0) {
-      roleText = Role.Write;
-    } else if (roles.findIndex(role => role === Role.Read) >= 0) {
-      roleText = Role.Read;
+    if (roles.findIndex(role => role === RoleType.Manage) >= 0) {
+      roleText = RoleType.Manage;
+    } else if (roles.findIndex(role => role === RoleType.Write) >= 0) {
+      roleText = RoleType.Write;
+    } else if (roles.findIndex(role => role === RoleType.Read) >= 0) {
+      roleText = RoleType.Read;
     }
 
     return parseSelectTranslation(
