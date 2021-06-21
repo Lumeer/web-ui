@@ -46,6 +46,8 @@ import {selectViewDataQuery, selectViewSettings} from '../../core/store/view-set
 import {selectCurrentQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 @Injectable()
 export abstract class DataPerspectiveComponent<T>
@@ -60,6 +62,7 @@ export abstract class DataPerspectiveComponent<T>
   public constraintData$: Observable<ConstraintData>;
   public dataLoaded$: Observable<boolean>;
   public viewSettings$: Observable<ViewSettings>;
+  public currentUser$: Observable<User>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -99,6 +102,7 @@ export abstract class DataPerspectiveComponent<T>
   private subscribeData() {
     this.documentsAndLinks$ = this.subscribeDocumentsAndLinks$();
     this.data$ = this.subscribeData$();
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));

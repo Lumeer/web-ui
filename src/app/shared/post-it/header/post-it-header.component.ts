@@ -18,9 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {PostItTag} from '../post-it.component';
+import {DataResourcePermissions} from '../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'post-it-header',
@@ -42,7 +42,7 @@ export class PostItHeaderComponent {
   public colors: string[];
 
   @Input()
-  public allowedPermissions: AllowedPermissions;
+  public dataPermissions: DataResourcePermissions;
 
   @Input()
   public favorite: boolean;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {Query} from '../../../../../../core/store/navigation/query/query';
@@ -43,9 +43,6 @@ export class EmptyTasksComponent implements OnInit {
   @Input()
   public compact: boolean;
 
-  @Output()
-  public tablePerspective = new EventEmitter();
-
   public documentsCount$: Observable<number>;
   public hasWritePermission$: Observable<boolean>;
 
@@ -55,11 +52,12 @@ export class EmptyTasksComponent implements OnInit {
     this.documentsCount$ = this.store$.pipe(select(selectAllDocumentsCount));
     this.hasWritePermission$ = this.store$.pipe(
       select(selectProjectPermissions),
-      map(permissions => permissions?.write)
+      map(
+        permissions =>
+          permissions?.roles?.LinkContribute &&
+          permissions?.roles?.CollectionContribute &&
+          permissions?.roles?.ViewContribute
+      )
     );
-  }
-
-  public onSwitchToTablePerspective() {
-    this.tablePerspective.emit();
   }
 }

@@ -252,17 +252,17 @@ function hasPermissionByConfig(config: GanttChartStemConfig, permissions: Resour
   let hasPermission = true;
   if (config.name) {
     const permission = queryAttributePermissions(config.name, permissions);
-    hasPermission = hasPermission && permission && permission.writeWithView;
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   if (config.start) {
     const permission = queryAttributePermissions(config.start, permissions);
-    hasPermission = hasPermission && permission.writeWithView;
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   if (config.end) {
     const permission = queryAttributePermissions(config.end, permissions);
-    hasPermission = hasPermission && permission.writeWithView;
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   return hasPermission;

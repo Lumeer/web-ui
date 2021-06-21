@@ -17,6 +17,7 @@
         [class.light]="truncateContent && last"
         [size]="currentSize"
         [document]="document"
+        [currentUser]="currentUser"
         [permissions]="data.permissions && data.permissions[document.collectionId]"
         [isOpened]="document | isDocumentOpened:config"
         [collection]="collectionsMap[document.collectionId]"
@@ -66,10 +67,8 @@
 </ng-container>
 
 <ng-template #noDocuments>
-  <empty-tasks
-    (tablePerspective)="switchPerspectiveToTable()"
-    [collections]="allTasksCollections$ | async"
-    [compact]="compactEmptyPages"
-    [query]="query">
+  <empty-tasks [collections]="allTasksCollections$ | async"
+               [compact]="compactEmptyPages"
+               [query]="query">
   </empty-tasks>
 </ng-template>

@@ -124,7 +124,6 @@ import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
-import {RoleType} from '../../model/role-type';
 
 @Injectable()
 export class TablesEffects {

@@ -29,7 +29,7 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isNotNullOrUndefined, objectsByIdMap} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {
@@ -133,7 +133,6 @@ export class KanbanConverter {
       this.linkTypes
     );
     const otherColumn: Partial<KanbanDataColumn> = {cards: [], createdFromAttributes: [], createResources: []};
-    const linkTypesMap = objectsByIdMap(this.linkTypes);
     const columnsAggregated: Record<string, AggregatedColumnData> = {};
     const otherAggregated: AggregatedColumnData = {count: 0, values: []};
 
@@ -389,11 +388,8 @@ export class KanbanConverter {
           this.collections,
           this.linkTypes
         );
-        const resourcePermissions = queryAttributePermissions(
-          stemConfig.attribute || stemConfig.attribute,
-          permissions
-        );
-        if (resourcePermissions?.writeWithView && resource) {
+        const resourcePermissions = queryAttributePermissions(stemConfig.resource || stemConfig.attribute, permissions);
+        if (resourcePermissions?.rolesWithView?.DataContribute && resource) {
           resources.push({resource, kanbanAttribute, stemIndex});
         }
       }

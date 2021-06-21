@@ -10,7 +10,7 @@
   <data-input class="h-100 w-100 p-1 data-input key"
               [cursor]="cursor"
               [focus]="true"
-              [readonly]="!permissions?.writeWithView || !(keyEditing$ | async)"
+              [readonly]="readonly || !(keyEditing$ | async)"
               [dataValue]="keyDataValue"
               [editableInReadonly]="editable"
               placeholder="Enter name"
@@ -25,8 +25,8 @@
               [clickOutsideEnabled]="(keyFocused$ | async) || (keyEditing$ | async)"
               [class.editing]="keyEditing$ | async"
               [class.key-focused]="keyFocused$ | async"
-              [class.cursor-pointer]="!permissions?.writeWithView"
-              [class.read-only]="!permissions?.writeWithView">
+              [class.cursor-pointer]="!readonly"
+              [class.read-only]="readonly">
   </data-input>
 </div>
 

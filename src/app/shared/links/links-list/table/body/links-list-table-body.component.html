@@ -16,8 +16,6 @@
       [row]="row"
       [linkPermissions]="row.linkInstance | dataResourcePermissions:linkType:linkTypePermissions:currentUser"
       [documentPermissions]="row.document | dataResourcePermissions:collection:collectionPermissions:currentUser"
-      [linkTypePermissions]="linkTypePermissions"
-      [collectionPermissions]="collectionPermissions"
       [linkTypeId]="linkType?.id"
       [collectionId]="collection?.id"
       [documentId]="document?.id"

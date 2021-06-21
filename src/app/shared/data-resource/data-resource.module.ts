@@ -48,7 +48,7 @@ import {DetailSettingsButtonComponent} from './detail/header/settings-button/det
 import {DetailSettingsDropdownComponent} from './detail/header/settings-button/dropdown/detail-settings-dropdown.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
-import {DataResourcePermissionsPipe} from './detail/pipes/data-resource-permissions.pipe';
+import {ResourcePermissionsPipe} from './detail/pipes/resource-permissions.pipe';
 
 @NgModule({
   imports: [
@@ -85,7 +85,7 @@ import {DataResourcePermissionsPipe} from './detail/pipes/data-resource-permissi
     AuditLogEntriesComponent,
     DetailSettingsButtonComponent,
     DetailSettingsDropdownComponent,
-    DataResourcePermissionsPipe,
+    ResourcePermissionsPipe,
   ],
   exports: [DataResourceDetailComponent],
 })

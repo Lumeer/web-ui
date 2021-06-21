@@ -24,6 +24,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {TaskAttributes} from '../../../model/task-attributes';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
+import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'search-task-first-line',
@@ -45,7 +46,7 @@ export class SearchTaskFirstLineComponent {
   public large: boolean;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public dataPermissions: DataResourcePermissions;
 
   @Input()
   public attributes: TaskAttributes;

@@ -21,11 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {User} from '../../../core/store/users/user';
-import {
-  userCanDeleteDataResource,
-  userCanEditDataResource,
-  userCanReadDataResource,
-} from '../../utils/permission.utils';
+import {dataResourcePermissions} from '../../utils/permission.utils';
 import {DataResourcePermissions} from '../../../core/model/data-resource-permissions';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Collection} from '../../../core/store/collections/collection';
@@ -40,10 +36,6 @@ export class DataResourcePermissionsPipe implements PipeTransform {
     permissions: AllowedPermissions,
     user: User
   ): DataResourcePermissions {
-    return {
-      read: userCanReadDataResource(dataResource, resource, permissions, user),
-      edit: userCanEditDataResource(dataResource, resource, permissions, user),
-      delete: userCanDeleteDataResource(dataResource, resource, permissions, user),
-    };
+    return dataResourcePermissions(dataResource, resource, permissions, user);
   }
 }

@@ -42,7 +42,7 @@ import {
 } from '../../../../../../core/store/tables/tables.selector';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../../../../../core/store/collections/collections.state';
 import {selectViewQuery} from '../../../../../../core/store/views/views.state';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {
@@ -51,6 +51,10 @@ import {
 } from '../../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../../../../../../core/store/app.state';
+import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
+import {User} from '../../../../../../core/store/users/user';
+import {AttributesResource} from '../../../../../../core/model/resource';
 
 @Component({
   selector: 'table-cell-group',
@@ -74,6 +78,8 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public constraintData$: Observable<ConstraintData>;
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<AllowedPermissions>;
+  public resource$: Observable<AttributesResource>;
+  public currentUser$: Observable<User>;
 
   public columns$: Observable<TableConfigColumn[]>;
   public part$: Observable<TableConfigPart>;
@@ -89,9 +95,11 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.columns$ = this.bindColumns();
     this.permissions$ = this.bindPermissions();
+    this.resource$ = this.bindResource();
     this.documents$ = this.bindDocuments();
     this.linkInstances$ = this.bindLinkInstances();
     this.selectedCursor$ = this.bindSelectedCursor();
@@ -125,6 +133,25 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
               return this.store$.pipe(select(selectLinkTypePermissions(part.linkTypeId)));
             }
             return of({});
+          })
+        )
+      )
+    );
+  }
+
+  private bindResource(): Observable<AttributesResource> {
+    return this.cursor$.pipe(
+      filter(cursor => !!cursor),
+      switchMap(cursor =>
+        this.store$.pipe(
+          select(selectTablePart(cursor)),
+          switchMap(part => {
+            if (part?.collectionId) {
+              return this.store$.pipe(select(selectCollectionById(part.collectionId)));
+            } else if (part?.linkTypeId) {
+              return this.store$.pipe(select(selectLinkTypeById(part.linkTypeId)));
+            }
+            return of(null);
           })
         )
       )

@@ -46,17 +46,21 @@ import {LinkInstance} from '../link-instances/link.instance';
 import {User} from '../users/user';
 
 export function isDocumentOwnerByPurpose(document: DocumentModel, collection: Collection, user: User): boolean {
+  if (!document || !collection || !user) {
+    return false;
+  }
   if (collection.purpose?.type === CollectionPurposeType.Tasks) {
     const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
     const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
     if (assigneeAttribute) {
-      const assigneeData = document.data?.[assigneeAttribute.id];
+      const assigneeData = document?.data?.[assigneeAttribute.id];
       const assignees = (isArray(assigneeData) ? assigneeData : [assigneeData]).filter(value =>
         isNotNullOrUndefined(value)
       );
       return assignees.includes(user.email);
     }
   }
+  return false;
 }
 
 export function getDocumentsAndLinksByStemData(

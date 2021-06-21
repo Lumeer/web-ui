@@ -59,7 +59,7 @@
 </div>
 
 <div class="order-3 order-md-4 d-flex justify-content-end">
-  <span *ngIf="permissions?.read" class="clickable ml-3"
+  <span *ngIf="dataPermissions?.read" class="clickable ml-3"
         (click)="$event.stopPropagation(); toggleFavorite.emit()"
         title="{{ document.favorite ?  'Unpin task from top' : 'Pin task to top'}}"
         i18n-title="@@task.pinned">

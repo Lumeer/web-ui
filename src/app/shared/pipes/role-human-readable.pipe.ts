@@ -26,18 +26,18 @@ import {parseSelectTranslation} from '../utils/translation.utils';
 })
 export class RoleHumanReadablePipe implements PipeTransform {
   public transform(roles: string[]): string {
-    let roleText = RoleType.Empty;
+    let roleText;
 
     if (roles.findIndex(role => role === RoleType.Manage) >= 0) {
       roleText = RoleType.Manage;
-    } else if (roles.findIndex(role => role === RoleType.Write) >= 0) {
-      roleText = RoleType.Write;
+    } else if (roles.findIndex(role => role === RoleType.DataWrite) >= 0) {
+      roleText = RoleType.DataWrite;
     } else if (roles.findIndex(role => role === RoleType.Read) >= 0) {
       roleText = RoleType.Read;
     }
 
     return parseSelectTranslation(
-      $localize`:@@user.permission.humanName:{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned}}`,
+      $localize`:@@user.permission.humanName:{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} other {No role assigned}}`,
       {role: roleText}
     );
   }

@@ -35,7 +35,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {calendarStemConfigIsWritable, checkOrTransformCalendarConfig} from '../util/calendar-util';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {deepObjectCopy, deepObjectsEquals, objectsByIdMap, toNumber} from '../../../../shared/utils/common.utils';
+import {deepObjectCopy, deepObjectsEquals, toNumber} from '../../../../shared/utils/common.utils';
 import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
@@ -55,6 +55,7 @@ import {
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -64,6 +65,7 @@ interface Data {
   permissions: ResourcesPermissions;
   query: Query;
   constraintData: ConstraintData;
+  currentUser: User;
 }
 
 interface PatchData {
@@ -101,6 +103,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public sidebarOpened: boolean;
@@ -150,7 +155,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       data.data,
       data.permissions,
       data.constraintData,
-      data.query
+      data.query,
+      data.currentUser
     );
   }
 
@@ -162,6 +168,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         changes.data ||
         changes.permissions ||
         changes.query ||
+        changes.currentUser ||
         changes.constraintData) &&
       this.config
     ) {
@@ -173,13 +180,13 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         config: this.config,
         query: this.query,
         constraintData: this.constraintData,
+        currentUser: this.currentUser,
       });
     }
     this.canCreateEvents = this.isSomeStemConfigWritable();
   }
 
   private isSomeStemConfigWritable(): boolean {
-    const linkTypesMap = objectsByIdMap(this.linkTypes);
     return (this.config?.stemsConfigs || []).some(config => calendarStemConfigIsWritable(config, this.permissions));
   }
 

@@ -27,6 +27,7 @@ import {RoleType} from '../../../../../../core/model/role-type';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TaskAttributes} from '../../model/task-attributes';
+import {User} from '../../../../../../core/store/users/user';
 
 @Component({
   selector: 'search-task-wrapper',
@@ -55,6 +56,9 @@ export class SearchTaskWrapperComponent implements OnChanges {
 
   @Input()
   public attributes: TaskAttributes;
+
+  @Input()
+  public currentUser: User;
 
   @Output()
   public detail = new EventEmitter();

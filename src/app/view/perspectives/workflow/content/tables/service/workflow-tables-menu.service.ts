@@ -24,6 +24,7 @@ import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConstraintType} from '@lumeer/data-filters';
+import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
 
 export enum HeaderMenuId {
   Edit = 'edit',
@@ -55,12 +56,12 @@ export enum RowMenuId {
 export class WorkflowTablesMenuService {
   public readonly macOS = isMacOS();
 
-  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked?: boolean): MenuItem[] {
+  public createRowMenu(dataPermissions: DataResourcePermissions, row: TableRow, linked?: boolean): MenuItem[] {
     const items: MenuItem[] = [
       {
         id: RowMenuId.Edit,
         title: this.translateRowMenuItem(RowMenuId.Edit),
-        disabled: !permissions?.rolesWithView?.DataWrite, // TODO contributor
+        disabled: !dataPermissions?.edit,
         icons: ['fa fa-edit'],
         shortcut: this.macOS ? '↩' : 'Enter',
         group: 0,
@@ -71,7 +72,7 @@ export class WorkflowTablesMenuService {
       items.push({
         id: RowMenuId.Detail,
         title: this.translateRowMenuItem(RowMenuId.Detail),
-        disabled: !permissions?.roles?.DataRead,
+        disabled: !dataPermissions?.read,
         icons: ['far fa-file-search'],
         group: 0,
       });
@@ -90,7 +91,7 @@ export class WorkflowTablesMenuService {
       items.push({
         id: RowMenuId.Unlink,
         title: this.translateRowMenuItem(RowMenuId.Unlink),
-        disabled: !permissions?.rolesWithView?.DataDelete, // TODO contribute
+        disabled: !dataPermissions?.delete,
         icons: ['fa fa-unlink text-warning'],
         group: 1,
       });
@@ -98,7 +99,7 @@ export class WorkflowTablesMenuService {
       items.push({
         id: RowMenuId.Delete,
         title: this.translateRowMenuItem(RowMenuId.Delete),
-        disabled: row.documentId ? !permissions?.rolesWithView?.DataDelete : false, // TODO contribute
+        disabled: !dataPermissions?.delete,
         icons: ['far fa-trash-alt text-danger'],
         group: 1,
       });

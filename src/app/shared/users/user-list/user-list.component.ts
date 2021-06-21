@@ -116,7 +116,7 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       this.inheritedManagePermission$ = this.store$.pipe(
         select(selectOrganizationPermissions),
-        map(permissions => permissions?.manage)
+        map(permissions => permissions?.roles?.Manage)
       );
     }
   }
@@ -162,9 +162,10 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   public onUserRolesChanged(userId: string, roles: string[]) {
     const current = this.getUserPermission(userId);
     const newPermission = {id: userId, roles};
-    this.pendingUserUpdates[userId] = {new: newPermission, current};
-    this.rolesChange$.next('');
-    this.usersPermissionsChangeToStore.emit({permissions: [newPermission]});
+    // TODO
+    // this.pendingUserUpdates[userId] = {new: newPermission, current};
+    // this.rolesChange$.next('');
+    // this.usersPermissionsChangeToStore.emit({permissions: [newPermission]});
   }
 
   private getUserPermission(userId: string): Permission {

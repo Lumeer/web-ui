@@ -26,16 +26,8 @@ import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 })
 @Injectable({providedIn: 'root'})
 export class CanCreateLinksPipe implements PipeTransform {
-  public transform(linkType: LinkType, collectionsPermissions: AllowedPermissionsMap): boolean {
-    if (linkType?.collectionIds) {
-      const atLeastReadPermission = linkType.collectionIds.some(
-        collectionId => collectionsPermissions?.[collectionId]?.readWithView
-      );
-      const atLeastWritePermission = linkType.collectionIds.some(
-        collectionId => collectionsPermissions?.[collectionId]?.writeWithView
-      );
-      return atLeastReadPermission && atLeastWritePermission;
-    }
-    return false;
+  public transform(linkType: LinkType, linkTypesPermissions: AllowedPermissionsMap): boolean {
+    const permissions = linkTypesPermissions?.[linkType.id];
+    return permissions?.rolesWithView?.DataContribute || permissions?.rolesWithView?.DataDelete;
   }
 }

@@ -74,6 +74,7 @@ import {
   filterDocumentsAndLinksByStem,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
   selector: 'kanban-columns',
@@ -109,6 +110,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public constraintData: ConstraintData;

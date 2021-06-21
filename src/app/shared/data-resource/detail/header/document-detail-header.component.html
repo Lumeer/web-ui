@@ -55,7 +55,7 @@
          i18n-title="@@document.detail.switch.table"
          (click)="onSwitchToTable()"></i>
       <ng-container
-        *ngIf="(dataResource | dataResourceIsReadable:resource:permissions:user) && resourceType === collectionResourceType && document">
+        *ngIf="dataPermissions?.read && resourceType === collectionResourceType && document">
         <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
@@ -72,7 +72,7 @@
       </ng-container>
       <i class="far fa-fw fa-trash-alt text-danger clickable"
          aria-hidden="true"
-         *ngIf="(dataResource | dataResourceIsDeletable:resource:permissions:user) && resourceType === collectionResourceType"
+         *ngIf="dataPermissions?.delete && resourceType === collectionResourceType"
          title="Remove Record"
          i18n-title="@@document.detail.remove"
          tooltip="Remove Record"
@@ -81,7 +81,7 @@
       ></i>
       <i class="fas fa-fw fa-unlink text-warning clickable"
          aria-hidden="true"
-         *ngIf="(dataResource | dataResourceIsDeletable:resource:permissions:user) && resourceType !== collectionResourceType"
+         *ngIf="dataPermissions?.delete && resourceType !== collectionResourceType"
          title="Unlink"
          i18n-title="@@link.detail.unlink"
          tooltip="Unlink"

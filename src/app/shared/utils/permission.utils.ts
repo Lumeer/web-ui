@@ -34,6 +34,7 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {isDocumentOwnerByPurpose} from '../../core/store/documents/document.utils';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {getAttributesResourceType} from './resource.utils';
+import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -257,9 +258,32 @@ export function userCanManageProjectDetail(organization: Organization, project: 
   return userRoleTypesInProject(organization, project, user).some(role => roles.includes(role));
 }
 
+export function permissionsCanManageProjectDetail(permissions: AllowedPermissions): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
+  return roles.some(role => permissions?.roles?.[role]);
+}
+
 export function userCanManageOrganizationDetail(organization: Organization, user: User): boolean {
   const roles = [RoleType.Manage, RoleType.UserConfig];
   return userRoleTypesInOrganization(organization, user).some(role => roles.includes(role));
+}
+
+export function permissionsCanManageOrganizationDetail(permissions: AllowedPermissions): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig];
+  return roles.some(role => permissions?.roles?.[role]);
+}
+
+export function dataResourcePermissions(
+  dataResource: DataResource,
+  resource: AttributesResource,
+  permissions: AllowedPermissions,
+  user: User
+): DataResourcePermissions {
+  return {
+    read: userCanReadDataResource(dataResource, resource, permissions, user),
+    edit: userCanEditDataResource(dataResource, resource, permissions, user),
+    delete: userCanDeleteDataResource(dataResource, resource, permissions, user),
+  };
 }
 
 export function userCanReadDataResource(
@@ -344,7 +368,7 @@ export function userCanDeleteDocument(
 }
 
 function isDocumentOwner(document: DocumentModel, collection: Collection, user: User): boolean {
-  return document.createdBy == user.id || isDocumentOwnerByPurpose(document, collection, user);
+  return (user && document?.createdBy == user.id) || isDocumentOwnerByPurpose(document, collection, user);
 }
 
 export function userCanReadLinkInstance(

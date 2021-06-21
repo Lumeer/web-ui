@@ -176,7 +176,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => {
-        if (this.allowedPermissions?.writeWithView) {
+        if (this.allowedPermissions?.roles?.AttributeEdit) {
           if (action.payload.clear) {
             this.lastName$.next('');
           }
@@ -386,7 +386,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private startEditing() {
-    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+    if (this.allowedPermissions?.roles?.AttributeEdit) {
       this.edited$.next(true);
     }
   }

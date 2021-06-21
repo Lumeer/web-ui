@@ -17,19 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Router} from '@angular/router';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Resource} from '../../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {
+  permissionsCanManageOrganizationDetail,
+  permissionsCanManageProjectDetail,
+} from '../../../../utils/permission.utils';
 
 @Component({
   selector: 'resource-detail',
   templateUrl: './resource-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceDetailComponent {
+export class ResourceDetailComponent implements OnChanges {
   @Input()
   public type: ResourceType;
 
@@ -42,7 +46,23 @@ export class ResourceDetailComponent {
   @Input()
   public workspace: Workspace;
 
+  public canManageDetail: boolean;
+
   constructor(private router: Router) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.permissions) {
+      this.checkCanManage();
+    }
+  }
+
+  private checkCanManage() {
+    if (this.type === ResourceType.Organization) {
+      this.canManageDetail = permissionsCanManageOrganizationDetail(this.permissions);
+    } else if (this.type === ResourceType.Project) {
+      this.canManageDetail = permissionsCanManageProjectDetail(this.permissions);
+    }
+  }
 
   public goToOrganizationSettings(page: string) {
     if (this.workspace?.organizationCode) {

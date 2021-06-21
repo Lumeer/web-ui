@@ -10,6 +10,7 @@
                 [settings]="viewSettings$ | async"
                 [permissions]="permissions$ | async"
                 [workspace]="workspace$ | async"
+                [currentUser]="currentUser$ | async"
                 (configChange)="onConfigChanged($event)"
                 (sidebarToggle)="onSidebarToggle()">
 </kanban-content>

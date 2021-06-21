@@ -140,6 +140,9 @@ import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils'
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 import {CommonAction} from '../../../../../../core/store/common/common.action';
 import {RoleType} from '../../../../../../core/model/role-type';
+import {User} from '../../../../../../core/store/users/user';
+import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -148,6 +151,7 @@ export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {}; // grouped by columnId
   private lockedRowIds: Record<string, string[]> = {}; // grouped by tableId
   private currentView: View;
+  private currentUser: User;
 
   constructor(
     private store$: Store<AppState>,
@@ -161,6 +165,7 @@ export class WorkflowTablesDataService {
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
     this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.currentView = view));
+    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -369,7 +374,9 @@ export class WorkflowTablesDataService {
                 linkColumnIdsMap,
                 columnIdsMap,
                 linkPermissions,
-                collectionPermissions
+                collectionPermissions,
+                linkType,
+                collection
               );
 
               const newRowDataAggregated = {
@@ -413,7 +420,9 @@ export class WorkflowTablesDataService {
             linkColumnIdsMap,
             columnIdsMap,
             linkPermissions,
-            collectionPermissions
+            collectionPermissions,
+            linkType,
+            collection
           );
 
           const tableSettings = stemTableSettings?.find(tab => !tab.value);
@@ -727,7 +736,9 @@ export class WorkflowTablesDataService {
     linkColumnIdsMap: Record<string, string>,
     columnIdsMap: Record<string, string>,
     linkPermissions: AllowedPermissions,
-    collectionPermissions: AllowedPermissions
+    collectionPermissions: AllowedPermissions,
+    linkType: LinkType,
+    collection: Collection
   ): {rows: TableRow[]; newRow: TableRow} {
     const rowsMap = currentRows.reduce(
       (result, row) => ({
@@ -761,10 +772,20 @@ export class WorkflowTablesDataService {
           documentMenuItems: [],
           linkMenuItems: [],
         };
-        row.documentMenuItems.push(
-          ...this.menuService.createRowMenu(collectionPermissions, row, !!object.linkInstance)
+        const documentPermissions = dataResourcePermissions(
+          object.document,
+          collection,
+          collectionPermissions,
+          this.currentUser
         );
-        row.linkMenuItems.push(...this.menuService.createRowMenu(linkPermissions, row, !!object.linkInstance));
+        row.documentMenuItems.push(...this.menuService.createRowMenu(documentPermissions, row, !!object.linkInstance));
+        const linkInstancePermissions = dataResourcePermissions(
+          object.linkInstance,
+          linkType,
+          linkPermissions,
+          this.currentUser
+        );
+        row.linkMenuItems.push(...this.menuService.createRowMenu(linkInstancePermissions, row, !!object.linkInstance));
 
         if (lockedRowIds.includes(row.id)) {
           data.lockedRows.push(row);
@@ -788,8 +809,8 @@ export class WorkflowTablesDataService {
       : collectionPermissions.rolesWithView?.[RoleType.DataContribute];
     if (canCreateNewRow) {
       newRow = createEmptyNewRow(tableId);
-      newRow.documentMenuItems = this.menuService.createRowMenu(collectionPermissions, newRow);
-      newRow.linkMenuItems = this.menuService.createRowMenu(linkPermissions, newRow);
+      newRow.documentMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
+      newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
 
     return {rows: [...rows, ...lockedRowsWithUncreated], newRow};

@@ -23,9 +23,9 @@ import {AttributesResource, AttributesResourceType} from '../../../../core/model
 import {getAttributesResourceType} from '../../../utils/resource.utils';
 
 @Pipe({
-  name: 'dataResourcePermissions',
+  name: 'resourcePermissions',
 })
-export class DataResourcePermissionsPipe implements PipeTransform {
+export class ResourcePermissionsPipe implements PipeTransform {
   public transform(resource: AttributesResource, permissions: ResourcesPermissions): AllowedPermissions {
     const type = getAttributesResourceType(resource);
     if (type === AttributesResourceType.Collection) {
