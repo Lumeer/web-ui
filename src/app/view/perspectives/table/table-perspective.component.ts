@@ -65,7 +65,7 @@ import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.compo
 import {Perspective} from '../perspective';
 import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
-import {TableRowNumberService} from './table-row-number.service';
+import {TableRowNumberService} from './service/table-row-number.service';
 import {selectTable, selectTableId} from '../../../core/store/tables/tables.state';
 import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';

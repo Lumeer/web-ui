@@ -18,15 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryItem} from '../model/query-item';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {isQueryItemEditable} from '../../../../../core/store/navigation/query/query.util';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {permissionsCanManageProjectDetail} from '../../utils/permission.utils';
 
 @Pipe({
-  name: 'isQueryItemEditable',
+  name: 'canEnterProjectSettings',
 })
-export class IsQueryItemEditablePipe implements PipeTransform {
-  public transform(index: number, queryItems: QueryItem[], canManageQuery: boolean, viewQuery: Query): boolean {
-    return isQueryItemEditable(index, queryItems, canManageQuery, viewQuery);
+export class CanEnterProjectSettingsPipe implements PipeTransform {
+  public transform(permissions: AllowedPermissions): boolean {
+    return permissionsCanManageProjectDetail(permissions);
   }
 }

@@ -11,7 +11,7 @@
       (selectDocument)="selectDocument($event)">
     </preview-results>
 
-    <div class="mb-4 d-flex justify-content-center" *ngIf="data.permissions?.writeWithView && data.selected.collection">
+    <div class="mb-4 d-flex justify-content-center" *ngIf="data.permissions?.rolesWithView?.DataContribute && data.selected.collection">
       <button type="button"
               class="btn btn-sm btn-primary"
               [attr.aria-disabled]="data.creatingDocument"

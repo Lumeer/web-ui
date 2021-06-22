@@ -85,10 +85,10 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
 export function isQueryItemEditable(
   index: number,
   queryItems: QueryItem[],
-  canManageConfig: boolean,
+  canManageQuery: boolean,
   viewQuery: Query
 ): boolean {
-  if (canManageConfig) {
+  if (canManageQuery) {
     return true;
   }
 

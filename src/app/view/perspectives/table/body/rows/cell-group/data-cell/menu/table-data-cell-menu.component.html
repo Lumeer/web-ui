@@ -78,7 +78,7 @@
         </button>
       </ng-container>
 
-      <ng-container *ngIf="cursor.partIndex === 0 && dataPermissions?.edit && canManageConfig">
+      <ng-container *ngIf="cursor.partIndex === 0 && dataPermissions?.edit">
         <hr class="my-2" *ngIf="(indentable$ | async) || (outdentable$ | async)">
         <button *ngIf="indentable$ | async"
                 (click)="onClick($event); onIndent()"

@@ -20,11 +20,11 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {filter, map, switchMap, take} from 'rxjs/operators';
-import {getTableRowCursor, TableBodyCursor, TableCursor} from '../../../../../core/store/tables/table-cursor';
+import {getTableRowCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor, selectTablePart, selectTableRow} from '../../../../../core/store/tables/tables.selector';
+import {selectTableCursor} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
@@ -32,25 +32,15 @@ import {AppState} from '../../../../../core/store/app.state';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
-import {
-  selectCollectionPermissions,
-  selectLinkTypePermissions,
-} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcePermissions} from '../../../../../core/model/data-resource-permissions';
-import {TableConfigPart} from '../../../../../core/store/tables/table.model';
-import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
-import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
-import {selectCurrentUser} from '../../../../../core/store/users/users.state';
-import {dataResourcePermissions} from '../../../../../shared/utils/permission.utils';
-import {selectLinkInstanceById} from '../../../../../core/store/link-instances/link-instances.state';
-import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
+import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
 
 @Component({
   selector: 'table-hidden-input',
   templateUrl: './table-hidden-input.component.html',
   styleUrls: ['./table-hidden-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TableDataPermissionsService],
 })
 export class TableHiddenInputComponent implements OnInit, OnDestroy {
   @Input()
@@ -68,7 +58,11 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private constraintData: ConstraintData;
 
-  constructor(private actions$: Actions, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private store$: Store<AppState>,
+    private dataPermissionsService: TableDataPermissionsService
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
@@ -180,11 +174,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         select(selectTableCursor),
         take(1),
         switchMap(cursor =>
-          this.store$.pipe(
-            select(selectTablePart(cursor)),
-            take(1),
-            filter(part => !!part),
-            switchMap(part => this.selectDataPermissions$(cursor, part)),
+          this.dataPermissionsService.selectDataPermissions$(cursor).pipe(
             take(1),
             filter(() => !!cursor.rowPath),
             map(permissions => [cursor, permissions?.edit])
@@ -214,51 +204,6 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
           }
         }
       });
-  }
-
-  private selectDataPermissions$(cursor: TableCursor, part: TableConfigPart): Observable<DataResourcePermissions> {
-    return this.store$.pipe(
-      select(selectTableRow(cursor)),
-      take(1),
-      switchMap(tableRow => {
-        if (tableRow) {
-          if (part.collectionId) {
-            return this.selectDocumentPermissions$(tableRow.documentId, part.collectionId);
-          } else if (part.linkTypeId) {
-            return this.selectLinkPermissions$(tableRow.linkInstanceId, part.linkTypeId);
-          }
-        }
-        return of({});
-      })
-    );
-  }
-
-  private selectDocumentPermissions$(documentId: string, collectionId: string): Observable<DataResourcePermissions> {
-    return combineLatest([
-      this.store$.pipe(select(selectDocumentById(documentId))),
-      this.store$.pipe(select(selectCollectionById(collectionId))),
-      this.store$.pipe(select(selectCollectionPermissions(collectionId))),
-      this.store$.pipe(select(selectCurrentUser)),
-    ]).pipe(
-      take(1),
-      map(([document, collection, permissions, user]) =>
-        dataResourcePermissions(document, collection, permissions, user)
-      )
-    );
-  }
-
-  private selectLinkPermissions$(linkInstance: string, linkType: string): Observable<DataResourcePermissions> {
-    return combineLatest([
-      this.store$.pipe(select(selectLinkInstanceById(linkInstance))),
-      this.store$.pipe(select(selectLinkTypeById(linkType))),
-      this.store$.pipe(select(selectLinkTypePermissions(linkType))),
-      this.store$.pipe(select(selectCurrentUser)),
-    ]).pipe(
-      take(1),
-      map(([linkInstance, linkType, permissions, user]) =>
-        dataResourcePermissions(linkInstance, linkType, permissions, user)
-      )
-    );
   }
 
   public onInput(event: KeyboardEvent) {

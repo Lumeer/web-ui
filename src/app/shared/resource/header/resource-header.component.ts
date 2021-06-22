@@ -23,6 +23,7 @@ import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
 import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
 import {parseSelectTranslation} from '../../utils/translation.utils';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'resource-header',
@@ -38,6 +39,9 @@ export class ResourceHeaderComponent implements OnInit {
 
   @Input()
   public restrictedValues: string[];
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public codeChange: EventEmitter<string> = new EventEmitter();
@@ -166,7 +170,7 @@ export class ResourceHeaderComponent implements OnInit {
   }
 
   public togglePicker() {
-    this.iconColorDropdownComponent.toggle();
+    this.iconColorDropdownComponent?.toggle();
   }
 
   public onIconColorChange(data: {icon: string; color: string}) {

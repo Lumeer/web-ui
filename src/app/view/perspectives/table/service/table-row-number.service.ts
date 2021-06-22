@@ -21,10 +21,10 @@ import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-import {selectTableRows} from '../../../core/store/tables/tables.selector';
-import {countLinkedRows} from '../../../core/store/tables/table.utils';
-import {TableConfigRow} from '../../../core/store/tables/table.model';
-import {AppState} from '../../../core/store/app.state';
+import {selectTableRows} from '../../../../core/store/tables/tables.selector';
+import {countLinkedRows} from '../../../../core/store/tables/table.utils';
+import {TableConfigRow} from '../../../../core/store/tables/table.model';
+import {AppState} from '../../../../core/store/app.state';
 
 const COMPUTE_BATCH = 100;
 

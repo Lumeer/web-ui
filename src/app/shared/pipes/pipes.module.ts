@@ -108,13 +108,11 @@ import {CanCreateLinksPipe} from './can-create-links.pipe';
 import {ViewIconPipe} from './view-icon.pipe';
 import {ViewColorPipe} from './view-color.pipe';
 import {ViewLinkPipe} from './view-link.pipe';
-import {DataResourceIsWritablePipe} from './data-resource/data-resource-is-writable.pipe';
-import {DataResourceIsDeletablePipe} from './data-resource/data-resource-is-deletable.pipe';
-import {DataResourceIsReadablePipe} from './data-resource/data-resource-is-readable.pipe';
 import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 
 @NgModule({
-  imports: [CommonModule, DataPipesModule, DataResourcesPipesModule],
+  imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
     IconsPipe,
@@ -206,6 +204,9 @@ import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.mod
     ViewLinkPipe,
   ],
   exports: [
+    DataPipesModule,
+    DataResourcesPipesModule,
+    PermissionsPipesModule,
     LightenColorPipe,
     IconsPipe,
     ColorsPipe,
@@ -232,8 +233,6 @@ import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.mod
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
-    DataPipesModule,
-    DataResourcesPipesModule,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,

@@ -73,7 +73,7 @@ export function userRolesInProject(organization: Organization, project: Project,
 }
 
 export function getUserGroups(organization: Organization, user: User): string[] {
-  return user.groups?.[organization?.id] || [];
+  return user?.groups?.[organization?.id] || [];
 }
 
 export function userPermissionsInCollection(
@@ -220,7 +220,7 @@ export function userRoleTypesInPermissions(
 }
 
 function userRolesInResource(resource: Resource, user: User, groups: string[]): Role[] {
-  return userRolesInPermissions(resource.permissions, user, groups);
+  return userRolesInPermissions(resource?.permissions || {users: [], groups: []}, user, groups);
 }
 
 function userRolesInPermissions(permissions: Permissions, user: User, groups: string[]): Role[] {
@@ -251,6 +251,11 @@ export function userCanManageCollectionDetail(
 ): boolean {
   const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
   return userRoleTypesInResource(organization, project, collection, user).some(role => roles.includes(role));
+}
+
+export function permissionsCanManageCollectionDetail(permissions: AllowedPermissions): boolean {
+  const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
+  return roles.some(role => permissions?.roles?.[role]);
 }
 
 export function userCanManageProjectDetail(organization: Organization, project: Project, user: User): boolean {
@@ -372,38 +377,38 @@ function isDocumentOwner(document: DocumentModel, collection: Collection, user: 
 }
 
 export function userCanReadLinkInstance(
-  document: LinkInstance,
+  linkInstance: LinkInstance,
   linkType: LinkType,
   permissions: AllowedPermissions,
   user: User
 ): boolean {
   return (
     permissions?.rolesWithView?.DataRead ||
-    (permissions?.rolesWithView?.DataContribute && isLinkOwner(document, linkType, user))
+    (permissions?.rolesWithView?.DataContribute && isLinkOwner(linkInstance, linkType, user))
   );
 }
 
 export function userCanEditLinkInstance(
-  document: LinkInstance,
+  linkInstance: LinkInstance,
   linkType: LinkType,
   permissions: AllowedPermissions,
   user: User
 ): boolean {
   return (
     permissions?.rolesWithView?.DataWrite ||
-    (permissions?.rolesWithView?.DataContribute && isLinkOwner(document, linkType, user))
+    (permissions?.rolesWithView?.DataContribute && isLinkOwner(linkInstance, linkType, user))
   );
 }
 
 export function userCanDeleteLinkInstance(
-  document: LinkInstance,
+  linkInstance: LinkInstance,
   linkType: LinkType,
   permissions: AllowedPermissions,
   user: User
 ): boolean {
   return (
     permissions?.rolesWithView?.DataDelete ||
-    (permissions?.rolesWithView?.DataContribute && isLinkOwner(document, linkType, user))
+    (permissions?.rolesWithView?.DataContribute && isLinkOwner(linkInstance, linkType, user))
   );
 }
 

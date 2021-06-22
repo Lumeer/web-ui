@@ -4,7 +4,7 @@
         [formGroup]="form"
         class="d-flex">
     <ng-container
-      *ngIf="{canManageConfig: canManageConfig$ | async, query: query$ | async, perspective: perspective$ | async, currentView: currentView$ | async, queryItems: queryItems$ | async} as data">
+      *ngIf="{canChangeQuery: canChangeQuery$ | async, query: query$ | async, perspective: perspective$ | async, currentView: currentView$ | async, queryItems: queryItems$ | async} as data">
       <div *ngIf="constraintData$ | async as constraintData"
            class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
            [style.width.px]="1"
@@ -14,7 +14,7 @@
           [queryItemForm]="queryItemsControl.at(queryItemData.realIndex)"
           [queryItem]="queryItemData.queryItem"
           [constraintData]="constraintData"
-          [readonly]="!(queryItemData.realIndex | isQueryItemEditable:data.queryItems:data.canManageConfig:data.currentView?.query)"
+          [readonly]="!(queryItemData.realIndex | isQueryItemEditable:data.queryItems:data.canChangeQuery:data.currentView?.query)"
           (change)="onQueryItemsChanged()"
           (remove)="onRemoveQueryItem(queryItemData.realIndex)"
           (focusInput)="searchInput.focusInput()"
@@ -26,15 +26,15 @@
 
         <search-input #searchInput
                       [queryItems]="data.queryItems"
-                      [restrictedMode]="!data.canManageConfig"
+                      [restrictedMode]="!data.canChangeQuery"
                       (addQueryItem)="onAddQueryItem($event)"
-                      (removeQueryItem)="onRemoveLastQueryItem(data.canManageConfig)"
+                      (removeQueryItem)="onRemoveLastQueryItem(data.canChangeQuery)"
                       (search)="onSearch()"
                       class="flex-grow-1 mt-1 ml-1 mw-100">
         </search-input>
       </div>
 
-      <settings-button *ngIf="data.canManageConfig && (data.perspective | shouldShowSettings:data.query)"
+      <settings-button *ngIf="(canManageConfig$ | async) && (data.perspective | shouldShowSettings:data.query)"
                        [showAttributes]="data.perspective | shouldShowAttributesSettings:data.query"
                        class="flex-grow-0">
       </settings-button>

@@ -36,6 +36,7 @@ import {
   userPermissionsInProject,
   userPermissionsInView,
 } from '../../shared/utils/permission.utils';
+import {filter} from 'rxjs/operators';
 
 @Injectable()
 export class PermissionsCheckService {
@@ -47,13 +48,15 @@ export class PermissionsCheckService {
     combineLatest([
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
       this.store$.pipe(select(selectWorkspaceModels)),
-    ]).subscribe(([currentUser, {organization, project}]) => {
-      this.subscriptions.unsubscribe();
-      this.subscriptions = new Subscription();
-      this.checkWorkspacePermissions(currentUser, organization, project);
-      this.subscriptions.add(this.checkResourcesPermissions(currentUser, organization, project));
-      this.subscriptions.add(this.checkViewsPermissions(currentUser, organization, project));
-    });
+    ])
+      .pipe(filter(([currentUser, {organization, project}]) => !!currentUser && !!organization && !!project))
+      .subscribe(([currentUser, {organization, project}]) => {
+        this.subscriptions.unsubscribe();
+        this.subscriptions = new Subscription();
+        this.checkWorkspacePermissions(currentUser, organization, project);
+        this.subscriptions.add(this.checkResourcesPermissions(currentUser, organization, project));
+        this.subscriptions.add(this.checkViewsPermissions(currentUser, organization, project));
+      });
     return Promise.resolve(true);
   }
 

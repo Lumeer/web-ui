@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {QueryItem} from '../model/query-item';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {isQueryItemEditable} from '../../../../../core/store/navigation/query/query.util';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CanEnterOrganizationSettingsPipe} from './can-enter-organization-settings.pipe';
+import {CanEnterProjectSettingsPipe} from './can-enter-project-settings.pipe';
 
-@Pipe({
-  name: 'isQueryItemEditable',
+@NgModule({
+  imports: [CommonModule],
+  declarations: [CanEnterOrganizationSettingsPipe, CanEnterProjectSettingsPipe],
+  exports: [CanEnterOrganizationSettingsPipe, CanEnterProjectSettingsPipe],
 })
-export class IsQueryItemEditablePipe implements PipeTransform {
-  public transform(index: number, queryItems: QueryItem[], canManageQuery: boolean, viewQuery: Query): boolean {
-    return isQueryItemEditable(index, queryItems, canManageQuery, viewQuery);
-  }
-}
+export class PermissionsPipesModule {}

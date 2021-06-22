@@ -38,6 +38,8 @@ import {selectProjectsForWorkspace} from '../../core/store/projects/projects.sta
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -46,6 +48,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
+  public permissions$: Observable<AllowedPermissions>;
   public organizationCodes$: Observable<string[]>;
   public organization$ = new BehaviorSubject<Organization>(null);
 
@@ -131,6 +134,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
         )
         .subscribe(organization => this.organization$.next({...organization}))
     );
+    this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
 
     this.subscriptions.add(
       this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url))
