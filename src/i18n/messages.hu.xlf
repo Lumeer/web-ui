@@ -310,7 +310,31 @@
         <source>Gets the immediate child records in hierarchy. Returns an empty array if there aren't any.</source>
 		<target>A hierarchiában megkapja a közvetlen gyermekrekordokat. Üres tömböt ad vissza, ha nincs ilyen.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-child-documents-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getHierarchySiblingsDocumentsBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-child-documents-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getDocumentCreatedAuthorBlock" datatype="html">
+        <source>Gets the author of the given record.</source><target>Megkapja az adott lemez íróját.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-created-author-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getDocumentCreatedDateBlock" datatype="html">
+        <source>Gets the creation date of the given record.</source><target>Megkapja az adott rekord létrehozásának dátumát.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-created-date-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getDocumentUpdatedAuthorBlock" datatype="html">
+        <source>Gets the user who updated the record last time.</source><target>Megkapja azt a felhasználót, aki legutóbb frissítette a rekordot.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-updated-author-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getDocumentUpdatedDateBlock" datatype="html">
+        <source>Gets the last update date of the given record.</source><target>Megkapja az adott rekord utolsó frissítésének dátumát.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-updated-date-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getHierarchySiblingsDocumentsBlock" datatype="html">
         <source>Gets the sibling records in hierarchy. Returns an empty array if there aren't any.</source>
 		<target>A testvérrekordokat hierarchiába rendezi be. Üres tömböt ad vissza, ha nincs ilyen.</target>
 
@@ -4153,11 +4177,11 @@
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1137</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">375</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1141</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.title">
 					<source>Delete this column?</source>
 					<target>Törlöd ezt az oszlopot?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1136</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">374</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1140</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.header.add-button">
 					<source>Link table</source>
 					<target>Hivatkozási tábla</target>
@@ -4322,15 +4346,15 @@
 				<trans-unit datatype="html" id="template.create.empty">
 					<source>I am sorry, you do not have any organization to create project in.</source>
 					<target>Sajnálom, de nincs olyan szervezet, amelyben projektet hozhatnál létre.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">127</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">128</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="template.create.error">
 					<source>I am sorry, something went wrong.</source>
 					<target>Sajnálom, valami rosszul sült el.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">109</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="template.create.limitsExceeded">
 					<source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source>
 					<target>Sajnálom, nem lehet létrehozni több projektet az ingyenes fiókban. Szeretnél most frissíteni az Üzleti verzióra?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">116</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="templates.button.empty">
 					<source>Start with empty project</source>
 					<target>Kezdés üres projekttel</target>

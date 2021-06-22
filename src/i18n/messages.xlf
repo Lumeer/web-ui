@@ -1169,21 +1169,21 @@
         <source>I am sorry, something went wrong.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/redirect.component.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="template.create.limitsExceeded" datatype="html">
         <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/redirect.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="template.create.empty" datatype="html">
         <source>I am sorry, you do not have any organization to create project in.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/redirect.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.not.found" datatype="html">
@@ -2436,6 +2436,34 @@
         <source>Gets the immediate child records in hierarchy. Returns an empty array if there aren&apos;t any.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-child-documents-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.getDocumentCreatedAuthorBlock" datatype="html">
+        <source>Gets the author of the given record.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-created-author-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.getDocumentCreatedDateBlock" datatype="html">
+        <source>Gets the creation date of the given record.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-created-date-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.getDocumentUpdatedAuthorBlock" datatype="html">
+        <source>Gets the user who updated the record last time.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-updated-author-blockly-component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.getDocumentUpdatedDateBlock" datatype="html">
+        <source>Gets the last update date of the given record.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-document-updated-date-blockly-component.ts</context>
           <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
@@ -3764,18 +3792,18 @@
           <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="constraint.duration.unit.conversion" datatype="html">
-        <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">34,35</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
         <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.duration.unit.conversion" datatype="html">
+        <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">34,35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.description" datatype="html">
@@ -6756,19 +6784,19 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source> <x id="ICU" equiv-text="{yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}"/>
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">2,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
+        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">
@@ -8000,7 +8028,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1136</context>
+          <context context-type="linenumber">1140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
@@ -8011,7 +8039,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1137</context>
+          <context context-type="linenumber">1141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.add.link.column" datatype="html">

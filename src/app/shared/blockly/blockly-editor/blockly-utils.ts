@@ -114,6 +114,10 @@ export class BlocklyUtils {
   public static readonly LOOP_BREAK = 'loop_break';
   public static readonly LOOP_CONTINUE = 'loop_continue';
   public static readonly BLOCK_COMMENT = 'block_comment';
+  public static readonly GET_DOCUMENT_CREATED_DATE = 'get_document_created_date';
+  public static readonly GET_DOCUMENT_CREATED_AUTHOR = 'get_document_created_author';
+  public static readonly GET_DOCUMENT_UPDATED_DATE = 'get_document_updated_date';
+  public static readonly GET_DOCUMENT_UPDATED_AUTHOR = 'get_document_updated_author';
   public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
   public static readonly MAXIMUM_DOCUMENTS_RETURNED = 1000;
   public static readonly SHOW_MESSAGES_LIMIT = 5;

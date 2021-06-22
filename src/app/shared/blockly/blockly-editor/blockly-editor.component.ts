@@ -98,6 +98,10 @@ import {CountOccurrencesBlocklyComponent} from './blocks/count-occurrences-block
 import {FilterObjectsBlocklyComponent} from './blocks/filter-objects-blockly-component';
 import {NavigateByIdBlocklyComponent} from './blocks/navigate-by-id-blockly-component';
 import {ShareViewBlocklyComponent} from './blocks/share-view-blockly-component';
+import {GetDocumentCreatedDateBlocklyComponent} from './blocks/get-document-created-date-blockly-component';
+import {GetDocumentUpdatedDateBlocklyComponent} from './blocks/get-document-updated-date-blockly-component';
+import {GetDocumentCreatedAuthorBlocklyComponent} from './blocks/get-document-created-author-blockly-component';
+import {GetDocumentUpdatedAuthorBlocklyComponent} from './blocks/get-document-updated-author-blockly-component';
 
 declare var Blockly: any;
 
@@ -224,6 +228,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new IsStringBlocklyComponent(this.blocklyUtils),
       new CountOccurrencesBlocklyComponent(this.blocklyUtils),
       new FilterObjectsBlocklyComponent(this.blocklyUtils),
+      new GetDocumentCreatedDateBlocklyComponent(this.blocklyUtils),
+      new GetDocumentCreatedAuthorBlocklyComponent(this.blocklyUtils),
+      new GetDocumentUpdatedDateBlocklyComponent(this.blocklyUtils),
+      new GetDocumentUpdatedAuthorBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
