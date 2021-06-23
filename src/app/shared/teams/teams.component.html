@@ -1,0 +1,9 @@
+<team-list [organization]="organization$ | async"
+           [project]="project$ | async"
+           [resource]="resource$ | async"
+           [resourceType]="resourceType"
+           [teams]="teams$ | async"
+           (teamCreated)="onNewTeam($event)"
+           (teamDeleted)="onTeamDeleted($event)"
+           (teamUpdated)="onTeamUpdated($event)">
+</team-list>

@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Group {
-  id?: string;
-  name: string;
-}
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TeamsComponent} from './teams.component';
+import {FormsModule} from '@angular/forms';
+import {NewTeamComponent} from './new-team/new-team.component';
+import {TeamListComponent} from './team-list/team-list.component';
+import {PipesModule} from '../pipes/pipes.module';
+import {TeamFilterPipe} from './team-list/pipes/team-filter.pipe';
+import {TeamComponent} from './team/team.component';
+
+@NgModule({
+  declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamFilterPipe, TeamComponent],
+  imports: [FormsModule, CommonModule, PipesModule],
+  exports: [TeamsComponent],
+})
+export class TeamsModule {}

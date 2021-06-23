@@ -18,101 +18,103 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Group} from './group';
+import {Team} from './team';
 
-export enum GroupsActionType {
-  GET = '[Groups] Get',
-  GET_SUCCESS = '[Groups] Get :: Success',
-  GET_FAILURE = '[Groups] Get :: Failure',
+export enum TeamsActionType {
+  GET = '[Teams] Get',
+  GET_SUCCESS = '[Teams] Get :: Success',
+  GET_FAILURE = '[Teams] Get :: Failure',
 
-  CREATE = '[Groups] Create',
-  CREATE_SUCCESS = '[Groups] Create :: Success',
-  CREATE_FAILURE = '[Groups] Create :: Failure',
+  CREATE = '[Teams] Create',
+  CREATE_SUCCESS = '[Teams] Create :: Success',
+  CREATE_FAILURE = '[Teams] Create :: Failure',
 
-  UPDATE = '[Groups] Update',
-  UPDATE_SUCCESS = '[Groups] Update :: Success',
-  UPDATE_FAILURE = '[Groups] Update :: Failure',
+  UPDATE = '[Teams] Update',
+  UPDATE_SUCCESS = '[Teams] Update :: Success',
+  UPDATE_FAILURE = '[Teams] Update :: Failure',
 
-  DELETE = '[Groups] Delete',
-  DELETE_SUCCESS = '[Groups] Delete :: Success',
-  DELETE_FAILURE = '[Groups] Delete :: Failure',
+  DELETE = '[Teams] Delete',
+  DELETE_SUCCESS = '[Teams] Delete :: Success',
+  DELETE_FAILURE = '[Teams] Delete :: Failure',
 
-  CLEAR = '[Groups] Clear',
+  CLEAR = '[Teams] Clear',
 }
 
-export namespace GroupsAction {
+export namespace TeamsAction {
   export class Get implements Action {
-    public readonly type = GroupsActionType.GET;
+    public readonly type = TeamsActionType.GET;
+
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class GetSuccess implements Action {
-    public readonly type = GroupsActionType.GET_SUCCESS;
+    public readonly type = TeamsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {groups: Group[]}) {}
+    public constructor(public payload: {organizationId: string; teams: Team[]}) {}
   }
 
   export class GetFailure implements Action {
-    public readonly type = GroupsActionType.GET_FAILURE;
+    public readonly type = TeamsActionType.GET_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
-    public readonly type = GroupsActionType.CREATE;
+    public readonly type = TeamsActionType.CREATE;
 
-    public constructor(public payload: {group: Group}) {}
+    public constructor(public payload: {team: Team}) {}
   }
 
   export class CreateSuccess implements Action {
-    public readonly type = GroupsActionType.CREATE_SUCCESS;
+    public readonly type = TeamsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {group: Group}) {}
+    public constructor(public payload: {team: Team}) {}
   }
 
   export class CreateFailure implements Action {
-    public readonly type = GroupsActionType.CREATE_FAILURE;
+    public readonly type = TeamsActionType.CREATE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
-    public readonly type = GroupsActionType.UPDATE;
+    public readonly type = TeamsActionType.UPDATE;
 
-    public constructor(public payload: {group: Group}) {}
+    public constructor(public payload: {team: Team}) {}
   }
 
   export class UpdateSuccess implements Action {
-    public readonly type = GroupsActionType.UPDATE_SUCCESS;
+    public readonly type = TeamsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {group: Group}) {}
+    public constructor(public payload: {team: Team}) {}
   }
 
   export class UpdateFailure implements Action {
-    public readonly type = GroupsActionType.UPDATE_FAILURE;
+    public readonly type = TeamsActionType.UPDATE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
-    public readonly type = GroupsActionType.DELETE;
+    public readonly type = TeamsActionType.DELETE;
 
-    public constructor(public payload: {groupId: string}) {}
+    public constructor(public payload: {teamId: string}) {}
   }
 
   export class DeleteSuccess implements Action {
-    public readonly type = GroupsActionType.DELETE_SUCCESS;
+    public readonly type = TeamsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {groupId: string}) {}
+    public constructor(public payload: {teamId: string}) {}
   }
 
   export class DeleteFailure implements Action {
-    public readonly type = GroupsActionType.DELETE_FAILURE;
+    public readonly type = TeamsActionType.DELETE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
 
   export class Clear implements Action {
-    public readonly type = GroupsActionType.CLEAR;
+    public readonly type = TeamsActionType.CLEAR;
   }
 
   export type All =

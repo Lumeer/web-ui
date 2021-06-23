@@ -22,14 +22,15 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
-import {GroupDto} from '../dto';
+import {TeamDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {map} from 'rxjs/operators';
 import {BaseService} from './base.service';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
-export class GroupService extends BaseService {
+export class TeamService extends BaseService {
   constructor(
     private httpClient: HttpClient,
     protected store$: Store<AppState>,
@@ -38,24 +39,24 @@ export class GroupService extends BaseService {
     super(store$);
   }
 
-  public createGroup(group: GroupDto): Observable<GroupDto> {
-    return this.httpClient.post<GroupDto>(this.apiPrefix(), group);
+  public createTeam(team: TeamDto): Observable<TeamDto> {
+    return this.httpClient.post<TeamDto>(this.apiPrefix(), team);
   }
 
-  public updateGroup(id: string, group: GroupDto): Observable<GroupDto> {
-    return this.httpClient.put<GroupDto>(this.apiPrefix(id), group);
+  public updateGroup(id: string, team: TeamDto): Observable<TeamDto> {
+    return this.httpClient.put<TeamDto>(this.apiPrefix(id), team);
   }
 
   public deleteGroup(id: string): Observable<string> {
     return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'}).pipe(map(() => id));
   }
 
-  public getGroups(): Observable<GroupDto[]> {
-    return this.httpClient.get<GroupDto[]>(this.apiPrefix());
+  public getGroups(organizationId: string): Observable<TeamDto[]> {
+    return this.httpClient.get<TeamDto[]>(this.apiPrefix(null, {organizationId}));
   }
 
-  private apiPrefix(groupId?: string): string {
-    const organizationId = this.getOrCurrentOrganizationId();
+  private apiPrefix(groupId?: string, workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
     return `${this.configurationService.getConfiguration().apiUrl}/rest/organizations/${organizationId}/groups${
       groupId ? `/${groupId}` : ''
     }`;

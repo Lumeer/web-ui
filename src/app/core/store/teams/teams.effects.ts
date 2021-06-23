@@ -21,21 +21,21 @@ import {of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
-import {GroupService} from '../../rest';
+import {TeamService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {GroupConverter} from './group.converter';
-import {GroupsAction, GroupsActionType} from './groups.action';
+import {convertTeamDtoToModel, convertTeamModelToDto} from './teams.converter';
+import {TeamsAction, TeamsActionType} from './teams.action';
 
 @Injectable()
-export class GroupsEffects {
+export class TeamsEffects {
   public get$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.Get>(GroupsActionType.GET),
-      mergeMap(() =>
-        this.groupService.getGroups().pipe(
-          map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
-          map(groups => new GroupsAction.GetSuccess({groups: groups})),
-          catchError(error => of(new GroupsAction.GetFailure({error})))
+      ofType<TeamsAction.Get>(TeamsActionType.GET),
+      mergeMap(action =>
+        this.groupService.getGroups(action.payload.organizationId).pipe(
+          map(dtos => dtos.map(dto => convertTeamDtoToModel(dto))),
+          map(teams => new TeamsAction.GetSuccess({teams, organizationId: action.payload.organizationId})),
+          catchError(error => of(new TeamsAction.GetFailure({error})))
         )
       )
     )
@@ -43,7 +43,7 @@ export class GroupsEffects {
 
   public getFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
+      ofType<TeamsAction.GetFailure>(TeamsActionType.GET_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@groups.get.fail:Could not get groups`;
@@ -54,14 +54,14 @@ export class GroupsEffects {
 
   public create$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.Create>(GroupsActionType.CREATE),
+      ofType<TeamsAction.Create>(TeamsActionType.CREATE),
       mergeMap(action => {
-        const groupDto = GroupConverter.toDto(action.payload.group);
+        const groupDto = convertTeamModelToDto(action.payload.team);
 
-        return this.groupService.createGroup(groupDto).pipe(
-          map(dto => GroupConverter.fromDto(dto)),
-          map(group => new GroupsAction.CreateSuccess({group: group})),
-          catchError(error => of(new GroupsAction.CreateFailure({error})))
+        return this.groupService.createTeam(groupDto).pipe(
+          map(dto => convertTeamDtoToModel(dto)),
+          map(team => new TeamsAction.CreateSuccess({team})),
+          catchError(error => of(new TeamsAction.CreateFailure({error})))
         );
       })
     )
@@ -69,7 +69,7 @@ export class GroupsEffects {
 
   public createFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
+      ofType<TeamsAction.CreateFailure>(TeamsActionType.CREATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@group.create.fail:Could not create the group`;
@@ -80,14 +80,14 @@ export class GroupsEffects {
 
   public update$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.Update>(GroupsActionType.UPDATE),
+      ofType<TeamsAction.Update>(TeamsActionType.UPDATE),
       mergeMap(action => {
-        const groupDto = GroupConverter.toDto(action.payload.group);
+        const groupDto = convertTeamModelToDto(action.payload.team);
 
         return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
-          map(dto => GroupConverter.fromDto(dto)),
-          map(group => new GroupsAction.UpdateSuccess({group: group})),
-          catchError(error => of(new GroupsAction.UpdateFailure({error})))
+          map(dto => convertTeamDtoToModel(dto)),
+          map(team => new TeamsAction.UpdateSuccess({team})),
+          catchError(error => of(new TeamsAction.UpdateFailure({error})))
         );
       })
     )
@@ -95,7 +95,7 @@ export class GroupsEffects {
 
   public updateFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
+      ofType<TeamsAction.UpdateFailure>(TeamsActionType.UPDATE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@group.update.fail:Could not update the group`;
@@ -106,11 +106,11 @@ export class GroupsEffects {
 
   public delete$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
+      ofType<TeamsAction.Delete>(TeamsActionType.DELETE),
       mergeMap(action =>
-        this.groupService.deleteGroup(action.payload.groupId).pipe(
-          map(() => new GroupsAction.DeleteSuccess(action.payload)),
-          catchError(error => of(new GroupsAction.DeleteFailure({error})))
+        this.groupService.deleteGroup(action.payload.teamId).pipe(
+          map(() => new TeamsAction.DeleteSuccess(action.payload)),
+          catchError(error => of(new TeamsAction.DeleteFailure({error})))
         )
       )
     )
@@ -118,7 +118,7 @@ export class GroupsEffects {
 
   public deleteFailure$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
+      ofType<TeamsAction.DeleteFailure>(TeamsActionType.DELETE_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@group.delete.fail:Could not delete the group`;
@@ -127,5 +127,5 @@ export class GroupsEffects {
     )
   );
 
-  constructor(private actions$: Actions, private groupService: GroupService) {}
+  constructor(private actions$: Actions, private groupService: TeamService) {}
 }

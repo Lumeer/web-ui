@@ -22,7 +22,7 @@ export {CollectionDto} from './collection.dto';
 export {ContactDto} from './contact.dto';
 export {DocumentDto} from './document.dto';
 export {Event} from './event';
-export {GroupDto} from './group.dto';
+export {TeamDto} from './team.dto';
 export {LinkInstanceDto} from './link-instance.dto';
 export {LinkTypeDto} from './link-type.dto';
 export {OrganizationDto} from './organization.dto';

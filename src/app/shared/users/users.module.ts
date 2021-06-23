@@ -21,12 +21,10 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
-import {UserGroupsComponent} from './user-groups/user-groups.component';
 import {UserListComponent} from './user-list/user-list.component';
 import {UserComponent} from './user/user.component';
 import {NewUserComponent} from './new-user/new-user.component';
 import {UsersComponent} from './users.component';
-import {GroupsSuggestionsComponent} from './user-groups/suggestions/groups-suggestions.component';
 import {TagModule} from '../tag/tag.module';
 import {InputModule} from '../input/input.module';
 import {UserFilterPipe} from './user-list/pipes/user-filter.pipe';
@@ -38,8 +36,6 @@ import {GravatarModule} from 'ngx-gravatar';
   imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule],
   declarations: [
     UserFilterPipe,
-    UserGroupsComponent,
-    GroupsSuggestionsComponent,
     UserListComponent,
     UserComponent,
     NewUserComponent,

@@ -17,5 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {TeamService} from './team.service';
-export {ImportService} from './import.service';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
+
+import {removeAccentFromString} from '@lumeer/data-filters';
+import {Team} from '../../../../core/store/teams/team';
+
+@Pipe({
+  name: 'teamFilter',
+})
+@Injectable()
+export class TeamFilterPipe implements PipeTransform {
+  public transform(groups: Team[], value: string): Team[] {
+    if (!groups || !value) {
+      return groups;
+    }
+
+    const valueLowerCase = removeAccentFromString(value, true);
+    return groups.filter(user => removeAccentFromString(user.name, true).includes(valueLowerCase));
+  }
+}

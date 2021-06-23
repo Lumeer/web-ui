@@ -201,7 +201,7 @@
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.countOccurrences" datatype="html">
         <source>Counts the occurrences of a given string in an array.</source><target state="final">Counts the occurrences of a given string in an array.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/count-occurrences-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.field.placeholder.value" datatype="html">
         <source>value</source><target state="final">value</target>
         <context-group purpose="location">
@@ -712,7 +712,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="search.input.placeholder.short" datatype="html">
         <source>Search or filter…</source><target state="final">Search or filter…</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="search.button" datatype="html">
         <source>Search</source><target state="final">Search</target>
 
@@ -1000,22 +1000,22 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="view.modal.settings.name.notEmpty" datatype="html">
         <source>View name can not be empty</source><target state="final">View name can not be empty</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority" datatype="html">
         <source>Priority:</source><target state="final">Priority:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.placeholder" datatype="html">
         <source>Enter any number</source><target state="final">Enter any number</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.invalid" datatype="html">
         <source>Number is not valid</source><target state="final">Number is not valid</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.invalidRange" datatype="html">
         <source>Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</source><target state="final">Number is not from valid range (<x id="INTERPOLATION" equiv-text="{{minInteger}}"/> - <x id="INTERPOLATION_1" equiv-text="{{maxInteger}}"/>)</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="view.modal.settings.priority.help" datatype="html">
         <source>By default, views are sorted by last used. Setting an priority overrides the default behavior. A higher priority means that the view will be above others. </source><target state="final">By default, views are sorted by last used. Setting an priority overrides the default behavior. A higher priority means that the view will be above others. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="view.modal.settings.folders" datatype="html">
         <source>Folders:</source><target state="final">Folders:</target>
 
@@ -1030,8 +1030,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="settings" datatype="html">
         <source>Settings</source><target state="final">Settings</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="choose.organization.title" datatype="html">
         <source>Choose organization</source><target state="final">Choose organization</target>
 
@@ -1704,13 +1704,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source><target state="final">All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.title" datatype="html">
         <source>Do you want to erase all sample data in the project?</source><target state="final">Do you want to erase all sample data in the project?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="project.deleteSamples.dialog.placeholder" datatype="html">
         <source>PERMANENTLY CLEAN</source><target state="final">PERMANENTLY CLEAN</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
         <source>Keep your Lumeer for Business active!</source><target state="final">Keep your Lumeer for Business active!</target>
 
@@ -2224,7 +2224,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/common/view-detail/view-detail.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="views.folders.number.views" datatype="html">
         <source>Number of views</source><target state="final">Number of views</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/folders/content/folders/folder/views-folder.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>There are no Views yet!</source><target state="final">There are no Views yet!</target>
 
@@ -2849,19 +2849,19 @@
       <trans-unit id="groups.get.fail" datatype="html">
         <source>Could not get groups</source><target state="final">Could not get groups</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
       <trans-unit id="group.create.fail" datatype="html">
         <source>Could not create the group</source><target state="final">Could not create the group</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context><context context-type="linenumber">75</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context><context context-type="linenumber">75</context></context-group></trans-unit>
       <trans-unit id="group.update.fail" datatype="html">
         <source>Could not update the group</source><target state="final">Could not update the group</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context><context context-type="linenumber">101</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context><context context-type="linenumber">101</context></context-group></trans-unit>
       <trans-unit id="group.delete.fail" datatype="html">
         <source>Could not delete the group</source><target state="final">Could not delete the group</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context><context context-type="linenumber">124</context></context-group></trans-unit>
       <trans-unit id="link.instances.get.fail" datatype="html">
         <source>Could not get links</source><target state="final">Could not get links</target>
 
@@ -2929,7 +2929,7 @@
         </context-group>
       </trans-unit><trans-unit id="warning.link.nameExisting" datatype="html">
         <source>I am sorry, the link '<x id="name" equiv-text="action.payload.name"/>' already exists.</source><target state="final">I am sorry, the link '<x id="name" equiv-text="action.payload.name"/>' already exists.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">149</context></context-group></trans-unit><trans-unit id="warning.link.nameEmpty" datatype="html">
         <source>I am sorry, the link name must not be empty.</source><target state="final">I am sorry, the link name must not be empty.</target>
         <context-group purpose="location">
@@ -3012,7 +3012,7 @@
         </context-group>
       </trans-unit><trans-unit id="project.downloadRawContent.fail" datatype="html">
         <source>Could not download project data</source><target state="final">Could not download project data</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">407</context></context-group></trans-unit>
       <trans-unit id="project.permission.change.fail" datatype="html">
         <source>Could not change the project permissions</source><target state="final">Could not change the project permissions</target>
@@ -3121,7 +3121,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">416</context></context-group></trans-unit><trans-unit id="view.set.folders.fail" datatype="html">
         <source>Could not update view folders</source><target state="final">Could not update view folders</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context><context context-type="linenumber">452</context></context-group></trans-unit><trans-unit id="view.add.favorite.fail" datatype="html">
         <source>Could not add the view to favorites</source><target state="final">Could not add the view to favorites</target>
 
@@ -3236,7 +3236,7 @@
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.filterObjects" datatype="html">
         <source>Filters object in an array by having the given key equal to a given value.</source><target state="final">Filters object in an array by having the given key equal to a given value.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/filter-objects-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="blockly.field.placeholder.key" datatype="html">
         <source>key</source><target state="final">key</target>
         <context-group purpose="location">
@@ -3421,10 +3421,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.title" datatype="html">
         <source>Revert changes?</source><target state="final">Revert changes?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="audit.revert.confirm.message" datatype="html">
         <source>Do you really want to revert the latest changes?</source><target state="final">Do you really want to revert the latest changes?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
         <source>Remove options</source><target state="final">Remove options</target>
 
@@ -3771,7 +3771,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">229</context></context-group></trans-unit><trans-unit id="perspective.kanban.move.card.failure" datatype="html">
         <source>Could not move card</source><target state="final">Could not move card</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context><context context-type="linenumber">601</context></context-group></trans-unit><trans-unit id="kanban.config.collection.resource.empty" datatype="html">
         <source>Select table or link</source><target state="final">Select table or link</target>
 
@@ -3976,7 +3976,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="project.settings.collections.deleteSampleData" datatype="html">
         <source>Delete sample data from the project</source><target state="final">Delete sample data from the project</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
       <trans-unit id="project.delete.dialog.message" datatype="html">
         <source>Do you really want to permanently delete this project?</source><target state="final">Do you really want to permanently delete this project?</target>

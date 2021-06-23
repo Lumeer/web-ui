@@ -1613,28 +1613,28 @@
       <trans-unit id="groups.get.fail" datatype="html">
         <source>Could not get groups</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
+          <context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context>
           <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="group.create.fail" datatype="html">
         <source>Could not create the group</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
+          <context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context>
           <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="group.update.fail" datatype="html">
         <source>Could not update the group</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
+          <context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context>
           <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="group.delete.fail" datatype="html">
         <source>Could not delete the group</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
+          <context context-type="sourcefile">src/app/core/store/groups/teams.effects.ts</context>
           <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>

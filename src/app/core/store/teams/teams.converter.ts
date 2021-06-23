@@ -17,10 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from './group';
+import {Team} from './team';
+import {TeamDto} from '../../dto';
 
-export class GroupFilters {
-  public static filterFunctions(groups: Group[]) {
-    return groups.filter(group => typeof group === 'object');
-  }
+export function convertTeamDtoToModel(dto: TeamDto): Team {
+  return {
+    id: dto.id,
+    name: dto.name,
+    description: dto.description,
+    organizationId: dto.organizationId,
+    users: dto.users,
+    icon: dto.icon,
+    color: dto.color,
+  };
+}
+
+export function convertTeamModelToDto(model: Team): TeamDto {
+  return {
+    id: model.id,
+    name: model.name,
+    description: model.description,
+    organizationId: model.organizationId,
+    users: model.users,
+    icon: model.icon,
+    color: model.color,
+  };
 }

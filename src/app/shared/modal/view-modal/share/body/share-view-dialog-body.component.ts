@@ -125,7 +125,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   public addNewUser(text: string) {
-    const newUser: User = {correlationId: generateCorrelationId(), email: text, groupsMap: {}};
+    const newUser: User = {correlationId: generateCorrelationId(), email: text};
     this.userRoles$.next({...this.userRoles$.getValue(), [newUser.correlationId]: []});
     this.newUsers$.next([...this.newUsers$.getValue(), newUser]);
   }

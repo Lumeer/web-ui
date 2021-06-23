@@ -79,7 +79,6 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
 import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
-import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
 import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
@@ -173,7 +172,6 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
@@ -266,7 +264,6 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,

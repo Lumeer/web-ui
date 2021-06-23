@@ -17,7 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface GroupDto {
-  id?: string;
-  name: string;
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {ResourceType} from '../../../core/model/resource-type';
+
+@Component({
+  selector: 'organization-teams',
+  templateUrl: './organization-teams.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class OrganizationTeamsComponent {
+  public readonly resourceType = ResourceType.Organization;
 }

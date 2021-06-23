@@ -22,43 +22,25 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {Team} from '../../../core/store/teams/team';
 
 @Component({
-  selector: '[user-component]',
-  templateUrl: './user.component.html',
-  styleUrls: ['../../../../styles/custom/_user-roles.scss'],
+  selector: '[team-component]',
+  templateUrl: './team.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserComponent {
+export class TeamComponent {
   @Input()
   public resourceType: ResourceType;
 
   @Input()
-  public editable: boolean;
-
-  @Input()
-  public changeRoles: boolean;
-
-  @Input()
-  public user: User;
-
-  @Input()
-  public userRoles: string[];
-
-  @Input()
-  public groupRoles: string[];
-
-  @Input()
-  public inheritedManage: boolean = false;
+  public team: Team;
 
   @Output()
-  public userUpdated = new EventEmitter<User>();
+  public teamUpdated = new EventEmitter<Team>();
 
   @Output()
-  public userDeleted = new EventEmitter<User>();
-
-  @Output()
-  public rolesUpdate = new EventEmitter<string[]>();
+  public teamDeleted = new EventEmitter<Team>();
 
   private readonly inheritedManagerMsg: string;
   private readonly cannotChangeRoleMsg: string;
@@ -66,38 +48,19 @@ export class UserComponent {
   private readonly deleteTitleMsg: string;
 
   constructor(private notificationService: NotificationService) {
-    this.deleteMsg = $localize`:@@users.user.delete.message:Do you want to permanently remove this user?`;
-    this.deleteTitleMsg = $localize`:@@users.user.delete.title:Remove user?`;
+    this.deleteMsg = $localize`:@@groups.group.delete.message:Do you want to permanently remove this group?`;
+    this.deleteTitleMsg = $localize`:@@groups.group.delete.title:Remove group?`;
     this.cannotChangeRoleMsg = $localize`:@@users.user.changeRoles:You cannot change these roles. Either you are this user, or you are the last manager here, or you do not have sufficient rights.`;
     this.inheritedManagerMsg = $localize`:@@users.user.inheritedManager:This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.`;
   }
 
   public onDelete() {
-    this.notificationService.confirmYesOrNo(this.deleteMsg, this.deleteTitleMsg, 'danger', () => this.deleteUser());
+    this.notificationService.confirmYesOrNo(this.deleteMsg, this.deleteTitleMsg, 'danger', () => this.deleteTeam());
   }
 
-  public deleteUser() {
-    this.userDeleted.emit(this.user);
+  public deleteTeam() {
+    this.teamDeleted.emit(this.team);
   }
 
-  public toggleRole(role: string) {
-    if (!this.changeRoles) {
-      if (this.inheritedManage) {
-        this.notificationService.info(this.inheritedManagerMsg);
-      } else {
-        this.notificationService.info(this.cannotChangeRoleMsg);
-      }
-
-      return;
-    }
-
-    let roles;
-    if (this.userRoles.includes(role)) {
-      roles = this.userRoles.filter(r => r !== role);
-    } else {
-      roles = [...this.userRoles, role];
-    }
-
-    this.rolesUpdate.emit(roles);
-  }
+  public toggleRole(role: string) {}
 }

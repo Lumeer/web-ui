@@ -49,7 +49,7 @@ export class PermissionsCheckService {
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
       this.store$.pipe(select(selectWorkspaceModels)),
     ])
-      .pipe(filter(([currentUser, {organization, project}]) => !!currentUser && !!organization && !!project))
+      .pipe(filter(([currentUser, {organization, project}]) => !!currentUser && !!organization))
       .subscribe(([currentUser, {organization, project}]) => {
         this.subscriptions.unsubscribe();
         this.subscriptions = new Subscription();

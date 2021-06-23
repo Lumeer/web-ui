@@ -18,43 +18,45 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {User} from '../../../core/store/users/user';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {Team} from '../../../core/store/teams/team';
 
 @Component({
-  selector: 'new-user',
-  templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss'],
+  selector: 'new-team',
+  templateUrl: './new-team.component.html',
+  styleUrls: ['./new-team.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewUserComponent {
+export class NewTeamComponent {
   @Input()
-  public users: User[];
+  public teams: Team[];
 
   @Output()
-  public userCreated = new EventEmitter<string>();
+  public teamCreated = new EventEmitter<string>();
 
-  public email: string;
-  public isDuplicate: boolean = false;
+  public name: string;
+  public isDuplicate: boolean;
+  public invalid: boolean;
 
-  public onAddUser() {
-    if (this.email && !this.isDuplicate) {
-      this.userCreated.emit(this.email);
+  public onAddTeam() {
+    const name = this.name.trim();
+    if (name && !this.isDuplicate) {
+      this.teamCreated.emit(name);
       this.clearInputs();
     }
   }
 
   public onInputChanged(value: string) {
-    this.email = value;
+    this.name = value;
     this.checkDuplicates();
   }
 
   public checkDuplicates() {
-    const emailCleaned = removeAccentFromString(this.email, true).trim();
-    this.isDuplicate = !!this.users.find(user => removeAccentFromString(user.email, true) === emailCleaned);
+    const nameCleaned = this.name.trim();
+    this.isDuplicate = this.teams.some(user => user.name.trim() === nameCleaned);
+    this.invalid = nameCleaned.length === 0;
   }
 
   private clearInputs() {
-    this.email = '';
+    this.name = '';
   }
 }

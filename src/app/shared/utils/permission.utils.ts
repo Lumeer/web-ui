@@ -73,7 +73,7 @@ export function userRolesInProject(organization: Organization, project: Project,
 }
 
 export function getUserGroups(organization: Organization, user: User): string[] {
-  return user?.groups?.[organization?.id] || [];
+  return user?.teams?.map(group => group.id) || [];
 }
 
 export function userPermissionsInCollection(

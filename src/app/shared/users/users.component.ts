@@ -26,7 +26,7 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {User} from '../../core/store/users/user';
 import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
+import {selectCurrentUser, selectUsersForWorkspace} from '../../core/store/users/users.state';
 import {ResourceType} from '../../core/model/resource-type';
 import {Resource} from '../../core/model/resource';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
@@ -74,13 +74,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private sortUsers(users: User[]): User[] {
-    return users.sort((user1, user2) => user1.email.localeCompare(user2.email));
-  }
-
   public onNewUser(email: string) {
-    const user: User = {email, groupsMap: {}};
-    user.groupsMap[this.getOrganizationId()] = [];
+    const user: User = {email};
 
     this.store$.dispatch(new UsersAction.Create({organizationId: this.getOrganizationId(), user}));
 
@@ -107,8 +102,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private getOrganizationId(): string {
-    const organization = this.organization$.getValue();
-    return organization && organization.id;
+    return this.organization$.value?.id;
   }
 
   public changeUsersPermissionsOnlyStore(data: {permissions: Permission[]}) {
@@ -169,13 +163,17 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace), map(this.sortUsers));
 
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 
     this.resource$ = this.store$.pipe(
       select(this.getSelector()),
       filter(resource => !!resource),
       tap(resource => (this.resourceId = resource.id))
     );
+  }
+
+  private sortUsers(users: User[]): User[] {
+    return users.sort((user1, user2) => (user1.name || user1.email).localeCompare(user2.name || user2.email));
   }
 
   private getSelector(): MemoizedSelector<AppState, Resource> {

@@ -1,0 +1,18 @@
+<td class="p-2 align-middle">
+  {{team.name}}
+</td>
+
+<td class="px-0 py-1 align-middle">
+  {{team.description}}
+</td>
+
+<td class="p-2 align-middle">
+
+  <i class="far fa-fw fa-trash-alt text-danger mx-2 cursor-pointer"
+     aria-hidden="true"
+     title="Remove team"
+     i18n-title="@@team.actions.remove"
+     (click)="onDelete()"></i>
+</td>
+
+

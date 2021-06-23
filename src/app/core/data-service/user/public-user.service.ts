@@ -66,7 +66,7 @@ export class PublicUserService implements UserService {
       name: 'Alan Turing',
       wizardDismissed: true,
       affiliatePartner: false,
-      groups: {},
+      groups: [],
       lastLoggedIn: new Date().getTime(),
     });
   }

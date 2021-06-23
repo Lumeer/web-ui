@@ -17,20 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Group} from '../../../../core/store/groups/group';
-
-@Component({
-  selector: 'group-suggestions',
-  templateUrl: './groups-suggestions.component.html',
-  styleUrls: ['./groups-suggestions.component.scss'],
-})
-export class GroupsSuggestionsComponent {
-  @Input() public groups: Group[];
-
-  @Output() public selectGroup = new EventEmitter<Group>();
-
-  public onSelectGroup(group: Group) {
-    this.selectGroup.emit(group);
-  }
+export interface TeamDto {
+  id?: string;
+  name: string;
+  description?: string;
+  organizationId?: string;
+  icon?: string;
+  color?: string;
+  users?: string[];
 }

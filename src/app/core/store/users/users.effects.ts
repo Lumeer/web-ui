@@ -31,7 +31,6 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {
   convertDefaultWorkspaceModelToDto,
-  convertNotificationsToDto,
   convertUserDtoToModel,
   convertUserHintsDtoToModel,
   convertUserHintsModelToDto,
