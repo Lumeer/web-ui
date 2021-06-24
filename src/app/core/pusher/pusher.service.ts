@@ -80,6 +80,8 @@ import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {PrintService} from '../service/print.service';
 import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
+import {TeamsAction} from '../store/teams/teams.action';
+import {convertTeamDtoToModel} from '../store/teams/teams.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -162,6 +164,7 @@ export class PusherService implements OnDestroy {
     this.bindOtherEvents();
     this.bindFavoriteEvents();
     this.bindUserEvents();
+    this.bindGroupEvents();
     this.bindSequenceEvents();
     this.bindUserMessageEvents();
     this.bindTemplateEvents();
@@ -776,6 +779,20 @@ export class PusherService implements OnDestroy {
     this.channel.bind('User:remove', data => {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(new UsersAction.DeleteSuccess({userId: data.id}));
+      }
+    });
+  }
+
+  private bindGroupEvents() {
+    this.channel.bind('Group:update', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new TeamsAction.UpdateSuccess({team: convertTeamDtoToModel(data.object)}));
+      }
+    });
+
+    this.channel.bind('Group:remove', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new TeamsAction.DeleteSuccess({teamId: data.id}));
       }
     });
   }

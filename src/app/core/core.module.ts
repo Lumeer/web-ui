@@ -37,7 +37,7 @@ import {HomeComponent} from './components/home.component';
 import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
 import {RedirectComponent} from './components/redirect.component';
-import {TeamService, ImportService} from './rest';
+import {ImportService} from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
 import {UserNotificationsService} from './rest/user-notifications.service';
@@ -96,7 +96,6 @@ FullCalendarModule.registerPlugins([
     TemplateService,
     BaseService,
     ImportService,
-    TeamService,
     OrganizationValidators,
     ProjectValidators,
     PusherService,

@@ -1,12 +1,13 @@
 <div>
   <input-box
+    #nameInput
     innerClass="bg-transparent"
     [canStayEmpty]="false"
     [userData]="false"
     [title]="team.name"
     [maxLength]="100"
     [initialValue]="team.name"
-    (newValue)="onNewName($event)">
+    (newValue)="onNewName($event, nameInput)">
   </input-box>
 
   <input-box

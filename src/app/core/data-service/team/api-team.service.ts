@@ -22,15 +22,16 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
-import {TeamDto} from '../dto';
-import {AppState} from '../store/app.state';
 import {map} from 'rxjs/operators';
-import {BaseService} from './base.service';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {Workspace} from '../store/navigation/workspace';
+import {TeamService} from './team.service';
+import {Workspace} from '../../store/navigation/workspace';
+import {TeamDto} from '../../dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AppState} from '../../store/app.state';
+import {BaseService} from '../../rest/base.service';
 
 @Injectable()
-export class TeamService extends BaseService {
+export class ApiTeamService extends BaseService implements TeamService {
   constructor(
     private httpClient: HttpClient,
     protected store$: Store<AppState>,
@@ -39,19 +40,19 @@ export class TeamService extends BaseService {
     super(store$);
   }
 
-  public createTeam(team: TeamDto): Observable<TeamDto> {
+  public create(team: TeamDto): Observable<TeamDto> {
     return this.httpClient.post<TeamDto>(this.apiPrefix(), team);
   }
 
-  public updateGroup(id: string, team: TeamDto): Observable<TeamDto> {
+  public update(id: string, team: TeamDto): Observable<TeamDto> {
     return this.httpClient.put<TeamDto>(this.apiPrefix(id), team);
   }
 
-  public deleteGroup(id: string): Observable<string> {
+  public delete(id: string): Observable<string> {
     return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'}).pipe(map(() => id));
   }
 
-  public getGroups(organizationId: string): Observable<TeamDto[]> {
+  public getAll(organizationId: string): Observable<TeamDto[]> {
     return this.httpClient.get<TeamDto[]>(this.apiPrefix(null, {organizationId}));
   }
 

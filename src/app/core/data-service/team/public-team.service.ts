@@ -17,4 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {ImportService} from './import.service';
+import {Injectable} from '@angular/core';
+
+import {Observable, of} from 'rxjs';
+import {TeamService} from './team.service';
+import {TeamDto} from '../../dto';
+import {BaseService} from '../../rest/base.service';
+
+@Injectable()
+export class PublicTeamService extends BaseService implements TeamService {
+  public create(team: TeamDto): Observable<TeamDto> {
+    return of(team);
+  }
+
+  public update(id: string, team: TeamDto): Observable<TeamDto> {
+    return of(team);
+  }
+
+  public delete(id: string): Observable<string> {
+    return of('');
+  }
+
+  public getAll(organizationId: string): Observable<TeamDto[]> {
+    return of([]);
+  }
+}

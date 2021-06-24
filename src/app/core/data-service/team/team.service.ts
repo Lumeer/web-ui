@@ -17,4 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {ImportService} from './import.service';
+import {Observable} from 'rxjs';
+import {TeamDto} from '../../dto';
+
+export abstract class TeamService {
+  public abstract create(team: TeamDto): Observable<TeamDto>;
+
+  public abstract update(id: string, team: TeamDto): Observable<TeamDto>;
+
+  public abstract delete(id: string): Observable<string>;
+
+  public abstract getAll(organizationId: string): Observable<TeamDto[]>;
+}

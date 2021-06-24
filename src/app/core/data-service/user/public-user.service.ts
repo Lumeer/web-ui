@@ -41,7 +41,7 @@ export class PublicUserService implements UserService {
     users: UserDto[],
     invitationType?: InvitationType
   ): Observable<UserDto[]> {
-    return of(users.map(user => ({...user, id: generateId()})));
+    return of(users.map(user => ({...user, organizations: [organizationId], id: generateId()})));
   }
 
   public updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto> {

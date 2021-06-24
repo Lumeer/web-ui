@@ -23,6 +23,7 @@ import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Team} from '../../../core/store/teams/team';
+import {InputBoxComponent} from '../../input/input-box/input-box.component';
 
 @Component({
   selector: 'team-component',
@@ -39,6 +40,9 @@ export class TeamComponent {
 
   @Input()
   public team: Team;
+
+  @Input()
+  public allTeams: Team[];
 
   @Output()
   public teamUpdated = new EventEmitter<Team>();
@@ -70,8 +74,15 @@ export class TeamComponent {
     this.teamUpdated.emit({...this.team, users});
   }
 
-  public onNewName(name: string) {
-    this.teamUpdated.emit({...this.team, name});
+  public onNewName(name: string, nameInput: InputBoxComponent) {
+    const teamWithName = this.allTeams?.some(t => t.name === name && t.id !== this.team.id);
+    if (teamWithName) {
+      const warning = $localize`:@@teams.team.name.existing:I am sorry, the team '${name}:name:' already exists.`;
+      this.notificationService.warning(warning);
+      nameInput.setValue(this.team.name);
+    } else {
+      this.teamUpdated.emit({...this.team, name});
+    }
   }
 
   public onNewDescription(description: string) {

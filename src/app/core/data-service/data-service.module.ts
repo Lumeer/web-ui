@@ -59,6 +59,9 @@ import {configuration} from '../../../environments/configuration';
 import {AuditLogService} from './audit-log/audit-log.service';
 import {PublicAuditLogService} from './audit-log/public-audit-log.service';
 import {ApiAuditLogService} from './audit-log/api-audit-log.service';
+import {TeamService} from './team/team.service';
+import {PublicTeamService} from './team/public-team.service';
+import {ApiTeamService} from './team/api-team.service';
 
 @NgModule({
   declarations: [],
@@ -115,6 +118,10 @@ import {ApiAuditLogService} from './audit-log/api-audit-log.service';
     {
       provide: AuditLogService,
       useClass: configuration.publicView ? PublicAuditLogService : ApiAuditLogService,
+    },
+    {
+      provide: TeamService,
+      useClass: configuration.publicView ? PublicTeamService : ApiTeamService,
     },
   ],
 })
