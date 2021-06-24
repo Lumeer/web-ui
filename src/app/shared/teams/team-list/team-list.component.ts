@@ -41,6 +41,7 @@ import {filter, map, take} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {selectOrganizationPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {Team} from '../../../core/store/teams/team';
+import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
 
 @Component({
   selector: 'team-list',
@@ -77,11 +78,14 @@ export class TeamListComponent implements OnInit, OnChanges {
 
   public searchString: string;
 
+  public users$: Observable<User[]>;
+
   private initialWorkspace: Workspace;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
     this.selectInitialWorkspace();
   }
 

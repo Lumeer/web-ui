@@ -25,13 +25,17 @@ import {NotificationService} from '../../../core/notifications/notification.serv
 import {Team} from '../../../core/store/teams/team';
 
 @Component({
-  selector: '[team-component]',
+  selector: 'team-component',
   templateUrl: './team.component.html',
+  styleUrls: ['./team.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamComponent {
   @Input()
   public resourceType: ResourceType;
+
+  @Input()
+  public users: User[];
 
   @Input()
   public team: Team;
@@ -62,5 +66,15 @@ export class TeamComponent {
     this.teamDeleted.emit(this.team);
   }
 
-  public toggleRole(role: string) {}
+  public onUsersSave(users: string[]) {
+    this.teamUpdated.emit({...this.team, users});
+  }
+
+  public onNewName(name: string) {
+    this.teamUpdated.emit({...this.team, name});
+  }
+
+  public onNewDescription(description: string) {
+    this.teamUpdated.emit({...this.team, description});
+  }
 }

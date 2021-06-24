@@ -1,0 +1,7 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: grid;
+  grid-template-columns: 1fr 1fr min-content;
+  align-items: center;
+}

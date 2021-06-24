@@ -27,7 +27,7 @@ import {Resource} from '../../core/model/resource';
 import {MemoizedSelector, select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, tap} from 'rxjs/operators';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
@@ -73,17 +73,13 @@ export class TeamsComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.add(subscription);
 
-    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace), map(this.sortTeams));
+    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
 
     this.resource$ = this.store$.pipe(
       select(this.getSelector()),
       filter(resource => !!resource),
       tap(resource => (this.resourceId = resource.id))
     );
-  }
-
-  private sortTeams(teams: Team[]): Team[] {
-    return teams.sort((t1, t2) => t1.name.localeCompare(t2.name));
   }
 
   private getSelector(): MemoizedSelector<AppState, Resource> {

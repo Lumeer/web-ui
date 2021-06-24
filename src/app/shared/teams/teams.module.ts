@@ -24,12 +24,16 @@ import {FormsModule} from '@angular/forms';
 import {NewTeamComponent} from './new-team/new-team.component';
 import {TeamListComponent} from './team-list/team-list.component';
 import {PipesModule} from '../pipes/pipes.module';
-import {TeamFilterPipe} from './team-list/pipes/team-filter.pipe';
 import {TeamComponent} from './team/team.component';
+import {InputModule} from '../input/input.module';
+import {TeamUsersComponent} from './team/users/team-users.component';
+import {GravatarModule} from 'ngx-gravatar';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {TeamsPipesModule} from './pipes/teams-pipes.module';
 
 @NgModule({
-  declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamFilterPipe, TeamComponent],
-  imports: [FormsModule, CommonModule, PipesModule],
+  declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamComponent, TeamUsersComponent],
+  imports: [FormsModule, CommonModule, PipesModule, InputModule, GravatarModule, DropdownModule, TeamsPipesModule],
   exports: [TeamsComponent],
 })
 export class TeamsModule {}
