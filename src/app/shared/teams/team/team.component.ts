@@ -24,6 +24,7 @@ import {ResourceType} from '../../../core/model/resource-type';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Team} from '../../../core/store/teams/team';
 import {InputBoxComponent} from '../../input/input-box/input-box.component';
+import {Permissions, Role} from '../../../core/store/permissions/permissions';
 
 @Component({
   selector: 'team-component',
@@ -34,6 +35,9 @@ import {InputBoxComponent} from '../../input/input-box/input-box.component';
 export class TeamComponent {
   @Input()
   public resourceType: ResourceType;
+
+  @Input()
+  public permissions: Permissions;
 
   @Input()
   public users: User[];
@@ -49,6 +53,9 @@ export class TeamComponent {
 
   @Output()
   public teamDeleted = new EventEmitter<Team>();
+
+  @Output()
+  public teamRolesChange = new EventEmitter<Role[]>();
 
   private readonly inheritedManagerMsg: string;
   private readonly cannotChangeRoleMsg: string;
@@ -87,5 +94,9 @@ export class TeamComponent {
 
   public onNewDescription(description: string) {
     this.teamUpdated.emit({...this.team, description});
+  }
+
+  public onChangeRoles(roles: Role[]) {
+    this.teamRolesChange.emit(roles);
   }
 }

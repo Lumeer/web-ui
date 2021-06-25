@@ -1,0 +1,7 @@
+<span class="mr-2">{{group.title}}</span>
+<span class="small text-muted mr-2">({{numSelected}}/{{group.roles.length}})</span>
+<label class="switch" (click)="$event.stopPropagation()">
+  <input type="checkbox" [checked]="group | isRoleGroupSelected:selectedRoles"
+         (change)="onCheckedChange($event.target.checked)">
+  <span class="slider round" (click)="$event.stopPropagation()"></span>
+</label>

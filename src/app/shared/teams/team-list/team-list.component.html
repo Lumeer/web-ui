@@ -16,8 +16,10 @@
                   [team]="team"
                   [allTeams]="teams"
                   [users]="users"
+                  [permissions]="permissions"
                   [resourceType]="resourceType"
                   (teamUpdated)="teamUpdated.emit($event)"
-                  (teamDeleted)="teamDeleted.emit($event)">
+                  (teamDeleted)="teamDeleted.emit($event)"
+                  (teamRolesChange)="teamRolesChange.emit({team: team, roles: $event})">
   </team-component>
 </div>

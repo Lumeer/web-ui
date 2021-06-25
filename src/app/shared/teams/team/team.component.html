@@ -25,15 +25,20 @@
 
 </div>
 
-<div class="">
+<div>
   <team-users class="cursor-pointer"
               [selectedUserIds]="team.users"
               [users]="users"
               (save)="onUsersSave($event)">
   </team-users>
+  <roles class="mt-3"
+         [roles]="permissions | teamRoles:team"
+         [resourceType]="resourceType"
+         (change)="onChangeRoles($event)">
+  </roles>
 </div>
 
-<div class="">
+<div>
   <i class="far fa-fw fa-trash-alt text-danger mx-2 cursor-pointer"
      aria-hidden="true"
      title="Remove team"

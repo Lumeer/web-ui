@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {UsersIdsPipe} from './users-ids.pipe';
-import {TeamFilterPipe} from './team-filter.pipe';
-import {UsersNamesPipe} from './users-names.pipe';
-import {FilterUsersPipe} from './filter-users.pipe';
-import { TeamRolesPipe } from './team-roles.pipe';
+import { Pipe, PipeTransform } from '@angular/core';
+import {Team} from '../../../core/store/teams/team';
+import {Permissions, Role} from '../../../core/store/permissions/permissions';
 
-@NgModule({
-  declarations: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
-  imports: [CommonModule],
-    exports: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
+@Pipe({
+  name: 'teamRoles'
 })
-export class TeamsPipesModule {}
+export class TeamRolesPipe implements PipeTransform {
+
+  public transform(permissions: Permissions, team: Team): Role[] {
+    return permissions?.groups?.find(group => group.id === team.id)?.roles || [];
+  }
+
+}

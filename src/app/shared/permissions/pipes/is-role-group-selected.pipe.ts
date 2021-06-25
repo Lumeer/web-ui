@@ -17,17 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {UsersIdsPipe} from './users-ids.pipe';
-import {TeamFilterPipe} from './team-filter.pipe';
-import {UsersNamesPipe} from './users-names.pipe';
-import {FilterUsersPipe} from './filter-users.pipe';
-import { TeamRolesPipe } from './team-roles.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Role} from '../../../core/store/permissions/permissions';
+import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
+import {RoleGroup} from '../../../core/model/role-group';
 
-@NgModule({
-  declarations: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
-  imports: [CommonModule],
-    exports: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
+@Pipe({
+  name: 'isRoleGroupSelected'
 })
-export class TeamsPipesModule {}
+export class IsRoleGroupSelectedPipe implements PipeTransform {
+
+
+  public transform(group: RoleGroup, roles: Role[]): boolean {
+    return group.roles.every(role => (roles || []).some(r => rolesAreSame(r, role)));
+  }
+
+}

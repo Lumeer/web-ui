@@ -22,27 +22,17 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
-import {Permission} from '../../../core/store/permissions/permissions';
+import {Permission, Role} from '../../../core/store/permissions/permissions';
 import {Resource} from '../../../core/model/resource';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
-import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {debounceTime, filter, map, take} from 'rxjs/operators';
-import {Observable, of, Subject, Subscription} from 'rxjs';
-import {objectValues} from '../../utils/common.utils';
-import {selectOrganizationPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'user-list',
@@ -50,7 +40,7 @@ import {selectOrganizationPermissions} from '../../../core/store/user-permission
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, OnChanges, OnDestroy {
+export class UserListComponent {
   @Input()
   public resourceType: ResourceType;
 
@@ -79,97 +69,15 @@ export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public usersPermissionsChangeToStore = new EventEmitter<{permissions: Permission[]}>();
-
-  @Output()
-  public usersPermissionsChange = new EventEmitter<{
-    permissions: Permission[];
-    currentPermissions: Permission[];
-    workspace?: Workspace;
-  }>();
-
-  public inheritedManagePermission$: Observable<boolean>;
+  public userRolesChange = new EventEmitter<{ user: User; roles: Role[] }>();
 
   public searchString: string;
-  public pendingUserUpdates: Record<string, {new: Permission; current: Permission}> = {};
 
-  private initialWorkspace: Workspace;
-  private rolesChange$ = new Subject<string>();
-  private rolesChangeSubscription: Subscription;
-
-  constructor(private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.selectInitialWorkspace();
-    this.subscribeToRolesChange();
+  constructor(private store$: Store<AppState>) {
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resource || changes.resourceType) {
-      this.checkRights();
-    }
-  }
-
-  private checkRights() {
-    if (this.resourceType === ResourceType.Organization) {
-      this.inheritedManagePermission$ = of(false);
-    } else {
-      this.inheritedManagePermission$ = this.store$.pipe(
-        select(selectOrganizationPermissions),
-        map(permissions => permissions?.roles?.Manage)
-      );
-    }
-  }
-
-  private selectInitialWorkspace() {
-    this.store$
-      .pipe(select(selectWorkspaceWithIds))
-      .pipe(
-        filter(workspace => !!workspace.organizationId),
-        take(1)
-      )
-      .subscribe(workspace => (this.initialWorkspace = workspace));
-  }
-
-  private subscribeToRolesChange() {
-    this.rolesChangeSubscription = this.rolesChange$
-      .pipe(debounceTime(2000))
-      .subscribe(() => this.sendAndClearPendingUpdates());
-  }
-
-  private sendAndClearPendingUpdates() {
-    if (Object.keys(this.pendingUserUpdates).length > 0) {
-      const permissions: Permission[] = [];
-      const currentPermissions: Permission[] = [];
-      objectValues(this.pendingUserUpdates).forEach(value => {
-        permissions.push(value.new);
-        currentPermissions.push(value.current);
-      });
-
-      const data = {permissions, currentPermissions, workspace: this.initialWorkspace};
-      this.usersPermissionsChange.emit(data);
-    }
-    this.pendingUserUpdates = {};
-  }
-
-  public ngOnDestroy() {
-    if (this.rolesChangeSubscription) {
-      this.rolesChangeSubscription.unsubscribe();
-    }
-    this.sendAndClearPendingUpdates();
-  }
-
-  public onUserRolesChanged(userId: string, roles: string[]) {
-    const current = this.getUserPermission(userId);
-    const newPermission = {id: userId, roles};
-    // TODO
-    // this.pendingUserUpdates[userId] = {new: newPermission, current};
-    // this.rolesChange$.next('');
-    // this.usersPermissionsChangeToStore.emit({permissions: [newPermission]});
-  }
-
-  private getUserPermission(userId: string): Permission {
-    return this.resource?.permissions?.users?.find(perm => perm.id === userId);
+  public onUserRolesChanged(user: User, roles: Role[]) {
+    this.userRolesChange.emit({user, roles});
   }
 
   public trackByUserId(index: number, user: User): string {

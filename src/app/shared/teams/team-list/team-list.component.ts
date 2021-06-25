@@ -30,18 +30,17 @@ import {
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
-import {Resource} from '../../../core/model/resource';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {filter, map, take} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
-import {selectOrganizationPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {filter,  take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {Team} from '../../../core/store/teams/team';
 import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
+import {Permissions, Role} from '../../../core/store/permissions/permissions';
 
 @Component({
   selector: 'team-list',
@@ -57,7 +56,7 @@ export class TeamListComponent implements OnInit, OnChanges {
   public teams: Team[];
 
   @Input()
-  public resource: Resource;
+  public permissions: Permissions;
 
   @Input()
   public organization: Organization;
@@ -74,7 +73,8 @@ export class TeamListComponent implements OnInit, OnChanges {
   @Output()
   public teamDeleted = new EventEmitter<Team>();
 
-  public inheritedManagePermission$: Observable<boolean>;
+  @Output()
+  public teamRolesChange = new EventEmitter<{team: Team, roles: Role[]}>();
 
   public searchString: string;
 
@@ -91,18 +91,6 @@ export class TeamListComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resource || changes.resourceType) {
-      this.checkRights();
-    }
-  }
-
-  private checkRights() {
-    if (this.resourceType === ResourceType.Organization) {
-      this.inheritedManagePermission$ = of(false);
-    } else {
-      this.inheritedManagePermission$ = this.store$.pipe(
-        select(selectOrganizationPermissions),
-        map(permissions => permissions?.roles?.Manage)
-      );
     }
   }
 

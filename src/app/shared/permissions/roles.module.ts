@@ -19,15 +19,24 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {UsersIdsPipe} from './users-ids.pipe';
-import {TeamFilterPipe} from './team-filter.pipe';
-import {UsersNamesPipe} from './users-names.pipe';
-import {FilterUsersPipe} from './filter-users.pipe';
-import { TeamRolesPipe } from './team-roles.pipe';
+import {RolesComponent} from './roles.component';
+import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {AccordionModule} from 'ngx-bootstrap/accordion';
+import { RoleComponent } from './dropdown/role/role.component';
+import { RoleGroupComponent } from './dropdown/role-group/role-group.component';
+import { IsRoleSelectedPipe } from './pipes/is-role-selected.pipe';
+import { IsRoleGroupSelectedPipe } from './pipes/is-role-group-selected.pipe';
+
 
 @NgModule({
-  declarations: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
-  imports: [CommonModule],
-    exports: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
+  declarations: [RolesComponent, RolesDropdownComponent, RoleComponent, RoleGroupComponent, IsRoleSelectedPipe, IsRoleGroupSelectedPipe],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    AccordionModule
+  ],
+  exports: [RolesComponent, RolesDropdownComponent]
 })
-export class TeamsPipesModule {}
+export class RolesModule {
+}

@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {User} from '../../../../core/store/users/user';
+import {User} from '../../../core/store/users/user';
 import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Pipe({

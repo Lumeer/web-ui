@@ -1,0 +1,34 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false"
+          (close)="onClose()"
+          (onCloseByClickOutside)="onClose()">
+
+  <div class="card p-0 overflow-auto" [style.width.px]="280">
+    <accordion [closeOthers]="true" *ngIf="selectedRoles$ | async as selectedRoles">
+
+      <accordion-group *ngFor="let group of groups; let first = first; trackBy:trackByGroup"
+                       panelClass="lmr-accordion"
+                       [isOpen]="first">
+
+        <role-group class="header-wrapper" accordion-heading
+                    [group]="group"
+                    [selectedRoles]="selectedRoles"
+                    (checkedChange)="toggleAllInGroup(group, $event)">
+        </role-group>
+        <role *ngFor="let role of group.roles; trackBy:trackByRole"
+              class="px-2 py-1"
+              [role]="role"
+              [checked]="role | isRoleSelected:selectedRoles"
+              (checkedChange)="onCheckedChange(role, $event)">
+        </role>
+
+      </accordion-group>
+
+    </accordion>
+  </div>
+
+</dropdown>

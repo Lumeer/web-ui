@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ResourceType} from '../../core/model/resource-type';
 import {Team} from '../../core/store/teams/team';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
@@ -27,12 +27,14 @@ import {Resource} from '../../core/model/resource';
 import {MemoizedSelector, select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {filter, tap} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 import {TeamsAction} from '../../core/store/teams/teams.action';
+import {Permission, Permissions, PermissionType, Role} from '../../core/store/permissions/permissions';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Component({
   selector: 'teams',
@@ -46,12 +48,13 @@ export class TeamsComponent implements OnInit, OnDestroy {
   public teams$: Observable<Team[]>;
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
-  public resource$: Observable<Resource>;
+  public resourcePermissions$: Observable<Permissions>;
 
   private resourceId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.subscribeData();
@@ -75,10 +78,11 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
 
-    this.resource$ = this.store$.pipe(
+    this.resourcePermissions$ = this.store$.pipe(
       select(this.getSelector()),
       filter(resource => !!resource),
-      tap(resource => (this.resourceId = resource.id))
+      tap(resource => (this.resourceId = resource.id)),
+      map(resource => resource.permissions)
     );
   }
 
@@ -90,6 +94,19 @@ export class TeamsComponent implements OnInit, OnDestroy {
         return selectProjectByWorkspace;
       case ResourceType.Collection:
         return selectCollectionByWorkspace;
+    }
+  }
+
+  public onRolesChange(roles: Role[], team: Team) {
+    const permissions: Permission[] = [{roles, id: team.id}];
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        this.store$.dispatch(new OrganizationsAction.ChangePermission({
+          organizationId: this.resourceId,
+          type: PermissionType.Groups,
+          permissions
+        }));
+
     }
   }
 

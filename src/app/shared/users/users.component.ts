@@ -31,14 +31,13 @@ import {ResourceType} from '../../core/model/resource-type';
 import {Resource} from '../../core/model/resource';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {Permission, PermissionType} from '../../core/store/permissions/permissions';
+import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {Workspace} from '../../core/store/navigation/workspace';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import {ConfigurationService} from '../../configuration/configuration.service';
@@ -105,34 +104,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     return this.organization$.value?.id;
   }
 
-  public changeUsersPermissionsOnlyStore(data: {permissions: Permission[]}) {
-    const payload = {...data, type: PermissionType.Users};
-    switch (this.resourceType) {
-      case ResourceType.Organization: {
-        this.store$.dispatch(
-          new OrganizationsAction.ChangePermissionSuccess({...payload, organizationId: this.resourceId})
-        );
-        break;
-      }
-      case ResourceType.Project: {
-        this.store$.dispatch(new ProjectsAction.ChangePermissionSuccess({...payload, projectId: this.resourceId}));
-        break;
-      }
-      case ResourceType.Collection: {
-        this.store$.dispatch(
-          new CollectionsAction.ChangePermissionSuccess({...payload, collectionId: this.resourceId})
-        );
-        break;
-      }
-    }
-  }
-
-  public changeUsersPermissions(data: {
-    permissions: Permission[];
-    currentPermissions: Permission[];
-    workspace?: Workspace;
-  }) {
-    const payload = {...data, type: PermissionType.Users};
+  public changeUserPermissions(data: { user: User; roles: Role[] }) {
+    const permissions: Permission[] = [{id: data.user.id, roles: data.roles}];
+    const payload = {permissions, type: PermissionType.Users};
     switch (this.resourceType) {
       case ResourceType.Organization: {
         this.store$.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}));

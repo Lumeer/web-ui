@@ -7,14 +7,13 @@
 </td>
 
 <td class="p-2 align-middle">
-  <i *ngFor="let role of resourceType | resourceRoles"
-     class="fas fa-fw {{role | roleIcon}} mx-1 user-role"
-     [class.role-clickable]="changeRoles"
-     [class.role-selected]="userRoles | includes:role"
-     aria-hidden="true"
-     [title]="role | roleTitle"
-     (click)="toggleRole(role)">
-  </i>
+  <roles [resourceType]="resourceType"
+         [roles]="permissions | userRoles:user"
+         (change)="rolesUpdate.emit($event)">
+  </roles>
+</td>
+
+<td>
   <i class="far fa-fw fa-trash-alt text-danger mx-2 cursor-pointer"
      *ngIf="editable"
      aria-hidden="true"

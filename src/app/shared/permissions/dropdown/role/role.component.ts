@@ -17,17 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {UsersIdsPipe} from './users-ids.pipe';
-import {TeamFilterPipe} from './team-filter.pipe';
-import {UsersNamesPipe} from './users-names.pipe';
-import {FilterUsersPipe} from './filter-users.pipe';
-import { TeamRolesPipe } from './team-roles.pipe';
+import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Role} from '../../../../core/store/permissions/permissions';
 
-@NgModule({
-  declarations: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
-  imports: [CommonModule],
-    exports: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
+@Component({
+  selector: 'role',
+  templateUrl: './role.component.html',
+  styleUrls: ['./role.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TeamsPipesModule {}
+export class RoleComponent {
+
+  @Input()
+  public role: Role;
+
+  @Input()
+  public checked: boolean;
+
+  @Output()
+  public checkedChange = new EventEmitter<boolean>();
+
+  public onCheckedChange(checked: boolean) {
+    this.checkedChange.emit(checked);
+  }
+}

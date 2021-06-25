@@ -20,15 +20,18 @@
 export const enum RoleType {
   Read = 'Read',
   Manage = 'Manage',
+
   DataRead = 'DataRead',
   DataWrite = 'DataWrite',
   DataDelete = 'DataDelete',
   DataContribute = 'DataContribute',
+
   ViewContribute = 'ViewContribute',
   CollectionContribute = 'CollectionContribute',
   LinkContribute = 'LinkContribute',
   ProjectContribute = 'ProjectContribute',
   CommentContribute = 'CommentContribute',
+
   AttributeEdit = 'AttributeEdit',
   UserConfig = 'UserConfig',
   TechConfig = 'TechConfig',

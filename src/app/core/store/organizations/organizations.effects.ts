@@ -32,7 +32,7 @@ import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
 import {OrganizationDto, PermissionDto} from '../../dto';
-import {PermissionType} from '../permissions/permissions';
+import {Permission, PermissionType} from '../permissions/permissions';
 import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {CommonAction} from '../common/common.action';
 import {ServiceLimitsAction} from './service-limits/service-limits.action';
@@ -279,24 +279,30 @@ export class OrganizationsEffects {
   public changePermission$ = createEffect(() =>
     this.actions$.pipe(
       ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
-      mergeMap(action => {
-        const workspace = action.payload.workspace;
+      withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
+      mergeMap(([action, organizationsMap]) => {
+
+        this.store$.dispatch(new OrganizationsAction.ChangePermissionSuccess(action.payload));
+
+        const originalOrganization = organizationsMap[action.payload.organizationId];
         const dtos = action.payload.permissions.map(permission => convertPermissionModelToDto(permission));
 
         let observable: Observable<PermissionDto>;
+        let currentPermissions: Permission[];
         if (action.payload.type === PermissionType.Users) {
-          observable = this.organizationService.updateUserPermission(dtos, workspace);
+          observable = this.organizationService.updateUserPermission(dtos);
+          currentPermissions = originalOrganization.permissions?.users;
         } else {
-          observable = this.organizationService.updateGroupPermission(dtos, workspace);
+          observable = this.organizationService.updateGroupPermission(dtos);
+          currentPermissions = originalOrganization.permissions?.groups;
         }
 
         return observable.pipe(
           mergeMap(() => EMPTY),
           catchError(error => {
             const payload = {
-              organizationId: workspace.organizationId || action.payload.organizationId,
-              type: action.payload.type,
-              permissions: action.payload.currentPermissions,
+              ...action.payload,
+              permissions: currentPermissions,
               error,
             };
             return of(new OrganizationsAction.ChangePermissionFailure(payload));
@@ -355,5 +361,6 @@ export class OrganizationsEffects {
     private actions$: Actions,
     private modalService: ModalService,
     private organizationService: OrganizationService
-  ) {}
+  ) {
+  }
 }

@@ -27,13 +27,15 @@ import {NewUserComponent} from './new-user/new-user.component';
 import {UsersComponent} from './users.component';
 import {TagModule} from '../tag/tag.module';
 import {InputModule} from '../input/input.module';
-import {UserFilterPipe} from './user-list/pipes/user-filter.pipe';
+import {UserFilterPipe} from './pipes/user-filter.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 import {UserStampComponent} from './user-stamp/user-stamp.component';
 import {GravatarModule} from 'ngx-gravatar';
+import {RolesModule} from '../permissions/roles.module';
+import { UserRolesPipe } from './pipes/user-roles.pipe';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule],
+    imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule, RolesModule],
   declarations: [
     UserFilterPipe,
     UserListComponent,
@@ -41,6 +43,7 @@ import {GravatarModule} from 'ngx-gravatar';
     NewUserComponent,
     UsersComponent,
     UserStampComponent,
+    UserRolesPipe,
   ],
   exports: [UsersComponent, NewUserComponent, UserStampComponent],
 })

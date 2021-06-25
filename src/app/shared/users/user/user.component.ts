@@ -22,6 +22,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {Permissions, Role} from '../../../core/store/permissions/permissions';
 
 @Component({
   selector: '[user-component]',
@@ -43,13 +44,7 @@ export class UserComponent {
   public user: User;
 
   @Input()
-  public userRoles: string[];
-
-  @Input()
-  public groupRoles: string[];
-
-  @Input()
-  public inheritedManage: boolean = false;
+  public permissions: Permissions;
 
   @Output()
   public userUpdated = new EventEmitter<User>();
@@ -58,7 +53,7 @@ export class UserComponent {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public rolesUpdate = new EventEmitter<string[]>();
+  public rolesUpdate = new EventEmitter<Role[]>();
 
   private readonly inheritedManagerMsg: string;
   private readonly cannotChangeRoleMsg: string;
@@ -78,26 +73,5 @@ export class UserComponent {
 
   public deleteUser() {
     this.userDeleted.emit(this.user);
-  }
-
-  public toggleRole(role: string) {
-    if (!this.changeRoles) {
-      if (this.inheritedManage) {
-        this.notificationService.info(this.inheritedManagerMsg);
-      } else {
-        this.notificationService.info(this.cannotChangeRoleMsg);
-      }
-
-      return;
-    }
-
-    let roles;
-    if (this.userRoles.includes(role)) {
-      roles = this.userRoles.filter(r => r !== role);
-    } else {
-      roles = [...this.userRoles, role];
-    }
-
-    this.rolesUpdate.emit(roles);
   }
 }
