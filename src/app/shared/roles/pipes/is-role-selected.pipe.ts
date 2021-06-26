@@ -20,16 +20,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Role} from '../../../core/store/permissions/permissions';
 import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
-import {RoleGroup} from '../../../core/model/role-group';
 
 @Pipe({
-  name: 'isRoleGroupSelected'
+  name: 'isRoleSelected',
 })
-export class IsRoleGroupSelectedPipe implements PipeTransform {
-
-
-  public transform(group: RoleGroup, roles: Role[]): boolean {
-    return group.roles.every(role => (roles || []).some(r => rolesAreSame(r, role)));
+export class IsRoleSelectedPipe implements PipeTransform {
+  public transform(role: Role, roles: Role[]): boolean {
+    return (roles || []).some(r => rolesAreSame(r, role));
   }
-
 }

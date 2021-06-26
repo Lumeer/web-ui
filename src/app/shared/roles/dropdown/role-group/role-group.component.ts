@@ -26,10 +26,9 @@ import {rolesAreSame} from '../../../../core/store/permissions/permissions.helpe
   selector: 'role-group',
   templateUrl: './role-group.component.html',
   styleUrls: ['./role-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoleGroupComponent implements OnChanges {
-
   @Input()
   public group: RoleGroup;
 
@@ -46,12 +45,14 @@ export class RoleGroupComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if(changes.selectedRoles || changes.group) {
+    if (changes.selectedRoles || changes.group) {
       this.checkNumSelected();
     }
   }
 
   private checkNumSelected() {
-    this.numSelected = (this.selectedRoles || []).filter(role => this.group.roles.some(r => rolesAreSame(r, role))).length;
+    this.numSelected = (this.selectedRoles || []).filter(role =>
+      this.group.roles.some(r => rolesAreSame(r, role))
+    ).length;
   }
 }

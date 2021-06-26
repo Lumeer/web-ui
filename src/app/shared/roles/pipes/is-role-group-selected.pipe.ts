@@ -17,14 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Role} from '../store/permissions/permissions';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Role} from '../../../core/store/permissions/permissions';
+import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
+import {RoleGroup} from '../../../core/model/role-group';
 
-export interface RoleGroup {
-  title?: string;
-  order: number;
-  roles: TranslatedRole[];
-}
-
-export interface TranslatedRole extends Role {
-  title: string;
+@Pipe({
+  name: 'isRoleGroupSelected',
+})
+export class IsRoleGroupSelectedPipe implements PipeTransform {
+  public transform(group: RoleGroup, roles: Role[]): boolean {
+    return group.roles.every(role => (roles || []).some(r => rolesAreSame(r, role)));
+  }
 }

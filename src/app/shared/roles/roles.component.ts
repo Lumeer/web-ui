@@ -21,39 +21,53 @@ import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Out
 import {Role} from '../../core/store/permissions/permissions';
 import {ResourceType} from '../../core/model/resource-type';
 import {RoleGroupService} from '../../core/service/role-group.service';
-import {RoleGroup} from '../../core/model/role-group';
+import {RoleGroup, TranslatedRole} from '../../core/model/role-group';
 
 @Component({
   selector: 'roles',
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RoleGroupService]
+  providers: [RoleGroupService],
 })
 export class RolesComponent implements OnChanges {
-
   @Input()
   public resourceType: ResourceType;
 
   @Input()
   public roles: Role[];
 
+  @Input()
+  public transitiveRoles: Role[];
+
+  @Input()
+  public editable: boolean;
+
   @Output()
   public change = new EventEmitter<Role[]>();
 
   public groups: RoleGroup[];
+  public translatedRoles: TranslatedRole[];
 
-  constructor(private service: RoleGroupService) {
-  }
+  constructor(private service: RoleGroupService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resourceType) {
       this.groups = this.service.createResourceGroups(this.resourceType);
     }
+    if (changes.roles) {
+      this.translatedRoles = this.createTranslatedRoles();
+    }
+  }
+
+  public createTranslatedRoles(): TranslatedRole[] {
+    const selectedTypes = this.roles.map(role => role.type);
+    return this.groups
+      .reduce((roles, group) => [...roles, ...group.roles], [])
+      .filter(role => selectedTypes.includes(role.type));
   }
 
   public trackByRole(index: number, role: Role): string {
     return `${role.type}:${role.transitive}`;
   }
-
 }

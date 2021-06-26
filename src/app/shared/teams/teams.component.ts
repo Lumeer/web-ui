@@ -35,6 +35,8 @@ import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 import {TeamsAction} from '../../core/store/teams/teams.action';
 import {Permission, Permissions, PermissionType, Role} from '../../core/store/permissions/permissions';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
 
 @Component({
   selector: 'teams',
@@ -53,8 +55,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   private resourceId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -101,12 +102,32 @@ export class TeamsComponent implements OnInit, OnDestroy {
     const permissions: Permission[] = [{roles, id: team.id}];
     switch (this.resourceType) {
       case ResourceType.Organization:
-        this.store$.dispatch(new OrganizationsAction.ChangePermission({
-          organizationId: this.resourceId,
-          type: PermissionType.Groups,
-          permissions
-        }));
-
+        this.store$.dispatch(
+          new OrganizationsAction.ChangePermission({
+            organizationId: this.resourceId,
+            type: PermissionType.Groups,
+            permissions,
+          })
+        );
+        break;
+      case ResourceType.Project:
+        this.store$.dispatch(
+          new ProjectsAction.ChangePermission({
+            projectId: this.resourceId,
+            type: PermissionType.Groups,
+            permissions,
+          })
+        );
+        break;
+      case ResourceType.Collection:
+        this.store$.dispatch(
+          new CollectionsAction.ChangePermission({
+            collectionId: this.resourceId,
+            type: PermissionType.Groups,
+            permissions,
+          })
+        );
+        break;
     }
   }
 

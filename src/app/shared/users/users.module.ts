@@ -31,11 +31,11 @@ import {UserFilterPipe} from './pipes/user-filter.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 import {UserStampComponent} from './user-stamp/user-stamp.component';
 import {GravatarModule} from 'ngx-gravatar';
-import {RolesModule} from '../permissions/roles.module';
-import { UserRolesPipe } from './pipes/user-roles.pipe';
+import {RolesModule} from '../roles/roles.module';
+import {UserRolesPipe} from './pipes/user-roles.pipe';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule, RolesModule],
+  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule, RolesModule],
   declarations: [
     UserFilterPipe,
     UserListComponent,

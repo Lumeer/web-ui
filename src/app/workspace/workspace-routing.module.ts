@@ -36,6 +36,7 @@ import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
+import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -56,7 +57,7 @@ const workspaceRoutes: Routes = [
       },
       {
         path: 'teams',
-        component: ProjectUsersComponent,
+        component: ProjectTeamsComponent,
       },
       {
         path: 'sequences',

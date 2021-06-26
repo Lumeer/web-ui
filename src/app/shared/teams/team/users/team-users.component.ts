@@ -50,6 +50,9 @@ export class TeamUsersComponent implements OnChanges {
   @Input()
   public selectedUserIds: string[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public save = new EventEmitter<string[]>();
 
@@ -190,7 +193,7 @@ export class TeamUsersComponent implements OnChanges {
 
   public onClick() {
     if (!this.suggesting) {
-      this.textInput.nativeElement.focus();
+      this.textInput?.nativeElement.focus();
     }
   }
 }

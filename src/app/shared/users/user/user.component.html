@@ -8,6 +8,7 @@
 
 <td class="p-2 align-middle">
   <roles [resourceType]="resourceType"
+         [editable]="changeRoles"
          [roles]="permissions | userRoles:user"
          (change)="rolesUpdate.emit($event)">
   </roles>

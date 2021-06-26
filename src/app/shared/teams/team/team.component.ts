@@ -46,6 +46,9 @@ export class TeamComponent {
   public team: Team;
 
   @Input()
+  public editable: boolean;
+
+  @Input()
   public allTeams: Team[];
 
   @Output()

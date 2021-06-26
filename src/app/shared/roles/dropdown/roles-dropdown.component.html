@@ -8,11 +8,19 @@
           (onCloseByClickOutside)="onClose()">
 
   <div class="card p-0 overflow-auto" [style.width.px]="280">
+
+    <role *ngFor="let role of groups | flattenUngroupedRoles; trackBy:trackByRole"
+          class="px-2 py-1"
+          [role]="role"
+          [checked]="role | isRoleSelected:selectedRoles"
+          (checkedChange)="onCheckedChange(role, $event)">
+    </role>
+
     <accordion [closeOthers]="true" *ngIf="selectedRoles$ | async as selectedRoles">
 
-      <accordion-group *ngFor="let group of groups; let first = first; trackBy:trackByGroup"
-                       panelClass="lmr-accordion"
-                       [isOpen]="first">
+      <accordion-group
+        *ngFor="let group of groups | filterGroupedRolesWithHeader; trackBy:trackByGroup"
+        panelClass="lmr-accordion">
 
         <role-group class="header-wrapper" accordion-heading
                     [group]="group"

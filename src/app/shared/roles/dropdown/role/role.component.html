@@ -1,5 +1,5 @@
 <span class="pr-2 cursor-pointer user-select-none text-truncate"
-      (click)="checkbox.click()">{{role.type}}</span>
+      (click)="checkbox.click()">{{role.title}}</span>
 <label class="switch">
   <input type="checkbox" [checked]="checked" #checkbox (change)="onCheckedChange($event.target.checked)">
   <span class="slider round" (click)="$event.stopPropagation()"></span>

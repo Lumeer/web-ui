@@ -5,6 +5,7 @@
     [canStayEmpty]="false"
     [userData]="false"
     [title]="team.name"
+    [editable]="editable"
     [maxLength]="100"
     [initialValue]="team.name"
     (newValue)="onNewName($event, nameInput)">
@@ -16,6 +17,7 @@
     [userData]="false"
     [fontSizeRem]="0.75"
     [maxLength]="1000"
+    [editable]="editable"
     placeholder="Enter team description"
     i18n-placeholder="@@team.description.placeholder"
     [title]="team.description"
@@ -26,14 +28,16 @@
 </div>
 
 <div>
-  <team-users class="cursor-pointer"
+  <team-users [class.cursor-pointer]="editable"
               [selectedUserIds]="team.users"
               [users]="users"
+              [editable]="editable"
               (save)="onUsersSave($event)">
   </team-users>
   <roles class="mt-3"
          [roles]="permissions | teamRoles:team"
          [resourceType]="resourceType"
+         [editable]="true"
          (change)="onChangeRoles($event)">
   </roles>
 </div>

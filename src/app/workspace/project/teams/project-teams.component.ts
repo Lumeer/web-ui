@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Role} from '../store/permissions/permissions';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {ResourceType} from '../../../core/model/resource-type';
 
-export interface RoleGroup {
-  title?: string;
-  order: number;
-  roles: TranslatedRole[];
-}
-
-export interface TranslatedRole extends Role {
-  title: string;
+@Component({
+  templateUrl: './project-teams.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ProjectTeamsComponent {
+  public readonly resourceType = ResourceType.Project;
 }

@@ -68,6 +68,12 @@
           Users
         </a>
       </li>
+      <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.UserConfig">
+        <a [routerLink]="'teams'"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@collection.config.tab.teams">Teams</a>
+      </li>
     </ul>
     <router-outlet></router-outlet>
   </div>

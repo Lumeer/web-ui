@@ -46,6 +46,7 @@ import {ProjectTemplateScriptComponent} from './project/template/metadata/script
 import {DirectivesModule} from '../shared/directives/directives.module';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {TeamsModule} from '../shared/teams/teams.module';
+import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 
 @NgModule({
   imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule],
@@ -68,6 +69,7 @@ import {TeamsModule} from '../shared/teams/teams.module';
     ProjectTemplateMetadataComponent,
     ProjectTemplateScriptComponent,
     OrganizationTeamsComponent,
+    ProjectTeamsComponent,
   ],
   exports: [],
   providers: [WorkspaceService, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],

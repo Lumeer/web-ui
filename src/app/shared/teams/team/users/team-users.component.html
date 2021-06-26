@@ -12,6 +12,7 @@
        [style.min-height.px]="avatarSize">
 
   <input #textInput
+         *ngIf="editable"
          [(ngModel)]="name"
          (blur)="onBlur()"
          (focus)="onFocus()"
@@ -23,7 +24,8 @@
          class="border-0 bg-transparent"
          type="text">
 
-  <options-dropdown [options]="users | filterUsers:name"
+  <options-dropdown *ngIf="editable"
+                    [options]="users | filterUsers:name"
                     [showBackdrop]="false"
                     [closeOnClickOutside]="false"
                     [origin]="textInput"

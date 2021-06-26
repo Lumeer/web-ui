@@ -25,7 +25,7 @@ import {
   ElementRef,
   OnInit,
   EventEmitter,
-  Output
+  Output,
 } from '@angular/core';
 import {Role} from '../../../core/store/permissions/permissions';
 import {RoleGroup} from '../../../core/model/role-group';
@@ -38,10 +38,9 @@ import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
   selector: 'roles-dropdown',
   templateUrl: './roles-dropdown.component.html',
   styleUrls: ['./roles-dropdown.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RolesDropdownComponent implements OnInit {
-
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -93,7 +92,7 @@ export class RolesDropdownComponent implements OnInit {
       } else {
         newRoles = this.removeRoleFromArray(role, newRoles);
       }
-    })
+    });
     this.selectedRoles$.next(newRoles);
   }
 

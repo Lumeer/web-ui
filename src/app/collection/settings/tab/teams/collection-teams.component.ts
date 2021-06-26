@@ -17,27 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Role} from '../../../../core/store/permissions/permissions';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
-  selector: 'role',
-  templateUrl: './role.component.html',
-  styleUrls: ['./role.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './collection-teams.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RoleComponent {
-
-  @Input()
-  public role: Role;
-
-  @Input()
-  public checked: boolean;
-
-  @Output()
-  public checkedChange = new EventEmitter<boolean>();
-
-  public onCheckedChange(checked: boolean) {
-    this.checkedChange.emit(checked);
-  }
+export class CollectionTeamsComponent {
+  public readonly resourceType = ResourceType.Collection;
 }

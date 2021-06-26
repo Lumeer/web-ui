@@ -30,11 +30,20 @@ import {TeamUsersComponent} from './team/users/team-users.component';
 import {GravatarModule} from 'ngx-gravatar';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsPipesModule} from './pipes/teams-pipes.module';
-import {RolesModule} from '../permissions/roles.module';
+import {RolesModule} from '../roles/roles.module';
 
 @NgModule({
   declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamComponent, TeamUsersComponent],
-    imports: [FormsModule, CommonModule, PipesModule, InputModule, GravatarModule, DropdownModule, TeamsPipesModule, RolesModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    PipesModule,
+    InputModule,
+    GravatarModule,
+    DropdownModule,
+    TeamsPipesModule,
+    RolesModule,
+  ],
   exports: [TeamsComponent],
 })
 export class TeamsModule {}

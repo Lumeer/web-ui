@@ -33,6 +33,7 @@ import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.co
 import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {GroupsGuard} from '../core/guards/data/groups.guard';
+import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
 
 const collectionRoutes: Routes = [
   {
@@ -62,6 +63,10 @@ const collectionRoutes: Routes = [
       {
         path: 'users',
         component: CollectionUsersComponent,
+      },
+      {
+        path: 'teams',
+        component: CollectionTeamsComponent,
       },
       {
         path: 'purpose',

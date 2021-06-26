@@ -17,14 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Role} from '../store/permissions/permissions';
+import {Pipe, PipeTransform} from '@angular/core';
+import {RoleGroup, TranslatedRole} from '../../../core/model/role-group';
 
-export interface RoleGroup {
-  title?: string;
-  order: number;
-  roles: TranslatedRole[];
-}
-
-export interface TranslatedRole extends Role {
-  title: string;
+@Pipe({
+  name: 'flattenUngroupedRoles',
+})
+export class FlattenUngroupedRolesPipe implements PipeTransform {
+  public transform(groups: RoleGroup[]): TranslatedRole[] {
+    return groups
+      .sort((a, b) => a.order - b.order)
+      .reduce((roles, group) => {
+        if (!group.title) {
+          roles.push(...group.roles);
+        }
+        return roles;
+      }, []);
+  }
 }

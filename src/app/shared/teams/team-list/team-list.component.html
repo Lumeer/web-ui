@@ -17,6 +17,7 @@
                   [allTeams]="teams"
                   [users]="users"
                   [permissions]="permissions"
+                  [editable]="resourceType | isOrganizationType"
                   [resourceType]="resourceType"
                   (teamUpdated)="teamUpdated.emit($event)"
                   (teamDeleted)="teamDeleted.emit($event)"

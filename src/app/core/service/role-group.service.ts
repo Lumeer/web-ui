@@ -19,20 +19,22 @@
 
 import {Injectable} from '@angular/core';
 import {ResourceType} from '../model/resource-type';
-import {RoleGroup} from '../model/role-group';
+import {RoleGroup, TranslatedRole} from '../model/role-group';
 import {parseSelectTranslation} from '../../shared/utils/translation.utils';
 import {RoleType} from '../model/role-type';
 
 @Injectable()
 export class RoleGroupService {
-
-  constructor() {
-  }
+  constructor() {}
 
   public createResourceGroups(type: ResourceType): RoleGroup[] {
     switch (type) {
       case ResourceType.Organization:
         return this.createOrganizationGroups();
+      case ResourceType.Project:
+        return this.createProjectGroups();
+      case ResourceType.Collection:
+        return this.createCollectionGroups();
       default:
         return [];
     }
@@ -40,34 +42,187 @@ export class RoleGroupService {
 
   private createOrganizationGroups(): RoleGroup[] {
     return [
-      {title: this.translateGroupType(RoleGroupType.Resource), order: 1, roles: [{type: RoleType.Read}, {type: RoleType.Manage}, {type: RoleType.UserConfig}, {type: RoleType.ProjectContribute}]},
-      {title: this.translateGroupType(RoleGroupType.Data), order: 2, roles: [{type: RoleType.DataRead, transitive: true}, {type: RoleType.DataWrite, transitive: true}, {type: RoleType.DataContribute, transitive: true}, {type: RoleType.DataDelete, transitive: true}]},
-      {title: this.translateGroupType(RoleGroupType.Collaborate), order: 3, roles: [{type: RoleType.CollectionContribute, transitive: true}, {type: RoleType.LinkContribute, transitive: true}, {type: RoleType.ViewContribute, transitive: true}, {type: RoleType.CommentContribute, transitive: true}]},
-      {title: this.translateGroupType(RoleGroupType.User), order: 4, roles: [{type: RoleType.UserConfig, transitive: true}]},
-      {title: this.translateGroupType(RoleGroupType.Config), order: 5, roles: [{type: RoleType.AttributeEdit, transitive: true}, {type: RoleType.TechConfig, transitive: true}]},
-      {title: this.translateGroupType(RoleGroupType.View), order: 6, roles: [{type: RoleType.PerspectiveConfig, transitive: true}, {type: RoleType.QueryConfig, transitive: true}]},
-    ]
+      {
+        order: 1,
+        roles: [
+          this.createWorkspaceRole(RoleType.Read),
+          this.createWorkspaceRole(RoleType.Manage),
+          this.createWorkspaceRole(RoleType.UserConfig),
+          this.createWorkspaceRole(RoleType.ProjectContribute),
+        ],
+      },
+      {
+        title: this.translateOrganizationGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createWorkspaceRole(RoleType.DataRead, true),
+          this.createWorkspaceRole(RoleType.DataWrite, true),
+          this.createWorkspaceRole(RoleType.DataContribute, true),
+          this.createWorkspaceRole(RoleType.DataDelete, true),
+        ],
+      },
+      {
+        title: this.translateOrganizationGroupType(RoleGroupType.Collaborate),
+        order: 3,
+        roles: [
+          this.createWorkspaceRole(RoleType.CollectionContribute, true),
+          this.createWorkspaceRole(RoleType.LinkContribute, true),
+          this.createWorkspaceRole(RoleType.ViewContribute, true),
+          this.createWorkspaceRole(RoleType.CommentContribute, true),
+        ],
+      },
+      {
+        title: this.translateOrganizationGroupType(RoleGroupType.User),
+        order: 4,
+        roles: [this.createWorkspaceRole(RoleType.UserConfig, true)],
+      },
+      {
+        title: this.translateOrganizationGroupType(RoleGroupType.Config),
+        order: 5,
+        roles: [
+          this.createWorkspaceRole(RoleType.AttributeEdit, true),
+          this.createWorkspaceRole(RoleType.TechConfig, true),
+        ],
+      },
+      {
+        title: this.translateOrganizationGroupType(RoleGroupType.View),
+        order: 6,
+        roles: [
+          this.createWorkspaceRole(RoleType.PerspectiveConfig, true),
+          this.createWorkspaceRole(RoleType.QueryConfig, true),
+        ],
+      },
+    ];
   }
 
-  private translateGroupType(type: RoleGroupType): string {
+  private createProjectGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [
+          this.createWorkspaceRole(RoleType.Read),
+          this.createWorkspaceRole(RoleType.Manage),
+          this.createWorkspaceRole(RoleType.UserConfig),
+        ],
+      },
+      {
+        title: this.translateProjectGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createWorkspaceRole(RoleType.DataRead, true),
+          this.createWorkspaceRole(RoleType.DataWrite, true),
+          this.createWorkspaceRole(RoleType.DataContribute, true),
+          this.createWorkspaceRole(RoleType.DataDelete, true),
+        ],
+      },
+      {
+        title: this.translateProjectGroupType(RoleGroupType.Collaborate),
+        order: 3,
+        roles: [
+          this.createWorkspaceRole(RoleType.CollectionContribute, true),
+          this.createWorkspaceRole(RoleType.LinkContribute, true),
+          this.createWorkspaceRole(RoleType.ViewContribute, true),
+          this.createWorkspaceRole(RoleType.CommentContribute, true),
+        ],
+      },
+      {
+        title: this.translateProjectGroupType(RoleGroupType.User),
+        order: 4,
+        roles: [this.createWorkspaceRole(RoleType.UserConfig, true)],
+      },
+      {
+        title: this.translateProjectGroupType(RoleGroupType.Config),
+        order: 5,
+        roles: [
+          this.createWorkspaceRole(RoleType.AttributeEdit, true),
+          this.createWorkspaceRole(RoleType.TechConfig, true),
+        ],
+      },
+      {
+        title: this.translateProjectGroupType(RoleGroupType.View),
+        order: 6,
+        roles: [
+          this.createWorkspaceRole(RoleType.PerspectiveConfig, true),
+          this.createWorkspaceRole(RoleType.QueryConfig, true),
+        ],
+      },
+    ];
+  }
+
+  private createCollectionGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [
+          this.createCollectionRole(RoleType.Read),
+          this.createCollectionRole(RoleType.Manage),
+          this.createCollectionRole(RoleType.UserConfig),
+          this.createCollectionRole(RoleType.TechConfig),
+          this.createCollectionRole(RoleType.AttributeEdit),
+          this.createCollectionRole(RoleType.CommentContribute),
+        ],
+      },
+      {
+        title: this.translateCollectionGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createCollectionRole(RoleType.DataRead),
+          this.createCollectionRole(RoleType.DataWrite),
+          this.createCollectionRole(RoleType.DataContribute),
+          this.createCollectionRole(RoleType.DataDelete),
+        ],
+      },
+    ];
+  }
+
+  private translateOrganizationGroupType(type: RoleGroupType): string {
     return parseSelectTranslation(
-      $localize`:@@user.permission.role.group:{type, select, Resource {Resource} Data {Data} View {View} Collaborate {Collaborate} User {User} Config {Config}}`,
+      $localize`:@@organization.user.permission.role.group:{type, select, Data {Manage All Data} View {Manage All Views} Collaborate {Create All} User {Manage All Permissions} Config {Manage Data Structure}}`,
       {type}
-    )
+    );
   }
 
+  private createWorkspaceRole(type: RoleType, transitive?: boolean): TranslatedRole {
+    return {
+      title: parseSelectTranslation(
+        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} ProjectContribute {Create projects} DataRead {Read all data} DataWrite {Edit all data} DataDelete {Delete all data} DataContribute {Create data everywhere} LinkContribute {Create link types} ViewContribute {Create views} CollectionContribute {Create tables} CommentContribute {Comment all records} AttributeEdit {Edit all attributes} TechConfig {Manage roles & functions} QueryConfig {Manage queries in views} PerspectiveConfig {Manage config in views}}`,
+        {type}
+      ),
+      type,
+      transitive,
+    };
+  }
 
+  private createCollectionRole(type: RoleType, transitive?: boolean): TranslatedRole {
+    return {
+      title: parseSelectTranslation(
+        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} DataRead {Read records} DataWrite {Edit records} DataDelete {Delete records} DataContribute {Create records} CommentContribute {Comment records} AttributeEdit {Edit attributes} TechConfig {Manage roles & functions}}`,
+        {type}
+      ),
+      type,
+      transitive,
+    };
+  }
+
+  private translateProjectGroupType(type: RoleGroupType): string {
+    return parseSelectTranslation(
+      $localize`:@@organization.user.permission.role.group:{type, select, Data {Manage All Data} View {Manage All Views} Collaborate {Create All} User {Manage All Permissions} Config {Manage Data Structure}}`,
+      {type}
+    );
+  }
+
+  private translateCollectionGroupType(type: RoleGroupType): string {
+    return parseSelectTranslation(
+      $localize`:@@user.permission.role.group:{type, select, Data {Manage Data} other {}}`,
+      {type}
+    );
+  }
 }
 
-
 export const enum RoleGroupType {
-  Resource = 'Resource',
   Data = 'Data',
   View = 'View',
   Collaborate = 'Collaborate',
   User = 'User',
   Config = 'Config',
 }
-
-
-

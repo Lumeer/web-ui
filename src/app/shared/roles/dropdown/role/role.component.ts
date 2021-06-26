@@ -17,14 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Role} from '../store/permissions/permissions';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {TranslatedRole} from '../../../../core/model/role-group';
 
-export interface RoleGroup {
-  title?: string;
-  order: number;
-  roles: TranslatedRole[];
-}
+@Component({
+  selector: 'role',
+  templateUrl: './role.component.html',
+  styleUrls: ['./role.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class RoleComponent {
+  @Input()
+  public role: TranslatedRole;
 
-export interface TranslatedRole extends Role {
-  title: string;
+  @Input()
+  public checked: boolean;
+
+  @Output()
+  public checkedChange = new EventEmitter<boolean>();
+
+  public onCheckedChange(checked: boolean) {
+    this.checkedChange.emit(checked);
+  }
 }

@@ -23,20 +23,25 @@ import {RolesComponent} from './roles.component';
 import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
-import { RoleComponent } from './dropdown/role/role.component';
-import { RoleGroupComponent } from './dropdown/role-group/role-group.component';
-import { IsRoleSelectedPipe } from './pipes/is-role-selected.pipe';
-import { IsRoleGroupSelectedPipe } from './pipes/is-role-group-selected.pipe';
-
+import {RoleComponent} from './dropdown/role/role.component';
+import {RoleGroupComponent} from './dropdown/role-group/role-group.component';
+import {IsRoleSelectedPipe} from './pipes/is-role-selected.pipe';
+import {IsRoleGroupSelectedPipe} from './pipes/is-role-group-selected.pipe';
+import {FilterGroupedRolesWithHeaderPipe} from './pipes/filter-grouped-roles-with-header.pipe';
+import {FlattenUngroupedRolesPipe} from './pipes/flatten-ungrouped-roles.pipe';
 
 @NgModule({
-  declarations: [RolesComponent, RolesDropdownComponent, RoleComponent, RoleGroupComponent, IsRoleSelectedPipe, IsRoleGroupSelectedPipe],
-  imports: [
-    CommonModule,
-    DropdownModule,
-    AccordionModule
+  declarations: [
+    RolesComponent,
+    RolesDropdownComponent,
+    RoleComponent,
+    RoleGroupComponent,
+    IsRoleSelectedPipe,
+    IsRoleGroupSelectedPipe,
+    FilterGroupedRolesWithHeaderPipe,
+    FlattenUngroupedRolesPipe,
   ],
-  exports: [RolesComponent, RolesDropdownComponent]
+  imports: [CommonModule, DropdownModule, AccordionModule],
+  exports: [RolesComponent, RolesDropdownComponent],
 })
-export class RolesModule {
-}
+export class RolesModule {}
