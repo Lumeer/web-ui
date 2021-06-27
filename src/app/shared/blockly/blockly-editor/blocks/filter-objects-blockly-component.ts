@@ -49,12 +49,12 @@ export class FilterObjectsBlocklyComponent extends BlocklyComponent {
           message0: '%{BKY_BLOCK_FILTER_OBJECTS}', // filter objects where %1 = %2 in %3
           args0: [
             {
-              type: 'field_input',
+              type: 'input_value',
               name: 'KEY',
               text: this_.fieldKey,
             },
             {
-              type: 'field_input',
+              type: 'input_value',
               name: 'VALUE',
               text: this_.fieldValue,
             },
@@ -63,6 +63,7 @@ export class FilterObjectsBlocklyComponent extends BlocklyComponent {
               name: 'VAR',
             },
           ],
+          inputsInline: true,
           output: '',
           colour: 260, // blockly lists
           tooltip: this_.tooltip,
@@ -71,11 +72,11 @@ export class FilterObjectsBlocklyComponent extends BlocklyComponent {
       },
     };
     Blockly.JavaScript[BlocklyUtils.FILTER_OBJECTS] = function (block) {
-      const text_key = block.getFieldValue('KEY');
-      const text_value = block.getFieldValue('VALUE');
+      const text_key = Blockly.JavaScript.valueToCode(block, 'KEY', Blockly.JavaScript.ORDER_MEMBER) || "''";
+      const text_value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-      const code = `(Array.isArray(${val}) && (${val}) ? (${val}).filter((o) => o['${text_key}'] === '${text_value}') : [])`;
+      const code = `(Array.isArray(${val}) && (${val}) ? (${val}).filter((o) => o[(${text_key})] === (${text_value})) : [])`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

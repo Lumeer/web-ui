@@ -22,6 +22,7 @@ import {Rule, RuleType} from '../../../../../core/model/rule';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'single-rule',
@@ -34,6 +35,9 @@ export class SingleRuleComponent {
 
   @Input()
   public canDuplicate: boolean = false;
+
+  @Input()
+  public attributes: Attribute[];
 
   @Output()
   public onEdit = new EventEmitter<string>();

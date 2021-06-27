@@ -47,7 +47,7 @@ export class CountOccurrencesBlocklyComponent extends BlocklyComponent {
           message0: '%{BKY_BLOCK_COUNT_OCCURRENCES}', // count occurrences of %1 in %2
           args0: [
             {
-              type: 'field_input',
+              type: 'input_value',
               name: 'NEEDLE',
               text: this_.fieldValue,
             },
@@ -56,6 +56,7 @@ export class CountOccurrencesBlocklyComponent extends BlocklyComponent {
               name: 'VAR',
             },
           ],
+          inputsInline: true,
           output: '',
           colour: 260, // blockly lists
           tooltip: this_.tooltip,
@@ -64,10 +65,10 @@ export class CountOccurrencesBlocklyComponent extends BlocklyComponent {
       },
     };
     Blockly.JavaScript[BlocklyUtils.COUNT_OCCURRENCES] = function (block) {
-      const text_needle = block.getFieldValue('NEEDLE');
+      const text_needle = Blockly.JavaScript.valueToCode(block, 'NEEDLE', Blockly.JavaScript.ORDER_MEMBER) || "''";
       const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
-      const code = `(Array.isArray(${val}) && (${val}) ? (${val}).reduce((a, v) => (v === '${text_needle}' ? a + 1 : a), 0) : 0)`;
+      const code = `(Array.isArray(${val}) && (${val}) ? (${val}).reduce((a, v) => (v === (${text_needle}) ? a + 1 : a), 0) : 0)`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

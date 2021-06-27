@@ -222,6 +222,18 @@ export function containsAttributeWithRule(attributes: Attribute[], rule: Rule): 
   });
 }
 
+export function attributesWithRule(attributes: Attribute[], rule: Rule): string[] {
+  return attributes
+    ?.filter(attribute => {
+      if (attribute.constraint?.type === ConstraintType.Action) {
+        const config = <ActionConstraintConfig>attribute.constraint.config;
+        return config?.rule === rule.id;
+      }
+      return false;
+    })
+    .map(attribute => attribute.name);
+}
+
 export function filterAttributesByFilters(attributes: Attribute[], filters: AttributeFilter[]): Attribute[] {
   const attributesMap = objectsByIdMap(attributes);
   return uniqueAttributes(
