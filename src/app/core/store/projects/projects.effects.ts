@@ -415,7 +415,6 @@ export class ProjectsEffects {
       ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
       withLatestFrom(this.store$.pipe(select(selectProjectsDictionary))),
       mergeMap(([action, projectsMap]) => {
-
         this.store$.dispatch(new ProjectsAction.ChangePermissionSuccess(action.payload));
 
         const originalProject = projectsMap[action.payload.projectId];
@@ -599,6 +598,5 @@ export class ProjectsEffects {
     private projectService: ProjectService,
     private templateService: TemplateService,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 }

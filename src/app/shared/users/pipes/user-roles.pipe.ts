@@ -17,17 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {Permissions, Role} from '../../../core/store/permissions/permissions';
 import {User} from '../../../core/store/users/user';
 
 @Pipe({
-  name: 'userRoles'
+  name: 'userRoles',
 })
 export class UserRolesPipe implements PipeTransform {
-
   public transform(permissions: Permissions, user: User): Role[] {
     return permissions?.users?.find(usr => usr.id === user.id)?.roles || [];
   }
-
 }

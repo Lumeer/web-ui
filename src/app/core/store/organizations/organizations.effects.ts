@@ -281,7 +281,6 @@ export class OrganizationsEffects {
       ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
       withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
       mergeMap(([action, organizationsMap]) => {
-
         this.store$.dispatch(new OrganizationsAction.ChangePermissionSuccess(action.payload));
 
         const originalOrganization = organizationsMap[action.payload.organizationId];
@@ -361,6 +360,5 @@ export class OrganizationsEffects {
     private actions$: Actions,
     private modalService: ModalService,
     private organizationService: OrganizationService
-  ) {
-  }
+  ) {}
 }

@@ -595,7 +595,6 @@ export class CollectionsEffects {
       ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
       withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
       mergeMap(([action, collectionsMap]) => {
-
         this.store$.dispatch(new CollectionsAction.ChangePermissionSuccess(action.payload));
 
         const originalCollection = collectionsMap[action.payload.collectionId];
@@ -669,8 +668,7 @@ export class CollectionsEffects {
     private importService: ImportService,
     private angulartics2: Angulartics2,
     private configurationService: ConfigurationService
-  ) {
-  }
+  ) {}
 }
 
 function createSetDefaultAttributeAction(

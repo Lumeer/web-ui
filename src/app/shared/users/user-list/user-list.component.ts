@@ -17,13 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
@@ -69,12 +63,11 @@ export class UserListComponent {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public userRolesChange = new EventEmitter<{ user: User; roles: Role[] }>();
+  public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
 
   public searchString: string;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public onUserRolesChanged(user: User, roles: Role[]) {
     this.userRolesChange.emit({user, roles});

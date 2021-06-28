@@ -104,7 +104,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     return this.organization$.value?.id;
   }
 
-  public changeUserPermissions(data: { user: User; roles: Role[] }) {
+  public changeUserPermissions(data: {user: User; roles: Role[]}) {
     const permissions: Permission[] = [{id: data.user.id, roles: data.roles}];
     const payload = {permissions, type: PermissionType.Users};
     switch (this.resourceType) {

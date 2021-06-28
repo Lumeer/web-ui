@@ -36,7 +36,7 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {filter,  take} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Team} from '../../../core/store/teams/team';
 import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
@@ -74,7 +74,7 @@ export class TeamListComponent implements OnInit, OnChanges {
   public teamDeleted = new EventEmitter<Team>();
 
   @Output()
-  public teamRolesChange = new EventEmitter<{team: Team, roles: Role[]}>();
+  public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
 
   public searchString: string;
 
@@ -91,6 +91,7 @@ export class TeamListComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resource || changes.resourceType) {
+      // TODO ?
     }
   }
 
