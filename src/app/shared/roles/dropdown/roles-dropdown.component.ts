@@ -23,9 +23,10 @@ import {
   Input,
   ViewChild,
   ElementRef,
-  OnInit,
   EventEmitter,
   Output,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {Role} from '../../../core/store/permissions/permissions';
 import {RoleGroup} from '../../../core/model/role-group';
@@ -40,7 +41,7 @@ import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
   styleUrls: ['./roles-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RolesDropdownComponent implements OnInit {
+export class RolesDropdownComponent implements OnChanges {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -60,8 +61,10 @@ export class RolesDropdownComponent implements OnInit {
 
   public selectedRoles$ = new BehaviorSubject<Role[]>([]);
 
-  public ngOnInit() {
-    this.selectedRoles$.next(this.selectedRoles || []);
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedRoles && !this.isOpen()) {
+      this.selectedRoles$.next(this.selectedRoles || []);
+    }
   }
 
   public isOpen(): boolean {

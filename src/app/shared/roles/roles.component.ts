@@ -70,4 +70,8 @@ export class RolesComponent implements OnChanges {
   public trackByRole(index: number, role: Role): string {
     return `${role.type}:${role.transitive}`;
   }
+
+  public onRolesChange(roles: Role[]) {
+    this.change.emit(roles);
+  }
 }

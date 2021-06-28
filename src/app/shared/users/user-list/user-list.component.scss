@@ -25,7 +25,7 @@ input::placeholder {
 
   .roles {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(200px, max-content);
     align-items: center;
   }
 }
