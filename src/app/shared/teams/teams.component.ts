@@ -37,6 +37,8 @@ import {Permission, Permissions, PermissionType, Role} from '../../core/store/pe
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 
 @Component({
   selector: 'teams',
@@ -50,6 +52,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   public teams$: Observable<Team[]>;
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
+  public serviceLimits$: Observable<ServiceLimits>;
   public resourcePermissions$: Observable<Permissions>;
 
   private resourceId: string;
@@ -78,6 +81,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
 
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
     this.resourcePermissions$ = this.store$.pipe(
       select(this.getSelector()),

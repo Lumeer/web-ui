@@ -31,6 +31,7 @@ import {GravatarModule} from 'ngx-gravatar';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsPipesModule} from './pipes/teams-pipes.module';
 import {RolesModule} from '../roles/roles.module';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamComponent, TeamUsersComponent],
@@ -43,6 +44,7 @@ import {RolesModule} from '../roles/roles.module';
     DropdownModule,
     TeamsPipesModule,
     RolesModule,
+    RouterModule,
   ],
   exports: [TeamsComponent],
 })

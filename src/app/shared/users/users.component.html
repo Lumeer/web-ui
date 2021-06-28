@@ -6,6 +6,7 @@
   [currentUser]="currentUser$ | async"
   [users]="users$ | async"
   [resource]="resource$ | async"
+  [serviceLimits]="serviceLimits$ | async"
   (userCreated)="onNewUser($event)"
   (userUpdated)="onUserUpdated($event)"
   (userDeleted)="onUserDeleted($event)"

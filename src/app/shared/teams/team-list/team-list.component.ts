@@ -32,21 +32,20 @@ import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
-import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {filter, take} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Team} from '../../../core/store/teams/team';
 import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
 import {Permissions, Role} from '../../../core/store/permissions/permissions';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'team-list',
   templateUrl: './team-list.component.html',
   styleUrls: ['./team-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'position-relative'},
 })
 export class TeamListComponent implements OnInit, OnChanges {
   @Input()
@@ -64,6 +63,9 @@ export class TeamListComponent implements OnInit, OnChanges {
   @Input()
   public project: Project;
 
+  @Input()
+  public serviceLimits: ServiceLimits;
+
   @Output()
   public teamCreated = new EventEmitter<string>();
 
@@ -77,32 +79,20 @@ export class TeamListComponent implements OnInit, OnChanges {
   public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
 
   public searchString: string;
+  public groupsAreEditable: boolean;
 
   public users$: Observable<User[]>;
-
-  private initialWorkspace: Workspace;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
-    this.selectInitialWorkspace();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resource || changes.resourceType) {
-      // TODO ?
+    if (changes.serviceLimits) {
+      this.groupsAreEditable = this.serviceLimits?.groups || false;
     }
-  }
-
-  private selectInitialWorkspace() {
-    this.store$
-      .pipe(select(selectWorkspaceWithIds))
-      .pipe(
-        filter(workspace => !!workspace.organizationId),
-        take(1)
-      )
-      .subscribe(workspace => (this.initialWorkspace = workspace));
   }
 
   public trackByTeam(index: number, team: Team): string {

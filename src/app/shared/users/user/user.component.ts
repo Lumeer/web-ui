@@ -39,7 +39,7 @@ export class UserComponent {
   public editable: boolean;
 
   @Input()
-  public changeRoles: boolean;
+  public changeTeams: boolean;
 
   @Input()
   public user: User;

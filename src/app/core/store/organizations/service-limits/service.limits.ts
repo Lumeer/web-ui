@@ -26,6 +26,7 @@ export interface ServiceLimits {
   projects: number;
   files: number;
   documents: number;
+  groups?: boolean;
   dbSizeMb: number;
   validUntil: Date;
   rulesPerCollection: number;

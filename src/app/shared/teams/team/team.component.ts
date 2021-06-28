@@ -49,6 +49,9 @@ export class TeamComponent {
   public editable: boolean;
 
   @Input()
+  public changeRoles: boolean;
+
+  @Input()
   public allTeams: Team[];
 
   @Output()

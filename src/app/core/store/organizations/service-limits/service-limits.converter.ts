@@ -19,7 +19,7 @@
 
 import {ServiceLimitsDto} from '../../../dto/service-limits.dto';
 import {ServiceLimits} from './service.limits';
-import {serviceLevelMap, ServiceLevelType} from '../../../dto/service-level-type';
+import {serviceLevelMap} from '../../../dto/service-level-type';
 
 export class ServiceLimitsConverter {
   public static fromDto(organizationId: string, dto: ServiceLimitsDto): ServiceLimits {
@@ -30,24 +30,11 @@ export class ServiceLimitsConverter {
       projects: dto.projects,
       files: dto.files,
       documents: dto.documents,
+      groups: dto.groups,
       dbSizeMb: dto.dbSizeMb,
       validUntil: new Date(dto.validUntil),
       rulesPerCollection: dto.rulesPerCollection,
       functionsPerCollection: dto.functionsPerCollection,
-    };
-  }
-
-  public static toDto(model: ServiceLimits): ServiceLimitsDto {
-    return {
-      serviceLevel: model.serviceLevel,
-      users: model.users,
-      projects: model.projects,
-      files: model.files,
-      documents: model.documents,
-      dbSizeMb: model.dbSizeMb,
-      validUntil: model.validUntil.getTime(),
-      rulesPerCollection: model.rulesPerCollection,
-      functionsPerCollection: model.functionsPerCollection,
     };
   }
 }

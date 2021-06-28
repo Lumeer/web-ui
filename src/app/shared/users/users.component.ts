@@ -41,6 +41,8 @@ import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'users',
@@ -52,6 +54,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public users$: Observable<User[]>;
   public currentUser$: Observable<User>;
+  public serviceLimits$: Observable<ServiceLimits>;
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
   public resource$: Observable<Resource>;
@@ -136,6 +139,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
 
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace), map(this.sortUsers));
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 

@@ -30,6 +30,7 @@ import {select, Store} from '@ngrx/store';
 import {Team} from '../../../core/store/teams/team';
 import {Observable} from 'rxjs';
 import {selectAllTeams} from '../../../core/store/teams/teams.state';
+import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 
 @Component({
   selector: 'user-list',
@@ -55,6 +56,9 @@ export class UserListComponent implements OnInit {
 
   @Input()
   public project: Project;
+
+  @Input()
+  public serviceLimits: ServiceLimits;
 
   @Output()
   public userCreated = new EventEmitter<string>();

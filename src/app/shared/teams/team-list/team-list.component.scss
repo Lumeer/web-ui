@@ -3,3 +3,12 @@
 .team:not(:last-child) {
   border-bottom: 1px solid $gray-200;
 }
+.blur {
+  filter: blur(12px);
+}
+
+.restricted-access {
+  width: 100%;
+  z-index: 3;
+  top: 0;
+}

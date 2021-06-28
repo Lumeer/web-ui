@@ -37,7 +37,7 @@
                   [user]="user"
                   [permissions]="resource.permissions"
                   [editable]="user.id !== currentUser.id && (resourceType | isOrganizationType)"
-                  [changeRoles]="user.id !== currentUser.id"
+                  [changeTeams]="serviceLimits?.groups"
                   (rolesUpdate)="onUserRolesChanged(user, $event)"
                   (userUpdated)="userUpdated.emit($event)"
                   (userDeleted)="userDeleted.emit($event)"
