@@ -75,6 +75,10 @@ export class ApiUserService implements UserService {
     return `${this.organizationApiPrefix(organizationId)}users${userId ? `/${userId}` : ''}`;
   }
 
+  public setTeams(organizationId: string, userId: string, teams: string[]): Observable<any> {
+    return this.httpClient.post(`${this.organizationUsersApiPrefix(organizationId, userId)}/groups`, teams);
+  }
+
   public getCurrentUser(): Observable<UserDto> {
     return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current`);
   }

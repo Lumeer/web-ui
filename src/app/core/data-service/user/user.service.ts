@@ -42,6 +42,8 @@ export abstract class UserService {
 
   public abstract getCurrentUser(): Observable<UserDto>;
 
+  public abstract setTeams(organizationId: string, userId: string, teams: string[]): Observable<any>;
+
   public abstract resendVerificationEmail(): Observable<any>;
 
   public abstract getUserReferrals(): Observable<PaymentStats>;

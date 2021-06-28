@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
@@ -26,7 +26,10 @@ import {Resource} from '../../../core/model/resource';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
 import {AppState} from '../../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
+import {Team} from '../../../core/store/teams/team';
+import {Observable} from 'rxjs';
+import {selectAllTeams} from '../../../core/store/teams/teams.state';
 
 @Component({
   selector: 'user-list',
@@ -34,7 +37,7 @@ import {Store} from '@ngrx/store';
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit {
   @Input()
   public resourceType: ResourceType;
 
@@ -65,9 +68,18 @@ export class UserListComponent {
   @Output()
   public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
 
+  @Output()
+  public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();
+
   public searchString: string;
 
+  public teams$: Observable<Team[]>;
+
   constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.teams$ = this.store$.pipe(select(selectAllTeams));
+  }
 
   public onUserRolesChanged(user: User, roles: Role[]) {
     this.userRolesChange.emit({user, roles});
@@ -75,5 +87,9 @@ export class UserListComponent {
 
   public trackByUserId(index: number, user: User): string {
     return user.id;
+  }
+
+  public onUserTeamsChanged(user: User, teams: string[]) {
+    this.userTeamsChange.emit({user, teams});
   }
 }

@@ -9,38 +9,23 @@ input::placeholder {
   font-style: italic;
 }
 
-table {
-  table-layout: fixed;
-
-  th {
-    vertical-align: middle;
-  }
-
-  tr {
-    .icon-hover {
-      transition: color $animation-color-duration;
-
-      i {
-        opacity: 0;
-      }
-
-      &:hover {
-        color: $primary;
-      }
-    }
-
-    &:hover .icon-hover i {
-      opacity: 1;
-    }
-  }
-
-  .visible i {
-    opacity: 1 !important;
-  }
-}
-
 .btn:focus,
 .btn:active {
   outline: none !important;
   box-shadow: none !important;
+}
+
+.user:not(:last-child) {
+  border-bottom: 1px solid $gray-200;
+}
+
+.user-list .header {
+  display: grid;
+  grid-template-columns: 1fr 2fr min-content;
+
+  .roles {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
 }

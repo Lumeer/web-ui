@@ -46,6 +46,7 @@ import {createCallbackActions} from '../utils/store.utils';
 import {selectAllServiceLimits} from '../organizations/service-limits/service-limits.state';
 import {ServiceLevelType} from '../../dto/service-level-type';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {TeamsAction} from '../teams/teams.action';
 
 @Injectable()
 export class UsersEffects {
@@ -383,6 +384,31 @@ export class UsersEffects {
       tap(action => console.error(action.payload.error)),
       map(() => {
         const message = $localize`:@@user.defaultWorkspace.save.fail:Could not save the default workspace`;
+        return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public setTeams$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.SetTeams>(UsersActionType.SET_TEAMS),
+      mergeMap(action => {
+        return this.userService
+          .setTeams(action.payload.organizationId, action.payload.user.id, action.payload.teams)
+          .pipe(
+            map(() => new TeamsAction.Get({organizationId: action.payload.organizationId})),
+            catchError(error => of(new UsersAction.SetTeamsFailure({error})))
+          );
+      })
+    )
+  );
+
+  public setTeamsFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<UsersAction.SetTeamsFailure>(UsersActionType.SET_TEAMS_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@user.teams.set.fail:Could not set user teams`;
         return new NotificationsAction.Error({message});
       })
     )

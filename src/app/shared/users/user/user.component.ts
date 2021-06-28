@@ -23,11 +23,12 @@ import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {Permissions, Role} from '../../../core/store/permissions/permissions';
+import {Team} from '../../../core/store/teams/team';
 
 @Component({
-  selector: '[user-component]',
+  selector: 'user-component',
   templateUrl: './user.component.html',
-  styleUrls: ['../../../../styles/custom/_user-roles.scss'],
+  styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent {
@@ -44,6 +45,9 @@ export class UserComponent {
   public user: User;
 
   @Input()
+  public teams: Team[];
+
+  @Input()
   public permissions: Permissions;
 
   @Output()
@@ -54,6 +58,9 @@ export class UserComponent {
 
   @Output()
   public rolesUpdate = new EventEmitter<Role[]>();
+
+  @Output()
+  public teamsUpdate = new EventEmitter<string[]>();
 
   private readonly inheritedManagerMsg: string;
   private readonly cannotChangeRoleMsg: string;
@@ -73,5 +80,9 @@ export class UserComponent {
 
   public deleteUser() {
     this.userDeleted.emit(this.user);
+  }
+
+  public onTeamsSave(teams: string[]) {
+    this.teamsUpdate.emit(teams);
   }
 }

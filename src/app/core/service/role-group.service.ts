@@ -185,7 +185,7 @@ export class RoleGroupService {
   private createWorkspaceRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
       title: parseSelectTranslation(
-        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} ProjectContribute {Create projects} DataRead {Read all data} DataWrite {Edit all data} DataDelete {Delete all data} DataContribute {Create data everywhere} LinkContribute {Create link types} ViewContribute {Create views} CollectionContribute {Create tables} CommentContribute {Comment all records} AttributeEdit {Edit all attributes} TechConfig {Manage roles & functions} QueryConfig {Manage queries in views} PerspectiveConfig {Manage config in views}}`,
+        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} ProjectContribute {Create projects} DataRead {Read all data} DataWrite {Edit all data} DataDelete {Delete all data} DataContribute {Create data everywhere} LinkContribute {Create link types} ViewContribute {Create views} CollectionContribute {Create tables} CommentContribute {Comment all records} AttributeEdit {Edit all attributes} TechConfig {Manage rules & functions} QueryConfig {Manage queries in views} PerspectiveConfig {Manage config in views}}`,
         {type}
       ),
       type,
@@ -196,7 +196,7 @@ export class RoleGroupService {
   private createCollectionRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
       title: parseSelectTranslation(
-        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} DataRead {Read records} DataWrite {Edit records} DataDelete {Delete records} DataContribute {Create records} CommentContribute {Comment records} AttributeEdit {Edit attributes} TechConfig {Manage roles & functions}}`,
+        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} DataRead {Read records} DataWrite {Edit records} DataDelete {Delete records} DataContribute {Create records} CommentContribute {Comment records} AttributeEdit {Edit attributes} TechConfig {Manage rules & functions}}`,
         {type}
       ),
       type,

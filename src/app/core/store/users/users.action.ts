@@ -36,6 +36,10 @@ export enum UsersActionType {
 
   PATCH_CURRENT_USER = '[Users] Patch Current',
 
+  SET_TEAMS = '[Users] Set Teams',
+  SET_TEAMS_SUCCESS = '[Users] Set Teams :: Success',
+  SET_TEAMS_FAILURE = '[Users] Set Teams :: Failure',
+
   SAVE_DEFAULT_WORKSPACE = '[Users] Save default workspace',
   SAVE_DEFAULT_WORKSPACE_SUCCESS = '[Users] Save default workspace :: Success',
   SAVE_DEFAULT_WORKSPACE_FAILURE = '[Users] Save default workspace :: Failure',
@@ -121,6 +125,24 @@ export namespace UsersAction {
     public readonly type = UsersActionType.PATCH_CURRENT_USER;
 
     public constructor(public payload: {user: Partial<User>; onSuccess?: () => void; onFailure?: () => void}) {}
+  }
+
+  export class SetTeams implements Action {
+    public readonly type = UsersActionType.SET_TEAMS;
+
+    public constructor(public payload: {organizationId: string; user: User; teams: string[]}) {}
+  }
+
+  export class SetTeamsSuccess implements Action {
+    public readonly type = UsersActionType.SET_TEAMS_SUCCESS;
+
+    public constructor(public payload: {user: User; groups: string[]}) {}
+  }
+
+  export class SetTeamsFailure implements Action {
+    public readonly type = UsersActionType.SET_TEAMS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
   }
 
   export class SaveDefaultWorkspace implements Action {
@@ -334,6 +356,9 @@ export namespace UsersAction {
     | Referrals
     | ReferralsSuccess
     | ReferralsFailure
+    | SetTeams
+    | SetTeamsSuccess
+    | SetTeamsFailure
     | GetHints
     | GetHintsSuccess
     | GetHintsFailure

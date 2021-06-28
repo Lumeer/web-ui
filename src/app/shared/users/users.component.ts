@@ -160,4 +160,8 @@ export class UsersComponent implements OnInit, OnDestroy {
         return selectCollectionByWorkspace;
     }
   }
+
+  public onUserTeamsChange(data: {user: User; teams: string[]}) {
+    this.store$.dispatch(new UsersAction.SetTeams({...data, organizationId: this.resourceId}));
+  }
 }

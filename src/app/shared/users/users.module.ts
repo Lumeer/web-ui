@@ -33,9 +33,23 @@ import {UserStampComponent} from './user-stamp/user-stamp.component';
 import {GravatarModule} from 'ngx-gravatar';
 import {RolesModule} from '../roles/roles.module';
 import {UserRolesPipe} from './pipes/user-roles.pipe';
+import {UserTeamsComponent} from './user/teams/user-teams.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
+import {FilterTeamsPipe} from './pipes/filter-teams.pipe';
+import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule, RolesModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TagModule,
+    InputModule,
+    PipesModule,
+    GravatarModule,
+    RolesModule,
+    DropdownModule,
+  ],
   declarations: [
     UserFilterPipe,
     UserListComponent,
@@ -44,6 +58,10 @@ import {UserRolesPipe} from './pipes/user-roles.pipe';
     UsersComponent,
     UserStampComponent,
     UserRolesPipe,
+    UserTeamsComponent,
+    TeamsIdsPipe,
+    FilterTeamsPipe,
+    FilterUserTeamsPipe,
   ],
   exports: [UsersComponent, NewUserComponent, UserStampComponent],
 })

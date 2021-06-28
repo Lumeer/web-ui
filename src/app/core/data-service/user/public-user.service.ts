@@ -71,6 +71,10 @@ export class PublicUserService implements UserService {
     });
   }
 
+  public setTeams(organizationId: string, userId: string, teams: string[]): Observable<any> {
+    return of(true);
+  }
+
   public resendVerificationEmail(): Observable<any> {
     return of(true);
   }
