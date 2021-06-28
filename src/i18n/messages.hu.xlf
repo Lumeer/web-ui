@@ -766,7 +766,13 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.on">
 				<source>on</source>
 				<target>rajta</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.usedInAction" datatype="html">
+        <source>Used in action in listed column(s)</source><target>A felsorolt oszlop (ok) műveletében (ak)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.onRecord">
 				<source> On record </source>
 				<target>A nyilvántartásban</target>
@@ -809,7 +815,7 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.serviceLimit">
 				<source> You can have only a single automation in the Free Plan. </source>
 				<target>Csak egyetlen szabályod lehet az Ingyenes Csomagban.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.timing.create">
 				<source>Create</source>
 				<target>Létrehoz</target>
@@ -829,15 +835,15 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.upgradePlan">
 				<source>Upgrade to Business Plan!</source>
 				<target>Frissítsen üzleti tervre!</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/audit-logs/audit-logs.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.zapier.warning.text">
 				<source>This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).</source>
 				<target>Ezt a szabályt egy Zap a Zapier-ben hozta létre. Konfiguráld ezt a szabályt közvetlenül a Zapier (www.zapier.com) alkalmazásban.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.zapier.warning.title">
 				<source>Zapier Automation</source>
 				<target>Zapier automatizálás</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">74</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.workflow">
 				<source> Workflow </source>
 				<target>Munkafolyamat</target>
@@ -5038,15 +5044,15 @@
 				<trans-unit datatype="html" id="collection.config.tab.rules.btn.duplicate">
 					<source>Duplicate automation</source>
 					<target>Automatizálás megkettőzése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="collection.config.tab.rules.btn.edit">
 					<source>Edit automation</source>
 					<target>Automatizálás szerkesztése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="collection.config.tab.rules.btn.delete">
 					<source>Delete automation</source>
 					<target>Automatizálás törlése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">1</context></context-group>
 		</body>
 	</file>

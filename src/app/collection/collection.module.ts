@@ -50,6 +50,7 @@ import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/for
 import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
 import {DataInputModule} from '../shared/data-input/data-input.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {AttributeNamesPipe} from './settings/common/rules/single-rule/attribute-names.pipe';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule],
@@ -71,6 +72,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     HasCreatePipe,
     HasUpdatePipe,
     HasDeletePipe,
+    AttributeNamesPipe,
     AddCollectionAttributeComponent,
     CollectionAttributesTableComponent,
     LinkTypeRulesComponent,
