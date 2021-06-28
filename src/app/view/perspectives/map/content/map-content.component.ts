@@ -53,6 +53,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {AppState} from '../../../../core/store/app.state';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -61,6 +62,7 @@ interface Data {
   config: MapConfig;
   permissions: ResourcesPermissions;
   query: Query;
+  user: User;
 }
 
 @Component({
@@ -87,6 +89,9 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public user: User;
 
   @Input()
   public map: MapModel;
@@ -120,7 +125,15 @@ export class MapContentComponent implements OnInit, OnChanges {
       this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
     }
 
-    return this.converter.convert(config, data.collections, data.linkTypes, data.data, data.permissions, data.query);
+    return this.converter.convert(
+      config,
+      data.collections,
+      data.linkTypes,
+      data.data,
+      data.permissions,
+      data.query,
+      data.user
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -130,6 +143,7 @@ export class MapContentComponent implements OnInit, OnChanges {
         changes.data ||
         changes.permissions ||
         changes.query ||
+        changes.user ||
         this.mapConfigChanged(changes.map)) &&
       this.map?.config
     ) {
@@ -140,6 +154,7 @@ export class MapContentComponent implements OnInit, OnChanges {
         permissions: this.permissions,
         config: this.map.config,
         query: this.query,
+        user: this.user,
       });
     }
   }

@@ -29,6 +29,8 @@ import {
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {mapMarkerDataId} from './map-content.utils';
 import {DocumentsAndLinksData} from '@lumeer/data-filters';
+import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
+import {User} from '../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {
   Color = 'color',
@@ -37,6 +39,7 @@ enum DataObjectInfoKeyType {
 
 export class MapDataConverter {
   private config: MapConfig;
+  private user: User;
 
   private dataObjectAggregator = new DataObjectAggregator<any>();
 
@@ -46,9 +49,11 @@ export class MapDataConverter {
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
     permissions: ResourcesPermissions,
-    query: Query
+    query: Query,
+    user: User
   ): MapMarkerData[] {
     this.config = config;
+    this.user = user;
 
     const mapData = (query?.stems || []).reduce((allData, stem, index) => {
       const stemData = data.dataByStems?.[index];
@@ -102,9 +107,10 @@ export class MapDataConverter {
     dataObjectsInfo: DataObjectInfo<any>[]
   ): MapMarkerData[] {
     const resource = this.dataObjectAggregator.getResource(attribute);
+    const permissions = this.dataObjectAggregator.attributePermissions(attribute);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(attribute);
     const resourceIcons = this.dataObjectAggregator.getAttributeIcons(attribute);
-    const editable = this.dataObjectAggregator.isAttributeEditable(attribute);
+    const attributeEditable = this.dataObjectAggregator.isAttributeEditable(attribute);
     const resourceType = attribute.resourceType;
 
     return dataObjectsInfo.reduce<MapMarkerData[]>((data, item) => {
@@ -112,6 +118,7 @@ export class MapDataConverter {
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const color = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources) || resourceColor;
+      const editable = attributeEditable && userCanEditDataResource(dataResource, resource, permissions, this.user);
 
       data.push({
         resource,

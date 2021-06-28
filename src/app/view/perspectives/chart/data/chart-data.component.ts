@@ -48,6 +48,7 @@ import {ChartDataConverter} from './convertor/chart-data-converter';
 import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-visualizer';
 import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -59,6 +60,7 @@ interface Data {
   config: ChartConfig;
   updateType: UpdateType;
   constraintData: ConstraintData;
+  user: User;
 }
 
 enum UpdateType {
@@ -92,6 +94,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public user: User;
 
   @Input()
   public constraintData: ConstraintData;
@@ -162,7 +167,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
       latestData.config,
       latestData.linkTypes,
       latestData.linkInstances,
-      latestData.constraintData
+      latestData.constraintData,
+      latestData.user
     );
   }
 
@@ -193,6 +199,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       query: this.query,
       updateType,
       constraintData: this.constraintData,
+      user: this.user,
     });
   }
 
@@ -249,6 +256,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       changes.documents ||
       changes.query ||
       changes.permissions ||
+      changes.user ||
       (changes.config && changes.config.firstChange)
     ) {
       return true;
