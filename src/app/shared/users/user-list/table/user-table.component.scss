@@ -1,0 +1,10 @@
+.header {
+  display: grid;
+  grid-template-columns: 1fr 2fr min-content;
+
+  .roles {
+    display: grid;
+    grid-template-columns: auto minmax(200px, max-content);
+    align-items: center;
+  }
+}

@@ -22,7 +22,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 import {UserListComponent} from './user-list/user-list.component';
-import {UserComponent} from './user/user.component';
+import {UserComponent} from './user-list/user/user.component';
 import {NewUserComponent} from './new-user/new-user.component';
 import {UsersComponent} from './users.component';
 import {TagModule} from '../tag/tag.module';
@@ -33,11 +33,12 @@ import {UserStampComponent} from './user-stamp/user-stamp.component';
 import {GravatarModule} from 'ngx-gravatar';
 import {RolesModule} from '../roles/roles.module';
 import {UserRolesPipe} from './pipes/user-roles.pipe';
-import {UserTeamsComponent} from './user/teams/user-teams.component';
+import {UserTeamsComponent} from './user-list/user/teams/user-teams.component';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
 import {FilterTeamsPipe} from './pipes/filter-teams.pipe';
 import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
+import {UserTableComponent} from './user-list/table/user-table.component';
 
 @NgModule({
   imports: [
@@ -62,7 +63,9 @@ import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
     TeamsIdsPipe,
     FilterTeamsPipe,
     FilterUserTeamsPipe,
+    UserTableComponent,
   ],
-  exports: [UsersComponent, NewUserComponent, UserStampComponent],
+  exports: [UsersComponent, NewUserComponent, UserStampComponent, UserTableComponent],
 })
-export class UsersModule {}
+export class UsersModule {
+}

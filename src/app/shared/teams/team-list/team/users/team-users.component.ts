@@ -29,13 +29,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {OptionsDropdownComponent} from '../../../dropdown/options/options-dropdown.component';
-import {USER_AVATAR_SIZE} from '../../../../core/constants';
-import {User} from '../../../../core/store/users/user';
-import {KeyCode} from '../../../key-code';
-import {DropdownOption} from '../../../dropdown/options/dropdown-option';
-import {areArraysSame, uniqueValues} from '../../../utils/array.utils';
-import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
+import {USER_AVATAR_SIZE} from '../../../../../core/constants';
+import {User} from '../../../../../core/store/users/user';
+import {KeyCode} from '../../../../key-code';
+import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
+import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
+import {DropdownPosition} from '../../../../dropdown/dropdown-position';
 
 @Component({
   selector: 'team-users',

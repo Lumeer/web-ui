@@ -35,6 +35,8 @@ export class RoleGroupService {
         return this.createProjectGroups();
       case ResourceType.Collection:
         return this.createCollectionGroups();
+      case ResourceType.View:
+        return this.createViewGroups();
       default:
         return [];
     }
@@ -160,6 +162,29 @@ export class RoleGroupService {
           this.createCollectionRole(RoleType.TechConfig),
           this.createCollectionRole(RoleType.AttributeEdit),
           this.createCollectionRole(RoleType.CommentContribute),
+        ],
+      },
+      {
+        title: this.translateCollectionGroupType(RoleGroupType.Data),
+        order: 2,
+        roles: [
+          this.createCollectionRole(RoleType.DataRead),
+          this.createCollectionRole(RoleType.DataWrite),
+          this.createCollectionRole(RoleType.DataContribute),
+          this.createCollectionRole(RoleType.DataDelete),
+        ],
+      },
+    ];
+  }
+
+  private createViewGroups(): RoleGroup[] {
+    return [
+      {
+        order: 1,
+        roles: [
+          this.createCollectionRole(RoleType.Read),
+          this.createCollectionRole(RoleType.Manage),
+          this.createCollectionRole(RoleType.UserConfig),
         ],
       },
       {

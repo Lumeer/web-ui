@@ -1,0 +1,26 @@
+<div class="layer1 mt-4" [class.blur]="!editableTeams">
+  <team-component class="team py-2"
+                  *ngFor="let team of teams | teamFilter:searchString; trackBy:trackByTeam"
+                  [team]="team"
+                  [allTeams]="teams"
+                  [users]="users"
+                  [permissions]="permissions"
+                  [changeRoles]="changeRoles"
+                  [editable]="editable"
+                  [deletable]="deletableTeamIds | includes:team.id"
+                  [removable]="removableTeamIds | includes:team.id"
+                  [resourceType]="resourceType"
+                  (teamUpdated)="teamUpdated.emit($event)"
+                  (teamDeleted)="teamDeleted.emit($event)"
+                  (teamRolesChange)="teamRolesChange.emit({team: team, roles: $event})">
+  </team-component>
+</div>
+<div class="layer2 w-100 text-center p-5" *ngIf="!editableTeams">
+  <h5 i18n="@@teams.update.serviceLimits.title">Free plan</h5>
+  <div class="px-5" i18n="@@teams.update.serviceLimits.message">You are currently on the Free plan which does not allow you to have
+    manipulate with Teams. Do you want to upgrade to Business now?
+  </div>
+  <button class="btn btn-primary mt-3">
+    <a class="color-inherit" [routerLink]="['/o', organizationCode, 'detail']" [fragment]="'orderService'"><span i18n="@@teams.update.serviceLimits.button">Upgrade now!</span></a>
+  </button>
+</div>

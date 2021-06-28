@@ -17,11 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
-import {Permission, Role} from '../../../core/store/permissions/permissions';
+import {Role} from '../../../core/store/permissions/permissions';
 import {Resource} from '../../../core/model/resource';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -38,7 +47,7 @@ import {ServiceLimits} from '../../../core/store/organizations/service-limits/se
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnChanges {
   @Input()
   public resourceType: ResourceType;
 
@@ -70,19 +79,36 @@ export class UserListComponent implements OnInit {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
+  public userRolesChange = new EventEmitter<{ user: User; roles: Role[] }>();
 
   @Output()
-  public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();
+  public userTeamsChange = new EventEmitter<{ user: User; teams: string[] }>();
 
   public searchString: string;
 
   public teams$: Observable<Team[]>;
 
-  constructor(private store$: Store<AppState>) {}
+  public deletableUserIds: string[];
+
+  constructor(private store$: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.teams$ = this.store$.pipe(select(selectAllTeams));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.users || changes.resourceType || changes.currentUser) {
+      this.checkDeletableUserIds();
+    }
+  }
+
+  private checkDeletableUserIds() {
+    if (this.resourceType === ResourceType.Organization) {
+      this.deletableUserIds = (this.users || []).filter(user => user.id !== this.currentUser.id).map(user => user.id);
+    } else {
+      this.deletableUserIds = [];
+    }
   }
 
   public onUserRolesChanged(user: User, roles: Role[]) {

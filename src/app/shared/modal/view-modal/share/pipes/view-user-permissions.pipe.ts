@@ -22,15 +22,23 @@ import {User} from '../../../../../core/store/users/user';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {userCanReadAllInWorkspace} from '../../../../utils/permission.utils';
+import {View} from '../../../../../core/store/views/view';
+import {Permissions, Role} from '../../../../../core/store/permissions/permissions';
 
 @Pipe({
-  name: 'canRemoveUser',
+  name: 'viewUserPermissions',
 })
-export class CanRemoveUserPipe implements PipeTransform {
-  public transform(user: User, currentUser: User, organization: Organization, project: Project): boolean {
-    if (user.id === currentUser.id) {
-      return false;
-    }
-    return !userCanReadAllInWorkspace(organization, project, user);
+export class ViewUserPermissionsPipe implements PipeTransform {
+  public transform(view: View, roles: Record<string, Role[]>): Permissions {
+    const userPermissions = [...(view.permissions?.users || [])];
+    Object.keys(roles).forEach(id => {
+      const roleIndex = userPermissions.findIndex(role => role.id === id);
+      if (roleIndex >= 0) {
+        userPermissions[roleIndex] = {id, roles: roles[id]};
+      } else {
+        userPermissions.push({id, roles: roles[id]});
+      }
+    });
+    return {...view.permissions, users: userPermissions};
   }
 }

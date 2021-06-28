@@ -1,0 +1,33 @@
+<div class="header" [style.background-color]="color | lightenColor:.5">
+  <div class="p-2 font-weight-bold" i18n="@@users.header.user">User</div>
+  <div class="roles">
+    <div class="font-weight-bold p-2 text-nowrap" i18n="@@users.header.teams.roles">Teams & Roles</div>
+    <div class="pl-3 input-group input-group-sm">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
+      </div>
+      <input id="userSearch" class="form-control mr-1" type="search"
+             placeholder="Search user..."
+             i18n-placeholder="@@users.header.search.placeholder"
+             title="Search for users" i18n-title="@@users.header.search.title"
+             aria-describedby="search-user1"
+             [(ngModel)]="searchString">
+    </div>
+  </div>
+  <div><i class="fa fa-fw fa-none m-1"></i></div>
+</div>
+<user-component *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
+                class="user"
+                [teams]="teams"
+                [resourceType]="resourceType"
+                [user]="user"
+                [permissions]="permissions"
+                [deletable]="deletableUserIds | includes:user.id"
+                [removable]="removableUserIds | includes:user.id"
+                [changeTeams]="editableGroups"
+                (rolesUpdate)="userRolesChange.emit({user: user, roles: $event})"
+                (userUpdated)="userUpdated.emit($event)"
+                (userDeleted)="userDeleted.emit($event)"
+                (userRemoved)="userRemoved.emit($event)"
+                (teamsUpdate)="userTeamsChange.emit({user: user, teams: $event})">
+</user-component>

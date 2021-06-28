@@ -3,7 +3,7 @@
 </div>
 
 <div>
-  <user-teams [class.cursor-pointer]="editable"
+  <user-teams [class.cursor-pointer]="changeTeams"
               [teams]="teams"
               [selectedTeamIds]="user | filterUserTeams:teams"
               [editable]="changeTeams"
@@ -19,10 +19,16 @@
 
 <div>
   <i class="far fa-fw fa-trash-alt text-danger m-1 cursor-pointer"
-     *ngIf="editable"
+     *ngIf="deletable"
+     aria-hidden="true"
+     title="Delete User"
+     i18n-title="@@users.actions.delete"
+     (click)="onDelete()"></i>
+  <i class="far fa-fw fa-times text-danger m-1 cursor-pointer"
+     *ngIf="removable"
      aria-hidden="true"
      title="Remove User"
      i18n-title="@@users.actions.remove"
-     (click)="onDelete()"></i>
-  <i class="fa fa-fw fa-none m-1" *ngIf="!editable"></i>
+     (click)="onRemove()"></i>
+  <i class="fa fa-fw fa-none m-1" *ngIf="!deletable && !removable"></i>
 </div>

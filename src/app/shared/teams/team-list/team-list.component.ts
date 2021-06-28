@@ -43,9 +43,7 @@ import {ServiceLimits} from '../../../core/store/organizations/service-limits/se
 @Component({
   selector: 'team-list',
   templateUrl: './team-list.component.html',
-  styleUrls: ['./team-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'position-relative'},
 })
 export class TeamListComponent implements OnInit, OnChanges {
   @Input()
@@ -76,26 +74,26 @@ export class TeamListComponent implements OnInit, OnChanges {
   public teamDeleted = new EventEmitter<Team>();
 
   @Output()
-  public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
+  public teamRolesChange = new EventEmitter<{ team: Team; roles: Role[] }>();
 
-  public searchString: string;
+  public teamIds: string[];
   public groupsAreEditable: boolean;
 
   public users$: Observable<User[]>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.teams) {
+      this.teamIds = (this.teams || []).map(team => team.id);
+    }
     if (changes.serviceLimits) {
       this.groupsAreEditable = this.serviceLimits?.groups || false;
     }
-  }
-
-  public trackByTeam(index: number, team: Team): string {
-    return team.id;
   }
 }

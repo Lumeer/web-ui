@@ -28,7 +28,6 @@ import {selectUsersForWorkspace} from '../../../../core/store/users/users.state'
 import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {
-  selectOrganizationPermissions,
   selectProjectPermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
 
@@ -42,7 +41,6 @@ export class InviteUserComponent implements OnInit {
   @Input()
   public mobile: boolean;
 
-  public organizationPermissions$: Observable<AllowedPermissions>;
   public projectPermissions$: Observable<AllowedPermissions>;
   public projectUsers$: Observable<number>;
 
@@ -52,7 +50,6 @@ export class InviteUserComponent implements OnInit {
   constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.projectUsers$ = this.store$.pipe(
       select(selectUsersForWorkspace),

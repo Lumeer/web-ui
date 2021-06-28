@@ -1,7 +1,7 @@
-@import '../../../../styles/variables';
+@import 'src/styles/variables';
 
 :host {
   display: grid;
   grid-template-columns: 1fr 2fr min-content;
-  align-items: center;
+  align-items: flex-start;
 }

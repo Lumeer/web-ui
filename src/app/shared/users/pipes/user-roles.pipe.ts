@@ -26,6 +26,6 @@ import {User} from '../../../core/store/users/user';
 })
 export class UserRolesPipe implements PipeTransform {
   public transform(permissions: Permissions, user: User): Role[] {
-    return permissions?.users?.find(usr => usr.id === user.id)?.roles || [];
+    return permissions?.users?.find(role => role.id === (user.id || user.correlationId))?.roles || [];
   }
 }

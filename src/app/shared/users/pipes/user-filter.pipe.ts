@@ -32,6 +32,6 @@ export class UserFilterPipe implements PipeTransform {
       return users;
     }
     const valueLowerCase = removeAccentFromString(value, true);
-    return users.filter(user => removeAccentFromString(user.email, true).includes(valueLowerCase));
+    return users.filter(user => removeAccentFromString(user.name || user.email, true).includes(valueLowerCase));
   }
 }

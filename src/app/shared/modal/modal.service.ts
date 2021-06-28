@@ -163,7 +163,7 @@ export class ModalService {
 
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
-    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
+    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
   }
 
   public showViewSettings(view: View) {

@@ -19,12 +19,12 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {User} from '../../../core/store/users/user';
-import {ResourceType} from '../../../core/model/resource-type';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {Team} from '../../../core/store/teams/team';
-import {InputBoxComponent} from '../../input/input-box/input-box.component';
-import {Permissions, Role} from '../../../core/store/permissions/permissions';
+import {User} from '../../../../core/store/users/user';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {Team} from '../../../../core/store/teams/team';
+import {InputBoxComponent} from '../../../input/input-box/input-box.component';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 
 @Component({
   selector: 'team-component',
@@ -49,6 +49,12 @@ export class TeamComponent {
   public editable: boolean;
 
   @Input()
+  public deletable: boolean;
+
+  @Input()
+  public removable: boolean;
+
+  @Input()
   public changeRoles: boolean;
 
   @Input()
@@ -59,6 +65,9 @@ export class TeamComponent {
 
   @Output()
   public teamDeleted = new EventEmitter<Team>();
+
+  @Output()
+  public teamRemoved = new EventEmitter<Team>();
 
   @Output()
   public teamRolesChange = new EventEmitter<Role[]>();
@@ -104,5 +113,9 @@ export class TeamComponent {
 
   public onChangeRoles(roles: Role[]) {
     this.teamRolesChange.emit(roles);
+  }
+
+  public onRemove() {
+    this.teamRemoved.emit(this.team);
   }
 }

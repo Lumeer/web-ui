@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
-import {Permission, PermissionType} from '../permissions/permissions';
+import {Permission, PermissionType, Role} from '../permissions/permissions';
 import {User} from '../users/user';
 import {DefaultViewConfig, View} from './view';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -154,7 +154,7 @@ export namespace ViewsAction {
         viewId: string;
         permissions: Permission[];
         newUsers: User[];
-        newUsersRoles: Record<string, string[]>;
+        newUsersRoles: Record<string, Role[]>;
         onSuccess?: () => void;
         onFailure?: () => void;
         onInviteFailure?: () => void;

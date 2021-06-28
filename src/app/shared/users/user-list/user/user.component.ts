@@ -19,11 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {User} from '../../../core/store/users/user';
-import {ResourceType} from '../../../core/model/resource-type';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {Permissions, Role} from '../../../core/store/permissions/permissions';
-import {Team} from '../../../core/store/teams/team';
+import {User} from '../../../../core/store/users/user';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
+import {Team} from '../../../../core/store/teams/team';
 
 @Component({
   selector: 'user-component',
@@ -36,7 +36,10 @@ export class UserComponent {
   public resourceType: ResourceType;
 
   @Input()
-  public editable: boolean;
+  public deletable: boolean;
+
+  @Input()
+  public removable: boolean;
 
   @Input()
   public changeTeams: boolean;
@@ -55,6 +58,9 @@ export class UserComponent {
 
   @Output()
   public userDeleted = new EventEmitter<User>();
+
+  @Output()
+  public userRemoved = new EventEmitter<User>();
 
   @Output()
   public rolesUpdate = new EventEmitter<Role[]>();
@@ -80,6 +86,10 @@ export class UserComponent {
 
   public deleteUser() {
     this.userDeleted.emit(this.user);
+  }
+
+  public onRemove() {
+    this.userRemoved.emit(this.user);
   }
 
   public onTeamsSave(teams: string[]) {

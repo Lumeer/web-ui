@@ -4,6 +4,7 @@
            [permissions]="resourcePermissions$ | async"
            [resourceType]="resourceType"
            [teams]="teams$ | async"
+           [serviceLimits]="serviceLimits$ | async"
            (teamCreated)="onNewTeam($event)"
            (teamDeleted)="onTeamDeleted($event)"
            (teamUpdated)="onTeamUpdated($event)"

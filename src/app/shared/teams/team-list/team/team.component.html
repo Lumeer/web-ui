@@ -44,12 +44,18 @@
 
 <div>
   <i class="far fa-fw fa-trash-alt text-danger m-1 cursor-pointer"
-     *ngIf="editable"
+     *ngIf="deletable"
      aria-hidden="true"
      title="Remove team"
      i18n-title="@@team.actions.remove"
      (click)="onDelete()"></i>
-  <i class="fa fa-fw fa-none m-1" *ngIf="!editable"></i>
+  <i class="far fa-fw fa-times text-danger m-1 cursor-pointer"
+     *ngIf="removable"
+     aria-hidden="true"
+     title="Remove team"
+     i18n-title="@@team.actions.remove"
+     (click)="onRemove()"></i>
+  <i class="fa fa-fw fa-none m-1" *ngIf="!deletable"></i>
 </div>
 
 

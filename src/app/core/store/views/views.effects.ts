@@ -30,7 +30,7 @@ import {CommonAction} from '../common/common.action';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {Permission, PermissionType} from '../permissions/permissions';
+import {Permission, PermissionType, Role} from '../permissions/permissions';
 import {convertPermissionDtoToModel, convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {View} from './view';
@@ -67,7 +67,6 @@ import {UsersAction} from '../users/users.action';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as DetailActions from './../details/detail.actions';
 import {getPerspectiveSavedPerspectives} from './view.utils';
-import {roleTypesMap} from '../../model/role-type';
 
 @Injectable()
 export class ViewsEffects {
@@ -384,7 +383,7 @@ export class ViewsEffects {
     )
   );
 
-  private addUserToWorkspace(newUsers: User[], newUsersRoles: Record<string, string[]>): Observable<Permission[]> {
+  private addUserToWorkspace(newUsers: User[], newUsersRoles: Record<string, Role[]>): Observable<Permission[]> {
     if (newUsers.length === 0) {
       return of([]);
     }
@@ -398,8 +397,7 @@ export class ViewsEffects {
       map(users =>
         users.map((user, index) => {
           const correlationId = newUsers[index].correlationId;
-          // TODO just workaround for now
-          const roles = newUsersRoles[correlationId].map(role => ({type: roleTypesMap[role]}));
+          const roles = newUsersRoles[correlationId];
           return {id: user.id, roles};
         })
       )

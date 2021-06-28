@@ -24,17 +24,18 @@ import {FormsModule} from '@angular/forms';
 import {NewTeamComponent} from './new-team/new-team.component';
 import {TeamListComponent} from './team-list/team-list.component';
 import {PipesModule} from '../pipes/pipes.module';
-import {TeamComponent} from './team/team.component';
+import {TeamComponent} from './team-list/team/team.component';
 import {InputModule} from '../input/input.module';
-import {TeamUsersComponent} from './team/users/team-users.component';
+import {TeamUsersComponent} from './team-list/team/users/team-users.component';
 import {GravatarModule} from 'ngx-gravatar';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsPipesModule} from './pipes/teams-pipes.module';
 import {RolesModule} from '../roles/roles.module';
 import {RouterModule} from '@angular/router';
+import { TeamTableComponent } from './team-list/table/team-table.component';
 
 @NgModule({
-  declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamComponent, TeamUsersComponent],
+  declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamComponent, TeamUsersComponent, TeamTableComponent],
   imports: [
     FormsModule,
     CommonModule,
@@ -46,6 +47,6 @@ import {RouterModule} from '@angular/router';
     RolesModule,
     RouterModule,
   ],
-  exports: [TeamsComponent],
+  exports: [TeamsComponent, TeamTableComponent],
 })
 export class TeamsModule {}

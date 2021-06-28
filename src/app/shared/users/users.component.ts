@@ -50,7 +50,8 @@ import {ServiceLimits} from '../../core/store/organizations/service-limits/servi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersComponent implements OnInit, OnDestroy {
-  @Input() public resourceType: ResourceType;
+  @Input()
+  public resourceType: ResourceType;
 
   public users$: Observable<User[]>;
   public currentUser$: Observable<User>;
@@ -59,14 +60,15 @@ export class UsersComponent implements OnInit, OnDestroy {
   public project$ = new BehaviorSubject<Project>(null);
   public resource$: Observable<Resource>;
 
-  private resourceId: string;
+  private currentResourceId: string;
   private subscriptions = new Subscription();
 
   constructor(
     private store$: Store<AppState>,
     private angulartics2: Angulartics2,
     private configurationService: ConfigurationService
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.subscribeData();
@@ -107,20 +109,26 @@ export class UsersComponent implements OnInit, OnDestroy {
     return this.organization$.value?.id;
   }
 
-  public changeUserPermissions(data: {user: User; roles: Role[]}) {
+  public changeUserPermissions(data: { user: User; roles: Role[] }) {
     const permissions: Permission[] = [{id: data.user.id, roles: data.roles}];
     const payload = {permissions, type: PermissionType.Users};
     switch (this.resourceType) {
       case ResourceType.Organization: {
-        this.store$.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}));
+        this.store$.dispatch(new OrganizationsAction.ChangePermission({
+          ...payload,
+          organizationId: this.currentResourceId
+        }));
         break;
       }
       case ResourceType.Project: {
-        this.store$.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.resourceId}));
+        this.store$.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.currentResourceId}));
         break;
       }
       case ResourceType.Collection: {
-        this.store$.dispatch(new CollectionsAction.ChangePermission({...payload, collectionId: this.resourceId}));
+        this.store$.dispatch(new CollectionsAction.ChangePermission({
+          ...payload,
+          collectionId: this.currentResourceId
+        }));
         break;
       }
     }
@@ -146,7 +154,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.resource$ = this.store$.pipe(
       select(this.getSelector()),
       filter(resource => !!resource),
-      tap(resource => (this.resourceId = resource.id))
+      tap(resource => (this.currentResourceId = resource.id))
     );
   }
 
@@ -165,7 +173,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onUserTeamsChange(data: {user: User; teams: string[]}) {
-    this.store$.dispatch(new UsersAction.SetTeams({...data, organizationId: this.resourceId}));
+  public onUserTeamsChange(data: { user: User; teams: string[] }) {
+    this.store$.dispatch(new UsersAction.SetTeams({...data, organizationId: this.currentResourceId}));
   }
 }

@@ -17,6 +17,7 @@
                             [organization]="organization$ | async"
                             [project]="project$ | async"
                             [view]="view"
+                            [teams]="teams$ | async"
                             [users]="users$ | async"
                             (submitForm)="onShare($event)"
                             (rolesChanged)="onRolesChanged($event)">

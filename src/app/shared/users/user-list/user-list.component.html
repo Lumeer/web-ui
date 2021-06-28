@@ -11,36 +11,15 @@
     </div>
   </div>
 </div>
-<div class="user-list" *ngIf="teams$ | async as teams">
-  <div class="header" [style.background-color]="resource.color | lightenColor:.5">
-    <div class="p-2 font-weight-bold" i18n="@@users.header.user">User</div>
-    <div class="roles">
-      <div class="font-weight-bold p-2 text-nowrap" i18n="@@users.header.teams.roles">Teams & Roles</div>
-      <div class="pl-3 input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
-        </div>
-        <input id="userSearch" class="form-control mr-1" type="search"
-               placeholder="Search user..."
-               i18n-placeholder="@@users.header.search.placeholder"
-               title="Search for users" i18n-title="@@users.header.search.title"
-               aria-describedby="search-user1"
-               [(ngModel)]="searchString">
-      </div>
-    </div>
-    <div><i class="fa fa-fw fa-none m-1"></i></div>
-  </div>
-  <user-component *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
-                  class="user"
-                  [teams]="teams"
-                  [resourceType]="resourceType"
-                  [user]="user"
-                  [permissions]="resource.permissions"
-                  [editable]="user.id !== currentUser.id && (resourceType | isOrganizationType)"
-                  [changeTeams]="serviceLimits?.groups"
-                  (rolesUpdate)="onUserRolesChanged(user, $event)"
-                  (userUpdated)="userUpdated.emit($event)"
-                  (userDeleted)="userDeleted.emit($event)"
-                  (teamsUpdate)="onUserTeamsChanged(user, $event)">
-  </user-component>
-</div>
+<user-table [users]="users"
+            [resourceType]="resourceType"
+            [teams]="teams$ | async"
+            [permissions]="resource.permissions"
+            [color]="resource.color"
+            [editableGroups]="(resourceType | isOrganizationType) && serviceLimits?.groups"
+            [deletableUserIds]="deletableUserIds"
+            (userTeamsChange)="userTeamsChange.emit($event)"
+            (userRolesChange)="userRolesChange.emit($event)"
+            (userDeleted)="userDeleted.emit($event)"
+            (userUpdated)="userUpdated.emit($event)">
+</user-table>

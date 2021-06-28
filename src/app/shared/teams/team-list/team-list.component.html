@@ -10,27 +10,17 @@
     </div>
   </div>
 </div>
-<div class="team-list mt-4" *ngIf="users$ | async as users" [class.blur]="!groupsAreEditable">
-  <team-component class="team py-2"
-                  *ngFor="let team of teams | teamFilter:searchString; trackBy:trackByTeam"
-                  [team]="team"
-                  [allTeams]="teams"
-                  [users]="users"
-                  [permissions]="permissions"
-                  [changeRoles]="groupsAreEditable"
-                  [editable]="groupsAreEditable && (resourceType | isOrganizationType)"
-                  [resourceType]="resourceType"
-                  (teamUpdated)="teamUpdated.emit($event)"
-                  (teamDeleted)="teamDeleted.emit($event)"
-                  (teamRolesChange)="teamRolesChange.emit({team: team, roles: $event})">
-  </team-component>
-</div>
-<div class="position-absolute restricted-access text-center px-5">
-  <h5 i18n="@@teams.update.serviceLimits.title">Free plan</h5>
-  <div class="px-5" i18n="@@teams.update.serviceLimits.message">You are currently on the Free plan which does not allows you to have
-    manipulate with Teams. Do you want to upgrade to Business now?
-  </div>
-  <button class="btn btn-primary mt-3">
-    <a class="color-inherit" [routerLink]="['/o', organization?.code, 'detail']" [fragment]="'orderService'"><span i18n="@@teams.update.serviceLimits.button">Upgrade now!</span></a>
-  </button>
-</div>
+<team-table [editableTeams]="groupsAreEditable"
+            [resourceType]="resourceType"
+            [permissions]="permissions"
+            [teams]="teams"
+            [users]="users$ | async"
+            [editable]="groupsAreEditable && (resourceType | isOrganizationType)"
+            [changeRoles]="groupsAreEditable"
+            [deletableTeamIds]="groupsAreEditable && (resourceType | isOrganizationType) ? teamIds : []"
+            [organizationCode]="organization?.code"
+            (teamUpdated)="teamUpdated.emit($event)"
+            (teamDeleted)="teamDeleted.emit($event)"
+            (teamRemoved)="teamDeleted.emit($event)"
+            (teamRolesChange)="teamRolesChange.emit($event)">
+</team-table>
