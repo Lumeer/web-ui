@@ -21,6 +21,12 @@
     <span class="trail" i18n="@@userNotifications.taskAssignedSuffix"> has been assigned to you.</span>
   </ng-container>
 
+  <ng-container *ngSwitchCase="notificationType.TaskReopened">
+    <span class="trail" i18n="@@userNotifications.taskAssignedPrefix">The task <em [innerHTML]="taskName | truncate:128"></em> </span>
+    <span class="trail" i18n="@@userNotifications.taskAssignedMiddle" *ngIf="taskDueDate"> with due date {{taskDueDate}} </span>
+    <span class="trail" i18n="@@userNotifications.taskReopenedSuffix"> was reopened.</span>
+  </ng-container>
+
   <ng-container *ngSwitchCase="notificationType.DueDateSoon">
     <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName | truncate:128"></em> has due date soon – {{taskDueDate}}.</span>
   </ng-container>

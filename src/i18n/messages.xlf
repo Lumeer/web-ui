@@ -2573,7 +2573,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.tooltip.loopBreakBlock" datatype="html">
-        <source>Breaks the for cycle, if branch, switch case etc.</source>
+        <source>Breaks the for cycle, and a switch case.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/loop-break-blockly-component.ts</context>
           <context context-type="linenumber">32</context>
@@ -3799,18 +3799,18 @@
           <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="constraint.duration.unit.conversion" datatype="html">
-        <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">34,35</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
         <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.duration.unit.conversion" datatype="html">
+        <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">34,35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.description" datatype="html">
@@ -5525,19 +5525,19 @@
           <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="query.suggestion.type" datatype="html">
         <source> <x id="ICU" equiv-text="{suggestion.type, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}"/>
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11,12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4ea4591060b668f7c7ef6395ab16d544184b6645" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} LinkAttribute {Link Attribute} Collection {Table} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
-          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.empty" datatype="html">
@@ -5828,12 +5828,20 @@
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
         <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskAssignedSuffix" datatype="html">
@@ -5843,102 +5851,109 @@
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="userNotifications.taskReopenedSuffix" datatype="html">
+        <source> was reopened.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="userNotifications.dueDateSoon" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.pastDueDate" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.dueDateChangedPrefix" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has a changed due date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.dueDateChangedMiddle" datatype="html">
         <source> – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.dueDateChangedNoDate" datatype="html">
         <source> – no due date set</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.dueDateChangedSuffix" datatype="html">
         <source>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.stateUpdate" datatype="html">
         <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em&gt;"/><x id="INTERPOLATION" equiv-text="{{taskState}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.stateUpdate.len1" datatype="html">
         <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has been updated to <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.stateUpdate.len0" datatype="html">
         <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has been updated to <x id="START_EMPHASISED_TEXT_1" equiv-text="&lt;em&gt;"/>none<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskUpdated" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has been updated.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskRemoved" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has been removed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskUnassigned" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has been unassigned from you.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskCommented" datatype="html">
         <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> has a new comment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.taskMentioned" datatype="html">
         <source>You have been mentioned in a comment of the task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em [innerHTML]=&quot;taskName | truncate:128&quot;&gt;"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userNotifications.showUnread" datatype="html">
