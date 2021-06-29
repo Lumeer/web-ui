@@ -32,10 +32,17 @@ import {DropdownModule} from '../dropdown/dropdown.module';
 import {TeamsPipesModule} from './pipes/teams-pipes.module';
 import {RolesModule} from '../roles/roles.module';
 import {RouterModule} from '@angular/router';
-import { TeamTableComponent } from './team-list/table/team-table.component';
+import {TeamTableComponent} from './team-list/table/team-table.component';
 
 @NgModule({
-  declarations: [TeamsComponent, NewTeamComponent, TeamListComponent, TeamComponent, TeamUsersComponent, TeamTableComponent],
+  declarations: [
+    TeamsComponent,
+    NewTeamComponent,
+    TeamListComponent,
+    TeamComponent,
+    TeamUsersComponent,
+    TeamTableComponent,
+  ],
   imports: [
     FormsModule,
     CommonModule,

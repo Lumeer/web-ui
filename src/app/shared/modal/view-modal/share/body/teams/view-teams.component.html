@@ -3,8 +3,8 @@
             [teams]="teams"
             [resourceType]="resourceType"
             [permissions]="permissions"
-            [editableTeams]="!data.serviceLimits?.groups"
+            [editableTeams]="data.serviceLimits?.groups"
             [organizationCode]="organization?.code"
-            [changeRoles]="!data.serviceLimits?.groups"
+            [changeRoles]="data.serviceLimits?.groups"
             (teamRolesChange)="teamRolesChange.emit($event)">
 </team-table>

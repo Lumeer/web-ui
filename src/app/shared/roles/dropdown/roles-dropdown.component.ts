@@ -75,6 +75,14 @@ export class RolesDropdownComponent implements OnChanges {
     this.dropdown?.open();
   }
 
+  public toggle() {
+    if (this.isOpen()) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
   public close() {
     this.dropdown?.close();
   }

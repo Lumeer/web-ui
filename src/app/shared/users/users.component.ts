@@ -67,8 +67,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private angulartics2: Angulartics2,
     private configurationService: ConfigurationService
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -109,15 +108,17 @@ export class UsersComponent implements OnInit, OnDestroy {
     return this.organization$.value?.id;
   }
 
-  public changeUserPermissions(data: { user: User; roles: Role[] }) {
+  public changeUserPermissions(data: {user: User; roles: Role[]}) {
     const permissions: Permission[] = [{id: data.user.id, roles: data.roles}];
     const payload = {permissions, type: PermissionType.Users};
     switch (this.resourceType) {
       case ResourceType.Organization: {
-        this.store$.dispatch(new OrganizationsAction.ChangePermission({
-          ...payload,
-          organizationId: this.currentResourceId
-        }));
+        this.store$.dispatch(
+          new OrganizationsAction.ChangePermission({
+            ...payload,
+            organizationId: this.currentResourceId,
+          })
+        );
         break;
       }
       case ResourceType.Project: {
@@ -125,10 +126,12 @@ export class UsersComponent implements OnInit, OnDestroy {
         break;
       }
       case ResourceType.Collection: {
-        this.store$.dispatch(new CollectionsAction.ChangePermission({
-          ...payload,
-          collectionId: this.currentResourceId
-        }));
+        this.store$.dispatch(
+          new CollectionsAction.ChangePermission({
+            ...payload,
+            collectionId: this.currentResourceId,
+          })
+        );
         break;
       }
     }
@@ -173,7 +176,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onUserTeamsChange(data: { user: User; teams: string[] }) {
+  public onUserTeamsChange(data: {user: User; teams: string[]}) {
     this.store$.dispatch(new UsersAction.SetTeams({...data, organizationId: this.currentResourceId}));
   }
 }

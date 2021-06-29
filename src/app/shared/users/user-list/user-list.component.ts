@@ -25,7 +25,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
@@ -79,10 +79,10 @@ export class UserListComponent implements OnInit, OnChanges {
   public userDeleted = new EventEmitter<User>();
 
   @Output()
-  public userRolesChange = new EventEmitter<{ user: User; roles: Role[] }>();
+  public userRolesChange = new EventEmitter<{user: User; roles: Role[]}>();
 
   @Output()
-  public userTeamsChange = new EventEmitter<{ user: User; teams: string[] }>();
+  public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();
 
   public searchString: string;
 
@@ -90,8 +90,7 @@ export class UserListComponent implements OnInit, OnChanges {
 
   public deletableUserIds: string[];
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.teams$ = this.store$.pipe(select(selectAllTeams));

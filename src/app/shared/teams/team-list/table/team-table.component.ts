@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
@@ -31,9 +30,8 @@ import {ResourceType} from '../../../../core/model/resource-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamTableComponent {
-
   @Input()
-  public users: User[]
+  public users: User[];
 
   @Input()
   public teams: Team[];

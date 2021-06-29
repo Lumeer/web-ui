@@ -27,10 +27,9 @@ import {ResourceType} from '../../../../core/model/resource-type';
   selector: 'user-table',
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent {
-
   @Input()
   public users: User[];
 
@@ -75,5 +74,4 @@ export class UserTableComponent {
   public trackByUserId(index: number, user: User): string {
     return user.id || user.correlationId;
   }
-
 }

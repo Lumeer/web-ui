@@ -67,5 +67,4 @@ import {UserTableComponent} from './user-list/table/user-table.component';
   ],
   exports: [UsersComponent, NewUserComponent, UserStampComponent, UserTableComponent],
 })
-export class UsersModule {
-}
+export class UsersModule {}

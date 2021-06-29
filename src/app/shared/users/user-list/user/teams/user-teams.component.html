@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center h-100 p-1 flex-wrap wrapper-element" #wrapperElement
+<div class="d-flex align-items-center h-100 flex-wrap wrapper-element" #wrapperElement
      *ngIf="selectedTeams$ | async as selectedTeams"
      (click)="onClick()"
      (mousedown)="onMouseDown($event)">
@@ -18,7 +18,7 @@
          (keydown)="onKeyDown($event)"
          [class.ml-1]="selectedTeams.length > 0"
          [spellcheck]="false"
-         class="border-0 bg-transparent"
+         class="border-0 bg-transparent mb-1"
          type="text">
 
   <options-dropdown *ngIf="editable"

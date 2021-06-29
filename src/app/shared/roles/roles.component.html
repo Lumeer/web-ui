@@ -3,12 +3,11 @@
 </span>
 
 <ng-container *ngIf="editable">
-  <div class="btn btn-sm btn-primary mb-1" #buttonElement (click)="dropdownComponent.open()">
-    <span class="small">Edit roles</span>
+  <div class="btn btn-sm btn-outline-primary mb-1 text-nowrap" #buttonElement (click)="$event.stopPropagation(); onClick()">
+    <i class="far fa-pencil mr-2"></i><span class="small">Edit roles</span>
   </div>
 
-  <roles-dropdown #dropdownComponent
-                  [origin]="buttonElement"
+  <roles-dropdown [origin]="buttonElement"
                   [selectedRoles]="roles"
                   [groups]="groups"
                   (change)="onRolesChange($event)">

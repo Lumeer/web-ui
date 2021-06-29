@@ -3,6 +3,7 @@
 .team:not(:last-child) {
   border-bottom: 1px solid $gray-200;
 }
+
 .blur {
   filter: blur(12px);
 }
@@ -11,7 +12,8 @@
   display: grid;
 }
 
-.layer1, .layer2{
+.layer1,
+.layer2 {
   grid-column: 1;
   grid-row: 1;
 }
@@ -19,4 +21,3 @@
 .layer2 {
   z-index: 3;
 }
-

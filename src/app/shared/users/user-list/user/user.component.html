@@ -2,14 +2,14 @@
   <user-stamp class="d-block p-2" [email]="user.email" [userName]="user.name" [size]="32"></user-stamp>
 </div>
 
-<div>
+<div class="pb-2 pt-3">
   <user-teams [class.cursor-pointer]="changeTeams"
               [teams]="teams"
               [selectedTeamIds]="user | filterUserTeams:teams"
               [editable]="changeTeams"
               (save)="onTeamsSave($event)">
   </user-teams>
-  <roles class="mt-3"
+  <roles class="mt-3 cursor-pointer"
          [resourceType]="resourceType"
          [editable]="true"
          [roles]="permissions | userRoles:user"

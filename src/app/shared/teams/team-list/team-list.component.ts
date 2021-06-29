@@ -74,15 +74,14 @@ export class TeamListComponent implements OnInit, OnChanges {
   public teamDeleted = new EventEmitter<Team>();
 
   @Output()
-  public teamRolesChange = new EventEmitter<{ team: Team; roles: Role[] }>();
+  public teamRolesChange = new EventEmitter<{team: Team; roles: Role[]}>();
 
   public teamIds: string[];
   public groupsAreEditable: boolean;
 
   public users$: Observable<User[]>;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));

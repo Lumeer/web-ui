@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {User} from '../../../../../../core/store/users/user';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {View} from '../../../../../../core/store/views/view';
@@ -34,10 +43,9 @@ import {Permissions, Role} from '../../../../../../core/store/permissions/permis
 @Component({
   selector: 'view-users',
   templateUrl: './view-users.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewUsersComponent implements OnInit, OnChanges {
-
   @Input()
   public view: View;
 
@@ -74,15 +82,14 @@ export class ViewUsersComponent implements OnInit, OnChanges {
 
   public readonly resourceType = ResourceType.View;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if(changes.otherUsers) {
+    if (changes.otherUsers) {
       this.removableUserIds = (this.otherUsers || []).map(user => user.id);
     }
   }

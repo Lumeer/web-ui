@@ -17,11 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import {Role} from '../../core/store/permissions/permissions';
 import {ResourceType} from '../../core/model/resource-type';
 import {RoleGroupService} from '../../core/service/role-group.service';
 import {RoleGroup, TranslatedRole} from '../../core/model/role-group';
+import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
 
 @Component({
   selector: 'roles',
@@ -45,6 +56,9 @@ export class RolesComponent implements OnChanges {
 
   @Output()
   public change = new EventEmitter<Role[]>();
+
+  @ViewChild(RolesDropdownComponent)
+  public rolesDropdownComponent: RolesDropdownComponent;
 
   public groups: RoleGroup[];
   public translatedRoles: TranslatedRole[];
@@ -73,5 +87,10 @@ export class RolesComponent implements OnChanges {
 
   public onRolesChange(roles: Role[]) {
     this.change.emit(roles);
+  }
+
+  @HostListener('click')
+  public onClick() {
+    this.rolesDropdownComponent?.toggle();
   }
 }
