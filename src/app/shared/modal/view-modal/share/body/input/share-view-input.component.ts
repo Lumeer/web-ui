@@ -47,9 +47,6 @@ export class ShareViewInputComponent implements OnChanges {
   @Input()
   public currentUsers: User[];
 
-  @Input()
-  public canAddNewUsers: boolean;
-
   @Output()
   public selectUser = new EventEmitter<User>();
 

@@ -34,8 +34,8 @@ import {combineLatest, Observable} from 'rxjs';
 import {first, map} from 'rxjs/operators';
 import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
 import {
-  selectCollectionsByWritePermission,
-  selectLinkTypesByReadPermission,
+  selectReadableCollections,
+  selectReadableLinkTypes,
 } from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
@@ -83,15 +83,10 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   private bindCollections(cursor: TableBodyCursor) {
     this.collections$ = combineLatest([
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
-      this.store$.pipe(select(selectCollectionsByWritePermission)),
+      this.store$.pipe(select(selectReadableCollections)),
     ]).pipe(
-      map(([lastCollectionId, writableCollections]) => {
-        const writableCollectionIds = writableCollections.map(collection => collection.id);
-        if (!writableCollectionIds.includes(lastCollectionId)) {
-          return [];
-        }
-
-        const filteredCollections = writableCollections.filter(collection => collection.id !== lastCollectionId);
+      map(([lastCollectionId, linkedCollections]) => {
+        const filteredCollections = linkedCollections.filter(collection => collection.id !== lastCollectionId);
         return sortResourcesByFavoriteAndLastUsed(filteredCollections);
       })
     );
@@ -99,7 +94,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   private bindLinkTypes(cursor: TableBodyCursor) {
     this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByReadPermission)),
+      this.store$.pipe(select(selectReadableLinkTypes)),
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),

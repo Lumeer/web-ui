@@ -31,7 +31,6 @@ import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   MapConfig,
   MapMarkerData,
@@ -44,8 +43,7 @@ import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {MapDataConverter} from './map-data-converter';
 import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
@@ -55,14 +53,16 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {AppState} from '../../../../core/store/app.state';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
   linkTypes: LinkType[];
   data: DocumentsAndLinksData;
   config: MapConfig;
-  permissions: AllowedPermissionsMap;
+  permissions: ResourcesPermissions;
   query: Query;
+  user: User;
 }
 
 @Component({
@@ -85,10 +85,13 @@ export class MapContentComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public query: Query;
+
+  @Input()
+  public user: User;
 
   @Input()
   public map: MapModel;
@@ -122,7 +125,15 @@ export class MapContentComponent implements OnInit, OnChanges {
       this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
     }
 
-    return this.converter.convert(config, data.collections, data.linkTypes, data.data, data.permissions, data.query);
+    return this.converter.convert(
+      config,
+      data.collections,
+      data.linkTypes,
+      data.data,
+      data.permissions,
+      data.query,
+      data.user
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -132,6 +143,7 @@ export class MapContentComponent implements OnInit, OnChanges {
         changes.data ||
         changes.permissions ||
         changes.query ||
+        changes.user ||
         this.mapConfigChanged(changes.map)) &&
       this.map?.config
     ) {
@@ -142,6 +154,7 @@ export class MapContentComponent implements OnInit, OnChanges {
         permissions: this.permissions,
         config: this.map.config,
         query: this.query,
+        user: this.user,
       });
     }
   }

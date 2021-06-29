@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permission, Permissions, PermissionType} from './permissions';
+import {Permission, Permissions, PermissionType, Role} from './permissions';
 
 export class PermissionsHelper {
   public static changePermission(
@@ -40,17 +40,8 @@ export class PermissionsHelper {
     permissionsCopy[type] = entityPermissions;
     return permissionsCopy;
   }
+}
 
-  public static removePermission(permissions: Permissions, type: PermissionType, name: string): Permissions {
-    const entityPermissions: Permission[] = permissions ? permissions[type].slice() : [];
-
-    const index = entityPermissions.findIndex(p => p.id === name);
-    if (index) {
-      entityPermissions.splice(index, 1);
-    }
-
-    const permissionsCopy: Permissions = {...permissions};
-    permissionsCopy[type] = entityPermissions;
-    return permissionsCopy;
-  }
+export function rolesAreSame(r1: Role, r2: Role): boolean {
+  return r1.type === r2.type && !!r1.transitive === !!r2.transitive;
 }

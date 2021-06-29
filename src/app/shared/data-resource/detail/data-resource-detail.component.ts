@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
@@ -72,8 +72,10 @@ import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {computeResourcesPermissionsForWorkspace} from '../../utils/permission.utils';
 import {selectCurrentView} from '../../../core/store/views/views.state';
+import {computeResourcesPermissions} from '../../utils/permission.utils';
+import {User} from '../../../core/store/users/user';
+import {RoleType} from '../../../core/model/role-type';
 
 @Component({
   selector: 'data-resource-detail',
@@ -123,11 +125,9 @@ export class DataResourceDetailComponent
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
   public attributesSettings$: Observable<AttributesSettings>;
-  public resourcesPermissions$: Observable<{
-    collectionsPermissions: AllowedPermissionsMap;
-    linkTypesPermissions: AllowedPermissionsMap;
-  }>;
+  public resourcesPermissions$: Observable<ResourcesPermissions>;
   public linkTypes$: Observable<LinkType[]>;
+  public currentUser$: Observable<User>;
 
   public readonly contactUrl: string;
   public readonly collectionResourceType = AttributesResourceType.Collection;
@@ -167,6 +167,7 @@ export class DataResourceDetailComponent
   public ngOnInit() {
     super.ngOnInit();
 
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$.asObservable()]).pipe(
       map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
@@ -186,13 +187,13 @@ export class DataResourceDetailComponent
       this.store$.pipe(select(selectCurrentView)),
     ]).pipe(
       map(([user, models, collections, linkTypes, defaultView, currentView]) =>
-        computeResourcesPermissionsForWorkspace(
-          user,
+        computeResourcesPermissions(
           models?.organization,
           models?.project,
           defaultView || currentView,
           collections,
-          linkTypes
+          linkTypes,
+          user
         )
       )
     );
@@ -207,7 +208,7 @@ export class DataResourceDetailComponent
         ([permissions, linkTypes, collectionId, collectionsMap]) =>
           (collectionId &&
             linkTypes
-              .filter(linkType => permissions?.linkTypesPermissions?.[linkType.id]?.readWithView)
+              .filter(linkType => permissions?.linkTypes?.[linkType.id]?.rolesWithView?.Read)
               .filter(linkType => linkType.collectionIds?.includes(collectionId))
               .map(linkType => mapLinkTypeCollections(linkType, collectionsMap))) ||
           []

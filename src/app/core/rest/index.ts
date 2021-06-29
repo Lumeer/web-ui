@@ -17,5 +17,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {GroupService} from './group.service';
 export {ImportService} from './import.service';

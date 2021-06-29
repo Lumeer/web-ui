@@ -38,7 +38,7 @@ import {
 } from './data-resources.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
-import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
@@ -46,16 +46,12 @@ export class DataResourcesEffects {
   public get$ = createEffect(() =>
     this.actions$.pipe(
       ofType<DataResourcesAction.Get>(DataResourcesActionType.GET),
-      withLatestFrom(
-        this.store$.pipe(select(selectCollectionsPermissions)),
-        this.store$.pipe(select(selectLinkTypesPermissions))
-      ),
-      map(([action, collectionsPermissions, linkTypePermissions]) =>
+      withLatestFrom(this.store$.pipe(select(selectResourcesPermissions))),
+      map(([action, permissions]) =>
         checkLoadedDataQueryPayload(
           action.payload,
           this.configurationService.getConfiguration().publicView,
-          collectionsPermissions,
-          linkTypePermissions
+          permissions
         )
       ),
       withLatestFrom(

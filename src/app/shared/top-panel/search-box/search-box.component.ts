@@ -57,7 +57,7 @@ import {
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
+import {selectCanChangeViewQuery, selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {SearchBoxData, SearchBoxService} from './util/search-box.service';
 
@@ -78,6 +78,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public perspective$: Observable<Perspective>;
   public query$: Observable<Query>;
   public canManageConfig$: Observable<boolean>;
+  public canChangeQuery$: Observable<boolean>;
   public searchBoxData$: Observable<SearchBoxData>;
 
   public queryItemsControl: FormArray;
@@ -105,6 +106,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.perspective$ = this.store$.pipe(select(selectPerspective));
+    this.canChangeQuery$ = this.store$.pipe(select(selectCanChangeViewQuery));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.searchBoxData$ = this.searchBoxService.data$;
   }

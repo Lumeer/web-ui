@@ -34,6 +34,9 @@ import {ProjectTemplateComponent} from './project/template/project-template.comp
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {GroupsGuard} from '../core/guards/data/groups.guard';
+import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
+import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -42,6 +45,7 @@ const workspaceRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
     resolve: {
       users: UsersGuard,
+      groups: GroupsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
       linkTypes: LinkTypesGuard,
@@ -50,6 +54,10 @@ const workspaceRoutes: Routes = [
       {
         path: 'users',
         component: ProjectUsersComponent,
+      },
+      {
+        path: 'teams',
+        component: ProjectTeamsComponent,
       },
       {
         path: 'sequences',
@@ -72,6 +80,7 @@ const workspaceRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
     resolve: {
       users: UsersGuard,
+      groups: GroupsGuard,
     },
     children: [
       {
@@ -81,6 +90,10 @@ const workspaceRoutes: Routes = [
       {
         path: 'users',
         component: OrganizationUsersComponent,
+      },
+      {
+        path: 'teams',
+        component: OrganizationTeamsComponent,
       },
       {
         path: '',

@@ -35,6 +35,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {QueryParam} from '../store/navigation/query-param';
 import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
 import {getDefaultAttributeId} from '../store/collections/collection.util';
+import {RoleType} from '../model/role-type';
 
 @Component({
   template: '',
@@ -81,10 +82,10 @@ export class DocumentRedirectComponent implements OnInit {
         let query: string;
         const path: any[] = ['w', organizationCode, projectCode, 'view'];
         const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
-        if (defaultView && viewsPermissions[defaultView.id]?.read) {
+        if (defaultView && viewsPermissions[defaultView.id]?.roles?.Read) {
           query = '';
           path.push({vc: defaultView.code});
-        } else if (collection && collectionsPermissions[collection.id]?.read) {
+        } else if (collection && collectionsPermissions[collection.id]?.roles?.Read) {
           query = convertQueryModelToString({stems: [{collectionId: document.collectionId}]});
           path.push(Perspective.Workflow);
         } else if (collection) {

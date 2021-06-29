@@ -32,7 +32,7 @@ import {LinkInstance} from '../../../../../../core/store/link-instances/link.ins
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {
   AttributeSortType,
@@ -139,6 +139,10 @@ import {filterUniqueWorkflowConfigStems} from '../../../../../../core/store/work
 import {columnBackgroundColor} from '../../../../../../shared/utils/color.utils';
 import {NavigationAction} from '../../../../../../core/store/navigation/navigation.action';
 import {CommonAction} from '../../../../../../core/store/common/common.action';
+import {RoleType} from '../../../../../../core/model/role-type';
+import {User} from '../../../../../../core/store/users/user';
+import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -147,6 +151,7 @@ export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {}; // grouped by columnId
   private lockedRowIds: Record<string, string[]> = {}; // grouped by tableId
   private currentView: View;
+  private currentUser: User;
 
   constructor(
     private store$: Store<AppState>,
@@ -160,6 +165,7 @@ export class WorkflowTablesDataService {
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
     this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.currentView = view));
+    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -217,7 +223,7 @@ export class WorkflowTablesDataService {
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
     config: WorkflowConfig,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
@@ -261,7 +267,7 @@ export class WorkflowTablesDataService {
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
     config: WorkflowConfig,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
@@ -269,7 +275,7 @@ export class WorkflowTablesDataService {
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
     return filterUniqueWorkflowConfigStems(config).reduce(
-      (result, stemConfig, index) => {
+      (result, stemConfig) => {
         const collection = collectionsMap[stemConfig.collection?.resourceId];
         if (!collection) {
           return result;
@@ -301,7 +307,6 @@ export class WorkflowTablesDataService {
           currentCollectionColumns,
           collection,
           permissions,
-          linkTypesMap,
           viewSettings,
           queryByStem,
           linkPermissions
@@ -369,7 +374,9 @@ export class WorkflowTablesDataService {
                 linkColumnIdsMap,
                 columnIdsMap,
                 linkPermissions,
-                collectionPermissions
+                collectionPermissions,
+                linkType,
+                collection
               );
 
               const newRowDataAggregated = {
@@ -413,7 +420,9 @@ export class WorkflowTablesDataService {
             linkColumnIdsMap,
             columnIdsMap,
             linkPermissions,
-            collectionPermissions
+            collectionPermissions,
+            linkType,
+            collection
           );
 
           const tableSettings = stemTableSettings?.find(tab => !tab.value);
@@ -496,13 +505,12 @@ export class WorkflowTablesDataService {
     stemConfig: WorkflowStemConfig,
     currentColumns: TableColumn[],
     collection: Collection,
-    permissions: AllowedPermissionsMap,
-    linkTypesMap: Record<string, LinkType>,
+    permissions: ResourcesPermissions,
     viewSettings: ViewSettings,
     query: Query,
     linkTypePermissions: AllowedPermissions
   ): {columns: TableColumn[]; actions: Action[]; permissions: AllowedPermissions} {
-    const collectionPermissions = queryAttributePermissions(stemConfig.collection, permissions, linkTypesMap);
+    const collectionPermissions = queryAttributePermissions(stemConfig.collection, permissions);
     const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
 
     return {
@@ -613,7 +621,7 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      if (!setting.hidden || permissions?.read || permissions?.manage) {
+      if (!setting.hidden || permissions?.roles?.Read) {
         columns.push(column);
       }
       return columns;
@@ -643,7 +651,7 @@ export class WorkflowTablesDataService {
     if (
       !this.currentView &&
       isCollection &&
-      permissions.manage &&
+      permissions.roles?.AttributeEdit &&
       !attributeColumns.some(column => !column.attribute)
     ) {
       const lastColumn: TableColumn = {
@@ -728,7 +736,9 @@ export class WorkflowTablesDataService {
     linkColumnIdsMap: Record<string, string>,
     columnIdsMap: Record<string, string>,
     linkPermissions: AllowedPermissions,
-    collectionPermissions: AllowedPermissions
+    collectionPermissions: AllowedPermissions,
+    linkType: LinkType,
+    collection: Collection
   ): {rows: TableRow[]; newRow: TableRow} {
     const rowsMap = currentRows.reduce(
       (result, row) => ({
@@ -762,10 +772,20 @@ export class WorkflowTablesDataService {
           documentMenuItems: [],
           linkMenuItems: [],
         };
-        row.documentMenuItems.push(
-          ...this.menuService.createRowMenu(collectionPermissions, row, !!object.linkInstance)
+        const documentPermissions = dataResourcePermissions(
+          object.document,
+          collection,
+          collectionPermissions,
+          this.currentUser
         );
-        row.linkMenuItems.push(...this.menuService.createRowMenu(linkPermissions, row, !!object.linkInstance));
+        row.documentMenuItems.push(...this.menuService.createRowMenu(documentPermissions, row, !!object.linkInstance));
+        const linkInstancePermissions = dataResourcePermissions(
+          object.linkInstance,
+          linkType,
+          linkPermissions,
+          this.currentUser
+        );
+        row.linkMenuItems.push(...this.menuService.createRowMenu(linkInstancePermissions, row, !!object.linkInstance));
 
         if (lockedRowIds.includes(row.id)) {
           data.lockedRows.push(row);
@@ -784,11 +804,13 @@ export class WorkflowTablesDataService {
       .filter(row => !!row);
 
     let newRow: TableRow;
-    const canCreateNewRow = linkPermissions ? linkPermissions.writeWithView : collectionPermissions.writeWithView;
+    const canCreateNewRow = linkPermissions
+      ? linkPermissions.rolesWithView?.DataContribute
+      : collectionPermissions.rolesWithView?.[RoleType.DataContribute];
     if (canCreateNewRow) {
       newRow = createEmptyNewRow(tableId);
-      newRow.documentMenuItems = this.menuService.createRowMenu(collectionPermissions, newRow);
-      newRow.linkMenuItems = this.menuService.createRowMenu(linkPermissions, newRow);
+      newRow.documentMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
+      newRow.linkMenuItems = this.menuService.createRowMenu({read: false, edit: true, delete: true}, newRow);
     }
 
     return {rows: [...rows, ...lockedRowsWithUncreated], newRow};

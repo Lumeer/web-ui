@@ -1,0 +1,37 @@
+<div class="d-flex align-items-center h-100 flex-wrap wrapper-element" #wrapperElement
+     *ngIf="selectedTeams$ | async as selectedTeams"
+     (click)="onClick()"
+     (mousedown)="onMouseDown($event)">
+
+  <div *ngFor="let team of selectedTeams; trackBy: trackByTeam"
+       class="badge badge-pill badge-info mr-2 mb-1">
+    {{team.name}}
+  </div>
+
+  <input #textInput
+         *ngIf="editable"
+         [(ngModel)]="name"
+         (blur)="onBlur()"
+         (focus)="onFocus()"
+         placeholder="Add team"
+         i18n-placeholder="@@user.teams.search.placeholder"
+         (keydown)="onKeyDown($event)"
+         [class.ml-1]="selectedTeams.length > 0"
+         [spellcheck]="false"
+         class="border-0 bg-transparent mb-1"
+         type="text">
+
+  <options-dropdown *ngIf="editable"
+                    [options]="teams | filterTeams:name"
+                    [showBackdrop]="false"
+                    [closeOnClickOutside]="false"
+                    [origin]="textInput"
+                    [highlightedText]="name"
+                    [multiSelect]="true"
+                    [dropdownPositions]="dropdownPositions"
+                    [selectedValues]="selectedTeams | teamsIds"
+                    [firstItemActive]="false"
+                    (selectOption)="onSelectOption($event)">
+  </options-dropdown>
+
+</div>

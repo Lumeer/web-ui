@@ -40,7 +40,7 @@ import {
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {
@@ -230,11 +230,7 @@ export function ganttTaskBarModel(task: GanttTask): GanttChartBarModel {
   return metadata && metadata.stemConfig && (metadata.stemConfig.name || metadata.stemConfig.start);
 }
 
-export function canCreateTaskByStemConfig(
-  config: GanttChartStemConfig,
-  permissions: AllowedPermissionsMap,
-  linkTypesMap: Record<string, LinkType>
-): boolean {
+export function canCreateTaskByStemConfig(config: GanttChartStemConfig, permissions: ResourcesPermissions): boolean {
   if (!config.start || !config.end) {
     return false;
   }
@@ -245,35 +241,28 @@ export function canCreateTaskByStemConfig(
       ganttModelsAreAtDistance(config.name, config.start, maxDistance) &&
       ganttModelsAreAtDistance(config.name, config.end, maxDistance) &&
       ganttModelsAreAtDistance(config.start, config.end, maxDistance) &&
-      hasPermissionByConfig(config, permissions, linkTypesMap)
+      hasPermissionByConfig(config, permissions)
     );
   }
 
-  return (
-    ganttModelsAreAtDistance(config.start, config.end, maxDistance) &&
-    hasPermissionByConfig(config, permissions, linkTypesMap)
-  );
+  return ganttModelsAreAtDistance(config.start, config.end, maxDistance) && hasPermissionByConfig(config, permissions);
 }
 
-function hasPermissionByConfig(
-  config: GanttChartStemConfig,
-  permissions: AllowedPermissionsMap,
-  linkTypesMap: Record<string, LinkType>
-): boolean {
+function hasPermissionByConfig(config: GanttChartStemConfig, permissions: ResourcesPermissions): boolean {
   let hasPermission = true;
   if (config.name) {
-    const permission = queryAttributePermissions(config.name, permissions, linkTypesMap);
-    hasPermission = hasPermission && permission && permission.writeWithView;
+    const permission = queryAttributePermissions(config.name, permissions);
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   if (config.start) {
-    const permission = queryAttributePermissions(config.start, permissions, linkTypesMap);
-    hasPermission = hasPermission && permission.writeWithView;
+    const permission = queryAttributePermissions(config.start, permissions);
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   if (config.end) {
-    const permission = queryAttributePermissions(config.end, permissions, linkTypesMap);
-    hasPermission = hasPermission && permission.writeWithView;
+    const permission = queryAttributePermissions(config.end, permissions);
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   return hasPermission;

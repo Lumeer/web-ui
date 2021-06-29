@@ -23,12 +23,9 @@ import {Observable} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {map, switchMap} from 'rxjs/operators';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {ViewConfig} from '../../../core/store/views/view';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectPanelWidth} from '../../../core/store/views/views.state';
 import {WorkflowConfig} from '../../../core/store/workflows/workflow';
@@ -36,7 +33,6 @@ import {selectWorkflowById, selectWorkflowSelectedDocumentId} from '../../../cor
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
@@ -50,7 +46,6 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 export class WorkflowPerspectiveComponent
   extends DataPerspectiveComponent<WorkflowConfig>
   implements OnInit, OnDestroy {
-  public permissions$: Observable<AllowedPermissionsMap>;
   public selectedDocument$: Observable<DocumentModel>;
   public selectedCollection$: Observable<Collection>;
   public panelWidth$: Observable<number>;
@@ -89,7 +84,6 @@ export class WorkflowPerspectiveComponent
   }
 
   public subscribeAdditionalData() {
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     const selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
     this.selectedDocument$ = selectedDocumentId$.pipe(

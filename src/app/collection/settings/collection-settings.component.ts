@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 
-import {filter, map, take} from 'rxjs/operators';
+import {filter, map, switchMap, take} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -41,6 +41,8 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectCollectionPermissions} from '../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -50,6 +52,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public readonly collectionType = ResourceType.Collection;
 
   public collection$ = new BehaviorSubject<Collection>(null);
+  public permissions$: Observable<AllowedPermissions>;
   public userCount$: Observable<number>;
   public organizationAndProject$: Observable<{organization: Organization; project: Project}>;
 
@@ -161,6 +164,10 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         filter(collection => !!collection)
       )
       .subscribe(collection => this.collection$.next({...collection}));
+    this.permissions$ = this.collection$.pipe(
+      filter(collection => !!collection),
+      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection.id))))
+    );
     this.subscriptions.add(sub2);
 
     this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url));

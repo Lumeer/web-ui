@@ -24,16 +24,14 @@ import {Observable} from 'rxjs';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
-import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
 import {
-  selectCollectionsByWritePermission,
-  selectLinkTypesByWritePermission,
+  selectContributeAndWritableCollections,
+  selectContributeAndWritableLinkTypes,
   selectViewsByRead,
 } from '../../../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../../../core/store/views/view';
@@ -101,9 +99,9 @@ export class BlocklyFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByWritePermission));
+    this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByWritePermission));
+    this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
     if (this.collection) {
       this.variables = [
         {name: 'oldRecord', collectionId: this.collection.id},

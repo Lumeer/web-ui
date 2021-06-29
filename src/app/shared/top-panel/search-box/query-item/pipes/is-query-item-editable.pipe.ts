@@ -26,7 +26,7 @@ import {isQueryItemEditable} from '../../../../../core/store/navigation/query/qu
   name: 'isQueryItemEditable',
 })
 export class IsQueryItemEditablePipe implements PipeTransform {
-  public transform(index: number, queryItems: QueryItem[], canManageConfig: boolean, viewQuery: Query): boolean {
-    return isQueryItemEditable(index, queryItems, canManageConfig, viewQuery);
+  public transform(index: number, queryItems: QueryItem[], canManageQuery: boolean, viewQuery: Query): boolean {
+    return isQueryItemEditable(index, queryItems, canManageQuery, viewQuery);
   }
 }

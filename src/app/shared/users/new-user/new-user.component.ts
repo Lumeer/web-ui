@@ -38,8 +38,10 @@ export class NewUserComponent {
   public isDuplicate: boolean = false;
 
   public onAddUser() {
-    this.userCreated.emit(this.email);
-    this.clearInputs();
+    if (this.email && !this.isDuplicate) {
+      this.userCreated.emit(this.email);
+      this.clearInputs();
+    }
   }
 
   public onInputChanged(value: string) {
@@ -54,9 +56,5 @@ export class NewUserComponent {
 
   private clearInputs() {
     this.email = '';
-  }
-
-  public emailPlaceHolder(): string {
-    return $localize`:@@user.add.placeholder:Type email to invite another user`;
   }
 }

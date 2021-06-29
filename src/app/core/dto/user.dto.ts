@@ -18,16 +18,14 @@
  */
 
 import {DefaultWorkspaceDto} from './default-workspace.dto';
-import {NotificationSettings} from '../store/users/user';
-import {UserNotificationType} from '../model/user-notification';
-import {NotificationChannel} from '../model/notification-channel';
-import {NotificationFrequency} from '../model/notification-frequency';
+import {TeamDto} from './team.dto';
 
 export interface UserDto {
   id?: string;
   name?: string;
   email: string;
-  groups: {[organizationId: string]: string[]};
+  organizations?: string[];
+  groups?: TeamDto[];
   defaultWorkspace?: DefaultWorkspaceDto;
   agreement?: boolean;
   agreementDate?: number;

@@ -1,0 +1,12 @@
+<team-list class="d-block mb-5"
+           [organization]="organization$ | async"
+           [project]="project$ | async"
+           [permissions]="resourcePermissions$ | async"
+           [resourceType]="resourceType"
+           [teams]="teams$ | async"
+           [serviceLimits]="serviceLimits$ | async"
+           (teamCreated)="onNewTeam($event)"
+           (teamDeleted)="onTeamDeleted($event)"
+           (teamUpdated)="onTeamUpdated($event)"
+           (teamRolesChange)="onRolesChange($event.roles, $event.team)">
+</team-list>

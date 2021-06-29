@@ -1,0 +1,19 @@
+<span *ngFor="let role of transitiveTranslatedRoles; trackBy:trackByRole" class="badge badge-outline-secondary mr-2 mb-1">
+  {{role.title}}
+</span>
+<span *ngFor="let role of translatedRoles; trackBy:trackByRole" class="badge badge-outline-success mr-2 mb-1">
+  {{role.title}}
+</span>
+
+<ng-container *ngIf="editable">
+  <div class="btn btn-sm btn-outline-primary mb-1 text-nowrap" #buttonElement (click)="$event.stopPropagation(); onClick()">
+    <i class="far fa-pencil mr-2"></i><span class="small">Edit roles</span>
+  </div>
+
+  <roles-dropdown [origin]="buttonElement"
+                  [selectedRoles]="roles"
+                  [transitiveRoles]="transitiveRoles"
+                  [groups]="groups"
+                  (change)="onRolesChange($event)">
+  </roles-dropdown>
+</ng-container>

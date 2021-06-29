@@ -24,7 +24,7 @@ import {Subscription} from 'rxjs';
 import {filter, map, switchMap, take} from 'rxjs/operators';
 import {getTableRowCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
+import {selectTableCursor} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
@@ -32,14 +32,15 @@ import {AppState} from '../../../../../core/store/app.state';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
-import {selectCollectionPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
 
 @Component({
   selector: 'table-hidden-input',
   templateUrl: './table-hidden-input.component.html',
   styleUrls: ['./table-hidden-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TableDataPermissionsService],
 })
 export class TableHiddenInputComponent implements OnInit, OnDestroy {
   @Input()
@@ -57,7 +58,11 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private constraintData: ConstraintData;
 
-  constructor(private actions$: Actions, private store$: Store<AppState>) {}
+  constructor(
+    private actions$: Actions,
+    private store$: Store<AppState>,
+    private dataPermissionsService: TableDataPermissionsService
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
@@ -169,21 +174,17 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         select(selectTableCursor),
         take(1),
         switchMap(cursor =>
-          this.store$.pipe(
-            select(selectTablePart(cursor)),
-            take(1),
-            filter(part => !!part),
-            switchMap(part => this.store$.pipe(select(selectCollectionPermissions(part.collectionId)))),
+          this.dataPermissionsService.selectDataPermissions$(cursor).pipe(
             take(1),
             filter(() => !!cursor.rowPath),
-            map(permissions => [cursor, permissions?.writeWithView])
+            map(permissions => [cursor, permissions?.edit])
           )
         )
       )
-      .subscribe(([cursor, writeWithView]: [TableBodyCursor, boolean]) => {
-        event[EDITABLE_EVENT] = writeWithView;
+      .subscribe(([cursor, editable]: [TableBodyCursor, boolean]) => {
+        event[EDITABLE_EVENT] = editable;
 
-        if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {
+        if (event.altKey && event.shiftKey && editable && this.canManageConfig) {
           event.stopPropagation();
           switch (event.code) {
             case KeyCode.ArrowRight:

@@ -50,6 +50,7 @@ import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
+import {RoleType} from '../../../model/role-type';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -84,10 +85,10 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
 export function isQueryItemEditable(
   index: number,
   queryItems: QueryItem[],
-  canManageConfig: boolean,
+  canManageQuery: boolean,
   viewQuery: Query
 ): boolean {
-  if (canManageConfig) {
+  if (canManageQuery) {
     return true;
   }
 
@@ -385,7 +386,7 @@ export function tasksCollectionQueryStem(collection: Collection, permissions: Al
         ],
       };
     }
-  } else if (permissions?.[collection.id]?.read) {
+  } else if (permissions?.[collection.id]?.roles?.DataRead || permissions?.[collection.id]?.roles?.DataContribute) {
     return {collectionId: collection.id};
   }
   return null;
@@ -452,8 +453,6 @@ export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTy
 
   stemCopy.filters = stem.filters?.filter(filter => notRemovedCollectionIds.includes(filter.collectionId));
   stemCopy.linkFilters = stem.linkFilters?.filter(filter => stem.linkTypeIds.includes(filter.linkTypeId));
-
-  // TODO filter documents once implemented
 
   return stemCopy;
 }

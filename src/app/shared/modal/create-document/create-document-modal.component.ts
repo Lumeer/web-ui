@@ -25,7 +25,7 @@ import {getQueryFiltersForCollection} from '../../../core/store/navigation/query
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectCollectionsByWritePermission, selectTasksQuery} from '../../../core/store/common/permissions.selectors';
+import {selectContributeCollections, selectTasksQuery} from '../../../core/store/common/permissions.selectors';
 import {map, take, tap} from 'rxjs/operators';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
@@ -47,7 +47,7 @@ export class CreateDocumentModalComponent implements OnInit {
 
   public ngOnInit() {
     this.collections$ = this.store$.pipe(
-      select(selectCollectionsByWritePermission),
+      select(selectContributeCollections),
       map(collections =>
         this.purpose ? collections.filter(coll => coll.purpose?.type === this.purpose) : collections
       ),

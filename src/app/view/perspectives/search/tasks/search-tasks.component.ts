@@ -44,6 +44,7 @@ import {DataResourcesAction} from '../../../../core/store/data-resources/data-re
 import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {View} from '../../../../core/store/views/view';
+import {User} from '../../../../core/store/users/user';
 
 const PAGE_SIZE = 50;
 
@@ -67,6 +68,7 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
   public query$: Observable<Query>;
   public views$: Observable<View[]>;
   public workspace$: Observable<Workspace>;
+  public currentUser$: Observable<User>;
 
   private searchId: string;
   private config: SearchConfig;

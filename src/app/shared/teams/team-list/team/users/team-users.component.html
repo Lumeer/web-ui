@@ -1,0 +1,40 @@
+<div class="d-flex align-items-center h-100 p-1 flex-wrap wrapper-element" #wrapperElement
+     *ngIf="selectedUsers$ | async as selectedUsers"
+     [title]="selectedUsers | usersNames | join"
+     (click)="onClick()"
+     (mousedown)="onMouseDown($event)">
+
+  <img ngxGravatar class="user"
+       *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first"
+       [email]="user.email"
+       [size]="avatarSize"
+       [style.min-width.px]="avatarSize"
+       [style.min-height.px]="avatarSize">
+
+  <input #textInput
+         *ngIf="editable"
+         [(ngModel)]="name"
+         (blur)="onBlur()"
+         (focus)="onFocus()"
+         placeholder="Add user"
+         i18n-placeholder="@@teams.users.search.placeholder"
+         (keydown)="onKeyDown($event)"
+         [class.ml-1]="selectedUsers.length > 0"
+         [spellcheck]="false"
+         class="border-0 bg-transparent"
+         type="text">
+
+  <options-dropdown *ngIf="editable"
+                    [options]="users | filterUsers:name"
+                    [showBackdrop]="false"
+                    [closeOnClickOutside]="false"
+                    [origin]="textInput"
+                    [highlightedText]="name"
+                    [multiSelect]="true"
+                    [dropdownPositions]="dropdownPositions"
+                    [selectedValues]="selectedUsers | usersIds"
+                    [firstItemActive]="false"
+                    (selectOption)="onSelectOption($event)">
+  </options-dropdown>
+
+</div>

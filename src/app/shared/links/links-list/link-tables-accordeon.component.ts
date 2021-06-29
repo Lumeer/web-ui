@@ -23,7 +23,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AttributesSettings} from '../../../core/store/views/view';
 import {Observable, of} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap, ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -50,7 +50,7 @@ export class LinkTablesAccordeonComponent implements OnChanges {
   public linkInstance: LinkInstance;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public preventEventBubble: boolean;

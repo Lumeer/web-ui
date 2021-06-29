@@ -222,10 +222,10 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
             let query: string;
             const path: any[] = ['w', organization.code, notification.projectCode, 'view'];
             const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
-            if (defaultView && viewsPermissions[defaultView.id]?.read) {
+            if (defaultView && viewsPermissions[defaultView.id]?.roles?.Read) {
               query = '';
               path.push({vc: defaultView.code});
-            } else if (collection && collectionsPermissions[collection.id]?.read) {
+            } else if (collection && collectionsPermissions[collection.id]?.roles?.Read) {
               query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
               path.push(Perspective.Workflow);
             } else {

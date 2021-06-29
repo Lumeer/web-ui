@@ -27,7 +27,6 @@ import {first, map, mergeMap, take} from 'rxjs/operators';
 import {combineLatest} from 'rxjs';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {userHasManageRoleInResource} from '../utils/resource.utils';
 import {Organization} from '../../core/store/organizations/organization';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
@@ -56,6 +55,8 @@ import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-
 import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
+import {userHasRoleInOrganization} from '../utils/permission.utils';
+import {RoleType} from '../../core/model/role-type';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -162,7 +163,7 @@ export class ModalService {
 
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
-    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
+    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
   }
 
   public showViewSettings(view: View) {
@@ -256,7 +257,7 @@ export class ModalService {
     ])
       .pipe(take(1))
       .subscribe(([currentUser, organization]) => {
-        if (userHasManageRoleInResource(currentUser, organization)) {
+        if (userHasRoleInOrganization(organization, currentUser, RoleType.Manage)) {
           this.notifyFunctionsLimitWithRedirect(organization);
         } else {
           this.notifyFunctionsLimitWithoutRights();

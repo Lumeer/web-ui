@@ -21,31 +21,52 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
-import {UserGroupsComponent} from './user-groups/user-groups.component';
 import {UserListComponent} from './user-list/user-list.component';
-import {UserComponent} from './user/user.component';
+import {UserComponent} from './user-list/user/user.component';
 import {NewUserComponent} from './new-user/new-user.component';
 import {UsersComponent} from './users.component';
-import {GroupsSuggestionsComponent} from './user-groups/suggestions/groups-suggestions.component';
 import {TagModule} from '../tag/tag.module';
 import {InputModule} from '../input/input.module';
-import {UserFilterPipe} from './user-list/pipes/user-filter.pipe';
+import {UserFilterPipe} from './pipes/user-filter.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 import {UserStampComponent} from './user-stamp/user-stamp.component';
 import {GravatarModule} from 'ngx-gravatar';
+import {RolesModule} from '../roles/roles.module';
+import {UserRolesPipe} from './pipes/user-roles.pipe';
+import {UserTeamsComponent} from './user-list/user/teams/user-teams.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
+import {FilterTeamsPipe} from './pipes/filter-teams.pipe';
+import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
+import {UserTableComponent} from './user-list/table/user-table.component';
+import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TagModule,
+    InputModule,
+    PipesModule,
+    GravatarModule,
+    RolesModule,
+    DropdownModule,
+  ],
   declarations: [
     UserFilterPipe,
-    UserGroupsComponent,
-    GroupsSuggestionsComponent,
     UserListComponent,
     UserComponent,
     NewUserComponent,
     UsersComponent,
     UserStampComponent,
+    UserRolesPipe,
+    UserTeamsComponent,
+    TeamsIdsPipe,
+    FilterTeamsPipe,
+    FilterUserTeamsPipe,
+    UserTableComponent,
+    UserTransitiveRolesPipe,
   ],
-  exports: [UsersComponent, NewUserComponent, UserStampComponent],
+  exports: [UsersComponent, NewUserComponent, UserStampComponent, UserTableComponent],
 })
 export class UsersModule {}

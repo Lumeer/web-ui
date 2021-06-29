@@ -34,8 +34,8 @@ import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
-import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionType} from '../permissions/permissions';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
+import {Permission, PermissionType} from '../permissions/permissions';
 import {RouterAction} from '../router/router.action';
 import {UsersAction} from '../users/users.action';
 import {selectCurrentUser} from '../users/users.state';
@@ -413,25 +413,30 @@ export class ProjectsEffects {
   public changePermission$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
-      mergeMap(action => {
-        const {workspace, projectId, permissions, type, currentPermissions} = action.payload;
-        const dtos = permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
+      withLatestFrom(this.store$.pipe(select(selectProjectsDictionary))),
+      mergeMap(([action, projectsMap]) => {
+        this.store$.dispatch(new ProjectsAction.ChangePermissionSuccess(action.payload));
+
+        const originalProject = projectsMap[action.payload.projectId];
+        const dtos = action.payload.permissions.map(permission => convertPermissionModelToDto(permission));
 
         let observable: Observable<PermissionDto>;
+        let currentPermissions: Permission[];
         if (action.payload.type === PermissionType.Users) {
-          observable = this.projectService.updateUserPermission(dtos, workspace);
+          observable = this.projectService.updateUserPermission(dtos);
+          currentPermissions = originalProject.permissions?.users;
         } else {
-          observable = this.projectService.updateGroupPermission(dtos, workspace);
+          observable = this.projectService.updateGroupPermission(dtos);
+          currentPermissions = originalProject.permissions?.groups;
         }
 
         return observable.pipe(
           mergeMap(() => EMPTY),
           catchError(error => {
             const payload = {
-              projectId: workspace?.projectId || projectId,
-              type,
-              error,
+              ...action.payload,
               permissions: currentPermissions,
+              error,
             };
             return of(new ProjectsAction.ChangePermissionFailure(payload));
           })

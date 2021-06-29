@@ -37,7 +37,7 @@
       <span class="small">{{commentsCount ? ' (' + commentsCount + ')' : ''}}</span>
     </a>
   </li>
-  <li *ngIf="permissions?.writeWithView" class="nav-item">
+  <li *ngIf="showActivity" class="nav-item">
     <a class="nav-link text-truncate"
        [class.active]="activeTab === detailTabTypes.Activity"
        title="Activity"

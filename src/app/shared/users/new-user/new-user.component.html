@@ -1,7 +1,8 @@
-<form class="input-group">
+<form class="input-group" (submit)="emailField.valid && onAddUser()">
   <input ngModel [value]="email" name="emailField" #emailField="ngModel"
          id="emailField" class="form-control form-control-sm" type="email"
-         [placeholder]="emailPlaceHolder()"
+         i18n-placeholder="@@user.add.placeholder"
+         placeholder="Type email to invite another user"
          (input)="onInputChanged(emailField.control.value)" email>
   <div class="input-group-append">
     <button type="button"

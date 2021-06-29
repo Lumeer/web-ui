@@ -80,6 +80,7 @@ import {
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
+import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'table-data-cell',
@@ -112,6 +113,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public allowedPermissions: AllowedPermissions;
+
+  @Input()
+  public dataPermissions: DataResourcePermissions;
 
   @Input()
   public query: Query;
@@ -237,7 +241,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.dataValue$ = this.createDataValue$();
       }
     }
-    this.editable = this.allowedPermissions?.writeWithView;
+    this.editable = this.dataPermissions?.edit;
   }
 
   private createDataValue$(): Observable<DataValue> {
@@ -294,7 +298,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
-        if (this.allowedPermissions?.writeWithView && this.isAttributeEditable(attribute)) {
+        if (this.dataPermissions?.edit && this.isAttributeEditable(attribute)) {
           if (action.payload.clear) {
             this.startEditingAndClear();
           } else {
@@ -374,7 +378,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editing$.getValue()) {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
-        if (this.allowedPermissions?.writeWithView && this.isAttributeEditable(attribute)) {
+        if (this.dataPermissions?.edit && this.isAttributeEditable(attribute)) {
           this.editing$.next(true);
         }
       });
@@ -788,7 +792,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onKeyDownInSelectionMode(event: KeyboardEvent) {
-    const writeWithView = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    const writeWithView = this.allowedPermissions && this.dataPermissions?.edit;
     event[EDITABLE_EVENT] = writeWithView;
 
     if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {

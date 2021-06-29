@@ -32,7 +32,7 @@ import {
 } from '../../../../../core/store/charts/chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -81,7 +81,8 @@ const collections: Collection[] = [
   },
 ];
 
-const permissions: AllowedPermissionsMap = {C1: {writeWithView: true}};
+const allowedPermissions = {rolesWithView: {DataWrite: true, DataRead: true}} as AllowedPermissions;
+const permissions: ResourcesPermissions = {collections: {C1: allowedPermissions}, linkTypes: {}};
 
 const query: Query = {stems: [{collectionId: 'C1'}]};
 
@@ -599,10 +600,8 @@ const collections2 = [
 ];
 
 const permissions2 = {
-  ...permissions,
-  C2: {writeWithView: true},
-  C3: {writeWithView: true},
-  C4: {writeWithView: true},
+  collections: {C1: allowedPermissions, C2: allowedPermissions, C3: allowedPermissions, C4: allowedPermissions},
+  linkTypes: {},
 };
 
 const linkTypes2: LinkType[] = [
@@ -1513,7 +1512,10 @@ describe('Chart data converter linked collections', () => {
       {id: 'l9', linkTypeId: 'LT1', documentIds: ['D3', 'D29'], data: {}},
     ];
     const query3: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1']}]};
-    const permissions3: AllowedPermissionsMap = {C1: {writeWithView: true}, C2: {writeWithView: true}};
+    const permissions3: ResourcesPermissions = {
+      collections: {C1: allowedPermissions, C2: allowedPermissions},
+      linkTypes: {},
+    };
 
     const configAvg: ChartConfig = {
       type: ChartType.Line,

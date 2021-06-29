@@ -23,7 +23,7 @@
     </table-header-link>
   </ng-container>
 
-  <table-header-add-button *ngIf="canManageConfig && (hasCollectionToLink$ | async)"
+  <table-header-add-button *ngIf="(canCreateLinks$ | async) && (hasCollectionToLink$ | async)"
                            [cursor]="cursor"
                            [parts]="table.config.parts"
                            (click)="unsetCursor()"

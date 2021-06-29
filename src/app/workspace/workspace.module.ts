@@ -44,9 +44,12 @@ import {ProjectTemplateMetadataComponent} from './project/template/metadata/proj
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {ProjectTemplateScriptComponent} from './project/template/metadata/script/project-template-script.component';
 import {DirectivesModule} from '../shared/directives/directives.module';
+import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
+import {TeamsModule} from '../shared/teams/teams.module';
+import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 
 @NgModule({
-  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule],
+  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,
@@ -65,6 +68,8 @@ import {DirectivesModule} from '../shared/directives/directives.module';
     ProjectTemplateComponent,
     ProjectTemplateMetadataComponent,
     ProjectTemplateScriptComponent,
+    OrganizationTeamsComponent,
+    ProjectTeamsComponent,
   ],
   exports: [],
   providers: [WorkspaceService, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],

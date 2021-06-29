@@ -30,13 +30,15 @@ import {SearchConfig} from '../searches/search';
 import {MapConfig} from '../maps/map.model';
 import {WorkflowConfig} from '../workflows/workflow';
 import {DetailConfig} from '../details/detail';
+import {RoleType} from '../../model/role-type';
 
 export interface View extends Resource {
   perspective?: Perspective;
   query?: Query;
   config?: ViewConfig;
   settings?: ViewSettings;
-  authorRights?: Record<string, string[]>;
+  authorCollectionsRoles?: Record<string, RoleType[]>;
+  authorLinkTypesRoles?: Record<string, RoleType[]>;
   lastTimeUsed?: Date;
   favorite?: boolean;
   folders?: string[];
@@ -105,3 +107,17 @@ export enum AttributeSortType {
   Ascending = 'asc',
   Descending = 'desc',
 }
+
+export const viewRoleTypes = [
+  RoleType.Read,
+  RoleType.DataRead,
+  RoleType.DataWrite,
+  RoleType.DataContribute,
+  RoleType.DataDelete,
+  RoleType.QueryConfig,
+  RoleType.Manage,
+  RoleType.CommentContribute,
+  RoleType.TechConfig,
+  RoleType.UserConfig,
+  RoleType.PerspectiveConfig,
+];

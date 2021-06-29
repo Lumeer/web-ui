@@ -86,6 +86,14 @@ export class OptionsDropdownComponent implements OnChanges {
   @Input()
   public minWidth: number;
 
+  @Input()
+  public dropdownPositions = [
+    DropdownPosition.BottomStart,
+    DropdownPosition.TopStart,
+    DropdownPosition.BottomEnd,
+    DropdownPosition.TopEnd,
+  ];
+
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
 
@@ -99,13 +107,6 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public activeValue$ = new BehaviorSubject<any>(null);
   public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
-
-  public readonly dropdownPositions = [
-    DropdownPosition.BottomStart,
-    DropdownPosition.TopStart,
-    DropdownPosition.BottomEnd,
-    DropdownPosition.TopEnd,
-  ];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {

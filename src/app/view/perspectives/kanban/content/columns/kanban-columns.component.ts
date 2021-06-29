@@ -55,7 +55,7 @@ import {generateCorrelationId, getAttributesResourceType} from '../../../../../s
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {groupLinkInstancesByLinkTypes} from '../../../../../core/store/link-instances/link-instance.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
-import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
 import {
   createPossibleLinkingDocuments,
@@ -74,6 +74,7 @@ import {
   filterDocumentsAndLinksByStem,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
   selector: 'kanban-columns',
@@ -105,13 +106,13 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public canManageConfig: boolean;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
-
-  @Input()
-  public linkTypesPermissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public query: Query;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public constraintData: ConstraintData;
@@ -440,8 +441,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       groupDocumentsByCollection(this.data?.uniqueDocuments),
       this.linkTypes,
       groupLinkInstancesByLinkTypes(this.data?.uniqueLinkInstances),
-      this.permissions,
-      this.linkTypesPermissions,
+      this.permissions?.collections,
+      this.permissions?.linkTypes,
       this.constraintData,
       stem,
       this.query?.fulltexts || []

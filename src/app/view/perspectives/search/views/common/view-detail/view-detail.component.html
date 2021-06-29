@@ -25,7 +25,7 @@
           </span>
 
         <i class="fa-star mr-2 text-warning cursor-pointer hiding-icon"
-           *ngIf="permissions?.read"
+           *ngIf="permissions?.roles?.Read"
            (click)="$event.preventDefault(); $event.stopPropagation(); onFavoriteToggle()"
            [class.always-visible]="view.favorite"
            title="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
@@ -34,18 +34,18 @@
            aria-hidden="true">
         </i>
 
-        <ng-container *ngIf="permissions?.manage">
-          <i class="fas fa-fw fa-share-alt mr-2 text-success cursor-pointer"
-             (click)="$event.preventDefault(); $event.stopPropagation(); onShareClick()"
-             title="Share" i18n-title="@@button.share"
-             aria-hidden="true">
-          </i>
-          <i class="fas fa-fw fa-cog text-success cursor-pointer"
-             (click)="$event.preventDefault(); $event.stopPropagation(); onSettings()"
-             title="Settings" i18n-title="@@settings"
-             aria-hidden="true">
-          </i>
-        </ng-container>
+        <i class="fas fa-fw fa-share-alt mr-2 text-success cursor-pointer"
+           *ngIf="permissions?.roles?.UserConfig"
+           (click)="$event.preventDefault(); $event.stopPropagation(); onShareClick()"
+           title="Share" i18n-title="@@button.share"
+           aria-hidden="true">
+        </i>
+        <i class="fas fa-fw fa-cog text-success cursor-pointer"
+           *ngIf="permissions?.roles?.Manage"
+           (click)="$event.preventDefault(); $event.stopPropagation(); onSettings()"
+           title="Settings" i18n-title="@@settings"
+           aria-hidden="true">
+        </i>
 
       </div>
 

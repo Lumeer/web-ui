@@ -53,6 +53,7 @@ import {selectLinkInstanceById} from '../../../../core/store/link-instances/link
 import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'data-resource-data',
@@ -81,6 +82,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public user: User;
 
   @Input()
   public toolbarRef: TemplateRef<any>;

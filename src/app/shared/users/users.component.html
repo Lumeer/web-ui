@@ -1,14 +1,15 @@
-<user-list
-  *ngIf="organization$ | async as organization"
-  [resourceType]="resourceType"
-  [organization]="organization"
-  [project]="project$ | async"
-  [currentUser]="currentUser$ | async"
-  [users]="users$ | async"
-  [resource]="resource$ | async"
-  (userCreated)="onNewUser($event)"
-  (userUpdated)="onUserUpdated($event)"
-  (userDeleted)="onUserDeleted($event)"
-  (usersPermissionsChangeToStore)="changeUsersPermissionsOnlyStore($event)"
-  (usersPermissionsChange)="changeUsersPermissions($event)">
+<user-list *ngIf="organization$ | async as organization"
+           class="d-block mb-5"
+           [resourceType]="resourceType"
+           [organization]="organization"
+           [project]="project$ | async"
+           [currentUser]="currentUser$ | async"
+           [users]="users$ | async"
+           [resource]="resource$ | async"
+           [serviceLimits]="serviceLimits$ | async"
+           (userCreated)="onNewUser($event)"
+           (userUpdated)="onUserUpdated($event)"
+           (userDeleted)="onUserDeleted($event)"
+           (userRolesChange)="changeUserPermissions($event)"
+           (userTeamsChange)="onUserTeamsChange($event)">
 </user-list>

@@ -11,44 +11,17 @@
     </div>
   </div>
 </div>
-<div class="row mt-4">
-  <div class="col">
-    <h4 *ngIf="resourceType | isOrganizationType" i18n="@@users.header.existingUsers">Existing users</h4>
-    <table class="table table-sm">
-      <thead [style.background-color]="resource.color | lightenColor:.5">
-        <tr>
-          <th class="border-top-0"></th>
-          <th class="border-top-0">
-            <span i18n="@@users.header.email">Email</span>
-          </th>
-          <th style="width: 30%;" class="text-right border-top-0">
-            <div class="input-group input-group-sm">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
-              </div>
-              <input id="userSearch" class="form-control mr-1" type="search"
-                     placeholder="Search user..."
-                     i18n-placeholder="@@users.header.search.placeholder"
-                     title="Search for users" i18n-title="@@users.header.search.title"
-                     aria-describedby="search-user1"
-                     [(ngModel)]="searchString">
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr user *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
+<user-table [users]="users"
             [resourceType]="resourceType"
-            [user]="user"
-            [editable]="user.id !== currentUser.id && (resourceType | isOrganizationType)"
-            [changeRoles]="user.id !== currentUser.id && (user | canChangeRoles:resourceType:organization:project)"
-            [userRoles]="user | userRolesInResource:resource:resourceType:organization:project:pendingUserUpdates"
-            [inheritedManage]="inheritedManagePermission$ | async"
-            (rolesUpdate)="onUserRolesChanged(user.id, $event)"
-            (userUpdated)="userUpdated.emit($event)"
-            (userDeleted)="userDeleted.emit($event)">
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+            [teams]="teams$ | async"
+            [organization]="organization"
+            [project]="project"
+            [permissions]="resource.permissions"
+            [color]="resource.color"
+            [editableGroups]="(resourceType | isOrganizationType) && serviceLimits?.groups"
+            [deletableUserIds]="deletableUserIds"
+            (userTeamsChange)="userTeamsChange.emit($event)"
+            (userRolesChange)="userRolesChange.emit($event)"
+            (userDeleted)="userDeleted.emit($event)"
+            (userUpdated)="userUpdated.emit($event)">
+</user-table>

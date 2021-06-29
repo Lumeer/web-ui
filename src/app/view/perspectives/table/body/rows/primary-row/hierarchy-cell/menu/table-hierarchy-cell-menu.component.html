@@ -1,5 +1,5 @@
 <div class="position-absolute"
-     *ngIf="((indentable$ | async) || (outdentable$ | async)) && (canManageConfig || (allowedPermissions$ | async)?.writeWithView)"
+     *ngIf="((indentable$ | async) || (outdentable$ | async)) && (dataPermissions$ | async)?.edit"
      [style.left.px]="contextMenuPosition.x"
      [style.top.px]="contextMenuPosition.y"
      [matMenuTriggerFor]="contextMenu">
@@ -7,7 +7,6 @@
 
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
-    <!-- TODO add collapse/expand menu items -->
     <button *ngIf="indentable$ | async"
             (click)="onIndent()"
             mat-menu-item>

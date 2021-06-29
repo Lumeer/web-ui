@@ -1,0 +1,45 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false"
+          (close)="onClose()"
+          (onCloseByClickOutside)="onClose()">
+
+  <div class="card p-0 overflow-auto" [style.width.px]="280">
+
+    <role *ngFor="let role of groups | flattenUngroupedRoles; trackBy:trackByRole"
+          class="px-2 py-1"
+          [role]="role"
+          [checked]="(role | isRoleSelected:selectedRoles) || (role | isRoleSelected:transitiveRoles)"
+          [disabled]="!(role | isRoleSelected:selectedRoles) && (role | isRoleSelected:transitiveRoles)"
+          (checkedChange)="onCheckedChange(role, $event)">
+    </role>
+
+    <accordion [closeOthers]="true" *ngIf="selectedRoles$ | async as selectedRoles">
+
+      <accordion-group
+        *ngFor="let group of groups | filterGroupedRolesWithHeader; trackBy:trackByGroup"
+        panelClass="lmr-accordion">
+
+        <role-group class="header-wrapper" accordion-heading
+                    [group]="group"
+                    [selectedRoles]="selectedRoles"
+                    [transitiveRoles]="transitiveRoles"
+                    (checkedChange)="toggleAllInGroup(group, $event)">
+        </role-group>
+        <role *ngFor="let role of group.roles; trackBy:trackByRole"
+              class="px-2 py-1"
+              [role]="role"
+              [checked]="(role | isRoleSelected:selectedRoles) || (role | isRoleSelected:transitiveRoles)"
+              [disabled]="!(role | isRoleSelected:selectedRoles) && (role | isRoleSelected:transitiveRoles)"
+              (checkedChange)="onCheckedChange(role, $event)">
+        </role>
+
+      </accordion-group>
+
+    </accordion>
+  </div>
+
+</dropdown>

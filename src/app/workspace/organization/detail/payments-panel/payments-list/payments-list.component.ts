@@ -24,13 +24,13 @@ import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
 import {Payment} from '../../../../../core/store/organizations/payment/payment';
 import {selectPaymentsByWorkspaceSorted} from '../../../../../core/store/organizations/payment/payments.state';
 import {PaymentsAction} from '../../../../../core/store/organizations/payment/payments.action';
 import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-list',
@@ -57,12 +57,12 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   public subscribeToStore() {
     this.organizationSubscription = this.store
       .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .pipe(filter(organization => isNotNullOrUndefined(organization)))
       .subscribe(organization => (this.organization = organization));
 
     this.paymentsSubscription = this.store
       .select(selectPaymentsByWorkspaceSorted)
-      .pipe(filter(payments => !isNullOrUndefined(payments) && payments.length > 0))
+      .pipe(filter(payments => isNotNullOrUndefined(payments) && payments.length > 0))
       .subscribe(payments => (this.payments = payments));
   }
 

@@ -23,11 +23,11 @@ import {ResourceType} from '../../../../../../core/model/resource-type';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {Role} from '../../../../../../core/model/role';
-import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
+import {RoleType} from '../../../../../../core/model/role-type';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TaskAttributes} from '../../model/task-attributes';
+import {User} from '../../../../../../core/store/users/user';
 
 @Component({
   selector: 'search-task-wrapper',
@@ -57,6 +57,9 @@ export class SearchTaskWrapperComponent implements OnChanges {
   @Input()
   public attributes: TaskAttributes;
 
+  @Input()
+  public currentUser: User;
+
   @Output()
   public detail = new EventEmitter();
 
@@ -65,7 +68,7 @@ export class SearchTaskWrapperComponent implements OnChanges {
 
   public readonly collectionType = ResourceType.Collection;
   public readonly sizeType = SizeType;
-  public readonly readRole = Role.Read;
+  public readonly readRole = RoleType.Read;
 
   public small: boolean;
   public medium: boolean;

@@ -35,8 +35,8 @@ import {fileAttachmentsReducer} from './file-attachments/file-attachments.reduce
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {GeocodingEffects} from './geocoding/geocoding.effects';
 import {geocodingReducer} from './geocoding/geocoding.reducer';
-import {GroupsEffects} from './groups/groups.effects';
-import {groupsReducer} from './groups/groups.reducer';
+import {TeamsEffects} from './teams/teams.effects';
+import {teamsReducer} from './teams/teams.reducer';
 import {kanbansReducer} from './kanbans/kanbans.reducer';
 import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
@@ -92,7 +92,7 @@ const reducers: ActionReducerMap<AppState> = {
   documents: documentsReducer,
   fileAttachments: fileAttachmentsReducer,
   geocoding: geocodingReducer,
-  groups: groupsReducer,
+  teams: teamsReducer,
   linkInstances: linkInstancesReducer,
   linkTypes: linkTypesReducer,
   dataResources: dataResourcesReducer,
@@ -132,7 +132,7 @@ const effects = [
   DocumentsEffects,
   FileAttachmentsEffects,
   GeocodingEffects,
-  GroupsEffects,
+  TeamsEffects,
   LinkInstancesEffects,
   LinkTypesEffects,
   DataResourcesEffects,

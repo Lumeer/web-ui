@@ -18,7 +18,14 @@
  */
 
 import {ResourceDto} from '../../dto';
+import {RoleType} from '../../model/role-type';
 
-export function setDefaultUserPermissions<T extends ResourceDto>(dto: T, userId: string, roles: string[]): T {
-  return {...dto, permissions: {groups: [], users: [{id: userId, roles}]}};
+export function setDefaultUserPermissions<T extends ResourceDto>(dto: T, userId: string, roleTypes: RoleType[]): T {
+  return {
+    ...dto,
+    permissions: {
+      groups: [],
+      users: [{id: userId, roles: roleTypes.map(roleType => ({type: roleType.toString(), transitive: false}))}],
+    },
+  };
 }

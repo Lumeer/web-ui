@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Role} from '../../../../../../../core/model/role';
+import {RoleType} from '../../../../../../../core/model/role-type';
 import {ResourceType} from '../../../../../../../core/model/resource-type';
 
 @Component({
@@ -30,14 +30,14 @@ import {ResourceType} from '../../../../../../../core/model/resource-type';
 })
 export class ActionConstraintPermissionsFormComponent {
   @Input()
-  public role: Role;
+  public role: RoleType;
 
   @Input()
   public roleControl: FormControl;
 
   public readonly resourceType = ResourceType.Collection;
 
-  public selectRole(role: Role) {
+  public selectRole(role: RoleType) {
     this.roleControl.setValue(role);
   }
 }

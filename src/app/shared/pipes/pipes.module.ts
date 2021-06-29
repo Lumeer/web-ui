@@ -79,7 +79,6 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
 import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
-import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
 import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
@@ -108,9 +107,11 @@ import {CanCreateLinksPipe} from './can-create-links.pipe';
 import {ViewIconPipe} from './view-icon.pipe';
 import {ViewColorPipe} from './view-color.pipe';
 import {ViewLinkPipe} from './view-link.pipe';
+import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 
 @NgModule({
-  imports: [CommonModule, DataPipesModule],
+  imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
     IconsPipe,
@@ -171,7 +172,6 @@ import {ViewLinkPipe} from './view-link.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
@@ -202,6 +202,9 @@ import {ViewLinkPipe} from './view-link.pipe';
     ViewLinkPipe,
   ],
   exports: [
+    DataPipesModule,
+    DataResourcesPipesModule,
+    PermissionsPipesModule,
     LightenColorPipe,
     IconsPipe,
     ColorsPipe,
@@ -228,7 +231,6 @@ import {ViewLinkPipe} from './view-link.pipe';
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
-    DataPipesModule,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,
@@ -262,7 +264,6 @@ import {ViewLinkPipe} from './view-link.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,

@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DetailTabType} from '../detail-tab-type';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'detail-tabs',
@@ -27,7 +26,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
   styleUrls: ['./detail-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailTabsComponent {
+export class DetailTabsComponent implements OnChanges {
   @Input()
   public activeTab: DetailTabType;
 
@@ -38,6 +37,9 @@ export class DetailTabsComponent {
   public showTables: boolean;
 
   @Input()
+  public showActivity: boolean;
+
+  @Input()
   public commentsCount: number;
 
   @Input()
@@ -46,11 +48,24 @@ export class DetailTabsComponent {
   @Input()
   public documentsCount: number;
 
-  @Input()
-  public permissions: AllowedPermissions;
+  @Output()
+  public onTabSelect = new EventEmitter<DetailTabType>();
 
   public readonly detailTabTypes = DetailTabType;
 
-  @Output()
-  public onTabSelect = new EventEmitter<DetailTabType>();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.showLinks && !this.showLinks && this.activeTab === DetailTabType.Links) {
+      this.resetTabActive();
+    }
+    if (changes.showTables && !this.showTables && this.activeTab === DetailTabType.Tables) {
+      this.resetTabActive();
+    }
+    if (changes.showActivity && !this.showActivity && this.activeTab === DetailTabType.Activity) {
+      this.resetTabActive();
+    }
+  }
+
+  private resetTabActive() {
+    this.onTabSelect.emit(DetailTabType.Detail);
+  }
 }

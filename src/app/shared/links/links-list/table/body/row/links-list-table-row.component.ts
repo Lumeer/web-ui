@@ -42,6 +42,7 @@ import {DataInputConfiguration} from '../../../../../data-input/data-input-confi
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
+import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -60,7 +61,10 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public row: LinkRow;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public linkPermissions: DataResourcePermissions;
+
+  @Input()
+  public documentPermissions: DataResourcePermissions;
 
   @Input()
   public linkTypeId: string;
@@ -191,8 +195,14 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return constraint.createDataValue(initialValue, this.constraintData);
   }
 
-  private isColumnEditable(column: number): boolean {
-    return this.permissions?.writeWithView && this.columns[column].editable;
+  private isColumnEditable(index: number): boolean {
+    const column = this.columns[index];
+    if (column.linkTypeId) {
+      return column.editable && this.linkPermissions?.edit;
+    } else if (column.collectionId) {
+      return column.editable && (this.documentPermissions?.edit || this.linkPermissions?.edit);
+    }
+    return false;
   }
 
   private columnValue(index: number): any {

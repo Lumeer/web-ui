@@ -188,7 +188,6 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
-          this.dropdown.resetActiveOption();
         } else {
           this.preventSaveAndBlur();
           const action = keyboardEventInputSaveAction(event);
@@ -246,7 +245,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.saveValueByOption(action, activeOption);
     } else if (
       this.name &&
-      (this.commonConfiguration.skipValidation || (this.value.config && this.value.config.externalUsers)) &&
+      (this.commonConfiguration.skipValidation || this.value.config?.externalUsers) &&
       inputIsEmail
     ) {
       if (this.multi) {
@@ -307,6 +306,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public onSelectOption(option: DropdownOption) {
     if (this.multi) {
       this.toggleOption(option);
+      this.dropdown?.resetActiveOption();
     } else {
       this.preventSaveAndBlur();
       this.saveValue(DataInputSaveAction.Select, option);

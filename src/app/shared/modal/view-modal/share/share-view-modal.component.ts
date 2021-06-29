@@ -28,7 +28,7 @@ import {User} from '../../../../core/store/users/user';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {View} from '../../../../core/store/views/view';
-import {Permission} from '../../../../core/store/permissions/permissions';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import mixpanel from 'mixpanel-browser';
 import {Angulartics2} from 'angulartics2';
@@ -38,6 +38,8 @@ import {selectAllUsers, selectCurrentUser} from '../../../../core/store/users/us
 import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {selectViewById} from '../../../../core/store/views/views.state';
+import {Team} from '../../../../core/store/teams/team';
+import {selectTeamsForWorkspace} from '../../../../core/store/teams/teams.state';
 
 @Component({
   templateUrl: './share-view-modal.component.html',
@@ -53,6 +55,7 @@ export class ShareViewModalComponent implements OnInit {
   public currentUser$: Observable<User>;
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
+  public teams$: Observable<Team[]>;
   public users$: Observable<User[]>;
   public view$: Observable<View>;
 
@@ -74,13 +77,19 @@ export class ShareViewModalComponent implements OnInit {
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.view$ = this.store$.pipe(select(selectViewById(this.view.id)));
+    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
   }
 
   public onSubmit() {
     this.shareViewDialogBody.onSubmit();
   }
 
-  public onShare(data: {permissions: Permission[]; newUsers: User[]; newUsersRoles: Record<string, string[]>}) {
+  public onShare(data: {
+    permissions: Permissions;
+    newUsers: User[];
+    newUsersRoles: Record<string, Role[]>;
+    newTeams: Team[];
+  }) {
     this.performingAction$.next(true);
     this.store$.dispatch(
       new ViewsAction.SetUserPermissions({
