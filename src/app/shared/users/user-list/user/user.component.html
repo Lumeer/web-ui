@@ -12,6 +12,7 @@
   <roles class="mt-3 cursor-pointer"
          [resourceType]="resourceType"
          [editable]="true"
+         [transitiveRoles]="transitiveRoles"
          [roles]="permissions | userRoles:user"
          (change)="rolesUpdate.emit($event)">
   </roles>

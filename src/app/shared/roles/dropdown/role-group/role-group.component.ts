@@ -35,6 +35,9 @@ export class RoleGroupComponent implements OnChanges {
   @Input()
   public selectedRoles: Role[];
 
+  @Input()
+  public transitiveRoles: Role[];
+
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 
@@ -45,14 +48,16 @@ export class RoleGroupComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedRoles || changes.group) {
+    if (changes.selectedRoles || changes.group || changes.transitiveRoles) {
       this.checkNumSelected();
     }
   }
 
   private checkNumSelected() {
-    this.numSelected = (this.selectedRoles || []).filter(role =>
-      this.group.roles.some(r => rolesAreSame(r, role))
+    this.numSelected = this.group.roles.filter(
+      role =>
+        (this.selectedRoles || []).some(r => rolesAreSame(r, role)) ||
+        (this.transitiveRoles || []).some(r => rolesAreSame(r, role))
     ).length;
   }
 }

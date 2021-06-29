@@ -33,6 +33,7 @@ import {ResourceType} from '../../core/model/resource-type';
 import {RoleGroupService} from '../../core/service/role-group.service';
 import {RoleGroup, TranslatedRole} from '../../core/model/role-group';
 import {RolesDropdownComponent} from './dropdown/roles-dropdown.component';
+import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 
 @Component({
   selector: 'roles',
@@ -61,6 +62,7 @@ export class RolesComponent implements OnChanges {
   public rolesDropdownComponent: RolesDropdownComponent;
 
   public groups: RoleGroup[];
+  public transitiveTranslatedRoles: TranslatedRole[];
   public translatedRoles: TranslatedRole[];
 
   constructor(private service: RoleGroupService) {}
@@ -70,15 +72,19 @@ export class RolesComponent implements OnChanges {
       this.groups = this.service.createResourceGroups(this.resourceType);
     }
     if (changes.roles) {
-      this.translatedRoles = this.createTranslatedRoles();
+      this.translatedRoles = this.createTranslatedRoles(this.roles);
+    }
+    if (changes.transitiveRoles) {
+      this.transitiveTranslatedRoles = this.createTranslatedRoles(this.transitiveRoles).filter(
+        role => !this.translatedRoles.some(r => rolesAreSame(r, role))
+      );
     }
   }
 
-  public createTranslatedRoles(): TranslatedRole[] {
-    const selectedTypes = this.roles.map(role => role.type);
+  public createTranslatedRoles(roles: Role[]): TranslatedRole[] {
     return this.groups
       .reduce((roles, group) => [...roles, ...group.roles], [])
-      .filter(role => selectedTypes.includes(role.type));
+      .filter(role => roles.some(r => rolesAreSame(r, role)));
   }
 
   public trackByRole(index: number, role: Role): string {

@@ -33,6 +33,9 @@ export class RoleComponent {
   @Input()
   public checked: boolean;
 
+  @Input()
+  public disabled: boolean;
+
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 

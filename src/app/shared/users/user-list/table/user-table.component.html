@@ -21,6 +21,7 @@
                 [teams]="teams"
                 [resourceType]="resourceType"
                 [user]="user"
+                [transitiveRoles]="organization | userTransitiveRoles:project:user:resourceType:permissions"
                 [permissions]="permissions"
                 [deletable]="deletableUserIds | includes:user.id"
                 [removable]="removableUserIds | includes:user.id"

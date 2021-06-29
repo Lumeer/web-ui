@@ -49,6 +49,9 @@ export class RolesDropdownComponent implements OnChanges {
   public selectedRoles: Role[];
 
   @Input()
+  public transitiveRoles: Role[];
+
+  @Input()
   public groups: RoleGroup[];
 
   @Output()

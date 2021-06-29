@@ -22,6 +22,8 @@ import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ResourceType} from '../../../../core/model/resource-type';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {Project} from '../../../../core/store/projects/project';
 
 @Component({
   selector: 'user-table',
@@ -44,6 +46,12 @@ export class UserTableComponent {
 
   @Input()
   public resourceType: ResourceType;
+
+  @Input()
+  public organization: Organization;
+
+  @Input()
+  public project: Project;
 
   @Input()
   public deletableUserIds: string[];

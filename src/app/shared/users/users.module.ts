@@ -39,6 +39,7 @@ import {TeamsIdsPipe} from './pipes/teams-ids.pipe';
 import {FilterTeamsPipe} from './pipes/filter-teams.pipe';
 import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
 import {UserTableComponent} from './user-list/table/user-table.component';
+import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import {UserTableComponent} from './user-list/table/user-table.component';
     FilterTeamsPipe,
     FilterUserTeamsPipe,
     UserTableComponent,
+    UserTransitiveRolesPipe,
   ],
   exports: [UsersComponent, NewUserComponent, UserStampComponent, UserTableComponent],
 })

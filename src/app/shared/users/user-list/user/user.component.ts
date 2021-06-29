@@ -53,6 +53,9 @@ export class UserComponent {
   @Input()
   public permissions: Permissions;
 
+  @Input()
+  public transitiveRoles: Role[];
+
   @Output()
   public userUpdated = new EventEmitter<User>();
 
