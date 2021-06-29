@@ -19,46 +19,28 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
-import {Permissions, Role} from '../../../core/store/permissions/permissions';
-import {User} from '../../../core/store/users/user';
+import {Role} from '../../../core/store/permissions/permissions';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
-import {userRolesInOrganization, userRolesInProject} from '../../utils/permission.utils';
+import {teamRolesInOrganization, teamRolesInProject} from '../../utils/permission.utils';
+import {Team} from '../../../core/store/teams/team';
 
 @Pipe({
-  name: 'userTransitiveRoles',
+  name: 'teamTransitiveRoles',
 })
-export class UserTransitiveRolesPipe implements PipeTransform {
-  public transform(
-    organization: Organization,
-    project: Project,
-    user: User,
-    resourceType: ResourceType,
-    permissions: Permissions
-  ): Role[] {
-    const userTeamIds = user.teams?.map(team => team.id);
-    const userTeamsRoles = (permissions?.groups || []).reduce((roles, team) => {
-      if (userTeamIds.includes(team.id)) {
-        roles.push(...(team.roles || []));
-      }
-      return roles;
-    }, []);
-
+export class TeamTransitiveRolesPipe implements PipeTransform {
+  public transform(organization: Organization, project: Project, team: Team, resourceType: ResourceType): Role[] {
     switch (resourceType) {
-      case ResourceType.Organization: {
-        return userTeamsRoles;
-      }
       case ResourceType.Project: {
-        return [...userRolesInOrganization(organization, user), ...userTeamsRoles];
+        return teamRolesInOrganization(organization, team).filter(role => role.transitive);
       }
       case ResourceType.View:
       case ResourceType.Collection: {
         return [
-          ...userRolesInProject(organization, project, user).map(role => ({
+          ...teamRolesInProject(organization, project, team).map(role => ({
             ...role,
             transitive: false,
           })),
-          ...userTeamsRoles,
         ];
       }
       default:

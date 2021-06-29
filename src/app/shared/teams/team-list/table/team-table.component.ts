@@ -17,11 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ResourceType} from '../../../../core/model/resource-type';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {Project} from '../../../../core/store/projects/project';
 
 @Component({
   selector: 'team-table',
@@ -58,7 +60,10 @@ export class TeamTableComponent {
   public editableTeams: boolean;
 
   @Input()
-  public organizationCode: string;
+  public organization: Organization;
+
+  @Input()
+  public project: Project;
 
   @Output()
   public teamUpdated = new EventEmitter<Team>();

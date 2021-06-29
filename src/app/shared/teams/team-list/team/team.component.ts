@@ -60,6 +60,9 @@ export class TeamComponent {
   @Input()
   public allTeams: Team[];
 
+  @Input()
+  public transitiveRoles: Role[];
+
   @Output()
   public teamUpdated = new EventEmitter<Team>();
 

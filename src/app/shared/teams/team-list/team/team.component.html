@@ -38,6 +38,7 @@
          [class.cursor-pointer]="changeRoles"
          [roles]="permissions | teamRoles:team"
          [resourceType]="resourceType"
+         [transitiveRoles]="transitiveRoles"
          [editable]="changeRoles"
          (change)="onChangeRoles($event)">
   </roles>

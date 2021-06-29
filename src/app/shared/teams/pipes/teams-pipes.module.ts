@@ -24,10 +24,11 @@ import {TeamFilterPipe} from './team-filter.pipe';
 import {UsersNamesPipe} from './users-names.pipe';
 import {FilterUsersPipe} from './filter-users.pipe';
 import {TeamRolesPipe} from './team-roles.pipe';
+import {TeamTransitiveRolesPipe} from './team-transitive-roles.pipe';
 
 @NgModule({
-  declarations: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
+  declarations: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe, TeamTransitiveRolesPipe],
   imports: [CommonModule],
-  exports: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe],
+  exports: [TeamFilterPipe, UsersNamesPipe, FilterUsersPipe, UsersIdsPipe, TeamRolesPipe, TeamTransitiveRolesPipe],
 })
 export class TeamsPipesModule {}
