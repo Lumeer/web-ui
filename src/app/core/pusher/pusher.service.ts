@@ -795,6 +795,10 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new UsersAction.DeleteSuccess({userId: data.id}));
       }
     });
+
+    this.channel.bind('User:reload', data => {
+      this.store$.dispatch(new UsersAction.UpdateSuccess({user: convertUserDtoToModel(data)}));
+    });
   }
 
   private bindTemplateEvents() {

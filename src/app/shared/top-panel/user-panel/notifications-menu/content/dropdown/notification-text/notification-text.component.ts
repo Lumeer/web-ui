@@ -44,6 +44,7 @@ export class NotificationTextComponent implements OnChanges {
     if (changes.notification && changes.notification.currentValue) {
       switch (changes.notification.currentValue.type) {
         case UserNotificationType.TaskAssigned:
+        case UserNotificationType.TaskReopened:
         case UserNotificationType.DueDateSoon:
         case UserNotificationType.PastDueDate:
         case UserNotificationType.DueDateChanged:

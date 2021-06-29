@@ -29,7 +29,7 @@ export class LoopBreakBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.loopBreakBlock:Breaks the for cycle, if branch, switch case etc.`;
+    this.tooltip = $localize`:@@blockly.tooltip.loopBreakBlock:Breaks the for cycle, and a switch case.`;
   }
 
   public getVisibility(): MasterBlockType[] {

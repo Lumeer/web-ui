@@ -63,6 +63,7 @@ export class NotificationPathComponent implements OnChanges {
           this.viewSharedNotification = changes.notification.currentValue;
           break;
         case UserNotificationType.TaskAssigned:
+        case UserNotificationType.TaskReopened:
         case UserNotificationType.DueDateSoon:
         case UserNotificationType.PastDueDate:
         case UserNotificationType.DueDateChanged:

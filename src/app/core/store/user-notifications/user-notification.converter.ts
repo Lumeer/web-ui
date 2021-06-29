@@ -80,6 +80,7 @@ export namespace UserNotificationConverter {
           viewPerspective: perspectivesMap[dto.data.viewPerspective],
         };
       case UserNotificationType.TaskAssigned:
+      case UserNotificationType.TaskReopened:
       case UserNotificationType.DueDateSoon:
       case UserNotificationType.PastDueDate:
       case UserNotificationType.DueDateChanged:
