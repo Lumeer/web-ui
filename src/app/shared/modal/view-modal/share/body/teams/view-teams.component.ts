@@ -17,14 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnInit,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {View} from '../../../../../../core/store/views/view';
 import {User} from '../../../../../../core/store/users/user';
 import {Organization} from '../../../../../../core/store/organizations/organization';
@@ -36,17 +29,16 @@ import {select, Store} from '@ngrx/store';
 import {ServiceLimits} from '../../../../../../core/store/organizations/service-limits/service.limits';
 import {Observable} from 'rxjs';
 import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
-import {Role} from '../../../../../../core/store/permissions/permissions';
+import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
 
 @Component({
   selector: 'view-teams',
   templateUrl: './view-teams.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewTeamsComponent implements OnInit {
-
   @Input()
-  public view: View;
+  public permissions: Permissions;
 
   @Input()
   public teams: Team[];
@@ -70,12 +62,9 @@ export class ViewTeamsComponent implements OnInit {
 
   public serviceLimits$: Observable<ServiceLimits>;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
   }
-
-
 }

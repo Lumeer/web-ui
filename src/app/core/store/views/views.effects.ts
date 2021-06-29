@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {EMPTY, Observable, of, pipe} from 'rxjs';
+import {combineLatest, EMPTY, Observable, of, pipe} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
@@ -30,8 +30,8 @@ import {CommonAction} from '../common/common.action';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {Permission, PermissionType, Role} from '../permissions/permissions';
-import {convertPermissionDtoToModel, convertPermissionModelToDto} from '../permissions/permissions.converter';
+import {Permission, Role} from '../permissions/permissions';
+import {convertPermissionModelToDto, convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {View} from './view';
 import {
@@ -67,6 +67,9 @@ import {UsersAction} from '../users/users.action';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as DetailActions from './../details/detail.actions';
 import {getPerspectiveSavedPerspectives} from './view.utils';
+import {TeamService} from '../../data-service/team/team.service';
+import {Team} from '../teams/team';
+import {convertTeamModelToDto} from '../teams/teams.converter';
 
 @Injectable()
 export class ViewsEffects {
@@ -348,21 +351,26 @@ export class ViewsEffects {
 
   public setUserPermission$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<ViewsAction.SetUserPermissions>(ViewsActionType.SET_USER_PERMISSIONS),
+      ofType<ViewsAction.SetUserPermissions>(ViewsActionType.SET_PERMISSIONS),
       concatMap(action => {
-        const {permissions, viewId, newUsers, newUsersRoles} = action.payload;
+        const {permissions, viewId, newUsers, newUsersRoles, newTeams} = action.payload;
 
-        return this.addUserToWorkspace(newUsers, newUsersRoles).pipe(
-          mergeMap(newPermissions => {
-            const permissionsDto: PermissionDto[] = [...permissions, ...newPermissions].map(model =>
-              convertPermissionModelToDto(model)
+        return combineLatest([
+          this.addUsersToWorkspace(newUsers, newUsersRoles),
+          this.addTeamsToWorkspace(newTeams),
+        ]).pipe(
+          mergeMap(([newUserPermissions]) => {
+            const userPermissionsDto: PermissionDto[] = [...permissions.users, ...newUserPermissions].map(
+              convertPermissionModelToDto
             );
-            return this.viewService.updateUserPermission(viewId, permissionsDto);
+            const teamPermissionsDto: PermissionDto[] = permissions.groups.map(convertPermissionModelToDto);
+            const permissionsDto = {users: userPermissionsDto, groups: teamPermissionsDto};
+            return this.viewService.updatePermissions(viewId, permissionsDto);
           }),
-          map(dtos => dtos.map(dto => convertPermissionDtoToModel(dto))),
+          map(dto => convertPermissionsDtoToModel(dto)),
           concatMap(newPermissions =>
             of(
-              new ViewsAction.SetPermissionsSuccess({viewId, permissions: newPermissions, type: PermissionType.Users}),
+              new ViewsAction.SetPermissionsSuccess({viewId, permissions: newPermissions}),
               ...createCallbackActions(action.payload.onSuccess)
             )
           ),
@@ -383,7 +391,7 @@ export class ViewsEffects {
     )
   );
 
-  private addUserToWorkspace(newUsers: User[], newUsersRoles: Record<string, Role[]>): Observable<Permission[]> {
+  private addUsersToWorkspace(newUsers: User[], newUsersRoles: Record<string, Role[]>): Observable<Permission[]> {
     if (newUsers.length === 0) {
       return of([]);
     }
@@ -392,7 +400,7 @@ export class ViewsEffects {
     return this.store$.select(pipe(selectWorkspaceWithIds)).pipe(
       take(1),
       mergeMap(workspace =>
-        this.userService.createUserInWorkspace(workspace.organizationId, workspace.projectId, usersDtos)
+        this.userService.createUsersInWorkspace(workspace.organizationId, workspace.projectId, usersDtos)
       ),
       map(users =>
         users.map((user, index) => {
@@ -400,6 +408,20 @@ export class ViewsEffects {
           const roles = newUsersRoles[correlationId];
           return {id: user.id, roles};
         })
+      )
+    );
+  }
+
+  private addTeamsToWorkspace(teams: Team[]): Observable<any> {
+    if (teams.length === 0) {
+      return of(true);
+    }
+
+    const teamsDtos = teams.map(team => convertTeamModelToDto(team));
+    return this.store$.select(pipe(selectWorkspaceWithIds)).pipe(
+      take(1),
+      mergeMap(workspace =>
+        this.teamService.addTeamsToWorkspace(workspace.organizationId, workspace.projectId, teamsDtos)
       )
     );
   }
@@ -575,6 +597,7 @@ export class ViewsEffects {
     private store$: Store<AppState>,
     private viewService: ViewService,
     private userService: UserService,
+    private teamService: TeamService,
     private angulartics2: Angulartics2,
     private configurationService: ConfigurationService
   ) {}

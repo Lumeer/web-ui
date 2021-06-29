@@ -18,13 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {User} from '../../../../../core/store/users/user';
+import {View} from '../../../../../core/store/views/view';
+import {Permissions, Role} from '../../../../../core/store/permissions/permissions';
 
 @Pipe({
-  name: 'userRoles',
+  name: 'viewGroupPermissions',
 })
-export class UserRolesPipe implements PipeTransform {
-  public transform(user: User, userRoles: {[id: string]: string[]}): string[] {
-    return userRoles[user.id || user.correlationId] || [];
+export class ViewGroupPermissionsPipe implements PipeTransform {
+  public transform(view: View, roles: Record<string, Role[]>): Permissions {
+    const teamPermissions = [...(view.permissions?.groups || [])];
+    Object.keys(roles).forEach(id => {
+      const roleIndex = teamPermissions.findIndex(role => role.id === id);
+      if (roleIndex >= 0) {
+        teamPermissions[roleIndex] = {id, roles: roles[id]};
+      } else {
+        teamPermissions.push({id, roles: roles[id]});
+      }
+    });
+    return {...view.permissions, groups: teamPermissions};
   }
 }

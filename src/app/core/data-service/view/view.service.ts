@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
+import {PermissionsDto, ViewDto} from '../../dto';
 import {Observable} from 'rxjs';
 import {Workspace} from '../../store/navigation/workspace';
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
@@ -39,13 +39,7 @@ export abstract class ViewService {
 
   public abstract getPermissions(viewId: string): Observable<PermissionsDto>;
 
-  public abstract updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]>;
-
-  public abstract updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]>;
-
-  public abstract removeUserPermission(viewId: string, user: string): Observable<any>;
-
-  public abstract removeGroupPermission(viewId: string, group: string): Observable<any>;
+  public abstract updatePermissions(viewId: string, permissions: PermissionsDto): Observable<PermissionsDto>;
 
   public abstract updateDefaultConfig(dto: DefaultViewConfigDto): Observable<DefaultViewConfigDto>;
 

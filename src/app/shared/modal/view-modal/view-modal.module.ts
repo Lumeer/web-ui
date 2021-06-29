@@ -23,7 +23,7 @@ import {ShareViewModalComponent} from './share/share-view-modal.component';
 import {ShareViewInputComponent} from './share/body/input/share-view-input.component';
 import {ShareViewCopyComponent} from './share/body/copy/share-view-copy.component';
 import {ShareViewDialogBodyComponent} from './share/body/share-view-dialog-body.component';
-import {UserRolesPipe} from './share/pipes/user-roles.pipe';
+import {ViewGroupPermissionsPipe} from './share/pipes/view-group-permissions.pipe';
 import {ViewUserPermissionsPipe} from './share/pipes/view-user-permissions.pipe';
 import {CanAddNewUserPipe} from './share/pipes/can-add-new-user.pipe';
 import {ViewSettingsModalComponent} from './settings/view-settings-modal.component';
@@ -50,7 +50,7 @@ import {TeamsModule} from '../../teams/teams.module';
     ShareViewInputComponent,
     ShareViewCopyComponent,
     ShareViewDialogBodyComponent,
-    UserRolesPipe,
+    ViewGroupPermissionsPipe,
     ViewUserPermissionsPipe,
     CanAddNewUserPipe,
     ViewHeaderComponent,
@@ -77,5 +77,4 @@ import {TeamsModule} from '../../teams/teams.module';
   ],
   exports: [ShareViewModalComponent, ViewSettingsModalComponent],
 })
-export class ViewModalModule {
-}
+export class ViewModalModule {}

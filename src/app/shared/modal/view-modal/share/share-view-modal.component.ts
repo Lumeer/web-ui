@@ -28,7 +28,7 @@ import {User} from '../../../../core/store/users/user';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {View} from '../../../../core/store/views/view';
-import {Permission, Role} from '../../../../core/store/permissions/permissions';
+import {Permissions, Role} from '../../../../core/store/permissions/permissions';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import mixpanel from 'mixpanel-browser';
 import {Angulartics2} from 'angulartics2';
@@ -84,7 +84,12 @@ export class ShareViewModalComponent implements OnInit {
     this.shareViewDialogBody.onSubmit();
   }
 
-  public onShare(data: {permissions: Permission[]; newUsers: User[]; newUsersRoles: Record<string, Role[]>}) {
+  public onShare(data: {
+    permissions: Permissions;
+    newUsers: User[];
+    newUsersRoles: Record<string, Role[]>;
+    newTeams: Team[];
+  }) {
     this.performingAction$.next(true);
     this.store$.dispatch(
       new ViewsAction.SetUserPermissions({

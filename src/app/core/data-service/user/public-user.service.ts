@@ -35,7 +35,7 @@ export class PublicUserService implements UserService {
     return of({...user, id: generateId()});
   }
 
-  public createUserInWorkspace(
+  public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],

@@ -35,6 +35,7 @@ import {isDocumentOwnerByPurpose} from '../../core/store/documents/document.util
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {getAttributesResourceType} from './resource.utils';
 import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
+import {Team} from '../../core/store/teams/team';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -49,8 +50,16 @@ export function userRoleTypesInOrganization(organization: Organization, user: Us
 }
 
 export function userRolesInOrganization(organization: Organization, user: User): Role[] {
-  const groups = getUserGroups(organization, user);
-  return userRolesInResource(organization, user, groups);
+  const teams = getUserTeams(organization, user);
+  return userRolesInResource(organization, user, teams);
+}
+
+export function teamRolesTypesInOrganization(organization: Organization, team: Team): RoleType[] {
+  return uniqueValues(teamRolesInResource(organization, team).map(role => role.type));
+}
+
+export function teamRolesInOrganization(organization: Organization, team: Team): Role[] {
+  return teamRolesInResource(organization, team);
 }
 
 export function userPermissionsInProject(organization: Organization, project: Project, user: User): AllowedPermissions {
@@ -61,18 +70,31 @@ export function userRoleTypesInProject(organization: Organization, project: Proj
   return uniqueValues(userRolesInProject(organization, project, user).map(role => role.type));
 }
 
-export function userRolesInProject(organization: Organization, project: Project, user: User): Role[] {
-  const groups = getUserGroups(organization, user);
+export function teamRoleTypesInProject(organization: Organization, project: Project, team: Team): RoleType[] {
+  return uniqueValues(teamRolesInProject(organization, project, team).map(role => role.type));
+}
 
-  const organizationRoles = userRolesInResource(organization, user, groups);
+export function userRolesInProject(organization: Organization, project: Project, user: User): Role[] {
+  const teams = getUserTeams(organization, user);
+
+  const organizationRoles = userRolesInResource(organization, user, teams);
   if (organizationRoles.some(role => role.type === RoleType.Read)) {
-    const projectRoles = userRolesInResource(project, user, groups);
+    const projectRoles = userRolesInResource(project, user, teams);
     return [...organizationRoles.filter(role => role.transitive), ...projectRoles];
   }
   return [];
 }
 
-export function getUserGroups(organization: Organization, user: User): string[] {
+export function teamRolesInProject(organization: Organization, project: Project, team: Team): Role[] {
+  const organizationRoles = teamRolesInOrganization(organization, team);
+  if (organizationRoles.some(role => role.type === RoleType.Read)) {
+    const projectRoles = teamRolesInResource(project, team);
+    return [...organizationRoles.filter(role => role.transitive), ...projectRoles];
+  }
+  return [];
+}
+
+export function getUserTeams(organization: Organization, user: User): string[] {
   return user?.teams?.map(group => group.id) || [];
 }
 
@@ -172,6 +194,10 @@ export function userHasRoleInOrganization(organization: Organization, user: User
   return userRoleTypesInOrganization(organization, user).includes(roleType);
 }
 
+export function teamHasRoleInOrganization(organization: Organization, team: Team, roleType: RoleType): boolean {
+  return teamRolesTypesInOrganization(organization, team).includes(roleType);
+}
+
 export function userHasRoleInProject(
   organization: Organization,
   project: Project,
@@ -179,6 +205,15 @@ export function userHasRoleInProject(
   roleType: RoleType
 ): boolean {
   return userRoleTypesInProject(organization, project, user).includes(roleType);
+}
+
+export function teamHasRoleInProject(
+  organization: Organization,
+  project: Project,
+  team: Team,
+  roleType: RoleType
+): boolean {
+  return teamRoleTypesInProject(organization, project, team).includes(roleType);
 }
 
 export function userHasRoleInResource(
@@ -197,16 +232,16 @@ export function userRoleTypesInPermissions(
   permissions: Permissions,
   user: User
 ): RoleType[] {
-  const groups = getUserGroups(organization, user);
+  const teams = getUserTeams(organization, user);
   const roleTypes = [];
 
-  const organizationRoles = userRolesInResource(organization, user, groups);
+  const organizationRoles = userRolesInResource(organization, user, teams);
   if (!organizationRoles.some(role => role.type === RoleType.Read)) {
     return [];
   }
   roleTypes.push(...organizationRoles.filter(role => role.transitive).map(role => role.type));
 
-  const projectRoles = userRolesInResource(project, user, groups);
+  const projectRoles = userRolesInResource(project, user, teams);
   if (
     !organizationRoles.some(role => role.type === RoleType.Read && role.transitive) &&
     !projectRoles.some(role => role.type === RoleType.Read)
@@ -215,12 +250,16 @@ export function userRoleTypesInPermissions(
   }
   roleTypes.push(...projectRoles.filter(role => role.transitive).map(role => role.type));
 
-  roleTypes.push(...userRolesInPermissions(permissions, user, groups).map(role => role.type));
+  roleTypes.push(...userRolesInPermissions(permissions, user, teams).map(role => role.type));
   return uniqueValues(roleTypes);
 }
 
 function userRolesInResource(resource: Resource, user: User, groups: string[]): Role[] {
   return userRolesInPermissions(resource?.permissions || {users: [], groups: []}, user, groups);
+}
+
+function teamRolesInResource(resource: Resource, team: Team): Role[] {
+  return teamRolesInPermissions(resource?.permissions || {users: [], groups: []}, team);
 }
 
 function userRolesInPermissions(permissions: Permissions, user: User, groups: string[]): Role[] {
@@ -231,8 +270,22 @@ function userRolesInPermissions(permissions: Permissions, user: User, groups: st
   return [...userRoles, ...groupRoles];
 }
 
+function teamRolesInPermissions(permissions: Permissions, team: Team): Role[] {
+  return (team && permissions?.groups?.find(permission => permission.id === team.id)?.roles) || [];
+}
+
 export function userCanReadWorkspace(organization: Organization, project: Project, user: User): boolean {
-  return userRoleTypesInProject(organization, project, user).includes(RoleType.Read);
+  return (
+    userHasRoleInOrganization(organization, user, RoleType.Read) &&
+    userHasRoleInProject(organization, project, user, RoleType.Read)
+  );
+}
+
+export function teamCanReadWorkspace(organization: Organization, project: Project, team: Team): boolean {
+  return (
+    teamHasRoleInOrganization(organization, team, RoleType.Read) &&
+    teamHasRoleInProject(organization, project, team, RoleType.Read)
+  );
 }
 
 export function userCanReadAllInOrganization(organization: Organization, user: User): boolean {

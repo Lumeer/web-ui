@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {ViewService} from './view.service';
-import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
+import {PermissionsDto, ViewDto} from '../../dto';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {Workspace} from '../../store/navigation/workspace';
@@ -102,20 +102,8 @@ export class PublicViewService extends BaseService implements ViewService {
     return of({users: [], groups: []});
   }
 
-  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
-    return of(userPermissions);
-  }
-
-  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
-    return of(userPermissions);
-  }
-
-  public removeUserPermission(viewId: string, user: string): Observable<any> {
-    return of(true);
-  }
-
-  public removeGroupPermission(viewId: string, group: string): Observable<any> {
-    return of(true);
+  public updatePermissions(viewId: string, permissions: PermissionsDto): Observable<PermissionsDto> {
+    return of(permissions);
   }
 
   public updateDefaultConfig(dto: DefaultViewConfigDto): Observable<DefaultViewConfigDto> {

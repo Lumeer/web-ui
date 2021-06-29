@@ -19,10 +19,11 @@
 
 import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
-import {Permission, PermissionType, Role} from '../permissions/permissions';
+import {Permissions, Role} from '../permissions/permissions';
 import {User} from '../users/user';
 import {DefaultViewConfig, View} from './view';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {Team} from '../teams/team';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -42,7 +43,7 @@ export enum ViewsActionType {
   DELETE_SUCCESS = '[Views] Delete :: Success',
   DELETE_FAILURE = '[Views] Delete :: Failure',
 
-  SET_USER_PERMISSIONS = '[Views] Set User Permission',
+  SET_PERMISSIONS = '[Views] Set User Permission',
   SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
@@ -147,14 +148,15 @@ export namespace ViewsAction {
   }
 
   export class SetUserPermissions implements Action {
-    public readonly type = ViewsActionType.SET_USER_PERMISSIONS;
+    public readonly type = ViewsActionType.SET_PERMISSIONS;
 
     public constructor(
       public payload: {
         viewId: string;
-        permissions: Permission[];
+        permissions: Permissions;
         newUsers: User[];
         newUsersRoles: Record<string, Role[]>;
+        newTeams: Team[];
         onSuccess?: () => void;
         onFailure?: () => void;
         onInviteFailure?: () => void;
@@ -165,7 +167,7 @@ export namespace ViewsAction {
   export class SetPermissionsSuccess implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
 
-    public constructor(public payload: {viewId: string; type: PermissionType; permissions: Permission[]}) {}
+    public constructor(public payload: {viewId: string; permissions: Permissions}) {}
   }
 
   export class SetPermissionsFailure implements Action {

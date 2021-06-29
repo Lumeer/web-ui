@@ -39,7 +39,7 @@ export class ApiUserService implements UserService {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
   }
 
-  public createUserInWorkspace(
+  public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],

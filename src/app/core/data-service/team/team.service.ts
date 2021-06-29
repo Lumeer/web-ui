@@ -19,6 +19,7 @@
 
 import {Observable} from 'rxjs';
 import {TeamDto} from '../../dto';
+import {InvitationType} from '../../model/invitation-type';
 
 export abstract class TeamService {
   public abstract create(team: TeamDto): Observable<TeamDto>;
@@ -28,4 +29,11 @@ export abstract class TeamService {
   public abstract delete(id: string): Observable<string>;
 
   public abstract getAll(organizationId: string): Observable<TeamDto[]>;
+
+  public abstract addTeamsToWorkspace(
+    organizationId: string,
+    projectId: string,
+    teams: TeamDto[],
+    invitationType?: InvitationType
+  ): Observable<TeamDto[]>;
 }

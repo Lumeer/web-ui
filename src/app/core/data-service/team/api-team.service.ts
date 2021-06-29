@@ -29,6 +29,7 @@ import {TeamDto} from '../../dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
+import {InvitationType} from '../../model/invitation-type';
 
 @Injectable()
 export class ApiTeamService extends BaseService implements TeamService {
@@ -61,5 +62,19 @@ export class ApiTeamService extends BaseService implements TeamService {
     return `${this.configurationService.getConfiguration().apiUrl}/rest/organizations/${organizationId}/groups${
       groupId ? `/${groupId}` : ''
     }`;
+  }
+
+  public addTeamsToWorkspace(
+    organizationId: string,
+    projectId: string,
+    teams: TeamDto[],
+    invitationType?: InvitationType
+  ): Observable<TeamDto[]> {
+    return this.httpClient.post<TeamDto[]>(
+      `${this.apiPrefix(null, {organizationId})}/projects/${projectId}/groups/${
+        invitationType || InvitationType.JoinOnly
+      }`,
+      teams
+    );
   }
 }

@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionType} from '../permissions/permissions';
 import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
@@ -126,11 +125,5 @@ function isViewNewer(view: View, oldView: View): boolean {
 }
 
 function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {
-  let permissions = state.entities[action.payload.viewId].permissions;
-  if (action.payload.type === PermissionType.Users) {
-    permissions = {...permissions, users: action.payload.permissions};
-  } else {
-    permissions = {...permissions, groups: action.payload.permissions};
-  }
-  return viewsAdapter.updateOne({id: action.payload.viewId, changes: {permissions}}, state);
+  return viewsAdapter.updateOne({id: action.payload.viewId, changes: {permissions: action.payload.permissions}}, state);
 }

@@ -254,7 +254,7 @@ export class UsersEffects {
         const usersDto = action.payload.users.map(user => convertUserModelToDto(user));
 
         return this.userService
-          .createUserInWorkspace(
+          .createUsersInWorkspace(
             action.payload.organizationId,
             action.payload.projectId,
             usersDto,

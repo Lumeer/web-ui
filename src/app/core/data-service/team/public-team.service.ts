@@ -23,6 +23,7 @@ import {Observable, of} from 'rxjs';
 import {TeamService} from './team.service';
 import {TeamDto} from '../../dto';
 import {BaseService} from '../../rest/base.service';
+import {InvitationType} from '../../model/invitation-type';
 
 @Injectable()
 export class PublicTeamService extends BaseService implements TeamService {
@@ -40,5 +41,14 @@ export class PublicTeamService extends BaseService implements TeamService {
 
   public getAll(organizationId: string): Observable<TeamDto[]> {
     return of([]);
+  }
+
+  public addTeamsToWorkspace(
+    organizationId: string,
+    projectId: string,
+    teams: TeamDto[],
+    invitationType?: InvitationType
+  ): Observable<TeamDto[]> {
+    return of(teams);
   }
 }

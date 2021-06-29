@@ -2,9 +2,9 @@
             [users]="users"
             [teams]="teams"
             [resourceType]="resourceType"
-            [permissions]="view.permissions"
-            [editableTeams]="data.serviceLimits?.groups"
+            [permissions]="permissions"
+            [editableTeams]="!data.serviceLimits?.groups"
             [organizationCode]="organization?.code"
-            [changeRoles]="data.serviceLimits?.groups"
+            [changeRoles]="!data.serviceLimits?.groups"
             (teamRolesChange)="teamRolesChange.emit($event)">
 </team-table>
