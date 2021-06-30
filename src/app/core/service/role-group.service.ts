@@ -47,51 +47,53 @@ export class RoleGroupService {
       {
         order: 1,
         roles: [
-          this.createWorkspaceRole(RoleType.Read),
-          this.createWorkspaceRole(RoleType.Manage),
-          this.createWorkspaceRole(RoleType.UserConfig),
-          this.createWorkspaceRole(RoleType.ProjectContribute),
+          this.createOrganizationRole(RoleType.Read),
+          this.createOrganizationRole(RoleType.Manage),
+          this.createOrganizationRole(RoleType.ProjectContribute),
         ],
       },
       {
-        title: this.translateOrganizationGroupType(RoleGroupType.Data),
+        title: this.translateGroupType(RoleGroupType.User),
         order: 2,
         roles: [
-          this.createWorkspaceRole(RoleType.DataRead, true),
-          this.createWorkspaceRole(RoleType.DataWrite, true),
-          this.createWorkspaceRole(RoleType.DataContribute, true),
-          this.createWorkspaceRole(RoleType.DataDelete, true),
+          this.createOrganizationRole(RoleType.UserConfig),
+          this.createOrganizationRole(RoleType.UserConfig, true),
         ],
       },
       {
-        title: this.translateOrganizationGroupType(RoleGroupType.Collaborate),
+        title: this.translateGroupType(RoleGroupType.Collaborate),
         order: 3,
         roles: [
-          this.createWorkspaceRole(RoleType.CollectionContribute, true),
-          this.createWorkspaceRole(RoleType.LinkContribute, true),
-          this.createWorkspaceRole(RoleType.ViewContribute, true),
-          this.createWorkspaceRole(RoleType.CommentContribute, true),
+          this.createOrganizationRole(RoleType.CollectionContribute, true),
+          this.createOrganizationRole(RoleType.LinkContribute, true),
+          this.createOrganizationRole(RoleType.ViewContribute, true),
+          this.createOrganizationRole(RoleType.CommentContribute, true),
         ],
       },
       {
-        title: this.translateOrganizationGroupType(RoleGroupType.User),
+        title: this.translateGroupType(RoleGroupType.Config),
         order: 4,
-        roles: [this.createWorkspaceRole(RoleType.UserConfig, true)],
+        roles: [
+          this.createOrganizationRole(RoleType.AttributeEdit, true),
+          this.createOrganizationRole(RoleType.TechConfig, true),
+        ],
       },
       {
-        title: this.translateOrganizationGroupType(RoleGroupType.Config),
+        title: this.translateGroupType(RoleGroupType.Data),
         order: 5,
         roles: [
-          this.createWorkspaceRole(RoleType.AttributeEdit, true),
-          this.createWorkspaceRole(RoleType.TechConfig, true),
+          this.createOrganizationRole(RoleType.DataRead, true),
+          this.createOrganizationRole(RoleType.DataWrite, true),
+          this.createOrganizationRole(RoleType.DataContribute, true),
+          this.createOrganizationRole(RoleType.DataDelete, true),
         ],
       },
       {
-        title: this.translateOrganizationGroupType(RoleGroupType.View),
+        title: this.translateGroupType(RoleGroupType.View),
         order: 6,
         roles: [
-          this.createWorkspaceRole(RoleType.PerspectiveConfig, true),
-          this.createWorkspaceRole(RoleType.QueryConfig, true),
+          this.createOrganizationRole(RoleType.PerspectiveConfig, true),
+          this.createOrganizationRole(RoleType.QueryConfig, true),
         ],
       },
     ];
@@ -101,51 +103,47 @@ export class RoleGroupService {
     return [
       {
         order: 1,
-        roles: [
-          this.createWorkspaceRole(RoleType.Read),
-          this.createWorkspaceRole(RoleType.Manage),
-          this.createWorkspaceRole(RoleType.UserConfig),
-        ],
+        roles: [this.createProjectRole(RoleType.Read), this.createProjectRole(RoleType.Manage)],
       },
       {
-        title: this.translateProjectGroupType(RoleGroupType.Data),
+        title: this.translateGroupType(RoleGroupType.User),
         order: 2,
-        roles: [
-          this.createWorkspaceRole(RoleType.DataRead, true),
-          this.createWorkspaceRole(RoleType.DataWrite, true),
-          this.createWorkspaceRole(RoleType.DataContribute, true),
-          this.createWorkspaceRole(RoleType.DataDelete, true),
-        ],
+        roles: [this.createProjectRole(RoleType.UserConfig), this.createProjectRole(RoleType.UserConfig, true)],
       },
       {
-        title: this.translateProjectGroupType(RoleGroupType.Collaborate),
+        title: this.translateGroupType(RoleGroupType.Collaborate),
         order: 3,
         roles: [
-          this.createWorkspaceRole(RoleType.CollectionContribute, true),
-          this.createWorkspaceRole(RoleType.LinkContribute, true),
-          this.createWorkspaceRole(RoleType.ViewContribute, true),
-          this.createWorkspaceRole(RoleType.CommentContribute, true),
+          this.createProjectRole(RoleType.CollectionContribute, true),
+          this.createProjectRole(RoleType.LinkContribute, true),
+          this.createProjectRole(RoleType.ViewContribute, true),
+          this.createProjectRole(RoleType.CommentContribute, true),
         ],
       },
       {
-        title: this.translateProjectGroupType(RoleGroupType.User),
+        title: this.translateGroupType(RoleGroupType.Config),
         order: 4,
-        roles: [this.createWorkspaceRole(RoleType.UserConfig, true)],
+        roles: [
+          this.createProjectRole(RoleType.AttributeEdit, true),
+          this.createProjectRole(RoleType.TechConfig, true),
+        ],
       },
       {
-        title: this.translateProjectGroupType(RoleGroupType.Config),
+        title: this.translateGroupType(RoleGroupType.Data),
         order: 5,
         roles: [
-          this.createWorkspaceRole(RoleType.AttributeEdit, true),
-          this.createWorkspaceRole(RoleType.TechConfig, true),
+          this.createProjectRole(RoleType.DataRead, true),
+          this.createProjectRole(RoleType.DataWrite, true),
+          this.createProjectRole(RoleType.DataContribute, true),
+          this.createProjectRole(RoleType.DataDelete, true),
         ],
       },
       {
-        title: this.translateProjectGroupType(RoleGroupType.View),
+        title: this.translateGroupType(RoleGroupType.View),
         order: 6,
         roles: [
-          this.createWorkspaceRole(RoleType.PerspectiveConfig, true),
-          this.createWorkspaceRole(RoleType.QueryConfig, true),
+          this.createProjectRole(RoleType.PerspectiveConfig, true),
+          this.createProjectRole(RoleType.QueryConfig, true),
         ],
       },
     ];
@@ -165,7 +163,7 @@ export class RoleGroupService {
         ],
       },
       {
-        title: this.translateCollectionGroupType(RoleGroupType.Data),
+        title: this.translateGroupType(RoleGroupType.Data),
         order: 2,
         roles: [
           this.createCollectionRole(RoleType.DataRead),
@@ -182,63 +180,228 @@ export class RoleGroupService {
       {
         order: 1,
         roles: [
-          this.createCollectionRole(RoleType.Read),
-          this.createCollectionRole(RoleType.Manage),
-          this.createCollectionRole(RoleType.UserConfig),
+          this.createViewRole(RoleType.Read),
+          this.createViewRole(RoleType.Manage),
+          this.createViewRole(RoleType.UserConfig),
+          this.createViewRole(RoleType.PerspectiveConfig),
+          this.createViewRole(RoleType.QueryConfig),
         ],
       },
       {
-        title: this.translateCollectionGroupType(RoleGroupType.Data),
+        title: this.translateGroupType(RoleGroupType.Data),
         order: 2,
         roles: [
-          this.createCollectionRole(RoleType.DataRead),
-          this.createCollectionRole(RoleType.DataWrite),
-          this.createCollectionRole(RoleType.DataContribute),
-          this.createCollectionRole(RoleType.DataDelete),
+          this.createViewRole(RoleType.DataRead),
+          this.createViewRole(RoleType.DataWrite),
+          this.createViewRole(RoleType.DataContribute),
+          this.createViewRole(RoleType.DataDelete),
         ],
       },
     ];
   }
 
-  private translateOrganizationGroupType(type: RoleGroupType): string {
+  private createOrganizationRole(type: RoleType, transitive?: boolean): TranslatedRole {
+    return {
+      title: transitive ? this.workspaceTransitiveRoleTitle(type) : this.organizationRoleTitle(type),
+      tooltip: this.organizationRoleTooltip(type, transitive),
+      type,
+      transitive,
+    };
+  }
+
+  private createProjectRole(type: RoleType, transitive?: boolean): TranslatedRole {
+    return {
+      title: transitive ? this.workspaceTransitiveRoleTitle(type) : this.projectRoleTitle(type),
+      tooltip: this.projectRoleTooltip(type, transitive),
+      type,
+      transitive,
+    };
+  }
+
+  private organizationRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.user.permission.role.group:{type, select, Data {Manage All Data} View {Manage All Views} Collaborate {Create All} User {Manage All Permissions} Config {Manage Data Structure}}`,
+      $localize`:@@organization.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}`,
       {type}
     );
   }
 
-  private createWorkspaceRole(type: RoleType, transitive?: boolean): TranslatedRole {
-    return {
-      title: parseSelectTranslation(
-        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} ProjectContribute {Create projects} DataRead {Read all data} DataWrite {Edit all data} DataDelete {Delete all data} DataContribute {Create data everywhere} LinkContribute {Create link types} ViewContribute {Create views} CollectionContribute {Create tables} CommentContribute {Comment all records} AttributeEdit {Edit all attributes} TechConfig {Manage rules & functions} QueryConfig {Manage queries in views} PerspectiveConfig {Manage config in views}}`,
-        {type}
-      ),
-      type,
-      transitive,
-    };
+  private organizationRoleTooltip(type: RoleType, transitive: boolean): string {
+    switch (type) {
+      case RoleType.Read:
+        return $localize`:@@organization.permission.role.tooltip.Read:A user can see this organization.`;
+      case RoleType.Manage:
+        return $localize`:@@organization.permission.role.tooltip.Manage:A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.`;
+      case RoleType.ProjectContribute:
+        return $localize`:@@organization.permission.role.tooltip.ProjectContribute:A user can create new projects in this organization. They become a manager of the new project.`;
+      case RoleType.UserConfig:
+        if (transitive) {
+          return $localize`:@@organization.permission.transitive.role.tooltip.UserConfig:A user can add, modify, and delete users everywhere in the organization.`;
+        }
+        return $localize`:@@organization.permission.role.tooltip.UserConfig:A user can add, modify, and delete users in this organization (at the organizational level).`;
+      case RoleType.DataRead:
+        return $localize`:@@organization.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in all projects in this organization.`;
+      case RoleType.DataWrite:
+        return $localize`:@@organization.permission.transitive.role.tooltip.DataWrite:A user can modify all data in all tables and views in all projects in this organization.`;
+      case RoleType.DataDelete:
+        return $localize`:@@organization.permission.transitive.role.tooltip.DataDelete:A user can delete all records (rows) in all tables and views in all projects in this organization.`;
+      case RoleType.DataContribute:
+        return $localize`:@@organization.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in all tables, links, and views in all projects in this organization.`;
+      case RoleType.CommentContribute:
+        return $localize`:@@organization.permission.transitive.role.tooltip.CommentContribute:A user can comment all records in all projects in this organization.`;
+      case RoleType.CollectionContribute:
+        return $localize`:@@organization.permission.transitive.role.tooltip.CollectionContribute:A user can create tables in all projects in this organization. They become a manager of the new table.`;
+      case RoleType.ViewContribute:
+        return $localize`:@@organization.permission.transitive.role.tooltip.ViewContribute:A user can create views in all projects in this organization. They become a manager of the new view.`;
+      case RoleType.LinkContribute:
+        return $localize`:@@organization.permission.transitive.role.tooltip.LinkContribute:A user can create link types in all projects in this organization. They become a manager of the new link type.`;
+      case RoleType.AttributeEdit:
+        return $localize`:@@organization.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in tables and link types in all projects in this organization..`;
+      case RoleType.TechConfig:
+        return $localize`:@@organization.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all resources in all projects in this organization.`;
+      case RoleType.PerspectiveConfig:
+        return $localize`:@@organization.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage view configurations of all views in all projects in this organization.`;
+      case RoleType.QueryConfig:
+        return $localize`:@@organization.permission.transitive.role.tooltip.QueryConfig:A user can modify queries in all views in all projects in this organization.`;
+    }
+  }
+
+  private projectRoleTitle(type: RoleType): string {
+    return parseSelectTranslation(
+      $localize`:@@project.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users}}`,
+      {type}
+    );
+  }
+
+  private workspaceTransitiveRoleTitle(type: RoleType): string {
+    return parseSelectTranslation(
+      $localize`:@@organization.permission.transitive.role.title:{type, select, UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+      {type}
+    );
+  }
+
+  private projectRoleTooltip(type: RoleType, transitive: boolean): string {
+    switch (type) {
+      case RoleType.Read:
+        return $localize`:@@project.permission.role.tooltip.Read:A user can see this project.`;
+      case RoleType.Manage:
+        return $localize`:@@project.permission.role.tooltip.Manage:A user can change the project name, color, icon, description and can delete it.`;
+      case RoleType.UserConfig:
+        if (transitive) {
+          return $localize`:@@project.permission.transitive.role.tooltip.UserConfig:A user can manage user roles everywhere in the project.`;
+        }
+        return $localize`:@@project.permission.role.tooltip.UserConfig:A user can manage user roles in this project (at the project level).`;
+      case RoleType.DataRead:
+        return $localize`:@@project.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in this project.`;
+      case RoleType.DataWrite:
+        return $localize`:@@project.permission.transitive.role.tooltip.DataWrite:A user can modify all data in all tables and views in this project.`;
+      case RoleType.DataDelete:
+        return $localize`:@@project.permission.transitive.role.tooltip.DataDelete:A user can delete all records (rows) in all tables and views in this project.`;
+      case RoleType.DataContribute:
+        return $localize`:@@project.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in all tables, links, and views in this project.`;
+      case RoleType.CommentContribute:
+        return $localize`:@@project.permission.transitive.role.tooltip.CommentContribute:A user can comment all records in this project.`;
+      case RoleType.CollectionContribute:
+        return $localize`:@@project.permission.transitive.role.tooltip.CollectionContribute:A user can create tables in this project. They become a manager of the new table.`;
+      case RoleType.ViewContribute:
+        return $localize`:@@project.permission.transitive.role.tooltip.ViewContribute:A user can create views in this project. They become a manager of the new view.`;
+      case RoleType.LinkContribute:
+        return $localize`:@@project.permission.transitive.role.tooltip.LinkContribute:A user can create link types in this project. They become a manager of the new link type.`;
+      case RoleType.AttributeEdit:
+        return $localize`:@@project.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in tables and link types in this project.`;
+      case RoleType.TechConfig:
+        return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all resources in this project.`;
+      case RoleType.PerspectiveConfig:
+        return $localize`:@@project.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage view configurations of all views in this project.`;
+      case RoleType.QueryConfig:
+        return $localize`:@@project.permission.transitive.role.tooltip.QueryConfig:A user can modify queries in all views in this project.`;
+    }
   }
 
   private createCollectionRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
-      title: parseSelectTranslation(
-        $localize`:@@organization.user.permission.role:{type, select, Read {Read} Manage {Manage} UserConfig {User permissions} DataRead {Read records} DataWrite {Edit records} DataDelete {Delete records} DataContribute {Create records} CommentContribute {Comment records} AttributeEdit {Edit attributes} TechConfig {Manage rules & functions}}`,
-        {type}
-      ),
+      title: this.collectionRoleTitle(type),
+      tooltip: this.collectionRoleTooltip(type),
       type,
       transitive,
     };
   }
 
-  private translateProjectGroupType(type: RoleGroupType): string {
+  private collectionRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.user.permission.role.group:{type, select, Data {Manage All Data} View {Manage All Views} Collaborate {Create All} User {Manage All Permissions} Config {Manage Data Structure}}`,
+      $localize`:@@collection.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}`,
       {type}
     );
   }
 
-  private translateCollectionGroupType(type: RoleGroupType): string {
+  private collectionRoleTooltip(type: RoleType): string {
+    switch (type) {
+      case RoleType.Read:
+        return $localize`:@@collection.permission.role.tooltip.Read:A user can see this table.`;
+      case RoleType.Manage:
+        return $localize`:@@collection.permission.role.tooltip.Manage:A user can change the table name, color, icon, description and can delete it.`;
+      case RoleType.UserConfig:
+        return $localize`:@@collection.permission.role.tooltip.UserConfig:A user can can manage user roles in this table.`;
+      case RoleType.DataRead:
+        return $localize`:@@collection.permission.role.tooltip.DataRead:A user can read all data in this table.`;
+      case RoleType.DataWrite:
+        return $localize`:@@collection.permission.role.tooltip.DataWrite:A user can modify all data in this table.`;
+      case RoleType.DataDelete:
+        return $localize`:@@collection.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this table.`;
+      case RoleType.DataContribute:
+        return $localize`:@@collection.permission.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in this table.`;
+      case RoleType.CommentContribute:
+        return $localize`:@@collection.permission.role.tooltip.CommentContribute:A user can comment all records in this table.`;
+      case RoleType.AttributeEdit:
+        return $localize`:@@collection.permission.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in this table.`;
+      case RoleType.TechConfig:
+        return $localize`:@@collection.permission.role.tooltip.TechConfig:A user can add, modify, and delete automations in this table.`;
+    }
+  }
+
+  private createViewRole(type: RoleType, transitive?: boolean): TranslatedRole {
+    return {
+      title: this.viewRoleTitle(type),
+      tooltip: this.viewRoleTooltip(type),
+      type,
+      transitive,
+    };
+  }
+
+  private viewRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@user.permission.role.group:{type, select, Data {Manage Data} other {}}`,
+      $localize`:@@view.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
+      {type}
+    );
+  }
+
+  private viewRoleTooltip(type: RoleType): string {
+    switch (type) {
+      case RoleType.Read:
+        return $localize`:@@view.permission.role.tooltip.Read:A user can see this view.`;
+      case RoleType.Manage:
+        return $localize`:@@view.permission.role.tooltip.Manage:A user can change the view name, color, icon, folders and can delete it.`;
+      case RoleType.UserConfig:
+        return $localize`:@@view.permission.role.tooltip.UserConfig:A user can can manage user roles in this view.`;
+      case RoleType.DataRead:
+        return $localize`:@@view.permission.role.tooltip.DataRead:A user can read all data in this view.`;
+      case RoleType.DataWrite:
+        return $localize`:@@view.permission.role.tooltip.DataWrite:A user can modify all data in this view.`;
+      case RoleType.DataDelete:
+        return $localize`:@@view.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this view.`;
+      case RoleType.DataContribute:
+        return $localize`:@@view.permission.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in this view.`;
+      case RoleType.CommentContribute:
+        return $localize`:@@view.permission.role.tooltip.CommentContribute:A user can comment all records in this view.`;
+      case RoleType.PerspectiveConfig:
+        return $localize`:@@view.permission.role.tooltip.PerspectiveConfig:A user can manage view configurations in all perspectives.`;
+      case RoleType.QueryConfig:
+        return $localize`:@@view.permission.role.tooltip.QueryConfig:A user can modify queries in this view.`;
+    }
+  }
+
+  private translateGroupType(type: RoleGroupType): string {
+    return parseSelectTranslation(
+      $localize`:@@organization.permission.role.group:{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Resources} User {User Management} Config {Manage Resources}}`,
       {type}
     );
   }

@@ -36,7 +36,7 @@ export class UserTransitiveRolesPipe implements PipeTransform {
     resourceType: ResourceType,
     permissions: Permissions
   ): Role[] {
-    const userTeamIds = user.teams?.map(team => team.id);
+    const userTeamIds = user.teams?.map(team => team.id) || [];
     const userTeamsRoles = (permissions?.groups || []).reduce((roles, team) => {
       if (userTeamIds.includes(team.id)) {
         roles.push(...(team.roles || []));
