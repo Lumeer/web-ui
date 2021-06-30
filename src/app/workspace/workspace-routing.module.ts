@@ -37,6 +37,7 @@ import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
+import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 
 const workspaceRoutes: Routes = [
   {
@@ -48,6 +49,7 @@ const workspaceRoutes: Routes = [
       groups: GroupsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
+      limits: ServiceLimitsGuard,
       linkTypes: LinkTypesGuard,
     },
     children: [
@@ -79,6 +81,7 @@ const workspaceRoutes: Routes = [
     component: OrganizationSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
     resolve: {
+      limits: ServiceLimitsGuard,
       users: UsersGuard,
       groups: GroupsGuard,
     },

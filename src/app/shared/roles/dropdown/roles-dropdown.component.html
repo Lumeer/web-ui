@@ -9,11 +9,12 @@
 
   <div class="card p-0 overflow-auto" [style.width.px]="280">
 
+    <div class="font-weight-bold h5 mb-0 px-2 py-2">{resourceType, select, organization {Organization roles} project {Project roles} collection {Table roles} view {View roles} link_type {LinkType roles} }</div>
+
     <role *ngFor="let role of groups | flattenUngroupedRoles; trackBy:trackByRole"
           class="px-2 py-1"
           [role]="role"
-          [checked]="(role | isRoleSelected:selectedRoles) || (role | isRoleSelected:transitiveRoles)"
-          [disabled]="!(role | isRoleSelected:selectedRoles) && (role | isRoleSelected:transitiveRoles)"
+          [checked]="role | isRoleSelected:selectedRoles"
           (checkedChange)="onCheckedChange(role, $event)">
     </role>
 
@@ -26,14 +27,12 @@
         <role-group class="header-wrapper" accordion-heading
                     [group]="group"
                     [selectedRoles]="selectedRoles"
-                    [transitiveRoles]="transitiveRoles"
                     (checkedChange)="toggleAllInGroup(group, $event)">
         </role-group>
         <role *ngFor="let role of group.roles; trackBy:trackByRole"
               class="px-2 py-1"
               [role]="role"
-              [checked]="(role | isRoleSelected:selectedRoles) || (role | isRoleSelected:transitiveRoles)"
-              [disabled]="!(role | isRoleSelected:selectedRoles) && (role | isRoleSelected:transitiveRoles)"
+              [checked]="role | isRoleSelected:selectedRoles"
               (checkedChange)="onCheckedChange(role, $event)">
         </role>
 

@@ -10,6 +10,7 @@
     cursor: text;
     text-overflow: ellipsis;
     overflow: hidden;
+    border: 1px solid transparent;
 
     &:focus {
       text-overflow: clip;
@@ -21,6 +22,7 @@
     overflow: hidden;
     word-wrap: break-word;
     word-break: break-all;
+    border: 1px solid transparent;
 
     &:focus {
       text-overflow: clip;

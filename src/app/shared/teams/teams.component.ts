@@ -53,7 +53,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
   public serviceLimits$: Observable<ServiceLimits>;
-  public resourcePermissions$: Observable<Permissions>;
+  public resource$: Observable<Resource>;
 
   private resourceId: string;
   private subscriptions = new Subscription();
@@ -83,11 +83,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
-    this.resourcePermissions$ = this.store$.pipe(
+    this.resource$ = this.store$.pipe(
       select(this.getSelector()),
       filter(resource => !!resource),
-      tap(resource => (this.resourceId = resource.id)),
-      map(resource => resource.permissions)
+      tap(resource => (this.resourceId = resource.id))
     );
   }
 

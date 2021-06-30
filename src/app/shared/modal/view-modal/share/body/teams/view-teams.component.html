@@ -1,6 +1,7 @@
 <team-table *ngIf="{serviceLimits: serviceLimits$ | async} as data"
             [users]="users"
             [teams]="teams"
+            [color]="view | viewColor:(collectionsMap$ | async)"
             [resourceType]="resourceType"
             [permissions]="permissions"
             [editableTeams]="data.serviceLimits?.groups"

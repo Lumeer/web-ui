@@ -30,6 +30,8 @@ import {ServiceLimits} from '../../../../../../core/store/organizations/service-
 import {Observable} from 'rxjs';
 import {selectServiceLimitsByWorkspace} from '../../../../../../core/store/organizations/service-limits/service-limits.state';
 import {Permissions, Role} from '../../../../../../core/store/permissions/permissions';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {selectCollectionsDictionary} from '../../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'view-teams',
@@ -37,6 +39,9 @@ import {Permissions, Role} from '../../../../../../core/store/permissions/permis
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewTeamsComponent implements OnInit {
+  @Input()
+  public view: View;
+
   @Input()
   public permissions: Permissions;
 
@@ -61,10 +66,12 @@ export class ViewTeamsComponent implements OnInit {
   public readonly resourceType = ResourceType.View;
 
   public serviceLimits$: Observable<ServiceLimits>;
+  public collectionsMap$: Observable<Record<string, Collection>>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
+    this.collectionsMap$ = this.store$.pipe(select(selectCollectionsDictionary));
   }
 }

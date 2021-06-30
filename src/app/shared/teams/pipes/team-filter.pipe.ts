@@ -27,12 +27,16 @@ import {Team} from '../../../core/store/teams/team';
 })
 @Injectable()
 export class TeamFilterPipe implements PipeTransform {
-  public transform(groups: Team[], value: string): Team[] {
-    if (!groups || !value) {
-      return groups;
+  public transform(teams: Team[], value: string): Team[] {
+    if (!teams || !value) {
+      return teams;
     }
 
     const valueLowerCase = removeAccentFromString(value, true);
-    return groups.filter(user => removeAccentFromString(user.name, true).includes(valueLowerCase));
+    return teams.filter(
+      team =>
+        removeAccentFromString(team.name, true).includes(valueLowerCase) ||
+        removeAccentFromString(team.description, true).includes(valueLowerCase)
+    );
   }
 }

@@ -30,12 +30,12 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
-import {USER_AVATAR_SIZE} from '../../../../../core/constants';
 import {User} from '../../../../../core/store/users/user';
 import {KeyCode} from '../../../../key-code';
 import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
 import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
+import {Team} from '../../../../../core/store/teams/team';
 
 @Component({
   selector: 'team-users',
@@ -65,12 +65,13 @@ export class TeamUsersComponent implements OnChanges {
   @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
-  public readonly avatarSize = USER_AVATAR_SIZE;
+  public readonly avatarSize = 26;
 
   private preventSave: boolean;
-  public suggesting: boolean;
+
   public name: string = '';
   public selectedUsers$ = new BehaviorSubject<User[]>([]);
+  public suggesting$ = new BehaviorSubject(false);
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
@@ -88,7 +89,6 @@ export class TeamUsersComponent implements OnChanges {
   }
 
   public onFocus() {
-    this.suggesting = true;
     this.dropdown?.resetActiveOption();
     this.dropdown?.open();
   }
@@ -136,21 +136,29 @@ export class TeamUsersComponent implements OnChanges {
     if (this.selectedUsers$.value.some(o => o.id === option.value)) {
       this.selectedUsers$.next(this.selectedUsers$.value.filter(o => o.id !== option.value));
     } else {
-      const selectUser = (this.users || []).find(o => o.id === option.value);
-      if (selectUser) {
-        this.selectedUsers$.next([...this.selectedUsers$.value, selectUser]);
+      const newSelectedUsers = this.createSelectedUsers(option.value);
+      if (newSelectedUsers.length !== this.selectedUsers$.value.length) {
+        this.selectedUsers$.next(newSelectedUsers);
         setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
     this.resetSearchInput();
   }
 
+  private createSelectedUsers(withId?: string): User[] {
+    const selectedUsersIds = this.selectedUsers$.value.map(user => user.id);
+    if (withId) {
+      selectedUsersIds.push(withId);
+    }
+    return (this.users || []).filter(o => selectedUsersIds.includes(o.id));
+  }
+
   private saveValue(activeOption?: DropdownOption) {
     const selectedUser =
       (activeOption && this.users.find(option => option.id === activeOption.value)) ||
       this.users.find(user => (user.name || user.email) === this.name?.trim());
-    const options = [...this.selectedUsers$.value, selectedUser].filter(option => !!option);
-    const ids = uniqueValues(options.map(option => option.id));
+    const newSelectedUsers = this.createSelectedUsers(selectedUser?.id);
+    const ids = uniqueValues(newSelectedUsers.map(team => team.id));
     if (!areArraysSame(ids, this.selectedUserIds)) {
       this.save.emit(ids);
       this.resetSearchInput();
@@ -176,7 +184,8 @@ export class TeamUsersComponent implements OnChanges {
 
   private blurCleanup() {
     this.dropdown?.close();
-    this.suggesting = false;
+    this.suggesting$.next(false);
+    this.name = '';
   }
 
   public onMouseDown(event: MouseEvent) {
@@ -192,8 +201,23 @@ export class TeamUsersComponent implements OnChanges {
   }
 
   public onClick() {
-    if (!this.suggesting) {
-      this.textInput?.nativeElement.focus();
+    if (this.suggesting$.value) {
+      this.stopSuggesting();
+    } else {
+      this.startSuggesting();
     }
+  }
+
+  public onEditClick() {
+    this.startSuggesting();
+  }
+
+  private startSuggesting() {
+    this.suggesting$.next(true);
+    setTimeout(() => this.textInput?.nativeElement.focus());
+  }
+
+  private stopSuggesting() {
+    this.textInput?.nativeElement.blur();
   }
 }

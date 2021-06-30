@@ -438,7 +438,7 @@ div[contenteditable='true'].form-control {
   &:active,
   &:focus,
   &.user:hover {
-    border: 1px solid $gray-400;
+    border: 1px solid $gray-400 !important;
     text-decoration-line: none !important;
   }
 
@@ -524,6 +524,12 @@ div[contenteditable='true'].form-control {
   &-warning {
     color: #fff;
   }
+}
+
+.badge-lg {
+  line-height: 1;
+  font-size: inherit;
+  font-weight: normal;
 }
 
 .alert {

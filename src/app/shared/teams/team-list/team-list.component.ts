@@ -37,8 +37,9 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Team} from '../../../core/store/teams/team';
 import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
-import {Permissions, Role} from '../../../core/store/permissions/permissions';
+import {Role} from '../../../core/store/permissions/permissions';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
+import {Resource} from '../../../core/model/resource';
 
 @Component({
   selector: 'team-list',
@@ -53,7 +54,7 @@ export class TeamListComponent implements OnInit, OnChanges {
   public teams: Team[];
 
   @Input()
-  public permissions: Permissions;
+  public resource: Resource;
 
   @Input()
   public organization: Organization;

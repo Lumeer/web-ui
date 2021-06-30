@@ -62,7 +62,6 @@ export class RolesComponent implements OnChanges {
   public rolesDropdownComponent: RolesDropdownComponent;
 
   public groups: RoleGroup[];
-  public transitiveTranslatedRoles: TranslatedRole[];
   public translatedRoles: TranslatedRole[];
 
   constructor(private service: RoleGroupService) {}
@@ -71,20 +70,24 @@ export class RolesComponent implements OnChanges {
     if (changes.resourceType) {
       this.groups = this.service.createResourceGroups(this.resourceType);
     }
-    if (changes.roles) {
-      this.translatedRoles = this.createTranslatedRoles(this.roles);
-    }
-    if (changes.transitiveRoles) {
-      this.transitiveTranslatedRoles = this.createTranslatedRoles(this.transitiveRoles).filter(
-        role => !this.translatedRoles.some(r => rolesAreSame(r, role))
-      );
+    if (changes.resourceType || changes.roles || changes.transitiveRoles) {
+      this.translatedRoles = this.createTranslatedRoles();
     }
   }
 
-  public createTranslatedRoles(roles: Role[]): TranslatedRole[] {
+  public createTranslatedRoles(): TranslatedRole[] {
     return this.groups
       .reduce((roles, group) => [...roles, ...group.roles], [])
-      .filter(role => roles.some(r => rolesAreSame(r, role)));
+      .reduce((roles, role) => {
+        if (this.roles?.some(r => rolesAreSame(r, role))) {
+          return [...roles, role];
+        }
+        if (this.transitiveRoles?.some(r => rolesAreSame(r, role))) {
+          return [...roles, {...role, fromParentOrTeams: true}];
+        }
+
+        return roles;
+      }, []);
   }
 
   public trackByRole(index: number, role: Role): string {

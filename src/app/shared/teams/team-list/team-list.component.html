@@ -1,20 +1,16 @@
-<div *ngIf="groupsAreEditable && (resourceType | isOrganizationType)" class="row mt-4">
-  <div class="col">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title" i18n="@@teams.header.title.main">Start building new team</h4>
-        <new-team [teams]="teams"
-                  (teamCreated)="teamCreated.emit($event)">
-        </new-team>
-      </div>
-    </div>
-  </div>
+<div *ngIf="groupsAreEditable && (resourceType | isOrganizationType)" class="mt-4">
+  <h4 class="card-title" i18n="@@teams.header.title.main">Start building new team</h4>
+  <new-team [teams]="teams"
+            (teamCreated)="teamCreated.emit($event)">
+  </new-team>
 </div>
-<team-table [editableTeams]="groupsAreEditable"
+<team-table class="d-block mt-4"
+            [editableTeams]="groupsAreEditable"
             [resourceType]="resourceType"
-            [permissions]="permissions"
+            [permissions]="resource.permissions"
             [teams]="teams"
             [users]="users$ | async"
+            [color]="resource.color"
             [editable]="groupsAreEditable && (resourceType | isOrganizationType)"
             [changeRoles]="groupsAreEditable"
             [deletableTeamIds]="groupsAreEditable && (resourceType | isOrganizationType) ? teamIds : []"
