@@ -254,7 +254,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@organization.permission.transitive.role.tooltip.DataDelete:A user can delete all records (rows) in all tables and views in all projects in this organization.`;
       case RoleType.DataContribute:
-        return $localize`:@@organization.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.`;
+        return $localize`:@@organization.permission.transitive.role.tooltip.DataContribute:A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.`;
       case RoleType.CommentContribute:
         return $localize`:@@organization.permission.transitive.role.tooltip.CommentContribute:A user can comment all records in all projects in this organization.`;
       case RoleType.CollectionContribute:
@@ -312,7 +312,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@project.permission.transitive.role.tooltip.DataDelete:A user can delete all records (rows) in all tables and views in this project.`;
       case RoleType.DataContribute:
-        return $localize`:@@project.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in all tables, links, and views in this project.`;
+        return $localize`:@@project.permission.transitive.role.tooltip.DataContribute:A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.`;
       case RoleType.CommentContribute:
         return $localize`:@@project.permission.transitive.role.tooltip.CommentContribute:A user can comment all records in this project.`;
       case RoleType.CollectionContribute:
@@ -363,7 +363,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@collection.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this table.`;
       case RoleType.DataContribute:
-        return $localize`:@@collection.permission.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in this table.`;
+        return $localize`:@@collection.permission.role.tooltip.DataContribute:A user can create, see, modify and delete only their own records (rows) in this table.`;
       case RoleType.CommentContribute:
         return $localize`:@@collection.permission.role.tooltip.CommentContribute:A user can comment all records in this table.`;
       case RoleType.AttributeEdit:
@@ -404,7 +404,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@view.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this view.`;
       case RoleType.DataContribute:
-        return $localize`:@@view.permission.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in this view.`;
+        return $localize`:@@view.permission.role.tooltip.DataContribute:A user can create, see, modify and delete only their own records (rows) in this view.`;
       case RoleType.CommentContribute:
         return $localize`:@@view.permission.role.tooltip.CommentContribute:A user can comment all records in this view.`;
       case RoleType.PerspectiveConfig:

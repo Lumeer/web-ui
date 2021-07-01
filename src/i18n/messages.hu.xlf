@@ -556,7 +556,7 @@
           <context context-type="linenumber">255</context>
         </context-group>
       </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source><target state="new">A user can create, modify and delete their own records (rows) in all tables, links, and views in all projects in this organization.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source><target state="new">A user can create, modify and delete their own records (rows) in all tables, links, and views in all projects in this organization.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">257</context>
@@ -676,7 +676,7 @@
           <context context-type="linenumber">313</context>
         </context-group>
       </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in all tables, links, and views in this project.</source><target state="new">A user can create, modify and delete their own records (rows) in all tables, links, and views in this project.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.</source><target state="new">A user can create, modify and delete their own records (rows) in all tables, links, and views in this project.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">315</context>
@@ -772,7 +772,7 @@
           <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in this table.</source><target state="new">A user can create, modify and delete their own records (rows) in this table.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in this table.</source><target state="new">A user can create, modify and delete their own records (rows) in this table.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">366</context>
@@ -838,7 +838,7 @@
           <context context-type="linenumber">405</context>
         </context-group>
       </trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in this view.</source><target state="new">A user can create, modify and delete their own records (rows) in this view.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in this view.</source><target state="new">A user can create, modify and delete their own records (rows) in this view.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">407</context>

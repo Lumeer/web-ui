@@ -1390,7 +1390,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source>
+        <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">257</context>
@@ -1530,7 +1530,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in all tables, links, and views in this project.</source>
+        <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">315</context>
@@ -1642,7 +1642,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in this table.</source>
+        <source>A user can create, see, modify and delete only their own records (rows) in this table.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">366</context>
@@ -1719,7 +1719,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in this view.</source>
+        <source>A user can create, see, modify and delete only their own records (rows) in this view.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">407</context>
@@ -4241,13 +4241,6 @@
           <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="constraint.duration.unit.description" datatype="html">
         <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }"/> </source>
         <context-group purpose="location">
@@ -4255,11 +4248,11 @@
           <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
-        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds}}</source>
+      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
+        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.unit.conversion" datatype="html">
@@ -4267,6 +4260,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
+        <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.description" datatype="html">
@@ -5033,18 +5033,18 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="modal.links.modify.selected" datatype="html">
-        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-          <context context-type="linenumber">18,19</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="modal.links.modify.selected" datatype="html">
+        <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18,19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.filter.title" datatype="html">

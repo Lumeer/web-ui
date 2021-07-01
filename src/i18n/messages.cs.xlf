@@ -3293,8 +3293,8 @@
           <context context-type="linenumber">255</context>
         </context-group>
       </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source>
-        <target>Uživatel může vytváře, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech tabulkách, propojeních a pohledech ve všech projektech v této organizaci.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source>
+        <target>Uživatel může vytváře, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech tabulkách, propojeních a pohledech ve všech projektech v této organizaci.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">257</context>
@@ -3432,8 +3432,8 @@
           <context context-type="linenumber">313</context>
         </context-group>
       </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in all tables, links, and views in this project.</source>
-        <target>Uživatel může vyvtářet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech taulkách, propojeních a pohledech v tomto projektu.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.</source>
+        <target>Uživatel může vyvtářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech taulkách, propojeních a pohledech v tomto projektu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">315</context>
@@ -3543,8 +3543,8 @@
           <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in this table.</source>
-        <target>Uživatel může vytvářet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v této tabulce.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in this table.</source>
+        <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v této tabulce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">366</context>
@@ -3619,8 +3619,8 @@
           <context context-type="linenumber">405</context>
         </context-group>
       </trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
-        <source>A user can create, modify and delete only their own records (rows) in this view.</source>
-        <target>Uživatel může vytvářet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v tomto pohledu.</target>
+        <source>A user can create, see, modify and delete only their own records (rows) in this view.</source>
+        <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v tomto pohledu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">407</context>
