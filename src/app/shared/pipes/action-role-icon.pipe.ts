@@ -17,31 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
-import {ResourceType} from '../../core/model/resource-type';
 import {RoleType} from '../../core/model/role-type';
+import {ActionRole} from '@lumeer/data-filters';
 
 @Pipe({
-  name: 'resourceRoles',
+  name: 'actionRoleIcon',
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class ResourceRolesPipe implements PipeTransform {
-  public transform(resourceType: ResourceType): RoleType[] {
-    switch (resourceType) {
-      // TODO
-      case ResourceType.Organization:
-        return [RoleType.Read, RoleType.DataContribute, RoleType.Manage];
-      case ResourceType.Project:
-        return [RoleType.Read, RoleType.DataContribute, RoleType.Manage];
-      case ResourceType.Collection:
-        return [RoleType.Read, RoleType.DataContribute, RoleType.Manage];
-      case ResourceType.View:
-        return [RoleType.Read, RoleType.DataContribute, RoleType.Manage];
+export class ActionRoleIconPipe implements PipeTransform {
+  public transform(role: ActionRole): string {
+    switch (role) {
+      case ActionRole.Read:
+        return 'fa-book';
+      case ActionRole.Write:
+        return 'fa-pencil';
       default:
-        return [];
+        return '';
     }
   }
 }

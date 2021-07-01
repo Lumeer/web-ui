@@ -20,7 +20,7 @@
 import {createSelector} from '@ngrx/store';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../app.state';
-import {selectAllUsers, selectCurrentUser} from '../users/users.state';
+import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
 import {selectAllViews} from '../views/views.state';
 
 export type ConstraintDataState = Partial<ConstraintData>;
@@ -33,7 +33,7 @@ export const selectConstraintData = createSelector(
   selectConstraintDataState,
   selectAllUsers,
   selectAllViews,
-  selectCurrentUser,
+  selectCurrentUserForWorkspace,
   (state, users, views, currentUser) => ({
     ...state,
     users,

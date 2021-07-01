@@ -222,7 +222,15 @@ export class ActionDataInputComponent implements OnChanges {
     );
     const attributesMap = objectsByIdMap(resource.attributes);
     return {
-      ...actionButtonEnabledStats(dataValues, attributesMap, permissions, config, constraintData),
+      ...actionButtonEnabledStats(
+        dataResource,
+        dataValues,
+        resource,
+        attributesMap,
+        permissions,
+        config,
+        constraintData
+      ),
       attributesMap,
       constraintData,
     };

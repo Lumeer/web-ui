@@ -129,6 +129,7 @@
       <comments-panel *ngIf="resource && dataResource?.id"
                       [permissions]="dataResourceData.permissions"
                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                      [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
                       [resourceId]="dataResource.id"
                       [startEditing]="data.startEditing"
                       (onSaveComment)="startEditing$.next(false)"

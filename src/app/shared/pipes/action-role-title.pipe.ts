@@ -19,24 +19,17 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {RoleType} from '../../core/model/role-type';
+import {parseSelectTranslation} from '../utils/translation.utils';
+import {ActionRole} from '@lumeer/data-filters';
 
 @Pipe({
-  name: 'roleIcon',
+  name: 'actionRoleTitle',
 })
-export class RoleIconPipe implements PipeTransform {
-  public transform(role: RoleType): string {
-    switch (role) {
-      case RoleType.Read:
-        return 'fa-book';
-      case RoleType.Manage:
-        return 'fa-cog';
-      case RoleType.DataContribute:
-        return 'fa-pencil';
-      case RoleType.CommentContribute:
-        return 'fa-comment-alt';
-      default:
-        return '';
-    }
+export class ActionRoleTitlePipe implements PipeTransform {
+  public transform(role: ActionRole): string {
+    return parseSelectTranslation(
+      $localize`:@@user.permission.icon:{role, select, READ {read} MANAGE {manage} WRITE {write}}`,
+      {role}
+    );
   }
 }

@@ -71,7 +71,7 @@ import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {User} from '../../../../core/store/users/user';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 
 const columnWidth = 100;
 
@@ -169,7 +169,7 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

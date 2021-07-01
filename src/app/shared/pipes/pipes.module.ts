@@ -50,9 +50,8 @@ import {PageSlicePipe} from './page-slice.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
-import {ResourceRolesPipe} from './resource-roles.pipe';
-import {RoleIconPipe} from './role-icon.pipe';
-import {RoleTitlePipe} from './role-title.pipe';
+import {ActionRoleIconPipe} from './action-role-icon.pipe';
+import {ActionRoleTitlePipe} from './action-role-title.pipe';
 import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
@@ -128,9 +127,8 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ResourceRolesPipe,
-    RoleIconPipe,
-    RoleTitlePipe,
+    ActionRoleIconPipe,
+    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -220,9 +218,8 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ResourceRolesPipe,
-    RoleIconPipe,
-    RoleTitlePipe,
+    ActionRoleIconPipe,
+    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,

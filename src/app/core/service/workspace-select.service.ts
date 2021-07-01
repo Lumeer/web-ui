@@ -29,7 +29,7 @@ import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {User} from '../store/users/user';
-import {selectCurrentUser} from '../store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {ResourceType} from '../model/resource-type';
 import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
@@ -44,7 +44,7 @@ export class WorkspaceSelectService {
   private currentUser: User;
 
   constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {
-    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
+    this.store$.pipe(select(selectCurrentUserForWorkspace)).subscribe(user => (this.currentUser = user));
   }
 
   public selectOrganization(organization: Organization) {

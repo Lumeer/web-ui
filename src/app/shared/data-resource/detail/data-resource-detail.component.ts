@@ -68,14 +68,13 @@ import * as DetailActions from './../../../core/store/details/detail.actions';
 import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-config-perspective.component';
 import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {computeResourcesPermissions} from '../../utils/permission.utils';
 import {User} from '../../../core/store/users/user';
-import {RoleType} from '../../../core/model/role-type';
 
 @Component({
   selector: 'data-resource-detail',
@@ -167,7 +166,7 @@ export class DataResourceDetailComponent
   public ngOnInit() {
     super.ngOnInit();
 
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$.asObservable()]).pipe(
       map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
@@ -179,7 +178,7 @@ export class DataResourceDetailComponent
 
   private bindPermissions() {
     this.resourcesPermissions$ = combineLatest([
-      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectCurrentUserForWorkspace)),
       this.store$.pipe(select(selectWorkspaceModels)),
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
