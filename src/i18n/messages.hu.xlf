@@ -1351,11 +1351,11 @@
 				<target>Biztosan törölni szeretnéd a "
 					<x id="name" equiv-text="{{name}}"/>
 					tulajdonságot?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">103</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.attributes.delete.title">
 				<source>Delete attribute?</source>
 				<target>Törli a tulajdonságot?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">96</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">102</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.attributes.none">
 				<source>There are no attributes yet. Create one! </source>
 				<target>Nincsenek még tulajdonságok. Hozz létre egyet!</target>
@@ -1363,7 +1363,7 @@
 			<trans-unit datatype="html" id="collection.tab.linktypes.delete.message">
 				<source>Do you really want to delete the link type "<x id="name" equiv-text="linkType.name"/>" and all its usages?</source>
 				<target>Biztosan törölni szeretnéd a "<x id="name" equiv-text="{{name}}"/>" hivatkozástípust és annak összes használatát?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.prefix.copyOf" datatype="html">
         <source>Copy of</source><target>Másolata a</target>
 
 
@@ -1371,15 +1371,15 @@
 			<trans-unit datatype="html" id="collection.tab.linktypes.delete.title">
 				<source>Delete link type?</source>
 				<target>Törlöd a hivatkozás típusát?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">98</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.linktypes.name.placeholder">
 				<source>Enter link type name</source>
 				<target>Hivatkozástípus nevének megadása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.linkTypes.none">
 				<source> There are no link types yet. </source>
 				<target>Még nincsenek hivatkozástípusok.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.update.fail">
 				<source>Could not update table</source>
 				<target>Nem lehet frissíteni a táblázat célját</target>
@@ -2021,7 +2021,7 @@
 			<trans-unit datatype="html" id="delete">
 				<source>Delete</source>
 				<target>Töröl</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="dialog.attribute.description.title">
 				<source>Edit Description of</source>
 				<target>Szerkesztés leírása</target>
@@ -2679,7 +2679,7 @@
 			<trans-unit datatype="html" id="links.count">
 				<source>Number of links</source>
 				<target>Hivatkozások száma</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/query-stem/query-stem-query-item.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="lumeer.advice">
 				<source>Lumeer's Advice</source>
 				<target>Lumeer tanácsa</target>
@@ -4611,7 +4611,7 @@
 				<trans-unit datatype="html" id="table.body.row.clone">
 					<source>Duplicate row</source>
 					<target>Sor duplikálása</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="table.body.row.links.update" datatype="html">
         <source>Add/Remove links</source><target>Linkek hozzáadása/eltávolítása</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit>
@@ -4658,7 +4658,7 @@
 				<trans-unit datatype="html" id="table.data.cell.linked.row.uninitialized">
 					<source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
 					<target>Nem tudom a megadott értéket semmivel kapcsolni, először meg kell adnod egy értéket a táblázat előző részéhez.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">423</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">429</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>
