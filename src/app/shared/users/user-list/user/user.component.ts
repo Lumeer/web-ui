@@ -45,6 +45,9 @@ export class UserComponent {
   public changeTeams: boolean;
 
   @Input()
+  public changeRoles: boolean;
+
+  @Input()
   public user: User;
 
   @Input()

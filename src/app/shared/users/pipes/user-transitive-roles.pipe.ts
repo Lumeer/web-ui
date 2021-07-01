@@ -36,7 +36,7 @@ export class UserTransitiveRolesPipe implements PipeTransform {
     resourceType: ResourceType,
     permissions: Permissions
   ): Role[] {
-    const userTeamIds = user.teams?.map(team => team.id);
+    const userTeamIds = user.teams?.map(team => team.id) || [];
     const userTeamsRoles = (permissions?.groups || []).reduce((roles, team) => {
       if (userTeamIds.includes(team.id)) {
         roles.push(...(team.roles || []));
@@ -49,15 +49,26 @@ export class UserTransitiveRolesPipe implements PipeTransform {
         return userTeamsRoles;
       }
       case ResourceType.Project: {
-        return [...userRolesInOrganization(organization, user), ...userTeamsRoles];
+        return [
+          ...userRolesInOrganization(organization, user).filter(role => role.transitive),
+          ...userRolesInOrganization(organization, user)
+            .filter(role => role.transitive)
+            .map(role => ({
+              ...role,
+              transitive: false,
+            })),
+          ...userTeamsRoles,
+        ];
       }
       case ResourceType.View:
       case ResourceType.Collection: {
         return [
-          ...userRolesInProject(organization, project, user).map(role => ({
-            ...role,
-            transitive: false,
-          })),
+          ...userRolesInProject(organization, project, user)
+            .filter(role => role.transitive)
+            .map(role => ({
+              ...role,
+              transitive: false,
+            })),
           ...userTeamsRoles,
         ];
       }

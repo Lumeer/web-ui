@@ -25,7 +25,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChange,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 
@@ -81,7 +81,7 @@ export class InputBoxComponent implements OnInit, OnChanges {
     this.computeProperties();
   }
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+  public ngOnChanges(changes: SimpleChanges) {
     this.computeProperties();
   }
 

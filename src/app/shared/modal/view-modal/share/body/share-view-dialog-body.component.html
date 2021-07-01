@@ -27,7 +27,7 @@
 
       <ng-container *ngIf="selectedTab === viewTab.Users">
         <share-view-input
-          class="d-block my-2 mt-4"
+          class="d-block mb-2 mt-4"
           [readableUsers]="usersWithReadPermission"
           [currentUsers]="[data.staticUsers, data.changeableUsers, data.newUsers] | concat"
           (selectUser)="onUserSelected($event)"
@@ -49,8 +49,10 @@
       </ng-container>
 
       <view-teams *ngIf="selectedTab === viewTab.Teams"
+                  class="d-block mt-4"
                   [organization]="organization"
                   [project]="project"
+                  [view]="view"
                   [permissions]="view | viewGroupPermissions:data.teamRoles"
                   [users]="users"
                   [teams]="teamsWithReadPermission"

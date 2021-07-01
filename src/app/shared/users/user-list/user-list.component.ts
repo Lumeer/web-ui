@@ -84,11 +84,10 @@ export class UserListComponent implements OnInit, OnChanges {
   @Output()
   public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();
 
-  public searchString: string;
-
   public teams$: Observable<Team[]>;
 
   public deletableUserIds: string[];
+  public editableUserIds: string[];
 
   constructor(private store$: Store<AppState>) {}
 
@@ -98,27 +97,20 @@ export class UserListComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.users || changes.resourceType || changes.currentUser) {
-      this.checkDeletableUserIds();
+      this.checkUserIds();
     }
   }
 
-  private checkDeletableUserIds() {
+  private checkUserIds() {
     if (this.resourceType === ResourceType.Organization) {
       this.deletableUserIds = (this.users || []).filter(user => user.id !== this.currentUser.id).map(user => user.id);
     } else {
       this.deletableUserIds = [];
     }
+    this.editableUserIds = (this.users || []).filter(user => user.id !== this.currentUser.id).map(user => user.id);
   }
 
   public onUserRolesChanged(user: User, roles: Role[]) {
     this.userRolesChange.emit({user, roles});
-  }
-
-  public trackByUserId(index: number, user: User): string {
-    return user.id;
-  }
-
-  public onUserTeamsChanged(user: User, teams: string[]) {
-    this.userTeamsChange.emit({user, teams});
   }
 }

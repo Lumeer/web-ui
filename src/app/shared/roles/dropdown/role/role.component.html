@@ -1,6 +1,10 @@
 <span class="pr-2 cursor-pointer user-select-none text-truncate"
       (click)="checkbox.click()">{{role.title}}</span>
+<i class="help fa-fw far fa-question-circle mx-2 text-muted"
+   [tooltip]="role.tooltip">
+</i>
 <label class="switch">
-  <input type="checkbox" [disabled]="disabled" [checked]="checked" #checkbox (change)="onCheckedChange($event.target.checked)">
+  <input type="checkbox" [disabled]="disabled" [checked]="checked" #checkbox
+         (change)="onCheckedChange($event.target.checked)">
   <span class="slider round" (click)="$event.stopPropagation()"></span>
 </label>

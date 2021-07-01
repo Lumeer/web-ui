@@ -34,6 +34,7 @@ import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {allDropdownPositions} from '../../dropdown/dropdown-position';
 import {BehaviorSubject} from 'rxjs';
 import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
+import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
   selector: 'roles-dropdown',
@@ -46,10 +47,10 @@ export class RolesDropdownComponent implements OnChanges {
   public origin: ElementRef | HTMLElement;
 
   @Input()
-  public selectedRoles: Role[];
+  public resourceType: ResourceType;
 
   @Input()
-  public transitiveRoles: Role[];
+  public selectedRoles: Role[];
 
   @Input()
   public groups: RoleGroup[];

@@ -60,6 +60,9 @@ export class UserTableComponent {
   public removableUserIds: string[];
 
   @Input()
+  public editableUserIds: string[];
+
+  @Input()
   public editableGroups: boolean;
 
   @Output()

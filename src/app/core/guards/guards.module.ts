@@ -28,6 +28,7 @@ import {ViewRedirectGuard} from './view-redirect.guard';
 import {UsersGuard} from './data/users.guard';
 import {ViewDefaultConfigsGuard} from './data/view-default-configs.guard';
 import {GroupsGuard} from './data/groups.guard';
+import {ServiceLimitsGuard} from './data/service-limits.guard';
 
 @NgModule({
   imports: [CommonModule],
@@ -41,6 +42,7 @@ import {GroupsGuard} from './data/groups.guard';
     CurrentUserGuard,
     UsersGuard,
     GroupsGuard,
+    ServiceLimitsGuard,
     ViewDefaultConfigsGuard,
   ],
 })

@@ -4,34 +4,39 @@
      (mousedown)="onMouseDown($event)">
 
   <div *ngFor="let team of selectedTeams; trackBy: trackByTeam"
-       class="badge badge-pill badge-info mr-2 mb-1">
-    {{team.name}}
+       class="badge badge-lg badge-pill badge-info mr-2 mb-1">{{team.name}}</div>
+
+  <div #textInputParent *ngIf="editable">
+    <button class="btn btn-sm btn-link text-nowrap py-0 mb-1" *ngIf="!(suggesting$ | async)"
+            (click)="$event.stopPropagation(); onEditClick()">
+      <i class="far fa-users mr-1"></i><span i18n="@@edit">Edit</span>
+    </button>
+
+    <input *ngIf="suggesting$ | async"
+           #textInput
+           [(ngModel)]="name"
+           (blur)="onBlur()"
+           (focus)="onFocus()"
+           (click)="$event.stopPropagation()"
+           placeholder="Add team"
+           i18n-placeholder="@@user.teams.search.placeholder"
+           (keydown)="onKeyDown($event)"
+           [class.ml-1]="selectedTeams.length > 0"
+           [spellcheck]="false"
+           class="border-0 bg-transparent mb-1"
+           type="text">
+
+    <options-dropdown [options]="teams | filterTeams:name"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInputParent"
+                      [highlightedText]="name"
+                      [multiSelect]="true"
+                      [dropdownPositions]="dropdownPositions"
+                      [selectedValues]="selectedTeams | teamsIds"
+                      [firstItemActive]="false"
+                      (selectOption)="onSelectOption($event)">
+    </options-dropdown>
   </div>
-
-  <input #textInput
-         *ngIf="editable"
-         [(ngModel)]="name"
-         (blur)="onBlur()"
-         (focus)="onFocus()"
-         placeholder="Add team"
-         i18n-placeholder="@@user.teams.search.placeholder"
-         (keydown)="onKeyDown($event)"
-         [class.ml-1]="selectedTeams.length > 0"
-         [spellcheck]="false"
-         class="border-0 bg-transparent mb-1"
-         type="text">
-
-  <options-dropdown *ngIf="editable"
-                    [options]="teams | filterTeams:name"
-                    [showBackdrop]="false"
-                    [closeOnClickOutside]="false"
-                    [origin]="textInput"
-                    [highlightedText]="name"
-                    [multiSelect]="true"
-                    [dropdownPositions]="dropdownPositions"
-                    [selectedValues]="selectedTeams | teamsIds"
-                    [firstItemActive]="false"
-                    (selectOption)="onSelectOption($event)">
-  </options-dropdown>
 
 </div>

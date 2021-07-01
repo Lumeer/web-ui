@@ -1,17 +1,12 @@
-<div *ngIf="resourceType | isOrganizationType" class="row my-4">
-  <div class="col">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title" i18n="@@users.header.inviteUser">Invite a colleague or a friend</h4>
-        <new-user
-          [users]="users"
-          (userCreated)="userCreated.emit($event)">
-        </new-user>
-      </div>
-    </div>
-  </div>
+<div *ngIf="resourceType | isOrganizationType" class="mt-4">
+  <h4 class="card-title" i18n="@@users.header.inviteUser">Invite a colleague or a friend</h4>
+  <new-user
+    [users]="users"
+    (userCreated)="userCreated.emit($event)">
+  </new-user>
 </div>
-<user-table [users]="users"
+<user-table class="d-block mt-4"
+            [users]="users"
             [resourceType]="resourceType"
             [teams]="teams$ | async"
             [organization]="organization"
@@ -20,6 +15,7 @@
             [color]="resource.color"
             [editableGroups]="(resourceType | isOrganizationType) && serviceLimits?.groups"
             [deletableUserIds]="deletableUserIds"
+            [editableUserIds]="editableUserIds"
             (userTeamsChange)="userTeamsChange.emit($event)"
             (userRolesChange)="userRolesChange.emit($event)"
             (userDeleted)="userDeleted.emit($event)"

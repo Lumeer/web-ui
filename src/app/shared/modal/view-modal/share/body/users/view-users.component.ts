@@ -79,6 +79,7 @@ export class ViewUsersComponent implements OnInit, OnChanges {
   public collectionsMap$: Observable<Record<string, Collection>>;
 
   public removableUserIds: string[];
+  public editableUserIds: string[];
 
   public readonly resourceType = ResourceType.View;
 
@@ -91,6 +92,11 @@ export class ViewUsersComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.otherUsers) {
       this.removableUserIds = (this.otherUsers || []).map(user => user.id);
+    }
+    if (changes.staticUsers || changes.otherUsers || changes.currentUser) {
+      this.editableUserIds = [...(this.staticUsers || []), ...(this.otherUsers || [])]
+        .filter(user => user.id !== this.currentUser.id)
+        .map(user => user.id);
     }
   }
 }

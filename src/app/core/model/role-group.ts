@@ -27,4 +27,6 @@ export interface RoleGroup {
 
 export interface TranslatedRole extends Role {
   title: string;
+  tooltip?: string;
+  fromParentOrTeams?: boolean;
 }

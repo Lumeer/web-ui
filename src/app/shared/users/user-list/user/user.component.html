@@ -10,8 +10,9 @@
               (save)="onTeamsSave($event)">
   </user-teams>
   <roles class="mt-3 cursor-pointer"
+         [class.cursor-pointer]="changeRoles"
          [resourceType]="resourceType"
-         [editable]="true"
+         [editable]="changeRoles"
          [transitiveRoles]="transitiveRoles"
          [roles]="permissions | userRoles:user"
          (change)="rolesUpdate.emit($event)">

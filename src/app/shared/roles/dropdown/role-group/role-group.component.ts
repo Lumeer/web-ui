@@ -35,9 +35,6 @@ export class RoleGroupComponent implements OnChanges {
   @Input()
   public selectedRoles: Role[];
 
-  @Input()
-  public transitiveRoles: Role[];
-
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 
@@ -54,10 +51,8 @@ export class RoleGroupComponent implements OnChanges {
   }
 
   private checkNumSelected() {
-    this.numSelected = this.group.roles.filter(
-      role =>
-        (this.selectedRoles || []).some(r => rolesAreSame(r, role)) ||
-        (this.transitiveRoles || []).some(r => rolesAreSame(r, role))
+    this.numSelected = this.group.roles.filter(role =>
+      (this.selectedRoles || []).some(r => rolesAreSame(r, role))
     ).length;
   }
 }

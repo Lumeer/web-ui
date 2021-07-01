@@ -30,8 +30,6 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
-import {USER_AVATAR_SIZE} from '../../../../../core/constants';
-import {User} from '../../../../../core/store/users/user';
 import {KeyCode} from '../../../../key-code';
 import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
 import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
@@ -67,9 +65,9 @@ export class UserTeamsComponent implements OnChanges {
   public dropdown: OptionsDropdownComponent;
 
   private preventSave: boolean;
-  public suggesting: boolean;
   public name: string = '';
   public selectedTeams$ = new BehaviorSubject<Team[]>([]);
+  public suggesting$ = new BehaviorSubject(false);
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
@@ -87,7 +85,6 @@ export class UserTeamsComponent implements OnChanges {
   }
 
   public onFocus() {
-    this.suggesting = true;
     this.dropdown?.resetActiveOption();
     this.dropdown?.open();
   }
@@ -135,21 +132,29 @@ export class UserTeamsComponent implements OnChanges {
     if (this.selectedTeams$.value.some(o => o.id === option.value)) {
       this.selectedTeams$.next(this.selectedTeams$.value.filter(o => o.id !== option.value));
     } else {
-      const selectTeam = (this.teams || []).find(o => o.id === option.value);
-      if (selectTeam) {
-        this.selectedTeams$.next([...this.selectedTeams$.value, selectTeam]);
+      const newSelectedTeams = this.createSelectedTeams(option.value);
+      if (newSelectedTeams.length !== this.selectedTeams$.value.length) {
+        this.selectedTeams$.next(newSelectedTeams);
         setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
     this.resetSearchInput();
   }
 
+  private createSelectedTeams(withId?: string): Team[] {
+    const selectedTeamsIds = this.selectedTeams$.value.map(team => team.id);
+    if (withId) {
+      selectedTeamsIds.push(withId);
+    }
+    return (this.teams || []).filter(o => selectedTeamsIds.includes(o.id));
+  }
+
   private saveValue(activeOption?: DropdownOption) {
     const selectedTeam =
       (activeOption && this.teams.find(option => option.id === activeOption.value)) ||
       this.teams.find(team => team.name === this.name?.trim());
-    const options = [...this.selectedTeams$.value, selectedTeam].filter(option => !!option);
-    const ids = uniqueValues(options.map(option => option.id));
+    const newSelectedTeams = this.createSelectedTeams(selectedTeam?.id);
+    const ids = uniqueValues(newSelectedTeams.map(team => team.id));
     if (!areArraysSame(ids, this.selectedTeamIds)) {
       this.save.emit(ids);
       this.resetSearchInput();
@@ -175,7 +180,8 @@ export class UserTeamsComponent implements OnChanges {
 
   private blurCleanup() {
     this.dropdown?.close();
-    this.suggesting = false;
+    this.suggesting$.next(false);
+    this.name = '';
   }
 
   public onMouseDown(event: MouseEvent) {
@@ -191,8 +197,23 @@ export class UserTeamsComponent implements OnChanges {
   }
 
   public onClick() {
-    if (!this.suggesting) {
-      this.textInput?.nativeElement.focus();
+    if (this.suggesting$.value) {
+      this.stopSuggesting();
+    } else {
+      this.startSuggesting();
     }
+  }
+
+  public onEditClick() {
+    this.startSuggesting();
+  }
+
+  private startSuggesting() {
+    this.suggesting$.next(true);
+    setTimeout(() => this.textInput?.nativeElement.focus());
+  }
+
+  private stopSuggesting() {
+    this.textInput?.nativeElement.blur();
   }
 }

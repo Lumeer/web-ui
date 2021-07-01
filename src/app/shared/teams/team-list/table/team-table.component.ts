@@ -54,6 +54,9 @@ export class TeamTableComponent {
   public editable: boolean;
 
   @Input()
+  public color: string;
+
+  @Input()
   public changeRoles: boolean;
 
   @Input()
