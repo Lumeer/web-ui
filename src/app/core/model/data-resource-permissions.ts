@@ -18,6 +18,7 @@
  */
 
 export interface DataResourcePermissions {
+  create?: boolean;
   read?: boolean;
   edit?: boolean;
   delete?: boolean;

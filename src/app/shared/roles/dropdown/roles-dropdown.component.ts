@@ -91,6 +91,11 @@ export class RolesDropdownComponent implements OnChanges {
     this.dropdown?.close();
   }
 
+  public closeAndSave() {
+    this.save();
+    this.dropdown?.close();
+  }
+
   public trackByGroup(index: number, group: RoleGroup): string {
     return group.title;
   }
@@ -112,6 +117,10 @@ export class RolesDropdownComponent implements OnChanges {
   }
 
   public onClose() {
+    this.save();
+  }
+
+  private save() {
     this.change.emit(this.selectedRoles$.value);
   }
 

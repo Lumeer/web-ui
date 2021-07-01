@@ -67,7 +67,7 @@ export class WorkspaceService {
   ): Observable<{user?: User; organization?: Organization; project?: Project}> {
     return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
       mergeMap(organization =>
-        this.selectUserGroupsAndProject(organization, projectCode).pipe(
+        this.selectUserTeamsAndProject(organization, projectCode).pipe(
           map(({user, project}) => ({user, organization, project}))
         )
       )
@@ -108,7 +108,7 @@ export class WorkspaceService {
     });
   }
 
-  private selectUserGroupsAndProject(
+  private selectUserTeamsAndProject(
     organization: Organization,
     projectCode: string
   ): Observable<{user?: User; project?: Project}> {
@@ -122,7 +122,7 @@ export class WorkspaceService {
   }
 
   private selectUser(organization: Organization): Observable<User> {
-    return this.selectGroups(organization).pipe(
+    return this.selectTeams(organization).pipe(
       switchMap(() =>
         this.store$.pipe(
           select(selectCurrentUserForOrganization(organization)),
@@ -132,7 +132,7 @@ export class WorkspaceService {
     );
   }
 
-  private selectGroups(organization: Organization): Observable<Team[]> {
+  private selectTeams(organization: Organization): Observable<Team[]> {
     return this.store$.select(selectTeamsLoadedForOrganization(organization.id)).pipe(
       tap(loaded => {
         if (!loaded) {

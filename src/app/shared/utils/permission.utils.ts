@@ -338,6 +338,7 @@ export function dataResourcePermissions(
   user: User
 ): DataResourcePermissions {
   return {
+    create: permissions?.rolesWithView?.DataContribute,
     read: userCanReadDataResource(dataResource, resource, permissions, user),
     edit: userCanEditDataResource(dataResource, resource, permissions, user),
     delete: userCanDeleteDataResource(dataResource, resource, permissions, user),
