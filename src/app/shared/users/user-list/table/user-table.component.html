@@ -25,6 +25,7 @@
                 [permissions]="permissions"
                 [deletable]="deletableUserIds | includes:user.id"
                 [removable]="removableUserIds | includes:user.id"
+                [changeRoles]="editableUserIds | includes:user.id"
                 [changeTeams]="editableGroups"
                 (rolesUpdate)="userRolesChange.emit({user: user, roles: $event})"
                 (userUpdated)="userUpdated.emit($event)"

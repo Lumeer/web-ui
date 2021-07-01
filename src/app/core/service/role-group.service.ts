@@ -74,6 +74,7 @@ export class RoleGroupService {
         title: this.translateGroupType(RoleGroupType.Config),
         order: 4,
         roles: [
+          this.createOrganizationRole(RoleType.Read, true),
           this.createOrganizationRole(RoleType.AttributeEdit, true),
           this.createOrganizationRole(RoleType.TechConfig, true),
         ],
@@ -124,6 +125,7 @@ export class RoleGroupService {
         title: this.translateGroupType(RoleGroupType.Config),
         order: 4,
         roles: [
+          this.createOrganizationRole(RoleType.Read, true),
           this.createProjectRole(RoleType.AttributeEdit, true),
           this.createProjectRole(RoleType.TechConfig, true),
         ],
@@ -228,6 +230,9 @@ export class RoleGroupService {
   private organizationRoleTooltip(type: RoleType, transitive: boolean): string {
     switch (type) {
       case RoleType.Read:
+        if (transitive) {
+          return $localize`:@@organization.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in all projects in this organization.`;
+        }
         return $localize`:@@organization.permission.role.tooltip.Read:A user can see this organization.`;
       case RoleType.Manage:
         return $localize`:@@organization.permission.role.tooltip.Manage:A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.`;
@@ -274,7 +279,7 @@ export class RoleGroupService {
 
   private workspaceTransitiveRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.permission.transitive.role.title:{type, select, UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+      $localize`:@@organization.permission.transitive.role.title:{type, select, Read {Read All Resources} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
       {type}
     );
   }
@@ -282,6 +287,9 @@ export class RoleGroupService {
   private projectRoleTooltip(type: RoleType, transitive: boolean): string {
     switch (type) {
       case RoleType.Read:
+        if (transitive) {
+          return $localize`:@@project.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in this project.`;
+        }
         return $localize`:@@project.permission.role.tooltip.Read:A user can see this project.`;
       case RoleType.Manage:
         return $localize`:@@project.permission.role.tooltip.Manage:A user can change the project name, color, icon, description and can delete it.`;

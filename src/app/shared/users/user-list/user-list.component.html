@@ -15,6 +15,7 @@
             [color]="resource.color"
             [editableGroups]="(resourceType | isOrganizationType) && serviceLimits?.groups"
             [deletableUserIds]="deletableUserIds"
+            [editableUserIds]="editableUserIds"
             (userTeamsChange)="userTeamsChange.emit($event)"
             (userRolesChange)="userRolesChange.emit($event)"
             (userDeleted)="userDeleted.emit($event)"

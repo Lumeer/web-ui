@@ -32,15 +32,25 @@ export class TeamTransitiveRolesPipe implements PipeTransform {
   public transform(organization: Organization, project: Project, team: Team, resourceType: ResourceType): Role[] {
     switch (resourceType) {
       case ResourceType.Project: {
-        return teamRolesInOrganization(organization, team).filter(role => role.transitive);
+        return [
+          ...teamRolesInOrganization(organization, team).filter(role => role.transitive),
+          ...teamRolesInOrganization(organization, team)
+            .filter(role => role.transitive)
+            .map(role => ({
+              ...role,
+              transitive: false,
+            })),
+        ];
       }
       case ResourceType.View:
       case ResourceType.Collection: {
         return [
-          ...teamRolesInProject(organization, project, team).map(role => ({
-            ...role,
-            transitive: false,
-          })),
+          ...teamRolesInProject(organization, project, team)
+            .filter(role => role.transitive)
+            .map(role => ({
+              ...role,
+              transitive: false,
+            })),
         ];
       }
       default:
