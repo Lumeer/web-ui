@@ -9,7 +9,7 @@
 
   <div class="card p-0 overflow-auto" [style.min-width.px]="320">
 
-    <div class="font-weight-bold h5 mb-0 px-2 py-2">{resourceType, select, organization {Organization roles} project {Project roles} collection {Table roles} view {View roles} link_type {LinkType roles} }</div>
+    <div class="font-weight-bold h5 mb-0 px-2 py-2">{resourceType, select, organization {Organization Rights} project {Project Rights} collection {Table Rights} view {View Rights} link_type {Link Type Rights} }</div>
 
     <role *ngFor="let role of groups | flattenUngroupedRoles; trackBy:trackByRole"
           class="px-2 py-1"

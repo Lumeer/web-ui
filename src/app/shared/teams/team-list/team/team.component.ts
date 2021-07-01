@@ -81,10 +81,10 @@ export class TeamComponent {
   private readonly deleteTitleMsg: string;
 
   constructor(private notificationService: NotificationService) {
-    this.deleteMsg = $localize`:@@groups.group.delete.message:Do you want to permanently remove this group?`;
-    this.deleteTitleMsg = $localize`:@@groups.group.delete.title:Remove group?`;
-    this.cannotChangeRoleMsg = $localize`:@@users.user.changeRoles:You cannot change these roles. Either you are this user, or you are the last manager here, or you do not have sufficient rights.`;
-    this.inheritedManagerMsg = $localize`:@@users.user.inheritedManager:This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.`;
+    this.deleteMsg = $localize`:@@groups.group.delete.message:Do you want to permanently remove this team?`;
+    this.deleteTitleMsg = $localize`:@@groups.group.delete.title:Remove team?`;
+    this.cannotChangeRoleMsg = $localize`:@@users.user.changeRoles:You cannot change these rights. Either you are this user, or you are the last manager here, or you do not have sufficient rights.`;
+    this.inheritedManagerMsg = $localize`:@@users.user.inheritedManager:This user is a manager of the organization and their rights cannot be changed. Remove organization manage first.`;
   }
 
   public onDelete() {

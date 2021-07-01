@@ -1,5 +1,5 @@
 <div *ngIf="groupsAreEditable && (resourceType | isOrganizationType)" class="mt-4">
-  <h4 class="card-title" i18n="@@teams.header.title.main">Start building new team</h4>
+  <h4 class="card-title" i18n="@@teams.header.title.main">Start building a new team</h4>
   <new-team [teams]="teams"
             (teamCreated)="teamCreated.emit($event)">
   </new-team>

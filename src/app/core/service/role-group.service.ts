@@ -237,14 +237,14 @@ export class RoleGroupService {
         return $localize`:@@organization.permission.role.tooltip.Read:A user can see this organization.`;
       case RoleType.Manage:
         if (transitive) {
-          return $localize`:@@organization.permission.transitive.role.tooltip.Manage:A user can change and delete all projects, tables, views and links in this organization.`;
+          return $localize`:@@organization.permission.transitive.role.tooltip.Manage:A user can change and delete all projects, tables, views and links in all projects in this organization.`;
         }
         return $localize`:@@organization.permission.role.tooltip.Manage:A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.`;
       case RoleType.ProjectContribute:
         return $localize`:@@organization.permission.role.tooltip.ProjectContribute:A user can create new projects in this organization. They become a manager of the new project.`;
       case RoleType.UserConfig:
         if (transitive) {
-          return $localize`:@@organization.permission.transitive.role.tooltip.UserConfig:A user can add, modify, and delete users everywhere in the organization.`;
+          return $localize`:@@organization.permission.transitive.role.tooltip.UserConfig:A user can add, modify, and delete users and their rights everywhere in this organization.`;
         }
         return $localize`:@@organization.permission.role.tooltip.UserConfig:A user can add, modify, and delete users in this organization (at the organizational level).`;
       case RoleType.DataRead:
@@ -254,7 +254,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@organization.permission.transitive.role.tooltip.DataDelete:A user can delete all records (rows) in all tables and views in all projects in this organization.`;
       case RoleType.DataContribute:
-        return $localize`:@@organization.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in all tables, links, and views in all projects in this organization.`;
+        return $localize`:@@organization.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.`;
       case RoleType.CommentContribute:
         return $localize`:@@organization.permission.transitive.role.tooltip.CommentContribute:A user can comment all records in all projects in this organization.`;
       case RoleType.CollectionContribute:
@@ -266,7 +266,7 @@ export class RoleGroupService {
       case RoleType.AttributeEdit:
         return $localize`:@@organization.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in tables and link types in all projects in this organization.`;
       case RoleType.TechConfig:
-        return $localize`:@@organization.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all resources in all projects in this organization.`;
+        return $localize`:@@organization.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations in all tables and link types in all projects in this organization.`;
       case RoleType.PerspectiveConfig:
         return $localize`:@@organization.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage view configurations of all views in all projects in this organization.`;
       case RoleType.QueryConfig:
@@ -292,7 +292,7 @@ export class RoleGroupService {
     switch (type) {
       case RoleType.Read:
         if (transitive) {
-          return $localize`:@@project.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in this project.`;
+          return $localize`:@@project.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in this project. However for their content (data) there is a separate right.`;
         }
         return $localize`:@@project.permission.role.tooltip.Read:A user can see this project.`;
       case RoleType.Manage:
@@ -302,9 +302,9 @@ export class RoleGroupService {
         return $localize`:@@project.permission.role.tooltip.Manage:A user can change the project name, color, icon, description and can delete it.`;
       case RoleType.UserConfig:
         if (transitive) {
-          return $localize`:@@project.permission.transitive.role.tooltip.UserConfig:A user can manage user roles everywhere in the project.`;
+          return $localize`:@@project.permission.transitive.role.tooltip.UserConfig:A user can manage user rights everywhere in the project.`;
         }
-        return $localize`:@@project.permission.role.tooltip.UserConfig:A user can manage user roles in this project (at the project level).`;
+        return $localize`:@@project.permission.role.tooltip.UserConfig:A user can manage user rights in this project (at the project level).`;
       case RoleType.DataRead:
         return $localize`:@@project.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in this project.`;
       case RoleType.DataWrite:
@@ -312,7 +312,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@project.permission.transitive.role.tooltip.DataDelete:A user can delete all records (rows) in all tables and views in this project.`;
       case RoleType.DataContribute:
-        return $localize`:@@project.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in all tables, links, and views in this project.`;
+        return $localize`:@@project.permission.transitive.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in all tables, links, and views in this project.`;
       case RoleType.CommentContribute:
         return $localize`:@@project.permission.transitive.role.tooltip.CommentContribute:A user can comment all records in this project.`;
       case RoleType.CollectionContribute:
@@ -322,9 +322,9 @@ export class RoleGroupService {
       case RoleType.LinkContribute:
         return $localize`:@@project.permission.transitive.role.tooltip.LinkContribute:A user can create link types in this project. They become a manager of the new link type.`;
       case RoleType.AttributeEdit:
-        return $localize`:@@project.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in tables and link types in this project.`;
+        return $localize`:@@project.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in all tables and link types in this project.`;
       case RoleType.TechConfig:
-        return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all resources in this project.`;
+        return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
       case RoleType.PerspectiveConfig:
         return $localize`:@@project.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage view configurations of all views in this project.`;
       case RoleType.QueryConfig:
@@ -343,7 +343,7 @@ export class RoleGroupService {
 
   private collectionRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@collection.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}`,
+      $localize`:@@collection.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}`,
       {type}
     );
   }
@@ -355,7 +355,7 @@ export class RoleGroupService {
       case RoleType.Manage:
         return $localize`:@@collection.permission.role.tooltip.Manage:A user can change the table name, color, icon, description and can delete it.`;
       case RoleType.UserConfig:
-        return $localize`:@@collection.permission.role.tooltip.UserConfig:A user can can manage user roles in this table.`;
+        return $localize`:@@collection.permission.role.tooltip.UserConfig:A user can manage user rights in this table.`;
       case RoleType.DataRead:
         return $localize`:@@collection.permission.role.tooltip.DataRead:A user can read all data in this table.`;
       case RoleType.DataWrite:
@@ -363,7 +363,7 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@collection.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this table.`;
       case RoleType.DataContribute:
-        return $localize`:@@collection.permission.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in this table.`;
+        return $localize`:@@collection.permission.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in this table.`;
       case RoleType.CommentContribute:
         return $localize`:@@collection.permission.role.tooltip.CommentContribute:A user can comment all records in this table.`;
       case RoleType.AttributeEdit:
@@ -396,7 +396,7 @@ export class RoleGroupService {
       case RoleType.Manage:
         return $localize`:@@view.permission.role.tooltip.Manage:A user can change the view name, color, icon, folders and can delete it.`;
       case RoleType.UserConfig:
-        return $localize`:@@view.permission.role.tooltip.UserConfig:A user can can manage user roles in this view.`;
+        return $localize`:@@view.permission.role.tooltip.UserConfig:A user can manage user rights in this view.`;
       case RoleType.DataRead:
         return $localize`:@@view.permission.role.tooltip.DataRead:A user can read all data in this view.`;
       case RoleType.DataWrite:
@@ -404,11 +404,11 @@ export class RoleGroupService {
       case RoleType.DataDelete:
         return $localize`:@@view.permission.role.tooltip.DataDelete:A user can delete all records (rows) in this view.`;
       case RoleType.DataContribute:
-        return $localize`:@@view.permission.role.tooltip.DataContribute:A user can create, modify and delete their own records (rows) in this view.`;
+        return $localize`:@@view.permission.role.tooltip.DataContribute:A user can create, modify and delete only their own records (rows) in this view.`;
       case RoleType.CommentContribute:
         return $localize`:@@view.permission.role.tooltip.CommentContribute:A user can comment all records in this view.`;
       case RoleType.PerspectiveConfig:
-        return $localize`:@@view.permission.role.tooltip.PerspectiveConfig:A user can manage view configurations in all perspectives.`;
+        return $localize`:@@view.permission.role.tooltip.PerspectiveConfig:A user can manage the configuration of this view.`;
       case RoleType.QueryConfig:
         return $localize`:@@view.permission.role.tooltip.QueryConfig:A user can modify queries in this view.`;
     }
