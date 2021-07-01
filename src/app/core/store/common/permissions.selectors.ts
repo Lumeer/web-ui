@@ -73,7 +73,7 @@ import {
   selectViewsPermissions,
 } from '../user-permissions/user-permissions.state';
 import {CollectionPurposeType} from '../collections/collection';
-import {selectCurrentUser} from '../users/users.state';
+import {selectCurrentUserForWorkspace} from '../users/users.state';
 import {userCanReadDocument, userCanReadLinkInstance} from '../../../shared/utils/permission.utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
@@ -200,7 +200,7 @@ export const selectDocumentsByReadPermission = createSelector(
   selectAllDocuments,
   selectReadableCollections,
   selectCollectionsPermissions,
-  selectCurrentUser,
+  selectCurrentUserForWorkspace,
   (documents, collections, permissionsMap, currentUser) => {
     const documentsByCollection = groupDocumentsByCollection(documents);
     return collections.reduce((allDocuments, collection) => {
@@ -223,7 +223,7 @@ export const selectLinksByReadPermission = createSelector(
   selectAllLinkInstances,
   selectReadableLinkTypes,
   selectLinkTypesPermissions,
-  selectCurrentUser,
+  selectCurrentUserForWorkspace,
   (linkInstances, linkTypes, permissionsMap, currentUser) => {
     const linkInstancesByLinkTypes = groupLinkInstancesByLinkTypes(linkInstances);
     return linkTypes.reduce((allLinkInstances, linkType) => {

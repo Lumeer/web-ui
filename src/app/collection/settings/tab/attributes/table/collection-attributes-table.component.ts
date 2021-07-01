@@ -24,6 +24,7 @@ import {ConstraintType} from '@lumeer/data-filters';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'collection-attributes-table',
@@ -34,6 +35,9 @@ import {NotificationsAction} from '../../../../../core/store/notifications/notif
 export class CollectionAttributesTableComponent {
   @Input()
   public collection: Collection;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public setDefault = new EventEmitter<Attribute>();

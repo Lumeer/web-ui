@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
@@ -28,6 +28,8 @@ import {CollectionsAction} from '../../../../core/store/collections/collections.
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {CollectionAttributesTableComponent} from './table/collection-attributes-table.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
@@ -38,6 +40,7 @@ export class CollectionAttributesComponent implements OnInit {
   public tableComponent: CollectionAttributesTableComponent;
 
   public collection$: Observable<Collection>;
+  public permissions$: Observable<AllowedPermissions>;
 
   private collection: Collection;
 
@@ -51,6 +54,9 @@ export class CollectionAttributesComponent implements OnInit {
     this.collection$ = this.store$.pipe(
       select(selectCollectionByWorkspace),
       tap(collection => (this.collection = collection))
+    );
+    this.permissions$ = this.collection$.pipe(
+      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection.id))))
     );
   }
 

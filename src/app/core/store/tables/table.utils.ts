@@ -41,6 +41,7 @@ import {
   TableModel,
 } from './table.model';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
+import {AllowedPermissions} from '../../model/allowed-permissions';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
   if (!path || path.length === 0) {
@@ -311,7 +312,8 @@ export function createCollectionPart(
   collection: Collection,
   index: number,
   last?: boolean,
-  config?: TableConfig
+  config?: TableConfig,
+  permissions?: AllowedPermissions
 ): TableConfigPart {
   if (!collection) {
     return {columns: []};
@@ -323,7 +325,7 @@ export function createCollectionPart(
   const columns = createTableColumnsFromAttributes(collection?.attributes, null, columnsConfig);
 
   const lastColumn = columns[columns.length - 1];
-  if (last && (!lastColumn || lastColumn.attributeIds.length > 0)) {
+  if (permissions?.rolesWithView?.AttributeEdit && last && (!lastColumn || lastColumn.attributeIds.length > 0)) {
     columns.push(createEmptyColumn(collection.attributes, columns));
   }
 

@@ -47,6 +47,8 @@ import {DirectivesModule} from '../shared/directives/directives.module';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {TeamsModule} from '../shared/teams/teams.module';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
+import {OrganizationTabGuard} from './organization/organization-tab.guard';
+import {ProjectTabGuard} from './project/project-tab.guard';
 
 @NgModule({
   imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule],
@@ -72,6 +74,13 @@ import {ProjectTeamsComponent} from './project/teams/project-teams.component';
     ProjectTeamsComponent,
   ],
   exports: [],
-  providers: [WorkspaceService, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],
+  providers: [
+    WorkspaceService,
+    OrganizationSettingsGuard,
+    OrganizationTabGuard,
+    ProjectSettingsGuard,
+    ProjectTabGuard,
+    DatePipe,
+  ],
 })
 export class WorkspaceModule {}

@@ -86,7 +86,7 @@ export class CopyValueService {
   }
 
   public copyDataValues(dataValues: DataValue[], constraint: Constraint, unique?: boolean) {
-    const {values} = dataValues.reduce(
+    const {values} = (dataValues || []).reduce(
       (data, dataValue) => {
         const serialized = dataValue.serialize();
 

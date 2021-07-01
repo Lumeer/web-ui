@@ -70,7 +70,7 @@
       <div id="dropdown-{{collection.id}}">
         <a *ngIf="canManageDetail$ | async" title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-left"
-           [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id, 'purpose']">
+           [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">
           <i class="fas fa-fw fa-cog" aria-hidden="true"></i>
         </a>
       </div>

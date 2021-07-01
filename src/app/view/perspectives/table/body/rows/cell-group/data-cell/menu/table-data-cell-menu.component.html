@@ -102,19 +102,19 @@
             <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
           </div>
         </button>
+      </ng-container>
 
-        <ng-container *ngIf="created && data.numberOfParts < 4">
-          <hr class="my-2">
-          <button (click)="onClick($event); onCloneRow()"
-                  mat-menu-item>
-            <div class="d-flex align-items-baseline">
-              <i class="far fa-fw fa-clone mr-1"
-                 aria-hidden="true"></i>
-              <span class="flex-grow-1"
-                    i18n="@@table.body.row.clone">Duplicate row</span>
-            </div>
-          </button>
-        </ng-container>
+      <ng-container *ngIf="cursor.partIndex === 0 && created && data.numberOfParts < 4 && dataPermissions?.create">
+        <hr class="my-2">
+        <button (click)="onClick($event); onCloneRow()"
+                mat-menu-item>
+          <div class="d-flex align-items-baseline">
+            <i class="far fa-fw fa-clone mr-1"
+               aria-hidden="true"></i>
+            <span class="flex-grow-1"
+                  i18n="@@table.body.row.clone">Duplicate row</span>
+          </div>
+        </button>
       </ng-container>
 
       <ng-container *ngIf="setLinks$ | async">

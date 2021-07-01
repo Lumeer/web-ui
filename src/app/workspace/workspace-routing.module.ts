@@ -38,12 +38,16 @@ import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {OrganizationTeamsComponent} from './organization/teams/organization-teams.component';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
+import {OrganizationTabGuard} from './organization/organization-tab.guard';
+import {RoleType} from '../core/model/role-type';
+import {ProjectTabGuard} from './project/project-tab.guard';
 
 const workspaceRoutes: Routes = [
   {
     path: 'o/:organizationCode/p/:projectCode',
     component: ProjectSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
+    canActivateChild: [ProjectTabGuard],
     resolve: {
       users: UsersGuard,
       groups: GroupsGuard,
@@ -56,18 +60,22 @@ const workspaceRoutes: Routes = [
       {
         path: 'users',
         component: ProjectUsersComponent,
+        data: {role: RoleType.UserConfig},
       },
       {
         path: 'teams',
         component: ProjectTeamsComponent,
+        data: {role: RoleType.UserConfig},
       },
       {
         path: 'sequences',
         component: ProjectSequencesComponent,
+        data: {role: RoleType.TechConfig},
       },
       {
         path: 'template',
         component: ProjectTemplateComponent,
+        data: {role: RoleType.TechConfig},
       },
       {
         path: '',
@@ -80,6 +88,7 @@ const workspaceRoutes: Routes = [
     path: 'o/:organizationCode',
     component: OrganizationSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
+    canActivateChild: [OrganizationTabGuard],
     resolve: {
       limits: ServiceLimitsGuard,
       users: UsersGuard,
@@ -89,14 +98,17 @@ const workspaceRoutes: Routes = [
       {
         path: 'detail',
         component: OrganizationDetailComponent,
+        data: {role: RoleType.Manage},
       },
       {
         path: 'users',
         component: OrganizationUsersComponent,
+        data: {role: RoleType.UserConfig},
       },
       {
         path: 'teams',
         component: OrganizationTeamsComponent,
+        data: {role: RoleType.UserConfig},
       },
       {
         path: '',
