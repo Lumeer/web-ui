@@ -75,6 +75,7 @@ export class RoleGroupService {
         order: 4,
         roles: [
           this.createOrganizationRole(RoleType.Read, true),
+          this.createOrganizationRole(RoleType.Manage, true),
           this.createOrganizationRole(RoleType.AttributeEdit, true),
           this.createOrganizationRole(RoleType.TechConfig, true),
         ],
@@ -231,10 +232,13 @@ export class RoleGroupService {
     switch (type) {
       case RoleType.Read:
         if (transitive) {
-          return $localize`:@@organization.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in all projects in this organization.`;
+          return $localize`:@@organization.permission.transitive.role.tooltip.Read:A user can see all projects, tables, views and links in all projects in this organization.`;
         }
         return $localize`:@@organization.permission.role.tooltip.Read:A user can see this organization.`;
       case RoleType.Manage:
+        if (transitive) {
+          return $localize`:@@organization.permission.transitive.role.tooltip.Manage:A user can change and delete all projects, tables, views and links in this organization.`;
+        }
         return $localize`:@@organization.permission.role.tooltip.Manage:A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.`;
       case RoleType.ProjectContribute:
         return $localize`:@@organization.permission.role.tooltip.ProjectContribute:A user can create new projects in this organization. They become a manager of the new project.`;
@@ -260,7 +264,7 @@ export class RoleGroupService {
       case RoleType.LinkContribute:
         return $localize`:@@organization.permission.transitive.role.tooltip.LinkContribute:A user can create link types in all projects in this organization. They become a manager of the new link type.`;
       case RoleType.AttributeEdit:
-        return $localize`:@@organization.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in tables and link types in all projects in this organization..`;
+        return $localize`:@@organization.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in tables and link types in all projects in this organization.`;
       case RoleType.TechConfig:
         return $localize`:@@organization.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all resources in all projects in this organization.`;
       case RoleType.PerspectiveConfig:
@@ -279,7 +283,7 @@ export class RoleGroupService {
 
   private workspaceTransitiveRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.permission.transitive.role.title:{type, select, Read {Read All Resources} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+      $localize`:@@organization.permission.transitive.role.title:{type, select, Read {Read All Resources} Manage {Manage All Resources} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
       {type}
     );
   }
@@ -292,6 +296,9 @@ export class RoleGroupService {
         }
         return $localize`:@@project.permission.role.tooltip.Read:A user can see this project.`;
       case RoleType.Manage:
+        if (transitive) {
+          return $localize`:@@project.permission.transitive.role.tooltip.Manage:A user can change and delete all tables, views and links in this project.`;
+        }
         return $localize`:@@project.permission.role.tooltip.Manage:A user can change the project name, color, icon, description and can delete it.`;
       case RoleType.UserConfig:
         if (transitive) {
