@@ -33,6 +33,8 @@ import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permi
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
@@ -42,6 +44,7 @@ import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 export class CollectionLinkTypesComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public collection$: Observable<Collection>;
+  public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
   public searchString$ = new BehaviorSubject<string>('');
 
   constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
@@ -55,6 +58,7 @@ export class CollectionLinkTypesComponent implements OnInit {
       filter(collection => !!collection),
       mergeMap(collection => this.selectLinkTypesForCollection(collection.id))
     );
+    this.linkTypesPermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
 
     this.collection$ = this.store$
       .select(selectCollectionByWorkspace)

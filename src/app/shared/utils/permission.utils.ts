@@ -302,12 +302,12 @@ export function userCanManageCollectionDetail(
   collection: Collection,
   user: User
 ): boolean {
-  const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
+  const roles = [RoleType.Manage, RoleType.AttributeEdit, RoleType.UserConfig, RoleType.TechConfig];
   return userRoleTypesInResource(organization, project, collection, user).some(role => roles.includes(role));
 }
 
 export function permissionsCanManageCollectionDetail(permissions: AllowedPermissions): boolean {
-  const roles = [RoleType.Manage, RoleType.UserConfig, RoleType.TechConfig];
+  const roles = [RoleType.Manage, RoleType.AttributeEdit, RoleType.UserConfig, RoleType.TechConfig];
   return roles.some(role => permissions?.roles?.[role]);
 }
 
@@ -338,6 +338,7 @@ export function dataResourcePermissions(
   user: User
 ): DataResourcePermissions {
   return {
+    create: permissions?.rolesWithView?.DataContribute,
     read: userCanReadDataResource(dataResource, resource, permissions, user),
     edit: userCanEditDataResource(dataResource, resource, permissions, user),
     delete: userCanDeleteDataResource(dataResource, resource, permissions, user),
@@ -397,7 +398,8 @@ export function userCanReadDocument(
 ): boolean {
   return (
     permissions?.rolesWithView?.DataRead ||
-    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user))
+    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
+    isDocumentOwnerByPurpose(document, collection, user)
   );
 }
 
@@ -409,7 +411,8 @@ export function userCanEditDocument(
 ): boolean {
   return (
     permissions?.rolesWithView?.DataWrite ||
-    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user))
+    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
+    isDocumentOwnerByPurpose(document, collection, user)
   );
 }
 
@@ -421,12 +424,13 @@ export function userCanDeleteDocument(
 ): boolean {
   return (
     permissions?.rolesWithView?.DataDelete ||
-    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user))
+    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
+    isDocumentOwnerByPurpose(document, collection, user)
   );
 }
 
 function isDocumentOwner(document: DocumentModel, collection: Collection, user: User): boolean {
-  return (user && document?.createdBy == user.id) || isDocumentOwnerByPurpose(document, collection, user);
+  return user && document?.createdBy == user.id;
 }
 
 export function userCanReadLinkInstance(
@@ -465,8 +469,8 @@ export function userCanDeleteLinkInstance(
   );
 }
 
-function isLinkOwner(document: LinkInstance, linkType: LinkType, user: User): boolean {
-  return document.createdBy == user.id;
+function isLinkOwner(linkInstance: LinkInstance, linkType: LinkType, user: User): boolean {
+  return user && linkInstance?.createdBy == user.id;
 }
 
 export function computeResourcesPermissions(

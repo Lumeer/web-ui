@@ -34,15 +34,20 @@ import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purp
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
+import {CollectionTabGuard} from './collection-tab.guard';
+import {RoleType} from '../core/model/role-type';
+import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 
 const collectionRoutes: Routes = [
   {
     path: 'o/:organizationCode/p/:projectCode/c/:collectionId',
     canActivate: [AuthGuard, CurrentUserGuard, CollectionSettingsGuard],
+    canActivateChild: [CollectionTabGuard],
     component: CollectionSettingsComponent,
     resolve: {
       linkTypes: LinkTypesGuard,
       collections: CollectionsGuard,
+      serviceLimits: ServiceLimitsGuard,
       users: UsersGuard,
       views: ViewsGuard,
       groups: GroupsGuard,
@@ -51,10 +56,12 @@ const collectionRoutes: Routes = [
       {
         path: 'attributes',
         component: CollectionAttributesComponent,
+        data: {role: RoleType.AttributeEdit},
       },
       {
         path: 'rules',
         component: CollectionRulesComponent,
+        data: {role: RoleType.TechConfig},
       },
       {
         path: 'linktypes',
@@ -63,14 +70,17 @@ const collectionRoutes: Routes = [
       {
         path: 'users',
         component: CollectionUsersComponent,
+        data: {role: RoleType.UserConfig},
       },
       {
         path: 'teams',
         component: CollectionTeamsComponent,
+        data: {role: RoleType.UserConfig},
       },
       {
         path: 'purpose',
         component: CollectionPurposeComponent,
+        data: {role: RoleType.TechConfig},
       },
       {
         path: '',

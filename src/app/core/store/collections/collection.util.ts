@@ -31,11 +31,7 @@ export function isCollectionAttributeEditable(
   query?: Query
 ): boolean {
   const attribute = attributeId && (collection?.attributes || []).find(attr => attr.id === attributeId);
-  return (
-    isAttributeEditable(attribute) &&
-    (permissions?.rolesWithView?.DataWrite || permissions?.rolesWithView?.DataContribute) &&
-    !isCollectionAttributeLockedByQuery(query, collection, attributeId)
-  );
+  return isAttributeEditable(attribute) && !isCollectionAttributeLockedByQuery(query, collection, attributeId);
 }
 
 export function isCollectionAttributeLockedByQuery(query: Query, collection: Collection, attributeId: string): boolean {
@@ -60,11 +56,7 @@ export function isLinkTypeAttributeEditable(
   query?: Query
 ): boolean {
   const attribute = attributeId && (linkType?.attributes || []).find(attr => attr.id === attributeId);
-  return (
-    isAttributeEditable(attribute) &&
-    (permissions?.rolesWithView?.DataWrite || permissions?.rolesWithView?.DataContribute) &&
-    !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId)
-  );
+  return isAttributeEditable(attribute) && !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId);
 }
 
 export function isLinkTypeAttributeLockedByQuery(query: Query, linkType: LinkType, attributeId: string): boolean {
@@ -89,11 +81,7 @@ export function isAttributeEditableWithQuery(
     return true;
   }
 
-  return (
-    isAttributeEditable(attribute) &&
-    (permissions?.rolesWithView?.DataWrite || permissions?.rolesWithView?.DataContribute) &&
-    !isAttributeLockedByFilters(filters, attribute.id)
-  );
+  return isAttributeEditable(attribute) && !isAttributeLockedByFilters(filters, attribute.id);
 }
 
 function isAttributeEditable(attribute: Attribute): boolean {

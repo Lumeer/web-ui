@@ -19,11 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {debounceTime, map, switchMap, take} from 'rxjs/operators';
-import {selectTablePart, selectTableRow, selectTableRows} from '../../../../core/store/tables/tables.selector';
-import {countLinkedRows} from '../../../../core/store/tables/table.utils';
-import {TableConfigPart, TableConfigRow} from '../../../../core/store/tables/table.model';
+import {combineLatest, Observable, of} from 'rxjs';
+import {map, switchMap, take} from 'rxjs/operators';
+import {selectTablePart, selectTableRow} from '../../../../core/store/tables/tables.selector';
 import {AppState} from '../../../../core/store/app.state';
 import {TableCursor} from '../../../../core/store/tables/table-cursor';
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
@@ -33,7 +31,7 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../shared/utils/permission.utils';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
@@ -66,7 +64,7 @@ export class TableDataPermissionsService {
       this.store$.pipe(select(selectDocumentById(documentId))),
       this.store$.pipe(select(selectCollectionById(collectionId))),
       this.store$.pipe(select(selectCollectionPermissions(collectionId))),
-      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectCurrentUserForWorkspace)),
     ]).pipe(
       take(1),
       map(([document, collection, permissions, user]) =>
@@ -80,7 +78,7 @@ export class TableDataPermissionsService {
       this.store$.pipe(select(selectLinkInstanceById(linkInstance))),
       this.store$.pipe(select(selectLinkTypeById(linkType))),
       this.store$.pipe(select(selectLinkTypePermissions(linkType))),
-      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectCurrentUserForWorkspace)),
     ]).pipe(
       take(1),
       map(([linkInstance, linkType, permissions, user]) =>

@@ -241,7 +241,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.dataValue$ = this.createDataValue$();
       }
     }
-    this.editable = this.dataPermissions?.edit;
+    if (changes.document || changes.linkInstance || changes.dataPermissions) {
+      if (this.document?.id || this.linkInstance?.id) {
+        this.editable = this.dataPermissions?.edit;
+      } else {
+        this.editable = this.dataPermissions?.create;
+      }
+    }
   }
 
   private createDataValue$(): Observable<DataValue> {
@@ -298,7 +304,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
-        if (this.dataPermissions?.edit && this.isAttributeEditable(attribute)) {
+        if (this.editable && this.isAttributeEditable(attribute)) {
           if (action.payload.clear) {
             this.startEditingAndClear();
           } else {
@@ -378,7 +384,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editing$.getValue()) {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
-        if (this.dataPermissions?.edit && this.isAttributeEditable(attribute)) {
+        if (this.editable && this.isAttributeEditable(attribute)) {
           this.editing$.next(true);
         }
       });
@@ -792,7 +798,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onKeyDownInSelectionMode(event: KeyboardEvent) {
-    const writeWithView = this.allowedPermissions && this.dataPermissions?.edit;
+    const writeWithView = this.editable;
     event[EDITABLE_EVENT] = writeWithView;
 
     if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {

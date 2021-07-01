@@ -51,7 +51,7 @@ import {
 } from '../../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../../../../../../core/store/app.state';
-import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {User} from '../../../../../../core/store/users/user';
 import {AttributesResource} from '../../../../../../core/model/resource';
@@ -95,7 +95,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.columns$ = this.bindColumns();
     this.permissions$ = this.bindPermissions();

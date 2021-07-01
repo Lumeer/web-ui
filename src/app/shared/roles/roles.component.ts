@@ -100,6 +100,10 @@ export class RolesComponent implements OnChanges {
 
   @HostListener('click')
   public onClick() {
-    this.rolesDropdownComponent?.toggle();
+    if (this.rolesDropdownComponent?.isOpen()) {
+      this.rolesDropdownComponent?.closeAndSave();
+    } else {
+      this.rolesDropdownComponent?.open();
+    }
   }
 }

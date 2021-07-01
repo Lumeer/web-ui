@@ -53,6 +53,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {AttributeNamesPipe} from './settings/common/rules/single-rule/attribute-names.pipe';
 import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
 import {TeamsModule} from '../shared/teams/teams.module';
+import {CollectionTabGuard} from './collection-tab.guard';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule, TeamsModule],
@@ -85,6 +86,6 @@ import {TeamsModule} from '../shared/teams/teams.module';
     CollectionPurposeTasksComponent,
     CollectionTeamsComponent,
   ],
-  providers: [CollectionSettingsGuard],
+  providers: [CollectionSettingsGuard, CollectionTabGuard],
 })
 export class CollectionModule {}
