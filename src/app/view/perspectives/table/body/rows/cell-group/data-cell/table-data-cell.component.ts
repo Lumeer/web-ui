@@ -115,7 +115,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public allowedPermissions: AllowedPermissions;
 
   @Input()
+  public linkAllowedPermissions: AllowedPermissions;
+
+  @Input()
   public dataPermissions: DataResourcePermissions;
+
+  @Input()
+  public linkDataPermissions: DataResourcePermissions;
 
   @Input()
   public query: Query;
@@ -207,8 +213,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.attribute$ = this.store$.pipe(
         select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
       );
-    }
-    if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
+    } else if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
       this.attribute$ = this.store$.pipe(
         select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
@@ -241,13 +246,50 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.dataValue$ = this.createDataValue$();
       }
     }
-    if (changes.document || changes.linkInstance || changes.dataPermissions) {
-      if (this.document?.id || this.linkInstance?.id) {
-        this.editable = this.dataPermissions?.edit;
+    if (
+      changes.cursor ||
+      changes.document ||
+      changes.linkInstance ||
+      changes.dataPermissions ||
+      changes.linkAllowedPermissions
+    ) {
+      this.checkIsEditable();
+    }
+  }
+
+  private checkIsEditable() {
+    // is first collection or link
+    if (this.cursor?.partIndex === 0 || this.cursor?.partIndex % 2 === 1) {
+      this.editable = this.isEditable();
+    } else if (this.cursor?.partIndex % 2 === 0) {
+      if (this.document?.id) {
+        this.editable = this.dataPermissions?.edit || this.linkDataPermissions?.edit;
       } else {
-        this.editable = this.dataPermissions?.create;
+        this.editable = this.linkAllowedPermissions?.rolesWithView?.DataContribute;
+      }
+    } else {
+      this.editable = false;
+    }
+  }
+
+  private isEditable(): boolean {
+    if (this.document?.id || this.linkInstance?.id) {
+      return this.dataPermissions?.edit;
+    } else {
+      return this.dataPermissions?.create;
+    }
+  }
+
+  private canSuggest(): boolean {
+    // check if is linked collection
+    if (this.cursor?.partIndex > 0 && this.cursor?.partIndex % 2 === 0) {
+      if (this.document?.id) {
+        return this.linkDataPermissions?.edit;
+      } else {
+        return this.linkAllowedPermissions?.rolesWithView?.DataContribute;
       }
     }
+    return false;
   }
 
   private createDataValue$(): Observable<DataValue> {
@@ -289,10 +331,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private setSuggesting() {
-    if (this.cursor.partIndex < 2) {
-      return;
+    if (this.canSuggest()) {
+      this.suggesting$.next(true);
     }
-    this.suggesting$.next(true);
   }
 
   private resetSuggesting() {
@@ -356,7 +397,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (this.document?.data) {
       return this.document.data[this.column.attributeIds[0]];
     }
-    if (this.linkInstance.data) {
+    if (this.linkInstance?.data) {
       return this.linkInstance.data[this.column.attributeIds[0]];
     }
     return '';
@@ -454,7 +495,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private clearEditedAttribute() {
     this.dataValue$ = this.createDataValue$();
-    if (this.document && this.document.id) {
+    if (this.document?.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
     }
   }
@@ -471,8 +512,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public updateData(value: any) {
     if (this.document) {
       this.updateDocumentData(this.column.attributeIds[0], this.column.attributeName, value);
-    }
-    if (this.linkInstance) {
+    } else if (this.linkInstance) {
       this.updateLinkInstanceData(this.column.attributeIds[0], this.column.attributeName, value);
     }
   }
@@ -736,10 +776,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public onValueChange(dataValue: DataValue) {
     this.editedValue = dataValue;
-
-    if (this.cursor.partIndex > 1) {
-      this.suggesting$.next(true);
-    }
+    this.setSuggesting();
   }
 
   public onValueSave(dataValue: DataValue) {

@@ -39,6 +39,7 @@ import {
   selectTableCursor,
   selectTablePart,
   selectTablePartLeafColumns,
+  selectTableParts,
 } from '../../../../../../core/store/tables/tables.selector';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
@@ -55,6 +56,7 @@ import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {User} from '../../../../../../core/store/users/user';
 import {AttributesResource} from '../../../../../../core/model/resource';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'table-cell-group',
@@ -79,6 +81,8 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<AllowedPermissions>;
   public resource$: Observable<AttributesResource>;
+  public linkType$: Observable<LinkType>;
+  public linkTypePermissions$: Observable<AllowedPermissions>;
   public currentUser$: Observable<User>;
 
   public columns$: Observable<TableConfigColumn[]>;
@@ -100,6 +104,8 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
     this.columns$ = this.bindColumns();
     this.permissions$ = this.bindPermissions();
     this.resource$ = this.bindResource();
+    this.linkType$ = this.bindLinkType();
+    this.linkTypePermissions$ = this.bindLinkTypePermissions(this.linkType$);
     this.documents$ = this.bindDocuments();
     this.linkInstances$ = this.bindLinkInstances();
     this.selectedCursor$ = this.bindSelectedCursor();
@@ -158,6 +164,34 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
     );
   }
 
+  private bindLinkType(): Observable<LinkType> {
+    return this.cursor$.pipe(
+      filter(cursor => !!cursor),
+      switchMap(cursor =>
+        this.store$.pipe(
+          select(selectTableParts(cursor)),
+          switchMap(parts => {
+            // if is linked collection
+            if (cursor.partIndex > 0 && cursor.partIndex % 2 === 0) {
+              const linkTypeId = parts[cursor.partIndex - 1].linkTypeId;
+              if (linkTypeId) {
+                return this.store$.pipe(select(selectLinkTypeById(linkTypeId)));
+              }
+            }
+            return of(null);
+          })
+        )
+      )
+    );
+  }
+
+  private bindLinkTypePermissions(linkType$: Observable<LinkType>): Observable<AllowedPermissions> {
+    return linkType$.pipe(
+      filter(linkType => !!linkType),
+      switchMap(linkType => this.store$.pipe(select(selectLinkTypePermissions(linkType.id))))
+    );
+  }
+
   private bindDocuments(): Observable<DocumentModel[]> {
     return combineLatest([this.cursor$, this.rows$]).pipe(
       filter(([cursor, rows]) => !!cursor && !!rows),
@@ -180,7 +214,6 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
       switchMap(([cursor, rows]) =>
         this.store$.pipe(
           select(selectTablePart(cursor)),
-          filter(part => part && !!part.linkTypeId),
           switchMap(() => {
             const linkInstanceIds = rows.map(row => row.linkInstanceId);
             return this.store$.pipe(select(selectLinkInstancesByIds(linkInstanceIds)));

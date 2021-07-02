@@ -34,7 +34,7 @@
       </button>
       <hr class="my-2">
       <button (click)="onClick($event); onAddRow(0)"
-              [disabled]="!allowedPermissions?.rolesWithView?.DataContribute"
+              [disabled]="!linkAllowedPermissions?.rolesWithView?.DataContribute"
               mat-menu-item>
         <i class="fa fa-fw fa-arrow-to-top mr-1"
            aria-hidden="true"></i>
@@ -43,7 +43,7 @@
         <span *ngIf="!cursor?.partIndex" i18n="@@table.body.row.add.above">Add row above</span>
       </button>
       <button (click)="onClick($event); onAddRow(1)"
-              [disabled]="!allowedPermissions?.rolesWithView?.DataContribute"
+              [disabled]="!linkAllowedPermissions?.rolesWithView?.DataContribute"
               mat-menu-item>
         <i class="fa fa-fw fa-arrow-to-bottom mr-1"
            aria-hidden="true"></i>
@@ -130,7 +130,7 @@
       <hr class="my-2">
       <button *ngIf="created && cursor.partIndex > 0"
               (click)="onClick($event); onUnlinkRow()"
-              [disabled]="!dataPermissions?.delete"
+              [disabled]="!linkDataPermissions?.delete"
               mat-menu-item>
         <i class="fa fa-fw fa-unlink text-warning mr-1"
            aria-hidden="true"></i>

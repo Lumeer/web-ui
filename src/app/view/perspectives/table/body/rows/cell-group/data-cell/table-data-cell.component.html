@@ -5,12 +5,14 @@
                         [linkInstance]="linkInstance"
                         [canManageConfig]="canManageConfig"
                         [allowedPermissions]="allowedPermissions"
+                        [linkAllowedPermissions]="linkAllowedPermissions"
                         [dataPermissions]="dataPermissions"
+                        [linkDataPermissions]="linkDataPermissions"
                         (edit)="onEdit()">
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="{editable: data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query} as dataInputData">
+    *ngIf="{editable: editable && (data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)} as dataInputData">
     <ng-container
       *ngIf="data.attribute | dataInputEditInfo:data.dataValue:dataInputData.editable: (editing$ | async) as dataInputInfo">
 

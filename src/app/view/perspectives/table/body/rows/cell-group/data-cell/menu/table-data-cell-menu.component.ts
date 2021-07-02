@@ -79,7 +79,13 @@ export class TableDataCellMenuComponent implements OnChanges {
   public allowedPermissions: AllowedPermissions;
 
   @Input()
+  public linkAllowedPermissions: AllowedPermissions;
+
+  @Input()
   public dataPermissions: DataResourcePermissions;
+
+  @Input()
+  public linkDataPermissions: DataResourcePermissions;
 
   @Output()
   public edit = new EventEmitter();

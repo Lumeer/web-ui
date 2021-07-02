@@ -47,6 +47,7 @@ import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
 import {AppState} from '../../../../../core/store/app.state';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-header-add-button',
@@ -61,6 +62,12 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   @Input()
   public parts: TableConfigPart[];
 
+  @Input()
+  public permissions: AllowedPermissions;
+
+  @Input()
+  public canCreateLinks: boolean;
+
   @Output()
   public addColumn = new EventEmitter();
 
@@ -69,7 +76,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
-  public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
+  public linkTypes$: Observable<LinkType[]>;
 
   constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<AppState>) {}
 
@@ -104,9 +111,10 @@ export class TableHeaderAddButtonComponent implements OnChanges {
         return linkTypes
           .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
-          .map<[LinkType, Collection, Collection]>(linkType => {
-            return [linkType, collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
-          });
+          .map(linkType => ({
+            ...linkType,
+            collections: [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]],
+          }));
       })
     );
   }
