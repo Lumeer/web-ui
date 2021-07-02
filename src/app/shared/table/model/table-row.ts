@@ -30,6 +30,9 @@ export interface TableRow {
   linkedDocumentId?: string; // used for newly created row
   correlationId?: string;
   commentsCount?: number;
+  documentEditable: boolean;
+  linkEditable: boolean;
+  canSuggest: boolean;
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
 }

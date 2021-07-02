@@ -173,7 +173,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
           switchMap(parts => {
             // if is linked collection
             if (cursor.partIndex > 0 && cursor.partIndex % 2 === 0) {
-              const linkTypeId = parts[cursor.partIndex - 1].linkTypeId;
+              const linkTypeId = parts[cursor.partIndex - 1]?.linkTypeId;
               if (linkTypeId) {
                 return this.store$.pipe(select(selectLinkTypeById(linkTypeId)));
               }

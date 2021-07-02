@@ -96,6 +96,9 @@ export function createEmptyNewRow(tableId: string): TableRow {
     data: null,
     correlationId: id,
     height: TABLE_ROW_HEIGHT,
+    documentEditable: true,
+    linkEditable: true,
+    canSuggest: true,
     documentMenuItems: [],
     linkMenuItems: [],
   };

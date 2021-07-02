@@ -711,7 +711,7 @@ export class WorkflowTablesDataService {
     const columnNames = table.columns
       .filter(column => column.linkTypeId)
       .map(column => column.attribute?.name || column.name);
-    if (linkType && permissions) {
+    if (linkType && permissions?.roles?.AttributeEdit) {
       const lastColumn: TableColumn = {
         id: generateId(),
         name: generateAttributeName(columnNames),
@@ -760,6 +760,18 @@ export class WorkflowTablesDataService {
         const linkData = createRowValues(object.linkInstance?.data, linkColumnIdsMap);
         const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
         const id = currentRow?.id || objectCorrelationId || generateId();
+        const documentPermissions = dataResourcePermissions(
+          object.document,
+          collection,
+          collectionPermissions,
+          this.currentUser
+        );
+        const linkInstancePermissions = dataResourcePermissions(
+          object.linkInstance,
+          linkType,
+          linkPermissions,
+          this.currentUser
+        );
         const row: TableRow = {
           id,
           tableId,
@@ -769,22 +781,14 @@ export class WorkflowTablesDataService {
           height: currentRow?.height || TABLE_ROW_HEIGHT,
           correlationId: objectCorrelationId || id,
           commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
+          documentEditable: documentPermissions?.edit,
+          linkEditable: linkInstancePermissions?.edit,
+          canSuggest: linkInstancePermissions?.edit,
           documentMenuItems: [],
           linkMenuItems: [],
         };
-        const documentPermissions = dataResourcePermissions(
-          object.document,
-          collection,
-          collectionPermissions,
-          this.currentUser
-        );
+
         row.documentMenuItems.push(...this.menuService.createRowMenu(documentPermissions, row, !!object.linkInstance));
-        const linkInstancePermissions = dataResourcePermissions(
-          object.linkInstance,
-          linkType,
-          linkPermissions,
-          this.currentUser
-        );
         row.linkMenuItems.push(...this.menuService.createRowMenu(linkInstancePermissions, row, !!object.linkInstance));
 
         if (lockedRowIds.includes(row.id)) {

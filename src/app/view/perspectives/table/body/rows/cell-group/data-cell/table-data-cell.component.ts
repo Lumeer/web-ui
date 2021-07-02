@@ -780,7 +780,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onValueSave(dataValue: DataValue) {
-    if (!this.editable) {
+    if (!this.isEditable()) {
+      this.onCancelEditing();
       return false;
     }
 

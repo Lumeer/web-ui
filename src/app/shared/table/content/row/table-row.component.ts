@@ -136,7 +136,7 @@ export class TableRowComponent implements OnChanges {
   private checkEdited() {
     if (this.isEditing()) {
       const column = this.columnById(this.editedCell.columnId);
-      if (column?.editable) {
+      if (this.isColumnEditable(column)) {
         this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
         if (column.collectionId) {
           this.suggestedColumn = column;
@@ -147,6 +147,15 @@ export class TableRowComponent implements OnChanges {
     if (!this.suggestedColumn) {
       this.endSuggesting();
     }
+  }
+
+  private isColumnEditable(column: TableColumn, direct?: boolean): boolean {
+    if (column?.collectionId) {
+      return column.editable && (this.row?.documentEditable || (!direct && this.row?.canSuggest));
+    } else if (column?.linkTypeId) {
+      return column.editable && this.row?.linkEditable;
+    }
+    return false;
   }
 
   private isEditing(): boolean {
@@ -191,7 +200,8 @@ export class TableRowComponent implements OnChanges {
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
-    if (!column.editable) {
+    if (!this.isColumnEditable(column, true)) {
+      this.onDataInputCancel(column, DataInputSaveAction.Direct);
       return;
     }
 
