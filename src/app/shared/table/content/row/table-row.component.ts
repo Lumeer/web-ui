@@ -77,9 +77,6 @@ export class TableRowComponent implements OnChanges {
   public cellType: TableCellType = TableCellType.Body;
 
   @Input()
-  public linkedDocumentId: string;
-
-  @Input()
   public collectionId: string;
 
   @Input()
@@ -138,24 +135,35 @@ export class TableRowComponent implements OnChanges {
       const column = this.columnById(this.editedCell.columnId);
       if (this.isColumnEditable(column)) {
         this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
-        if (column.collectionId) {
+        if (this.canSuggestInColumn(column)) {
           this.suggestedColumn = column;
           this.suggesting$.next(this.editedValue);
+        } else {
+          this.suggestedColumn = null;
         }
+      } else {
+        this.suggestedColumn = null;
       }
+    } else {
+      this.suggestedColumn = null;
     }
+
     if (!this.suggestedColumn) {
       this.endSuggesting();
     }
   }
 
-  private isColumnEditable(column: TableColumn, direct?: boolean): boolean {
+  private isColumnEditable(column: TableColumn): boolean {
     if (column?.collectionId) {
-      return column.editable && (this.row?.documentEditable || (!direct && this.row?.canSuggest));
+      return column.editable && this.row?.documentEditable;
     } else if (column?.linkTypeId) {
       return column.editable && this.row?.linkEditable;
     }
     return false;
+  }
+
+  private canSuggestInColumn(column: TableColumn): boolean {
+    return column.collectionId && this.row?.canSuggest;
   }
 
   private isEditing(): boolean {
@@ -200,7 +208,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
-    if (!this.isColumnEditable(column, true)) {
+    if (!this.isColumnEditable(column)) {
       this.onDataInputCancel(column, DataInputSaveAction.Direct);
       return;
     }
@@ -248,10 +256,6 @@ export class TableRowComponent implements OnChanges {
     return column.id;
   }
 
-  public onRowEdit(columnId: string) {
-    this.onDoubleClick.emit(columnId);
-  }
-
   public onContextMenu(columnId: string, event: MouseEvent) {
     const columnIndex = this.columnGroups?.findIndex(group => group.column?.id === columnId);
     const column = this.columnGroups[columnIndex]?.column;
@@ -259,7 +263,7 @@ export class TableRowComponent implements OnChanges {
       this.menuComponent.id = columnId;
       this.menuComponent.items = column.collectionId ? this.row.documentMenuItems : this.row.linkMenuItems;
 
-      const {x, y} = computeElementPositionInParent(event, 'table');
+      const {x, y} = computeElementPositionInParent(event, 'tr');
       this.menuComponent.open(x, y);
     }
 

@@ -33,7 +33,7 @@
           [linkType]="linkType"
           [document]="document"
           [collection]="otherCollection"
-          [collectionPermissions]="permissions?.collections && permissions?.collections[collection.id]"
+          [collectionPermissions]="permissions?.collections && permissions?.collections[otherCollection.id]"
           [linkTypePermissions]="permissions?.linkTypes && permissions?.linkTypes[linkType.id]"
           [query]="query$ | async"
           [allowSelect]="allowSelectDocument"

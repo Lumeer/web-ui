@@ -4,7 +4,7 @@
     <td class="table-border"
         *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.data || {} : row.document?.data || {})[column.attribute.id] | dataValue:column.attribute?.constraint:constraintData,
           editing: data.columnEditing === index, focused: data.columnFocused === index,
-          editable: column.linkTypeId ? linkPermissions?.edit : (documentPermissions?.edit || linkPermissions?.edit)} as columnData"
+          editable: column.linkTypeId ? linkEditable : documentEditable} as columnData"
         [style.width.px]="column.width"
         [class.focused]="columnData.focused"
         [class.editing]="columnData.editing && !column?.attribute?.constraint?.isDirectlyEditable"
@@ -65,7 +65,7 @@
   </td>
 
   <document-hints
-    *ngIf="!(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId && (columns[data.columnEditing].attribute | canShowAttributeHints)"
+    *ngIf="canSuggest && !(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId && (columns[data.columnEditing].attribute | canShowAttributeHints)"
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"

@@ -164,6 +164,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   public onNewValue(dataValue: DataValue) {
     if (!this.isEditable()) {
+      this.onDataInputCancel();
       return;
     }
 

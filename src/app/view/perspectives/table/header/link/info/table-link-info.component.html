@@ -15,7 +15,7 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
     <button (click)="addLinkColumn.emit()"
-            [disabled]="!canManageView"
+            [disabled]="!allowedPermissions?.roles.AttributeEdit"
             mat-menu-item>
       <i class="fa fa-fw fa-plus-circle mr-1"></i>&nbsp;
       <span i18n="@@table.header.add.link.column">Add link column</span>

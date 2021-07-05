@@ -57,7 +57,7 @@
 </ng-container>
 <lmr-static-menu #tableMenu (itemSelected)="onMenuSelected(row, tableMenu.id, $event)"></lmr-static-menu>
 <document-hints
-  *ngIf="suggestedColumn?.attribute && (suggestedColumn?.attribute | canShowAttributeHints) && (row.linkInstanceId ||  linkedDocumentId) && row.canSuggest"
+  *ngIf="suggestedColumn?.attribute && (suggestedColumn?.attribute | canShowAttributeHints) && (row.linkInstanceId || row.linkedDocumentId) && row.canSuggest"
   [attributeId]="suggestedColumn?.attribute?.id"
   [correlationId]="row.correlationId"
   [dataValue]="suggesting$ | async"
@@ -65,7 +65,7 @@
   [columns]="columnGroups | documentHintsColumns"
   [offsetLeft]="columnGroups | calculateHintsOffset"
   [excludedDocumentIds]="row.documentId ? [row.documentId] : []"
-  [linkedDocumentId]="linkedDocumentId"
+  [linkedDocumentId]="row.linkedDocumentId"
   [linkInstanceId]="row.linkInstanceId"
   [linkTypeId]="linkTypeId"
   [createLinkDirectly]="false"

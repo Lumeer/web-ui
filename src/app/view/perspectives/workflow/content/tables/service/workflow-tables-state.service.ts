@@ -209,7 +209,8 @@ export class WorkflowTablesStateService {
 
   public setEditedCell(cell: TableCell, inputValue?: any) {
     const column = this.findTableColumn(cell.tableId, cell.columnId);
-    if (canEditCell(cell, column)) {
+    const row = this.findTableRow(cell.tableId, cell.rowId);
+    if (canEditCell(cell, column, row)) {
       this.selectedCell$.next(null);
       this.editedCell$.next({...cell, inputValue});
     }
@@ -528,14 +529,15 @@ function cellsAreSame(c1: TableCell, c2: TableCell): boolean {
   return columnAndTableAreSame;
 }
 
-function canEditCell(cell: TableCell, column: TableColumn): boolean {
+function canEditCell(cell: TableCell, column: TableColumn, row?: TableRow): boolean {
   if (column.hidden) {
     return false;
   }
   if (cell.type === TableCellType.Header) {
     return column.permissions?.roles?.AttributeEdit && !column.creating;
   } else if (cell.type === TableCellType.Body) {
-    return column.editable;
+    const rowEditable = column.collectionId ? row?.documentEditable : row?.linkEditable;
+    return column.editable && rowEditable;
   }
   return false;
 }

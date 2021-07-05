@@ -213,7 +213,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.attribute$ = this.store$.pipe(
         select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
       );
-    } else if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
+    }
+    if ((changes.column || changes.linkInstance) && this.column && this.linkInstance && !this.document) {
       this.attribute$ = this.store$.pipe(
         select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
@@ -265,7 +266,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       if (this.document?.id) {
         this.editable = this.dataPermissions?.edit || this.linkDataPermissions?.edit;
       } else {
-        this.editable = this.linkAllowedPermissions?.rolesWithView?.DataContribute;
+        this.editable = this.linkDataPermissions?.create;
       }
     } else {
       this.editable = false;
@@ -286,7 +287,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       if (this.document?.id) {
         return this.linkDataPermissions?.edit;
       } else {
-        return this.linkAllowedPermissions?.rolesWithView?.DataContribute;
+        return this.linkDataPermissions?.create;
       }
     }
     return false;
