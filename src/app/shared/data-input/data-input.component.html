@@ -135,7 +135,7 @@
                    (save)="onSaveValueWithAction($event)"
                    (cancel)="onCancel()"
                    (enterInvalid)="enterInvalid.emit()"
-                   class="w-100">
+                   class="d-block w-100">
   </user-data-input>
 
   <view-data-input *ngSwitchCase="constraintType.View"
@@ -148,7 +148,7 @@
                    (save)="onSaveValueWithAction($event)"
                    (cancel)="onCancel()"
                    (enterInvalid)="enterInvalid.emit()"
-                   class="w-100">
+                   class="d-block w-100">
   </view-data-input>
 
   <link-data-input *ngSwitchCase="constraintType.Link" [focus]="focus"

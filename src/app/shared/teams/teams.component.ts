@@ -33,12 +33,13 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 import {TeamsAction} from '../../core/store/teams/teams.action';
-import {Permission, Permissions, PermissionType, Role} from '../../core/store/permissions/permissions';
+import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
+import {objectsByIdMap} from '../utils/common.utils';
 
 @Component({
   selector: 'teams',
@@ -57,6 +58,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   private resourceId: string;
   private subscriptions = new Subscription();
+  private teamsSortedIds: string[] = [];
 
   constructor(private store$: Store<AppState>) {}
 
@@ -80,7 +82,10 @@ export class TeamsComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.add(subscription);
 
-    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
+    this.teams$ = this.store$.pipe(
+      select(selectTeamsForWorkspace),
+      map(teams => this.mapAndSortTeams(teams))
+    );
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
     this.resource$ = this.store$.pipe(
@@ -88,6 +93,25 @@ export class TeamsComponent implements OnInit, OnDestroy {
       filter(resource => !!resource),
       tap(resource => (this.resourceId = resource.id))
     );
+  }
+
+  private mapAndSortTeams(teams: Team[]): Team[] {
+    const teamsSortedByName = objectsByIdMap(teams.sort((team1, team2) => team1.name.localeCompare(team2.name)));
+    const teamsSorted = [];
+    for (const teamId of this.teamsSortedIds) {
+      const team = teamsSortedByName[teamId];
+      if (team) {
+        teamsSorted.push(team);
+      }
+      delete teamsSortedByName[teamId];
+    }
+
+    for (const teamId of Object.keys(teamsSortedByName)) {
+      this.teamsSortedIds.push(teamId);
+      teamsSorted.push(teamsSortedByName[teamId]);
+    }
+
+    return teamsSorted;
   }
 
   private getSelector(): MemoizedSelector<AppState, Resource> {

@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {User} from '../../../core/store/users/user';
-import {userCanEditDataResource} from '../../utils/permission.utils';
+import {dataResourcePermissions} from '../../utils/permission.utils';
 
 @Pipe({
   name: 'dataResourceIsWritable',
@@ -33,6 +33,7 @@ export class DataResourceIsWritablePipe implements PipeTransform {
     permissions: AllowedPermissions,
     user: User
   ): boolean {
-    return userCanEditDataResource(dataResource, resource, permissions, user);
+    const dataPermissions = dataResourcePermissions(dataResource, resource, permissions, user);
+    return dataResource?.id ? dataPermissions?.edit : dataPermissions?.create;
   }
 }

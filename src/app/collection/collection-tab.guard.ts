@@ -50,11 +50,11 @@ export class CollectionTabGuard implements CanActivateChild {
         }
 
         const baseUrl = ['/o', data.organization?.code, 'p', data.project?.code, 'c', data.collection.id];
-        if (roleTypes.includes(RoleType.AttributeEdit)) {
-          return this.router.createUrlTree([...baseUrl, 'attributes']);
-        }
         if (roleTypes.includes(RoleType.TechConfig)) {
           return this.router.createUrlTree([...baseUrl, 'purpose']);
+        }
+        if (roleTypes.includes(RoleType.AttributeEdit)) {
+          return this.router.createUrlTree([...baseUrl, 'attributes']);
         }
         if (roleTypes.includes(RoleType.UserConfig)) {
           return this.router.createUrlTree([...baseUrl, 'users']);

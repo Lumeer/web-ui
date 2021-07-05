@@ -383,18 +383,47 @@ export class KanbanConverter {
     return (config?.stemsConfigs || []).reduce((resources, stemConfig, stemIndex) => {
       const kanbanAttribute = stemConfig.attribute;
       if (kanbanAttribute) {
-        const resource = createKanbanCardResource(
-          stemConfig.resource || stemConfig.attribute,
-          this.collections,
-          this.linkTypes
-        );
-        const resourcePermissions = queryAttributePermissions(stemConfig.resource || stemConfig.attribute, permissions);
+        const resource = this.getKanbanCardResource(stemConfig);
+        const resourcePermissions = queryAttributePermissions(stemConfig.resource || kanbanAttribute, permissions);
         if (resourcePermissions?.rolesWithView?.DataContribute && resource) {
-          resources.push({resource, kanbanAttribute, stemIndex});
+          const linkingResource = this.getNextOrPreviousLinkingResource(stemConfig);
+          if (linkingResource) {
+            // in this situation we need to create document and link so additional check is needed
+            const linkingResourcePermissions = queryAttributePermissions(linkingResource, permissions);
+            if (linkingResourcePermissions?.rolesWithView?.DataContribute) {
+              resources.push({resource, kanbanAttribute, stemIndex});
+            }
+          } else {
+            resources.push({resource, kanbanAttribute, stemIndex});
+          }
         }
       }
       return resources;
     }, []);
+  }
+
+  private getNextOrPreviousLinkingResource(stemConfig: KanbanStemConfig): KanbanResource {
+    if (
+      stemConfig.resource?.resourceType === AttributesResourceType.Collection &&
+      Math.abs(stemConfig.resource.resourceIndex - stemConfig.attribute.resourceIndex) >= 1
+    ) {
+      let index = stemConfig.resource.resourceIndex;
+      if (stemConfig.resource.resourceIndex > stemConfig.attribute.resourceIndex) {
+        index--;
+      } else {
+        index++;
+      }
+      return {
+        resourceIndex: index,
+        resourceType: AttributesResourceType.LinkType,
+        resourceId: this.dataAggregator.getResource(index)?.id,
+      };
+    }
+    return null;
+  }
+
+  private getKanbanCardResource(stemConfig: KanbanStemConfig): AttributesResource {
+    return createKanbanCardResource(stemConfig.resource || stemConfig.attribute, this.collections, this.linkTypes);
   }
 }
 

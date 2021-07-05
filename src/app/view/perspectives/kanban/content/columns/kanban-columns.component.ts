@@ -639,7 +639,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
     ) {
       const changedIndex = documentValue.findIndex(value => String(value) === String(previousValue));
       const newArray = [...documentValue];
-      if (!newArray.includes(newValue)) {
+      if (newArray.some(value => String(value) === String(newValue))) {
+        newArray.splice(changedIndex, 1);
+      } else {
         newArray[changedIndex] = newValue;
       }
       return constraint.createDataValue(newArray, this.constraintData).serialize();

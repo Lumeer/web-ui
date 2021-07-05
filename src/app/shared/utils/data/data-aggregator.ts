@@ -117,6 +117,10 @@ export class DataAggregator {
     return objectValues(this.dataMap[resourceId] || {});
   }
 
+  public getResource(index: number): AttributesResource {
+    return this.attributesResourcesOrder[index];
+  }
+
   public getNextCollectionResource(index: number): AttributesResource {
     if (this.attributesResourceTypeForIndex(index) === AttributesResourceType.LinkType) {
       return this.attributesResourcesOrder[index + 1];

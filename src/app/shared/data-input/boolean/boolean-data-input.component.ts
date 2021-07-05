@@ -114,22 +114,18 @@ export class BooleanDataInputComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onDivClick(event: MouseEvent) {
-    if (this.editableInReadonly) {
-      event.preventDefault();
-    }
+    event.preventDefault();
   }
 
   public onInputClick(event: MouseEvent) {
     if (this.editableInReadonly) {
       // label click is propagated instead
-      event.preventDefault();
       event.stopPropagation();
     }
+    event.preventDefault();
   }
 
   public onLabelClick(event: MouseEvent) {
-    if (this.editableInReadonly) {
-      event.preventDefault();
-    }
+    event.preventDefault();
   }
 }
