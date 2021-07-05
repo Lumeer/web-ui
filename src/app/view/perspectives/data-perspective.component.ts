@@ -47,7 +47,7 @@ import {selectCurrentQueryDataResourcesLoaded} from '../../core/store/data-resou
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
 import {User} from '../../core/store/users/user';
-import {selectCurrentUser} from '../../core/store/users/users.state';
+import {selectCurrentUser, selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 
 @Injectable()
 export abstract class DataPerspectiveComponent<T>
@@ -102,7 +102,7 @@ export abstract class DataPerspectiveComponent<T>
   private subscribeData() {
     this.documentsAndLinks$ = this.subscribeDocumentsAndLinks$();
     this.data$ = this.subscribeData$();
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));

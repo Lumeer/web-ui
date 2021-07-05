@@ -17,6 +17,7 @@
                  [data]="data$ | async"
                  [linkTypes]="data.linkTypes"
                  [query]="data.query"
+                 [user]="currentUser$ | async"
                  [permissions]="permissions$ | async"
                  [constraintData]="constraintData$ | async"
                  [map]="data.map">
