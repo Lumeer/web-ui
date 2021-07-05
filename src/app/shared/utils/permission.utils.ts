@@ -254,8 +254,13 @@ export function userRoleTypesInPermissions(
   return uniqueValues(roleTypes);
 }
 
-function userRolesInResource(resource: Resource, user: User, groups: string[]): Role[] {
-  return userRolesInPermissions(resource?.permissions || {users: [], groups: []}, user, groups);
+export function userHasAnyRoleInResource(resource: Resource, user: User): boolean {
+  const teamIds = (user.teams || []).map(team => team.id);
+  return userRolesInResource(resource, user, teamIds).length > 0;
+}
+
+function userRolesInResource(resource: Resource, user: User, teams: string[]): Role[] {
+  return userRolesInPermissions(resource?.permissions || {users: [], groups: []}, user, teams);
 }
 
 function teamRolesInResource(resource: Resource, team: Team): Role[] {

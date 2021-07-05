@@ -23,7 +23,6 @@ import {View} from '../../core/store/views/view';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {RoleType} from '../../core/model/role-type';
 
 @Pipe({
   name: 'viewControlsInfo',
@@ -49,7 +48,7 @@ export class ViewControlsInfoPipe implements PipeTransform {
       canClone: hasDirectAccessToView && projectPermissions?.roles?.ViewContribute,
       canSave: viewPermissions?.roles?.PerspectiveConfig || viewPermissions?.roles?.QueryConfig,
       canConfig: viewPermissions?.roles?.PerspectiveConfig,
-      canShare: viewPermissions?.roles?.Manage,
+      canShare: viewPermissions?.roles?.UserConfig,
     };
   }
 }

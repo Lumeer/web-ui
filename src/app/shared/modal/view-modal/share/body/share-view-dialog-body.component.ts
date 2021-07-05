@@ -42,6 +42,7 @@ import {
   teamCanReadWorkspace,
   userCanReadAllInWorkspace,
   userCanReadWorkspace,
+  userHasAnyRoleInResource,
   userHasRoleInProject,
 } from '../../../../utils/permission.utils';
 import {Team} from '../../../../../core/store/teams/team';
@@ -183,7 +184,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     for (const user of this.users || []) {
       if (userCanReadAllInWorkspace(organization, project, user) || user.id === currentUser.id) {
         this.addUserToStaticIfNotPresented(user, userRoles);
-      } else if ((this.view.permissions?.users || []).find(u => u.id === user.id)) {
+      } else if (userHasAnyRoleInResource(this.view, user)) {
         this.addUserToChangeableIfNotPresented(user, userRoles);
       }
     }

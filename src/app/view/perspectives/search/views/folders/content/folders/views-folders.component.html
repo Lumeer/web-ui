@@ -16,7 +16,7 @@
   <div *ngIf="dragging$ | async" class="dragging-area position-absolute"></div>
 </div>
 <view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
-             draggable="true"
+             [draggable]="permissions && permissions[view.id]?.roles?.Manage"
              (dragstart)="onDragStart(view)"
              (dragend)="onDragEnd()"
              class="d-block"
