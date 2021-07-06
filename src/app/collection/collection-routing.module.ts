@@ -84,7 +84,7 @@ const collectionRoutes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'attributes',
+        redirectTo: 'purpose',
         pathMatch: 'full',
       },
     ],
