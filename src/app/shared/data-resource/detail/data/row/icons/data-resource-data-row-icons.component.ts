@@ -51,7 +51,7 @@ export class DataResourceDataRowIconsComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.permissions) {
       this.canEditType = this.permissions?.roles?.AttributeEdit;
-      this.canEditType = this.permissions?.roles?.TechConfig;
+      this.canEditAutomation = this.permissions?.roles?.TechConfig;
     }
   }
 

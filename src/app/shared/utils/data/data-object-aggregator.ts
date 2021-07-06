@@ -225,9 +225,9 @@ export class DataObjectAggregator<T> {
   }
 
   public getResource(model: QueryAttribute): AttributesResource {
-    if (model.resourceType === AttributesResourceType.Collection) {
+    if (model?.resourceType === AttributesResourceType.Collection) {
       return this.collectionsMap[model.resourceId];
-    } else if (model.resourceType === AttributesResourceType.LinkType) {
+    } else if (model?.resourceType === AttributesResourceType.LinkType) {
       return this.linkTypesMap[model.resourceId];
     }
 

@@ -78,7 +78,6 @@ import {
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ViewSettings} from '../../../../core/store/views/view';
-import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -89,7 +88,6 @@ interface Data {
   query: Query;
   constraintData: ConstraintData;
   settings: ViewSettings;
-  currentUser: User;
 }
 
 interface PatchData {
@@ -132,9 +130,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
-
-  @Input()
-  public currentUser: User;
 
   @Input()
   public dataLoaded: boolean;
@@ -215,8 +210,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       data.permissions,
       data.query,
       data.settings,
-      data.constraintData,
-      data.currentUser
+      data.constraintData
     );
   }
 
@@ -231,7 +225,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         settings: this.settings,
         query: this.query,
         constraintData: this.constraintData,
-        currentUser: this.currentUser,
       });
     }
   }

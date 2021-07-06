@@ -55,7 +55,6 @@ import {
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
-import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -65,7 +64,6 @@ interface Data {
   permissions: ResourcesPermissions;
   query: Query;
   constraintData: ConstraintData;
-  currentUser: User;
 }
 
 interface PatchData {
@@ -103,9 +101,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
-
-  @Input()
-  public currentUser: User;
 
   @Input()
   public sidebarOpened: boolean;
@@ -155,8 +150,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       data.data,
       data.permissions,
       data.constraintData,
-      data.query,
-      data.currentUser
+      data.query
     );
   }
 
@@ -180,7 +174,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         config: this.config,
         query: this.query,
         constraintData: this.constraintData,
-        currentUser: this.currentUser,
       });
     }
     this.canCreateEvents = this.isSomeStemConfigWritable();

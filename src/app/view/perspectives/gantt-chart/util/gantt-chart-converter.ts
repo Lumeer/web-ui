@@ -74,7 +74,6 @@ import {Configuration} from '../../../../../environments/configuration-type';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
-import {User} from '../../../../core/store/users/user';
 import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 
 export interface GanttTaskMetadata {
@@ -101,7 +100,6 @@ enum DataObjectInfoKeyType {
 export class GanttChartConverter {
   private config: GanttChartConfig;
   private constraintData?: ConstraintData;
-  private currentUser: User;
 
   private convertCount = 0;
 
@@ -120,12 +118,10 @@ export class GanttChartConverter {
     permissions: ResourcesPermissions,
     query: Query,
     settings: ViewSettings,
-    constraintData: ConstraintData,
-    currentUser: User
+    constraintData: ConstraintData
   ): {options: GanttOptions; tasks: GanttTask[]} {
     this.config = config;
     this.constraintData = constraintData;
-    this.currentUser = currentUser;
 
     let tasks = (query?.stems || []).reduce<GanttTask[]>((allTasks, stem, index) => {
       const stemData = data.dataByStems?.[index];
@@ -289,9 +285,10 @@ export class GanttChartConverter {
     showDatesAsSwimlanes: boolean
   ): GanttTask[] {
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
-    const endConstraint = stemConfig.end && this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
+    const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
     const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
+    const namePermission = this.dataObjectAggregator.attributePermissions(stemConfig.name);
     const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
     const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
     const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
@@ -306,7 +303,9 @@ export class GanttChartConverter {
       const end = stemConfig.end && endDataResource && endDataResource.data[stemConfig.end.attributeId];
       if (isTaskValid(start, end, endConstraint)) {
         const id = helperDataId(item);
-        validTaskIds.push(id);
+        if (userCanEditDataResource(nameDataResource, nameResource, namePermission, this.constraintData?.currentUser)) {
+          validTaskIds.push(id);
+        }
         const dataResource = nameDataResource || startDataResource;
         const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
         if (parentId) {
@@ -403,9 +402,14 @@ export class GanttChartConverter {
         startDataResource,
         startResource,
         startPermission,
-        this.currentUser
+        this.constraintData?.currentUser
       );
-      const userCanEditEnd = userCanEditDataResource(endDataResource, endResource, endPermission, this.currentUser);
+      const userCanEditEnd = userCanEditDataResource(
+        endDataResource,
+        endResource,
+        endPermission,
+        this.constraintData?.currentUser
+      );
 
       const names = isArray(name) ? name : [name];
       for (let i = 0; i < names.length; i++) {
@@ -436,7 +440,12 @@ export class GanttChartConverter {
           progressDrag:
             progressEditable &&
             metadata.progressDataIds.length === 1 &&
-            userCanEditDataResource(progressDataResources[0], progressResource, progressPermission, this.currentUser),
+            userCanEditDataResource(
+              progressDataResources[0],
+              progressResource,
+              progressPermission,
+              this.constraintData?.currentUser
+            ),
           editable: userCanEditStart && userCanEditEnd,
           textColor: contrastColor(barColor),
           swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],

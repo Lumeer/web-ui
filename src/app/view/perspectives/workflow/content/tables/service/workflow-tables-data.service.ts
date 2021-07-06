@@ -632,17 +632,20 @@ export class WorkflowTablesDataService {
     for (let i = 0; i < currentColumns?.length; i++) {
       const column = {...currentColumns[i], color: newColumnColor};
       if (!column.attribute) {
-        attributeColumns.splice(i, 0, mappedUncreatedColumns[column.id] || column);
-        if (mappedUncreatedColumns[column.id]) {
-          this.stateService.addColumn(mappedUncreatedColumns[column.id], i);
-          syncActions.push(
-            new ViewSettingsAction.AddAttribute({
-              attributeId: mappedUncreatedColumns[column.id].attribute.id,
-              position: i,
-              collection: isCollection && resource,
-              linkType: !isCollection && <LinkType>resource,
-            })
-          );
+        const mappedColumn = mappedUncreatedColumns[column.id];
+        if (permissions?.roles?.AttributeEdit || mappedColumn) {
+          attributeColumns.splice(i, 0, mappedColumn || column);
+          if (mappedColumn) {
+            this.stateService.addColumn(mappedColumn, i);
+            syncActions.push(
+              new ViewSettingsAction.AddAttribute({
+                attributeId: mappedColumn.attribute.id,
+                position: i,
+                collection: isCollection && resource,
+                linkType: !isCollection && <LinkType>resource,
+              })
+            );
+          }
         }
       }
       columnNames.push(column.name || column.attribute?.name);

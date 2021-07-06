@@ -40,7 +40,6 @@ import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';
 import {Constraint, ConstraintData, ConstraintType, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
-import {User} from '../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
@@ -53,7 +52,6 @@ enum DataObjectInfoKeyType {
 export class CalendarConverter {
   private config: CalendarConfig;
   private constraintData?: ConstraintData;
-  private currentUser: User;
 
   private dataObjectAggregator = new DataObjectAggregator<any>(value => value);
 
@@ -64,12 +62,10 @@ export class CalendarConverter {
     data: DocumentsAndLinksData,
     permissions: ResourcesPermissions,
     constraintData: ConstraintData,
-    query: Query,
-    currentUser: User
+    query: Query
   ): CalendarEvent[] {
     this.config = config;
     this.constraintData = constraintData;
-    this.currentUser = currentUser;
 
     const events = (query?.stems || []).reduce((allEvents, stem, index) => {
       const stemData = data.dataByStems?.[index];
@@ -191,12 +187,17 @@ export class CalendarConverter {
           allDay,
           startEditable:
             startEditable &&
-            userCanEditDataResource(startDataResource, startResource, startPermission, this.currentUser),
+            userCanEditDataResource(
+              startDataResource,
+              startResource,
+              startPermission,
+              this.constraintData?.currentUser
+            ),
           durationEditable:
             interval.end &&
             stemConfig.end &&
             endEditable &&
-            userCanEditDataResource(endDataResource, endResource, endPermission, this.currentUser),
+            userCanEditDataResource(endDataResource, endResource, endPermission, this.constraintData?.currentUser),
           extendedProps,
         };
 
