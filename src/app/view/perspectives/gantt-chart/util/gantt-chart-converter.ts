@@ -532,7 +532,8 @@ export class GanttChartConverter {
       case ConstraintType.User:
       case ConstraintType.View:
       case ConstraintType.Boolean:
-        return dataValue.serialize();
+        const value = dataValue.serialize();
+        return isArray(value) ? value[0] : value;
       default:
         return dataValue.format();
     }
