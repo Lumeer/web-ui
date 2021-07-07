@@ -31,7 +31,7 @@ import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/mode
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {areArraysSame, createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
@@ -310,7 +310,7 @@ export function getBaseCollectionIdsFromQuery(query: Query): string[] {
   return query?.stems?.map(stem => stem.collectionId) || [];
 }
 
-export function isQuerySubset(superset: Query, subset: Query): boolean {
+export function isQuerySubset(superset: Query, subset: Query, excludeLinksTypes?: boolean): boolean {
   if (!isArraySubset(superset?.fulltexts || [], subset?.fulltexts || [])) {
     return false;
   }
@@ -324,7 +324,7 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
 
   for (const stem of superset?.stems || []) {
     const stemIndex = subsetStems.findIndex(
-      subsetStem => queryStemsAreSame(subsetStem, stem) && isQueryStemSubset(stem, subsetStem)
+      subsetStem => queryStemsAreSame(subsetStem, stem) && isQueryStemSubset(stem, subsetStem, excludeLinksTypes)
     );
     if (stemIndex >= 0) {
       subsetStems.splice(stemIndex, 1);
@@ -335,7 +335,7 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
 
   for (const stem of unpairedStems) {
     const subsetStem = subsetStems.find(s => s.collectionId === stem.collectionId);
-    if (!subsetStem || !isQueryStemSubset(stem, subsetStem)) {
+    if (!subsetStem || !isQueryStemSubset(stem, subsetStem, excludeLinksTypes)) {
       return false;
     }
   }
@@ -343,10 +343,12 @@ export function isQuerySubset(superset: Query, subset: Query): boolean {
   return true;
 }
 
-export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boolean {
+export function isQueryStemSubset(superset: QueryStem, subset: QueryStem, excludeLinksTypes?: boolean): boolean {
   return (
     superset.collectionId === subset.collectionId &&
-    isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || []) &&
+    (excludeLinksTypes
+      ? areArraysSame(superset.linkTypeIds || [], subset.linkTypeIds || [])
+      : isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || [])) &&
     isArraySubset(superset.documentIds || [], subset.documentIds || []) &&
     isQueryFiltersSubset(superset.filters || [], subset.filters || []) &&
     isQueryLinkFiltersSubset(superset.linkFilters || [], subset.linkFilters || [])

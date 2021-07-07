@@ -101,6 +101,7 @@ function removeUnneededFiltersFromStem(stem: QueryStem, permissions?: ResourcesP
 export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView: boolean): boolean {
   const savedQuery = checkLoadedDataQuery(query, {collections: {}, linkTypes: {}}, publicView);
   return loadedQueries.some(
-    loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)
+    loadedQuery =>
+      !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery, true)
   );
 }
