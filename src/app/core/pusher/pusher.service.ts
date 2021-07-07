@@ -230,11 +230,15 @@ export class PusherService implements OnDestroy {
   }
 
   private checkIfUserGainReadAll(resource: Organization | Project, type: ResourceType) {
-    const hasReadAll =
-      type == ResourceType.Organization
-        ? userCanReadAllInOrganization(resource, this.user)
-        : userCanReadAllInWorkspace(this.currentOrganization, resource, this.user);
-    const hasReadAllInWorkspace = userCanReadAllInWorkspace(this.currentOrganization, this.currentProject, this.user);
+    let hasReadAll;
+    let hasReadAllInWorkspace;
+    if (type === ResourceType.Organization) {
+      hasReadAll = userCanReadAllInOrganization(resource, this.user);
+      hasReadAllInWorkspace = userCanReadAllInOrganization(this.currentOrganization, this.user);
+    } else {
+      hasReadAll = userCanReadAllInWorkspace(this.currentOrganization, resource, this.user);
+      hasReadAllInWorkspace = userCanReadAllInWorkspace(this.currentOrganization, this.currentProject, this.user);
+    }
 
     if (hasReadAll && !hasReadAllInWorkspace) {
       this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));

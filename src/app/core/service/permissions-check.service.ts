@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {selectCurrentUserForWorkspace} from '../store/users/users.state';
+import {selectCurrentUser, selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {combineLatest, Subscription} from 'rxjs';
 import {selectWorkspaceModels} from '../store/common/common.selectors';
 import {User} from '../store/users/user';
@@ -37,6 +37,11 @@ import {
   userPermissionsInView,
 } from '../../shared/utils/permission.utils';
 import {filter} from 'rxjs/operators';
+import {selectAllOrganizations} from '../store/organizations/organizations.state';
+import {selectAllProjects} from '../store/projects/projects.state';
+import {selectAllTeams} from '../store/teams/teams.state';
+import {Team} from '../store/teams/team';
+import {AllowedPermissionsMap} from '../model/allowed-permissions';
 
 @Injectable()
 export class PermissionsCheckService {
@@ -45,6 +50,16 @@ export class PermissionsCheckService {
   constructor(private store$: Store<AppState>) {}
 
   public init(): Promise<boolean> {
+    combineLatest([
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectAllOrganizations)),
+      this.store$.pipe(select(selectAllProjects)),
+      this.store$.pipe(select(selectAllTeams)),
+    ])
+      .pipe(filter(([currentUser]) => !!currentUser))
+      .subscribe(([currentUser, organizations, projects, teams]) => {
+        this.checkOrganizationsAndProjectsPermissions(currentUser, organizations, projects, teams);
+      });
     combineLatest([
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
       this.store$.pipe(select(selectWorkspaceModels)),
@@ -58,6 +73,33 @@ export class PermissionsCheckService {
         this.subscriptions.add(this.checkViewsPermissions(currentUser, organization, project));
       });
     return Promise.resolve(true);
+  }
+
+  private checkOrganizationsAndProjectsPermissions(
+    currentUser: User,
+    organizations: Organization[],
+    projects: Project[],
+    teams: Team[]
+  ) {
+    const organizationPermissions: AllowedPermissionsMap = {};
+    const projectPermissions: AllowedPermissionsMap = {};
+
+    for (const organization of organizations) {
+      const organizationUserTeams = teams.filter(
+        team => team.organizationId === organization.id && team.users?.includes(currentUser.id)
+      );
+      const organizationUser = {...currentUser, teams: organizationUserTeams};
+
+      organizationPermissions[organization.id] = userPermissionsInOrganization(organization, organizationUser);
+
+      const organizationProjects = projects.filter(project => project.organizationId === organization.id);
+      for (const project of organizationProjects) {
+        projectPermissions[project.id] = userPermissionsInProject(organization, project, organizationUser);
+      }
+    }
+
+    this.store$.dispatch(new UserPermissionsAction.SetOrganizationsPermissions({permissions: organizationPermissions}));
+    this.store$.dispatch(new UserPermissionsAction.SetProjectsPermissions({permissions: projectPermissions}));
   }
 
   private checkWorkspacePermissions(currentUser: User, organization: Organization, project: Project) {

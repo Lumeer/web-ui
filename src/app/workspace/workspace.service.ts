@@ -30,7 +30,7 @@ import {selectAllOrganizations} from '../core/store/organizations/organizations.
 import {ProjectConverter} from '../core/store/projects/project.converter';
 import {Project} from '../core/store/projects/project';
 import {ProjectsAction} from '../core/store/projects/projects.action';
-import {selectAllProjects} from '../core/store/projects/projects.state';
+import {selectReadableProjects} from '../core/store/projects/projects.state';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
 import {User} from '../core/store/users/user';
 import {CommonAction} from '../core/store/common/common.action';
@@ -185,7 +185,7 @@ export class WorkspaceService {
 
   private getProjectFromStore(organizationId: string, code: string): Observable<Project> {
     return this.store$.pipe(
-      select(selectAllProjects),
+      select(selectReadableProjects),
       map(projects => projects.find(proj => proj.organizationId === organizationId && proj.code === code)),
       take(1)
     );

@@ -22,14 +22,18 @@ import {createSelector} from '@ngrx/store';
 import {AllowedPermissions, AllowedPermissionsMap} from '../../model/allowed-permissions';
 
 export interface UserPermissionsState {
-  organization?: AllowedPermissions;
-  project?: AllowedPermissions;
+  currentOrganization?: AllowedPermissions;
+  currentProject?: AllowedPermissions;
+  organizations: AllowedPermissionsMap;
+  projects: AllowedPermissionsMap;
   collections: AllowedPermissionsMap;
   linkTypes: AllowedPermissionsMap;
   views: AllowedPermissionsMap;
 }
 
 export const initialUserPermissionsState: UserPermissionsState = {
+  organizations: {},
+  projects: {},
   collections: {},
   linkTypes: {},
   views: {},
@@ -37,9 +41,16 @@ export const initialUserPermissionsState: UserPermissionsState = {
 
 export const selectUserPermissionsState = (state: AppState) => state.userPermissions;
 
-export const selectOrganizationPermissions = createSelector(selectUserPermissionsState, state => state.organization);
+export const selectOrganizationPermissions = createSelector(
+  selectUserPermissionsState,
+  state => state.currentOrganization
+);
 
-export const selectProjectPermissions = createSelector(selectUserPermissionsState, state => state.project);
+export const selectOrganizationsPermissions = createSelector(selectUserPermissionsState, state => state.organizations);
+
+export const selectProjectPermissions = createSelector(selectUserPermissionsState, state => state.currentProject);
+
+export const selectProjectsPermissions = createSelector(selectUserPermissionsState, state => state.projects);
 
 export const selectCollectionsPermissions = createSelector(selectUserPermissionsState, state => state.collections);
 
