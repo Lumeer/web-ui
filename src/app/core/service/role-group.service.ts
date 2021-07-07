@@ -126,7 +126,8 @@ export class RoleGroupService {
         title: this.translateGroupType(RoleGroupType.Config),
         order: 4,
         roles: [
-          this.createOrganizationRole(RoleType.Read, true),
+          this.createProjectRole(RoleType.Read, true),
+          this.createProjectRole(RoleType.Manage, true),
           this.createProjectRole(RoleType.AttributeEdit, true),
           this.createProjectRole(RoleType.TechConfig, true),
         ],

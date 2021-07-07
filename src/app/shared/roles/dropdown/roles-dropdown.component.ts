@@ -35,6 +35,7 @@ import {allDropdownPositions} from '../../dropdown/dropdown-position';
 import {BehaviorSubject} from 'rxjs';
 import {rolesAreSame} from '../../../core/store/permissions/permissions.helper';
 import {ResourceType} from '../../../core/model/resource-type';
+import {deepArrayEquals} from '../../utils/array.utils';
 
 @Component({
   selector: 'roles-dropdown',
@@ -121,7 +122,9 @@ export class RolesDropdownComponent implements OnChanges {
   }
 
   private save() {
-    this.change.emit(this.selectedRoles$.value);
+    if (!deepArrayEquals(this.selectedRoles, this.selectedRoles$.value)) {
+      this.change.emit(this.selectedRoles$.value);
+    }
   }
 
   private addRoleToArray(role: Role, roles: Role[]): Role[] {

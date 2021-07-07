@@ -58,7 +58,7 @@ import {UserNotificationsAction} from '../store/user-notifications/user-notifica
 import {User} from '../store/users/user';
 import {convertUserDtoToModel} from '../store/users/user.converter';
 import {UsersAction} from '../store/users/users.action';
-import {selectCurrentUser} from '../store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {View} from '../store/views/view';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
@@ -92,6 +92,7 @@ export class PusherService implements OnDestroy {
   private currentOrganization: Organization;
   private currentProject: Project;
   private user: User;
+  private pusherInitiated: boolean;
 
   private userNotificationTitle: {success: string; info: string; warning: string; error: string};
   private dismissButton: NotificationButton;
@@ -129,13 +130,15 @@ export class PusherService implements OnDestroy {
   private subscribeToUser() {
     this.store$
       .pipe(
-        select(selectCurrentUser),
+        select(selectCurrentUserForWorkspace),
         filter(user => !!user),
-        take(1),
         tap(user => (this.user = user))
       )
       .subscribe(user => {
-        this.subscribePusher(user);
+        if (!this.pusherInitiated) {
+          this.pusherInitiated = true;
+          this.subscribePusher(user);
+        }
       });
   }
 
