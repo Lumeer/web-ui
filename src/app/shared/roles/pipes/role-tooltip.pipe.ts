@@ -30,13 +30,13 @@ export class RoleTooltipPipe implements PipeTransform {
       let inheritedMessage: string;
       switch (resourceType) {
         case ResourceType.Organization:
-          inheritedMessage = $localize`:@@organization.permission.role.inherited:Right is inherited from teams.`;
+          inheritedMessage = $localize`:@@organization.permission.role.inherited:This right is obtained from teams.`;
           break;
         case ResourceType.Project:
-          inheritedMessage = $localize`:@@project.permission.role.inherited:Right is inherited from teams or organization.`;
+          inheritedMessage = $localize`:@@project.permission.role.inherited:This right is obtained from teams, or organization.`;
           break;
         default:
-          inheritedMessage = $localize`:@@collection.permission.role.inherited:Right is inherited from teams, organization or project.`;
+          inheritedMessage = $localize`:@@collection.permission.role.inherited:This right is obtained from teams, organization, or project.`;
           break;
       }
       return `${role.tooltip} ${inheritedMessage}`;
