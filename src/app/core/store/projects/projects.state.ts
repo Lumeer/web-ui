@@ -55,10 +55,6 @@ export const selectReadableProjects = createSelector(
   (projects, permissions) => projects.filter(project => permissions?.[project.id]?.roles?.Read)
 );
 
-export const selectAllProjectsSorted = createSelector(selectReadableProjects, projects =>
-  sortResourcesByOrder(projects)
-);
-
 export const selectProjectsDictionary = createSelector(
   selectProjectsState,
   projectsAdapter.getSelectors().selectEntities
