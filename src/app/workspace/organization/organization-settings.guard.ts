@@ -29,6 +29,7 @@ import {Organization} from '../../core/store/organizations/organization';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {WorkspaceService} from '../workspace.service';
 import {userCanManageOrganizationDetail} from '../../shared/utils/permission.utils';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -76,6 +77,7 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchDataEvents(organization: Organization) {
+    this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: organization.id}));
     this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
   }
 }

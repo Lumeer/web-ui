@@ -27,7 +27,7 @@ import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType, DataResource, Resource} from '../../core/model/resource';
 import {RoleType} from '../../core/model/role-type';
-import {Permissions, Role} from '../../core/store/permissions/permissions';
+import {Permission, Permissions, Role} from '../../core/store/permissions/permissions';
 import {arrayIntersection, flattenMatrix, uniqueValues} from './array.utils';
 import {PermissionsType} from '../../core/model/permissions-type';
 import {DocumentModel} from '../../core/store/documents/document.model';
@@ -36,6 +36,8 @@ import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {getAttributesResourceType} from './resource.utils';
 import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
 import {Team} from '../../core/store/teams/team';
+import {objectsByIdMap} from './common.utils';
+import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -509,4 +511,27 @@ export function computeResourcesPermissions(
     {}
   );
   return {collections: collectionsPermissions, linkTypes: linkTypesPermissions};
+}
+
+export function permissionsChanged(p1: Permissions, p2: Permissions): boolean {
+  return permissionArrayChanged(p1?.users, p2?.users) || permissionArrayChanged(p1?.groups, p2?.groups);
+}
+
+export function permissionArrayChanged(p1: Permission[], p2: Permission[]): boolean {
+  const p1Map = objectsByIdMap(p1 || []);
+  const p2Map = objectsByIdMap(p2 || []);
+  const allKeys = uniqueValues([...Object.keys(p1Map), ...Object.keys(p2Map)]);
+  return allKeys.some(key => rolesChanged(p1Map[key]?.roles, p2Map[key]?.roles));
+}
+
+export function rolesChanged(roles1: Role[], roles2: Role[]): boolean {
+  const otherRoles = [...(roles2 || [])];
+  for (const role of roles1 || []) {
+    const index = otherRoles.findIndex(r => rolesAreSame(r, role));
+    if (index == -1) {
+      return true;
+    }
+    otherRoles.splice(index, 1);
+  }
+  return otherRoles.length > 0;
 }

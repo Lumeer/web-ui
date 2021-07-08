@@ -24,11 +24,11 @@ export function teamsReducer(state: TeamsState = initialTeamsState, action: Team
   switch (action.type) {
     case TeamsActionType.GET_SUCCESS:
       const newState = {...state, loaded: {...state.loaded, [action.payload.organizationId]: true}};
-      return teamsAdapter.setAll(action.payload.teams, newState);
+      return teamsAdapter.addMany(action.payload.teams, newState);
     case TeamsActionType.CREATE_SUCCESS:
       return teamsAdapter.addOne(action.payload.team, state);
     case TeamsActionType.UPDATE_SUCCESS:
-      return teamsAdapter.updateOne({id: action.payload.team.id, changes: action.payload.team}, state);
+      return teamsAdapter.upsertOne(action.payload.team, state);
     case TeamsActionType.DELETE_SUCCESS:
       return teamsAdapter.removeOne(action.payload.teamId, state);
     case TeamsActionType.CLEAR:

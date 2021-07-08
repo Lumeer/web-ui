@@ -40,7 +40,7 @@ export abstract class CollectionService extends PermissionService {
 
   public abstract removeFavorite(collectionId: string, workspace?: Workspace): Observable<any>;
 
-  public abstract getCollection(collectionId: string): Observable<CollectionDto>;
+  public abstract getCollection(collectionId: string, workspace?: Workspace): Observable<CollectionDto>;
 
   public abstract getCollections(workspace?: Workspace): Observable<CollectionDto[]>;
 

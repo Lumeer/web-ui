@@ -37,8 +37,9 @@ import {Permission, Permissions, Role} from '../../../../../core/store/permissio
 import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {generateCorrelationId} from '../../../../utils/resource.utils';
-import {containsSameElements, uniqueValues} from '../../../../utils/array.utils';
+import {uniqueValues} from '../../../../utils/array.utils';
 import {
+  rolesChanged,
   teamCanReadWorkspace,
   userCanReadAllInWorkspace,
   userCanReadWorkspace,
@@ -300,9 +301,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     const keys = uniqueValues([...Object.keys(initialRolesMap), ...Object.keys(currentRolesMap)]);
 
     for (const id of keys) {
-      const currentRoleTypes = uniqueValues((currentRolesMap[id] || []).map(role => role.type));
-      const initialRoleTypes = uniqueValues((initialRolesMap[id] || []).map(role => role.type));
-      if (!containsSameElements(currentRoleTypes, initialRoleTypes)) {
+      if (rolesChanged(currentRolesMap[id], initialRolesMap[id])) {
         return true;
       }
     }

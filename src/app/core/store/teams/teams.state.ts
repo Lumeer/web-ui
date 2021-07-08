@@ -42,11 +42,15 @@ export const selectTeamsDictionary = createSelector(selectTeamsState, teamsAdapt
 export const selectTeamsByOrganization = id =>
   createSelector(selectAllTeams, teams => teams.filter(team => team.organizationId === id));
 
+export const selectTeamById = id => createSelector(selectTeamsDictionary, teams => teams[id]);
+
 export const selectTeamsForWorkspace = createSelector(
   selectAllTeams,
   selectOrganizationByWorkspace,
   (teams, organization) => (organization && teams.filter(group => group.organizationId === organization.id)) || []
 );
+
+export const selectTeamsLoaded = createSelector(selectTeamsState, state => state.loaded);
 
 export const selectTeamsLoadedForOrganization = id =>
   createSelector(selectTeamsState, teamsState => teamsState.loaded?.[id]);

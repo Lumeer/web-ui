@@ -82,6 +82,8 @@ import {PrintService} from '../service/print.service';
 import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
 import {TeamsAction} from '../store/teams/teams.action';
 import {convertTeamDtoToModel} from '../store/teams/teams.converter';
+import {Team} from '../store/teams/team';
+import {selectTeamById} from '../store/teams/teams.state';
 
 @Injectable({
   providedIn: 'root',
@@ -241,11 +243,15 @@ export class PusherService implements OnDestroy {
     }
 
     if (hasReadAll && !hasReadAllInWorkspace) {
-      this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));
-      this.store$.dispatch(new CollectionsAction.Get({force: true}));
-      this.store$.dispatch(new LinkTypesAction.Get({force: true}));
-      this.store$.dispatch(new ViewsAction.Get({force: true}));
+      this.forceRefreshWorkspaceData();
     }
+  }
+
+  private forceRefreshWorkspaceData() {
+    this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));
+    this.store$.dispatch(new CollectionsAction.Get({force: true}));
+    this.store$.dispatch(new LinkTypesAction.Get({force: true}));
+    this.store$.dispatch(new ViewsAction.Get({force: true}));
   }
 
   private bindProjectEvents() {
@@ -796,20 +802,32 @@ export class PusherService implements OnDestroy {
 
   private bindGroupEvents() {
     this.channel.bind('Group:update', data => {
-      if (this.isCurrentOrganization(data)) {
-        this.store$.dispatch(new TeamsAction.UpdateSuccess({team: convertTeamDtoToModel(data.object)}));
-      }
+      const team = convertTeamDtoToModel(data.object);
+      const isCurrentOrganization = this.isCurrentOrganization(data);
+      this.checkIfUserGainedTeam(team, isCurrentOrganization);
+      this.store$.dispatch(new TeamsAction.UpdateSuccess({team}));
     });
 
     this.channel.bind('Group:remove', data => {
-      if (this.isCurrentOrganization(data)) {
-        this.store$.dispatch(new TeamsAction.DeleteSuccess({teamId: data.id}));
-      }
+      this.store$.dispatch(new TeamsAction.DeleteSuccess({teamId: data.id}));
     });
 
     this.channel.bind('Group:reload', data => {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(new TeamsAction.Get({organizationId: data.organizationId}));
+      }
+    });
+  }
+
+  private checkIfUserGainedTeam(team: Team, isCurrentOrganization: boolean) {
+    this.store$.pipe(select(selectTeamById(team.id)), take(1)).subscribe(originalTeam => {
+      const usersBefore = originalTeam?.users || [];
+      const usersNow = team.users || [];
+      if (!usersBefore.includes(this.user.id) && usersNow.includes(this.user.id)) {
+        this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: team.organizationId}));
+        if (isCurrentOrganization) {
+          this.forceRefreshWorkspaceData();
+        }
       }
     });
   }

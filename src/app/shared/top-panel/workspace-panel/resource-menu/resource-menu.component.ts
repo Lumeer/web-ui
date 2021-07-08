@@ -137,8 +137,10 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
         this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
       } else {
         const project = <Project>this.resource;
-        this.subscribeServiceLimits(project);
-        this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+        if (project) {
+          this.subscribeServiceLimits(project);
+          this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+        }
         this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
       }
     }

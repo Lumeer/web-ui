@@ -81,7 +81,7 @@ export class CollectionsEffects {
     this.actions$.pipe(
       ofType<CollectionsAction.GetSingle>(CollectionsActionType.GET_SINGLE),
       mergeMap(action => {
-        return this.collectionService.getCollection(action.payload.collectionId).pipe(
+        return this.collectionService.getCollection(action.payload.collectionId, action.payload.workspace).pipe(
           map((dto: CollectionDto) => convertCollectionDtoToModel(dto)),
           map(collection => new CollectionsAction.GetSuccess({collections: [collection]})),
           catchError(error => of(new CollectionsAction.GetFailure({error})))

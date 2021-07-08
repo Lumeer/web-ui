@@ -22,6 +22,7 @@ import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.s
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Project} from './project';
 import {LoadingState} from '../../model/loading-state';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 
 export function projectsReducer(
   state: ProjectsState = initialProjectsState,
@@ -81,7 +82,12 @@ function addOrUpdateProject(state: ProjectsState, project: Project): ProjectsSta
 }
 
 function isProjectNewer(project: Project, oldProject: Project): boolean {
-  return project.version && (!oldProject.version || project.version > oldProject.version);
+  return (
+    project.version &&
+    (!oldProject.version ||
+      project.version > oldProject.version ||
+      permissionsChanged(project.permissions, oldProject.permissions))
+  );
 }
 
 function onChangePermission(

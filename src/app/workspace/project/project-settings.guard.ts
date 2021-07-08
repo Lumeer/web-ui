@@ -27,6 +27,9 @@ import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {WorkspaceService} from '../workspace.service';
 import {userCanManageProjectDetail} from '../../shared/utils/permission.utils';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {Organization} from '../../core/store/organizations/organization';
+import {Project} from '../../core/store/projects/project';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
@@ -59,6 +62,7 @@ export class ProjectSettingsGuard implements CanActivate {
           return of(false);
         }
 
+        this.dispatchDataEvents(organization, project);
         return this.workspaceService.switchWorkspace(organization, project);
       }),
       take(1),
@@ -74,5 +78,9 @@ export class ProjectSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private dispatchDataEvents(organization: Organization, project: Project) {
+    this.store$.dispatch(new ProjectsAction.GetSingle({organizationId: organization.id, projectId: project.id}));
   }
 }

@@ -21,6 +21,7 @@ import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
 import {deepObjectCopy} from '../../../shared/utils/common.utils';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -121,7 +122,10 @@ function addOrUpdateView(state: ViewsState, view: View): ViewsState {
 }
 
 function isViewNewer(view: View, oldView: View): boolean {
-  return view.version && (!oldView.version || view.version > oldView.version);
+  return (
+    view.version &&
+    (!oldView.version || view.version > oldView.version || permissionsChanged(view.permissions, oldView.permissions))
+  );
 }
 
 function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {

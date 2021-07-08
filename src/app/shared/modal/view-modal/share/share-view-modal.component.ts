@@ -78,6 +78,8 @@ export class ShareViewModalComponent implements OnInit {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
     this.view$ = this.store$.pipe(select(selectViewById(this.view.id)));
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
+
+    this.store$.dispatch(new ViewsAction.GetOne({viewId: this.view.id}));
   }
 
   public onSubmit() {

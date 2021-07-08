@@ -63,7 +63,11 @@ export class CollectionSettingsGuard implements CanActivate {
         }
 
         return this.selectCollection(organization, project, collectionId).pipe(
-          mergeMap(collection => this.checkCollection(user, collection, organization, project))
+          mergeMap(collection =>
+            this.checkCollection(user, collection, organization, project).pipe(
+              tap(() => this.dispatchDataEvents(organization, project, collection))
+            )
+          )
         );
       }),
       take(1),
@@ -121,5 +125,14 @@ export class CollectionSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private dispatchDataEvents(organization: Organization, project: Project, collection: Collection) {
+    this.store$.dispatch(
+      new CollectionsAction.GetSingle({
+        collectionId: collection.id,
+        workspace: {organizationCode: organization.code, projectCode: project.code},
+      })
+    );
   }
 }

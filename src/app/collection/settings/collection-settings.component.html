@@ -24,7 +24,7 @@
 
     <div class="d-flex flex-row-reverse text-right mb-3" *ngIf="(organizationAndProject$ | async) as realWorkspace">
       <copy-text-box [label]="tableIdLabel"
-                     [value]="realWorkspace.organization.id + '/' + realWorkspace.project.id + '/' + collection.id"></copy-text-box>
+                     [value]="realWorkspace.organization?.id + '/' + realWorkspace.project?.id + '/' + collection.id"></copy-text-box>
     </div>
 
     <ul class="nav nav-tabs px-5" *ngIf="permissions$ | async as permissions">

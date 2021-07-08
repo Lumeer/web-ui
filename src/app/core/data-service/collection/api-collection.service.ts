@@ -73,8 +73,8 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     return this.httpClient.delete(`${this.apiPrefix(workspace)}/${collectionId}/favorite`);
   }
 
-  public getCollection(collectionId: string): Observable<CollectionDto> {
-    return this.httpClient.get<CollectionDto>(`${this.apiPrefix()}/${collectionId}`);
+  public getCollection(collectionId: string, workspace?: Workspace): Observable<CollectionDto> {
+    return this.httpClient.get<CollectionDto>(`${this.apiPrefix(workspace)}/${collectionId}`);
   }
 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {

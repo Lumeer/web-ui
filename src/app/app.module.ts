@@ -35,6 +35,7 @@ import {AppIdService} from './core/service/app-id.service';
 import {PrintModule} from './print/print.module';
 import {ConfigurationService} from './configuration/configuration.service';
 import {configuration} from '../environments/configuration';
+import {TeamsLoadService} from './core/service/teams-load.service';
 
 declare const require; // Use the require method provided by webpack
 
@@ -104,6 +105,13 @@ export const TRANSLATIONS_PATH = new InjectionToken<string>('TRANSLATIONS_PATH')
       provide: APP_INITIALIZER,
       useFactory: (permissionsCheckService: PermissionsCheckService) => () => permissionsCheckService.init(),
       deps: [PermissionsCheckService],
+      multi: true,
+    },
+    TeamsLoadService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (teamsLoadService: TeamsLoadService) => () => teamsLoadService.init(),
+      deps: [TeamsLoadService],
       multi: true,
     },
     AppIdService,

@@ -21,11 +21,15 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
+import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectAllOrganizationsSorted, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {
+  selectAllOrganizations,
+  selectAllOrganizationsSorted,
+  selectOrganizationsLoaded,
+} from '../store/organizations/organizations.state';
 import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectAllProjectsSorted, selectProjectsLoaded} from '../store/projects/projects.state';
@@ -37,6 +41,8 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {selectPublicViewCode} from '../store/public-data/public-data.state';
 import {PublicDataAction} from '../store/public-data/public-data.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {TeamsAction} from '../store/teams/teams.action';
+import {selectTeamsLoaded} from '../store/teams/teams.state';
 
 @Component({
   template: '',
@@ -81,23 +87,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private redirectToPublicWorkspace(): Subscription {
-    return this.getOrganizationsAndProjects().subscribe(({organizations, projects}) => {
-      const organization = organizations[0];
-      const project = projects[0];
+    return this.getOrganizationsAndProjects()
+      .pipe(take(1))
+      .subscribe(({organizations, projects}) => {
+        const organization = organizations[0];
+        const project = projects[0];
 
-      this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
-        if (organization && project) {
-          this.navigateToProject(organization, project, viewCode || project?.templateMetadata?.defaultView);
-        } else {
-          // TODO show some error page
-        }
+        this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
+          if (organization && project) {
+            this.navigateToProject(organization, project, viewCode || project?.templateMetadata?.defaultView);
+          } else {
+            // TODO show some error page
+          }
+        });
       });
-    });
   }
 
   private redirectToWorkspace(): Subscription {
     return combineLatest([this.getDefaultWorkspace(), this.getOrganizationsAndProjects()])
-      .pipe(first())
+      .pipe(take(1))
       .subscribe(([workspace, {organizations, projects}]) => {
         if (organizations.length > 0 && projects.length > 0) {
           if (workspace) {
@@ -171,7 +179,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       }),
       filter(loaded => loaded),
-      switchMap(() => this.store$.select(selectAllOrganizationsSorted))
+      switchMap(() => this.store$.select(selectAllOrganizations))
     );
   }
 
@@ -179,14 +187,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>
-          organizations.forEach(org => this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id})))
+          organizations.forEach(org => {
+            this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}));
+            this.store$.dispatch(new TeamsAction.Get({organizationId: org.id}));
+          })
         )
       ),
-      this.store$.select(selectProjectsLoaded),
+      this.store$.pipe(select(selectProjectsLoaded)),
+      this.store$.pipe(select(selectTeamsLoaded)),
     ]).pipe(
-      filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
-      switchMap(([organizations]) =>
-        this.store$.select(selectAllProjectsSorted).pipe(map((projects: Project[]) => ({organizations, projects})))
+      filter(([organizations, projectsLoaded, teamsLoaded]) =>
+        organizations.every(org => projectsLoaded[org.id] && teamsLoaded[org.id])
+      ),
+      switchMap(() => this.store$.pipe(select(selectAllOrganizationsSorted))),
+      switchMap(organizations =>
+        this.store$.pipe(
+          select(selectAllProjectsSorted),
+          map((projects: Project[]) => ({organizations, projects}))
+        )
       )
     );
   }
