@@ -131,7 +131,7 @@ export class CollectionSettingsGuard implements CanActivate {
     this.store$.dispatch(
       new CollectionsAction.GetSingle({
         collectionId: collection.id,
-        workspace: {organizationCode: organization.code, projectCode: project.code},
+        workspace: {organizationId: organization.id, projectId: project.id},
       })
     );
   }
