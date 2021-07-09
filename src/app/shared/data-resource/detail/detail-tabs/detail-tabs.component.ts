@@ -66,6 +66,6 @@ export class DetailTabsComponent implements OnChanges {
   }
 
   private resetTabActive() {
-    this.onTabSelect.emit(DetailTabType.Detail);
+    setTimeout(() => this.onTabSelect.emit(DetailTabType.Detail));
   }
 }

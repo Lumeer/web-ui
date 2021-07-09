@@ -101,7 +101,7 @@
       </links-accordeon>
     </div>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Tables">
+    <ng-container *ngIf="data.selectedTab === detailTabType.Tables && resourceType === linkTypeResourceType">
       <link-tables-accordeon class="d-block"
                              *ngIf="resource && dataResource?.id"
                              [linkInstance]="dataResource"
@@ -137,7 +137,7 @@
       </comments-panel>
     </ng-container>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Activity">
+    <ng-container *ngIf="data.selectedTab === detailTabType.Activity && (dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser)">
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"
