@@ -6,6 +6,7 @@
   </add-collection-attribute>
   <collection-attributes-table class="d-block mt-4 mb-5"
                                [collection]="collection"
+                               [permissions]="permissions$ | async"
                                (setDefault)="setDefaultAttribute($event)"
                                (delete)="onDeleteAttribute($event)"
                                (rename)="onNewAttributeName($event)"

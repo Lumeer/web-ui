@@ -45,11 +45,12 @@ import {debounceTime, filter, map} from 'rxjs/operators';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
@@ -57,7 +58,7 @@ interface Data {
   data: DocumentsAndLinksData;
   config: KanbanConfig;
   constraintData: ConstraintData;
-  permissions: AllowedPermissionsMap;
+  permissions: ResourcesPermissions;
   query: Query;
   settings: ViewSettings;
 }
@@ -100,10 +101,10 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public settings: ViewSettings;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
-  public linkTypesPermissions: AllowedPermissionsMap;
+  public currentUser: User;
 
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();

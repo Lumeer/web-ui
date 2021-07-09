@@ -24,6 +24,7 @@ import {NotificationsAction} from '../../../../../core/store/notifications/notif
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {containsSameElements} from '../../../../../shared/utils/array.utils';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: '[link-type]',
@@ -37,6 +38,9 @@ export class LinkTypeComponent {
   @Input()
   public allLinkTypes: LinkType[];
 
+  @Input()
+  public permissions: AllowedPermissions;
+
   @Output()
   public delete = new EventEmitter<number>();
 
@@ -46,11 +50,11 @@ export class LinkTypeComponent {
   @ViewChild(InputBoxComponent)
   public inputBoxComponent: InputBoxComponent;
 
+  constructor(private store$: Store<AppState>) {}
+
   public onDelete() {
     this.delete.emit();
   }
-
-  constructor(private store$: Store<AppState>) {}
 
   public onNewName(name: string) {
     const trimmedValue = (name || '').trim();

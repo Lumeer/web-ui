@@ -36,7 +36,6 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
-import {PerspectiveService} from '../../../../../core/service/perspective.service';
 import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
@@ -54,6 +53,7 @@ import {ModalService} from '../../../../../shared/modal/modal.service';
 import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {selectTasksCollections} from '../../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../../core/store/views/view';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
   selector: 'search-tasks-content',
@@ -96,6 +96,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   @Input()
   public views: View[];
 
+  @Input()
+  public currentUser: User;
+
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
@@ -109,7 +112,6 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public permissions$: Observable<AllowedPermissionsMap>;
 
   constructor(
-    private perspectiveService: PerspectiveService,
     private router: Router,
     private store$: Store<AppState>,
     private toggleService: DocumentFavoriteToggleService,
@@ -136,10 +138,6 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
 
   public onDetailClick(document: DocumentModel) {
     this.modalService.showDocumentDetail(document.id);
-  }
-
-  public switchPerspectiveToTable() {
-    this.perspectiveService.switchPerspective(Perspective.Table);
   }
 
   public trackByDocument(index: number, document: DocumentModel): string {

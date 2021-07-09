@@ -19,7 +19,7 @@
 
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {CalendarEvent, CalendarMetaData} from './calendar-event';
@@ -39,6 +39,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';
 import {Constraint, ConstraintData, ConstraintType, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
@@ -59,7 +60,7 @@ export class CalendarConverter {
     collections: Collection[],
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     constraintData: ConstraintData,
     query: Query
   ): CalendarEvent[] {
@@ -128,10 +129,12 @@ export class CalendarConverter {
     const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
     const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
     const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
+    const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
 
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
     const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
     const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
+    const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
 
     const groupConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.group);
 
@@ -182,8 +185,19 @@ export class CalendarConverter {
           borderColor: eventColor || shadeColor(resourceColor, 0.4),
           textColor: contrastColor(backgroundColor),
           allDay,
-          startEditable: startEditable && startPermission?.writeWithView,
-          durationEditable: interval.end && stemConfig.end && endEditable && endPermission?.writeWithView,
+          startEditable:
+            startEditable &&
+            userCanEditDataResource(
+              startDataResource,
+              startResource,
+              startPermission,
+              this.constraintData?.currentUser
+            ),
+          durationEditable:
+            interval.end &&
+            stemConfig.end &&
+            endEditable &&
+            userCanEditDataResource(endDataResource, endResource, endPermission, this.constraintData?.currentUser),
           extendedProps,
         };
 

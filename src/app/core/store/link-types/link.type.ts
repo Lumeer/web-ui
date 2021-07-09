@@ -19,6 +19,8 @@
 
 import {Attribute, Collection} from '../collections/collection';
 import {Rule} from '../../model/rule';
+import {PermissionsType} from '../../model/permissions-type';
+import {Permissions} from '../permissions/permissions';
 
 export interface LinkType {
   id?: string;
@@ -32,4 +34,7 @@ export interface LinkType {
 
   correlationId?: string;
   rules?: Rule[];
+
+  permissions?: Permissions;
+  permissionsType?: PermissionsType;
 }

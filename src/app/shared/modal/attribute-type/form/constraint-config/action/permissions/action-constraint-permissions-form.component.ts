@@ -19,8 +19,8 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Role} from '../../../../../../../core/model/role';
-import {ResourceType} from '../../../../../../../core/model/resource-type';
+import {RoleType} from '../../../../../../../core/model/role-type';
+import {ActionRole} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-permissions-form',
@@ -30,14 +30,14 @@ import {ResourceType} from '../../../../../../../core/model/resource-type';
 })
 export class ActionConstraintPermissionsFormComponent {
   @Input()
-  public role: Role;
+  public role: RoleType;
 
   @Input()
   public roleControl: FormControl;
 
-  public readonly resourceType = ResourceType.Collection;
+  public readonly actionRoles = Object.values(ActionRole);
 
-  public selectRole(role: Role) {
+  public selectRole(role: RoleType) {
     this.roleControl.setValue(role);
   }
 }

@@ -21,7 +21,6 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {PipesModule} from '../pipes/pipes.module';
-import {EmptyRecordsComponent} from './empty-records/empty-records.component';
 import {EmptySearchComponent} from './empty-search/empty-search.component';
 import {EmptyStateComponent} from './empty-state/empty-state.component';
 import {InvalidQueryComponent} from './invalid-query/invalid-query.component';
@@ -34,7 +33,6 @@ import {PublicProjectMessageComponent} from './public-project-message/public-pro
   declarations: [
     EmptySearchComponent,
     EmptyStateComponent,
-    EmptyRecordsComponent,
     InvalidQueryComponent,
     EmptyDataComponent,
     PublicProjectMessageComponent,
@@ -42,7 +40,6 @@ import {PublicProjectMessageComponent} from './public-project-message/public-pro
   exports: [
     EmptySearchComponent,
     EmptyStateComponent,
-    EmptyRecordsComponent,
     InvalidQueryComponent,
     EmptyDataComponent,
     PublicProjectMessageComponent,

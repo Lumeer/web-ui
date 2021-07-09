@@ -41,7 +41,7 @@ import {
   selectTablePart,
   selectTableRowWithHierarchyLevel,
 } from '../../../../../../core/store/tables/tables.selector';
-import {selectCollectionsByReadPermission} from '../../../../../../core/store/common/permissions.selectors';
+import {selectReadableCollections} from '../../../../../../core/store/common/permissions.selectors';
 import {AppState} from '../../../../../../core/store/app.state';
 
 @Component({
@@ -82,7 +82,7 @@ export class TablePrimaryRowComponent implements OnInit, OnChanges {
 
   private bindCollectionHasToLink() {
     this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+      select(selectReadableCollections),
       map(collections => collections.length > 1)
     );
   }

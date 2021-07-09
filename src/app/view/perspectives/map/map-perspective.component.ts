@@ -42,8 +42,6 @@ import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.uti
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
@@ -61,8 +59,6 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
   @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;
 
-  public permissions$: Observable<AllowedPermissionsMap>;
-
   constructor(private activatedRoute: ActivatedRoute, private router: Router, protected store$: Store<AppState>) {
     super(store$);
   }
@@ -74,8 +70,6 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
   }
 
   private subscribeAdditionalData() {
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-
     this.subscriptions.add(this.subscribeToMapConfigPosition());
     this.subscriptions.add(this.subscribeToMapConfig());
   }

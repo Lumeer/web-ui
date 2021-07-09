@@ -21,6 +21,7 @@ import {OrganizationsAction, OrganizationsActionType} from './organizations.acti
 import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Organization} from './organization';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 
 export function organizationsReducer(
   state: OrganizationsState = initialOrganizationsState,
@@ -71,7 +72,12 @@ function addOrUpdateOrganization(state: OrganizationsState, organization: Organi
 }
 
 function isOrganizationNewer(organization: Organization, oldOrganization: Organization): boolean {
-  return organization.version && (!oldOrganization.version || organization.version > oldOrganization.version);
+  return (
+    organization.version &&
+    (!oldOrganization.version ||
+      organization.version > oldOrganization.version ||
+      permissionsChanged(organization.permissions, oldOrganization.permissions))
+  );
 }
 
 function onChangePermission(

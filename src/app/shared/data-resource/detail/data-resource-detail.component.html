@@ -1,9 +1,9 @@
 <ng-container
   *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
   constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async,
-  resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async} as data">
+  resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async, currentUser: currentUser$ | async} as data">
   <ng-container
-    *ngIf="{permissions: resource | dataResourcePermissions: data.resourcesPermissions} as dataResourceData">
+    *ngIf="{permissions: resource | resourcePermissions: data.resourcesPermissions} as dataResourceData">
     <document-detail-header class="d-block mb-4"
                             [resource]="resource"
                             [dataResource]="dataResource"
@@ -12,6 +12,7 @@
                             [constraintData]="data.constraintData"
                             [permissions]="dataResourceData.permissions"
                             [workspace]="data.workspace"
+                            [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
                             (switchToTable)="onSwitchToTable()"
                             (remove)="onRemove()"
                             (versionClick)="selectTab(detailTabType.Activity)"
@@ -21,11 +22,11 @@
     <detail-tabs *ngIf="dataResource?.id"
                  [showLinks]="resourceType === collectionResourceType"
                  [showTables]="resourceType === linkTypeResourceType"
+                 [showActivity]="dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser"
                  [activeTab]="data.selectedTab"
                  [commentsCount]="data.commentsCount"
                  [linksCount]="linksCount$ | async"
                  [documentsCount]="documentsCount$ | async"
-                 [permissions]="dataResourceData.permissions"
                  (onTabSelect)="selectTab($event)">
     </detail-tabs>
 
@@ -37,6 +38,7 @@
                           [constraintData]="data.constraintData"
                           [workspace]="data.workspace"
                           [query]="query"
+                          [user]="data.currentUser"
                           [toolbarRef]="toolbarRef"
                           [preventEventBubble]="preventEventBubble"
                           [attributeSettings]="data.attributesSettings | resourceAttributesSettings:resourceType:resource.id"
@@ -51,6 +53,7 @@
       <comments-panel *ngIf="resource && dataResource?.id"
                       [maxCommentsCount]="1"
                       [permissions]="dataResourceData.permissions"
+                      [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
                       [resourceId]="dataResource.id"
                       (newCommentClick)="editNewComment()">
@@ -69,7 +72,6 @@
       <links-toolbar class="d-block w-100 text-right"
                      [collection]="resource"
                      [permissions]="dataResourceData.permissions"
-                     [collectionsPermissions]="data.resourcesPermissions.collectionsPermissions"
                      (createLink)="showCreateLink($event)">
       </links-toolbar>
       <links-accordeon class="d-block"
@@ -78,7 +80,7 @@
                        [preventEventBubble]="preventEventBubble"
                        [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
-                       [permissions]="data.resourcesPermissions.collectionsPermissions"
+                       [permissions]="data.resourcesPermissions"
                        [linkTypes]="data.linkTypes"
                        [collapsedLinkTypes]="data.detailConfig?.collapsedLinkTypes"
                        [attributesSettings]="data.attributesSettings"
@@ -106,7 +108,7 @@
                              [linkType]="resource"
                              [preventEventBubble]="preventEventBubble"
                              [allowSelectDocument]="allowSelectDocument"
-                             [permissions]="data.resourcesPermissions.collectionsPermissions"
+                             [permissions]="data.resourcesPermissions"
                              [collapsedCollections]="data.detailConfig?.collapsedCollections"
                              [attributesSettings]="data.attributesSettings"
                              (documentSelect)="onDocumentSelect($event)"
@@ -127,6 +129,7 @@
       <comments-panel *ngIf="resource && dataResource?.id"
                       [permissions]="dataResourceData.permissions"
                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                      [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
                       [resourceId]="dataResource.id"
                       [startEditing]="data.startEditing"
                       (onSaveComment)="startEditing$.next(false)"
@@ -134,7 +137,7 @@
       </comments-panel>
     </ng-container>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Activity && dataResourceData.permissions?.writeWithView">
+    <ng-container *ngIf="data.selectedTab === detailTabType.Activity && (dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser)">
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"

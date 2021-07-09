@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 
 import {of, Observable, combineLatest} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {catchError, filter, first, map, mergeMap, skipWhile, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../core/store/app.state';
 import {OrganizationConverter} from '../core/store/organizations/organization.converter';
 import {Organization} from '../core/store/organizations/organization';
@@ -30,12 +30,15 @@ import {selectAllOrganizations} from '../core/store/organizations/organizations.
 import {ProjectConverter} from '../core/store/projects/project.converter';
 import {Project} from '../core/store/projects/project';
 import {ProjectsAction} from '../core/store/projects/projects.action';
-import {selectAllProjects} from '../core/store/projects/projects.state';
+import {selectReadableProjects} from '../core/store/projects/projects.state';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.utils';
 import {User} from '../core/store/users/user';
-import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
 import {CommonAction} from '../core/store/common/common.action';
 import {OrganizationService, ProjectService} from '../core/data-service';
+import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
+import {selectTeamsByOrganization, selectTeamsLoadedForOrganization} from '../core/store/teams/teams.state';
+import {TeamsAction} from '../core/store/teams/teams.action';
+import {Team} from '../core/store/teams/team';
 
 @Injectable()
 export class WorkspaceService {
@@ -64,7 +67,7 @@ export class WorkspaceService {
   ): Observable<{user?: User; organization?: Organization; project?: Project}> {
     return this.getOrganizationFromStoreOrApi(organizationCode).pipe(
       mergeMap(organization =>
-        this.selectUserAndProject(organization, projectCode).pipe(
+        this.selectUserTeamsAndProject(organization, projectCode).pipe(
           map(({user, project}) => ({user, organization, project}))
         )
       )
@@ -105,7 +108,7 @@ export class WorkspaceService {
     });
   }
 
-  private selectUserAndProject(
+  private selectUserTeamsAndProject(
     organization: Organization,
     projectCode: string
   ): Observable<{user?: User; project?: Project}> {
@@ -118,10 +121,27 @@ export class WorkspaceService {
     return of({});
   }
 
-  private selectUser(organization?: Organization): Observable<User> {
-    return this.store$.pipe(
-      select(selectCurrentUserForOrganization(organization)),
-      filter(user => isNotNullOrUndefined(user))
+  private selectUser(organization: Organization): Observable<User> {
+    return this.selectTeams(organization).pipe(
+      switchMap(() =>
+        this.store$.pipe(
+          select(selectCurrentUserForOrganization(organization)),
+          filter(user => isNotNullOrUndefined(user))
+        )
+      )
+    );
+  }
+
+  private selectTeams(organization: Organization): Observable<Team[]> {
+    return this.store$.select(selectTeamsLoadedForOrganization(organization.id)).pipe(
+      tap(loaded => {
+        if (!loaded) {
+          this.store$.dispatch(new TeamsAction.Get({organizationId: organization.id}));
+        }
+      }),
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.pipe(select(selectTeamsByOrganization(organization.id)))),
+      first()
     );
   }
 
@@ -165,7 +185,7 @@ export class WorkspaceService {
 
   private getProjectFromStore(organizationId: string, code: string): Observable<Project> {
     return this.store$.pipe(
-      select(selectAllProjects),
+      select(selectReadableProjects),
       map(projects => projects.find(proj => proj.organizationId === organizationId && proj.code === code)),
       take(1)
     );

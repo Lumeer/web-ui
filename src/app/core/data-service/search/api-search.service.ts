@@ -24,8 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
-import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
-import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
+import {DocumentDto, LinkInstanceDto, QueryDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {SearchService} from './search.service';
 import {ConfigurationService} from '../../../configuration/configuration.service';
@@ -38,10 +37,6 @@ export class ApiSearchService extends BaseService implements SearchService {
     private configurationService: ConfigurationService
   ) {
     super(store$);
-  }
-
-  public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
-    return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
   }
 
   public searchLinkInstances(

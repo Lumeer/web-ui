@@ -102,7 +102,7 @@ export namespace CollectionsAction {
   export class GetSingle implements Action {
     public readonly type = CollectionsActionType.GET_SINGLE;
 
-    public constructor(public payload: {collectionId: string}) {}
+    public constructor(public payload: {collectionId: string; workspace?: Workspace}) {}
   }
 
   export class GetSuccess implements Action {
@@ -391,8 +391,6 @@ export namespace CollectionsAction {
         collectionId: string;
         type: PermissionType;
         permissions: Permission[];
-        currentPermissions: Permission[];
-        workspace?: Workspace;
       }
     ) {}
   }

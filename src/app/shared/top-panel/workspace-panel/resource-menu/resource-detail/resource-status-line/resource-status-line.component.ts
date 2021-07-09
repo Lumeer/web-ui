@@ -21,12 +21,11 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} fro
 import {Project} from '../../../../../../core/store/projects/project';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {AppState} from '../../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {selectProjectsForWorkspace} from '../../../../../../core/store/projects/projects.state';
 import {selectUsersForWorkspace} from '../../../../../../core/store/users/users.state';
-import {filter, map} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {map} from 'rxjs/operators';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 
 @Component({
@@ -44,26 +43,20 @@ export class ResourceStatusLineComponent implements OnChanges {
   public collectionsCount$: Observable<number>;
   public documentsCount$: Observable<number>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.organization) {
-      this.projectsCount$ = this.store.select(selectProjectsForWorkspace).pipe(
-        filter(projects => !isNullOrUndefined(projects)),
-        map(projects => projects.length)
-      );
-      this.usersCount$ = this.store.select(selectUsersForWorkspace).pipe(
-        filter(users => !isNullOrUndefined(users)),
-        map(users => users.length)
-      );
+      this.projectsCount$ = this.store$
+        .pipe(select(selectProjectsForWorkspace))
+        .pipe(map(projects => projects?.length));
+      this.usersCount$ = this.store$.pipe(select(selectUsersForWorkspace)).pipe(map(users => users?.length));
     }
     if (this.project) {
-      this.collectionsCount$ = this.store.select(selectAllCollections).pipe(
-        filter(collections => !isNullOrUndefined(collections)),
-        map(collections => collections.length)
-      );
-      this.documentsCount$ = this.store.select(selectAllCollections).pipe(
-        filter(collections => !isNullOrUndefined(collections)),
+      this.collectionsCount$ = this.store$
+        .pipe(select(selectAllCollections))
+        .pipe(map(collections => collections.length));
+      this.documentsCount$ = this.store$.pipe(select(selectAllCollections)).pipe(
         map(collections => collections.map(collection => collection.documentsCount)),
         map(collections => (collections.length ? collections.reduce((total = 0, count) => total + count) : 0))
       );

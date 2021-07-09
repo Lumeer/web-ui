@@ -34,6 +34,7 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 import {MatMenuTrigger} from '@angular/material/menu';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-link-info',
@@ -59,6 +60,9 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public canManageView: boolean;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   @Output()
   public addLinkColumn = new EventEmitter();

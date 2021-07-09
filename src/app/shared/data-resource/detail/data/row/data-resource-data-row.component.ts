@@ -164,6 +164,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   public onNewValue(dataValue: DataValue) {
     if (!this.isEditable()) {
+      this.onDataInputCancel();
       return;
     }
 
@@ -220,7 +221,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private startKeyEditing(value?: any): boolean {
-    if (this.isManageable() && !this.keyEditing$.value) {
+    if (this.editableKey && !this.keyEditing$.value) {
       this.keyDataValue = this.createKeyDataValue(value);
       this.keyEditing$.next(true);
       return true;
@@ -239,7 +240,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isEditable(): boolean {
-    return this.permissions?.writeWithView && !this.readonly;
+    return !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
@@ -267,10 +268,6 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
     }
-  }
-
-  private isManageable(): boolean {
-    return this.permissions?.manage;
   }
 
   public focusColumn(column: number) {

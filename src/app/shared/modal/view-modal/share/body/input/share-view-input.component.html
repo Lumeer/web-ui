@@ -1,4 +1,4 @@
-<div class="input-group flex-row p-0" *ngIf="{canAddUser: canAddNewUsers && (text | canAddNewUser:currentUsers)} as data">
+<div class="input-group flex-row p-0" *ngIf="{canAddUser: text | canAddNewUser:currentUsers} as data">
   <input class="form-control form-control-sm"
          [(ngModel)]="text"
          (keydown)="onKeyDown($event, data.canAddUser)"
@@ -9,8 +9,7 @@
          i18n-placeholder="@@view.share.dialog.input.placeholder"/>
 
   <div class="input-group-append">
-    <button *ngIf="canAddNewUsers"
-            type="button" class="btn btn-sm btn-primary text-nowrap"
+    <button type="button" class="btn btn-sm btn-primary text-nowrap"
             [disabled]="!data.canAddUser"
             (click)="onEnter()">
       <i class="fas fa-plus mr-2"></i>

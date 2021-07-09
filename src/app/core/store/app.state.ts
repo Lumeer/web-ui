@@ -22,7 +22,7 @@ import {CollectionsState, initialCollectionsState} from './collections/collectio
 import {DocumentsState, initialDocumentsState} from './documents/documents.state';
 import {FileAttachmentsState, initialFileAttachmentsState} from './file-attachments/file-attachments.state';
 import {GeocodingState, initialGeocodingState} from './geocoding/geocoding.state';
-import {GroupsState, initialGroupsState} from './groups/groups.state';
+import {TeamsState, initialTeamsState} from './teams/teams.state';
 import {initialLinkInstancesState, LinkInstancesState} from './link-instances/link-instances.state';
 import {initialLinkTypesState, LinkTypesState} from './link-types/link-types.state';
 import {initialMapsState, MapsState} from './maps/maps.state';
@@ -60,7 +60,7 @@ export interface AppState {
   documents: DocumentsState;
   fileAttachments: FileAttachmentsState;
   geocoding: GeocodingState;
-  groups: GroupsState;
+  teams: TeamsState;
   linkInstances: LinkInstancesState;
   linkTypes: LinkTypesState;
   dataResources: DataResourcesState;
@@ -100,7 +100,7 @@ export function initialAppState(): AppState {
     documents: initialDocumentsState,
     fileAttachments: initialFileAttachmentsState,
     geocoding: initialGeocodingState,
-    groups: initialGroupsState,
+    teams: initialTeamsState,
     linkInstances: initialLinkInstancesState,
     linkTypes: initialLinkTypesState,
     dataResources: initialDataResourcesState,

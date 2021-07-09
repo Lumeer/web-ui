@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionType} from '../permissions/permissions';
 import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
 import {deepObjectCopy} from '../../../shared/utils/common.utils';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -122,15 +122,12 @@ function addOrUpdateView(state: ViewsState, view: View): ViewsState {
 }
 
 function isViewNewer(view: View, oldView: View): boolean {
-  return view.version && (!oldView.version || view.version > oldView.version);
+  return (
+    view.version &&
+    (!oldView.version || view.version > oldView.version || permissionsChanged(view.permissions, oldView.permissions))
+  );
 }
 
 function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {
-  let permissions = state.entities[action.payload.viewId].permissions;
-  if (action.payload.type === PermissionType.Users) {
-    permissions = {...permissions, users: action.payload.permissions};
-  } else {
-    permissions = {...permissions, groups: action.payload.permissions};
-  }
-  return viewsAdapter.updateOne({id: action.payload.viewId, changes: {permissions}}, state);
+  return viewsAdapter.updateOne({id: action.payload.viewId, changes: {permissions: action.payload.permissions}}, state);
 }

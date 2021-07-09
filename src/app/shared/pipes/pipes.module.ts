@@ -50,9 +50,8 @@ import {PageSlicePipe} from './page-slice.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
-import {ResourceRolesPipe} from './resource-roles.pipe';
-import {RoleIconPipe} from './role-icon.pipe';
-import {RoleTitlePipe} from './role-title.pipe';
+import {ActionRoleIconPipe} from './action-role-icon.pipe';
+import {ActionRoleTitlePipe} from './action-role-title.pipe';
 import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
@@ -79,7 +78,6 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
 import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
-import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
 import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
@@ -108,9 +106,11 @@ import {CanCreateLinksPipe} from './can-create-links.pipe';
 import {ViewIconPipe} from './view-icon.pipe';
 import {ViewColorPipe} from './view-color.pipe';
 import {ViewLinkPipe} from './view-link.pipe';
+import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 
 @NgModule({
-  imports: [CommonModule, DataPipesModule],
+  imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
     IconsPipe,
@@ -127,9 +127,8 @@ import {ViewLinkPipe} from './view-link.pipe';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ResourceRolesPipe,
-    RoleIconPipe,
-    RoleTitlePipe,
+    ActionRoleIconPipe,
+    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -171,7 +170,6 @@ import {ViewLinkPipe} from './view-link.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
@@ -202,6 +200,9 @@ import {ViewLinkPipe} from './view-link.pipe';
     ViewLinkPipe,
   ],
   exports: [
+    DataPipesModule,
+    DataResourcesPipesModule,
+    PermissionsPipesModule,
     LightenColorPipe,
     IconsPipe,
     ColorsPipe,
@@ -217,9 +218,8 @@ import {ViewLinkPipe} from './view-link.pipe';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ResourceRolesPipe,
-    RoleIconPipe,
-    RoleTitlePipe,
+    ActionRoleIconPipe,
+    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -228,7 +228,6 @@ import {ViewLinkPipe} from './view-link.pipe';
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
-    DataPipesModule,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,
@@ -262,7 +261,6 @@ import {ViewLinkPipe} from './view-link.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,

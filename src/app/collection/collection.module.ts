@@ -51,9 +51,12 @@ import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/fo
 import {DataInputModule} from '../shared/data-input/data-input.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {AttributeNamesPipe} from './settings/common/rules/single-rule/attribute-names.pipe';
+import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
+import {TeamsModule} from '../shared/teams/teams.module';
+import {CollectionTabGuard} from './collection-tab.guard';
 
 @NgModule({
-  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule],
+  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule, TeamsModule],
   declarations: [
     AttributeFilterPipe,
     LinkTypeFilterPipe,
@@ -81,7 +84,8 @@ import {AttributeNamesPipe} from './settings/common/rules/single-rule/attribute-
     CollectionPurposeSelectComponent,
     CollectionPurposeFormComponent,
     CollectionPurposeTasksComponent,
+    CollectionTeamsComponent,
   ],
-  providers: [CollectionSettingsGuard],
+  providers: [CollectionSettingsGuard, CollectionTabGuard],
 })
 export class CollectionModule {}

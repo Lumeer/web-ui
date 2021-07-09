@@ -17,43 +17,57 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permission, Permissions} from './permissions';
+import {Permission, Permissions, Role} from './permissions';
 import {PermissionDto, PermissionsDto} from '../../dto';
+import {RoleDto} from '../../dto/role.dto';
+import {roleTypesMap} from '../../model/role-type';
 
-export class PermissionsConverter {
-  public static fromDto(dto: PermissionsDto): Permissions {
-    if (!dto) {
-      return null;
+export function convertPermissionsDtoToModel(dto: PermissionsDto): Permissions {
+  return (
+    dto && {
+      users: dto.users?.map(convertPermissionDtoToModel) || [],
+      groups: dto.groups?.map(convertPermissionDtoToModel) || [],
     }
+  );
+}
 
-    return {
-      users: dto.users ? dto.users.map(PermissionsConverter.fromPermissionDto) : [],
-      groups: dto.groups ? dto.groups.map(PermissionsConverter.fromPermissionDto) : [],
-    };
-  }
-
-  public static toDto(permissions: Permissions): PermissionsDto {
-    if (!permissions) {
-      return null;
+export function convertPermissionsModelToDto(permissions: Permissions): PermissionsDto {
+  return (
+    permissions && {
+      users: permissions.users?.map(convertPermissionModelToDto) || [],
+      groups: permissions.groups?.map(convertPermissionModelToDto) || [],
     }
+  );
+}
 
-    return {
-      users: permissions.users ? permissions.users.map(PermissionsConverter.toPermissionDto) : [],
-      groups: permissions.groups ? permissions.groups.map(PermissionsConverter.toPermissionDto) : [],
-    };
-  }
+export function convertPermissionDtoToModel(dto: PermissionDto): Permission {
+  return {
+    id: dto.id,
+    roles: dto.roles?.map(convertRoleDtoToModel) || [],
+  };
+}
 
-  public static fromPermissionDto(dto: PermissionDto): Permission {
-    return {
-      id: dto.id,
-      roles: dto.roles,
-    };
-  }
+export function convertPermissionModelToDto(permission: Permission): PermissionDto {
+  return {
+    id: permission.id,
+    roles: permission.roles?.map(convertRoleModelToDto) || [],
+  };
+}
 
-  public static toPermissionDto(permission: Permission): PermissionDto {
-    return {
-      id: permission.id,
-      roles: permission.roles,
-    };
-  }
+export function convertRoleDtoToModel(dto: RoleDto): Role {
+  return (
+    dto && {
+      type: roleTypesMap[dto.type],
+      transitive: dto.transitive,
+    }
+  );
+}
+
+export function convertRoleModelToDto(model: Role): RoleDto {
+  return (
+    model && {
+      type: model.type.toString(),
+      transitive: model.transitive,
+    }
+  );
 }

@@ -33,7 +33,7 @@ import {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
@@ -48,13 +48,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {
-  deepObjectsEquals,
-  isNotNullOrUndefined,
-  isNumeric,
-  objectsByIdMap,
-  toNumber,
-} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {
   canCreateTaskByStemConfig,
@@ -90,7 +84,7 @@ interface Data {
   data: DocumentsAndLinksData;
   linkTypes: LinkType[];
   config: GanttChartConfig;
-  permissions: AllowedPermissionsMap;
+  permissions: ResourcesPermissions;
   query: Query;
   constraintData: ConstraintData;
   settings: ViewSettings;
@@ -123,7 +117,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public config: GanttChartConfig;
 
   @Input()
-  public permissions: AllowedPermissionsMap;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public constraintData: ConstraintData;
@@ -213,7 +207,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       data.collections,
       data.linkTypes,
       data.data,
-      data.permissions || {},
+      data.permissions,
       data.query,
       data.settings,
       data.constraintData
@@ -523,7 +517,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public onTaskCreated(task: GanttTask) {
     const stemConfig = (this.config.stemsConfigs || []).find(config =>
-      canCreateTaskByStemConfig(config, this.permissions, objectsByIdMap(this.linkTypes))
+      canCreateTaskByStemConfig(config, this.permissions)
     );
     if (!stemConfig || !stemConfig.stem) {
       return;

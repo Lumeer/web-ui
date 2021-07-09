@@ -20,12 +20,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {Resource} from '../../../../../core/model/resource';
-import {Role} from '../../../../../core/model/role';
+import {RoleType} from '../../../../../core/model/role-type';
 import {Project} from '../../../../../core/store/projects/project';
 import {superUserEmails} from '../../../../../auth/super-user-emails';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {User} from '../../../../../core/store/users/user';
-import {userHasManageRoleInResource, userHasRoleInResource} from '../../../../utils/resource.utils';
+import {userHasRoleInOrganization} from '../../../../utils/permission.utils';
 
 @Pipe({
   name: 'canCreateResource',
@@ -41,13 +41,13 @@ export class CanCreateResourcePipe implements PipeTransform {
         return true;
       }
       const hasManagedOrganization = organizations.some(organization =>
-        userHasManageRoleInResource(currentUser, organization)
+        userHasRoleInOrganization(organization, currentUser, RoleType.Manage)
       );
       return !hasManagedOrganization;
     } else if (type === ResourceType.Project) {
       const project = resource as Project;
       const organization = organizations.find(org => org.id === project.organizationId);
-      return userHasRoleInResource(currentUser, organization, Role.Write);
+      return userHasRoleInOrganization(organization, currentUser, RoleType.ProjectContribute);
     }
     return true;
   }

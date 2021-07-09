@@ -538,7 +538,7 @@ export class PivotTableConverter {
     const valueIndex = this.getValueIndexForColumns([column]);
     if (aggregation === DataAggregationType.Join) {
       const constraint = this.data.valuesConstraints?.[valueIndex] || this.valueTypeInfo[valueIndex]?.defaultConstraint;
-      return aggregateDataValues(aggregation, value || [], constraint, false, this.constraintData);
+      return aggregateDataValues(aggregation, [value], constraint, false, this.constraintData);
     }
     return this.formatValueByValueType(value, valueIndex);
   }

@@ -28,7 +28,8 @@ export class FilterWritableTasksCollectionsPipe implements PipeTransform {
   public transform(collections: Collection[], permissions: AllowedPermissionsMap): Collection[] {
     return (collections || []).filter(
       collection =>
-        collection.purpose?.type === CollectionPurposeType.Tasks && permissions?.[collection.id]?.writeWithView
+        collection.purpose?.type === CollectionPurposeType.Tasks &&
+        permissions?.[collection.id]?.rolesWithView?.DataContribute
     );
   }
 }

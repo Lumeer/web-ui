@@ -31,6 +31,15 @@ export enum DropdownPosition {
   TopStart = 'TopStart',
 }
 
+export const allDropdownPositions = [
+  DropdownPosition.BottomEnd,
+  DropdownPosition.BottomStart,
+  DropdownPosition.Left,
+  DropdownPosition.Right,
+  DropdownPosition.TopEnd,
+  DropdownPosition.TopStart,
+];
+
 export const connectedPositionsMap: Record<DropdownPosition, ConnectedPosition> = {
   [DropdownPosition.BottomEnd]: {
     originX: 'end',

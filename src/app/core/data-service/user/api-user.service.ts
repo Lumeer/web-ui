@@ -39,7 +39,7 @@ export class ApiUserService implements UserService {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
   }
 
-  public createUserInWorkspace(
+  public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],
@@ -73,6 +73,10 @@ export class ApiUserService implements UserService {
 
   private organizationUsersApiPrefix(organizationId: string, userId?: string): string {
     return `${this.organizationApiPrefix(organizationId)}users${userId ? `/${userId}` : ''}`;
+  }
+
+  public setTeams(organizationId: string, userId: string, teams: string[]): Observable<any> {
+    return this.httpClient.post(`${this.organizationUsersApiPrefix(organizationId, userId)}/groups`, teams);
   }
 
   public getCurrentUser(): Observable<UserDto> {

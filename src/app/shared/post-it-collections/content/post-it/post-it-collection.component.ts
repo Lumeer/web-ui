@@ -40,6 +40,8 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
+import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collection',
@@ -76,6 +78,7 @@ export class PostItCollectionComponent implements OnChanges {
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public permissions$: Observable<AllowedPermissions>;
+  public canManageDetail$: Observable<boolean>;
 
   public path: any[];
   public queryParams: any;
@@ -85,6 +88,9 @@ export class PostItCollectionComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
       this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collection?.id)));
+      this.canManageDetail$ = this.permissions$.pipe(
+        map(permissions => permissionsCanManageCollectionDetail(permissions))
+      );
     }
     if (changes.collection || changes.workspace) {
       if (this.collection?.id) {

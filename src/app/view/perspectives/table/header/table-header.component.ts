@@ -29,13 +29,20 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {filter, map, skip, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
-import {selectCollectionsByReadPermission} from '../../../../core/store/common/permissions.selectors';
+import {selectReadableCollections} from '../../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionPermissions,
+  selectProjectPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Table} from '@fullcalendar/daygrid';
+import {selectTableLastCollectionId} from '../../../../core/store/tables/tables.selector';
 
 @Component({
   selector: 'table-header',
@@ -55,6 +62,10 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   public embedded: boolean;
 
   public hasCollectionToLink$: Observable<boolean>;
+  public canCreateLinks$: Observable<boolean>;
+  public permissions$: Observable<AllowedPermissions>;
+  public cursor$ = new BehaviorSubject<TableHeaderCursor>(null);
+
   public cursor: TableHeaderCursor;
 
   public constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
@@ -65,14 +76,24 @@ export class TableHeaderComponent implements OnInit, OnChanges {
 
   private bindCollectionHasToLink() {
     this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+      select(selectReadableCollections),
       map(collections => collections.length > 1)
+    );
+    this.canCreateLinks$ = this.store$.pipe(
+      select(selectProjectPermissions),
+      map(permissions => permissions?.roles?.LinkContribute)
+    );
+    this.permissions$ = this.cursor$.pipe(
+      filter(cursor => !!cursor),
+      switchMap(cursor => this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId)))),
+      switchMap(collectionId => this.store$.pipe(select(selectCollectionPermissions(collectionId))))
     );
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.table && this.table && hasTableIdChanged(changes.table)) {
       this.cursor = this.createHeaderRootCursor();
+      this.cursor$.next(this.cursor);
     }
   }
 

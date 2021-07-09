@@ -12,15 +12,15 @@
 </span>
 
 <div class="d-flex align-self-center ml-auto">
-  <i *ngIf="allowedPermissions?.readWithView"
+  <i *ngIf="dataPermissions?.read"
      class="icon text-primary far fa-file-search p-1 cursor-pointer"
      title="Show detail" i18n-title="@@show.detail"
      (click)="onDetail()"></i>
-  <i *ngIf="allowedPermissions?.writeWithView"
+  <i *ngIf="dataPermissions?.delete"
      class="icon text-danger far fa-trash-alt p-1 cursor-pointer"
      title="Delete" i18n-title="@@button.remove"
      (click)="onRemove()"></i>
-  <i *ngIf="allowedPermissions?.read && resourceType === resourceTypeCollection"
+  <i *ngIf="dataPermissions?.read && resourceType === resourceTypeCollection"
      class="icon text-warning fa-star p-1 cursor-pointer"
      [class.always-visible]="favorite"
      title="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"

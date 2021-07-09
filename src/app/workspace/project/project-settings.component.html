@@ -1,10 +1,11 @@
 <top-panel-wrapper>
-  <div *ngIf="project$ | async as project"
+  <div *ngIf="{project: project$ | async, permissions: permissions$ | async } as data"
        class="col-12 col-lg-11 col-xl-10 mx-auto content">
     <resource-header
-      [resource]="project"
+      [resource]="data.project"
       [resourceType]="projectType"
       [restrictedValues]="projectCodes$ | async"
+      [permissions]="data.permissions"
       (back)="goBack()"
       (delete)="onDelete()"
       (colorIconChange)="onNewColorOrIcon($event)"
@@ -20,16 +21,18 @@
       <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success mr-3"
            (click)="onCollectionsClick()"
            title="Number of tables" i18n-title="@@project.settings.collections.count">
-        <i class="far fa-edit" aria-hidden="true"></i>&nbsp;<span>{{project.collectionsCount}}</span>
+        <i class="far fa-edit" aria-hidden="true"></i>&nbsp;<span>{{data.project.collectionsCount}}</span>
       </div>
 
       <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success mr-3"
+           *ngIf="data.permissions?.roles?.Manage"
            (click)="onDownloadRawContent()"
            title="Download project content" i18n-title="@@project.settings.collections.downloadContent">
         <i class="far fa-download" aria-hidden="true"></i>&nbsp;
       </div>
 
       <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger mr-3"
+           *ngIf="data.permissions?.roles?.Manage"
            (click)="onSampleDataEraseClick()"
            title="Delete sample data from the project" i18n-title="@@project.settings.collections.deleteSampleData">
         <i class="far fa-eraser" aria-hidden="true"></i>&nbsp;
@@ -37,19 +40,25 @@
     </resource-header>
 
     <ul class="nav nav-tabs">
-      <li role="presentation" class="nav-item">
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.UserConfig">
         <a [routerLink]="'users'"
            routerLinkActive="active"
            class="nav-link"
            i18n="@@project.settings.tab.users">Users</a>
       </li>
-      <li role="presentation" class="nav-item">
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.UserConfig">
+        <a [routerLink]="'teams'"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@project.settings.tab.teams">Teams</a>
+      </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
         <a [routerLink]="'sequences'"
            routerLinkActive="active"
            class="nav-link"
            i18n="@@project.settings.tab.sequences">Sequences</a>
       </li>
-      <li role="presentation" class="nav-item">
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
         <a [routerLink]="'template'"
            routerLinkActive="active"
            class="nav-link"

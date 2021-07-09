@@ -29,11 +29,11 @@ import {Collection} from '../core/store/collections/collection';
 import {CollectionsAction} from '../core/store/collections/collections.action';
 import {Organization} from '../core/store/organizations/organization';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
-import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/utils/resource.utils';
 import {WorkspaceService} from '../workspace/workspace.service';
 import {User} from '../core/store/users/user';
 import {Project} from '../core/store/projects/project';
 import {CollectionService} from '../core/data-service';
+import {userCanManageCollectionDetail} from '../shared/utils/permission.utils';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -63,7 +63,11 @@ export class CollectionSettingsGuard implements CanActivate {
         }
 
         return this.selectCollection(organization, project, collectionId).pipe(
-          mergeMap(collection => this.checkCollection(user, collection, organization, project))
+          mergeMap(collection =>
+            this.checkCollection(user, collection, organization, project).pipe(
+              tap(() => this.dispatchDataEvents(organization, project, collection))
+            )
+          )
         );
       }),
       take(1),
@@ -101,7 +105,7 @@ export class CollectionSettingsGuard implements CanActivate {
       this.dispatchErrorActionsNotExist();
       return of(false);
     }
-    if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
+    if (!userCanManageCollectionDetail(organization, project, collection, user)) {
       this.dispatchErrorActionsNotPermission();
       return of(false);
     }
@@ -121,5 +125,14 @@ export class CollectionSettingsGuard implements CanActivate {
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private dispatchDataEvents(organization: Organization, project: Project, collection: Collection) {
+    this.store$.dispatch(
+      new CollectionsAction.GetSingle({
+        collectionId: collection.id,
+        workspace: {organizationId: organization.id, projectId: project.id},
+      })
+    );
   }
 }

@@ -25,9 +25,9 @@ import {AppState} from '../../../core/store/app.state';
 import {Project} from '../../../core/store/projects/project';
 import {LoadingState} from '../../../core/model/loading-state';
 import {
-  selectAllProjects,
   selectProjectTemplates,
   selectProjectTemplatesLoadingState,
+  selectReadableProjects,
 } from '../../../core/store/projects/projects.state';
 import {CreateProjectTemplatesComponent} from './templates/create-project-templates.component';
 import {FormBuilder, Validators} from '@angular/forms';
@@ -83,7 +83,7 @@ export class CreateProjectModalComponent implements OnInit {
     this.templates$ = this.store$.pipe(select(selectProjectTemplates));
     this.templatesState$ = this.store$.pipe(select(selectProjectTemplatesLoadingState));
     this.projectsCount$ = this.store$.pipe(
-      select(selectAllProjects),
+      select(selectReadableProjects),
       map(projects => (projects ? projects.length : 0))
     );
 

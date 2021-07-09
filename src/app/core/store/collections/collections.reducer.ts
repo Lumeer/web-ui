@@ -22,6 +22,7 @@ import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Attribute, Collection} from './collection';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {collectionsAdapter, CollectionsState, initialCollectionsState} from './collections.state';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 
 export function collectionsReducer(
   state: CollectionsState = initialCollectionsState,
@@ -113,7 +114,12 @@ function renameAttribute(
 }
 
 function isCollectionNewer(collection: Collection, oldCollection: Collection): boolean {
-  return collection.version && (!oldCollection.version || collection.version > oldCollection.version);
+  return (
+    collection.version &&
+    (!oldCollection.version ||
+      collection.version > oldCollection.version ||
+      permissionsChanged(collection.permissions, oldCollection.permissions))
+  );
 }
 
 function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string): CollectionsState {

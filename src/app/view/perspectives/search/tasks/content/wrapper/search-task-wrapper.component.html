@@ -15,7 +15,7 @@
                         [document]="document"
                         [attributes]="attributes"
                         [collection]="collection"
-                        [permissions]="permissions"
+                        [dataPermissions]="document | dataResourcePermissions:collection:permissions:currentUser"
                         [large]="large"
                         (detail)="onDetail()"
                         (toggleFavorite)="onToggleFavorite()">

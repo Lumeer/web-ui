@@ -18,7 +18,7 @@
  */
 
 import {AttributesResource, AttributesResourceType} from './resource';
-import {AllowedPermissions, AllowedPermissionsMap, mergeAllowedPermissions} from './allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from './allowed-permissions';
 import {LinkType} from '../store/link-types/link.type';
 import {Attribute, Collection} from '../store/collections/collection';
 import {findAttribute} from '../store/collections/collection.util';
@@ -61,15 +61,12 @@ export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
 
 export function queryAttributePermissions(
   attribute: QueryResource,
-  permissions: AllowedPermissionsMap,
-  linkTypesMap: Record<string, LinkType>
+  permissions: ResourcesPermissions
 ): AllowedPermissions {
   if (attribute.resourceType === AttributesResourceType.Collection) {
-    return permissions[attribute.resourceId] && permissions[attribute.resourceId];
-  }
-  const linkType = linkTypesMap[attribute.resourceId];
-  if (linkType) {
-    return mergeAllowedPermissions(permissions[linkType.collectionIds[0]], permissions[linkType.collectionIds[1]]);
+    return permissions?.collections?.[attribute.resourceId];
+  } else if (attribute.resourceType === AttributesResourceType.LinkType) {
+    return permissions.linkTypes?.[attribute.resourceId];
   }
   return {};
 }

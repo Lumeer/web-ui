@@ -438,7 +438,7 @@ div[contenteditable='true'].form-control {
   &:active,
   &:focus,
   &.user:hover {
-    border: 1px solid $gray-400;
+    border: 1px solid $gray-400 !important;
     text-decoration-line: none !important;
   }
 
@@ -524,6 +524,12 @@ div[contenteditable='true'].form-control {
   &-warning {
     color: #fff;
   }
+}
+
+.badge-lg {
+  line-height: 1;
+  font-size: inherit;
+  font-weight: normal;
 }
 
 .alert {
@@ -710,6 +716,10 @@ ul.nav-tabs {
     background-color: $success;
   }
 
+  input:disabled:checked + .slider {
+    background-color: darken($success, 20%);
+  }
+
   input:checked + .slider:before {
     transform: translateX(0.95rem);
   }
@@ -718,5 +728,23 @@ ul.nav-tabs {
 .badge-outline-success {
   color: $success;
   border: 1px solid $success;
+  background-color: white;
+}
+
+.badge-outline-primary {
+  color: $primary;
+  border: 1px solid $primary;
+  background-color: white;
+}
+
+.badge-outline-secondary {
+  color: $secondary;
+  border: 1px solid $secondary;
+  background-color: white;
+}
+
+.badge-outline-info {
+  color: $info;
+  border: 1px solid $info;
   background-color: white;
 }

@@ -54,7 +54,8 @@ import {ModalService} from '../../../../../../../../shared/modal/modal.service';
 import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {CanCreateLinksPipe} from '../../../../../../../../shared/pipes/can-create-links.pipe';
-import {selectCollectionsPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
+import {selectLinkTypesPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -76,6 +77,15 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   @Input()
   public allowedPermissions: AllowedPermissions;
+
+  @Input()
+  public linkAllowedPermissions: AllowedPermissions;
+
+  @Input()
+  public dataPermissions: DataResourcePermissions;
+
+  @Input()
+  public linkDataPermissions: DataResourcePermissions;
 
   @Output()
   public edit = new EventEmitter();
@@ -135,7 +145,7 @@ export class TableDataCellMenuComponent implements OnChanges {
           if (linkPart?.linkTypeId) {
             return combineLatest([
               this.store$.pipe(select(selectLinkTypeById(linkPart.linkTypeId))),
-              this.store$.pipe(select(selectCollectionsPermissions)),
+              this.store$.pipe(select(selectLinkTypesPermissions)),
             ]).pipe(map(([linkType, permissions]) => this.canCreateLinksPipe.transform(linkType, permissions)));
           }
           return of(false);

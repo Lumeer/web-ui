@@ -47,6 +47,7 @@ import {User} from '../../../../core/store/users/user';
 
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings} from '../../../../core/store/views/view';
+import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'document-detail-header',
@@ -76,6 +77,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public dataPermissions: DataResourcePermissions;
 
   @Output()
   public switchToTable = new EventEmitter();

@@ -1,9 +1,10 @@
 <ng-container
-  *ngIf="{columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async, readonly: !permissions.writeWithView} as data">
+  *ngIf="{columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async} as data">
   <ng-container *ngFor="let column of columns; trackBy: trackByColumn; let index = index">
     <td class="table-border"
         *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.data || {} : row.document?.data || {})[column.attribute.id] | dataValue:column.attribute?.constraint:constraintData,
-          editing: data.columnEditing === index, focused: data.columnFocused === index} as columnData"
+          editing: data.columnEditing === index, focused: data.columnFocused === index,
+          editable: column.linkTypeId ? linkEditable : documentEditable} as columnData"
         [style.width.px]="column.width"
         [class.focused]="columnData.focused"
         [class.editing]="columnData.editing && !column?.attribute?.constraint?.isDirectlyEditable"
@@ -13,17 +14,17 @@
         (click)="onDataInputFocus(index, $event)"
         (dblclick)="onDataInputDblClick(index, $event)">
       <ng-container
-        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:column.editable:columnData.editing as dataInputInfo">
+        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:(column.editable && columnData.editable):columnData.editing as dataInputInfo">
         <data-input *ngIf="column.linkTypeId"
                     [constraint]="column.attribute?.constraint"
                     [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
-                    [editableInReadonly]="column.editable"
+                    [editableInReadonly]="column.editable && columnData.editable"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
                     [readonly]="dataInputInfo.readonly"
-                    [class.cursor-pointer]="!data.readonly && column.editable"
+                    [class.cursor-pointer]="!dataInputInfo.readonly"
                     (save)="onNewValue(index, $event)"
                     (cancel)="onDataInputCancel(index)"
                     (enterInvalid)="onEnterInvalid()"
@@ -35,11 +36,11 @@
                     [cursor]="row.document && (row.document | dataCursor : column.attribute.id)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
-                    [editableInReadonly]="column.editable"
+                    [editableInReadonly]="column.editable && columnData.editable"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
                     [readonly]="dataInputInfo.readonly"
-                    [class.cursor-pointer]="!data.readonly && column.editable"
+                    [class.cursor-pointer]="!dataInputInfo.readonly"
                     (save)="onNewValue(index, $event)"
                     (keydown)="onDataInputKeyDown($event)"
                     (valueChange)="onValueChange(index, $event)"
@@ -53,18 +54,18 @@
   <td class="fixed-column border-0">
     <div class="d-flex flex-nowrap flex-row h-100 align-items-center px-2">
       <i class="fas fa-file-search clickable mr-2"
-         *ngIf="allowSelect && permissions?.readWithView && row.document"
+         *ngIf="allowSelect && documentPermissions?.read && row.document"
          (click)="onDetail()"
          i18n-title="@@show.detail" title="Show detail" aria-hidden="true"></i>
       <i class="fas fa-unlink clickable"
-         *ngIf="allowUnlink && permissions?.writeWithView && row.document"
+         *ngIf="allowUnlink && linkPermissions?.delete && row.document"
          (click)="onUnlink()"
          i18n-title="@@unlink" title="Unlink" aria-hidden="true"></i>
     </div>
   </td>
 
   <document-hints
-    *ngIf="!(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId && (columns[data.columnEditing].attribute | canShowAttributeHints)"
+    *ngIf="canSuggest && !(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId && (columns[data.columnEditing].attribute | canShowAttributeHints)"
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"

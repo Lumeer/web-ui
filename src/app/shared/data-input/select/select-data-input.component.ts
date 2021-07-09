@@ -185,7 +185,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
         if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
-          this.dropdown.resetActiveOption();
         } else {
           this.preventSaveAndBlur();
 
@@ -270,6 +269,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public onSelect(option: DropdownOption) {
     if (this.multi) {
       this.toggleOption(option);
+      this.dropdown?.resetActiveOption();
     } else {
       this.preventSaveAndBlur();
       this.saveValue(DataInputSaveAction.Select, option);

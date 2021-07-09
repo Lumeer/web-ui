@@ -37,7 +37,7 @@ import {notEmptyValidator} from '../../../../../core/validators/custom-validator
   selector: 'add-collection-attribute',
   templateUrl: './add-collection-attribute.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'card'},
+  host: {class: 'd-block'},
 })
 export class AddCollectionAttributeComponent implements OnInit, OnChanges {
   @Input()

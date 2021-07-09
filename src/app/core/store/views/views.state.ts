@@ -42,6 +42,7 @@ import {selectViewsPermissions} from '../user-permissions/user-permissions.state
 import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
+import {RoleType} from '../../model/role-type';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -157,7 +158,7 @@ export const selectViewQuery = createSelector(
   (view, query, permissions) => {
     if (
       !view ||
-      permissions?.[view.id]?.manageWithView ||
+      permissions?.[view.id]?.roles?.QueryConfig ||
       queryIsEmpty(view.query) ||
       isQuerySubset(query, view.query)
     ) {

@@ -35,13 +35,13 @@ export class PublicUserService implements UserService {
     return of({...user, id: generateId()});
   }
 
-  public createUserInWorkspace(
+  public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],
     invitationType?: InvitationType
   ): Observable<UserDto[]> {
-    return of(users.map(user => ({...user, id: generateId()})));
+    return of(users.map(user => ({...user, organizations: [organizationId], id: generateId()})));
   }
 
   public updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto> {
@@ -66,9 +66,13 @@ export class PublicUserService implements UserService {
       name: 'Alan Turing',
       wizardDismissed: true,
       affiliatePartner: false,
-      groups: {},
+      groups: [],
       lastLoggedIn: new Date().getTime(),
     });
+  }
+
+  public setTeams(organizationId: string, userId: string, teams: string[]): Observable<any> {
+    return of(true);
   }
 
   public resendVerificationEmail(): Observable<any> {

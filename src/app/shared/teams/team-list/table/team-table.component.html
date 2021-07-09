@@ -1,0 +1,48 @@
+<div class="header" [style.background-color]="color | lightenColor:.5">
+  <div class="p-2 font-weight-bold" i18n="@@teams.header.team">Team</div>
+  <div class="roles">
+    <div class="font-weight-bold py-2 pr-2 text-nowrap" i18n="@@teams.header.roles">Users & Rights</div>
+    <div class="pl-3 input-group input-group-sm">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="search-team1"><i class="fas fa-search"></i></span>
+      </div>
+      <input id="teamSearch" class="form-control mr-1" type="search"
+             placeholder="Search team..."
+             i18n-placeholder="@@teams.header.search.placeholder"
+             title="Search for teams" i18n-title="@@teams.header.search.title"
+             aria-describedby="search-team1"
+             [(ngModel)]="searchString">
+    </div>
+  </div>
+  <div><i class="fa fa-fw fa-none m-1"></i></div>
+</div>
+<div class="teams-list">
+  <div class="layer1" [class.blur]="!editableTeams">
+    <team-component class="team py-2"
+                    *ngFor="let team of teams | teamFilter:searchString; trackBy:trackByTeam"
+                    [team]="team"
+                    [allTeams]="teams"
+                    [users]="users"
+                    [permissions]="permissions"
+                    [changeRoles]="changeRoles"
+                    [editable]="editable"
+                    [transitiveRoles]="organization | teamTransitiveRoles:project:team:resourceType"
+                    [deletable]="deletableTeamIds | includes:team.id"
+                    [removable]="removableTeamIds | includes:team.id"
+                    [resourceType]="resourceType"
+                    (teamUpdated)="teamUpdated.emit($event)"
+                    (teamDeleted)="teamDeleted.emit($event)"
+                    (teamRolesChange)="teamRolesChange.emit({team: team, roles: $event})">
+    </team-component>
+  </div>
+  <div class="layer2 w-100 text-center p-5" *ngIf="!editableTeams">
+    <h5 i18n="@@teams.update.serviceLimits.title">Free plan</h5>
+    <div class="px-5" i18n="@@teams.update.serviceLimits.message">You are currently on the Free plan which does not
+      support Teams. Do you want to upgrade to Business now?
+    </div>
+    <button class="btn btn-primary mt-3">
+      <a class="color-inherit" [routerLink]="['/o', organization?.code, 'detail']" [fragment]="'orderService'"><span
+        i18n="@@teams.update.serviceLimits.button">Upgrade now!</span></a>
+    </button>
+  </div>
+</div>

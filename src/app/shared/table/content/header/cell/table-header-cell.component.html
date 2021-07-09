@@ -4,7 +4,7 @@
 
     <div #filterElement
          class="filter-icon-wrapper mr-1 cursor-pointer"
-         [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
+         [style.margin-bottom.px]="offsetHorizontal ? 2 : 0"
          (click)="onFilterClick($event)"
          (dblclick)="$event.stopPropagation(); $event.preventDefault()">
       <i *ngIf="column.attribute" class="fas fa-filter icon"
@@ -25,13 +25,13 @@
     </table-header-input>
 
     <ng-container *ngIf="{iconName: (column.attribute?.constraint | constraintTypeIcon)} as typeData">
-      <div class="d-flex flex-row align-items-center justify-content-center icons">
+      <div class="d-flex flex-row align-items-center justify-content-center icons"
+           [style.margin-bottom.px]="offsetHorizontal ? 2 : 0">
         <div *ngIf="column?.attribute?.description && !editing" class="ml-1"
              [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
           <i class="far fa-question-circle ml-1"></i>
         </div>
         <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons cursor-pointer"
-             [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
              (click)="onContextMenu($event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"

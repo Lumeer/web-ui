@@ -51,7 +51,7 @@ import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
-import {selectCollectionsPermissions, selectLinkTypesPermissions} from '../user-permissions/user-permissions.state';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
@@ -59,16 +59,12 @@ export class DocumentsEffects {
   public get$ = createEffect(() =>
     this.actions$.pipe(
       ofType<DocumentsAction.Get>(DocumentsActionType.GET),
-      withLatestFrom(
-        this.store$.pipe(select(selectCollectionsPermissions)),
-        this.store$.pipe(select(selectLinkTypesPermissions))
-      ),
-      map(([action, collectionsPermissions, linkTypePermissions]) =>
+      withLatestFrom(this.store$.pipe(select(selectResourcesPermissions))),
+      map(([action, permissions]) =>
         checkLoadedDataQueryPayload(
           action.payload,
           this.configurationService.getConfiguration().publicView,
-          collectionsPermissions,
-          linkTypePermissions
+          permissions
         )
       ),
       withLatestFrom(

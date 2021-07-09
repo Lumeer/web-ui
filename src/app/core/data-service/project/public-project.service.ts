@@ -28,7 +28,7 @@ import {AppState} from '../../store/app.state';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
-import {Role} from '../../model/role';
+import {RoleType} from '../../model/role-type';
 import {selectPublicProjectId} from '../../store/public-data/public-data.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
@@ -58,7 +58,9 @@ export class PublicProjectService extends PublicPermissionService implements Pro
           setDefaultUserPermissions(
             project,
             DEFAULT_USER,
-            project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+            project?.templateMetadata?.editable
+              ? [RoleType.Read, RoleType.CollectionContribute, RoleType.ViewContribute, RoleType.LinkContribute]
+              : [RoleType.Read]
           )
         )
       );

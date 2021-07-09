@@ -19,55 +19,58 @@
 
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   Output,
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  OnInit,
 } from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectReadableCollections} from '../../../../core/store/common/permissions.selectors';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'links-toolbar',
   templateUrl: './links-toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksToolbarComponent implements OnChanges {
+export class LinksToolbarComponent implements OnChanges, OnInit {
   @Input()
   public collection: Collection;
 
   @Input()
   public permissions: AllowedPermissions;
 
-  @Input()
-  public collectionsPermissions: AllowedPermissionsMap;
-
   @Output()
   public createLink = new EventEmitter<[string, string]>();
 
-  public writableCollections$: Observable<Collection[]>;
+  public collections$: Observable<Collection[]>;
+  public projectPermissions$: Observable<AllowedPermissions>;
+
+  public canLinkCollection: boolean;
 
   constructor(private store$: Store<AppState>) {}
 
+  public ngOnInit() {
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection || changes.collectionsPermissions) {
-      this.writableCollections$ = this.store$.pipe(
-        select(selectAllCollections),
-        map(collections =>
-          collections.filter(
-            collection =>
-              collection.id !== this.collection?.id && this.collectionsPermissions?.[collection.id]?.writeWithView
-          )
-        )
+    if (changes.collection) {
+      this.collections$ = this.store$.pipe(
+        select(selectReadableCollections),
+        map(collections => collections.filter(collection => collection.id !== this.collection?.id))
       );
+    }
+    if (changes.permissions) {
+      this.canLinkCollection = this.permissions?.roles?.Read;
     }
   }
 

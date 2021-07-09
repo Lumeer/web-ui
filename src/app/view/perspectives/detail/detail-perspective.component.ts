@@ -33,7 +33,7 @@ import {selectNavigation, selectViewCursor} from '../../../core/store/navigation
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionsByQueryWithoutLinks,
-  selectCollectionsByReadPermission,
+  selectReadableCollections,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {
@@ -84,7 +84,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       tap(query => this.onQueryChanged(query))
     );
     this.settingsQuery$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+      select(selectReadableCollections),
       map(collections => createFlatResourcesSettingsQuery(collections))
     );
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));

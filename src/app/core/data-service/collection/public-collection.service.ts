@@ -31,12 +31,13 @@ import {HttpClient} from '@angular/common/http';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {DEFAULT_USER} from '../../constants';
 import {setDefaultUserPermissions} from '../common/public-api-util';
-import {Role} from '../../model/role';
+import {RoleType} from '../../model/role-type';
 import {selectCollectionById} from '../../store/collections/collections.state';
 import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
 import {selectPublicProject} from '../../store/projects/projects.state';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {collectionRoleTypes} from '../../store/collections/collection';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {
@@ -153,5 +154,5 @@ export class PublicCollectionService extends PublicPermissionService implements 
 }
 
 function setCollectionPermissions(dto: CollectionDto, editable?: boolean): CollectionDto {
-  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? [Role.Read, Role.Write, Role.Manage] : [Role.Read]);
+  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? collectionRoleTypes : [RoleType.Read]);
 }

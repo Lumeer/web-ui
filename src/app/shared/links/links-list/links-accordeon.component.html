@@ -17,7 +17,7 @@
         </icons-presenter>
         <div class="font-weight-bold text-truncate mr-2" [title]="linkType.name">{{linkType.name}}</div>
         <div class="d-flex align-items-center">
-          <i *ngIf="linkType | canCreateLinks:permissions"
+          <i *ngIf="linkType | canCreateLinks:permissions?.linkTypes"
              class="fas fa-plus-circle mr-2"
              title="Add/Remove links"
              i18n-title="@@table.body.row.links.update"
@@ -33,7 +33,8 @@
           [linkType]="linkType"
           [document]="document"
           [collection]="otherCollection"
-          [permissions]="permissions && permissions[otherCollection.id]"
+          [collectionPermissions]="permissions?.collections && permissions?.collections[otherCollection.id]"
+          [linkTypePermissions]="permissions?.linkTypes && permissions?.linkTypes[linkType.id]"
           [query]="query$ | async"
           [allowSelect]="allowSelectDocument"
           [allowUnlink]="true"

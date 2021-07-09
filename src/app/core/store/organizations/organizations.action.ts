@@ -193,8 +193,6 @@ export namespace OrganizationsAction {
         organizationId: string;
         type: PermissionType;
         permissions: Permission[];
-        currentPermissions: Permission[];
-        workspace?: Workspace;
       }
     ) {}
   }

@@ -22,7 +22,8 @@ import {Workspace} from '../navigation/workspace';
 import {areDataQueriesEqual} from '../navigation/query/query.helper';
 import {Query, QueryStem} from '../navigation/query/query';
 import {isQuerySubset} from '../navigation/query/query.util';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../model/allowed-permissions';
+import {ResourcesPermissions} from '../../model/allowed-permissions';
+import {RoleType} from '../../model/role-type';
 
 export interface DataQueryPayload {
   query: DataQuery;
@@ -53,63 +54,54 @@ export function shouldLoadByDataQuery(
 export function checkLoadedDataQueryPayload(
   payload: DataQueryPayload,
   publicView: boolean,
-  collectionsPermissions?: AllowedPermissionsMap,
-  linkTypePermissions?: AllowedPermissionsMap
+  permissions?: ResourcesPermissions
 ): DataQueryPayload {
   return {
     ...payload,
-    query: checkLoadedDataQuery(payload.query, collectionsPermissions, linkTypePermissions, publicView, payload.silent),
+    query: checkLoadedDataQuery(payload.query, permissions, publicView, payload.silent),
   };
 }
 
 function checkLoadedDataQuery(
   query: DataQuery,
-  collectionsPermissions?: AllowedPermissionsMap,
-  linkTypePermissions?: AllowedPermissionsMap,
+  permissions?: ResourcesPermissions,
   publicView?: boolean,
   silent?: boolean
 ): Query {
   if (publicView) {
     return {};
   }
-  return silent ? undefined : removeUnneededFilters(query, collectionsPermissions, linkTypePermissions);
+  return silent ? undefined : removeUnneededFilters(query, permissions);
 }
 
-function removeUnneededFilters(
-  query: Query,
-  collectionsPermissions?: AllowedPermissionsMap,
-  linkTypePermissions?: AllowedPermissionsMap
-): Query {
+function removeUnneededFilters(query: Query, permissions?: ResourcesPermissions): Query {
   const shouldSkipFulltexts =
     query?.stems?.length > 0 &&
     query?.stems.some(
       stem =>
-        !collectionsPermissions?.[stem.collectionId]?.read ||
-        (stem.linkTypeIds || []).some(linkTypeId => !linkTypePermissions?.[linkTypeId]?.read)
+        !permissions?.collections?.[stem.collectionId]?.roles?.Read ||
+        (stem.linkTypeIds || []).some(linkTypeId => !permissions?.linkTypes?.[linkTypeId]?.roles?.Read)
     );
 
   return {
     ...query,
-    stems: query?.stems?.map(stem => removeUnneededFiltersFromStem(stem, collectionsPermissions, linkTypePermissions)),
+    stems: query?.stems?.map(stem => removeUnneededFiltersFromStem(stem, permissions)),
     fulltexts: shouldSkipFulltexts ? [] : query?.fulltexts,
   };
 }
 
-function removeUnneededFiltersFromStem(
-  stem: QueryStem,
-  collectionsPermissions?: AllowedPermissionsMap,
-  linkTypePermissions?: AllowedPermissionsMap
-): QueryStem {
+function removeUnneededFiltersFromStem(stem: QueryStem, permissions?: ResourcesPermissions): QueryStem {
   return {
     ...stem,
-    filters: stem.filters?.filter(filter => !collectionsPermissions?.[filter.collectionId]?.read),
-    linkFilters: stem.linkFilters?.filter(filter => !linkTypePermissions?.[filter.linkTypeId]?.read),
+    filters: stem.filters?.filter(filter => !permissions?.collections?.[filter.collectionId]?.roles?.Read),
+    linkFilters: stem.linkFilters?.filter(filter => !permissions?.linkTypes?.[filter.linkTypeId]?.roles?.Read),
   };
 }
 
 export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView: boolean): boolean {
-  const savedQuery = checkLoadedDataQuery(query, {}, {}, publicView);
+  const savedQuery = checkLoadedDataQuery(query, {collections: {}, linkTypes: {}}, publicView);
   return loadedQueries.some(
-    loadedQuery => !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery)
+    loadedQuery =>
+      !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery, true)
   );
 }

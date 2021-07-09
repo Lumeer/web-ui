@@ -80,6 +80,7 @@ import {
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
+import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'table-data-cell',
@@ -112,6 +113,15 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public allowedPermissions: AllowedPermissions;
+
+  @Input()
+  public linkAllowedPermissions: AllowedPermissions;
+
+  @Input()
+  public dataPermissions: DataResourcePermissions;
+
+  @Input()
+  public linkDataPermissions: DataResourcePermissions;
 
   @Input()
   public query: Query;
@@ -204,7 +214,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
       );
     }
-    if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
+    if ((changes.column || changes.linkInstance) && this.column && this.linkInstance && !this.document) {
       this.attribute$ = this.store$.pipe(
         select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
@@ -237,7 +247,50 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.dataValue$ = this.createDataValue$();
       }
     }
-    this.editable = this.allowedPermissions?.writeWithView;
+    if (
+      changes.cursor ||
+      changes.document ||
+      changes.linkInstance ||
+      changes.dataPermissions ||
+      changes.linkAllowedPermissions
+    ) {
+      this.checkIsEditable();
+    }
+  }
+
+  private checkIsEditable() {
+    // is first collection or link
+    if (this.cursor?.partIndex === 0 || this.cursor?.partIndex % 2 === 1) {
+      this.editable = this.isEditable();
+    } else if (this.cursor?.partIndex % 2 === 0) {
+      if (this.document?.id) {
+        this.editable = this.dataPermissions?.edit || this.linkDataPermissions?.edit;
+      } else {
+        this.editable = this.linkDataPermissions?.create;
+      }
+    } else {
+      this.editable = false;
+    }
+  }
+
+  private isEditable(): boolean {
+    if (this.document?.id || this.linkInstance?.id) {
+      return this.dataPermissions?.edit;
+    } else {
+      return this.dataPermissions?.create;
+    }
+  }
+
+  private canSuggest(): boolean {
+    // check if is linked collection
+    if (this.cursor?.partIndex > 0 && this.cursor?.partIndex % 2 === 0) {
+      if (this.document?.id) {
+        return this.linkDataPermissions?.edit;
+      } else {
+        return this.linkDataPermissions?.create;
+      }
+    }
+    return false;
   }
 
   private createDataValue$(): Observable<DataValue> {
@@ -279,10 +332,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private setSuggesting() {
-    if (this.cursor.partIndex < 2) {
-      return;
+    if (this.canSuggest()) {
+      this.suggesting$.next(true);
     }
-    this.suggesting$.next(true);
   }
 
   private resetSuggesting() {
@@ -294,7 +346,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
-        if (this.allowedPermissions?.writeWithView && this.isAttributeEditable(attribute)) {
+        if (this.editable && this.isAttributeEditable(attribute)) {
           if (action.payload.clear) {
             this.startEditingAndClear();
           } else {
@@ -346,7 +398,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (this.document?.data) {
       return this.document.data[this.column.attributeIds[0]];
     }
-    if (this.linkInstance.data) {
+    if (this.linkInstance?.data) {
       return this.linkInstance.data[this.column.attributeIds[0]];
     }
     return '';
@@ -374,7 +426,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editing$.getValue()) {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
-        if (this.allowedPermissions?.writeWithView && this.isAttributeEditable(attribute)) {
+        if (this.editable && this.isAttributeEditable(attribute)) {
           this.editing$.next(true);
         }
       });
@@ -444,7 +496,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private clearEditedAttribute() {
     this.dataValue$ = this.createDataValue$();
-    if (this.document && this.document.id) {
+    if (this.document?.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
     }
   }
@@ -461,8 +513,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public updateData(value: any) {
     if (this.document) {
       this.updateDocumentData(this.column.attributeIds[0], this.column.attributeName, value);
-    }
-    if (this.linkInstance) {
+    } else if (this.linkInstance) {
       this.updateLinkInstanceData(this.column.attributeIds[0], this.column.attributeName, value);
     }
   }
@@ -726,14 +777,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public onValueChange(dataValue: DataValue) {
     this.editedValue = dataValue;
-
-    if (this.cursor.partIndex > 1) {
-      this.suggesting$.next(true);
-    }
+    this.setSuggesting();
   }
 
   public onValueSave(dataValue: DataValue) {
-    if (!this.editable) {
+    if (!this.isEditable()) {
+      this.onCancelEditing();
       return false;
     }
 
@@ -788,7 +837,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onKeyDownInSelectionMode(event: KeyboardEvent) {
-    const writeWithView = this.allowedPermissions && this.allowedPermissions.writeWithView;
+    const writeWithView = this.editable;
     event[EDITABLE_EVENT] = writeWithView;
 
     if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {

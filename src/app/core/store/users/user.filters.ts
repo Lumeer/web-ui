@@ -18,19 +18,14 @@
  */
 
 import {Organization} from '../organizations/organization';
-import {isNullOrUndefined} from 'util';
 import {User} from './user';
-
-export function filterUserFunctions(users: User[]) {
-  return users.filter(user => typeof user === 'object');
-}
 
 export function filterUsersByOrganization(users: User[], organization: Organization): User[] {
   if (!organization) {
     return [];
   }
 
-  return users.filter(user => user.groupsMap[organization.id]);
+  return users.filter(user => user.organizations?.includes(organization.id));
 }
 
 export function filterUsersByFilter(users: User[], filter: string): User[] {

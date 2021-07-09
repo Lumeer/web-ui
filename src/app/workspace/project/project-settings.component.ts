@@ -39,11 +39,9 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {ModalService} from '../../shared/modal/modal.service';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextInputModalComponent} from '../../shared/modal/text-input/text-input-modal.component';
-import {ConfigurationService} from '../../configuration/configuration.service';
-import {
-  selectOrganizationByCode,
-  selectOrganizationByWorkspace,
-} from '../../core/store/organizations/organizations.state';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -53,10 +51,9 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectCodes$: Observable<string[]>;
   public project$ = new BehaviorSubject<Project>(null);
+  public permissions$: Observable<AllowedPermissions>;
 
   public readonly projectType = ResourceType.Project;
-
-  public rawUrl: string;
 
   private previousUrl: string;
   private workspace: Workspace;
@@ -71,8 +68,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
     private router: Router,
     private store$: Store<AppState>,
     private notificationService: NotificationService,
-    private modalService: ModalService,
-    private configurationService: ConfigurationService
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
@@ -154,6 +150,8 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
           );
         })
     );
+
+    this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
 
     this.subscriptions.add(
       this.store$

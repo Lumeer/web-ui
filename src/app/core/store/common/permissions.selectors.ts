@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {createSelector} from '@ngrx/store';
 import {
   DocumentsAndLinksData,
@@ -23,9 +24,9 @@ import {
   filterDocumentsAndLinksByQuery,
   filterDocumentsAndLinksDataByQuery,
 } from '@lumeer/data-filters';
-import {containsSameElements, isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
-import {hasRoleByPermissions, sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
-import {Role} from '../../model/role';
+import {containsSameElements, uniqueValues} from '../../../shared/utils/array.utils';
+import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
+import {RoleType} from '../../model/role-type';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {
   selectAllCollections,
@@ -33,7 +34,12 @@ import {
   selectCollectionsDictionary,
 } from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
-import {filterTaskDocuments, sortDocumentsByCreationDate, sortDocumentsTasks} from '../documents/document.utils';
+import {
+  filterTaskDocuments,
+  groupDocumentsByCollection,
+  sortDocumentsByCreationDate,
+  sortDocumentsTasks,
+} from '../documents/document.utils';
 import {selectAllDocuments, selectDocumentsByCollectionId} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
@@ -59,25 +65,35 @@ import {
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
-import {sortLinkInstances} from '../link-instances/link-instance.utils';
+import {groupLinkInstancesByLinkTypes, sortLinkInstances} from '../link-instances/link-instance.utils';
 import {
   selectCollectionsPermissions,
+  selectLinkTypesPermissions,
   selectResourcesPermissions,
   selectViewsPermissions,
 } from '../user-permissions/user-permissions.state';
 import {CollectionPurposeType} from '../collections/collection';
+import {selectCurrentUserForWorkspace} from '../users/users.state';
+import {userCanReadDocument, userCanReadLinkInstance} from '../../../shared/utils/permission.utils';
 
-const selectCollectionsByPermission = (role: Role) =>
+const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
-    collections.filter(collection => hasRoleByPermissions(role, permissions[collection.id]))
+    collections.filter(collection => roleTypes.some(role => permissions?.[collection.id]?.rolesWithView?.[role]))
   );
 
-export const selectCollectionsByReadPermission = selectCollectionsByPermission(Role.Read);
+export const selectReadableCollections = selectCollectionsByPermission([RoleType.Read]);
 
-export const selectCollectionsByWritePermission = selectCollectionsByPermission(Role.Write);
+export const selectContributeCollections = selectCollectionsByPermission([RoleType.DataContribute]);
+
+export const selectContributeAndWritableCollections = selectCollectionsByPermission([
+  RoleType.DataContribute,
+  RoleType.DataWrite,
+]);
+
+export const selectWritableCollections = selectCollectionsByPermission([RoleType.DataWrite]);
 
 export const selectCollectionsByQuery = createSelector(
-  selectCollectionsByReadPermission,
+  selectReadableCollections,
   selectAllDocuments,
   selectAllLinkTypes,
   selectViewQuery,
@@ -90,17 +106,33 @@ export const selectTasksCollections = createSelector(selectAllCollections, colle
   collections.filter(collection => collection.purpose?.type === CollectionPurposeType.Tasks)
 );
 
-const selectCollectionsByPurposeAndPermission = (purpose: CollectionPurposeType, role: Role) =>
+const selectCollectionsByPurposeAndPermission = (purpose: CollectionPurposeType, role: RoleType) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
     collections.filter(
-      collection => collection.purpose?.type === purpose && hasRoleByPermissions(role, permissions[collection.id])
+      collection => collection.purpose?.type === purpose && permissions?.[collection.id]?.rolesWithView?.[role]
     )
   );
 
 const selectTasksCollectionsByReadPermission = selectCollectionsByPurposeAndPermission(
   CollectionPurposeType.Tasks,
-  Role.Read
+  RoleType.Read
 );
+
+const selectLinkTypesByPermission = (roles: RoleType[]) =>
+  createSelector(selectLinkTypesPermissions, selectAllLinkTypes, (permissions, linkTypes) =>
+    linkTypes.filter(linkType => roles.some(role => permissions?.[linkType.id]?.rolesWithView?.[role]))
+  );
+
+export const selectReadableLinkTypes = selectLinkTypesByPermission([RoleType.Read]);
+
+export const selectContributeLinkTypes = selectLinkTypesByPermission([RoleType.DataContribute]);
+
+export const selectContributeAndWritableLinkTypes = selectLinkTypesByPermission([
+  RoleType.DataWrite,
+  RoleType.DataContribute,
+]);
+
+export const selectWritableLinkTypes = selectLinkTypesByPermission([RoleType.DataWrite]);
 
 export const selectTasksQuery = createSelector(
   selectViewQuery,
@@ -126,7 +158,7 @@ export const selectTasksCollectionsByQuery = createSelector(
 );
 
 export const selectCollectionsByQueryWithoutLinks = createSelector(
-  selectCollectionsByReadPermission,
+  selectReadableCollections,
   selectAllDocuments,
   selectAllLinkTypes,
   selectViewQuery,
@@ -156,7 +188,7 @@ export const selectCollectionsByStems = createSelector(
 
 export const selectCollectionsByCustomQuery = (query: Query) =>
   createSelector(
-    selectCollectionsByReadPermission,
+    selectReadableCollections,
     selectAllDocuments,
     selectAllLinkTypes,
     selectConstraintData,
@@ -166,18 +198,57 @@ export const selectCollectionsByCustomQuery = (query: Query) =>
 
 export const selectDocumentsByReadPermission = createSelector(
   selectAllDocuments,
-  selectCollectionsByReadPermission,
-  (documents, collections) => {
-    const allowedCollectionIds = new Set(collections.map(collection => collection.id));
-    return documents.filter(document => allowedCollectionIds.has(document.collectionId));
+  selectReadableCollections,
+  selectCollectionsPermissions,
+  selectCurrentUserForWorkspace,
+  (documents, collections, permissionsMap, currentUser) => {
+    const documentsByCollection = groupDocumentsByCollection(documents);
+    return collections.reduce((allDocuments, collection) => {
+      const permissions = permissionsMap[collection.id];
+      const collectionDocuments = documentsByCollection[collection.id] || [];
+      if (permissions?.rolesWithView?.DataRead) {
+        allDocuments.push(...collectionDocuments);
+      } else {
+        allDocuments.push(
+          ...collectionDocuments.filter(document => userCanReadDocument(document, collection, permissions, currentUser))
+        );
+      }
+
+      return allDocuments;
+    }, []);
+  }
+);
+
+export const selectLinksByReadPermission = createSelector(
+  selectAllLinkInstances,
+  selectReadableLinkTypes,
+  selectLinkTypesPermissions,
+  selectCurrentUserForWorkspace,
+  (linkInstances, linkTypes, permissionsMap, currentUser) => {
+    const linkInstancesByLinkTypes = groupLinkInstancesByLinkTypes(linkInstances);
+    return linkTypes.reduce((allLinkInstances, linkType) => {
+      const permissions = permissionsMap[linkType.id];
+      const collectionDocuments = linkInstancesByLinkTypes[linkType.id] || [];
+      if (permissions?.rolesWithView?.DataRead) {
+        allLinkInstances.push(...collectionDocuments);
+      } else {
+        allLinkInstances.push(
+          ...collectionDocuments.filter(document =>
+            userCanReadLinkInstance(document, linkType, permissions, currentUser)
+          )
+        );
+      }
+
+      return allLinkInstances;
+    }, []);
   }
 );
 
 export const selectDocumentsAndLinksByQuery = createSelector(
   selectDocumentsByReadPermission,
-  selectCollectionsByReadPermission,
-  selectAllLinkTypes,
-  selectAllLinkInstances,
+  selectReadableCollections,
+  selectReadableLinkTypes,
+  selectLinksByReadPermission,
   selectViewQuery,
   selectResourcesPermissions,
   selectConstraintData,
@@ -207,9 +278,9 @@ export const selectDocumentsAndLinksByQuery = createSelector(
 
 export const selectDataByQuery = createSelector(
   selectDocumentsByReadPermission,
-  selectCollectionsByReadPermission,
-  selectAllLinkTypes,
-  selectAllLinkInstances,
+  selectReadableCollections,
+  selectReadableLinkTypes,
+  selectLinksByReadPermission,
   selectViewQuery,
   selectResourcesPermissions,
   selectConstraintData,
@@ -271,9 +342,9 @@ export const selectDataByQuerySorted = createSelector(
 
 export const selectDocumentsAndLinksByQuerySorted = createSelector(
   selectDocumentsByReadPermission,
-  selectCollectionsByReadPermission,
-  selectAllLinkTypes,
-  selectAllLinkInstances,
+  selectReadableCollections,
+  selectReadableLinkTypes,
+  selectLinksByReadPermission,
   selectViewQuery,
   selectViewSettings,
   selectResourcesPermissions,
@@ -361,9 +432,9 @@ export const selectDocumentsByQuery = createSelector(
 export const selectDocumentsByQueryAndIdsSortedByCreation = (ids: string[]) =>
   createSelector(
     selectDocumentsByReadPermission,
-    selectCollectionsByReadPermission,
-    selectAllLinkTypes,
-    selectAllLinkInstances,
+    selectReadableCollections,
+    selectReadableLinkTypes,
+    selectLinksByReadPermission,
     selectViewQuery,
     selectResourcesPermissions,
     selectConstraintData,
@@ -406,9 +477,9 @@ export const selectDocumentsAndLinksByCollectionAndQuery = (collectionId: string
 const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean) =>
   createSelector(
     selectDocumentsByReadPermission,
-    selectCollectionsByReadPermission,
-    selectAllLinkTypes,
-    selectAllLinkInstances,
+    selectReadableCollections,
+    selectReadableLinkTypes,
+    selectLinksByReadPermission,
     selectResourcesPermissions,
     selectConstraintData,
     selectDataSettingsIncludeSubItems,
@@ -434,35 +505,13 @@ const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean) =>
 export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean) =>
   createSelector(selectDocumentsAndLinksByCustomQuery(query, desc), data => data.documents);
 
-export const selectLinkTypesByReadPermission = createSelector(
-  selectAllLinkTypes,
-  selectCollectionsByReadPermission,
-  (linkTypes, collections) => {
-    const allowedCollectionIds = collections.map(collection => collection.id);
-    return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
-  }
-);
-
-export const selectLinkTypesByWritePermission = createSelector(
-  selectAllLinkTypes,
-  selectCollectionsByWritePermission,
-  (linkTypes, collections) => {
-    const allowedCollectionIds = collections.map(collection => collection.id);
-    return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
-  }
-);
-
-export const selectLinkTypesInQuery = createSelector(
-  selectLinkTypesByReadPermission,
-  selectViewQuery,
-  (linkTypes, query) => {
-    const linkTypesIdsInQuery = new Set(getAllLinkTypeIdsFromQuery(query));
-    return linkTypes.filter(linkType => linkTypesIdsInQuery.has(linkType.id));
-  }
-);
+export const selectLinkTypesInQuery = createSelector(selectReadableLinkTypes, selectViewQuery, (linkTypes, query) => {
+  const linkTypesIdsInQuery = new Set(getAllLinkTypeIdsFromQuery(query));
+  return linkTypes.filter(linkType => linkTypesIdsInQuery.has(linkType.id));
+});
 
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
-  createSelector(selectLinkTypesByReadPermission, linkTypes =>
+  createSelector(selectReadableLinkTypes, linkTypes =>
     linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
   );
 
@@ -474,11 +523,17 @@ export const selectLinkTypesByCollectionIds = (collectionIds: string[]) =>
 export const selectCanManageViewConfig = createSelector(
   selectCurrentView,
   selectViewsPermissions,
-  (view, permissions) => !view || permissions?.[view.id]?.manage
+  (view, permissions) => !view || permissions?.[view.id]?.roles.PerspectiveConfig
+);
+
+export const selectCanChangeViewQuery = createSelector(
+  selectCurrentView,
+  selectViewsPermissions,
+  (view, permissions) => !view || permissions?.[view.id]?.roles.QueryConfig
 );
 
 export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermissions, (views, permissions) =>
-  views.filter(view => permissions?.[view.id]?.read)
+  views.filter(view => permissions?.[view.id]?.roles?.Read)
 );
 
 export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views): View[] =>

@@ -101,7 +101,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
       this.keyDataValue = this.createKeyDataValue();
       this.dataValue = this.createDataValue();
     }
-    this.editable = this.isEditable();
+    if (changes.readonly) {
+      this.editable = !this.readonly;
+    }
   }
 
   private createKeyDataValue(value?: any): DataValue {
@@ -131,7 +133,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   }
 
   public onNewValue(dataValue: DataValue) {
-    if (!this.isEditable()) {
+    if (!this.editable) {
       return;
     }
 
@@ -188,7 +190,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   }
 
   private startKeyEditing(value?: any): boolean {
-    if (this.isManageable() && !this.keyEditing$.value) {
+    if (this.permissions?.roles?.AttributeEdit && !this.keyEditing$.value) {
       this.keyDataValue = this.createKeyDataValue(value);
       this.keyEditing$.next(true);
       return true;
@@ -198,16 +200,12 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   private startValueEditing(value?: any): boolean {
     this.editedValue = null;
-    if (this.isEditable() && !this.editing$.value) {
+    if (this.editable && !this.editing$.value) {
       this.dataValue = this.createDataValue(value, true);
       this.editing$.next(true);
       return true;
     }
     return false;
-  }
-
-  private isEditable(): boolean {
-    return this.permissions?.writeWithView && !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
@@ -235,10 +233,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
     }
-  }
-
-  private isManageable(): boolean {
-    return this.permissions?.manage;
   }
 
   public focusColumn(column: number) {

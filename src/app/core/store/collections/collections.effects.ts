@@ -34,8 +34,8 @@ import {DocumentsAction, DocumentsActionType} from '../documents/documents.actio
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {PermissionType} from '../permissions/permissions';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {Permission, PermissionType} from '../permissions/permissions';
+import {convertPermissionModelToDto} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {Attribute, Collection} from './collection';
@@ -81,7 +81,7 @@ export class CollectionsEffects {
     this.actions$.pipe(
       ofType<CollectionsAction.GetSingle>(CollectionsActionType.GET_SINGLE),
       mergeMap(action => {
-        return this.collectionService.getCollection(action.payload.collectionId).pipe(
+        return this.collectionService.getCollection(action.payload.collectionId, action.payload.workspace).pipe(
           map((dto: CollectionDto) => convertCollectionDtoToModel(dto)),
           map(collection => new CollectionsAction.GetSuccess({collections: [collection]})),
           catchError(error => of(new CollectionsAction.GetFailure({error})))
@@ -593,24 +593,29 @@ export class CollectionsEffects {
   public changePermission$ = createEffect(() =>
     this.actions$.pipe(
       ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
-      mergeMap(action => {
-        const workspace = action.payload.workspace;
-        const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
+      withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+      mergeMap(([action, collectionsMap]) => {
+        this.store$.dispatch(new CollectionsAction.ChangePermissionSuccess(action.payload));
+
+        const originalCollection = collectionsMap[action.payload.collectionId];
+        const dtos = action.payload.permissions.map(permission => convertPermissionModelToDto(permission));
 
         let observable: Observable<PermissionDto>;
+        let currentPermissions: Permission[];
         if (action.payload.type === PermissionType.Users) {
-          observable = this.collectionService.updateUserPermission(dtos, workspace);
+          observable = this.collectionService.updateUserPermission(dtos);
+          currentPermissions = originalCollection.permissions?.users;
         } else {
-          observable = this.collectionService.updateGroupPermission(dtos, workspace);
+          observable = this.collectionService.updateGroupPermission(dtos);
+          currentPermissions = originalCollection.permissions?.groups;
         }
 
         return observable.pipe(
           mergeMap(() => EMPTY),
           catchError(error => {
             const payload = {
-              collectionId: workspace.collectionId || action.payload.collectionId,
-              type: action.payload.type,
-              permissions: action.payload.currentPermissions,
+              ...action.payload,
+              permissions: currentPermissions,
               error,
             };
             return of(new CollectionsAction.ChangePermissionFailure(payload));

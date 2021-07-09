@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {ViewService} from './view.service';
-import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
+import {PermissionsDto, ViewDto} from '../../dto';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {Workspace} from '../../store/navigation/workspace';
@@ -31,11 +31,12 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
 import {map, mergeMap, take} from 'rxjs/operators';
-import {Role} from '../../model/role';
+import {RoleType} from '../../model/role-type';
 import {selectViewByCode} from '../../store/views/views.state';
 import {convertViewModelToDto} from '../../store/views/view.converter';
 import {selectPublicProject} from '../../store/projects/projects.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {viewRoleTypes} from '../../store/views/view';
 
 @Injectable()
 export class PublicViewService extends BaseService implements ViewService {
@@ -101,20 +102,8 @@ export class PublicViewService extends BaseService implements ViewService {
     return of({users: [], groups: []});
   }
 
-  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
-    return of(userPermissions);
-  }
-
-  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
-    return of(userPermissions);
-  }
-
-  public removeUserPermission(viewId: string, user: string): Observable<any> {
-    return of(true);
-  }
-
-  public removeGroupPermission(viewId: string, group: string): Observable<any> {
-    return of(true);
+  public updatePermissions(viewId: string, permissions: PermissionsDto): Observable<PermissionsDto> {
+    return of(permissions);
   }
 
   public updateDefaultConfig(dto: DefaultViewConfigDto): Observable<DefaultViewConfigDto> {
@@ -136,5 +125,5 @@ export class PublicViewService extends BaseService implements ViewService {
 }
 
 function setViewPermission(dto: ViewDto, editable?: boolean): ViewDto {
-  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? [Role.Read, Role.Write, Role.Manage] : [Role.Read]);
+  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? viewRoleTypes : [RoleType.Read]);
 }

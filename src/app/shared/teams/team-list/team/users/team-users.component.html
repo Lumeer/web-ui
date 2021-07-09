@@ -1,0 +1,48 @@
+<div class="d-flex align-items-center h-100 pr-1 py-1 flex-wrap" #wrapperElement
+     *ngIf="selectedUsers$ | async as selectedUsers"
+     [class.pl-2]="selectedUsers.length"
+     [title]="selectedUsers | usersNames | join"
+     (click)="onClick()"
+     (mousedown)="onMouseDown($event)">
+
+  <img ngxGravatar class="user"
+       *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first"
+       [email]="user.email"
+       [size]="avatarSize"
+       [style.min-width.px]="avatarSize"
+       [style.min-height.px]="avatarSize">
+
+  <div #textInputParent *ngIf="editable">
+    <button class="btn btn-sm btn-link text-nowrap py-0" *ngIf="!(suggesting$ | async)"
+            (click)="$event.stopPropagation(); onEditClick()">
+      <i class="far fa-users mr-1"></i><span i18n="@@edit">Edit</span>
+    </button>
+
+    <input *ngIf="suggesting$ | async"
+           #textInput
+           [(ngModel)]="name"
+           (blur)="onBlur()"
+           (focus)="onFocus()"
+           (click)="$event.stopPropagation()"
+           placeholder="Search user"
+           i18n-placeholder="@@teams.users.search.placeholder"
+           (keydown)="onKeyDown($event)"
+           [class.ml-1]="selectedUsers.length > 0"
+           [spellcheck]="false"
+           class="border-0 bg-transparent"
+           type="text">
+
+    <options-dropdown [options]="users | filterUsers:name"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInputParent"
+                      [highlightedText]="name"
+                      [multiSelect]="true"
+                      [dropdownPositions]="dropdownPositions"
+                      [selectedValues]="selectedUsers | usersIds"
+                      [firstItemActive]="false"
+                      (selectOption)="onSelectOption($event)">
+    </options-dropdown>
+  </div>
+
+</div>

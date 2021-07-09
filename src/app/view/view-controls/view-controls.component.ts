@@ -223,17 +223,17 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 
-  public onSelectPerspective(perspective: string, canManage: boolean) {
+  public onSelectPerspective(perspective: string, canConfig: boolean) {
     if (perspective === this.currentPerspective) {
       return;
     }
 
     const path: any[] = [...this.workspacePaths(), 'view'];
-    if (canManage && this.workspace.viewCode) {
+    if (canConfig && this.workspace.viewCode) {
       path.push({vc: this.workspace.viewCode});
     }
     let extras: NavigationExtras = null;
-    if (canManage || !this.workspace.viewCode) {
+    if (canConfig || !this.workspace.viewCode) {
       extras = {queryParamsHandling: 'merge'};
     }
     path.push(perspective);

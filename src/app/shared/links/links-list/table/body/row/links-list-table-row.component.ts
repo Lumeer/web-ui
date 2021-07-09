@@ -23,9 +23,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
@@ -34,7 +36,6 @@ import {DataRowComponent} from '../../../../../data/data-row-component';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../../utils/common.utils';
 import {distinctUntilChanged, filter} from 'rxjs/operators';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
@@ -42,6 +43,7 @@ import {DataInputConfiguration} from '../../../../../data-input/data-input-confi
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
+import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -49,7 +51,7 @@ import {Action} from '@ngrx/store';
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy {
+export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
   @Input()
   public columns: LinkColumn[];
 
@@ -60,7 +62,10 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public row: LinkRow;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public linkPermissions: DataResourcePermissions;
+
+  @Input()
+  public documentPermissions: DataResourcePermissions;
 
   @Input()
   public linkTypeId: string;
@@ -130,6 +135,10 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public columnFocused$ = new BehaviorSubject<number>(null);
   public suggesting$ = new BehaviorSubject<DataValue>(null);
 
+  public creatingNewLink: boolean;
+  public canSuggest: boolean;
+  public linkEditable: boolean;
+  public documentEditable: boolean;
   public editedValue: DataValue;
   public subscriptions = new Subscription();
 
@@ -152,6 +161,29 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
         .pipe(distinctUntilChanged())
         .subscribe(index => this.columnEdit.emit(index))
     );
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.row) {
+      this.creatingNewLink = !this.row.document && !this.row.linkInstance;
+    }
+    if (changes.row || changes.linkPermissions) {
+      this.checkCanSuggest();
+    }
+    if (changes.row || changes.linkPermissions || changes.documentPermissions) {
+      this.checkIsEditable();
+    }
+  }
+
+  private checkCanSuggest() {
+    this.canSuggest = this.creatingNewLink ? this.linkPermissions?.create : this.linkPermissions?.edit;
+  }
+
+  private checkIsEditable() {
+    this.linkEditable = this.creatingNewLink ? this.linkPermissions?.create : this.linkPermissions?.edit;
+    this.documentEditable = this.creatingNewLink
+      ? this.linkPermissions?.create
+      : this.documentPermissions?.edit || this.linkPermissions?.edit;
   }
 
   public endColumnEditing(column: number) {
@@ -191,8 +223,14 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return constraint.createDataValue(initialValue, this.constraintData);
   }
 
-  private isColumnEditable(column: number): boolean {
-    return this.permissions?.writeWithView && this.columns[column].editable;
+  private isColumnEditable(index: number): boolean {
+    const column = this.columns[index];
+    if (column.linkTypeId) {
+      return column.editable && this.linkEditable;
+    } else if (column.collectionId) {
+      return column.editable && this.documentEditable;
+    }
+    return false;
   }
 
   private columnValue(index: number): any {
@@ -210,7 +248,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onNewValue(column: number, dataValue: DataValue) {
-    if (!this.columns?.[column]?.editable) {
+    if (!this.isColumnEditable(column)) {
+      this.onDataInputCancel(column);
       return;
     }
 
@@ -224,9 +263,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   private saveData(column: number, dataValue: DataValue) {
-    if (this.creatingNewLink()) {
+    if (this.creatingNewLink) {
       this.createNewLink(column, dataValue);
-    } else {
+    } else if (this.canPatchColumnData(column)) {
       const value = dataValue.serialize();
       const currentValue = this.columnValue(column);
       if (currentValue !== value) {
@@ -235,16 +274,22 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     }
   }
 
+  private canPatchColumnData(index: number): boolean {
+    const column = this.columns[index];
+    if (column.linkTypeId) {
+      return column.editable && this.linkPermissions?.edit;
+    } else if (column.collectionId) {
+      return column.editable && this.documentPermissions?.edit;
+    }
+    return false;
+  }
+
   private createNewLink(index: number, dataValue: DataValue) {
     const value = dataValue.serialize();
     if (isNotNullOrUndefined(value) && String(value).trim() !== '') {
       const column = this.columns[index];
       this.newLink.emit({column, value, correlationId: this.row.correlationId});
     }
-  }
-
-  private creatingNewLink(): boolean {
-    return !this.row.document && !this.row.linkInstance;
   }
 
   public onDataInputDblClick(column: number, event: MouseEvent) {

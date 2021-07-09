@@ -20,12 +20,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ShareViewModalComponent} from './share/share-view-modal.component';
-import {ShareUserComponent} from './share/body/user/share-user.component';
 import {ShareViewInputComponent} from './share/body/input/share-view-input.component';
 import {ShareViewCopyComponent} from './share/body/copy/share-view-copy.component';
 import {ShareViewDialogBodyComponent} from './share/body/share-view-dialog-body.component';
-import {UserRolesPipe} from './share/pipes/user-roles.pipe';
-import {CanRemoveUserPipe} from './share/pipes/can-remove-user.pipe';
+import {ViewGroupPermissionsPipe} from './share/pipes/view-group-permissions.pipe';
+import {ViewUserPermissionsPipe} from './share/pipes/view-user-permissions.pipe';
 import {CanAddNewUserPipe} from './share/pipes/can-add-new-user.pipe';
 import {ViewSettingsModalComponent} from './settings/view-settings-modal.component';
 import {PipesModule} from '../../pipes/pipes.module';
@@ -33,7 +32,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {InputModule} from '../../input/input.module';
 import {GravatarModule} from 'ngx-gravatar';
-import {UsersModule} from '../../users/users.module';
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {ViewHeaderComponent} from './header/view-header.component';
@@ -41,21 +39,26 @@ import {ViewSettingsModalBodyComponent} from './settings/body/view-settings-moda
 import {ViewsUniqueFoldersPipe} from './settings/pipes/views-unique-folders.pipe';
 import {PickerModule} from '../../picker/picker.module';
 import {DirectivesModule} from '../../directives/directives.module';
+import {ViewUsersComponent} from './share/body/users/view-users.component';
+import {ViewTeamsComponent} from './share/body/teams/view-teams.component';
+import {UsersModule} from '../../users/users.module';
+import {TeamsModule} from '../../teams/teams.module';
 
 @NgModule({
   declarations: [
     ShareViewModalComponent,
-    ShareUserComponent,
     ShareViewInputComponent,
     ShareViewCopyComponent,
     ShareViewDialogBodyComponent,
-    UserRolesPipe,
-    CanRemoveUserPipe,
+    ViewGroupPermissionsPipe,
+    ViewUserPermissionsPipe,
     CanAddNewUserPipe,
     ViewHeaderComponent,
     ViewSettingsModalComponent,
     ViewSettingsModalBodyComponent,
     ViewsUniqueFoldersPipe,
+    ViewUsersComponent,
+    ViewTeamsComponent,
   ],
   imports: [
     CommonModule,
@@ -65,11 +68,12 @@ import {DirectivesModule} from '../../directives/directives.module';
     ModalWrapperModule,
     InputModule,
     GravatarModule,
-    UsersModule,
     DropdownModule,
     DataInputModule,
     DirectivesModule,
     PickerModule,
+    UsersModule,
+    TeamsModule,
   ],
   exports: [ShareViewModalComponent, ViewSettingsModalComponent],
 })

@@ -21,7 +21,7 @@ import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AllowedPermissionsMap} from '../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../core/model/allowed-permissions';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
@@ -40,12 +40,14 @@ import {
   selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../core/store/common/permissions.selectors';
-import {selectCollectionsPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {selectResourcesPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
 import {selectViewDataQuery, selectViewSettings} from '../../core/store/view-settings/view-settings.state';
 import {selectCurrentQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser, selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 
 @Injectable()
 export abstract class DataPerspectiveComponent<T>
@@ -54,12 +56,13 @@ export abstract class DataPerspectiveComponent<T>
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public canManageConfig$: Observable<boolean>;
-  public permissions$: Observable<AllowedPermissionsMap>;
+  public permissions$: Observable<ResourcesPermissions>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public data$: Observable<DocumentsAndLinksData>;
   public constraintData$: Observable<ConstraintData>;
   public dataLoaded$: Observable<boolean>;
   public viewSettings$: Observable<ViewSettings>;
+  public currentUser$: Observable<User>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -99,10 +102,11 @@ export abstract class DataPerspectiveComponent<T>
   private subscribeData() {
     this.documentsAndLinks$ = this.subscribeDocumentsAndLinks$();
     this.data$ = this.subscribeData$();
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+    this.permissions$ = this.store$.pipe(select(selectResourcesPermissions));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));

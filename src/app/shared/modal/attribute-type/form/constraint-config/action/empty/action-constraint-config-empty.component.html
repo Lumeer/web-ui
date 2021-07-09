@@ -1,10 +1,10 @@
 <div class="d-flex flex-column align-items-center justify-content-center text-center p-3">
   <h5 i18n="@@constraint.action.empty.automation.title">There are no automations yet!</h5>
-  <div *ngIf="!permissions?.manage" class="mt-1" i18n="@@constraint.action.empty.automation.subtitle.norights">I am sorry but you
+  <div *ngIf="!permissions?.roles?.TechConfig" class="mt-1" i18n="@@constraint.action.empty.automation.subtitle.norights">I am sorry but you
     do not have permissions to add automations.
   </div>
 
-  <div *ngIf="permissions?.manage">
+  <div *ngIf="permissions?.roles?.TechConfig">
     <div class="mt-1" i18n="@@constraint.action.empty.subtitle">Navigate to Table settings and create something
       beautiful! Keep in mind that Automated Links cannot be used in an action.
     </div>

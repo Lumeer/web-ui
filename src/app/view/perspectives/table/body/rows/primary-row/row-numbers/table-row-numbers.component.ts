@@ -36,7 +36,7 @@ import {distinctUntilChanged, map, mergeMap, switchMap, take} from 'rxjs/operato
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
-import {TableRowNumberService} from '../../../../table-row-number.service';
+import {TableRowNumberService} from '../../../../service/table-row-number.service';
 import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/resize-observer';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
 import {selectDocumentById} from '../../../../../../../core/store/documents/documents.state';

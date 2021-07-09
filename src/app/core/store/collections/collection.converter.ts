@@ -19,7 +19,7 @@
 
 import {CollectionDto} from '../../dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel, convertPermissionsModelToDto} from '../permissions/permissions.converter';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {
   Collection,
@@ -49,7 +49,7 @@ export function convertCollectionDtoToModel(
       ? attributes.sort((a, b) => +a.id?.substring(1) - +b.id?.substring(1))
       : attributes,
     defaultAttributeId: dto.defaultAttributeId,
-    permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
+    permissions: dto.permissions ? convertPermissionsDtoToModel(dto.permissions) : null,
     documentsCount: dto.documentsCount,
     correlationId: correlationId,
     favorite: dto.favorite,
@@ -74,7 +74,7 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     icon: model.icon,
     priority: model.priority,
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
-    permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
+    permissions: model.permissions ? convertPermissionsModelToDto(model.permissions) : null,
     rules: convertRulesToDto(model.rules),
     purpose: convertCollectionPurposeModelToDto(model.purpose),
   };

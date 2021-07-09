@@ -21,14 +21,14 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
+import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {Organization} from '../store/organizations/organization';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectAllOrganizationsSorted, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
+import {selectAllOrganizations, selectOrganizationsLoaded} from '../store/organizations/organizations.state';
 import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectAllProjectsSorted, selectProjectsLoaded} from '../store/projects/projects.state';
+import {selectAllProjects, selectProjectsLoaded} from '../store/projects/projects.state';
 import {DefaultWorkspace} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
 import {NotificationService} from '../notifications/notification.service';
@@ -37,6 +37,11 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {selectPublicViewCode} from '../store/public-data/public-data.state';
 import {PublicDataAction} from '../store/public-data/public-data.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
+import {TeamsAction} from '../store/teams/teams.action';
+import {selectAllTeams, selectTeamsLoaded} from '../store/teams/teams.state';
+import {userHasRoleInOrganization, userHasRoleInProject} from '../../shared/utils/permission.utils';
+import {RoleType} from '../model/role-type';
+import {sortResourcesByOrder} from '../../shared/utils/resource.utils';
 
 @Component({
   template: '',
@@ -81,23 +86,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private redirectToPublicWorkspace(): Subscription {
-    return this.getOrganizationsAndProjects().subscribe(({organizations, projects}) => {
-      const organization = organizations[0];
-      const project = projects[0];
+    return this.getOrganizationsAndProjects()
+      .pipe(take(1))
+      .subscribe(({organizations, projects}) => {
+        const organization = organizations[0];
+        const project = projects[0];
 
-      this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
-        if (organization && project) {
-          this.navigateToProject(organization, project, viewCode || project?.templateMetadata?.defaultView);
-        } else {
-          // TODO show some error page
-        }
+        this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
+          if (organization && project) {
+            this.navigateToProject(organization, project, viewCode || project?.templateMetadata?.defaultView);
+          } else {
+            // TODO show some error page
+          }
+        });
       });
-    });
   }
 
   private redirectToWorkspace(): Subscription {
     return combineLatest([this.getDefaultWorkspace(), this.getOrganizationsAndProjects()])
-      .pipe(first())
+      .pipe(take(1))
       .subscribe(([workspace, {organizations, projects}]) => {
         if (organizations.length > 0 && projects.length > 0) {
           if (workspace) {
@@ -171,7 +178,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       }),
       filter(loaded => loaded),
-      switchMap(() => this.store$.select(selectAllOrganizationsSorted))
+      switchMap(() => this.store$.select(selectAllOrganizations))
     );
   }
 
@@ -179,15 +186,56 @@ export class HomeComponent implements OnInit, OnDestroy {
     return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>
-          organizations.forEach(org => this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id})))
+          organizations.forEach(org => {
+            this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}));
+            this.store$.dispatch(new TeamsAction.Get({organizationId: org.id}));
+          })
         )
       ),
-      this.store$.select(selectProjectsLoaded),
+      this.store$.pipe(select(selectProjectsLoaded)),
+      this.store$.pipe(select(selectTeamsLoaded)),
     ]).pipe(
-      filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
+      filter(([organizations, projectsLoaded, teamsLoaded]) =>
+        organizations.every(org => projectsLoaded[org.id] && teamsLoaded[org.id])
+      ),
       switchMap(([organizations]) =>
-        this.store$.select(selectAllProjectsSorted).pipe(map((projects: Project[]) => ({organizations, projects})))
+        this.store$.pipe(
+          select(selectAllProjects),
+          switchMap(projects => this.filterReadableOrganizationsAndProjects(organizations, projects))
+        )
       )
+    );
+  }
+
+  private filterReadableOrganizationsAndProjects(
+    organizations: Organization[],
+    projects: Project[]
+  ): Observable<{organizations: Organization[]; projects: Project[]}> {
+    return combineLatest([this.store$.pipe(select(selectCurrentUser)), this.store$.pipe(select(selectAllTeams))]).pipe(
+      map(([user, teams]) => {
+        const readableOrganizations = [];
+        const readableProjects = [];
+        for (const organization of organizations) {
+          const userTeams = teams.filter(
+            team => team.organizationId === organization.id && team.users?.includes(user.id)
+          );
+          const organizationUser = {...user, teams: userTeams};
+          if (userHasRoleInOrganization(organization, organizationUser, RoleType.Read)) {
+            readableOrganizations.push(organization);
+            readableProjects.push(
+              ...projects.filter(
+                project =>
+                  project.organizationId === organization.id &&
+                  userHasRoleInProject(organization, project, organizationUser, RoleType.Read)
+              )
+            );
+          }
+        }
+        return {
+          organizations: sortResourcesByOrder(readableOrganizations),
+          projects: sortResourcesByOrder(readableProjects),
+        };
+      })
     );
   }
 

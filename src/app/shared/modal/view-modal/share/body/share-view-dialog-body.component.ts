@@ -18,35 +18,42 @@
  */
 
 import {
-  Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
+  Input,
   OnChanges,
-  SimpleChanges,
   OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import {map, skip} from 'rxjs/operators';
 import {User} from '../../../../../core/store/users/user';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {View} from '../../../../../core/store/views/view';
-import {Permission} from '../../../../../core/store/permissions/permissions';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {Permission, Permissions, Role} from '../../../../../core/store/permissions/permissions';
+import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
-import {UserRolesInResourcePipe} from '../../../../pipes/user-roles-in-resource.pipe';
-import {ResourceType} from '../../../../../core/model/resource-type';
-import {isNullOrUndefined} from '../../../../utils/common.utils';
+import {generateCorrelationId} from '../../../../utils/resource.utils';
+import {uniqueValues} from '../../../../utils/array.utils';
 import {
-  generateCorrelationId,
+  rolesChanged,
+  teamCanReadWorkspace,
+  userCanReadAllInWorkspace,
   userCanReadWorkspace,
-  userHasRoleInResource,
-  userIsManagerInWorkspace,
-} from '../../../../utils/resource.utils';
-import {containsSameElements} from '../../../../utils/array.utils';
-import {Role} from '../../../../../core/model/role';
+  userHasAnyRoleInResource,
+  userHasRoleInProject,
+} from '../../../../utils/permission.utils';
+import {Team} from '../../../../../core/store/teams/team';
+import {RoleType} from '../../../../../core/model/role-type';
+import {deepObjectsEquals} from '../../../../utils/common.utils';
+
+export enum ViewTab {
+  Users = 'users',
+  Teams = 'teams',
+}
 
 @Component({
   selector: 'share-view-dialog-body',
@@ -70,32 +77,39 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   @Input()
   public users: User[];
 
+  @Input()
+  public teams: Team[];
+
   @Output()
   public submitForm = new EventEmitter<{
-    permissions: Permission[];
+    permissions: Permissions;
     newUsers: User[];
-    newUsersRoles: Record<string, string[]>;
+    newUsersRoles: Record<string, Role[]>;
+    newTeams: Team[];
   }>();
 
   @Output()
   public rolesChanged = new EventEmitter<boolean>();
 
-  public canAddNewUsers: boolean;
-  public staticUsers: User[] = [];
-  public initialUserRoles: Record<string, string[]> = {};
-  public usersWithReadPermission: User[];
+  public userRoles$ = new BehaviorSubject<Record<string, Role[]>>({});
+  public teamRoles$ = new BehaviorSubject<Record<string, Role[]>>({});
 
+  public usersWithReadPermission: User[];
+  public teamsWithReadPermission: Team[];
+
+  public staticUsers$ = new BehaviorSubject<User[]>([]);
   public changeableUsers$ = new BehaviorSubject<User[]>([]);
   public newUsers$ = new BehaviorSubject<User[]>([]);
-  public userRoles$ = new BehaviorSubject<Record<string, string[]>>({});
+
+  public selectedTab$ = new BehaviorSubject<ViewTab>(ViewTab.Users);
 
   public viewShareUrl$ = new BehaviorSubject<string>('');
 
-  public readonly viewResourceType = ResourceType.View;
+  public readonly viewTab = ViewTab;
 
   private subscriptions = new Subscription();
 
-  constructor(private clipboardService: ClipboardService, private userRolesInResourcePipe: UserRolesInResourcePipe) {}
+  constructor(private clipboardService: ClipboardService) {}
 
   public ngOnInit() {
     this.parseViewShareUrl();
@@ -103,15 +117,26 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.users || changes.organization || changes.project) {
-      this.usersWithReadPermission =
-        this.users?.filter(user => userCanReadWorkspace(user, this.organization, this.project)) || [];
-    }
-    if (this.currentUser && this.organization && this.project && this.view) {
+    if (changes.users || changes.teams || changes.organization || changes.project || changes.currentUser) {
+      const canInviteUsers = userHasRoleInProject(
+        this.organization,
+        this.project,
+        this.currentUser,
+        RoleType.UserConfig
+      );
+
+      if (canInviteUsers) {
+        this.usersWithReadPermission = this.users;
+        this.teamsWithReadPermission = this.teams;
+      } else {
+        this.usersWithReadPermission =
+          this.users?.filter(user => userCanReadWorkspace(this.organization, this.project, user)) || [];
+        this.teamsWithReadPermission =
+          this.teams?.filter(team => teamCanReadWorkspace(this.organization, this.project, team)) || [];
+      }
+
       this.initUsers(this.currentUser, this.organization, this.project);
-    }
-    if (changes.organization && changes.project && changes.currentUser) {
-      this.checkCanAddNewUsers();
+      this.initTeams();
     }
   }
 
@@ -125,135 +150,158 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   public addNewUser(text: string) {
-    const newUser: User = {correlationId: generateCorrelationId(), email: text, groupsMap: {}};
-    this.userRoles$.next({...this.userRoles$.getValue(), [newUser.correlationId]: []});
-    this.newUsers$.next([...this.newUsers$.getValue(), newUser]);
+    const newUser: User = {correlationId: generateCorrelationId(), email: text};
+    this.userRoles$.next({...this.userRoles$.value, [newUser.correlationId]: []});
+    this.newUsers$.next([...this.newUsers$.value, newUser]);
   }
 
   public deleteUser(user: User) {
-    const userRoles = {...this.userRoles$.getValue()};
+    const userRoles = {...this.userRoles$.value};
     if (user.id) {
       delete userRoles[user.id];
-      this.changeableUsers$.next(this.changeableUsers$.getValue().filter(u => u.id !== user.id));
+      this.changeableUsers$.next(this.changeableUsers$.value.filter(u => u.id !== user.id));
     } else if (user.correlationId) {
       delete userRoles[user.correlationId];
-      this.newUsers$.next(this.newUsers$.getValue().filter(u => u.correlationId !== user.correlationId));
+      this.newUsers$.next(this.newUsers$.value.filter(u => u.correlationId !== user.correlationId));
     }
 
     this.userRoles$.next(userRoles);
   }
 
-  public onNewRoles(user: User, roles: string[]) {
-    this.userRoles$.next({...this.userRoles$.getValue(), [user.id || user.correlationId]: roles});
+  public onNewRoles(user: User, roles: Role[]) {
+    this.userRoles$.next({...this.userRoles$.value, [user.id || user.correlationId]: roles});
   }
 
-  private isUserPresented(user: User): boolean {
-    return (
-      !!this.changeableUsers$.getValue().find(u => u.id === user.id) || !!this.staticUsers.find(u => u.id === user.id)
-    );
+  public onNewTeamRoles(team: Team, roles: Role[]) {
+    this.teamRoles$.next({...this.teamRoles$.value, [team.id]: roles});
   }
 
   public onUserSelected(user: User) {
     this.addUser(user);
   }
 
-  private getUserPermissionsInView(user: User): Permission {
-    return this.view.permissions.users.find(permission => permission.id === user.id);
-  }
-
   private initUsers(currentUser: User, organization: Organization, project: Project) {
+    const userRoles = {...this.userRoles$.value};
     for (const user of this.users || []) {
-      if (userIsManagerInWorkspace(user, organization, project) || user.id === currentUser.id) {
-        this.addUserToStaticIfNotPresented(user, organization, project);
-      } else if ((this.view.permissions?.users || []).find(u => u.id === user.id)) {
-        this.addUserToChangeableIfNotPresented(user, organization, project);
+      if (userCanReadAllInWorkspace(organization, project, user) || user.id === currentUser.id) {
+        this.addUserToStaticIfNotPresented(user, userRoles);
+      } else if (userHasAnyRoleInResource(this.view, user)) {
+        this.addUserToChangeableIfNotPresented(user, userRoles);
       }
     }
     this.checkRemovedUsers();
-  }
 
-  private addUserToStaticIfNotPresented(user: User, organization: Organization, project: Project) {
-    if (!this.isUserPresented(user)) {
-      this.staticUsers.push(user);
-      this.initRolesForUser(user, organization, project);
+    if (!deepObjectsEquals(userRoles, this.userRoles$.value)) {
+      this.userRoles$.next(userRoles);
     }
   }
 
-  private initRolesForUser(user: User, organization: Organization, project: Project) {
-    const roles = this.userRolesInResourcePipe.transform(user, this.view, this.viewResourceType, organization, project);
-    this.userRoles$.next({...this.userRoles$.getValue(), [user.id]: roles});
-    this.initialUserRoles[user.id] = roles;
+  private addUserToStaticIfNotPresented(user: User, rolesMap: Record<string, Role[]>) {
+    if (!this.isUserPresented(user)) {
+      this.staticUsers$.next([...this.staticUsers$.value, user]);
+      rolesMap[user.id] = this.getUserPermissionsInView(user)?.roles || [];
+    }
   }
 
-  private addUserToChangeableIfNotPresented(user: User, organization: Organization, project: Project) {
+  private addUserToChangeableIfNotPresented(user: User, rolesMap: Record<string, Role[]>) {
     if (!this.isUserPresented(user)) {
-      this.changeableUsers$.next([...this.changeableUsers$.getValue(), user]);
-      this.initRolesForUser(user, organization, project);
+      this.changeableUsers$.next([...this.changeableUsers$.value, user]);
+      rolesMap[user.id] = this.getUserPermissionsInView(user)?.roles || [];
     }
+  }
+
+  private isUserPresented(user: User): boolean {
+    return (
+      !!this.changeableUsers$.value.find(u => u.id === user.id) || !!this.staticUsers$.value.find(u => u.id === user.id)
+    );
+  }
+
+  private getUserPermissionsInView(user: User): Permission {
+    return this.view?.permissions?.users?.find(permission => permission.id === user.id);
   }
 
   private checkRemovedUsers() {
     const userIds = this.users.map(user => user.id);
-    this.staticUsers = this.staticUsers.filter(user => userIds.includes(user.id));
-    this.changeableUsers$.next(this.changeableUsers$.getValue().filter(user => userIds.includes(user.id)));
+    this.staticUsers$.next(this.staticUsers$.value.filter(user => userIds.includes(user.id)));
+    this.changeableUsers$.next(this.changeableUsers$.value.filter(user => userIds.includes(user.id)));
   }
 
-  public trackByUser(index: number, user: User): string {
-    return user.id || user.correlationId;
+  private initTeams() {
+    const teamRoles = {...this.teamRoles$.value};
+    let rolesChanged = false;
+    for (const team of this.teams || []) {
+      if (!teamRoles[team.id]) {
+        teamRoles[team.id] = this.getTeamPermissionsInView(team)?.roles || [];
+        rolesChanged = true;
+      }
+    }
+    if (rolesChanged) {
+      this.teamRoles$.next(teamRoles);
+    }
+  }
+
+  private getTeamPermissionsInView(team: Team): Permission {
+    return this.view?.permissions?.groups?.find(permission => permission.id === team.id);
   }
 
   public onSubmit() {
-    const userRoles = this.userRoles$.getValue();
-    const newUsers = this.newUsers$.getValue();
-    const changeableUsers = this.changeableUsers$.getValue();
+    const userRoles = this.userRoles$.value;
+    const allUsersIds = [...this.changeableUsers$.value.map(u => u.id), ...this.staticUsers$.value.map(u => u.id)];
 
-    const changeablePermissions: Permission[] = Object.keys(userRoles)
-      .filter(id => changeableUsers.find(user => user.id === id))
+    const userPermissions: Permission[] = Object.keys(userRoles)
+      .filter(id => allUsersIds.includes(id))
       .map(id => ({id, roles: userRoles[id]}));
 
-    const staticPermissions = this.staticUsers
-      .map(user => this.getUserPermissionsInView(user))
-      .filter(permission => permission && permission.roles && permission.roles.length > 0);
+    const teamRoles = this.teamRoles$.value;
+    const allTeamIds = this.teams.map(team => team.id);
 
-    const permissions = [...changeablePermissions, ...staticPermissions];
+    const teamPermissions: Permission[] = Object.keys(teamRoles)
+      .filter(id => allTeamIds.includes(id))
+      .map(id => ({id, roles: teamRoles[id]}));
 
+    const newUsers = this.newUsers$.value;
     const newUsersFiltered: User[] = Object.keys(userRoles)
       .map(id => newUsers.find(user => user.correlationId === id))
       .filter(user => !!user)
-      .filter(user => (userRoles[user.correlationId] || []).length > 0)
-      .map(user => ({...user, groupsMap: {[this.organization.id]: []}}));
+      .filter(user => (userRoles[user.correlationId] || []).length > 0);
 
-    this.submitForm.next({permissions, newUsers: newUsersFiltered, newUsersRoles: userRoles});
+    const newTeams = this.teams.filter(
+      team => !teamCanReadWorkspace(this.organization, this.project, team) && (teamRoles[team.id] || []).length > 0
+    );
+
+    const permissions: Permissions = {users: userPermissions, groups: teamPermissions};
+
+    this.submitForm.next({permissions, newUsers: newUsersFiltered, newUsersRoles: userRoles, newTeams});
   }
 
   private subscribeToRoles() {
     this.subscriptions.add(
-      this.userRoles$
-        .asObservable()
+      combineLatest([this.userRoles$, this.teamRoles$])
         .pipe(
           skip(1),
-          map(roles => this.viewPermissionsChanged(this.initialUserRoles, roles))
+          map(
+            ([userRoles, teamRoles]) =>
+              this.viewPermissionsChanged(this.view?.permissions?.users, userRoles) ||
+              this.viewPermissionsChanged(this.view?.permissions?.groups, teamRoles)
+          )
         )
         .subscribe(changed => this.rolesChanged.emit(changed))
     );
   }
 
-  private viewPermissionsChanged(
-    initialUserPermissions: Record<string, string[]>,
-    currentUserPermissions: Record<string, string[]>
-  ): boolean {
-    if (!initialUserPermissions || !currentUserPermissions) {
-      return false;
-    }
+  private viewPermissionsChanged(initialPermissions: Permission[], currentRolesMap: Record<string, Role[]>): boolean {
+    const initialRolesMap = (initialPermissions || []).reduce(
+      (map, permission) => ({
+        ...map,
+        [permission.id]: permission.roles,
+      }),
+      {}
+    );
 
-    if (Object.keys(initialUserPermissions).length !== Object.keys(currentUserPermissions).length) {
-      return true;
-    }
+    const keys = uniqueValues([...Object.keys(initialRolesMap), ...Object.keys(currentRolesMap)]);
 
-    for (const id of Object.keys(initialUserPermissions)) {
-      const currentRoles = currentUserPermissions[id];
-      const userRoles = initialUserPermissions[id];
-      if (isNullOrUndefined(currentRoles) || !containsSameElements(currentRoles, userRoles)) {
+    for (const id of keys) {
+      if (rolesChanged(currentRolesMap[id], initialRolesMap[id])) {
         return true;
       }
     }
@@ -271,11 +319,5 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  private checkCanAddNewUsers() {
-    this.canAddNewUsers =
-      userIsManagerInWorkspace(this.currentUser, this.organization, this.project) ||
-      userHasRoleInResource(this.currentUser, this.view, Role.Manage);
   }
 }

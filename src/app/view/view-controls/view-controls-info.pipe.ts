@@ -34,24 +34,21 @@ export class ViewControlsInfoPipe implements PipeTransform {
     collectionsPermissions: AllowedPermissionsMap,
     viewsPermissions: AllowedPermissionsMap,
     linkTypes: LinkType[]
-  ): {canClone: boolean; canManage: boolean; canShare: boolean} {
+  ): {canClone?: boolean; canShare?: boolean; canSave?: boolean; canConfig?: boolean} {
     if (!currentView || !currentView.code) {
-      return {canClone: false, canManage: projectPermissions?.write, canShare: false};
-    }
-
-    if (projectPermissions?.manage) {
-      return {canClone: true, canManage: true, canShare: true};
+      return {canSave: projectPermissions?.roles?.ViewContribute};
     }
 
     const hasDirectAccessToView = getAllCollectionIdsFromQuery(currentView.query, linkTypes).every(
-      collectionId => collectionsPermissions?.[collectionId]?.read
+      collectionId => collectionsPermissions?.[collectionId]?.roles?.Read
     );
 
     const viewPermissions = viewsPermissions?.[currentView.id];
     return {
-      canClone: hasDirectAccessToView && projectPermissions?.write,
-      canManage: viewPermissions?.manage,
-      canShare: viewPermissions?.share,
+      canClone: hasDirectAccessToView && projectPermissions?.roles?.ViewContribute,
+      canSave: viewPermissions?.roles?.PerspectiveConfig || viewPermissions?.roles?.QueryConfig,
+      canConfig: viewPermissions?.roles?.PerspectiveConfig,
+      canShare: viewPermissions?.roles?.UserConfig,
     };
   }
 }

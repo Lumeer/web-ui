@@ -53,6 +53,7 @@ import {selectLinkInstanceById} from '../../../../core/store/link-instances/link
 import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'data-resource-data',
@@ -81,6 +82,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public user: User;
 
   @Input()
   public toolbarRef: TemplateRef<any>;
@@ -147,7 +151,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
       this.dataRowService.init(this.resource, this.dataResource, this.attributeSettings);
       this.resource$ = this.selectResource$();
       this.dataResource$ = this.selectDataResource$();
-    } else if (changes.attributeSettings || changes.permissions || changes.ignoreSettingsOnReadPermission) {
+    } else if (changes.attributeSettings || changes.permissions) {
       this.dataRowService.setSettings(this.attributeSettings);
     }
     if (changes.workspace) {

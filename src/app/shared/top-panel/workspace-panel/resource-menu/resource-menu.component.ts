@@ -42,7 +42,7 @@ import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {User} from '../../../../core/store/users/user';
 import {Observable, Subscription} from 'rxjs';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {objectChanged} from '../../../utils/common.utils';
@@ -97,7 +97,7 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
   }
 
   public get isOrganizationType(): boolean {
@@ -137,8 +137,10 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
         this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
       } else {
         const project = <Project>this.resource;
-        this.subscribeServiceLimits(project);
-        this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+        if (project) {
+          this.subscribeServiceLimits(project);
+          this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+        }
         this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
       }
     }

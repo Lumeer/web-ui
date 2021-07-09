@@ -21,6 +21,8 @@ import {LinkTypeDto} from '../../dto';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkType} from './link.type';
 import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
+import {PermissionsType, permissionsTypesMap} from '../../model/permissions-type';
+import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 
 export function convertLinkTypeDtoToModel(
   dto: LinkTypeDto,
@@ -39,6 +41,8 @@ export function convertLinkTypeDtoToModel(
     version: dto.version,
     linksCount: dto.linksCount,
     rules: convertRulesFromDto(dto.rules),
+    permissions: convertPermissionsDtoToModel(dto.permissions),
+    permissionsType: permissionsTypesMap[dto.permissionsType] || PermissionsType.Merge,
   };
 }
 

@@ -1,5 +1,6 @@
 <ng-container
-  *ngIf="{changeableUsers: changeableUsers$| async, newUsers: newUsers$ | async, userRoles: userRoles$ | async} as data">
+  *ngIf="{changeableUsers: changeableUsers$| async, newUsers: newUsers$ | async, userRoles: userRoles$ | async,
+   staticUsers: staticUsers$ | async, teamRoles: teamRoles$ | async} as data">
 
   <share-view-copy
     [viewShareUrl]="viewShareUrl$ | async"
@@ -7,37 +8,58 @@
   </share-view-copy>
 
   <div class="p-3">
-    <share-view-input
-      class="d-block my-2 mt-4"
-      [readableUsers]="usersWithReadPermission"
-      [currentUsers]="[staticUsers, data.changeableUsers, data.newUsers] | concat"
-      [canAddNewUsers]="canAddNewUsers"
-      (selectUser)="onUserSelected($event)"
-      (addUser)="addNewUser($event)">
-    </share-view-input>
 
-    <table class="table">
-      <thead>
-      <tr>
-        <th class="border-top-0"></th>
-        <th class="border-top-0"><span i18n="@@users.header.email">Email</span></th>
-        <th class="border-top-0 tools"><span i18n="@@users.header.roles">Roles</span></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr share-user
-          *ngFor="let user of [staticUsers, data.changeableUsers, data.newUsers] | concat; trackBy:trackByUser"
-          [canRemove]="user | canRemoveUser:currentUser:organization:project"
-          [changeRoles]="user.id !== currentUser?.id && (user | canChangeRoles:viewResourceType:organization:project)"
-          [roles]="user | userRoles:data.userRoles"
-          [email]="user.email"
-          [userName]="user.name"
-          (rolesChange)="onNewRoles(user, $event)"
-          (delete)="deleteUser(user)">
-      </tr>
-      </tbody>
+    <ng-container *ngIf="selectedTab$ | async as selectedTab">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link text-truncate"
+             [class.active]="selectedTab === viewTab.Users"
+             i18n="@@view.share.tabs.users"
+             (click)="selectedTab$.next(viewTab.Users)">Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-truncate"
+             [class.active]="selectedTab === viewTab.Teams"
+             i18n="@@view.share.tabs.teams"
+             (click)="selectedTab$.next(viewTab.Teams)">Teams</a>
+        </li>
+      </ul>
 
-    </table>
+      <ng-container *ngIf="selectedTab === viewTab.Users">
+        <share-view-input
+          class="d-block mb-2 mt-4"
+          [readableUsers]="usersWithReadPermission"
+          [currentUsers]="[data.staticUsers, data.changeableUsers, data.newUsers] | concat"
+          (selectUser)="onUserSelected($event)"
+          (addUser)="addNewUser($event)">
+        </share-view-input>
+
+        <view-users [view]="view"
+                    [organization]="organization"
+                    [project]="project"
+                    [currentUser]="currentUser"
+                    [staticUsers]="data.staticUsers"
+                    [teams]="teams"
+                    [permissions]="view | viewUserPermissions:data.userRoles"
+                    [otherUsers]="[data.changeableUsers, data.newUsers] | concat"
+                    (userRemoved)="deleteUser($event)"
+                    (userRolesChange)="onNewRoles($event.user, $event.roles)">
+        </view-users>
+
+      </ng-container>
+
+      <view-teams *ngIf="selectedTab === viewTab.Teams"
+                  class="d-block mt-4"
+                  [organization]="organization"
+                  [project]="project"
+                  [view]="view"
+                  [permissions]="view | viewGroupPermissions:data.teamRoles"
+                  [users]="users"
+                  [teams]="teamsWithReadPermission"
+                  [currentUser]="currentUser"
+                  (teamRolesChange)="onNewTeamRoles($event.team, $event.roles)">
+      </view-teams>
+    </ng-container>
+
   </div>
-
 </ng-container>

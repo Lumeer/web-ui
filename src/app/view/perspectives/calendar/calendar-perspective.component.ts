@@ -31,12 +31,10 @@ import {selectCalendarById} from '../../../core/store/calendars/calendars.state'
 import {CalendarConfig} from '../../../core/store/calendars/calendar';
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query/query';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {checkOrTransformCalendarConfig} from './util/calendar-util';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
@@ -48,15 +46,8 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
 export class CalendarPerspectiveComponent
   extends DataPerspectiveComponent<CalendarConfig>
   implements OnInit, OnDestroy {
-  public permissions$: Observable<AllowedPermissionsMap>;
-
   constructor(protected store$: Store<AppState>) {
     super(store$);
-  }
-
-  public ngOnInit() {
-    super.ngOnInit();
-    this.subscribeAdditionalData();
   }
 
   public checkOrTransformConfig(
@@ -85,10 +76,6 @@ export class CalendarPerspectiveComponent
 
   public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
     return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-  }
-
-  private subscribeAdditionalData() {
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
   }
 
   public onConfigChanged(config: CalendarConfig) {

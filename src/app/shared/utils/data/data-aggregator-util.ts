@@ -43,7 +43,7 @@ export function createPossibleLinkingDocumentsByChains(
   const linkChain = dataResourceChain[linkChainIndex];
   const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
   const documentChain = dataResourceChain[linkChainIndex - 1];
-  const documentId = getOtherLinkedDocumentId(linkInstance, documentChain && documentChain.documentId);
+  const documentId = getOtherLinkedDocumentId(linkInstance, documentChain?.documentId);
   if (!linkInstance || !documentId) {
     return {};
   }
@@ -51,7 +51,7 @@ export function createPossibleLinkingDocumentsByChains(
   const otherDocumentIds = otherChains
     .map(otherChain => {
       const documentToLinkChain = otherChain[linkChainIndex - 1];
-      if (documentToLinkChain && documentToLinkChain.documentId && documentToLinkChain.documentId !== documentId) {
+      if (documentToLinkChain?.documentId && documentToLinkChain.documentId !== documentId) {
         return documentToLinkChain.documentId;
       }
       return null;

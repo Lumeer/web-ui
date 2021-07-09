@@ -32,7 +32,7 @@ import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {QueryAttribute, queryAttributePermissions} from '../../../core/model/query-attribute';
 import {deepObjectCopy, objectsByIdMap} from '../common.utils';
-import {AllowedPermissions, AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {
   findAttributeConstraint,
   isCollectionAttributeEditable,
@@ -75,7 +75,7 @@ export interface DataObjectInput<T> {
 export class DataObjectAggregator<T> {
   private collectionsMap: Record<string, Collection>;
   private linkTypesMap: Record<string, LinkType>;
-  private permissions: AllowedPermissionsMap;
+  private permissions: ResourcesPermissions;
   private query: Query;
   private constraintData: ConstraintData;
 
@@ -98,7 +98,7 @@ export class DataObjectAggregator<T> {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     queryStem: QueryStem,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     constraintData?: ConstraintData
   ) {
     this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem, constraintData);
@@ -225,9 +225,9 @@ export class DataObjectAggregator<T> {
   }
 
   public getResource(model: QueryAttribute): AttributesResource {
-    if (model.resourceType === AttributesResourceType.Collection) {
+    if (model?.resourceType === AttributesResourceType.Collection) {
       return this.collectionsMap[model.resourceId];
-    } else if (model.resourceType === AttributesResourceType.LinkType) {
+    } else if (model?.resourceType === AttributesResourceType.LinkType) {
       return this.linkTypesMap[model.resourceId];
     }
 
@@ -257,7 +257,7 @@ export class DataObjectAggregator<T> {
       return {};
     }
 
-    return queryAttributePermissions(model, this.permissions, this.linkTypesMap);
+    return queryAttributePermissions(model, this.permissions);
   }
 
   public getAttributeResourceColor(model: QueryAttribute): string {

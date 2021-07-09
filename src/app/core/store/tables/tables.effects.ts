@@ -119,7 +119,11 @@ import {selectTable} from './tables.state';
 import {AttributesResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
-import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
+import {
+  selectCollectionPermissions,
+  selectCollectionsPermissions,
+  selectResourcesPermissions,
+} from '../user-permissions/user-permissions.state';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
@@ -133,11 +137,12 @@ export class TablesEffects {
       filter(action => isSingleCollectionQuery(action.payload.query)),
       withLatestFrom(
         this.store$.pipe(select(selectCollectionsDictionary)),
+        this.store$.pipe(select(selectCollectionsPermissions)),
         this.store$.pipe(select(selectLinkTypesDictionary)),
         this.store$.pipe(select(selectDocumentsByQuery)),
         this.store$.pipe(select(selectViewCode))
       ),
-      mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
+      mergeMap(([action, collectionsMap, collectionsPermissions, linkTypesMap, documents, viewCode]) => {
         const {config, query, embedded} = action.payload;
 
         const queryStem = query.stems[0];
@@ -145,8 +150,9 @@ export class TablesEffects {
         const linkTypeIds = queryStem.linkTypeIds || [];
 
         let lastCollectionId = queryStem.collectionId;
+        const permissions = collectionsPermissions[lastCollectionId];
         const parts: TableConfigPart[] = [
-          createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config),
+          createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config, permissions),
         ];
 
         linkTypeIds.forEach((linkTypeId, index) => {
@@ -156,11 +162,13 @@ export class TablesEffects {
 
             const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastCollectionId);
             const collection = collectionsMap[collectionId];
+            const permissions = collectionsPermissions[collectionId];
             const collectionPart = createCollectionPart(
               collection,
               index * 2 + 2,
               !viewCode && index === linkTypeIds.length - 1,
-              config
+              config,
+              permissions
             );
 
             lastCollectionId = collectionId;
@@ -579,15 +587,22 @@ export class TablesEffects {
             this.selectResource$(part).pipe(
               filter(entity => !!entity),
               take(1),
-              withLatestFrom(this.store$.pipe(select(selectViewCode))),
-              mergeMap(([entity, viewCode]) => {
+              withLatestFrom(
+                this.store$.pipe(select(selectViewCode)),
+                this.store$.pipe(select(selectResourcesPermissions))
+              ),
+              mergeMap(([entity, viewCode, resourcesPermissions]) => {
                 const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
                 const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
                 const columns = addMissingTableColumns(initializedColumns, entity.attributes, false);
 
+                const permissions = part.collectionId
+                  ? resourcesPermissions?.collections?.[part.collectionId]
+                  : resourcesPermissions?.linkTypes?.[part.linkTypeId];
                 const lastColumn = columns[columns.length - 1];
                 const lastPartIndex = table.config.parts.length - 1;
                 if (
+                  permissions?.rolesWithView?.AttributeEdit &&
                   !viewCode &&
                   cursor.partIndex === lastPartIndex &&
                   (!lastColumn || lastColumn.attributeIds.length)
@@ -634,7 +649,7 @@ export class TablesEffects {
             const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
             return this.store$.pipe(
               select(selectCollectionPermissions(collectionId)),
-              map(permissions => permissions?.writeWithView),
+              map(permissions => permissions?.roles?.DataContribute),
               distinctUntilChanged(),
               mergeMap(canCreateDocuments => {
                 const {cursor} = action.payload;
@@ -1051,16 +1066,24 @@ export class TablesEffects {
                         collectionsMap[tablePart.collectionId]?.attributes,
                         attributeId
                       );
-                      dataValues = documents
-                        .filter(document => document.collectionId === tablePart.collectionId)
-                        .map(document => constraint?.createDataValue(document.data?.[attributeId], constraintData));
+                      dataValues =
+                        (constraint &&
+                          documents
+                            .filter(document => document.collectionId === tablePart.collectionId)
+                            .map(document =>
+                              constraint?.createDataValue(document.data?.[attributeId], constraintData)
+                            )) ||
+                        [];
                     } else if (tablePart.linkTypeId) {
                       constraint = findAttributeConstraint(linkTypesMap[tablePart.linkTypeId]?.attributes, attributeId);
-                      dataValues = linkInstances
-                        .filter(link => link.linkTypeId === tablePart.linkTypeId)
-                        .map(linkInstance =>
-                          constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData)
-                        );
+                      dataValues =
+                        (constraint &&
+                          linkInstances
+                            .filter(link => link.linkTypeId === tablePart.linkTypeId)
+                            .map(linkInstance =>
+                              constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData)
+                            )) ||
+                        [];
                     }
                     return {dataValues, constraint};
                   }),

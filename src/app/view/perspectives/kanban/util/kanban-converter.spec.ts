@@ -148,7 +148,7 @@ describe('Kanban converter', () => {
 
   it('should create empty columns', () => {
     const config: KanbanConfig = {columns: [], stemsConfigs: []};
-    const buildConfig = converter.convert(config, collections, [], data, {}, {});
+    const buildConfig = converter.convert(config, collections, [], data, {collections: {}, linkTypes: {}}, {});
     expect(buildConfig.config.columns).toEqual([]);
     expect(buildConfig.config.stemsConfigs).toEqual([]);
     expect(buildConfig.data.otherColumn.cards).toEqual([]);
@@ -170,7 +170,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.convert(config, collections, [], data, {}, {});
+    const buildConfig = converter.convert(config, collections, [], data, {collections: {}, linkTypes: {}}, {});
     expect(buildConfig.config.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass']);
     expect(buildConfig.data.columns[0].cards.map(card => card.dataResource.id)).toEqual(['D1', 'D4']);
     expect(buildConfig.data.columns[1].cards.map(card => card.dataResource.id)).toEqual(['D2']);
@@ -205,7 +205,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.convert(config, collections, [], data, {}, {});
+    const buildConfig = converter.convert(config, collections, [], data, {collections: {}, linkTypes: {}}, {});
     expect(buildConfig.config.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass', 'LMR']);
     expect(buildConfig.data.columns[0].cards.map(card => card.dataResource.id)).toEqual(['D1', 'D4', 'D9']);
     expect(buildConfig.data.columns[1].cards.map(card => card.dataResource.id)).toEqual(['D2', 'D6']);
@@ -258,7 +258,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.convert(previousConfig, collections, [], data, {}, {});
+    const buildConfig = converter.convert(previousConfig, collections, [], data, {collections: {}, linkTypes: {}}, {});
     expect(buildConfig.config.columns.map(c => c.title)).toEqual(['LMR', 'Glass', 'Dance', 'Sport']);
     expect(buildConfig.data.columns[0].cards.map(card => card.dataResource.id)).toEqual(['D7', 'D10']);
     expect(buildConfig.data.columns[1].cards.map(card => card.dataResource.id)).toEqual(['D3', 'D5', 'D8']);

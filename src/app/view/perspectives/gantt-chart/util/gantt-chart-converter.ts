@@ -20,7 +20,7 @@
 import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
@@ -41,7 +41,6 @@ import {
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
-  objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
@@ -75,6 +74,7 @@ import {Configuration} from '../../../../../environments/configuration-type';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
+import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;
@@ -115,7 +115,7 @@ export class GanttChartConverter {
     collections: Collection[],
     linkTypes: LinkType[],
     data: DocumentsAndLinksData,
-    permissions: AllowedPermissionsMap,
+    permissions: ResourcesPermissions,
     query: Query,
     settings: ViewSettings,
     constraintData: ConstraintData
@@ -153,7 +153,7 @@ export class GanttChartConverter {
       tasks = tasks.sort((t1, t2) => this.compareTasks(t1, t2));
     }
 
-    const options = this.createGanttOptions(config, permissions, linkTypes);
+    const options = this.createGanttOptions(config, permissions);
     this.convertCount++;
     return {options, tasks};
   }
@@ -164,14 +164,9 @@ export class GanttChartConverter {
     return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
   }
 
-  private createGanttOptions(
-    config: GanttChartConfig,
-    permissions: AllowedPermissionsMap,
-    linkTypes: LinkType[]
-  ): GanttOptions {
-    const linkTypesMap = objectsByIdMap(linkTypes);
+  private createGanttOptions(config: GanttChartConfig, permissions: ResourcesPermissions): GanttOptions {
     const createTasks = (config.stemsConfigs || []).some(stemConfig =>
-      canCreateTaskByStemConfig(stemConfig, permissions, linkTypesMap)
+      canCreateTaskByStemConfig(stemConfig, permissions)
     );
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
@@ -290,11 +285,13 @@ export class GanttChartConverter {
     showDatesAsSwimlanes: boolean
   ): GanttTask[] {
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
-    const endConstraint = stemConfig.end && this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
+    const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
     const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
+    const namePermission = this.dataObjectAggregator.attributePermissions(stemConfig.name);
     const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
     const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
+    const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
 
     const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = dataObjectsInfo.reduce((map, item) => {
@@ -306,7 +303,9 @@ export class GanttChartConverter {
       const end = stemConfig.end && endDataResource && endDataResource.data[stemConfig.end.attributeId];
       if (isTaskValid(start, end, endConstraint)) {
         const id = helperDataId(item);
-        validTaskIds.push(id);
+        if (userCanEditDataResource(nameDataResource, nameResource, namePermission, this.constraintData?.currentUser)) {
+          validTaskIds.push(id);
+        }
         const dataResource = nameDataResource || startDataResource;
         const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
         if (parentId) {
@@ -399,6 +398,19 @@ export class GanttChartConverter {
         stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
       };
 
+      const userCanEditStart = userCanEditDataResource(
+        startDataResource,
+        startResource,
+        startPermission,
+        this.constraintData?.currentUser
+      );
+      const userCanEditEnd = userCanEditDataResource(
+        endDataResource,
+        endResource,
+        endPermission,
+        this.constraintData?.currentUser
+      );
+
       const names = isArray(name) ? name : [name];
       for (let i = 0; i < names.length; i++) {
         let nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).preview();
@@ -423,10 +435,18 @@ export class GanttChartConverter {
           allowedDependencies: canEditDependencies ? validTaskIds.filter(id => id !== taskId) : [],
           barColor,
           progressColor: taskColor || shadeColor(resourceColor, 0.3),
-          startDrag: startEditable && startPermission.writeWithView,
-          endDrag: endEditable && endPermission.writeWithView,
-          progressDrag: progressEditable && metadata.progressDataIds.length === 1 && progressPermission.writeWithView,
-          editable: startPermission.writeWithView && endPermission.writeWithView,
+          startDrag: startEditable && userCanEditStart,
+          endDrag: endEditable && userCanEditEnd,
+          progressDrag:
+            progressEditable &&
+            metadata.progressDataIds.length === 1 &&
+            userCanEditDataResource(
+              progressDataResources[0],
+              progressResource,
+              progressPermission,
+              this.constraintData?.currentUser
+            ),
+          editable: userCanEditStart && userCanEditEnd,
           textColor: contrastColor(barColor),
           swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
           minProgress,
@@ -512,7 +532,8 @@ export class GanttChartConverter {
       case ConstraintType.User:
       case ConstraintType.View:
       case ConstraintType.Boolean:
-        return dataValue.serialize();
+        const value = dataValue.serialize();
+        return isArray(value) ? value[0] : value;
       default:
         return dataValue.format();
     }
