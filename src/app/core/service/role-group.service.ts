@@ -269,7 +269,7 @@ export class RoleGroupService {
       case RoleType.TechConfig:
         return $localize`:@@organization.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations in all tables and link types in all projects in this organization.`;
       case RoleType.PerspectiveConfig:
-        return $localize`:@@organization.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage view configurations of all views in all projects in this organization.`;
+        return $localize`:@@organization.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage visual view configurations of all views in all projects in this organization.`;
       case RoleType.QueryConfig:
         return $localize`:@@organization.permission.transitive.role.tooltip.QueryConfig:A user can modify queries in all views in all projects in this organization.`;
     }
@@ -327,7 +327,7 @@ export class RoleGroupService {
       case RoleType.TechConfig:
         return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
       case RoleType.PerspectiveConfig:
-        return $localize`:@@project.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage view configurations of all views in this project.`;
+        return $localize`:@@project.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage visual view configurations of all views in this project.`;
       case RoleType.QueryConfig:
         return $localize`:@@project.permission.transitive.role.tooltip.QueryConfig:A user can modify queries in all views in this project.`;
     }
@@ -385,7 +385,7 @@ export class RoleGroupService {
 
   private viewRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@view.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
+      $localize`:@@view.permission.role.title:{type, select, Read {Read} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
       {type}
     );
   }
@@ -409,7 +409,7 @@ export class RoleGroupService {
       case RoleType.CommentContribute:
         return $localize`:@@view.permission.role.tooltip.CommentContribute:A user can comment all records in this view.`;
       case RoleType.PerspectiveConfig:
-        return $localize`:@@view.permission.role.tooltip.PerspectiveConfig:A user can manage the configuration of this view.`;
+        return $localize`:@@view.permission.role.tooltip.PerspectiveConfig:A user can manage the visual configuration of this view.`;
       case RoleType.QueryConfig:
         return $localize`:@@view.permission.role.tooltip.QueryConfig:A user can modify queries in this view.`;
     }

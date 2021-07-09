@@ -489,385 +489,196 @@
 			<trans-unit datatype="html" id="button.ok">
 				<source>OK</source>
 				<target>Oké</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">118</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">121</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Read} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source><target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">226</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">227</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
         <source>A user can see all projects, tables, views and links in all projects in this organization.</source><target state="new">A user can see all projects, tables, views and links in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">235</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">236</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
         <source>A user can see this organization.</source><target state="new">A user can see this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">237</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">238</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
         <source>A user can change and delete all projects, tables, views and links in all projects in this organization.</source><target state="new">A user can change and delete all projects, tables, views and links in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">240</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">241</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.</source><target state="new">A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">242</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.role.tooltip.ProjectContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">243</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.ProjectContribute" datatype="html">
         <source>A user can create new projects in this organization. They become a manager of the new project.</source><target state="new">A user can create new projects in this organization. They become a manager of the new project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">244</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.UserConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">245</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.UserConfig" datatype="html">
         <source>A user can add, modify, and delete users and their rights everywhere in this organization.</source><target state="new">A user can add, modify, and delete users everywhere in the organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">247</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.role.tooltip.UserConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">248</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can add, modify, and delete users in this organization (at the organizational level).</source><target state="new">A user can add, modify, and delete users in this organization (at the organizational level).</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">249</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataRead" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">250</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in all tables and views in all projects in this organization.</source><target state="new">A user can read all data in all tables and views in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">251</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataWrite" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">252</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in all tables and views in all projects in this organization.</source><target state="new">A user can modify all data in all tables and views in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">253</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataDelete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">254</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in all tables and views in all projects in this organization.</source><target state="new">A user can delete all records (rows) in all tables and views in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">255</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">256</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source><target state="new">A user can create, modify and delete their own records (rows) in all tables, links, and views in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">257</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CommentContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in all projects in this organization.</source><target state="new">A user can comment all records in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">259</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">260</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
         <source>A user can create tables in all projects in this organization. They become a manager of the new table.</source><target state="new">A user can create tables in all projects in this organization. They become a manager of the new table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">261</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.ViewContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">262</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.ViewContribute" datatype="html">
         <source>A user can create views in all projects in this organization. They become a manager of the new view.</source><target state="new">A user can create views in all projects in this organization. They become a manager of the new view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">263</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.LinkContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.LinkContribute" datatype="html">
         <source>A user can create link types in all projects in this organization. They become a manager of the new link type.</source><target state="new">A user can create link types in all projects in this organization. They become a manager of the new link type.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">265</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">266</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in tables and link types in all projects in this organization.</source><target state="new">A user can add, modify, and delete columns in tables and link types in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">267</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.TechConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">268</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations in all tables and link types in all projects in this organization.</source><target state="new">A user can add, modify, and delete automations on all resources in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">269</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
-        <source>A user can manage view configurations of all views in all projects in this organization.</source><target state="new">A user can manage view configurations of all views in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">271</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.QueryConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
+        <source>A user can manage visual view configurations of all views in all projects in this organization.</source><target state="new">A user can manage view configurations of all views in all projects in this organization.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">272</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in all views in all projects in this organization.</source><target state="new">A user can modify queries in all views in all projects in this organization.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">273</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.role.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">274</context></context-group></trans-unit><trans-unit id="project.permission.role.title" datatype="html">
         <source>{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users}}</source><target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">279</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.transitive.role.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">280</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.title" datatype="html">
         <source>{type, select, Read {Read All Resources} Manage {Manage All Resources} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source><target state="new">{type, select, Read {Read All Resources} Manage {Manage All Resources} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">286</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">287</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
         <source>A user can see all tables, views and links in this project. However for their content (data) there is a separate right.</source><target state="new">A user can see all tables, views and links in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">295</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">296</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
         <source>A user can see this project.</source><target state="new">A user can see this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">297</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">298</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
         <source>A user can change and delete all tables, views and links in this project.</source><target state="new">A user can change and delete all tables, views and links in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">300</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">301</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the project name, color, icon, description and can delete it.</source><target state="new">A user can change the project name, color, icon, description and can delete it.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">302</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.UserConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">303</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights everywhere in the project.</source><target state="new">A user can manage user roles everywhere in the project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">305</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.role.tooltip.UserConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">306</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this project (at the project level).</source><target state="new">A user can manage user roles in this project (at the project level).</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">307</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataRead" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">308</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in all tables and views in this project.</source><target state="new">A user can read all data in all tables and views in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">309</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataWrite" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">310</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in all tables and views in this project.</source><target state="new">A user can modify all data in all tables and views in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">311</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataDelete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">312</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in all tables and views in this project.</source><target state="new">A user can delete all records (rows) in all tables and views in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">313</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">314</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.</source><target state="new">A user can create, modify and delete their own records (rows) in all tables, links, and views in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">315</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CommentContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">316</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this project.</source><target state="new">A user can comment all records in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">317</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">318</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
         <source>A user can create tables in this project. They become a manager of the new table.</source><target state="new">A user can create tables in this project. They become a manager of the new table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">319</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.ViewContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">320</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.ViewContribute" datatype="html">
         <source>A user can create views in this project. They become a manager of the new view.</source><target state="new">A user can create views in this project. They become a manager of the new view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">321</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.LinkContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">322</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.LinkContribute" datatype="html">
         <source>A user can create link types in this project. They become a manager of the new link type.</source><target state="new">A user can create link types in this project. They become a manager of the new link type.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">323</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">324</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in all tables and link types in this project.</source><target state="new">A user can add, modify, and delete columns in tables and link types in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">325</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.TechConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">326</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations on all tables and link types in this project.</source><target state="new">A user can add, modify, and delete automations on all resources in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">327</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
-        <source>A user can manage view configurations of all views in this project.</source><target state="new">A user can manage view configurations of all views in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">329</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.QueryConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">328</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
+        <source>A user can manage visual view configurations of all views in this project.</source><target state="new">A user can manage view configurations of all views in this project.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">330</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in all views in this project.</source><target state="new">A user can modify queries in all views in this project.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">331</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">332</context></context-group></trans-unit><trans-unit id="collection.permission.role.title" datatype="html">
         <source>{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}</source><target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">346</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.Read" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">347</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Read" datatype="html">
         <source>A user can see this table.</source><target state="new">A user can see this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">354</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.Manage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">355</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the table name, color, icon, description and can delete it.</source><target state="new">A user can change the table name, color, icon, description and can delete it.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">356</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.UserConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">357</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this table.</source><target state="new">A user can can manage user roles in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">358</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.DataRead" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">359</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in this table.</source><target state="new">A user can read all data in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">360</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.DataWrite" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">361</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in this table.</source><target state="new">A user can modify all data in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">362</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.DataDelete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">363</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in this table.</source><target state="new">A user can delete all records (rows) in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">364</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">365</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in this table.</source><target state="new">A user can create, modify and delete their own records (rows) in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">366</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.CommentContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">367</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this table.</source><target state="new">A user can comment all records in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">368</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.AttributeEdit" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">369</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in this table.</source><target state="new">A user can add, modify, and delete columns in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">370</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.permission.role.tooltip.TechConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">371</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations in this table.</source><target state="new">A user can add, modify, and delete automations in this table.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">372</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.title" datatype="html">
-        <source>{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}</source><target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">387</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.Read" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">373</context></context-group></trans-unit><trans-unit id="view.permission.role.title" datatype="html">
+        <source>{type, select, Read {Read} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}</source><target state="new">{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">388</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Read" datatype="html">
         <source>A user can see this view.</source><target state="new">A user can see this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">395</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.Manage" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">396</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the view name, color, icon, folders and can delete it.</source><target state="new">A user can change the view name, color, icon, folders and can delete it.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">397</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.UserConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">398</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this view.</source><target state="new">A user can can manage user roles in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">399</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.DataRead" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">400</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in this view.</source><target state="new">A user can read all data in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">401</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.DataWrite" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">402</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in this view.</source><target state="new">A user can modify all data in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">403</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.DataDelete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">404</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in this view.</source><target state="new">A user can delete all records (rows) in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">405</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">406</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in this view.</source><target state="new">A user can create, modify and delete their own records (rows) in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">407</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.CommentContribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">408</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this view.</source><target state="new">A user can comment all records in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">409</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.PerspectiveConfig" datatype="html">
-        <source>A user can manage the configuration of this view.</source><target state="new">A user can manage view configurations in all perspectives.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">411</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.permission.role.tooltip.QueryConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">410</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.PerspectiveConfig" datatype="html">
+        <source>A user can manage the visual configuration of this view.</source><target state="new">A user can manage view configurations in all perspectives.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">412</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in this view.</source><target state="new">A user can modify queries in this view.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">413</context>
-        </context-group>
-      </trans-unit><trans-unit id="organization.permission.role.group" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">414</context></context-group></trans-unit><trans-unit id="organization.permission.role.group" datatype="html">
         <source>{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Resources} User {User Management} Config {Manage Resources}}</source><target state="new">{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Resources} User {User Management} Config {Manage Resources}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">419</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">420</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.onward">
 				<source>Onward!</source>
 				<target>Tovább!</target>
@@ -2310,11 +2121,11 @@
 			<trans-unit datatype="html" id="file.not.exist">
 				<source>Table does not exist</source>
 				<target>A táblázat nem létezik.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">112</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">116</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="file.permission.missing">
 				<source>You do not have permission to access this table</source>
 				<target>Nincs engedélyed a tábla eléréséhez.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">117</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">121</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="file.upload.max.size.error">
 				<source>Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</source>
 				<target><x id="size" equiv-text="{{size}}"/>
@@ -2900,7 +2711,7 @@
 			<trans-unit datatype="html" id="organization.not.exist">
 				<source>Organization does not exist</source>
 				<target>A szervezet nem létezik</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">46</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="organization.payment.create.fail">
 				<source>Could not create your new service order</source>
 				<target>Nem lehet létrehozni az új szolgáltatási megrendelést</target>
@@ -2944,7 +2755,7 @@
 				<trans-unit datatype="html" id="organization.permission.missing">
 					<source>You do not have permission to access this organization</source>
 					<target>Nincs engedélyed a szervezet elérésére</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="project.settings.collections.deleteSampleData" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="project.settings.collections.deleteSampleData" datatype="html">
         <source>Delete sample data from the project</source><target>Törölje a minta adatokat a projektből</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
@@ -3815,7 +3626,7 @@
 				<trans-unit datatype="html" id="project.not.exist">
 					<source>Project does not exist</source>
 					<target>A projekt nem létezik</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">52</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.permission.change.fail">
 					<source>Could not change the project permissions</source>
 					<target>Nem lehet módosítani a projekt engedélyeit</target>
@@ -3823,7 +3634,7 @@
 				<trans-unit datatype="html" id="project.permission.missing">
 					<source>You do not have permission to access this project</source>
 					<target>Nincs engedélyed a projekt eléréséhez</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">70</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">74</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="project.settings.collections.count">
 					<source>Number of tables</source>
 					<target>Táblázatok száma</target>
@@ -4386,19 +4197,19 @@
 				<trans-unit datatype="html" id="rules.blockly.action.message.error">
 					<source>Error</source>
 					<target>Hiba</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">118</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.info">
 					<source>Information</source>
 					<target>Információ</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">113</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">116</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.success">
 					<source>Success</source>
 					<target>Siker</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">112</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="rules.blockly.action.message.warning">
 					<source>Warning</source>
 					<target>Figyelmeztetés</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">114</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">117</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="search.all.collections">
 					<source> Tables </source>
 					<target>Táblázatok</target>
