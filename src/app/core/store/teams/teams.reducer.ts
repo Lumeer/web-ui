@@ -24,7 +24,7 @@ export function teamsReducer(state: TeamsState = initialTeamsState, action: Team
   switch (action.type) {
     case TeamsActionType.GET_SUCCESS:
       const newState = {...state, loaded: {...state.loaded, [action.payload.organizationId]: true}};
-      return teamsAdapter.addMany(action.payload.teams, newState);
+      return teamsAdapter.upsertMany(action.payload.teams, newState);
     case TeamsActionType.CREATE_SUCCESS:
       return teamsAdapter.addOne(action.payload.team, state);
     case TeamsActionType.UPDATE_SUCCESS:
