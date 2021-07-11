@@ -62,6 +62,7 @@ import {DataResourcesAction} from '../data-resources/data-resources.action';
 import {UserPermissionsAction} from '../user-permissions/user-permissions.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import * as DetailActions from './../details/detail.actions';
+import {TeamsAction} from '../teams/teams.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -550,6 +551,8 @@ export class ProjectsEffects {
       mergeMap(action => {
         const {nextAction} = action.payload;
         const actions: Action[] = [
+          new OrganizationsAction.Clear(),
+          new ProjectsAction.Clear(),
           new CollectionsAction.Clear(),
           new DocumentsAction.Clear(),
           new DataResourcesAction.Clear(),
@@ -567,6 +570,8 @@ export class ProjectsEffects {
           new WorkflowsAction.Clear(),
           new SearchesAction.Clear(),
           new UserPermissionsAction.Clear(),
+          new UsersAction.Clear(),
+          new TeamsAction.Clear(),
         ];
 
         if (nextAction) {

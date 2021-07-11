@@ -54,6 +54,8 @@ export function projectsReducer(
       return {...state, templates: action.payload.templates, templatesState: LoadingState.Loaded};
     case ProjectsActionType.GET_TEMPLATES_FAILURE:
       return {...state, templatesState: LoadingState.Loaded};
+    case ProjectsActionType.CLEAR:
+      return initialProjectsState;
     default:
       return state;
   }

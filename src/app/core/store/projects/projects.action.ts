@@ -75,6 +75,8 @@ export enum ProjectsActionType {
   DOWNLOAD_RAW_CONTENT = '[Projects] Download Raw Content',
   DOWNLOAD_RAW_CONTENT_SUCCESS = '[Projects] Download Raw Content :: Success',
   DOWNLOAD_RAW_CONTENT_FAILURE = '[Projects] Download Raw Content :: Failure',
+
+  CLEAR = '[Projects] Clear',
 }
 
 export namespace ProjectsAction {
@@ -311,6 +313,10 @@ export namespace ProjectsAction {
     public constructor(public payload: {data: HttpResponse<Blob>; projectName?: string}) {}
   }
 
+  export class Clear implements Action {
+    public readonly type = ProjectsActionType.CLEAR;
+  }
+
   export type All =
     | Get
     | GetSingle
@@ -344,5 +350,6 @@ export namespace ProjectsAction {
     | GetTemplatesFailure
     | DismissWarningMessage
     | SwitchWorkspace
-    | ClearWorkspaceData;
+    | ClearWorkspaceData
+    | Clear;
 }
