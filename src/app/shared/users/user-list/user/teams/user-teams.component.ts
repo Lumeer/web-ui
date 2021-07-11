@@ -107,6 +107,7 @@ export class UserTeamsComponent implements OnChanges {
         }
         return;
       case KeyCode.Escape:
+        this.selectedTeams$.next(this.teams?.filter(team => this.selectedTeamIds?.includes(team.id)) || []);
         this.preventSaveAndBlur();
         this.resetSearchInput();
         return;
