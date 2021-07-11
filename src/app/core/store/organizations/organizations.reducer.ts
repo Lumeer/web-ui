@@ -44,6 +44,8 @@ export function organizationsReducer(
       return onChangePermission(state, action);
     case OrganizationsActionType.CHANGE_PERMISSION_FAILURE:
       return onChangePermission(state, action);
+    case OrganizationsActionType.CLEAR:
+      return initialOrganizationsState;
     default:
       return state;
   }

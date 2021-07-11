@@ -19,7 +19,7 @@
 
 import {CollectionDto} from '../../dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
-import {convertPermissionsDtoToModel, convertPermissionsModelToDto} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {
   Collection,
@@ -73,8 +73,7 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     color: model.color,
     icon: model.icon,
     priority: model.priority,
-    attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
-    permissions: model.permissions ? convertPermissionsModelToDto(model.permissions) : null,
+    attributes: model.attributes?.map(convertAttributeModelToDto) || [],
     rules: convertRulesToDto(model.rules),
     purpose: convertCollectionPurposeModelToDto(model.purpose),
   };
