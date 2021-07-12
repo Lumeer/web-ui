@@ -87,6 +87,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public minWidth: number;
 
   @Input()
+  public editable = true;
+
+  @Input()
   public dropdownPositions = [
     DropdownPosition.BottomStart,
     DropdownPosition.TopStart,
@@ -157,6 +160,14 @@ export class OptionsDropdownComponent implements OnChanges {
     this.selectOption.emit(option);
     if (!this.multiSelect) {
       this.close();
+    }
+  }
+
+  public toggle() {
+    if (this.dropdown?.isOpen()) {
+      this.close();
+    } else {
+      this.open();
     }
   }
 

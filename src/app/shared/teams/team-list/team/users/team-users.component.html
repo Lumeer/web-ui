@@ -12,13 +12,13 @@
        [style.min-width.px]="avatarSize"
        [style.min-height.px]="avatarSize">
 
-  <div #textInputParent *ngIf="editable">
-    <button class="btn btn-sm btn-link text-nowrap py-0" *ngIf="!(suggesting$ | async)"
+  <div #textInputParent>
+    <button class="btn btn-sm btn-link text-nowrap py-0" *ngIf="editable && !(suggesting$ | async)"
             (click)="$event.stopPropagation(); onEditClick()">
       <i class="far fa-users mr-1"></i><span i18n="@@edit">Edit</span>
     </button>
 
-    <input *ngIf="suggesting$ | async"
+    <input *ngIf="editable && (suggesting$ | async)"
            #textInput
            [(ngModel)]="name"
            (blur)="onBlur()"
@@ -34,10 +34,11 @@
 
     <options-dropdown [options]="users | filterUsers:name"
                       [showBackdrop]="false"
-                      [closeOnClickOutside]="false"
+                      [closeOnClickOutside]="!editable"
                       [origin]="textInputParent"
                       [highlightedText]="name"
                       [multiSelect]="true"
+                      [editable]="editable"
                       [dropdownPositions]="dropdownPositions"
                       [selectedValues]="selectedUsers | usersIds"
                       [firstItemActive]="false"

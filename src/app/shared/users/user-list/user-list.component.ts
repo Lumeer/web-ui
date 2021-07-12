@@ -17,16 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
@@ -34,12 +25,14 @@ import {Role} from '../../../core/store/permissions/permissions';
 import {Resource} from '../../../core/model/resource';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {Team} from '../../../core/store/teams/team';
-import {Observable} from 'rxjs';
-import {selectAllTeams, selectTeamsForWorkspace} from '../../../core/store/teams/teams.state';
+import {BehaviorSubject} from 'rxjs';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
+import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
+import {RoleType} from '../../../core/model/role-type';
+import {NotificationButton} from '../../../core/notifications/notification-button';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {deepObjectCopy} from '../../utils/common.utils';
 
 @Component({
   selector: 'user-list',
@@ -47,12 +40,15 @@ import {ServiceLimits} from '../../../core/store/organizations/service-limits/se
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, OnChanges {
+export class UserListComponent implements OnChanges {
   @Input()
   public resourceType: ResourceType;
 
   @Input()
   public users: User[];
+
+  @Input()
+  public teams: Team[];
 
   @Input()
   public currentUser: User;
@@ -84,20 +80,19 @@ export class UserListComponent implements OnInit, OnChanges {
   @Output()
   public userTeamsChange = new EventEmitter<{user: User; teams: string[]}>();
 
-  public teams$: Observable<Team[]>;
+  public teams$ = new BehaviorSubject<Team[]>([]);
 
   public deletableUserIds: string[];
   public editableUserIds: string[];
 
-  constructor(private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
-  }
+  constructor(private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.users || changes.resourceType || changes.currentUser) {
       this.checkUserIds();
+    }
+    if (changes.teams) {
+      this.teams$.next(this.teams);
     }
   }
 
@@ -112,5 +107,47 @@ export class UserListComponent implements OnInit, OnChanges {
 
   public onUserRolesChanged(user: User, roles: Role[]) {
     this.userRolesChange.emit({user, roles});
+  }
+
+  public onUserTeamsChange(data: {user: User; teams: string[]}) {
+    if (data.user.id === this.currentUser.id) {
+      const userTeams = (this.teams || []).filter(team => data.teams.includes(team.id));
+      const userWithTeams = {...data.user, teams: userTeams};
+      if (this.userLostUserConfig(this.organization, this.project, this.resource, userWithTeams)) {
+        this.askToPerformUpdate(
+          () => this.userTeamsChange.emit(data),
+          () => this.resetTeams()
+        );
+        return;
+      }
+    }
+
+    this.userTeamsChange.emit(data);
+  }
+
+  private resetTeams() {
+    this.teams$.next(deepObjectCopy(this.teams));
+  }
+
+  private askToPerformUpdate(confirm: () => void, cancel?: () => void) {
+    const message = $localize`:@@teams.list.lost.permissions.message:By confirming this action, you will lose the rights to manage users and teams and will not be able to revert it back.`;
+    const title = $localize`:@@teams.list.lost.permissions.title:Be careful, there is risk of losing access.`;
+    const yesButton = {text: $localize`:@@teams.list.lost.permissions.confirm:Save anyway`, action: confirm};
+    const noButton = {text: $localize`:@@teams.list.lost.permissions.close:Cancel`, action: cancel};
+
+    const buttons: NotificationButton[] = [noButton, yesButton];
+
+    this.notificationService.confirm(message, title, buttons, 'warning');
+  }
+
+  private userLostUserConfig(organization: Organization, project: Project, resource: Resource, user: User): boolean {
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        return !userHasRoleInOrganization(resource, user, RoleType.UserConfig);
+      case ResourceType.Project:
+        return !userHasRoleInProject(organization, resource, user, RoleType.UserConfig);
+      default:
+        return !userHasRoleInResource(organization, project, resource, user, RoleType.UserConfig);
+    }
   }
 }

@@ -176,7 +176,9 @@ export class UserTeamsComponent implements OnChanges {
   }
 
   public onSelectOption(option: DropdownOption) {
-    this.toggleOption(option);
+    if (this.editable) {
+      this.toggleOption(option);
+    }
   }
 
   private blurCleanup() {
@@ -187,7 +189,7 @@ export class UserTeamsComponent implements OnChanges {
 
   public onMouseDown(event: MouseEvent) {
     // prevent hide dropdown on mouse down (instead input)
-    if (this.textInput && !this.textInput.nativeElement.contains(event.target as any)) {
+    if (!this.editable || (this.textInput && !this.textInput.nativeElement.contains(event.target as any))) {
       event.stopImmediatePropagation();
       event.preventDefault();
     }
@@ -200,8 +202,10 @@ export class UserTeamsComponent implements OnChanges {
   public onClick() {
     if (this.suggesting$.value) {
       this.stopSuggesting();
-    } else {
+    } else if (this.editable) {
       this.startSuggesting();
+    } else {
+      this.dropdown?.toggle();
     }
   }
 

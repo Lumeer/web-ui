@@ -8,7 +8,7 @@
     "bundlesize": "bundlesize",
     "docs": "./node_modules/.bin/compodoc -p src/tsconfig.app.json -d ../web-ui-docs -n 'Lumeer Web UI documentation'",
     "format:check": "prettier --check '**/*.{ts,js,json,scss,md}'",
-    "format:fix": "prettier --write '**/*.{ts,js,json,scss,md}'",
+    "format:fix": "prettier --write",
     "http-server": "angular-http-server --path ./dist/lumeer -p 7000",
     "i18n": "ng extract-i18n --output-path src/i18n --format xlf && npm run i18n-merge",
     "i18n-merge": "xliffmerge --profile xliffmerge.json en cs hu",

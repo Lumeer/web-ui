@@ -35,7 +35,6 @@ import {KeyCode} from '../../../../key-code';
 import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
 import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
-import {Team} from '../../../../../core/store/teams/team';
 
 @Component({
   selector: 'team-users',
@@ -190,7 +189,7 @@ export class TeamUsersComponent implements OnChanges {
 
   public onMouseDown(event: MouseEvent) {
     // prevent hide dropdown on mouse down (instead input)
-    if (this.textInput && !this.textInput.nativeElement.contains(event.target as any)) {
+    if (!this.editable || (this.textInput && !this.textInput.nativeElement.contains(event.target as any))) {
       event.stopImmediatePropagation();
       event.preventDefault();
     }
@@ -203,8 +202,10 @@ export class TeamUsersComponent implements OnChanges {
   public onClick() {
     if (this.suggesting$.value) {
       this.stopSuggesting();
-    } else {
+    } else if (this.editable) {
       this.startSuggesting();
+    } else {
+      this.dropdown?.toggle();
     }
   }
 
