@@ -248,10 +248,17 @@ export class PusherService implements OnDestroy {
   }
 
   private forceRefreshWorkspaceData() {
-    this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));
-    this.store$.dispatch(new CollectionsAction.Get({force: true}));
-    this.store$.dispatch(new LinkTypesAction.Get({force: true}));
-    this.store$.dispatch(new ViewsAction.Get({force: true}));
+    const organizationId = this.getCurrentOrganizationId();
+    const projectId = this.getCurrentProjectId();
+    if (organizationId) {
+      this.store$.dispatch(new ProjectsAction.Get({organizationId, force: true}));
+      if (projectId) {
+        const workspace = {organizationId, projectId};
+        this.store$.dispatch(new CollectionsAction.Get({workspace, force: true}));
+        this.store$.dispatch(new LinkTypesAction.Get({workspace, force: true}));
+        this.store$.dispatch(new ViewsAction.Get({workspace, force: true}));
+      }
+    }
   }
 
   private bindProjectEvents() {
@@ -1016,7 +1023,11 @@ export class PusherService implements OnDestroy {
       )
       .subscribe(models => {
         this.currentOrganization = models.organization;
-        this.currentProject = models.project;
+        if (models.organization) {
+          this.currentProject = models.project || this.currentProject;
+        } else {
+          this.currentProject = null;
+        }
       });
   }
 

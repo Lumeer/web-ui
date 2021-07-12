@@ -6,13 +6,13 @@
   <div *ngFor="let team of selectedTeams; trackBy: trackByTeam"
        class="badge badge-lg badge-pill badge-info mr-2 mb-1">{{team.name}}</div>
 
-  <div #textInputParent *ngIf="editable">
-    <button class="btn btn-sm btn-link text-nowrap py-0 mb-1" *ngIf="!(suggesting$ | async)"
+  <div #textInputParent>
+    <button class="btn btn-sm btn-link text-nowrap py-0 mb-1" *ngIf="editable && !(suggesting$ | async)"
             (click)="$event.stopPropagation(); onEditClick()">
       <i class="far fa-users mr-1"></i><span i18n="@@edit">Edit</span>
     </button>
 
-    <input *ngIf="suggesting$ | async"
+    <input *ngIf="editable && (suggesting$ | async)"
            #textInput
            [(ngModel)]="name"
            (blur)="onBlur()"
@@ -28,15 +28,17 @@
 
     <options-dropdown [options]="teams | filterTeams:name"
                       [showBackdrop]="false"
-                      [closeOnClickOutside]="false"
+                      [closeOnClickOutside]="!editable"
                       [origin]="textInputParent"
                       [highlightedText]="name"
                       [multiSelect]="true"
+                      [editable]="editable"
                       [dropdownPositions]="dropdownPositions"
                       [selectedValues]="selectedTeams | teamsIds"
                       [firstItemActive]="false"
                       (selectOption)="onSelectOption($event)">
     </options-dropdown>
   </div>
+
 
 </div>

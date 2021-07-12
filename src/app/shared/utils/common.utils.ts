@@ -241,3 +241,7 @@ export function computeElementPositionInParent(event: MouseEvent, parentTag: str
 export function objectChanged(change: SimpleChange): boolean {
   return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
 }
+
+export function getLastUrlPart(url: string): string {
+  return (url || '').split('?')[0]?.split('/')?.pop();
+}

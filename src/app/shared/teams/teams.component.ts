@@ -40,6 +40,8 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {objectsByIdMap} from '../utils/common.utils';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 @Component({
   selector: 'teams',
@@ -51,6 +53,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   @Input() public resourceType: ResourceType;
 
   public teams$: Observable<Team[]>;
+  public currentUser$: Observable<User>;
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
   public serviceLimits$: Observable<ServiceLimits>;
@@ -87,6 +90,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
       map(teams => this.mapAndSortTeams(teams))
     );
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 
     this.resource$ = this.store$.pipe(
       select(this.getSelector()),

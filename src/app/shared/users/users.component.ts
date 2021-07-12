@@ -43,6 +43,8 @@ import mixpanel from 'mixpanel-browser';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {Team} from '../../core/store/teams/team';
+import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 
 @Component({
   selector: 'users',
@@ -54,6 +56,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   public resourceType: ResourceType;
 
   public users$: Observable<User[]>;
+  public teams$: Observable<Team[]>;
   public currentUser$: Observable<User>;
   public serviceLimits$: Observable<ServiceLimits>;
   public organization$ = new BehaviorSubject<Organization>(null);
@@ -150,6 +153,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
 
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace), map(this.sortUsers));
+    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
     this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));

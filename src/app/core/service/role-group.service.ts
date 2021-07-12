@@ -105,7 +105,11 @@ export class RoleGroupService {
     return [
       {
         order: 1,
-        roles: [this.createProjectRole(RoleType.Read), this.createProjectRole(RoleType.Manage)],
+        roles: [
+          this.createProjectRole(RoleType.Read),
+          this.createProjectRole(RoleType.Manage),
+          this.createProjectRole(RoleType.TechConfig),
+        ],
       },
       {
         title: this.translateGroupType(RoleGroupType.User),
@@ -277,14 +281,14 @@ export class RoleGroupService {
 
   private projectRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@project.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users}}`,
+      $localize`:@@project.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences}}`,
       {type}
     );
   }
 
   private workspaceTransitiveRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.permission.transitive.role.title:{type, select, Read {Read All Resources} Manage {Manage All Resources} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+      $localize`:@@organization.permission.transitive.role.title:{type, select, Read {Read All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
       {type}
     );
   }
@@ -306,6 +310,11 @@ export class RoleGroupService {
           return $localize`:@@project.permission.transitive.role.tooltip.UserConfig:A user can manage user rights everywhere in the project.`;
         }
         return $localize`:@@project.permission.role.tooltip.UserConfig:A user can manage user rights in this project (at the project level).`;
+      case RoleType.TechConfig:
+        if (transitive) {
+          return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
+        }
+        return $localize`:@@project.permission.role.tooltip.TechConfig:A user can manage sequences and publish project`;
       case RoleType.DataRead:
         return $localize`:@@project.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in this project.`;
       case RoleType.DataWrite:
@@ -324,8 +333,6 @@ export class RoleGroupService {
         return $localize`:@@project.permission.transitive.role.tooltip.LinkContribute:A user can create link types in this project. They become a manager of the new link type.`;
       case RoleType.AttributeEdit:
         return $localize`:@@project.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in all tables and link types in this project.`;
-      case RoleType.TechConfig:
-        return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
       case RoleType.PerspectiveConfig:
         return $localize`:@@project.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage visual view configurations of all views in this project.`;
       case RoleType.QueryConfig:
@@ -417,7 +424,7 @@ export class RoleGroupService {
 
   private translateGroupType(type: RoleGroupType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.permission.role.group:{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Resources} User {User Management} Config {Manage Resources}}`,
+      $localize`:@@organization.permission.role.group:{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Tables, Links and Views} User {User Management} Config {Manage Tables, Links and Views}}`,
       {type}
     );
   }

@@ -81,7 +81,7 @@ import {DataInputConfiguration} from '../../../../../../../shared/data-input/dat
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
-import * as Pressure from 'Pressure';
+import * as pressure from 'pressure';
 
 @Component({
   selector: 'table-data-cell',
@@ -188,7 +188,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
     let fullyTouched = false;
     let touchEvent = null;
-    Pressure.set(
+    pressure.set(
       this.element.nativeElement,
       {
         change: (force, event) => {

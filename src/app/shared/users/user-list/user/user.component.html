@@ -3,7 +3,7 @@
 </div>
 
 <div class="pb-2 pt-3">
-  <user-teams [class.cursor-pointer]="changeTeams"
+  <user-teams [class.cursor-pointer]="true"
               [teams]="teams"
               [selectedTeamIds]="user | filterUserTeams:teams"
               [editable]="changeTeams"
