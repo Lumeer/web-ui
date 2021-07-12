@@ -1,4 +1,4 @@
-<div class="mt-2 mb-5" *ngIf="dataLoaded$ | async; else loading">
+<div class="mt-2 pb-5" *ngIf="dataLoaded$ | async; else loading">
 
   <ng-container
     *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasTaskCollection: hasTaskCollection$ | async, showTaskTab: showTaskTab$ | async } as data">

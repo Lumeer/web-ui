@@ -34,15 +34,16 @@ import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Team} from '../../../core/store/teams/team';
 import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
-import {Permission, PermissionType, Role} from '../../../core/store/permissions/permissions';
+import {Permission, Permissions, PermissionType, Role} from '../../../core/store/permissions/permissions';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {Resource} from '../../../core/model/resource';
 import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
 import {RoleType} from '../../../core/model/role-type';
 import {PermissionsHelper} from '../../../core/store/permissions/permissions.helper';
+import {deepObjectCopy} from '../../utils/common.utils';
 
 @Component({
   selector: 'team-list',
@@ -87,6 +88,8 @@ export class TeamListComponent implements OnInit, OnChanges {
   public groupsAreEditable: boolean;
 
   public users$: Observable<User[]>;
+  public permissions$ = new BehaviorSubject<Permissions>(null);
+  public teams$ = new BehaviorSubject<Team[]>([]);
 
   constructor(private store$: Store<AppState>) {}
 
@@ -97,9 +100,13 @@ export class TeamListComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.teams) {
       this.teamIds = (this.teams || []).map(team => team.id);
+      this.teams$.next(this.teams);
     }
     if (changes.serviceLimits) {
       this.groupsAreEditable = this.serviceLimits?.groups || false;
+    }
+    if(changes.resource) {
+      this.permissions$.next(this.resource?.permissions);
     }
   }
 
@@ -109,6 +116,7 @@ export class TeamListComponent implements OnInit, OnChanges {
     teams[teamIndex] = team;
 
     if (this.currentUserLostUserConfig(this.organization, this.project, this.resource, teams)) {
+      this.teams$.next(deepObjectCopy(this.teams));
       console.log('lost right by team update');
     } else {
       this.teamUpdated.emit(team);
@@ -139,6 +147,7 @@ export class TeamListComponent implements OnInit, OnChanges {
     const newResource = {...this.resource, permissions: newPermissions};
 
     if (this.currentUserLostUserConfig(this.organization, this.project, newResource, this.teams)) {
+      this.permissions$.next(deepObjectCopy(this.resource.permissions));
       console.log('lost right by team roles change');
     } else {
       this.teamRolesChange.emit(data);

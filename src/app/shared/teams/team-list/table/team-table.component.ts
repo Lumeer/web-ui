@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
 import {Permissions, Role} from '../../../../core/store/permissions/permissions';
@@ -31,7 +31,7 @@ import {Project} from '../../../../core/store/projects/project';
   styleUrls: ['./team-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TeamTableComponent {
+export class TeamTableComponent implements OnChanges {
   @Input()
   public users: User[];
 
@@ -84,5 +84,9 @@ export class TeamTableComponent {
 
   public trackByTeam(index: number, team: Team): string {
     return team.id;
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
   }
 }

@@ -2,7 +2,7 @@
                    [width]="sidebarWidth"
                    (widthChanged)="sidebarResize.emit($event)">
 
-  <workflow-tables class="d-block ml-3 content"
+  <workflow-tables class="d-block ml-3 pb-3 content"
                    [class.mr-3]="!selectedDocument || !selectedCollection"
                    [collections]="collections"
                    [data]="data"

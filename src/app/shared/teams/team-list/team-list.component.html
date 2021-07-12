@@ -1,14 +1,14 @@
 <div *ngIf="groupsAreEditable && (resourceType | isOrganizationType)" class="mt-4">
   <h4 class="card-title" i18n="@@teams.header.title.main">Start building a new team</h4>
-  <new-team [teams]="teams"
+  <new-team [teams]="teams$ | async"
             (teamCreated)="teamCreated.emit($event)">
   </new-team>
 </div>
 <team-table class="d-block mt-4"
             [editableTeams]="groupsAreEditable"
             [resourceType]="resourceType"
-            [permissions]="resource.permissions"
-            [teams]="teams"
+            [permissions]="permissions$ | async"
+            [teams]="teams$ | async"
             [users]="users$ | async"
             [color]="resource.color"
             [editable]="groupsAreEditable && (resourceType | isOrganizationType)"
