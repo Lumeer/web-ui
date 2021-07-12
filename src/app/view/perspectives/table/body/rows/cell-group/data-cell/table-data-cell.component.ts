@@ -874,6 +874,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onCreateLink(data: {linkInstance: LinkInstance}) {
+    if (!this.isPreviousLinkedRowInitialized()) {
+      this.showUninitializedLinkedRowWarningAndResetValue();
+      return;
+    }
     this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: data.linkInstance}));
   }
 
