@@ -75,7 +75,8 @@
               "file-saver",
               "moment-timezone",
               "coordinate-parser",
-              "util"
+              "util",
+              "Progress"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
