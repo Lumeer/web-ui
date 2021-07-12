@@ -105,7 +105,11 @@ export class RoleGroupService {
     return [
       {
         order: 1,
-        roles: [this.createProjectRole(RoleType.Read), this.createProjectRole(RoleType.Manage)],
+        roles: [
+          this.createProjectRole(RoleType.Read),
+          this.createProjectRole(RoleType.Manage),
+          this.createProjectRole(RoleType.TechConfig),
+        ],
       },
       {
         title: this.translateGroupType(RoleGroupType.User),
@@ -277,7 +281,7 @@ export class RoleGroupService {
 
   private projectRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@project.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users}}`,
+      $localize`:@@project.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences}}`,
       {type}
     );
   }
@@ -306,6 +310,11 @@ export class RoleGroupService {
           return $localize`:@@project.permission.transitive.role.tooltip.UserConfig:A user can manage user rights everywhere in the project.`;
         }
         return $localize`:@@project.permission.role.tooltip.UserConfig:A user can manage user rights in this project (at the project level).`;
+      case RoleType.TechConfig:
+        if (transitive) {
+          return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
+        }
+        return $localize`:@@project.permission.role.tooltip.TechConfig:A user can manage sequences and publish project`;
       case RoleType.DataRead:
         return $localize`:@@project.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in this project.`;
       case RoleType.DataWrite:
@@ -324,8 +333,6 @@ export class RoleGroupService {
         return $localize`:@@project.permission.transitive.role.tooltip.LinkContribute:A user can create link types in this project. They become a manager of the new link type.`;
       case RoleType.AttributeEdit:
         return $localize`:@@project.permission.transitive.role.tooltip.AttributeEdit:A user can add, modify, and delete columns in all tables and link types in this project.`;
-      case RoleType.TechConfig:
-        return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
       case RoleType.PerspectiveConfig:
         return $localize`:@@project.permission.transitive.role.tooltip.PerspectiveConfig:A user can manage visual view configurations of all views in this project.`;
       case RoleType.QueryConfig:

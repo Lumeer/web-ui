@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
@@ -40,6 +40,7 @@ import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -61,6 +62,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private store$: Store<AppState>,
     private notificationService: NotificationService
   ) {}
@@ -134,7 +136,10 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
         )
         .subscribe(organization => this.organization$.next({...organization}))
     );
-    this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
+    this.permissions$ = this.store$.pipe(
+      select(selectOrganizationPermissions),
+      tap(permissions => this.checkCurrentTab(permissions))
+    );
 
     this.subscriptions.add(
       this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url))
@@ -160,6 +165,35 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       ),
       map(({codes, organization}) => (codes && codes.filter(code => code !== organization.code)) || [])
     );
+  }
+
+  private checkCurrentTab(permissions: AllowedPermissions) {
+    const currentTab = getLastUrlPart(this.router.url);
+    if (this.isInTabWithoutPermissions(permissions, currentTab)) {
+      this.navigateToAnyTab(permissions);
+    }
+  }
+
+  private isInTabWithoutPermissions(permissions: AllowedPermissions, tab: string) {
+    switch (tab) {
+      case 'detail':
+        return !permissions?.roles?.Manage;
+      case 'users':
+      case 'teams':
+        return !permissions?.roles?.UserConfig;
+      default:
+        return false;
+    }
+  }
+
+  private navigateToAnyTab(permissions: AllowedPermissions) {
+    if (permissions?.roles?.Manage) {
+      this.router.navigate(['detail'], {relativeTo: this.route});
+    } else if (permissions?.roles?.UserConfig) {
+      this.router.navigate(['users'], {relativeTo: this.route});
+    } else {
+      this.goBack();
+    }
   }
 
   private deleteOrganization() {

@@ -44,6 +44,8 @@ import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} 
 import {RoleType} from '../../../core/model/role-type';
 import {PermissionsHelper} from '../../../core/store/permissions/permissions.helper';
 import {deepObjectCopy} from '../../utils/common.utils';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {NotificationButton} from '../../../core/notifications/notification-button';
 
 @Component({
   selector: 'team-list',
@@ -91,7 +93,7 @@ export class TeamListComponent implements OnInit, OnChanges {
   public permissions$ = new BehaviorSubject<Permissions>(null);
   public teams$ = new BehaviorSubject<Team[]>([]);
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
@@ -105,7 +107,7 @@ export class TeamListComponent implements OnInit, OnChanges {
     if (changes.serviceLimits) {
       this.groupsAreEditable = this.serviceLimits?.groups || false;
     }
-    if(changes.resource) {
+    if (changes.resource) {
       this.permissions$.next(this.resource?.permissions);
     }
   }
@@ -116,11 +118,17 @@ export class TeamListComponent implements OnInit, OnChanges {
     teams[teamIndex] = team;
 
     if (this.currentUserLostUserConfig(this.organization, this.project, this.resource, teams)) {
-      this.teams$.next(deepObjectCopy(this.teams));
-      console.log('lost right by team update');
+      this.askToPerformUpdate(
+        () => this.teamUpdated.emit(team),
+        () => this.resetTeams()
+      );
     } else {
       this.teamUpdated.emit(team);
     }
+  }
+
+  private resetTeams() {
+    this.teams$.next(deepObjectCopy(this.teams));
   }
 
   public onTeamDeleted(team: Team) {
@@ -129,7 +137,7 @@ export class TeamListComponent implements OnInit, OnChanges {
     teams.splice(teamIndex, 1);
 
     if (this.currentUserLostUserConfig(this.organization, this.project, this.resource, teams)) {
-      console.log('lost right by team delete');
+      this.askToPerformUpdate(() => this.teamDeleted.emit(team));
     } else {
       this.teamDeleted.emit(team);
     }
@@ -147,15 +155,28 @@ export class TeamListComponent implements OnInit, OnChanges {
     const newResource = {...this.resource, permissions: newPermissions};
 
     if (this.currentUserLostUserConfig(this.organization, this.project, newResource, this.teams)) {
-      this.permissions$.next(deepObjectCopy(this.resource.permissions));
-      console.log('lost right by team roles change');
+      this.askToPerformUpdate(
+        () => this.teamRolesChange.emit(data),
+        () => this.resetPermissions()
+      );
     } else {
       this.teamRolesChange.emit(data);
     }
   }
 
-  private askToPerformUpdate() {
+  private resetPermissions() {
+    this.permissions$.next(deepObjectCopy(this.resource.permissions));
+  }
 
+  private askToPerformUpdate(confirm: () => void, cancel?: () => void) {
+    const message = $localize`:@@teams.list.lost.permissions.message:By confirming this action, you will lose the rights to manage users and teams and will not be able to revert it back.`;
+    const title = $localize`:@@teams.list.lost.permissions.title:Be careful, there is risk of losing access.`;
+    const yesButton = {text: $localize`:@@teams.list.lost.permissions.confirm:Save anyway`, action: confirm};
+    const noButton = {text: $localize`:@@teams.list.lost.permissions.close:Cancel`, action: cancel};
+
+    const buttons: NotificationButton[] = [noButton, yesButton];
+
+    this.notificationService.confirm(message, title, buttons, 'warning');
   }
 
   private currentUserLostUserConfig(

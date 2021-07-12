@@ -18,11 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 
-import {filter, map, switchMap, take} from 'rxjs/operators';
+import {filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -43,6 +43,7 @@ import {Project} from '../../core/store/projects/project';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectCollectionPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -69,7 +70,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationService,
     private router: Router,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private route: ActivatedRoute
   ) {}
 
   public ngOnInit() {
@@ -166,10 +168,43 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       .subscribe(collection => this.collection$.next({...collection}));
     this.permissions$ = this.collection$.pipe(
       filter(collection => !!collection),
-      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection.id))))
+      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection.id)))),
+      tap(permissions => this.checkCurrentTab(permissions))
     );
     this.subscriptions.add(sub2);
 
     this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url));
+  }
+
+  private checkCurrentTab(permissions: AllowedPermissions) {
+    const currentTab = getLastUrlPart(this.router.url);
+    if (this.isInTabWithoutPermissions(permissions, currentTab)) {
+      this.navigateToAnyTab(permissions);
+    }
+  }
+
+  private isInTabWithoutPermissions(permissions: AllowedPermissions, tab: string) {
+    switch (tab) {
+      case 'attributes':
+        return !permissions?.roles?.AttributeEdit;
+      case 'rules':
+      case 'purpose':
+        return !permissions?.roles?.TechConfig;
+      case 'users':
+      case 'teams':
+        return !permissions?.roles?.UserConfig;
+      default:
+        return false;
+    }
+  }
+
+  private navigateToAnyTab(permissions: AllowedPermissions) {
+    if (permissions?.roles?.TechConfig) {
+      this.router.navigate(['purpose'], {relativeTo: this.route});
+    } else if (permissions?.roles?.AttributeEdit) {
+      this.router.navigate(['attributes'], {relativeTo: this.route});
+    } else {
+      this.router.navigate(['linktypes'], {relativeTo: this.route});
+    }
   }
 }

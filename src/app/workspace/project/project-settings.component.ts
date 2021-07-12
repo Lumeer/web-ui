@@ -18,11 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take} from 'rxjs/operators';
+import {filter, first, map, take, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -42,6 +42,7 @@ import {TextInputModalComponent} from '../../shared/modal/text-input/text-input-
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -67,6 +68,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private store$: Store<AppState>,
+    private route: ActivatedRoute,
     private notificationService: NotificationService,
     private modalService: ModalService
   ) {}
@@ -151,7 +153,10 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
         })
     );
 
-    this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
+    this.permissions$ = this.store$.pipe(
+      select(selectProjectPermissions),
+      tap(permissions => this.checkCurrentTab(permissions))
+    );
 
     this.subscriptions.add(
       this.store$
@@ -165,6 +170,36 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url))
     );
+  }
+
+  private checkCurrentTab(permissions: AllowedPermissions) {
+    const currentTab = getLastUrlPart(this.router.url);
+    if (this.isInTabWithoutPermissions(permissions, currentTab)) {
+      this.navigateToAnyTab(permissions);
+    }
+  }
+
+  private isInTabWithoutPermissions(permissions: AllowedPermissions, tab: string) {
+    switch (tab) {
+      case 'sequences':
+      case 'template':
+        return !permissions?.roles?.TechConfig;
+      case 'users':
+      case 'teams':
+        return !permissions?.roles?.UserConfig;
+      default:
+        return false;
+    }
+  }
+
+  private navigateToAnyTab(permissions: AllowedPermissions) {
+    if (permissions?.roles?.UserConfig) {
+      this.router.navigate(['users'], {relativeTo: this.route});
+    } else if (permissions?.roles?.TechConfig) {
+      this.router.navigate(['sequences'], {relativeTo: this.route});
+    } else {
+      this.goBack();
+    }
   }
 
   private deleteProject() {
