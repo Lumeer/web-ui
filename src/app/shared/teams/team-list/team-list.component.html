@@ -16,8 +16,8 @@
             [deletableTeamIds]="groupsAreEditable && (resourceType | isOrganizationType) ? teamIds : []"
             [organization]="organization"
             [project]="project"
-            (teamUpdated)="teamUpdated.emit($event)"
-            (teamDeleted)="teamDeleted.emit($event)"
-            (teamRemoved)="teamDeleted.emit($event)"
-            (teamRolesChange)="teamRolesChange.emit($event)">
+            (teamUpdated)="onTeamUpdated($event)"
+            (teamDeleted)="onTeamDeleted($event)"
+            (teamRemoved)="onTeamRemoved($event)"
+            (teamRolesChange)="onTeamRolesChange($event)">
 </team-table>

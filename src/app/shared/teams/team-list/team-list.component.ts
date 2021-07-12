@@ -37,9 +37,12 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Team} from '../../../core/store/teams/team';
 import {selectUsersForWorkspace} from '../../../core/store/users/users.state';
-import {Role} from '../../../core/store/permissions/permissions';
+import {Permission, PermissionType, Role} from '../../../core/store/permissions/permissions';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 import {Resource} from '../../../core/model/resource';
+import {userHasRoleInOrganization, userHasRoleInProject, userHasRoleInResource} from '../../utils/permission.utils';
+import {RoleType} from '../../../core/model/role-type';
+import {PermissionsHelper} from '../../../core/store/permissions/permissions.helper';
 
 @Component({
   selector: 'team-list',
@@ -61,6 +64,9 @@ export class TeamListComponent implements OnInit, OnChanges {
 
   @Input()
   public project: Project;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public serviceLimits: ServiceLimits;
@@ -94,6 +100,67 @@ export class TeamListComponent implements OnInit, OnChanges {
     }
     if (changes.serviceLimits) {
       this.groupsAreEditable = this.serviceLimits?.groups || false;
+    }
+  }
+
+  public onTeamUpdated(team: Team) {
+    const teams = [...this.teams];
+    const teamIndex = teams.findIndex(t => t.id === team.id);
+    teams[teamIndex] = team;
+
+    if (this.currentUserLostUserConfig(this.organization, this.project, this.resource, teams)) {
+      console.log('lost right by team update');
+    } else {
+      this.teamUpdated.emit(team);
+    }
+  }
+
+  public onTeamDeleted(team: Team) {
+    const teams = [...this.teams];
+    const teamIndex = teams.findIndex(t => t.id === team.id);
+    teams.splice(teamIndex, 1);
+
+    if (this.currentUserLostUserConfig(this.organization, this.project, this.resource, teams)) {
+      console.log('lost right by team delete');
+    } else {
+      this.teamDeleted.emit(team);
+    }
+  }
+
+  public onTeamRemoved(team: Team) {
+    this.teamDeleted.emit(team);
+  }
+
+  public onTeamRolesChange(data: {team: Team; roles: Role[]}) {
+    const newPermission: Permission = {roles: data.roles, id: data.team.id};
+    const newPermissions = PermissionsHelper.changePermission(this.resource.permissions, PermissionType.Groups, [
+      newPermission,
+    ]);
+    const newResource = {...this.resource, permissions: newPermissions};
+
+    if (this.currentUserLostUserConfig(this.organization, this.project, newResource, this.teams)) {
+      console.log('lost right by team roles change');
+    } else {
+      this.teamRolesChange.emit(data);
+    }
+  }
+
+  private currentUserLostUserConfig(
+    organization: Organization,
+    project: Project,
+    resource: Resource,
+    teams: Team[]
+  ): boolean {
+    const userTeams = (teams || []).filter(team => team.users?.includes(this.currentUser.id));
+    const userWithTeams = {...this.currentUser, teams: userTeams};
+
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        return !userHasRoleInOrganization(resource, userWithTeams, RoleType.UserConfig);
+      case ResourceType.Project:
+        return !userHasRoleInProject(organization, resource, userWithTeams, RoleType.UserConfig);
+      default:
+        return !userHasRoleInResource(organization, project, resource, userWithTeams, RoleType.UserConfig);
     }
   }
 }
