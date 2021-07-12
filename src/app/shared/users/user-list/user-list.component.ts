@@ -38,7 +38,7 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Team} from '../../../core/store/teams/team';
 import {Observable} from 'rxjs';
-import {selectAllTeams} from '../../../core/store/teams/teams.state';
+import {selectAllTeams, selectTeamsForWorkspace} from '../../../core/store/teams/teams.state';
 import {ServiceLimits} from '../../../core/store/organizations/service-limits/service.limits';
 
 @Component({
@@ -92,7 +92,7 @@ export class UserListComponent implements OnInit, OnChanges {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.teams$ = this.store$.pipe(select(selectAllTeams));
+    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
