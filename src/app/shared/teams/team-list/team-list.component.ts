@@ -154,6 +154,10 @@ export class TeamListComponent implements OnInit, OnChanges {
     }
   }
 
+  private askToPerformUpdate() {
+
+  }
+
   private currentUserLostUserConfig(
     organization: Organization,
     project: Project,

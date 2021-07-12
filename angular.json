@@ -76,7 +76,7 @@
               "moment-timezone",
               "coordinate-parser",
               "util",
-              "Pressure"
+              "pressure"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
