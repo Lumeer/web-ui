@@ -81,6 +81,7 @@ import {DataInputConfiguration} from '../../../../../../../shared/data-input/dat
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
+import * as Pressure from 'Pressure';
 
 @Component({
   selector: 'table-data-cell',
@@ -184,6 +185,24 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToEditing());
+
+    let fullyTouched = false;
+    let touchEvent = null;
+    Pressure.set(
+      this.element.nativeElement,
+      {
+        change: (force, event) => {
+          fullyTouched = force >= 1;
+          touchEvent = event;
+        },
+        end: () => {
+          if (fullyTouched && touchEvent) {
+            this.showContextMenu(touchEvent);
+          }
+        },
+      },
+      {only: 'touch', preventSelect: false}
+    );
   }
 
   private subscribeToEditing(): Subscription {
