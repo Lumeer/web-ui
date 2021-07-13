@@ -205,11 +205,15 @@ export function getViewColor(view: View, collectionsMap: Record<string, Collecti
   return view?.color || defaultViewColorFromQuery(view, collectionsMap);
 }
 
-function defaultViewColorFromQuery(view: View, collectionsMap: Record<string, Collection>): string {
+export function defaultViewColorFromQuery(view: View, collectionsMap: Record<string, Collection>): string {
   const firstStemCollectionId = view?.query?.stems?.[0]?.collectionId;
   return (firstStemCollectionId && collectionsMap?.[firstStemCollectionId]?.color) || '';
 }
 
 export function getViewIcon(view: View): string {
-  return view?.icon || perspectiveIconsMap[view?.perspective] || '';
+  return view?.icon || defaultViewIcon(view);
+}
+
+export function defaultViewIcon(view: View): string {
+  return perspectiveIconsMap[view?.perspective] || '';
 }

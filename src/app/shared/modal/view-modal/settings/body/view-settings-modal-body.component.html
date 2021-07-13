@@ -8,7 +8,7 @@
 
 <form [formGroup]="form">
 
-  <div class="form-group row">
+  <div class="form-group row mb-0">
 
     <label class="col-form-label col-2 mb-2">
           <span i18n="@@resource.new.dialog.icon.label">
@@ -17,7 +17,8 @@
     </label>
 
     <div class="col-8 d-block mb-3 text-center cursor-pointer" (click)="pickerComponent.toggle()">
-      <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)</div>
+      <div class="text-muted small my-2" i18n="@@resource.new.dialog.icon.label.hint">(click the icon to change it)
+      </div>
       <i class="fa-fw {{ iconControl.value }} fa-3x"
          [style.color]="colorControl.value" #pickerOrigin></i>
       <icon-color-picker #pickerComponent
@@ -31,6 +32,12 @@
     </div>
 
     <div class="col-2"></div>
+    <div class="col-12 text-center">
+      <button class="btn btn-link"
+              [class.hidden]="colorControl.value === defaultColor && iconControl.value === defaultIcon"
+              (click)="resetIconAndColor()"><span class="small" i18n="@@view.settings.reset.iconColor">Reset icon and color</span>
+      </button>
+    </div>
   </div>
 
   <div class="form-group row">
@@ -67,7 +74,8 @@
     <small class="col-12 text-danger mt-1" *ngIf="priorityControl.errors?.invalid"
            i18n="@@view.modal.settings.priority.invalid">Number is not valid</small>
     <small class="col-12 text-danger mt-1" *ngIf="priorityControl.errors?.invalidRange"
-           i18n="@@view.modal.settings.priority.invalidRange">Number is not from valid range ({{minInteger}} - {{maxInteger}})</small>
+           i18n="@@view.modal.settings.priority.invalidRange">Number is not from valid range ({{minInteger}}
+      - {{maxInteger}})</small>
     <div class="col-12 mt-1 text-muted small"
          i18n="@@view.modal.settings.priority.help">By default, views are sorted by last used. Setting an priority
       overrides the default behavior. A higher priority means that the view will be above others.

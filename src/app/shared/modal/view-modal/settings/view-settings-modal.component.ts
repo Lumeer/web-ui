@@ -32,7 +32,12 @@ import {integerValidator, notEmptyValidator} from '../../../../core/validators/c
 import {selectAllViewsSorted, selectViewById} from '../../../../core/store/views/views.state';
 import {map, tap} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {getViewColor, getViewIcon} from '../../../../core/store/views/view.utils';
+import {
+  defaultViewColorFromQuery,
+  defaultViewIcon,
+  getViewColor,
+  getViewIcon,
+} from '../../../../core/store/views/view.utils';
 import {objectsByIdMap} from '../../../utils/common.utils';
 
 @Component({
@@ -54,6 +59,8 @@ export class ViewSettingsModalComponent implements OnInit {
   public readonly dialogType = DialogType;
 
   public form: FormGroup;
+  public defaultIcon: string;
+  public defaultColor: string;
 
   constructor(
     private bsModalRef: BsModalRef,
@@ -72,13 +79,17 @@ export class ViewSettingsModalComponent implements OnInit {
       map(views => views.filter(view => view.id !== this.view?.id))
     );
 
+    const collectionsMap = objectsByIdMap(this.collections);
     this.form = this.fb.group({
       name: [this.view.name, notEmptyValidator()],
       icon: [getViewIcon(this.view)],
-      color: [getViewColor(this.view, objectsByIdMap(this.collections))],
+      color: [getViewColor(this.view, collectionsMap)],
       priority: [this.view.priority, integerValidator()],
       folders: this.fb.array(this.view.folders || []),
     });
+
+    this.defaultColor = defaultViewColorFromQuery(this.view, collectionsMap);
+    this.defaultIcon = defaultViewIcon(this.view);
   }
 
   public onDeleteView() {
@@ -105,7 +116,13 @@ export class ViewSettingsModalComponent implements OnInit {
   private update() {
     this.performingAction$.next(true);
 
-    const updateView = {...this.view, ...this.form.value};
+    const updateView: View = {...this.view, ...this.form.value};
+    if (updateView.icon === this.defaultIcon) {
+      delete updateView.icon;
+    }
+    if (updateView.color === this.defaultColor) {
+      delete updateView.color;
+    }
     this.store$.dispatch(
       new ViewsAction.Update({
         view: updateView,
