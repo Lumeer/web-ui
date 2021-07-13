@@ -157,6 +157,13 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.workspace) {
       this.dataRowService.setWorkspace(this.workspace);
     }
+    if (objectChanged(changes.dataResource)) {
+      this.focusFirstDataInput();
+    }
+  }
+
+  private focusFirstDataInput() {
+    setTimeout(() => this.rows?.first?.onValueFocus());
   }
 
   private selectResource$(): Observable<AttributesResource> {

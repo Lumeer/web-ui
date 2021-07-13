@@ -34,6 +34,12 @@ export class ViewSettingsModalBodyComponent {
   @Input()
   public views: View[];
 
+  @Input()
+  public defaultColor: string;
+
+  @Input()
+  public defaultIcon: string;
+
   @Output()
   public delete = new EventEmitter();
 
@@ -59,5 +65,9 @@ export class ViewSettingsModalBodyComponent {
   public onIconColorChange(data: {icon: string; color: string}) {
     this.iconControl.patchValue(data.icon);
     this.colorControl.patchValue(data.color);
+  }
+
+  public resetIconAndColor() {
+    this.onIconColorChange({icon: this.defaultIcon, color: this.defaultColor});
   }
 }
