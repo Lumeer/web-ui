@@ -172,7 +172,7 @@ export class TeamListComponent implements OnInit, OnChanges {
     const message = $localize`:@@teams.list.lost.permissions.message:By confirming this action, you will lose the rights to manage users and teams and will not be able to revert it back.`;
     const title = $localize`:@@teams.list.lost.permissions.title:Be careful, there is risk of losing access.`;
     const yesButton = {text: $localize`:@@teams.list.lost.permissions.confirm:Save anyway`, action: confirm};
-    const noButton = {text: $localize`:@@teams.list.lost.permissions.close:Cancel`, action: cancel};
+    const noButton = {text: $localize`:@@button.cancel:Cancel`, action: cancel};
 
     const buttons: NotificationButton[] = [noButton, yesButton];
 
