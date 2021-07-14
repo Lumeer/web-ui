@@ -551,8 +551,6 @@ export class ProjectsEffects {
       mergeMap(action => {
         const {nextAction} = action.payload;
         const actions: Action[] = [
-          new OrganizationsAction.Clear(),
-          new ProjectsAction.Clear(),
           new CollectionsAction.Clear(),
           new DocumentsAction.Clear(),
           new DataResourcesAction.Clear(),
@@ -569,9 +567,6 @@ export class ProjectsEffects {
           new ChartAction.Clear(),
           new WorkflowsAction.Clear(),
           new SearchesAction.Clear(),
-          new UserPermissionsAction.Clear(),
-          new UsersAction.Clear(),
-          new TeamsAction.Clear(),
         ];
 
         if (nextAction) {
