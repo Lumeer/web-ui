@@ -314,7 +314,7 @@ export class RoleGroupService {
         if (transitive) {
           return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
         }
-        return $localize`:@@project.permission.role.tooltip.TechConfig:A user can manage sequences and publish project`;
+        return $localize`:@@project.permission.role.tooltip.TechConfig:A user can manage sequences and publish project.`;
       case RoleType.DataRead:
         return $localize`:@@project.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in this project.`;
       case RoleType.DataWrite:

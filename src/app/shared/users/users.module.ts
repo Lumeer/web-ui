@@ -40,6 +40,7 @@ import {FilterTeamsPipe} from './pipes/filter-teams.pipe';
 import {FilterUserTeamsPipe} from './pipes/filter-user-teams.pipe';
 import {UserTableComponent} from './user-list/table/user-table.component';
 import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import {UserTransitiveRolesPipe} from './pipes/user-transitive-roles.pipe';
     GravatarModule,
     RolesModule,
     DropdownModule,
+    TooltipModule,
   ],
   declarations: [
     UserFilterPipe,

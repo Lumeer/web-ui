@@ -33,6 +33,7 @@ import {TeamsPipesModule} from './pipes/teams-pipes.module';
 import {RolesModule} from '../roles/roles.module';
 import {RouterModule} from '@angular/router';
 import {TeamTableComponent} from './team-list/table/team-table.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {TeamTableComponent} from './team-list/table/team-table.component';
     TeamsPipesModule,
     RolesModule,
     RouterModule,
+    TooltipModule,
   ],
   exports: [TeamsComponent, TeamTableComponent],
 })

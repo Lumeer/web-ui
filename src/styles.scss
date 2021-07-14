@@ -401,3 +401,26 @@ modal-container {
 .font-capitalize {
   text-transform: uppercase;
 }
+
+.bs-tooltip-bottom .tooltip-arrow.arrow:before {
+  border-bottom-color: $gray-500;
+}
+
+.bs-tooltip-left .tooltip-arrow.arrow:before {
+  border-left-color: $gray-500;
+}
+
+.bs-tooltip-right .tooltip-arrow.arrow:before {
+  border-right-color: $gray-500;
+}
+
+.bs-tooltip-top .tooltip-arrow.arrow:before {
+  border-top-color: $gray-500;
+}
+
+.tooltip-inner {
+  border: 1px solid $border-color;
+  background-color: $white;
+  color: $primary;
+  box-shadow: $shadow-default;
+}
