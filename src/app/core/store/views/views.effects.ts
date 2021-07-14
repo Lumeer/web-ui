@@ -351,7 +351,7 @@ export class ViewsEffects {
 
   public setUserPermission$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<ViewsAction.SetUserPermissions>(ViewsActionType.SET_PERMISSIONS),
+      ofType<ViewsAction.SetPermissions>(ViewsActionType.SET_PERMISSIONS),
       concatMap(action => {
         const {permissions, viewId, newUsers, newUsersRoles, newTeams} = action.payload;
 
@@ -403,11 +403,17 @@ export class ViewsEffects {
         this.userService.createUsersInWorkspace(workspace.organizationId, workspace.projectId, usersDtos)
       ),
       map(users =>
-        users.map((user, index) => {
-          const correlationId = newUsers[index].correlationId;
-          const roles = newUsersRoles[correlationId];
-          return {id: user.id, roles};
-        })
+        users
+          .map((user, index) => {
+            if (!newUsers[index].id) {
+              // we collect roles only from newly created users
+              const correlationId = newUsers[index].correlationId;
+              const roles = newUsersRoles[correlationId];
+              return {id: user.id, roles};
+            }
+            return null;
+          })
+          .filter(permission => !!permission)
       )
     );
   }

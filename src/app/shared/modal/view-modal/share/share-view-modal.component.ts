@@ -94,7 +94,7 @@ export class ShareViewModalComponent implements OnInit {
   }) {
     this.performingAction$.next(true);
     this.store$.dispatch(
-      new ViewsAction.SetUserPermissions({
+      new ViewsAction.SetPermissions({
         viewId: this.view.id,
         ...data,
         onSuccess: () => this.hideDialog(),

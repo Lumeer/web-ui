@@ -43,14 +43,14 @@ export function convertPermissionsModelToDto(permissions: Permissions): Permissi
 export function convertPermissionDtoToModel(dto: PermissionDto): Permission {
   return {
     id: dto.id,
-    roles: dto.roles?.map(convertRoleDtoToModel) || [],
+    roles: dto.roles?.map(convertRoleDtoToModel).filter(role => !!role) || [],
   };
 }
 
 export function convertPermissionModelToDto(permission: Permission): PermissionDto {
   return {
     id: permission.id,
-    roles: permission.roles?.map(convertRoleModelToDto) || [],
+    roles: permission.roles?.map(convertRoleModelToDto).filter(role => !!role) || [],
   };
 }
 
@@ -65,7 +65,7 @@ export function convertRoleDtoToModel(dto: RoleDto): Role {
 
 export function convertRoleModelToDto(model: Role): RoleDto {
   return (
-    model && {
+    model?.type && {
       type: model.type.toString(),
       transitive: model.transitive,
     }
