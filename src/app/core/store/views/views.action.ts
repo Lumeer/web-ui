@@ -147,7 +147,7 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class SetUserPermissions implements Action {
+  export class SetPermissions implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS;
 
     public constructor(
@@ -317,7 +317,7 @@ export namespace ViewsAction {
     | Create
     | CreateSuccess
     | CreateFailure
-    | SetUserPermissions
+    | SetPermissions
     | SetPermissionsSuccess
     | SetPermissionsFailure
     | Update

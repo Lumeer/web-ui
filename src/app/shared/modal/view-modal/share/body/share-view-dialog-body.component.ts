@@ -248,6 +248,17 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     const userRoles = this.userRoles$.value;
     const allUsersIds = [...this.changeableUsers$.value.map(u => u.id), ...this.staticUsers$.value.map(u => u.id)];
 
+    const newUsers = this.newUsers$.value;
+    const newUsersFiltered: User[] = Object.keys(userRoles)
+      .map(id => newUsers.find(user => user.correlationId === id))
+      .filter(user => !!user)
+      .filter(user => (userRoles[user.correlationId] || []).length > 0);
+
+    const usersWithoutWorkspace = this.changeableUsers$.value.filter(
+      user => !userCanReadWorkspace(this.organization, this.project, user) && (userRoles[user.id] || []).length > 0
+    );
+    newUsersFiltered.push(...usersWithoutWorkspace);
+
     const userPermissions: Permission[] = Object.keys(userRoles)
       .filter(id => allUsersIds.includes(id))
       .map(id => ({id, roles: userRoles[id]}));
@@ -258,12 +269,6 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     const teamPermissions: Permission[] = Object.keys(teamRoles)
       .filter(id => allTeamIds.includes(id))
       .map(id => ({id, roles: teamRoles[id]}));
-
-    const newUsers = this.newUsers$.value;
-    const newUsersFiltered: User[] = Object.keys(userRoles)
-      .map(id => newUsers.find(user => user.correlationId === id))
-      .filter(user => !!user)
-      .filter(user => (userRoles[user.correlationId] || []).length > 0);
 
     const newTeams = this.teams.filter(
       team => !teamCanReadWorkspace(this.organization, this.project, team) && (teamRoles[team.id] || []).length > 0
