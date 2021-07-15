@@ -27,6 +27,7 @@
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <input class="form-control" type="text" formControlName="imageUrl" id="imageUrl"
                (keydown.enter)="$event.target.blur()"
+               inputmode="url"
                (focus)="editingControl = 'imageUrl'"
                (blur)="editingControl = null"
                placeholder="https://..."/>
@@ -58,6 +59,7 @@
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <input class="form-control" type="text" formControlName="relativeDate" id="relativeDate"
                bsDatepicker
+               inputmode="numeric"
                (focus)="editingControl = 'relativeDate'"
                (blur)="editingControl = null"
                [bsConfig]="datePickerConfig"/>
