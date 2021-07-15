@@ -413,8 +413,14 @@ export class UserMenuComponent implements OnInit {
     }
   }
 
-  public onHintsToggle($event: boolean) {
-    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.applicationHints, value: $event}));
+  public onHintsToggle($event: MouseEvent, state: boolean) {
+    if ($event.ctrlKey || $event.metaKey) {
+      // reset all hints
+      this.store$.dispatch(new UsersAction.UpdateHints({hints: {applicationHints: state}}));
+    } else {
+      // just toggle application hints
+      this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.applicationHints, value: state}));
+    }
   }
 
   public onSettings() {
