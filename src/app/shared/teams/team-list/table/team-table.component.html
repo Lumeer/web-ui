@@ -20,6 +20,7 @@
   </div>
   <div><i class="fa fa-fw fa-none m-1"></i></div>
 </div>
+<div *ngIf="teams | empty" class="text-muted p-1" i18n="@@teams.table.empty">There are no teams in your organization.</div>
 <div class="teams-list">
   <div class="layer1" [class.blur]="!editableTeams">
     <team-component class="team py-2"
@@ -53,7 +54,9 @@
 
 <ng-template #legend>
   <div class="text-left">
-    <span *ngIf="!(editableTeams && (resourceType | isOrganizationType))" i18n="@@teams.header.configuration.remark">Teams are created at the organizational level.</span><br/>
+    <ng-container  *ngIf="!(editableTeams && (resourceType | isOrganizationType))">
+      <span i18n="@@teams.header.configuration.remark">Teams are created at the organizational level.</span><br/>
+    </ng-container>
     <span class="badge badge-lg badge-outline-success mt-1" i18n="@@users.header.teams.roles.tooltip.rights">Rights</span>
     <span class="ml-1" i18n="@@users.header.teams.roles.tooltip.direct">directly assigned</span><br/>
     <span class="badge badge-lg badge-outline-secondary mt-1" i18n="@@users.header.teams.roles.tooltip.rights">Rights</span>

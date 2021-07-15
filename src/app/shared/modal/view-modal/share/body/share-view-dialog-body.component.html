@@ -9,6 +9,10 @@
 
   <div class="p-3">
 
+    <hint-box additionalClasses="mt-2" [hintKey]="userHintsKeys.viewTeamsHintDismissed">
+      <span i18n="@@view.share.instructions">Add Users or Teams (if not already present) to the list. Then set rights of individual Users and Teams for this View.</span>
+    </hint-box>
+
     <ng-container *ngIf="selectedTab$ | async as selectedTab">
       <ul class="nav nav-tabs">
         <li class="nav-item">

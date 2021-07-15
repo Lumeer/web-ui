@@ -31,6 +31,7 @@ import {FilterGroupedRolesWithHeaderPipe} from './pipes/filter-grouped-roles-wit
 import {FlattenUngroupedRolesPipe} from './pipes/flatten-ungrouped-roles.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {RoleTooltipPipe} from './pipes/role-tooltip.pipe';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import {RoleTooltipPipe} from './pipes/role-tooltip.pipe';
     FlattenUngroupedRolesPipe,
     RoleTooltipPipe,
   ],
-  imports: [CommonModule, DropdownModule, AccordionModule, TooltipModule],
+  imports: [CommonModule, DropdownModule, AccordionModule, TooltipModule, PipesModule],
   exports: [RolesComponent, RolesDropdownComponent],
 })
 export class RolesModule {}

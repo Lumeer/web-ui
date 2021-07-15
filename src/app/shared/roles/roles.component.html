@@ -5,7 +5,9 @@
 <ng-container *ngIf="editable">
   <div class="btn btn-sm btn-link mb-1 text-nowrap" #buttonElement
        (click)="$event.stopPropagation(); onClick()">
-    <i class="far fa-pencil mr-1"></i><span i18n="@@edit">Edit</span>
+    <i class="far fa-pencil mr-1"></i>
+    <span *ngIf="!(translatedRoles | empty)" i18n="@@edit">Edit</span>
+    <span *ngIf="translatedRoles | empty" i18n="@@roles.add">Add Rights</span>
   </div>
 
   <roles-dropdown [origin]="buttonElement"
