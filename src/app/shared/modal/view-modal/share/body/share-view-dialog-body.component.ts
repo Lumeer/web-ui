@@ -29,7 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {map, skip} from 'rxjs/operators';
-import {User} from '../../../../../core/store/users/user';
+import {User, UserHintsKeys} from '../../../../../core/store/users/user';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {View} from '../../../../../core/store/views/view';
@@ -49,6 +49,9 @@ import {
 import {Team} from '../../../../../core/store/teams/team';
 import {RoleType} from '../../../../../core/model/role-type';
 import {deepObjectsEquals} from '../../../../utils/common.utils';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../../core/store/app.state';
+import {UsersAction} from '../../../../../core/store/users/users.action';
 
 export enum ViewTab {
   Users = 'users',
@@ -107,9 +110,11 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   public readonly viewTab = ViewTab;
 
+  public readonly userHintsKeys = UserHintsKeys;
+
   private subscriptions = new Subscription();
 
-  constructor(private clipboardService: ClipboardService) {}
+  constructor(private clipboardService: ClipboardService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.parseViewShareUrl();
@@ -324,5 +329,9 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public dismissViewHint() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.viewTeamsHintDismissed, value: true}));
   }
 }

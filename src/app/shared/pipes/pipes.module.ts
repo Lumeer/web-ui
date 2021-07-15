@@ -108,6 +108,7 @@ import {ViewColorPipe} from './view-color.pipe';
 import {ViewLinkPipe} from './view-link.pipe';
 import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
+import {IsProjectTypePipe} from './is-project-type.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -136,6 +137,7 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     LogPipe,
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
+    IsProjectTypePipe,
     CanChangeRolesPipe,
     CollectionAttributePipe,
     ContrastColorPipe,
@@ -227,6 +229,7 @@ import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
     LogPipe,
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
+    IsProjectTypePipe,
     CanChangeRolesPipe,
     CollectionAttributePipe,
     ContrastColorPipe,

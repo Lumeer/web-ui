@@ -54,7 +54,7 @@
         </button>
         <button mat-menu-item
                 *ngIf="data.currentUser.hints.applicationHints === false"
-                (click)="onHintsToggle(true)"
+                (click)="onHintsToggle($event, true)"
                 title="Show Hints"
                 i18n-title="@@menu.hintsEnable">
           <i class="fad fa-fw fa-dot-circle"
@@ -63,7 +63,7 @@
           <span i18n="@@menu.hintsEnable">Show Hints</span>
         </button>
         <button mat-menu-item *ngIf="data.currentUser.hints.applicationHints !== false"
-                (click)="onHintsToggle(false)"
+                (click)="onHintsToggle($event, false)"
                 title="Hide Hints"
                 i18n-title="@@menu.hintsDisable">
           <i class="fad fa-fw fa-dot-circle color-danger"

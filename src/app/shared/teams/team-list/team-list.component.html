@@ -4,6 +4,12 @@
             (teamCreated)="teamCreated.emit($event)">
   </new-team>
 </div>
+<div hint-box [condition]="resourceType | isOrganizationType" [hintKey]="userHintsKeys.organizationTeamsHintDismissed" additionalClasses="mt-4">
+  <span i18n="@@teams.header.info.organization">Edit rights of the teams for this organization.</span>
+</div>
+<div hint-box [condition]="resourceType | isProjectType" [hintKey]="userHintsKeys.projectTeamsHintDismissed" additionalClasses="mt-4">
+  <span i18n="@@teams.header.info.project">Edit rights of the teams for this project.</span>
+</div>
 <team-table class="d-block mt-4"
             [editableTeams]="groupsAreEditable"
             [resourceType]="resourceType"

@@ -28,7 +28,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import {User} from '../../../core/store/users/user';
+import {User, UserHintsKeys} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -46,6 +46,7 @@ import {PermissionsHelper} from '../../../core/store/permissions/permissions.hel
 import {deepObjectCopy} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {NotificationButton} from '../../../core/notifications/notification-button';
+import {UsersAction} from '../../../core/store/users/users.action';
 
 @Component({
   selector: 'team-list',
@@ -92,6 +93,8 @@ export class TeamListComponent implements OnInit, OnChanges {
   public users$: Observable<User[]>;
   public permissions$ = new BehaviorSubject<Permissions>(null);
   public teams$ = new BehaviorSubject<Team[]>([]);
+
+  public readonly userHintsKeys = UserHintsKeys;
 
   constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
 
@@ -196,5 +199,13 @@ export class TeamListComponent implements OnInit, OnChanges {
       default:
         return !userHasRoleInResource(organization, project, resource, userWithTeams, RoleType.UserConfig);
     }
+  }
+
+  public dismissProjectHint() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.projectTeamsHintDismissed, value: true}));
+  }
+
+  public dismissOrganizationHint() {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.organizationTeamsHintDismissed, value: true}));
   }
 }

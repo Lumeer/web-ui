@@ -52,12 +52,18 @@ export interface DefaultWorkspace {
   projectId: string;
 }
 
-export const enum UserHintsKeys {
+export enum UserHintsKeys {
   applicationHints = 'applicationHints',
+  organizationTeamsHintDismissed = 'organizationTeamsHintDismissed',
+  projectTeamsHintDismissed = 'projectTeamsHintDismissed',
+  viewTeamsHintDismissed = 'viewTeamsHintDismissed',
 }
 
 export interface UserHints {
   applicationHints?: boolean;
+  organizationTeamsHintDismissed?: boolean;
+  projectTeamsHintDismissed?: boolean;
+  viewTeamsHintDismissed?: boolean;
 }
 
 export interface NotificationsSettings {
