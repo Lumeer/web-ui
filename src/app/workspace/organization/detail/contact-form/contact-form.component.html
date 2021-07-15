@@ -40,13 +40,13 @@
     </div>
     <div class="form-row">
       <div class="form-group col-6">
-        <input type="text" ngModel name="email" i18n-placeholder="@@organizations.tab.detail.contact.email" placeholder="E-mail" class="form-control form-control-sm" id="email" #email="ngModel" email>
+        <input type="text" ngModel name="email" inputmode="email" i18n-placeholder="@@organizations.tab.detail.contact.email" placeholder="E-mail" class="form-control form-control-sm" id="email" #email="ngModel" email>
         <small id="emailValid" class="invalid-message" *ngIf="email.invalid && email.touched" i18n="@@organizations.tab.detail.contact.email.invalid">
           Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
         </small>
       </div>
       <div class="form-group col-6">
-        <input type="text" ngModel name="phone" i18n-placeholder="@@organizations.tab.detail.contact.phone" placeholder="Phone" class="form-control form-control-sm" id="phone" #phone="ngModel" pattern="[-+0-9/ ]*">
+        <input type="text" ngModel name="phone" inputmode="tel" i18n-placeholder="@@organizations.tab.detail.contact.phone" placeholder="Phone" class="form-control form-control-sm" id="phone" #phone="ngModel" pattern="[-+0-9/ ]*">
         <small id="phoneValid" class="invalid-message" *ngIf="phone.invalid && (phone.dirty || phone.touched)" i18n="@@organizations.tab.detail.contact.phone.invalid">
           Please enter a phone number that contains only numbers, characters +-/ and spaces.
         </small>

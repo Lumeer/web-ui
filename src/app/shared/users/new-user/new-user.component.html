@@ -2,6 +2,7 @@
   <input ngModel [value]="email" name="emailField" #emailField="ngModel"
          id="emailField" class="form-control form-control-sm" type="email"
          i18n-placeholder="@@user.add.placeholder"
+         inputmode="email"
          placeholder="Type email to invite another user"
          (input)="onInputChanged(emailField.control.value)" email>
   <div class="input-group-append">
