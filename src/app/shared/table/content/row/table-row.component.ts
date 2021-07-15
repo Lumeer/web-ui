@@ -24,6 +24,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -47,6 +48,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {MenuItem} from '../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {initForceTouch} from '../../../utils/html-modifier';
 
 @Component({
   selector: '[table-row]',
@@ -54,7 +56,7 @@ import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lum
   styleUrls: ['./table-row.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowComponent implements OnChanges {
+export class TableRowComponent implements OnInit, OnChanges {
   @Input()
   public columnGroups: TableColumnGroup[];
 
@@ -123,6 +125,10 @@ export class TableRowComponent implements OnChanges {
   public suggesting$ = new BehaviorSubject<DataValue>(null);
 
   constructor(public element: ElementRef) {}
+
+  public ngOnInit() {
+    initForceTouch(this.element.nativeElement, event => this.onContextMenu(this.selectedCell.columnId, event));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.editedCell) {

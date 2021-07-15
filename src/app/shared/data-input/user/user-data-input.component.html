@@ -45,6 +45,7 @@
            [(ngModel)]="name"
            (blur)="onBlur()"
            (focus)="onFocused()"
+           inputmode="email"
            (ngModelChange)="onInputChange()"
            [class.ml-1]="selectedUsers.length > 0"
            [spellcheck]="false"

@@ -17,6 +17,7 @@
       <input class="form-control" type="text" #linkElement
              formControlName="link"
              placeholder="https://..."
+             inputmode="url"
              (blur)="onLinkBlur()"
              (keydown)="onLinkKeyDown($event)">
       <div class="grid-empty-cell"></div>

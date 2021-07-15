@@ -18,6 +18,7 @@
  */
 
 import {DataValue} from '@lumeer/data-filters';
+import * as pressure from 'pressure';
 
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {
@@ -120,4 +121,28 @@ export function clickedInsideElement(event: MouseEvent, tagName: string): boolea
     }
   }
   return false;
+}
+
+export function initForceTouch(element: HTMLElement, callback: (event: MouseEvent) => void) {
+  let fullyTouched = false;
+  let touchEvent = null;
+  pressure.set(
+    element,
+    {
+      change: (force, event) => {
+        fullyTouched = force >= 1;
+        touchEvent = event;
+      },
+      start: () => {
+        fullyTouched = false;
+        touchEvent = null;
+      },
+      end: () => {
+        if (fullyTouched && touchEvent) {
+          callback(touchEvent);
+        }
+      },
+    },
+    {only: 'touch', preventSelect: false}
+  );
 }
