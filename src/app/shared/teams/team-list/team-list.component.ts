@@ -200,12 +200,4 @@ export class TeamListComponent implements OnInit, OnChanges {
         return !userHasRoleInResource(organization, project, resource, userWithTeams, RoleType.UserConfig);
     }
   }
-
-  public dismissProjectHint() {
-    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.projectTeamsHintDismissed, value: true}));
-  }
-
-  public dismissOrganizationHint() {
-    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.organizationTeamsHintDismissed, value: true}));
-  }
 }

@@ -24,10 +24,19 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {UsersAction} from '../../core/store/users/users.action';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
-  selector: '[hint-box]',
+  selector: 'hint-box',
   templateUrl: './hint-box.component.html',
+  animations: [
+    trigger('inOutAnimation', [
+      transition(':leave', [
+        style({transform: 'translateX(0%)', opacity: 1}),
+        animate('.5s ease-in', style({transform: 'translateX(-75%)', opacity: 0})),
+      ]),
+    ]),
+  ],
 })
 export class HintBoxComponent implements OnInit {
   @Input()
@@ -46,7 +55,7 @@ export class HintBoxComponent implements OnInit {
   public ngOnInit(): void {
     this.visible$ = this.store$.pipe(
       select(selectCurrentUser),
-      map(user => !user?.hints[this.hintKey])
+      map(user => !user.hints?.[this.hintKey])
     );
   }
 

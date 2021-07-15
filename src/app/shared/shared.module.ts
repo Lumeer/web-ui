@@ -60,6 +60,7 @@ import {MenuModule} from './menu/menu.module';
 import {ButtonModule} from './button/button.module';
 import {LoadingModule} from './loading/loading.module';
 import {ProgressModule} from './progress/progress.module';
+import {HintBoxModule} from './hint-box/hint-box.module';
 
 @NgModule({
   imports: [
@@ -101,6 +102,7 @@ import {ProgressModule} from './progress/progress.module';
     MenuModule,
     ButtonModule,
     ProgressModule,
+    HintBoxModule,
   ],
   declarations: [PerspectiveDirective, ResourceHeaderComponent, TourComponent],
   exports: [
@@ -146,6 +148,7 @@ import {ProgressModule} from './progress/progress.module';
     MenuModule,
     ButtonModule,
     ProgressModule,
+    HintBoxModule,
   ],
 })
 export class SharedModule {}

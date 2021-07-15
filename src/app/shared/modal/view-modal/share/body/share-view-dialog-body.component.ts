@@ -330,8 +330,4 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
-
-  public dismissViewHint() {
-    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.viewTeamsHintDismissed, value: true}));
-  }
 }
