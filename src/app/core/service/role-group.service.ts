@@ -228,7 +228,7 @@ export class RoleGroupService {
 
   private organizationRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@organization.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}`,
+      $localize`:@@organization.permission.role.title:{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}`,
       {type}
     );
   }
@@ -239,7 +239,7 @@ export class RoleGroupService {
         if (transitive) {
           return $localize`:@@organization.permission.transitive.role.tooltip.Read:A user can see all projects, tables, views and links in all projects in this organization.`;
         }
-        return $localize`:@@organization.permission.role.tooltip.Read:A user can see this organization.`;
+        return $localize`:@@organization.permission.role.tooltip.Read:A user joins this organization and can see it.`;
       case RoleType.Manage:
         if (transitive) {
           return $localize`:@@organization.permission.transitive.role.tooltip.Manage:A user can change and delete all projects, tables, views and links in all projects in this organization.`;
@@ -281,7 +281,7 @@ export class RoleGroupService {
 
   private projectRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@project.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences}}`,
+      $localize`:@@project.permission.role.title:{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences}}`,
       {type}
     );
   }
@@ -299,7 +299,7 @@ export class RoleGroupService {
         if (transitive) {
           return $localize`:@@project.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in this project. However for their content (data) there is a separate right.`;
         }
-        return $localize`:@@project.permission.role.tooltip.Read:A user can see this project.`;
+        return $localize`:@@project.permission.role.tooltip.Read:A user joins this project and can see it.`;
       case RoleType.Manage:
         if (transitive) {
           return $localize`:@@project.permission.transitive.role.tooltip.Manage:A user can change and delete all tables, views and links in this project.`;
@@ -351,7 +351,7 @@ export class RoleGroupService {
 
   private collectionRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@collection.permission.role.title:{type, select, Read {Read} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}`,
+      $localize`:@@collection.permission.role.title:{type, select, Read {Join} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}`,
       {type}
     );
   }
@@ -359,7 +359,7 @@ export class RoleGroupService {
   private collectionRoleTooltip(type: RoleType): string {
     switch (type) {
       case RoleType.Read:
-        return $localize`:@@collection.permission.role.tooltip.Read:A user can see this table.`;
+        return $localize`:@@collection.permission.role.tooltip.Read:A user joins this table and can see it. Users need other rights to be able to see and work with the table content.`;
       case RoleType.Manage:
         return $localize`:@@collection.permission.role.tooltip.Manage:A user can change the table name, color, icon, description and can delete it.`;
       case RoleType.UserConfig:
@@ -392,7 +392,7 @@ export class RoleGroupService {
 
   private viewRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@view.permission.role.title:{type, select, Read {Read} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
+      $localize`:@@view.permission.role.title:{type, select, Read {Join} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
       {type}
     );
   }
@@ -400,7 +400,7 @@ export class RoleGroupService {
   private viewRoleTooltip(type: RoleType): string {
     switch (type) {
       case RoleType.Read:
-        return $localize`:@@view.permission.role.tooltip.Read:A user can see this view.`;
+        return $localize`:@@view.permission.role.tooltip.Read:A user joins this view and can see it. Users need other rights to be able to open the view, see and work with the view content.`;
       case RoleType.Manage:
         return $localize`:@@view.permission.role.tooltip.Manage:A user can change the view name, color, icon, folders and can delete it.`;
       case RoleType.UserConfig:
