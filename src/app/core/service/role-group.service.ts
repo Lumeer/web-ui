@@ -167,7 +167,6 @@ export class RoleGroupService {
           this.createCollectionRole(RoleType.UserConfig),
           this.createCollectionRole(RoleType.TechConfig),
           this.createCollectionRole(RoleType.AttributeEdit),
-          this.createCollectionRole(RoleType.CommentContribute),
         ],
       },
       {
@@ -178,6 +177,7 @@ export class RoleGroupService {
           this.createCollectionRole(RoleType.DataWrite),
           this.createCollectionRole(RoleType.DataContribute),
           this.createCollectionRole(RoleType.DataDelete),
+          this.createCollectionRole(RoleType.CommentContribute),
         ],
       },
     ];
