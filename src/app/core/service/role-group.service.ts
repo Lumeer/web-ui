@@ -210,7 +210,9 @@ export class RoleGroupService {
 
   private createOrganizationRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
-      title: transitive ? this.workspaceTransitiveRoleTitle(type) : this.organizationRoleTitle(type),
+      title: transitive
+        ? this.workspaceTransitiveRoleTitle(type, ResourceType.Organization)
+        : this.organizationRoleTitle(type),
       tooltip: this.organizationRoleTooltip(type, transitive),
       type,
       transitive,
@@ -219,7 +221,7 @@ export class RoleGroupService {
 
   private createProjectRole(type: RoleType, transitive?: boolean): TranslatedRole {
     return {
-      title: transitive ? this.workspaceTransitiveRoleTitle(type) : this.projectRoleTitle(type),
+      title: transitive ? this.workspaceTransitiveRoleTitle(type, ResourceType.Project) : this.projectRoleTitle(type),
       tooltip: this.projectRoleTooltip(type, transitive),
       type,
       transitive,
@@ -286,11 +288,20 @@ export class RoleGroupService {
     );
   }
 
-  private workspaceTransitiveRoleTitle(type: RoleType): string {
-    return parseSelectTranslation(
-      $localize`:@@organization.permission.transitive.role.title:{type, select, Read {Read All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
-      {type}
-    );
+  private workspaceTransitiveRoleTitle(type: RoleType, resourceType: ResourceType): string {
+    switch (resourceType) {
+      case ResourceType.Organization:
+      default:
+        return parseSelectTranslation(
+          $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join All Projects, Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+          {type}
+        );
+      case ResourceType.Project:
+        return parseSelectTranslation(
+          $localize`:@@organization.permission.transitive.role.project.title:{type, select, Read {Join All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+          {type}
+        );
+    }
   }
 
   private projectRoleTooltip(type: RoleType, transitive: boolean): string {
