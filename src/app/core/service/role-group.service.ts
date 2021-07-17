@@ -67,7 +67,6 @@ export class RoleGroupService {
           this.createOrganizationRole(RoleType.CollectionContribute, true),
           this.createOrganizationRole(RoleType.LinkContribute, true),
           this.createOrganizationRole(RoleType.ViewContribute, true),
-          this.createOrganizationRole(RoleType.CommentContribute, true),
         ],
       },
       {
@@ -88,6 +87,7 @@ export class RoleGroupService {
           this.createOrganizationRole(RoleType.DataWrite, true),
           this.createOrganizationRole(RoleType.DataContribute, true),
           this.createOrganizationRole(RoleType.DataDelete, true),
+          this.createOrganizationRole(RoleType.CommentContribute, true),
         ],
       },
       {
@@ -123,7 +123,6 @@ export class RoleGroupService {
           this.createProjectRole(RoleType.CollectionContribute, true),
           this.createProjectRole(RoleType.LinkContribute, true),
           this.createProjectRole(RoleType.ViewContribute, true),
-          this.createProjectRole(RoleType.CommentContribute, true),
         ],
       },
       {
@@ -144,6 +143,7 @@ export class RoleGroupService {
           this.createProjectRole(RoleType.DataWrite, true),
           this.createProjectRole(RoleType.DataContribute, true),
           this.createProjectRole(RoleType.DataDelete, true),
+          this.createProjectRole(RoleType.CommentContribute, true),
         ],
       },
       {
