@@ -293,7 +293,7 @@ export class RoleGroupService {
       case ResourceType.Organization:
       default:
         return parseSelectTranslation(
-          $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join All Projects, Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+          $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join All Projects, Tables, Links and Views} Manage {Manage All Projects, Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
         );
       case ResourceType.Project:
