@@ -3247,261 +3247,262 @@
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v organizaci} ProjectContribute {Vytvářet projekty}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">231</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">233</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
         <source>A user can see all projects, tables, views and links in all projects in this organization.</source>
         <target>Uživatel může vidět všechny projekty, tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">240</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">242</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this organization and can see it.</source>
         <target>Uživatel je přidaný do této organizace a může ji vidět.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">242</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">244</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
         <source>A user can change and delete all projects, tables, views and links in all projects in this organization.</source>
         <target>Uživatel může měnit a mazat všechny projekty, tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">245</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">247</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.</source>
         <target>Uživatel může měnit název, barvu, ikonu a popis organizace. Může provádět platby a upravovat fakturační údaje. Může smazat tuto organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">247</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.ProjectContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">249</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.ProjectContribute" datatype="html">
         <source>A user can create new projects in this organization. They become a manager of the new project.</source>
         <target>Uživatel může vytvářet nové projekty v této organizaci. Stane se správcem projektu, který vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">249</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">251</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.UserConfig" datatype="html">
         <source>A user can add, modify, and delete users and their rights everywhere in this organization.</source>
         <target>Uživatel může přidávat, upravovat a odstraňovat uživatele a jejich práva kdekoliv v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">252</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">254</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can add, modify, and delete users in this organization (at the organizational level).</source>
         <target>Uživatel může přidávat, upravovat a odstraňovat uživatele a jejich práva v této organizaci (jen na úrovni organizace).</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">254</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">256</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in all tables and views in all projects in this organization.</source>
         <target>Uživatel může číst údaje ve všech tabulkách a pohledech ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">256</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in all tables and views in all projects in this organization.</source>
         <target>Uživatel může upravovat údaje ve všech tabulkách a pohledech ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">260</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in all tables and views in all projects in this organization.</source>
         <target>Uživatel může odstraňovat záznamy (řádky) ve všech tabulkách a pohledech ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">260</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">262</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in all projects in this organization.</source>
         <target>Uživatel může vytváře, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech tabulkách, propojeních a pohledech ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">262</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in all projects in this organization.</source>
         <target>Uživatel může vkládat komentáře ke všem záznamům (řádkům) ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">264</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">266</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
         <source>A user can create tables in all projects in this organization. They become a manager of the new table.</source>
         <target>Uživatel může vytvářet tabulky ve všech projektech v této organizaci. Stane se správcem tabulky, kterou vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">266</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.ViewContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">268</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.ViewContribute" datatype="html">
         <source>A user can create views in all projects in this organization. They become a manager of the new view.</source>
         <target>Uživatel může vytvářet pohledy ve všech projektech v této organizaci. Stane se správcem pohledu, který vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">268</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.LinkContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.LinkContribute" datatype="html">
         <source>A user can create link types in all projects in this organization. They become a manager of the new link type.</source>
         <target>Uživatel může vytvářet propojení mezi tabulkami ve všech projektech v této organizaci. Stane se správcem propojení, které vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">270</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">272</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in tables and link types in all projects in this organization.</source>
         <target>Uživatel může přidávat, měnit a odstraňovat sloupce ve všech tabulkách a propojeních ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">272</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">274</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations in all tables and link types in all projects in this organization.</source>
         <target>Uživatel může přidávat, menit a odstraňovat automatizace ve všech tabulkách a propojeních ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">274</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage visual view configurations of all views in all projects in this organization.</source>
         <target>Uživatel může upravovat vizuální nastavení všech pohledů ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">276</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.QueryConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">278</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in all views in all projects in this organization.</source>
         <target>Uživatel může měnit filtry a dotazy ve všech pohledech ve všech projektech v této organizaci.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">278</context></context-group></trans-unit><trans-unit id="project.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">280</context></context-group></trans-unit><trans-unit id="project.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v projektu}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">284</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.title" datatype="html">
-        <source>{type, select, Read {Read All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
-        <target>{type, select, Read {Číst všechny tabulky, propojení a pohledy} Manage {Spravovat všechny tabulky, propojení a pohledy} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">286</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.organization.title" datatype="html">
+        <source>{type, select, Read {Join All Projects, Tables, Links and Views} Manage {Manage All Projects, Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
+        <target>{type, select, Read {Přidat se ke všem projektům, tabulkám, propojením a pohledům} Manage {Spravovat všechny projekty, tabulky, propojení a pohledy} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">291</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">296</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.project.title" datatype="html">
+        <source>{type, select, Read {Join All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
+        <target>{type, select, Read {Přidat se ke všem tabulkám, propojením a pohledům} Manage {Spravovat všechny tabulky, propojení a pohledy} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">301</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
         <source>A user can see all tables, views and links in this project. However for their content (data) there is a separate right.</source>
         <target>Uživatel může vidět všechny tabulky, pohledy a propojení v tomto projektu. Pro přístup k jejich obsahu (údajům) je však potřeba další oprávnění.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">300</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">311</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this project and can see it.</source><target>Uživatel je přidaný do tohoto projektu a může jej vidět.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">302</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">313</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
         <source>A user can change and delete all tables, views and links in this project.</source>
         <target>Uživatel může měnit nebo odstraňovat všechny tabulky, pohledy a propojení v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">305</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">316</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the project name, color, icon, description and can delete it.</source>
         <target>Uživatel může spravovat název, barvu, ikonu a popis projektu. Může také projekt odstranit..</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">307</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">318</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights everywhere in the project.</source>
         <target>Uživatel může spravovat uživatelská práva všude uvnitř projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">310</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">321</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this project (at the project level).</source>
         <target>Uživatel může spravovat uživatelská práva v tomto projektu (pouze na úrovni projektu).</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">312</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">323</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in all tables and views in this project.</source>
         <target>Uživatel může číst veškeré údaje ve všech tabulkách a pohledech v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">319</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">330</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in all tables and views in this project.</source>
         <target>Uživatel může upravovat veškeré údaje ve všech tabulkách a pohledech v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">321</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">332</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in all tables and views in this project.</source>
         <target>Uživatel může odstraňovat libovolné záznamy (řádky) ve všech tabulkách a pohledech v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">323</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">334</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in all tables, links, and views in this project.</source>
         <target>Uživatel může vyvtářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) ve všech taulkách, propojeních a pohledech v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">325</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">336</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this project.</source>
         <target>Uživatel může vkládat komentáře ke všem záznamům v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">327</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">338</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.CollectionContribute" datatype="html">
         <source>A user can create tables in this project. They become a manager of the new table.</source>
         <target>Uživatel může vytvářet tabulky v tomto projektu. Stane se správcem tabulky, kterou vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">329</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.ViewContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">340</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.ViewContribute" datatype="html">
         <source>A user can create views in this project. They become a manager of the new view.</source>
         <target>Uživatel může vytvářet pohledy v tomto projektu. Stane se správcem pohledu, který vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">331</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.LinkContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">342</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.LinkContribute" datatype="html">
         <source>A user can create link types in this project. They become a manager of the new link type.</source>
         <target>Uživatel může vytvářet nové typy propojení v tomto projektu. Stane se správcem typu propojení, které vytvoří.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">333</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">344</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in all tables and link types in this project.</source>
         <target>Uživatel může vytvářet, upravovat a odstraňovat sloupce ve všech tabulkách a typech propojení v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">335</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">346</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations on all tables and link types in this project.</source>
         <target>Uživatel může vytvářet, upravovat a odstraňovat automatizace ve všech tabulkách a typech propojení v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">315</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">326</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.TechConfig" datatype="html">
         <source>A user can manage sequences and publish project.</source>
         <target>Uživatel může spravovat sekvence a publikovat projekt.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
-          <context context-type="linenumber">317</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">328</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage visual view configurations of all views in this project.</source>
         <target>Uživatel může upravovat vizuální nastavení všech pohledů v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">337</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.QueryConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">348</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in all views in this project.</source>
         <target>Uživatel může upravovat filtry a dotazy všech pohledů v tomto projektu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">339</context></context-group></trans-unit><trans-unit id="collection.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">350</context></context-group></trans-unit><trans-unit id="collection.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} AttributeEdit {Manage Columns} TechConfig {Manage Automations}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele} DataRead {Číst záznamy} DataWrite {Upravovat záznamy} DataDelete {Odstraňovat záznamy} DataContribute {Přidávat svoje záznamy} CommentContribute {Vkládat komentáře} AttributeEdit {Spravovat sloupce} TechConfig {Spravovat automatizace}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">354</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">365</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this table and can see it. Users need other rights to be able to see and work with the table content.</source>
         <target>Uživatel je přidaný k této tabulce a může ji vidět. Uživatelé potřebují dalsí práva, aby mohli vidět a pracovat s obsahem tabulky.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">362</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">373</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the table name, color, icon, description and can delete it.</source>
         <target>Uživatel může upravovat název, barvu, ikonu a popis tabulky. Může tabulku také odstranit.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">364</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">375</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this table.</source>
         <target>Uživatel může spravovat práva uživatelů v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">366</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">377</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in this table.</source>
         <target>Uživatel může číst veškeré údaje v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">368</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">379</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in this table.</source>
         <target>Uživatel může upravovat veškeré údaje v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">370</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">381</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in this table.</source>
         <target>Uživatel může odstraňovat libovolné záznamy (řádky) z této tabulky.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">372</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">383</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in this table.</source>
         <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">374</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">385</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this table.</source>
         <target>Uživatel může vkládat komentáře ke všem záznamům v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">376</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.AttributeEdit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">387</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.AttributeEdit" datatype="html">
         <source>A user can add, modify, and delete columns in this table.</source>
         <target>Uživtal může přidávat, upravovat a odstraňovat sloupce v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">378</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.TechConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">389</context></context-group></trans-unit><trans-unit id="collection.permission.role.tooltip.TechConfig" datatype="html">
         <source>A user can add, modify, and delete automations in this table.</source>
         <target>Uživatel může přidávat, upravovat a odstraňovat automatizace v této tabulce.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">380</context></context-group></trans-unit><trans-unit id="view.permission.role.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">391</context></context-group></trans-unit><trans-unit id="view.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele} DataRead {Číst záznamy} DataWrite {Upravovat záznamy} DataDelete {Odstraňovat záznamy} DataContribute {Vytvářet záznamy} CommentContribute {Vkládat komentáře} PerspectiveConfig {Spravovat pohledy} QueryConfig {Spravovat filtry pohledů}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">395</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">406</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this view and can see it. Users need other rights to be able to open the view, see and work with the view content.</source>
         <target>Uživatel je přidaný k tomuto pohledu a může jej vidět. Uživatel potřebuje další práva, aby mohl podhled otevřít a vidět a pracovat s jeho obsahem.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">403</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Manage" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">414</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the view name, color, icon, folders and can delete it.</source>
         <target>Uživatel může upravovat název, ikonu, barvu a složky tohoto pohledu. Může pohled také odstranits.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">405</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.UserConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">416</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.UserConfig" datatype="html">
         <source>A user can manage user rights in this view.</source>
         <target>Uživatel může spravovat práva ostatních uživatelů v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">407</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataRead" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">418</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataRead" datatype="html">
         <source>A user can read all data in this view.</source>
         <target>Uživatel může číst veškeré údaje v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">409</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataWrite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">420</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataWrite" datatype="html">
         <source>A user can modify all data in this view.</source>
         <target>Uživatel může upravovat veškeré údaje v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">411</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataDelete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">422</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataDelete" datatype="html">
         <source>A user can delete all records (rows) in this view.</source>
         <target>Uživatel může odstraňovat libovolné záznamy (řádky) v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">413</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">424</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.DataContribute" datatype="html">
         <source>A user can create, see, modify and delete only their own records (rows) in this view.</source>
         <target>Uživatel může vytvářet, prohlížet, upravovat a odstraňovat jen svoje vlastní záznamy (řádky) v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">415</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.CommentContribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">426</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.CommentContribute" datatype="html">
         <source>A user can comment all records in this view.</source>
         <target>uživatel může vkládat komentáře ke všem záznamům v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">417</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.PerspectiveConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">428</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage the visual configuration of this view.</source>
         <target>Uživatel může upravovat vizuální nastavení tohoto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">419</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.QueryConfig" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">430</context></context-group></trans-unit><trans-unit id="view.permission.role.tooltip.QueryConfig" datatype="html">
         <source>A user can modify queries in this view.</source>
         <target>Uživatel může upravovat nastavení filtrů a dotazů v tomto pohledu.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">421</context></context-group></trans-unit><trans-unit id="organization.permission.role.group" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">432</context></context-group></trans-unit><trans-unit id="organization.permission.role.group" datatype="html">
         <source>{type, select, Data {Manage Data} View {Manage Views} Collaborate {Create Tables, Links and Views} User {User Management} Config {Manage Tables, Links and Views}}</source>
         <target>{type, select, Data {Spravovat údaje} View {Spravovat pohledy} Collaborate {Vytvářet tabulky, propojení a pohledy} User {Spravovat uživatele} Config {Spravovat tabulky, propojení a pohledy}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">427</context></context-group></trans-unit><trans-unit id="lumeer.advice" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">438</context></context-group></trans-unit><trans-unit id="lumeer.advice" datatype="html">
         <source>Lumeer's Advice</source><target>Lumeer radí</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="warning.force.refresh" datatype="html">
