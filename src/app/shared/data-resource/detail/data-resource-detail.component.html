@@ -23,6 +23,7 @@
                  [showLinks]="resourceType === collectionResourceType"
                  [showTables]="resourceType === linkTypeResourceType"
                  [showActivity]="dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser"
+                 [showComments]="dataResourceData.permissions?.rolesWithView?.CommentContribute"
                  [activeTab]="data.selectedTab"
                  [commentsCount]="data.commentsCount"
                  [linksCount]="linksCount$ | async"
@@ -50,22 +51,23 @@
       </data-resource-data>
       <div class="my-5">
       </div>
-      <comments-panel *ngIf="resource && dataResource?.id"
-                      [maxCommentsCount]="1"
-                      [permissions]="dataResourceData.permissions"
-                      [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
-                      [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                      [resourceId]="dataResource.id"
-                      (newCommentClick)="editNewComment()">
-      </comments-panel>
-      <div *ngIf="data.commentsCount > 1">
-        <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
-                i18n="@@document.detail.detail.comments.seeAll"
-                (click)="selectTab(detailTabType.Comments)">
-          See {data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}} {{data.commentsCount}}
-          {data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}} &gt;
-        </button>
-      </div>
+      <ng-container *ngIf="dataResourceData.permissions?.rolesWithView?.CommentContribute">
+        <comments-panel *ngIf="resource && dataResource?.id"
+                        [maxCommentsCount]="1"
+                        [permissions]="dataResourceData.permissions"
+                        [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                        [resourceId]="dataResource.id"
+                        (newCommentClick)="editNewComment()">
+        </comments-panel>
+        <div *ngIf="data.commentsCount > 1">
+          <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
+                  i18n="@@document.detail.detail.comments.seeAll"
+                  (click)="selectTab(detailTabType.Comments)">
+            See {data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}} {{data.commentsCount}}
+            {data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}} &gt;
+          </button>
+        </div>
+      </ng-container>
     </ng-container>
 
     <div *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
@@ -125,11 +127,11 @@
 
     </ng-container>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Comments">
+    <ng-container
+      *ngIf="data.selectedTab === detailTabType.Comments && dataResourceData.permissions?.rolesWithView?.CommentContribute">
       <comments-panel *ngIf="resource && dataResource?.id"
                       [permissions]="dataResourceData.permissions"
                       [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                      [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
                       [resourceId]="dataResource.id"
                       [startEditing]="data.startEditing"
                       (onSaveComment)="startEditing$.next(false)"
@@ -137,7 +139,8 @@
       </comments-panel>
     </ng-container>
 
-    <ng-container *ngIf="data.selectedTab === detailTabType.Activity && (dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser)">
+    <ng-container
+      *ngIf="data.selectedTab === detailTabType.Activity && (dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser)">
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"

@@ -40,6 +40,9 @@ export class DetailTabsComponent implements OnChanges {
   public showActivity: boolean;
 
   @Input()
+  public showComments: boolean;
+
+  @Input()
   public commentsCount: number;
 
   @Input()
@@ -61,6 +64,9 @@ export class DetailTabsComponent implements OnChanges {
       this.resetTabActive();
     }
     if (changes.showActivity && !this.showActivity && this.activeTab === DetailTabType.Activity) {
+      this.resetTabActive();
+    }
+    if (changes.showComments && !this.showComments && this.activeTab === DetailTabType.Comments) {
       this.resetTabActive();
     }
   }

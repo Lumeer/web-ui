@@ -40,7 +40,6 @@ import {generateId} from '../utils/resource.utils';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {map, take} from 'rxjs/operators';
-import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'comments-panel',
@@ -60,9 +59,6 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
 
   @Input()
   public permissions: AllowedPermissions;
-
-  @Input()
-  public dataPermissions: DataResourcePermissions;
 
   @Input()
   public startEditing: boolean = false;
