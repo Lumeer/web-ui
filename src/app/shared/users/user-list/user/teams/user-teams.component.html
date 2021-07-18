@@ -9,7 +9,9 @@
   <div #textInputParent>
     <button class="btn btn-sm btn-link text-nowrap py-0 mb-1" *ngIf="editable && !(suggesting$ | async)"
             (click)="$event.stopPropagation(); onEditClick()">
-      <i class="far fa-users mr-1"></i><span i18n="@@edit">Edit</span>
+      <i class="far fa-users mr-1"></i>
+      <span *ngIf="!(selectedTeams | empty)" i18n="@@edit">Edit</span>
+      <span *ngIf="selectedTeams | empty" i18n="@@users.teams.add.teams">Add Teams</span>
     </button>
 
     <input *ngIf="editable && (suggesting$ | async)"
