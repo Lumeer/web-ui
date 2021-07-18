@@ -203,6 +203,7 @@ export class RoleGroupService {
           this.createViewRole(RoleType.DataWrite),
           this.createViewRole(RoleType.DataContribute),
           this.createViewRole(RoleType.DataDelete),
+          this.createViewRole(RoleType.CommentContribute),
         ],
       },
     ];

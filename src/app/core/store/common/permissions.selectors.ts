@@ -198,7 +198,7 @@ export const selectCollectionsByCustomQuery = (query: Query) =>
 
 export const selectDocumentsByReadPermission = createSelector(
   selectAllDocuments,
-  selectReadableCollections,
+  selectAllCollections,
   selectCollectionsPermissions,
   selectCurrentUserForWorkspace,
   (documents, collections, permissionsMap, currentUser) => {
@@ -221,7 +221,7 @@ export const selectDocumentsByReadPermission = createSelector(
 
 export const selectLinksByReadPermission = createSelector(
   selectAllLinkInstances,
-  selectReadableLinkTypes,
+  selectAllLinkTypes,
   selectLinkTypesPermissions,
   selectCurrentUserForWorkspace,
   (linkInstances, linkTypes, permissionsMap, currentUser) => {
@@ -233,8 +233,8 @@ export const selectLinksByReadPermission = createSelector(
         allLinkInstances.push(...collectionDocuments);
       } else {
         allLinkInstances.push(
-          ...collectionDocuments.filter(document =>
-            userCanReadLinkInstance(document, linkType, permissions, currentUser)
+          ...collectionDocuments.filter(linkInstance =>
+            userCanReadLinkInstance(linkInstance, linkType, permissions, currentUser)
           )
         );
       }

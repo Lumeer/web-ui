@@ -58,7 +58,7 @@ function convertViewAuthorRights(authorRights: Record<string, string[]>): Record
   return Object.keys(authorRights || {}).reduce(
     (rights, id) => ({
       ...rights,
-      [id]: (rights[id] || []).map(role => roleTypesMap[role]).filter(role => !!role),
+      [id]: (authorRights[id] || []).map(role => roleTypesMap[role]).filter(role => !!role),
     }),
     {}
   );
