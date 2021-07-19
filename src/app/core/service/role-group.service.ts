@@ -240,12 +240,12 @@ export class RoleGroupService {
     switch (type) {
       case RoleType.Read:
         if (transitive) {
-          return $localize`:@@organization.permission.transitive.role.tooltip.Read:A user can see all projects, tables, views and links in all projects in this organization.`;
+          return $localize`:@@organization.permission.transitive.role.tooltip.Read:A user can see this organization, all projects, tables, views and links in all projects in this organization.`;
         }
         return $localize`:@@organization.permission.role.tooltip.Read:A user joins this organization and can see it.`;
       case RoleType.Manage:
         if (transitive) {
-          return $localize`:@@organization.permission.transitive.role.tooltip.Manage:A user can change and delete all projects, tables, views and links in all projects in this organization.`;
+          return $localize`:@@organization.permission.transitive.role.tooltip.Manage:A user can change and delete this organization, all projects, tables, views and links in all projects in this organization.`;
         }
         return $localize`:@@organization.permission.role.tooltip.Manage:A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.`;
       case RoleType.ProjectContribute:
@@ -294,12 +294,12 @@ export class RoleGroupService {
       case ResourceType.Organization:
       default:
         return parseSelectTranslation(
-          $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join All Projects, Tables, Links and Views} Manage {Manage All Projects, Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+          $localize`:@@organization.permission.transitive.role.organization.title:{type, select, Read {Join Everything} Manage {Manage Everything} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
         );
       case ResourceType.Project:
         return parseSelectTranslation(
-          $localize`:@@organization.permission.transitive.role.project.title:{type, select, Read {Join All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
+          $localize`:@@organization.permission.transitive.role.project.title:{type, select, Read {Join Everything} Manage {Manage Everytning} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}`,
           {type}
         );
     }
@@ -309,12 +309,12 @@ export class RoleGroupService {
     switch (type) {
       case RoleType.Read:
         if (transitive) {
-          return $localize`:@@project.permission.transitive.role.tooltip.Read:A user can see all tables, views and links in this project. However for their content (data) there is a separate right.`;
+          return $localize`:@@project.permission.transitive.role.tooltip.Read:A user can see this project, all tables, views and links in this project. However for their content (data) there is a separate right.`;
         }
         return $localize`:@@project.permission.role.tooltip.Read:A user joins this project and can see it.`;
       case RoleType.Manage:
         if (transitive) {
-          return $localize`:@@project.permission.transitive.role.tooltip.Manage:A user can change and delete all tables, views and links in this project.`;
+          return $localize`:@@project.permission.transitive.role.tooltip.Manage:A user can change and delete this project, all tables, views and links in this project.`;
         }
         return $localize`:@@project.permission.role.tooltip.Manage:A user can change the project name, color, icon, description and can delete it.`;
       case RoleType.UserConfig:
