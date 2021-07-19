@@ -3248,16 +3248,16 @@
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v organizaci} ProjectContribute {Vytvářet projekty}}</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">234</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Read" datatype="html">
-        <source>A user can see all projects, tables, views and links in all projects in this organization.</source>
-        <target>Uživatel může vidět všechny projekty, tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
+        <source>A user can see the organization, all projects, tables, views and links in all projects in this organization.</source>
+        <target>Uživatel může vidět tuto organizaci, všechny projekty a všechny tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">243</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this organization and can see it.</source>
         <target>Uživatel je přidaný do této organizace a může ji vidět.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">245</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.tooltip.Manage" datatype="html">
-        <source>A user can change and delete all projects, tables, views and links in all projects in this organization.</source>
-        <target>Uživatel může měnit a mazat všechny projekty, tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
+        <source>A user can change and delete the organization, all projects, tables, views and links in all projects in this organization.</source>
+        <target>Uživatel může měnit a mazat tuto organizaci, všechny projekty a všechny tabulky, pohledy a propojení ve všech projektech v této organizaci.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">248</context></context-group></trans-unit><trans-unit id="organization.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the organization name, color, icon, description, can trigger payments and update invoicing contact, can delete the organization.</source>
@@ -3328,23 +3328,23 @@
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v projektu} TechConfig {Spravovat sekvence a veřejný přístup}}</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">287</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.organization.title" datatype="html">
-        <source>{type, select, Read {Join All Projects, Tables, Links and Views} Manage {Manage All Projects, Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
-        <target>{type, select, Read {Přidat se ke všem projektům, tabulkám, propojením a pohledům} Manage {Spravovat všechny projekty, tabulky, propojení a pohledy} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek a propojení} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
+        <source>{type, select, Read {Join Everything} Manage {Manage Everything} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
+        <target>{type, select, Read {Přidat se všude} Manage {Spravovat vše} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek a propojení} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">297</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.project.title" datatype="html">
-        <source>{type, select, Read {Join All Tables, Links and Views} Manage {Manage All Tables, Links and Views} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
-        <target>{type, select, Read {Přidat se ke všem tabulkám, propojením a pohledům} Manage {Spravovat všechny tabulky, propojení a pohledy} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek a propojení} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
+        <source>{type, select, Read {Join Everything} Manage {Manage Everytning} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types} ViewContribute {Create Views} CollectionContribute {Create Tables} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
+        <target>{type, select, Read {Přidat se všude} Manage {Spravovat vše} UserConfig {Spravovat všechny uživatele} DataRead {Číst vše} DataWrite {Upravovat cokoliv} DataDelete {Odstraňovat cokoliv} DataContribute {Přispívat všude} LinkContribute {Kdekoliv vytvářet typy propojení} ViewContribute {Kdekoliv vytvářet pohledy} CollectionContribute {Kdekoliv vytvářet tabulky} CommentContribute {Kdekoliv vkládat komentáře} AttributeEdit {Upravovat sloupce tabulek a propojení} TechConfig {Spravovat automatizace} QueryConfig {Kdekoliv spravovat filtry pohledů} PerspectiveConfig {Kdekoliv spravovat pohledy}}</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">302</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Read" datatype="html">
-        <source>A user can see all tables, views and links in this project. However for their content (data) there is a separate right.</source>
-        <target>Uživatel může vidět všechny tabulky, pohledy a propojení v tomto projektu. Pro přístup k jejich obsahu (údajům) je však potřeba další oprávnění.</target>
+        <source>A user can see this project, all tables, views and links in this project. However for their content (data) there is a separate right.</source>
+        <target>Uživatel může vidět tento projekt a všechny tabulky, pohledy a propojení v tomto projektu. Pro přístup k jejich obsahu (údajům) je však potřeba další oprávnění.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">312</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Read" datatype="html">
         <source>A user joins this project and can see it.</source><target>Uživatel je přidaný do tohoto projektu a může jej vidět.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">314</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.Manage" datatype="html">
-        <source>A user can change and delete all tables, views and links in this project.</source>
-        <target>Uživatel může měnit nebo odstraňovat všechny tabulky, pohledy a propojení v tomto projektu.</target>
+        <source>A user can change and delete this project, all tables, views and links in this project.</source>
+        <target>Uživatel může měnit nebo odstraňovat tento projekt a všechny tabulky, pohledy a propojení v tomto projektu.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">317</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.Manage" datatype="html">
         <source>A user can change the project name, color, icon, description and can delete it.</source>
@@ -3787,7 +3787,7 @@
                 <target>Pozvat kolegu nebo známého</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="users.teams.add.teams" datatype="html">
-        <source>Add Teams</source><target state="new">Add Teams</target>
+        <source>Add Teams</source><target>Přidat týmy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context>
           <context context-type="linenumber">14</context>
