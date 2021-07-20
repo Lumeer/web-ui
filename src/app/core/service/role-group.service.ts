@@ -404,7 +404,7 @@ export class RoleGroupService {
 
   private viewRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@view.permission.role.title:{type, select, Read {Join} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Create Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
+      $localize`:@@view.permission.role.title:{type, select, Read {Join} Manage {Manage Settings} UserConfig {Manage Users} DataRead {Read Records} DataWrite {Edit Records} DataDelete {Delete Records} DataContribute {Contribute Records} CommentContribute {Comment Records} PerspectiveConfig {Configure View} QueryConfig {Manage Query}}`,
       {type}
     );
   }
