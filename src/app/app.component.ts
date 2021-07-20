@@ -234,6 +234,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private initLanguage() {
     this.localeService.use(this.configurationService.getConfiguration().locale);
+    moment.locale(this.configurationService.getConfiguration().locale);
 
     switch (this.configurationService.getConfiguration().locale) {
       case LanguageCode.CZ: {
