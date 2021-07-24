@@ -1,6 +1,6 @@
 <div class="container-fluid col-12 col-lg-10 col-xl-9 pb-5">
   <ng-container *ngIf="{selected: selected$ | async, query: query$ | async, viewSettings: viewSettings$ | async,
-  permissions: collectionPermission$ | async, creatingDocument: creatingDocument$ | async} as data">
+  permissions: permissions$ | async, creatingDocument: creatingDocument$ | async} as data">
     <preview-results
       class="mb-4 d-block"
       [selectedCollection]="data.selected.collection"
@@ -11,7 +11,7 @@
       (selectDocument)="selectDocument($event)">
     </preview-results>
 
-    <div class="mb-4 d-flex justify-content-center" *ngIf="data.permissions?.rolesWithView?.DataContribute && data.selected.collection">
+    <div class="mb-4 d-flex justify-content-center" *ngIf="data.selected.collection | canCreateNewRecord:data.permissions">
       <button type="button"
               class="btn btn-sm btn-primary"
               [attr.aria-disabled]="data.creatingDocument"

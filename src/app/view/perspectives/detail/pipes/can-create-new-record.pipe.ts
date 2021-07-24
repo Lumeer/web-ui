@@ -17,19 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../../../shared/shared.module';
-import {DetailPerspectiveComponent} from './detail-perspective.component';
-import {RouterModule} from '@angular/router';
-import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
-import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
-import {CanCreateNewRecordPipe} from './pipes/can-create-new-record.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../../../core/store/collections/collection';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 
-@NgModule({
-  imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
-  declarations: [DetailPerspectiveComponent, DetailQueryStemPipe, CanCreateNewRecordPipe],
-  exports: [DetailPerspectiveComponent],
+@Pipe({
+  name: 'canCreateNewRecord',
 })
-export class DetailPerspectiveModule {}
-
-export default DetailPerspectiveModule;
+export class CanCreateNewRecordPipe implements PipeTransform {
+  public transform(collection: Collection, permissions: AllowedPermissionsMap): boolean {
+    return collection && permissions?.[collection.id]?.rolesWithView?.DataContribute;
+  }
+}
