@@ -35,13 +35,6 @@ td.affected:not(.editing) {
   box-shadow: 1px 1px 4px $secondary;
 }
 
-td::ng-deep data-input {
-  & > *:not(user-data-input) > * {
-    padding-left: $padding !important;
-    padding-right: $padding !important;
-  }
-}
-
 :host:hover {
   .fixed-column i {
     opacity: 1 !important;
