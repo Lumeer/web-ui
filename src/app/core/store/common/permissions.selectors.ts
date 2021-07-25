@@ -90,8 +90,6 @@ export const selectContributeAndWritableCollections = selectCollectionsByPermiss
   RoleType.DataWrite,
 ]);
 
-export const selectWritableCollections = selectCollectionsByPermission([RoleType.DataWrite]);
-
 export const selectCollectionsByQuery = createSelector(
   selectReadableCollections,
   selectAllDocuments,
@@ -131,8 +129,6 @@ export const selectContributeAndWritableLinkTypes = selectLinkTypesByPermission(
   RoleType.DataWrite,
   RoleType.DataContribute,
 ]);
-
-export const selectWritableLinkTypes = selectLinkTypesByPermission([RoleType.DataWrite]);
 
 export const selectTasksQuery = createSelector(
   selectViewQuery,

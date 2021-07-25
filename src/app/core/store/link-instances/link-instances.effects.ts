@@ -61,10 +61,17 @@ export class LinkInstancesEffects {
       ),
       withLatestFrom(
         this.store$.pipe(select(selectLinkInstancesQueries)),
-        this.store$.pipe(select(selectLinkInstancesLoadingQueries))
+        this.store$.pipe(select(selectLinkInstancesLoadingQueries)),
+        this.store$.pipe(select(selectResourcesPermissions))
       ),
-      filter(([payload, queries, loadingQueries]) =>
-        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      filter(([payload, queries, loadingQueries, permissions]) =>
+        shouldLoadByDataQuery(
+          payload,
+          queries,
+          loadingQueries,
+          this.configurationService.getConfiguration().publicView,
+          permissions
+        )
       ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new LinkInstancesAction.SetLoadingQuery({query: payload.query}))),

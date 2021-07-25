@@ -56,10 +56,17 @@ export class DataResourcesEffects {
       ),
       withLatestFrom(
         this.store$.pipe(select(selectDataResourcesQueries)),
-        this.store$.pipe(select(selectDataResourcesLoadingQueries))
+        this.store$.pipe(select(selectDataResourcesLoadingQueries)),
+        this.store$.pipe(select(selectResourcesPermissions))
       ),
-      filter(([payload, queries, loadingQueries]) =>
-        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      filter(([payload, queries, loadingQueries, permissions]) =>
+        shouldLoadByDataQuery(
+          payload,
+          queries,
+          loadingQueries,
+          this.configurationService.getConfiguration().publicView,
+          permissions
+        )
       ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingQuery({query: payload.query}))),
@@ -95,9 +102,19 @@ export class DataResourcesEffects {
       map(action =>
         checkLoadedDataQueryPayload(action.payload, this.configurationService.getConfiguration().publicView)
       ),
-      withLatestFrom(this.store$.pipe(select(selectTasksQueries)), this.store$.pipe(select(selectTasksLoadingQueries))),
-      filter(([payload, queries, loadingQueries]) =>
-        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      withLatestFrom(
+        this.store$.pipe(select(selectTasksQueries)),
+        this.store$.pipe(select(selectTasksLoadingQueries)),
+        this.store$.pipe(select(selectResourcesPermissions))
+      ),
+      filter(([payload, queries, loadingQueries, permissions]) =>
+        shouldLoadByDataQuery(
+          payload,
+          queries,
+          loadingQueries,
+          this.configurationService.getConfiguration().publicView,
+          permissions
+        )
       ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new DataResourcesAction.SetLoadingTasksQuery({query: payload.query}))),

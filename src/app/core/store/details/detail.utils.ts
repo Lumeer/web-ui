@@ -27,21 +27,22 @@ import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   getBaseCollectionIdsFromQuery,
+  queryContainsOnlyFulltexts,
   queryIsEmpty,
   queryStemsAreSame,
   queryStemWithoutFilters,
 } from '../navigation/query/query.util';
 
 export function modifyDetailPerspectiveQuery(query: Query, collections: Collection[]): Query {
-  if (queryIsEmpty(query)) {
+  if (queryIsEmpty(query) || queryContainsOnlyFulltexts(query)) {
     const stems: QueryStem[] = (collections || []).map(collection => ({collectionId: collection.id}));
-    return {stems};
+    return {stems, fulltexts: query?.fulltexts};
   }
   const collectionIdsInQuery = getBaseCollectionIdsFromQuery(query);
   const stems: QueryStem[] = (collections || [])
     .filter(collection => collectionIdsInQuery.includes(collection.id))
     .map(collection => ({collectionId: collection.id}));
-  return {stems};
+  return {stems, fulltexts: query?.fulltexts};
 }
 
 export function createFlatResourcesSettingsQuery(collections: Collection[], linkTypes: LinkType[] = []): Query {
