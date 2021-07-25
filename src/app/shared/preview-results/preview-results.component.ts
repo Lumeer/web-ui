@@ -28,8 +28,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of, zip} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
@@ -102,23 +102,32 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
       documents$ = this.store$.pipe(
         select(selectDocumentsAndLinksByCollectionAndQuery(this.selectedCollection.id, collectionQuery))
       );
-      loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
+      loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)), distinctUntilChanged());
     } else {
       documents$ = of([]);
       if (queryIsEmpty(this.query) || queryContainsOnlyFulltexts(this.query)) {
         loaded$ = combineLatest([
           this.store$.pipe(select(selectReadableCollections)),
           this.store$.pipe(select(selectQueryDocumentsLoaded(this.query))),
-        ]).pipe(map(([collections, loaded]) => collections.length === 0 || loaded));
+        ]).pipe(
+          map(([collections, loaded]) => collections.length === 0 || loaded),
+          distinctUntilChanged()
+        );
       } else {
         loaded$ = this.store$.pipe(
           select(selectCollectionsByQueryWithoutLinks),
-          map(collections => collections.length === 0)
+          map(collections => collections.length === 0),
+          distinctUntilChanged()
         );
       }
     }
 
-    this.documentsData$ = zip(documents$, loaded$).pipe(map(([documents, loaded]) => ({loaded, documents})));
+    this.documentsData$ = combineLatest([documents$, loaded$]).pipe(
+      map(([documents, loaded]) => ({
+        loaded,
+        documents,
+      }))
+    );
   }
 
   public setActiveCollection(collection: Collection) {

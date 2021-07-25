@@ -3,15 +3,15 @@
   permissions: permissions$ | async, creatingDocument: creatingDocument$ | async} as data">
     <preview-results
       class="mb-4 d-block"
-      [selectedCollection]="data.selected.collection"
-      [selectedDocument]="data.selected.document"
+      [selectedCollection]="data.selected?.collection"
+      [selectedDocument]="data.selected?.document"
       [attributesSettings]="data.viewSettings?.attributes"
       [query]="data.query"
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
 
-    <div class="mb-4 d-flex justify-content-center" *ngIf="data.selected.collection | canCreateNewRecord:data.permissions">
+    <div class="mb-4 d-flex justify-content-center" *ngIf="data.selected?.collection | canCreateNewRecord:data.permissions">
       <button type="button"
               class="btn btn-sm btn-primary"
               [attr.aria-disabled]="data.creatingDocument"
@@ -23,12 +23,12 @@
       </button>
     </div>
 
-    <div class="card p-4 mb-4" *ngIf="data.selected.collection && data.selected.document">
-      <data-resource-detail [resource]="data.selected.collection"
-                            [dataResource]="data.selected.document"
+    <div class="card p-4 mb-4" *ngIf="data.selected?.collection && data.selected?.document">
+      <data-resource-detail [resource]="data.selected?.collection"
+                            [dataResource]="data.selected?.document"
                             [query]="data.query"
                             [settingsQuery]="settingsQuery$ | async"
-                            [settingsStem]="data.selected.collection | detailQueryStem"
+                            [settingsStem]="data.selected?.collection | detailQueryStem"
                             (documentSelect)="selectCollectionAndDocument($event)">
       </data-resource-detail>
     </div>

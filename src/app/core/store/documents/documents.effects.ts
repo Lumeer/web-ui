@@ -69,10 +69,17 @@ export class DocumentsEffects {
       ),
       withLatestFrom(
         this.store$.pipe(select(selectDocumentsQueries)),
-        this.store$.pipe(select(selectDocumentsLoadingQueries))
+        this.store$.pipe(select(selectDocumentsLoadingQueries)),
+        this.store$.pipe(select(selectResourcesPermissions))
       ),
-      filter(([payload, queries, loadingQueries]) =>
-        shouldLoadByDataQuery(payload, queries, loadingQueries, this.configurationService.getConfiguration().publicView)
+      filter(([payload, queries, loadingQueries, permissions]) =>
+        shouldLoadByDataQuery(
+          payload,
+          queries,
+          loadingQueries,
+          this.configurationService.getConfiguration().publicView,
+          permissions
+        )
       ),
       map(([payload, ,]) => payload),
       tap(payload => this.store$.dispatch(new DocumentsAction.SetLoadingQuery({query: payload.query}))),

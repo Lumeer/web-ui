@@ -28,13 +28,13 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
-import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectQuery, selectViewCursor} from '../../../core/store/navigation/navigation.state';
+import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
+import {selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionsByQueryWithoutLinks,
-  selectReadableCollections,
   selectDocumentsByCustomQuery,
+  selectReadableCollections,
 } from '../../../core/store/common/permissions.selectors';
 import {
   filterStemsForCollection,
@@ -50,13 +50,13 @@ import {
   selectCollectionsPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
 import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
-import {DataQuery} from '../../../core/model/data-query';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
-import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {userCanReadDocument} from '../../../shared/utils/permission.utils';
+import {PerspectiveService} from '../../../core/service/perspective.service';
+import {DataQuery} from '../../../core/model/data-query';
+import {Perspective} from '../perspective';
 
 @Component({
   selector: 'detail-perspective',
@@ -76,7 +76,7 @@ export class DetailPerspectiveComponent implements OnInit {
   private query: Query;
   private collection: Collection;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private perspectiveService: PerspectiveService) {}
 
   public ngOnInit() {
     this.settingsQuery$ = this.store$.pipe(
@@ -85,8 +85,6 @@ export class DetailPerspectiveComponent implements OnInit {
     );
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-
-    /////////////////////////
 
     this.query$ = this.store$.pipe(
       select(selectViewDataQuery),
@@ -106,19 +104,22 @@ export class DetailPerspectiveComponent implements OnInit {
   private initSelection() {
     this.selected$ = combineLatest([
       this.store$.pipe(select(selectViewCursor)),
-      this.store$.pipe(select(selectQuery)),
+      this.perspectiveService.selectQuery$(Perspective.Detail),
     ]).pipe(
       switchMap(([cursor, query]) =>
-        this.selectByCursor$(cursor, query).pipe(
-          switchMap(({collection, document}) => {
-            if (collection && document) {
-              return of({collection, document});
-            } else if (collection) {
-              return this.selectByCollection$(collection, query);
+        this.selectCollectionByCursor$(cursor, query).pipe(
+          switchMap(({collection}) => {
+            if (collection) {
+              return this.selectByCollection$(collection, query, cursor);
             }
             return this.store$.pipe(
               select(selectCollectionsByQueryWithoutLinks),
-              switchMap(collections => this.selectByCollection$(collections[0], query))
+              switchMap(collections => {
+                if (collections[0]) {
+                  return this.selectByCollection$(collections[0], query, cursor);
+                }
+                return of({collection: null, document: null});
+              })
             );
           }),
           tap(selection => this.emitCursor(selection.collection, selection.document, cursor))
@@ -130,25 +131,19 @@ export class DetailPerspectiveComponent implements OnInit {
   private emitCursor(collection: Collection, document: DocumentModel, cursor: ViewCursor) {
     if (collection?.id !== cursor?.collectionId || document?.id !== cursor?.documentId) {
       this.emit(collection, document);
+    } else if (collection) {
+      this.collection = collection;
     }
   }
 
-  private selectByCursor$(
-    cursor: ViewCursor,
-    query: Query
-  ): Observable<{collection?: Collection; document?: DocumentModel}> {
+  private selectCollectionByCursor$(cursor: ViewCursor, query: Query): Observable<{collection?: Collection}> {
     return combineLatest([
       this.store$.pipe(select(selectCollectionById(cursor?.collectionId))),
       this.store$.pipe(select(selectCollectionPermissions(cursor?.collectionId))),
-      this.store$.pipe(select(selectDocumentById(cursor?.documentId))),
-      this.store$.pipe(select(selectCurrentUserForWorkspace)),
     ]).pipe(
-      map(([collection, permissions, document, currentUser]) => {
+      map(([collection, permissions]) => {
         const baseCollectionIds = getBaseCollectionIdsFromQuery(query);
         if (collection && baseCollectionIds.includes(collection.id) && permissions?.rolesWithView?.Read) {
-          if (document && userCanReadDocument(document, collection, permissions, currentUser)) {
-            return {collection, document};
-          }
           return {collection};
         }
         return {};
@@ -158,15 +153,28 @@ export class DetailPerspectiveComponent implements OnInit {
 
   private selectByCollection$(
     collection: Collection,
-    query: Query
+    query: Query,
+    cursor: ViewCursor
   ): Observable<{collection?: Collection; document?: DocumentModel}> {
     const collectionQuery = filterStemsForCollection(collection.id, query);
-    this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+
     return this.store$.pipe(
-      select(selectDocumentsByCustomQuery(collectionQuery)),
-      map(documents => {
-        return {collection, document: documents?.[0]};
-      })
+      select(selectQueryDocumentsLoaded(collectionQuery)),
+      tap(loaded => {
+        if (!loaded) {
+          this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+        }
+      }),
+      filter(loaded => loaded),
+      mergeMap(() =>
+        this.store$.pipe(
+          select(selectDocumentsByCustomQuery(collectionQuery)),
+          map(
+            documents => (cursor?.documentId && documents.find(doc => doc.id === cursor.documentId)) || documents?.[0]
+          ),
+          map(document => ({collection, document}))
+        )
+      )
     );
   }
 
@@ -209,10 +217,16 @@ export class DetailPerspectiveComponent implements OnInit {
   }
 
   private emit(selectedCollection: Collection, selectedDocument: DocumentModel, query?: Query) {
+    if (!selectedCollection) {
+      return;
+    }
+
     const cursor: ViewCursor = {
       collectionId: selectedCollection.id,
       documentId: selectedDocument?.id,
     };
+
+    this.collection = selectedCollection;
 
     if (query) {
       this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query, cursor}));

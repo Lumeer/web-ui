@@ -23,7 +23,6 @@ import {areDataQueriesEqual} from '../navigation/query/query.helper';
 import {Query, QueryStem} from '../navigation/query/query';
 import {isQuerySubset} from '../navigation/query/query.util';
 import {ResourcesPermissions} from '../../model/allowed-permissions';
-import {RoleType} from '../../model/role-type';
 
 export interface DataQueryPayload {
   query: DataQuery;
@@ -36,14 +35,15 @@ export function shouldLoadByDataQuery(
   payload: DataQueryPayload,
   queries: DataQuery[],
   loadingQueries: DataQuery[],
-  publicView: boolean
+  publicView: boolean,
+  permissions: ResourcesPermissions
 ): boolean {
   if (payload.force) {
     return true;
   }
 
   // is already loaded
-  if (isDataQueryLoaded(payload.query, queries, publicView)) {
+  if (isDataQueryLoaded(payload.query, queries, publicView, permissions)) {
     return false;
   }
 
@@ -98,8 +98,13 @@ function removeUnneededFiltersFromStem(stem: QueryStem, permissions?: ResourcesP
   };
 }
 
-export function isDataQueryLoaded(query: DataQuery, loadedQueries: DataQuery[], publicView: boolean): boolean {
-  const savedQuery = checkLoadedDataQuery(query, {collections: {}, linkTypes: {}}, publicView);
+export function isDataQueryLoaded(
+  query: DataQuery,
+  loadedQueries: DataQuery[],
+  publicView: boolean,
+  permissions?: ResourcesPermissions
+): boolean {
+  const savedQuery = checkLoadedDataQuery(query, permissions || {collections: {}, linkTypes: {}}, publicView);
   return loadedQueries.some(
     loadedQuery =>
       !!query?.includeSubItems === !!loadedQuery?.includeSubItems && isQuerySubset(savedQuery, loadedQuery, true)

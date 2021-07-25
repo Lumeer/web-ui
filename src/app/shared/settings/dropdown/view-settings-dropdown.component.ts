@@ -31,10 +31,7 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {AttributesSettings, DataSettings, ViewSettings} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
-import {
-  selectCollectionsByQueryWithoutLinks,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
+import {selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
 import {combineLatest, Observable} from 'rxjs';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
@@ -46,9 +43,8 @@ import {AttributesResourceData} from '../attributes/attributes-settings-configur
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectPerspective, selectQuery} from '../../../core/store/navigation/navigation.state';
-import {Perspective} from '../../../view/perspectives/perspective';
-import {modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
+import {selectPerspective} from '../../../core/store/navigation/navigation.state';
+import {PerspectiveService} from '../../../core/service/perspective.service';
 
 @Component({
   selector: 'view-settings-dropdown',
@@ -78,7 +74,7 @@ export class ViewSettingsDropdownComponent implements OnInit {
 
   public attributesResourcesData$: Observable<AttributesResourceData[]>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private perspectiveService: PerspectiveService) {}
 
   public ngOnInit() {
     const query$ = this.selectQuery$();
@@ -113,20 +109,8 @@ export class ViewSettingsDropdownComponent implements OnInit {
     return this.store$.pipe(
       select(selectPerspective),
       distinctUntilChanged(),
-      switchMap(perspective => this.selectQueryByPerspective$(perspective))
+      switchMap(perspective => this.perspectiveService.selectQuery$(perspective))
     );
-  }
-
-  private selectQueryByPerspective$(perspective: Perspective): Observable<Query> {
-    switch (perspective) {
-      case Perspective.Detail:
-        return combineLatest([
-          this.store$.pipe(select(selectCollectionsByQueryWithoutLinks)),
-          this.store$.pipe(select(selectQuery)),
-        ]).pipe(map(([collections, query]) => modifyDetailPerspectiveQuery(query, collections)));
-      default:
-        return this.store$.pipe(select(selectQuery));
-    }
   }
 
   public isOpen(): boolean {
