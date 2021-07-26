@@ -9,12 +9,10 @@
 
     <div *ngIf="projectPermissions?.roles?.CollectionContribute">
       <div i18n="@@search.collections.empty.subtitle" class="text-center mb-3">Add your first table or import one.</div>
-      <post-it-collection-add-button [disabled]="false"
-                                     (clicked)="onNewCollection()">
+      <post-it-collection-add-button (clicked)="onNewCollection()">
       </post-it-collection-add-button>
 
       <post-it-collection-import-button class="ml-2"
-                                        [disabled]="false"
                                         (error)="onError($event)"
                                         (import)="onImport($event)">
       </post-it-collection-import-button>

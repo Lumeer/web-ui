@@ -22,12 +22,16 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take, tap} from 'rxjs/operators';
+import {filter, first, map, take, takeUntil, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousWorkspaceUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {
+  selectNavigatingToOtherWorkspace,
+  selectPreviousWorkspaceUrl,
+  selectWorkspace,
+} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
@@ -153,9 +157,19 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
         })
     );
 
-    this.permissions$ = this.store$.pipe(
-      select(selectProjectPermissions),
-      tap(permissions => this.checkCurrentTab(permissions))
+    this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
+
+    this.subscriptions.add(
+      this.permissions$
+        .pipe(
+          takeUntil(
+            this.store$.pipe(
+              select(selectNavigatingToOtherWorkspace),
+              filter(navigating => navigating)
+            )
+          )
+        )
+        .subscribe(permissions => this.checkCurrentTab(permissions))
     );
 
     this.subscriptions.add(

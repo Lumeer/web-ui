@@ -26,6 +26,7 @@ import {SearchTab} from './search-tab';
 import {ViewCursor} from './view-cursor/view-cursor';
 import {Workspace} from './workspace';
 import {PerspectiveSettings} from './settings/perspective-settings';
+import {isNavigatingToOtherWorkspace} from './query/query.util';
 
 export interface NavigationState {
   mapPosition?: MapPosition;
@@ -66,3 +67,7 @@ export const selectViewCursor = createSelector(selectNavigation, state => state?
 export const selectViewFolderPath = createSelector(selectPerspectiveSettings, settings => settings?.viewFolderPath);
 
 export const selectMapPosition = createSelector(selectNavigation, navigation => navigation.mapPosition);
+
+export const selectNavigatingToOtherWorkspace = createSelector(selectNavigation, navigation =>
+  isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace)
+);

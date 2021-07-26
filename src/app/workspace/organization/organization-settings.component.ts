@@ -21,12 +21,16 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, take, takeUntil, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousWorkspaceUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {
+  selectNavigatingToOtherWorkspace,
+  selectPreviousWorkspaceUrl,
+  selectWorkspace,
+} from '../../core/store/navigation/navigation.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
@@ -136,9 +140,19 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
         )
         .subscribe(organization => this.organization$.next({...organization}))
     );
-    this.permissions$ = this.store$.pipe(
-      select(selectOrganizationPermissions),
-      tap(permissions => this.checkCurrentTab(permissions))
+    this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
+
+    this.subscriptions.add(
+      this.permissions$
+        .pipe(
+          takeUntil(
+            this.store$.pipe(
+              select(selectNavigatingToOtherWorkspace),
+              filter(navigating => navigating)
+            )
+          )
+        )
+        .subscribe(permissions => this.checkCurrentTab(permissions))
     );
 
     this.subscriptions.add(
