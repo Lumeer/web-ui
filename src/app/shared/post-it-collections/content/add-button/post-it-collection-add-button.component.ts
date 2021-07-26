@@ -32,9 +32,6 @@ import {SampleDataType} from '../../../../core/model/sample-data-type';
 })
 export class PostItCollectionAddButtonComponent {
   @Input()
-  public disabled: boolean;
-
-  @Input()
   public showAddTaskTable: boolean;
 
   @Output()

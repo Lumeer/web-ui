@@ -1,7 +1,5 @@
 <button type="button"
         class="btn btn-sm btn-primary"
-        [disabled]="disabled"
-        [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
         title="Add table"
         i18n-title="@@collection.post.it.create.title"
         (click)="add()"
@@ -13,8 +11,6 @@
 <button type="button"
         *ngIf="showAddTaskTable"
         class="btn btn-sm btn-primary ml-2"
-        [disabled]="disabled"
-        [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
         (click)="onCreate()"
         data-tour="collection-add">
   <i *ngIf="!(creatingData$ | async)" class="fa fa-tasks mr-1" aria-hidden="true"></i>

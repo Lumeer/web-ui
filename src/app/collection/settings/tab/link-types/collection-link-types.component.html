@@ -1,6 +1,6 @@
 <div class="mt-4 mb-6">
   <table class="table table-borderless table-sm">
-    <thead [style.background-color]="(collection$ | async).color | lightenColor:.5">
+    <thead [style.background-color]="(collection$ | async)?.color | lightenColor:.5">
     <tr>
       <th i18n="@@collections.tab.linkTypes.name" class="pl-2">Link Type</th>
       <th [style.width.%]="30" class="text-right">

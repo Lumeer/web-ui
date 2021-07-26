@@ -81,6 +81,6 @@ export class ProjectSettingsGuard implements CanActivate {
   }
 
   private dispatchDataEvents(organization: Organization, project: Project) {
-    this.store$.dispatch(new ProjectsAction.GetSingle({organizationId: organization.id, projectId: project.id}));
+    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
   }
 }

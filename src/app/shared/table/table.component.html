@@ -56,7 +56,7 @@
     </table>
   </cdk-virtual-scroll-viewport>
   <table-new-row *ngIf="tableModel?.newRow"
-                 class="d-block"
+                 class="d-inline-block"
                  #tableNewRow
                  [style.height.px]="toolbarHeight"
                  (onNewRowClick)="rowNewClick.emit()">

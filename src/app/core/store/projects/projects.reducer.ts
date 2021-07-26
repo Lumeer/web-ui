@@ -73,11 +73,7 @@ function addProjects(state: ProjectsState, action: ProjectsAction.GetSuccess): P
 
 function addOrUpdateProject(state: ProjectsState, project: Project): ProjectsState {
   const oldProject = state.entities[project.id];
-  if (!oldProject) {
-    return projectsAdapter.addOne(project, state);
-  }
-
-  if (isProjectNewer(project, oldProject)) {
+  if (!oldProject || isProjectNewer(project, oldProject)) {
     return projectsAdapter.upsertOne(project, state);
   }
   return state;

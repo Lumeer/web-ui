@@ -130,17 +130,16 @@ function checkOrTransformWorkflowStemConfig(
 }
 
 function createDefaultConfig(query: Query): WorkflowConfig {
-  const stem = query.stems?.[0];
-  if (stem) {
+  const stemsConfigs = (query?.stems || []).reduce((configs, stem) => {
     const resource: WorkflowResource = {
       resourceId: stem.collectionId,
       resourceIndex: 0,
       resourceType: AttributesResourceType.Collection,
     };
-    return {stemsConfigs: [{stem, collection: resource}], version: latestWorkflowVersion, columns: {}, tables: []};
-  }
-
-  return {stemsConfigs: [], version: latestWorkflowVersion, columns: {}, tables: []};
+    configs.push({stem, collection: resource});
+    return configs;
+  }, []);
+  return {stemsConfigs, version: latestWorkflowVersion, columns: {}, tables: []};
 }
 
 export function createWorkflowSaveConfig(config: WorkflowConfig): WorkflowConfig {
@@ -188,7 +187,7 @@ function cleanWorkflowColumns(config: WorkflowConfig): WorkflowColumnsSettings {
 }
 
 export function filterUniqueWorkflowConfigStems(config: WorkflowConfig): WorkflowStemConfig[] {
-  return (config.stemsConfigs || []).reduce<WorkflowStemConfig[]>((stemsConfigs, currentConfig) => {
+  return (config?.stemsConfigs || []).reduce<WorkflowStemConfig[]>((stemsConfigs, currentConfig) => {
     if (!stemsConfigs.some(stemConfig => queryStemsAreSame(stemConfig.stem, currentConfig.stem))) {
       stemsConfigs.push(currentConfig);
     }

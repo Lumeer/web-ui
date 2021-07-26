@@ -113,6 +113,7 @@ export class WorkflowTablesService {
   }
 
   public onRowDetail(row: TableRow) {
+    this.stateService.resetSelection();
     this.dataService.showRowDocumentDetail(row, null, true);
   }
 
