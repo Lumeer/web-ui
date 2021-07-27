@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
@@ -29,6 +29,9 @@ import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../.
 import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
 import {DateTimeConstraintConfig, DateTimeDataValue} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../../../configuration/configuration.service';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
+import {AppState} from '../../../../../../core/store/app.state';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -65,7 +68,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   public exampleValue$: Observable<DateTimeDataValue>;
 
-  constructor(private configurationService: ConfigurationService) {
+  constructor(private configurationService: ConfigurationService, private store$: Store<AppState>) {
     this.formatItems = this.createFormatItems();
   }
 
@@ -90,14 +93,15 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   private bindExampleValue(): Observable<DateTimeDataValue> {
     return this.form.valueChanges.pipe(
       startWith(this.form.value),
-      map(value => {
+      withLatestFrom(this.store$.pipe(select(selectConstraintData))),
+      map(([value, constraintData]) => {
         const config: DateTimeConstraintConfig = {
           format: value.format || value.customFormat,
           minValue: undefined,
           maxValue: undefined,
           range: undefined,
         };
-        return new DateTimeDataValue(new Date().toISOString(), config);
+        return new DateTimeDataValue(new Date().toISOString(), config, constraintData);
       })
     );
   }
