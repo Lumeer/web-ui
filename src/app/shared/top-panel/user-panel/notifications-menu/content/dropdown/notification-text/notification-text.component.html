@@ -52,6 +52,10 @@
     <span class="trail" i18n="@@userNotifications.taskUpdated">The task <em [innerHTML]="taskName | truncate:128"></em> has been updated.</span>
   </ng-container>
 
+  <ng-container *ngSwitchCase="notificationType.TaskChanged">
+    <span class="trail" i18n="@@userNotifications.taskChanged">The task <em [innerHTML]="taskName | truncate:128"></em> has been changed.</span>
+  </ng-container>
+
   <ng-container *ngSwitchCase="notificationType.TaskRemoved">
     <span class="trail" i18n="@@userNotifications.taskRemoved">The task <em [innerHTML]="taskName | truncate:128"></em> has been removed.</span>
   </ng-container>

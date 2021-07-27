@@ -70,6 +70,7 @@ export class NotificationIconComponent implements OnChanges {
         case UserNotificationType.StateUpdate:
         case UserNotificationType.TaskUpdated:
         case UserNotificationType.TaskRemoved:
+        case UserNotificationType.TaskChanged:
         case UserNotificationType.TaskUnassigned:
         case UserNotificationType.TaskCommented:
         case UserNotificationType.TaskMentioned:

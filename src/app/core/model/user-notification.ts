@@ -29,6 +29,7 @@ export enum UserNotificationType {
   PastDueDate = 'PAST_DUE_DATE',
   StateUpdate = 'STATE_UPDATE',
   TaskUpdated = 'TASK_UPDATED',
+  TaskChanged = 'TASK_CHANGED',
   TaskRemoved = 'TASK_REMOVED',
   TaskUnassigned = 'TASK_UNASSIGNED',
   TaskReopened = 'TASK_REOPENED',
@@ -48,6 +49,7 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.PastDueDate]: UserNotificationType.PastDueDate,
   [UserNotificationType.StateUpdate]: UserNotificationType.StateUpdate,
   [UserNotificationType.TaskUpdated]: UserNotificationType.TaskUpdated,
+  [UserNotificationType.TaskChanged]: UserNotificationType.TaskChanged,
   [UserNotificationType.TaskRemoved]: UserNotificationType.TaskRemoved,
   [UserNotificationType.TaskUnassigned]: UserNotificationType.TaskUnassigned,
   [UserNotificationType.TaskReopened]: UserNotificationType.TaskReopened,
@@ -175,6 +177,10 @@ export interface TaskReopenedUserNotification extends TaskUserNotification {
   type: UserNotificationType.TaskReopened;
 }
 
+export interface TaskChangedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskChanged;
+}
+
 export interface DueDateSoonUserNotification extends TaskUserNotification {
   type: UserNotificationType.DueDateSoon;
 }
@@ -221,6 +227,7 @@ export type UserNotification =
   | TaskUpdatedUserNotification
   | TaskRemovedUserNotification
   | TaskUnassignedUserNotification
+  | TaskChangedUserNotification
   | CommentedUserNotification
   | MentionedUserNotification
   | BulkActionUserNotification;

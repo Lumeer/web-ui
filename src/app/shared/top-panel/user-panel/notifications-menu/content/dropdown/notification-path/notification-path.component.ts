@@ -69,6 +69,7 @@ export class NotificationPathComponent implements OnChanges {
         case UserNotificationType.DueDateChanged:
         case UserNotificationType.StateUpdate:
         case UserNotificationType.TaskUpdated:
+        case UserNotificationType.TaskChanged:
         case UserNotificationType.TaskRemoved:
         case UserNotificationType.TaskUnassigned:
         case UserNotificationType.TaskCommented:
