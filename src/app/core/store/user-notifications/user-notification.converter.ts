@@ -112,6 +112,7 @@ export namespace UserNotificationConverter {
           assignee: dto.data.assignee,
           collectionQuery: dto.data.collectionQuery,
           documentCursor: dto.data.documentCursor,
+          comment: dto.data.taskComment,
         };
       default:
         return null;
