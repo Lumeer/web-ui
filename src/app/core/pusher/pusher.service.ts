@@ -747,9 +747,10 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel.bind('UserNotification:create', data => {
-      this.store$.dispatch(
-        new UserNotificationsAction.UpdateSuccess({userNotification: UserNotificationConverter.fromDto(data)})
-      );
+      const userNotification = UserNotificationConverter.fromDto(data);
+      if (userNotification) {
+        this.store$.dispatch(new UserNotificationsAction.UpdateSuccess({userNotification}));
+      }
     });
     this.channel.bind('UserNotification:remove', data => {
       this.store$.dispatch(new UserNotificationsAction.DeleteSuccess({id: data.id}));
