@@ -33,8 +33,10 @@ export enum LanguageCode {
 export const languageCodeMap = {
   [LanguageCode.CZ]: LanguageCode.CZ,
   [LanguageCode.EN]: LanguageCode.EN,
+  [LanguageCode.HU]: LanguageCode.HU,
   [LanguageCode.CZ.toUpperCase()]: LanguageCode.CZ,
   [LanguageCode.EN.toUpperCase()]: LanguageCode.EN,
+  [LanguageCode.HU.toUpperCase()]: LanguageCode.HU,
 };
 
 export const availableLanguages: Language[] = [

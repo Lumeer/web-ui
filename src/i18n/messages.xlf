@@ -5626,28 +5626,9 @@
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
           <context context-type="linenumber">10,11</context>
         </context-group>
-<<<<<<< HEAD
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.info" datatype="html">
-        <source>
-    An automation executed regularly according to the timer settings.
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.edit.message" datatype="html">
-        <source>Edit Rule Code:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/cron-form/cron-form.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="view.perspective.guide.select" datatype="html">
-        <source>1. Select View</source>
-=======
       </trans-unit>
       <trans-unit id="collection.document.count" datatype="html">
         <source>Record Count</source>
->>>>>>> 2408d2504fb65ef930c87d6af989b5db17160012
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context>
           <context context-type="linenumber">41</context>
