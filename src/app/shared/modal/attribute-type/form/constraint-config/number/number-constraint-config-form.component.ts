@@ -23,12 +23,21 @@ import {minMaxValidator} from '../../../../../../core/validators/min-max-validat
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {NumberConstraintFormControl} from './number-constraint-form-control';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
-import {objectValues} from '../../../../../utils/common.utils';
-import {LanguageTag, NumberConstraint, NumberConstraintConfig, NumberDataValue} from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../../../core/model/language-tag';
+import {isNumeric, objectValues, toNumber} from '../../../../../utils/common.utils';
+import {
+  ConstraintData,
+  LanguageTag,
+  NumberConstraint,
+  NumberConstraintConfig,
+  NumberDataValue,
+} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../../utils/translation.utils';
+import {AppState} from '../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
+import {TranslationService} from '../../../../../../core/service/translation.service';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -47,7 +56,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
   public exampleValue$: Observable<NumberDataValue>;
 
-  constructor(private i18n: I18n) {
+  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
     this.currencySelectItems = this.createCurrencySelectItems();
   }
 
@@ -82,39 +91,29 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
     this.exampleValue$ = this.form.valueChanges.pipe(
       startWith(''),
-      map(() => this.createNumberDataValue())
+      withLatestFrom(this.store$.pipe(select(selectConstraintData))),
+      map(([, constraintData]) => this.createNumberDataValue(constraintData))
     );
   }
 
-  private createNumberDataValue(): NumberDataValue {
-    const config: NumberConstraintConfig = this.form.value;
+  private createNumberDataValue(constraintData: ConstraintData): NumberDataValue {
+    const config: NumberConstraintConfig = {...this.form.value};
     let exampleValue = 123456789.123456789;
     if (config.negative) {
       exampleValue *= -1;
     }
-    config.locale = getCurrentLocaleLanguageTag();
+    config.decimals = isNumeric(config.decimals) ? toNumber(config.decimals) : null;
 
-    return new NumberConstraint(config).createDataValue(exampleValue);
+    return new NumberConstraint(config).createDataValue(exampleValue, constraintData);
   }
 
   private createCurrencySelectItems(): SelectItemModel[] {
     return objectValues(LanguageTag)
       .map(tag => ({
         id: tag,
-        value: this.translateLanguageTag(tag),
+        value: this.translationService.translateLanguageTag(tag),
       }))
       .sort((a, b) => a.value.localeCompare(b.value));
-  }
-
-  private translateLanguageTag(tag: LanguageTag): string {
-    return this.i18n(
-      {
-        id: 'constraint.number.currency.select',
-        value:
-          '{tag, select, en-IN {India - ₹ (INR)} uk-UA {Ukraine - ₴ (UAH)} tr-TR {Turkey - ₺ (TRY)} en-MT {Malta - € (EUR)} en-IE {Ireland - € (EUR)} da-DK {Denmark - kr (DKK)} de-CH {Switzerland - CHF} en-NZ {New Zealand - $ (NZD)} fr-CA {Canada - $ (CAD)} sv-SE {Sweden - kr (SEK)} nb-NO {Norway - kr (NOK)} fi-FI {Finland - € (EUR)} he-IL {Israel - ₪ (ILS)} es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR)} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - ₽ (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}',
-      },
-      {tag}
-    );
   }
 
   public onCurrencySelect(tag: LanguageTag) {

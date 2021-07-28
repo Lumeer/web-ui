@@ -1,7 +1,7 @@
 <values-slider
   class="d-block"
-  [style.min-width.px]="160"
-  [items]="items"
+  [style.min-width.px]="120"
+  [items]="items | slice:0:numItems"
   [selectedId]="defaultSize"
   [disabled]="disabled"
   (itemSelected)="onNewItem($event)">

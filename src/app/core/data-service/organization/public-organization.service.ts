@@ -28,6 +28,9 @@ import {OrganizationService} from './organization.service';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
 import {selectPublicOrganizationId} from '../../store/public-data/public-data.state';
+import {setDefaultUserPermissions} from '../common/public-api-util';
+import {DEFAULT_USER} from '../../constants';
+import {RoleType} from '../../model/role-type';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {
@@ -47,7 +50,8 @@ export class PublicOrganizationService extends PublicPermissionService implement
     return this.store$.pipe(
       select(selectPublicOrganizationId),
       take(1),
-      map(organizationId => ({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'}))
+      map(organizationId => ({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'})),
+      map(organization => setDefaultUserPermissions(organization, DEFAULT_USER, [RoleType.Read]))
     );
   }
 

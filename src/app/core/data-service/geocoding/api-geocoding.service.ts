@@ -21,19 +21,21 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {GeocodingService} from './geocoding.service';
-import {environment} from '../../../../environments/environment';
 import {CoordinatesDto, LocationDto} from '../../dto/location.dto';
-
-const GEOCODING_URL = `${environment.apiUrl}/rest/geocoding`;
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiGeocodingService implements GeocodingService {
-  constructor(private http: HttpClient) {}
+  private readonly geocodingUrl: string;
+
+  constructor(private http: HttpClient, private configurationService: ConfigurationService) {
+    this.geocodingUrl = `${this.configurationService.getConfiguration().apiUrl}/rest/geocoding`;
+  }
 
   public findCoordinates(queries: string[]): Observable<Record<string, CoordinatesDto>> {
-    return this.http.get<Record<string, CoordinatesDto>>(`${GEOCODING_URL}/coordinates`, {
+    return this.http.get<Record<string, CoordinatesDto>>(`${this.geocodingUrl}/coordinates`, {
       params: {
         query: queries,
       },
@@ -41,20 +43,15 @@ export class ApiGeocodingService implements GeocodingService {
   }
 
   public findLocations(query: string, limit = 10): Observable<LocationDto[]> {
-    return this.http.get<LocationDto[]>(`${GEOCODING_URL}/locations`, {
+    return this.http.get<LocationDto[]>(`${this.geocodingUrl}/locations`, {
       params: {
         query,
         limit: String(limit),
-        lang: environment.locale,
       },
     });
   }
 
   public findLocationByCoordinates(coordinates: CoordinatesDto): Observable<LocationDto> {
-    return this.http.get<LocationDto>(`${GEOCODING_URL}/locations/${coordinates.lat},${coordinates.lng}`, {
-      params: {
-        lang: environment.locale,
-      },
-    });
+    return this.http.get<LocationDto>(`${this.geocodingUrl}/locations/${coordinates.lat},${coordinates.lng}`);
   }
 }

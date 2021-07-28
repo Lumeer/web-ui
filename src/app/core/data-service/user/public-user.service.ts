@@ -27,8 +27,7 @@ import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {DEFAULT_USER} from '../../constants';
-import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
-import {map} from 'rxjs/operators';
+import {UserHintsDto} from '../../dto/user.dto';
 
 @Injectable()
 export class PublicUserService implements UserService {
@@ -36,13 +35,13 @@ export class PublicUserService implements UserService {
     return of({...user, id: generateId()});
   }
 
-  public createUserInWorkspace(
+  public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],
     invitationType?: InvitationType
   ): Observable<UserDto[]> {
-    return of(users.map(user => ({...user, id: generateId()})));
+    return of(users.map(user => ({...user, organizations: [organizationId], id: generateId()})));
   }
 
   public updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto> {
@@ -67,9 +66,13 @@ export class PublicUserService implements UserService {
       name: 'Alan Turing',
       wizardDismissed: true,
       affiliatePartner: false,
-      groups: {},
+      groups: [],
       lastLoggedIn: new Date().getTime(),
     });
+  }
+
+  public setTeams(organizationId: string, userId: string, teams: string[]): Observable<any> {
+    return of(true);
   }
 
   public resendVerificationEmail(): Observable<any> {
@@ -106,9 +109,5 @@ export class PublicUserService implements UserService {
 
   public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
     return of({});
-  }
-
-  public updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto> {
-    return this.getCurrentUser().pipe(map(user => ({...user, notifications})));
   }
 }

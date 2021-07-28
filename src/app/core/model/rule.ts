@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from '../dto';
-import {Language, LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 import {Query} from '../store/navigation/query/query';
 
 export enum RuleType {
@@ -104,6 +103,7 @@ export interface BlocklyRuleConfiguration {
   blocklyResultTimestamp: number;
   blocklyDryRun: boolean;
   blocklyDryRunResult: string;
+  blocklyRecursive: boolean;
 }
 
 export interface ZapierRuleConfiguration {

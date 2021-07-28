@@ -1,0 +1,71 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  (onClose)="hideDialog()"
+  (onSubmit)="onSubmit()"
+  [performingAction]="performingAction$ | async"
+  [submitDisabled]="data.selectedDocumentIds.length === 0 && data.removedLinkInstancesIds.length === 0"
+  *ngIf="{documents: documents$ | async, linkInstances: linkInstances$ | async, selectedLinkTypeId: selectedLinkTypeId$ | async,
+   collection: collection$ | async, linkType: linkType$ | async,  selectedDocumentIds: selectedDocumentIds$ | async, removedLinkInstancesIds : removedLinkInstancesIds$ | async} as data">
+
+  <span class="title" i18n="@@modal.links.modify.title">Select Linked Records</span>
+
+  <div class="body p-3">
+    <ng-container *ngIf="data.documents.length">
+      <ng-container
+        *ngIf="{count: data.documents | countSelectedLinkedDocuments:data.linkInstances:data.selectedDocumentIds:data.removedLinkInstancesIds} as selected">
+        <div class="mb-1">
+          <span i18n="@@modal.links.modify.selected">
+            {selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }
+          </span>
+          <span class="ml-2 small text-muted" i18n="@@modal.links.modify.filter.title">
+            Use filters to find records to link. Selected records are always visible (no matter of filters).
+          </span>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <collection-filters [collection]="data.collection"
+                        (filtersChange)="onFiltersChange($event)">
+    </collection-filters>
+
+    <ng-container *ngIf="data.documents.length; else noData">
+      <results-table class="d-block mt-2"
+                     [style.height.vh]="50"
+                     [mainDocumentId]="documentId"
+                     [documents]="data.documents"
+                     [linkType]="data.linkType"
+                     [collection]="data.collection"
+                     [linkInstances]="data.linkInstances"
+                     [constraintData]="constraintData$ | async"
+                     [removedLinkInstancesIds]="removedLinkInstancesIds$ | async"
+                     [selectedDocumentIds]="selectedDocumentIds$ | async"
+                     (selectRow)="onRowSelected($event)"
+                     (unselectRow)="onRowUnselected($event)"
+                     (selectAll)="onSelectAll($event)"
+                     (unselectAll)="onUnSelectAll($event)">
+      </results-table>
+    </ng-container>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@button.confirm">Confirm</span>
+  </span>
+
+</modal-wrapper>
+
+<ng-template #noData>
+  <empty-state *ngIf="query$ | async | emptyQuery; else emptySearch"
+               class="py-4 d-block" [compact]="true" icon="fa fa-file-times">
+    <h4 i18n="@@modal.links.modify.empty.title" class="text-center mt-2">
+      I am sorry but there is nothing to link.
+    </h4>
+  </empty-state>
+</ng-template>
+
+<ng-template #emptySearch>
+  <empty-search class="py-4 d-block" [compact]="true"></empty-search>
+</ng-template>

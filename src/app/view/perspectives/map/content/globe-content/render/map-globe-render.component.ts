@@ -33,7 +33,6 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Point} from 'geojson';
 import {
   GeoJSONSource,
@@ -49,7 +48,6 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {DeviceDetectorService, OS} from 'ngx-device-detector';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
-import {environment} from '../../../../../../../environments/environment';
 import {MapCoordinates, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
 import {
   createMapboxMap,
@@ -63,9 +61,7 @@ import {MarkerMoveEvent} from './marker-move.event';
 import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
-
-mapboxgl.accessToken = environment.mapboxKey;
-window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
+import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 
 const MAP_SOURCE_ID = 'records';
 
@@ -112,11 +108,14 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
 
   constructor(
     private deviceDetectorService: DeviceDetectorService,
-    private i18n: I18n,
     private ngZone: NgZone,
     private platform: Platform,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private configurationService: ConfigurationService
+  ) {
+    mapboxgl.accessToken = configurationService.getConfiguration().mapboxKey;
+    window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToMapMarkers());
@@ -186,7 +185,12 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   private initMap(position: MapPosition) {
-    this.mapboxMap = createMapboxMap(this.mapElementId, position, this.translateMap());
+    this.mapboxMap = createMapboxMap(
+      this.mapElementId,
+      position,
+      this.configurationService.getConfiguration(),
+      this.translateMap()
+    );
     this.mapboxMap.addControl(new NavigationControl(), 'top-right');
     this.mapboxMap.addControl(new ScaleControl(), 'bottom-right');
     // GeolocateControl needs to be added after ScaleControl to be shown above it
@@ -384,26 +388,23 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private activateMapTilesLanguageAutoDetection() {
     const mapbox = this.mapboxMap as any;
     if (mapbox) {
-      mapbox.autodetectLanguage(environment.locale);
+      mapbox.autodetectLanguage(this.configurationService.getConfiguration().locale);
     }
   }
 
   private translateMap(): Record<string, string> {
     // translation ids can be found in node_modules/mapbox-gl/src/ui/default_locale.js
     return {
-      'GeolocateControl.FindMyLocation': this.i18n({id: 'map.location.find', value: 'Find my location'}),
-      'GeolocateControl.LocationNotAvailable': this.i18n({
-        id: 'map.location.notAvailable',
-        value: 'Location not available',
-      }),
-      'NavigationControl.ResetBearing': this.i18n({id: 'map.control.compass', value: 'Reset bearing to north'}),
-      'NavigationControl.ZoomIn': this.i18n({id: 'map.control.zoom.in', value: 'Zoom in'}),
-      'NavigationControl.ZoomOut': this.i18n({id: 'map.control.zoom.out', value: 'Zoom out'}),
-      'ScaleControl.Feet': this.i18n({id: 'distance.feat', value: 'ft'}),
-      'ScaleControl.Meters': this.i18n({id: 'distance.meters', value: 'm'}),
-      'ScaleControl.Kilometers': this.i18n({id: 'distance.kilometers', value: 'km'}),
-      'ScaleControl.Miles': this.i18n({id: 'distance.miles', value: 'mi'}),
-      'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
+      'GeolocateControl.FindMyLocation': $localize`:@@map.location.find:Find my location`,
+      'GeolocateControl.LocationNotAvailable': $localize`:@@map.location.notAvailable:Location not available`,
+      'NavigationControl.ResetBearing': $localize`:@@map.control.compass:Reset bearing to north`,
+      'NavigationControl.ZoomIn': $localize`:@@map.control.zoom.in:Zoom in`,
+      'NavigationControl.ZoomOut': $localize`:@@map.control.zoom.out:Zoom out`,
+      'ScaleControl.Feet': $localize`:@@distance.feat:ft`,
+      'ScaleControl.Meters': $localize`:@@distance.meters:m`,
+      'ScaleControl.Kilometers': $localize`:@@distance.kilometers:km`,
+      'ScaleControl.Miles': $localize`:@@distance.miles:mi`,
+      'ScaleControl.NauticalMiles': $localize`:@@distance.nauticalMiles:nm`,
     };
   }
 }

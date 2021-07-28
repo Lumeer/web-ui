@@ -20,8 +20,6 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {UserNotification} from '../../../../../core/model/user-notification';
 import {Organization} from '../../../../../core/store/organizations/organization';
-import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {Project} from '../../../../../core/store/projects/project';
 import {Dictionary} from '@ngrx/entity';
 
 @Component({
@@ -54,23 +52,4 @@ export class NotificationsMenuContentComponent {
 
   @Output()
   public clickNotification = new EventEmitter<UserNotification>();
-
-  public toggleUnreadFilter(event: MouseEvent): void {
-    event.stopPropagation();
-    this.toggleUnread.emit();
-  }
-
-  public deleteNotificationEvent(event: MouseEvent, notification: UserNotification) {
-    event.stopPropagation();
-    this.deleteNotification.next(notification);
-  }
-
-  public setNotificationReadEvent(event: MouseEvent, notification: UserNotification, read: boolean): void {
-    event.stopPropagation();
-    this.readNotification.next({notification, read});
-  }
-
-  public navigateToTarget(notification: UserNotification) {
-    this.clickNotification.next(notification);
-  }
 }

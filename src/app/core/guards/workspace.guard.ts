@@ -19,7 +19,6 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take} from 'rxjs/operators';
 import {WorkspaceService} from '../../workspace/workspace.service';
@@ -30,7 +29,6 @@ import {NotificationService} from '../notifications/notification.service';
 })
 export class WorkspaceGuard implements CanActivate {
   public constructor(
-    private i18n: I18n,
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,
     private router: Router
@@ -43,12 +41,12 @@ export class WorkspaceGuard implements CanActivate {
     return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
       mergeMap(({organization, project}) => {
         if (!organization) {
-          const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+          const message = $localize`:@@organization.not.exist:Organization does not exist`;
           this.navigateHomeAndShowErrorMessage(message);
           return of(false);
         }
         if (!project) {
-          const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+          const message = $localize`:@@project.not.exist:Project does not exist`;
           this.navigateHomeAndShowErrorMessage(message);
           return of(false);
         }

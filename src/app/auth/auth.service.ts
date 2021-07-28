@@ -23,7 +23,6 @@ import {Router} from '@angular/router';
 import {Auth0DecodedHash, Auth0UserProfile, WebAuth} from 'auth0-js';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
-import {environment} from '../../environments/environment';
 import {Angulartics2} from 'angulartics2';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
@@ -36,6 +35,7 @@ import {select, Store} from '@ngrx/store';
 import {UserActivityService} from './user-activity.service';
 import {isNullOrUndefined} from '../shared/utils/common.utils';
 import {UserService} from '../core/data-service';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -66,9 +66,10 @@ export class AuthService {
     private activityService: UserActivityService,
     private store$: Store<AppState>,
     private angulartics2: Angulartics2,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private configurationService: ConfigurationService
   ) {
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       const redirectUri = document.location.origin + location.prepareExternalUrl('auth');
       this.initAuth(redirectUri);
 
@@ -79,8 +80,8 @@ export class AuthService {
 
   private initAuth(redirectUri: string) {
     this.auth0 = new WebAuth({
-      clientID: environment.authClientId,
-      domain: environment.authDomain,
+      clientID: this.configurationService.getConfiguration().authClientId,
+      domain: this.configurationService.getConfiguration().authDomain,
       responseType: 'token id_token',
       audience: document.location.origin.replace(':7000', ':8080') + '/',
       redirectUri,
@@ -101,7 +102,7 @@ export class AuthService {
   }
 
   private trackUserLogin() {
-    if (!environment.analytics) {
+    if (!this.configurationService.getConfiguration().analytics) {
       return;
     }
 
@@ -110,7 +111,7 @@ export class AuthService {
       properties: {category: 'User Actions'},
     });
 
-    if (environment.mixpanelKey) {
+    if (this.configurationService.getConfiguration().mixpanelKey) {
       mixpanel.track('User Login');
     }
   }
@@ -129,7 +130,7 @@ export class AuthService {
   }
 
   private trackUserLastLogin() {
-    if (!environment.analytics) {
+    if (!this.configurationService.getConfiguration().analytics) {
       return;
     }
     this.store$
@@ -144,7 +145,7 @@ export class AuthService {
           properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
         });
 
-        if (environment.mixpanelKey) {
+        if (this.configurationService.getConfiguration().mixpanelKey) {
           mixpanel.identify(hashUserId(user.id));
           mixpanel.track('User Returned', {
             dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
@@ -162,7 +163,7 @@ export class AuthService {
     // Set the time that the access token will expire at
     this.expiresAt = new Date(authResult.expiresIn * 1000 + new Date().getTime()).getTime();
 
-    if (environment.authPersistence) {
+    if (this.configurationService.getConfiguration().authPersistence) {
       localStorage.setItem(ACCESS_TOKEN_KEY, this.accessToken);
       localStorage.setItem(ID_TOKEN_KEY, this.idToken);
       localStorage.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
@@ -170,7 +171,7 @@ export class AuthService {
   }
 
   public logout(): void {
-    if (!environment.auth) {
+    if (!this.configurationService.getConfiguration().auth) {
       console.warn('Cannot log out. Authentication is disabled.');
       return;
     }
@@ -184,7 +185,7 @@ export class AuthService {
     this.idToken = null;
     this.expiresAt = null;
 
-    if (environment.authPersistence) {
+    if (this.configurationService.getConfiguration().authPersistence) {
       // Remove tokens and expiry time from localStorage
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       localStorage.removeItem(ID_TOKEN_KEY);
@@ -196,7 +197,9 @@ export class AuthService {
 
   public getLogoutUrl(): string {
     const returnToUrl = encodeURIComponent(document.location.origin + this.location.prepareExternalUrl('logout'));
-    return `https://${environment.authDomain}/v2/logout?returnTo=${returnToUrl}&client_id=${environment.authClientId}`;
+    return `https://${
+      this.configurationService.getConfiguration().authDomain
+    }/v2/logout?returnTo=${returnToUrl}&client_id=${this.configurationService.getConfiguration().authClientId}`;
   }
 
   public isAuthenticated(): boolean {
@@ -269,7 +272,7 @@ export class AuthService {
     if (this.isAuthenticated()) {
       const expiresAt = this.getExpiresAt();
       const expiresInMinutes = (expiresAt - Date.now()) / 1000 / 60;
-      const maximumInactivity = environment.sessionTimeout / 2;
+      const maximumInactivity = this.configurationService.getConfiguration().sessionTimeout / 2;
       if (
         expiresInMinutes > RENEW_TOKEN_EXPIRATION ||
         this.activityService.getLastActivityBeforeMinutes() > maximumInactivity
@@ -306,8 +309,10 @@ export class AuthService {
     }
   }
 
-  public getLoginRedirectPath(): string {
-    return localStorage.getItem(REDIRECT_KEY) || '/';
+  public getAndClearLoginRedirectPath(): string {
+    const redirectPath = localStorage.getItem(REDIRECT_KEY) || '/';
+    localStorage.removeItem(REDIRECT_KEY);
+    return redirectPath;
   }
 
   public saveLoginRedirectPath(redirectPath: string) {

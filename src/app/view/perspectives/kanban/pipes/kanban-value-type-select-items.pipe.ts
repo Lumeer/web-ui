@@ -18,27 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {PivotValueType} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {KanbanValueType} from '../../../../core/store/kanbans/kanban';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Pipe({
   name: 'kanbanValueTypeSelectItems',
 })
 export class KanbanValueTypeSelectItemsPipe implements PipeTransform {
-  constructor(private i18n: I18n) {}
-
   public transform(types: KanbanValueType[]): SelectItemModel[] {
     return (types || []).map(type => ({id: type, value: this.translateValueType(type)}));
   }
 
   private translateValueType(type: KanbanValueType): string {
-    return this.i18n(
-      {
-        id: 'perspective.kanban.config.value.type',
-        value: '{type, select, default {Default} all {% of all columns}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@perspective.kanban.config.value.type:{type, select, default {Default} all {% of all columns}}`,
       {type}
     );
   }

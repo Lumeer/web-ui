@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DetailTabType} from '../detail-tab-type';
 
 @Component({
@@ -26,12 +26,21 @@ import {DetailTabType} from '../detail-tab-type';
   styleUrls: ['./detail-tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailTabsComponent {
+export class DetailTabsComponent implements OnChanges {
   @Input()
   public activeTab: DetailTabType;
 
   @Input()
-  public showLinks: boolean = true;
+  public showLinks: boolean;
+
+  @Input()
+  public showTables: boolean;
+
+  @Input()
+  public showActivity: boolean;
+
+  @Input()
+  public showComments: boolean;
 
   @Input()
   public commentsCount: number;
@@ -39,8 +48,30 @@ export class DetailTabsComponent {
   @Input()
   public linksCount: number;
 
-  public readonly detailTabTypes = DetailTabType;
+  @Input()
+  public documentsCount: number;
 
   @Output()
   public onTabSelect = new EventEmitter<DetailTabType>();
+
+  public readonly detailTabTypes = DetailTabType;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.showLinks && !this.showLinks && this.activeTab === DetailTabType.Links) {
+      this.resetTabActive();
+    }
+    if (changes.showTables && !this.showTables && this.activeTab === DetailTabType.Tables) {
+      this.resetTabActive();
+    }
+    if (changes.showActivity && !this.showActivity && this.activeTab === DetailTabType.Activity) {
+      this.resetTabActive();
+    }
+    if (changes.showComments && !this.showComments && this.activeTab === DetailTabType.Comments) {
+      this.resetTabActive();
+    }
+  }
+
+  private resetTabActive() {
+    setTimeout(() => this.onTabSelect.emit(DetailTabType.Detail));
+  }
 }

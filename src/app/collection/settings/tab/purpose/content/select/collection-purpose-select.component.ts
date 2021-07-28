@@ -19,9 +19,9 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {collectionPurposesIcons, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
+import {parseSelectTranslation} from '../../../../../../shared/utils/translation.utils';
 
 @Component({
   selector: 'collection-purpose-select',
@@ -40,8 +40,6 @@ export class CollectionPurposeSelectComponent implements OnInit {
 
   public items: SelectItemModel[];
 
-  constructor(private i18n: I18n) {}
-
   public ngOnInit() {
     this.items = this.createSelectItems();
   }
@@ -49,7 +47,7 @@ export class CollectionPurposeSelectComponent implements OnInit {
   private createSelectItems(): SelectItemModel[] {
     const result: SelectItemModel[] = objectValues(CollectionPurposeType).map(type => ({
       id: type,
-      value: this.i18n('{type, select, None {Generic} Tasks {Tasks}}', {type}),
+      value: parseSelectTranslation($localize`:@@tasks.type:{type, select, None {Generic} Tasks {Tasks}}`, {type}),
       icons: [collectionPurposesIcons[type]],
     }));
 

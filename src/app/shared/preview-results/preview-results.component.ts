@@ -28,19 +28,26 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
   selectCollectionsByQueryWithoutLinks,
-  selectDocumentsByCustomQuery,
+  selectReadableCollections,
+  selectDocumentsAndLinksByCollectionAndQuery,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {Query} from '../../core/store/navigation/query/query';
-import {filterStemsForCollection} from '../../core/store/navigation/query/query.util';
+import {
+  filterStemsForCollection,
+  queryContainsOnlyFulltexts,
+  queryIsEmpty,
+} from '../../core/store/navigation/query/query.util';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
+import {DataQuery} from '../../core/model/data-query';
+import {AttributesSettings} from '../../core/store/views/view';
 
 @Component({
   selector: 'preview-results',
@@ -55,7 +62,10 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public selectedDocument: DocumentModel;
 
   @Input()
-  public query: Query;
+  public query: DataQuery;
+
+  @Input()
+  public attributesSettings: AttributesSettings;
 
   @Output()
   public selectCollection = new EventEmitter<Collection>();
@@ -64,9 +74,8 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public selectDocument = new EventEmitter<DocumentModel>();
 
   public collections$: Observable<Collection[]>;
-  public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
-  public loaded$: Observable<boolean>;
+  public documentsData$: Observable<{loaded: boolean; documents: DocumentModel[]}>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -86,14 +95,39 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   private subscribeToDocuments() {
+    let documents$: Observable<DocumentModel[]>;
+    let loaded$: Observable<boolean>;
     if (this.selectedCollection && this.query) {
       const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
-      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)));
-      this.loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
+      documents$ = this.store$.pipe(
+        select(selectDocumentsAndLinksByCollectionAndQuery(this.selectedCollection.id, collectionQuery))
+      );
+      loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)), distinctUntilChanged());
     } else {
-      this.documents$ = of([]);
-      this.loaded$ = of(true);
+      documents$ = of([]);
+      if (queryIsEmpty(this.query) || queryContainsOnlyFulltexts(this.query)) {
+        loaded$ = combineLatest([
+          this.store$.pipe(select(selectReadableCollections)),
+          this.store$.pipe(select(selectQueryDocumentsLoaded(this.query))),
+        ]).pipe(
+          map(([collections, loaded]) => collections.length === 0 || loaded),
+          distinctUntilChanged()
+        );
+      } else {
+        loaded$ = this.store$.pipe(
+          select(selectCollectionsByQueryWithoutLinks),
+          map(collections => collections.length === 0),
+          distinctUntilChanged()
+        );
+      }
     }
+
+    this.documentsData$ = combineLatest([documents$, loaded$]).pipe(
+      map(([documents, loaded]) => ({
+        loaded,
+        documents,
+      }))
+    );
   }
 
   public setActiveCollection(collection: Collection) {

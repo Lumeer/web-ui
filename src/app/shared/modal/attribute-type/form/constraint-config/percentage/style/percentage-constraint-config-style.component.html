@@ -1,0 +1,37 @@
+<div class="form-group mt-3">
+  <label i18n="@@constraint.percentage.display.label">
+    Display
+  </label>
+  <div class="style-content" *ngIf="{selected: selectedStyle$ | async} as data">
+    <div *ngFor="let item of items" class="card p-3"
+         [class.active]="data.selected === item.style"
+         (click)="onSelect(item.style)">
+      <i *ngIf="data.selected === item.style" class="indicator fas fa-check text-success"></i>
+      <div>
+        <span class="font-weight-bold">{{item.title}}</span>
+        <i *ngIf="item.style === style.ProgressBar && data.selected === style.ProgressBar"
+           class="fas fa-fw fa-palette text-success ml-2 cursor-pointer"
+           title="Choose progress color" (click)="onPaletteClick(colorPicker)"
+           i18n-title="@@constraint.percentage.display.progress.color"></i>
+        <color-picker [color]="colorControl.value"
+                      #colorPicker
+                      [origin]="styleElement"
+                      (saveOnClose)="$event && onColorChange($event)"
+                      (valueChange)="onColorChange($event)"
+                      (cancel)="onColorCancel()"
+                      (save)="onColorChange($event)">
+        </color-picker>
+      </div>
+      <div #styleElement [ngSwitch]="item.style">
+        <div *ngSwitchCase="style.Text">35%</div>
+        <progress-bar *ngSwitchCase="style.ProgressBar"
+                      class="mt-1"
+                      [color]="colorControl.value"
+                      [style.height.px]="15"
+                      [max]="100"
+                      [value]="35">
+        </progress-bar>
+      </div>
+    </div>
+  </div>
+</div>

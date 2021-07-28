@@ -31,7 +31,6 @@ import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   MapConfig,
   MapMarkerData,
@@ -44,8 +43,7 @@ import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {MapDataConverter} from './map-data-converter';
 import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
@@ -53,16 +51,18 @@ import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {AppState} from '../../../../core/store/app.state';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
+  data: DocumentsAndLinksData;
   config: MapConfig;
-  permissions: Record<string, AllowedPermissions>;
+  permissions: ResourcesPermissions;
   query: Query;
+  user: User;
 }
 
 @Component({
@@ -79,19 +79,19 @@ export class MapContentComponent implements OnInit, OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public documents: DocumentModel[];
-
-  @Input()
-  public linkInstances: LinkInstance[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public constraintData: ConstraintData;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public query: Query;
+
+  @Input()
+  public user: User;
 
   @Input()
   public map: MapModel;
@@ -105,7 +105,7 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   private readonly converter = new MapDataConverter();
 
-  constructor(private store$: Store<{}>, private modalService: ModalService) {}
+  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.data$ = this.subscribeToData$();
@@ -128,33 +128,33 @@ export class MapContentComponent implements OnInit, OnChanges {
     return this.converter.convert(
       config,
       data.collections,
-      data.documents,
       data.linkTypes,
-      data.linkInstances,
+      data.data,
       data.permissions,
-      data.query
+      data.query,
+      data.user
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (
-      (changes.documents ||
-        changes.collections ||
+      (changes.collections ||
         changes.linkTypes ||
-        changes.linkInstances ||
+        changes.data ||
         changes.permissions ||
         changes.query ||
+        changes.user ||
         this.mapConfigChanged(changes.map)) &&
       this.map?.config
     ) {
       this.dataSubject$.next({
-        documents: this.documents,
-        linkInstances: this.linkInstances,
-        linkTypes: this.linkTypes,
         collections: this.collections,
+        linkTypes: this.linkTypes,
+        data: this.data,
         permissions: this.permissions,
         config: this.map.config,
         query: this.query,
+        user: this.user,
       });
     }
   }

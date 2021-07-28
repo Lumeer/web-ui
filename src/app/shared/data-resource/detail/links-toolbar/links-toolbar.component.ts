@@ -17,44 +17,66 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+} from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
-import {selectCollectionsByWritePermission} from '../../../../core/store/common/permissions.selectors';
 import {map} from 'rxjs/operators';
-import {ModalService} from '../../../modal/modal.service';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectReadableCollections} from '../../../../core/store/common/permissions.selectors';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'links-toolbar',
   templateUrl: './links-toolbar.component.html',
-  styleUrls: ['./links-toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksToolbarComponent implements OnInit {
+export class LinksToolbarComponent implements OnChanges, OnInit {
   @Input()
   public collection: Collection;
 
-  public writableCollections$: Observable<Collection[]>;
+  @Input()
+  public permissions: AllowedPermissions;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  @Output()
+  public createLink = new EventEmitter<[string, string]>();
+
+  public collections$: Observable<Collection[]>;
+  public projectPermissions$: Observable<AllowedPermissions>;
+
+  public canLinkCollection: boolean;
+
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.writableCollections$ = this.store$.pipe(
-      select(selectCollectionsByWritePermission),
-      map(writableCollections => {
-        if (!writableCollections.some(collection => collection.id === this.collection?.id)) {
-          return [];
-        }
-        return writableCollections.filter(collection => collection.id !== this.collection?.id);
-      })
-    );
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection) {
+      this.collections$ = this.store$.pipe(
+        select(selectReadableCollections),
+        map(collections => collections.filter(collection => collection.id !== this.collection?.id))
+      );
+    }
+    if (changes.permissions) {
+      this.canLinkCollection = this.permissions?.roles?.Read;
+    }
   }
 
   public onUseCollection(collection: Collection) {
     if (this.collection) {
-      this.modalService.showCreateLink([this.collection, collection]);
+      this.createLink.emit([this.collection?.id, collection.id]);
     }
   }
 }

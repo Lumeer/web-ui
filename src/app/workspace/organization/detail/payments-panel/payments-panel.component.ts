@@ -23,7 +23,6 @@ import {Organization} from '../../../../core/store/organizations/organization';
 import {Subscription} from 'rxjs';
 import {ActionsSubject, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../../core/store/app.state';
 import {filter} from 'rxjs/operators';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
@@ -35,9 +34,9 @@ import {DatePipe, DOCUMENT} from '@angular/common';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {environment} from '../../../../../environments/environment';
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'payments-panel',
@@ -58,16 +57,16 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   private lastCreatedPayment: Subscription;
 
   constructor(
-    private i18n: I18n,
     private router: Router,
     private store: Store<AppState>,
     private actionsSubject: ActionsSubject,
     @Inject(DOCUMENT) private document,
     private elementRef: ElementRef,
     private notificationService: NotificationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private configurationService: ConfigurationService
   ) {
-    this.languageCode = this.i18n({id: 'organization.payments.lang.code', value: 'en'});
+    this.languageCode = $localize`:@@organization.payments.lang.code:en`;
   }
 
   public ngOnInit() {
@@ -111,11 +110,9 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public createPayment($event) {
-    let validUntil: Date;
-
-    validUntil = new Date(
+    const validUntil: Date = new Date(
       $event.start.getFullYear(),
-      $event.start.getMonth() + $event.months,
+      +$event.start.getMonth() + +$event.months,
       $event.start.getDate(),
       23,
       59,
@@ -143,20 +140,12 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
       this.serviceLimits.serviceLevel !== ServiceLevelType.FREE &&
       this.checkDayOverlap(this.serviceLimits.validUntil, $event.start)
     ) {
+      const validUntil = this.datePipe.transform(this.serviceLimits.validUntil, 'shortDate');
+      const start = this.datePipe.transform($event.start, 'shortDate');
       this.store.dispatch(
         new NotificationsAction.Confirm({
-          title: this.i18n({id: 'organization.payments.paidWarning.title', value: 'Already Paid'}),
-          message: this.i18n(
-            {
-              id: 'organization.payments.paidWarning.text',
-              value: `Your current subscription lasts until {{0}}. Are you sure you want to proceed with an order with earlier start date of {{1}}?
- In case you want to add more users, please contact support@lumeer.io.`,
-            },
-            {
-              '0': this.datePipe.transform(this.serviceLimits.validUntil, 'shortDate'),
-              '1': this.datePipe.transform($event.start, 'shortDate'),
-            }
-          ),
+          title: $localize`:@@organization.payments.paidWarning.title:Already Paid`,
+          message: $localize`:@@organization.payments.paidWarning.text:Your current subscription lasts until ${validUntil}:validUntil:. Are you sure you want to proceed with an order with earlier start date of ${start}:start:? In case you want to add more users, please contact support@lumeer.io.`,
           action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}),
           type: 'warning',
         })
@@ -190,17 +179,15 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public callGoPay($event: string) {
-    /*const message = this.i18n(
-      {
-        id: 'organization.payments.disabled.message',
-        value: `Thank you for your interest. Payments not available. We'll get in touch with you soon!`
-      });
-    const title = this.i18n({id: 'organization.payments.disabled.title', value: 'Thank You!'});
-    const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
+    /*
+    const message = $localize`:@@organization.payments.disabled.message:Thank you for your interest. Payments not available. We'll get in touch with you soon!`;
+    const title = $localize`:@@organization.payments.disabled.title:Thank You!`;
+    const okButtonText = $localize`:@@button.ok:OK`;
 
     this.notificationService.confirm(message, title, [
       {text: okButtonText, bold: true},
-    ]);*/
+    ]);
+    */
 
     if (isNotNullOrUndefined($event) && $event !== '') {
       (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
@@ -210,7 +197,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   public ngAfterViewInit(): void {
     const script = this.document.createElement('script');
     script.type = 'text/javascript';
-    script.src = environment.paymentGw;
+    script.src = this.configurationService.getConfiguration().paymentGw;
     this.elementRef.nativeElement.appendChild(script);
   }
 }

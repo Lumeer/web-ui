@@ -34,7 +34,7 @@ export class ResourceAttributeEditablePipe implements PipeTransform {
     resource: AttributesResource,
     attributeId: string,
     permissions: AllowedPermissions,
-    query?: Query
+    query: Query
   ): boolean {
     if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
       return isCollectionAttributeEditable(attributeId, resource as Collection, permissions, query);

@@ -32,6 +32,8 @@ import {Perspective} from './perspectives/perspective';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';
+import {DocumentRedirectComponent} from '../core/components/document-redirect.component';
+import {GroupsGuard} from '../core/guards/data/groups.guard';
 
 const viewRoutes: Routes = [
   {
@@ -43,6 +45,7 @@ const viewRoutes: Routes = [
       views: ViewsGuard,
       linkTypes: LinkTypesGuard,
       users: UsersGuard,
+      groups: GroupsGuard,
       defaultConfigs: ViewDefaultConfigsGuard,
     },
     component: ViewComponent,
@@ -100,6 +103,16 @@ const viewRoutes: Routes = [
         component: ViewLoadingComponent,
       },
     ],
+  },
+  {
+    path: 'w/:organizationCode/:projectCode/document/:collectionId/:documentId',
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard],
+    resolve: {
+      collections: CollectionsGuard,
+      views: ViewsGuard,
+      linkTypes: LinkTypesGuard,
+    },
+    component: DocumentRedirectComponent,
   },
 ];
 

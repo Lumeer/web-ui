@@ -23,38 +23,37 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {KeyCode} from '../../key-code';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
-import {ViewSettings} from '../../../core/store/views/view';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
-import {selectViewQuery} from '../../../core/store/views/views.state';
+import {selectDefaultDocumentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {
-  selectCollectionPermissions,
-  selectLinkTypePermissions,
-} from '../../../core/store/user-permissions/user-permissions.state';
+  createFlatCollectionSettingsQueryStem,
+  createFlatLinkTypeSettingsQueryStem,
+  createFlatResourcesSettingsQuery,
+} from '../../../core/store/details/detail.utils';
+import {map, switchMap} from 'rxjs/operators';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {View} from '../../../core/store/views/view';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -62,7 +61,7 @@ import {
   styleUrls: ['./data-resource-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataResourceDetailModalComponent implements OnInit, OnChanges {
+export class DataResourceDetailModalComponent implements OnInit {
   @Input()
   public resource: AttributesResource;
 
@@ -88,10 +87,12 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public performingAction$ = new BehaviorSubject(false);
 
   public query$: Observable<Query>;
+  public settingsQuery$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
-  public permissions$: Observable<AllowedPermissions>;
-  public viewSettings$: Observable<ViewSettings>;
+
+  public detailSettingsQueryStem: QueryStem;
+  public dataResourceDefaultView$: Observable<View>;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
@@ -106,14 +107,11 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.settingsQuery$ = combineLatest([
+      this.store$.pipe(select(selectAllCollections)),
+      this.store$.pipe(select(selectAllLinkTypes)),
+    ]).pipe(map(([collections, linkTypes]) => createFlatResourcesSettingsQuery(collections, linkTypes)));
     this.initialModalsCount = this.bsModalService.getModalsCount();
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.resource || changes.dataResource) {
-      this.initData();
-    }
   }
 
   private initData() {
@@ -122,9 +120,18 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   private setData(resource: AttributesResource, dataResource: DataResource) {
     this.resourceType = getAttributesResourceType(resource);
-    this.resource$ = of(resource);
-    this.dataResource$ = of(dataResource);
-    this.permissions$ = this.selectPermissions$(resource);
+    this.resource$ = this.selectResource$(resource.id);
+    this.dataResource$ = dataResource?.id ? this.selectDataResource$(dataResource.id) : of(dataResource);
+
+    if (this.resourceType === AttributesResourceType.Collection) {
+      this.dataResourceDefaultView$ = this.resource$.pipe(
+        switchMap(resource => this.store$.pipe(select(selectDefaultDocumentView((<Collection>resource)?.purpose))))
+      );
+      this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
+    } else if (this.resourceType === AttributesResourceType.LinkType) {
+      this.dataResourceDefaultView$ = of(null);
+      this.detailSettingsQueryStem = createFlatLinkTypeSettingsQueryStem(<LinkType>resource);
+    }
 
     this.subscribeExist(resource, dataResource);
     this.currentDataResource = dataResource;
@@ -133,8 +140,8 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   private subscribeExist(resource: AttributesResource, dataResource: DataResource) {
     this.dataExistSubscription.unsubscribe();
     this.dataExistSubscription = combineLatest([
-      resource.id ? this.selectResource$(resource.id) : of(true),
-      dataResource.id ? this.selectDataResource$(dataResource.id) : of(true),
+      resource?.id ? this.selectResource$(resource.id) : of(true),
+      dataResource?.id ? this.selectDataResource$(dataResource.id) : of(true),
     ]).subscribe(([currentResource, currentDataResource]) => {
       if (!currentResource || !currentDataResource) {
         this.hideDialog();
@@ -154,13 +161,6 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
       return this.store$.pipe(select(selectDocumentById(id)));
     }
     return this.store$.pipe(select(selectLinkInstanceById(id)));
-  }
-
-  private selectPermissions$(resource: AttributesResource): Observable<AllowedPermissions> {
-    if (this.resourceType === AttributesResourceType.Collection) {
-      return this.store$.pipe(select(selectCollectionPermissions(resource.id)));
-    }
-    return this.store$.pipe(select(selectLinkTypePermissions(resource.id)));
   }
 
   public onSubmit() {

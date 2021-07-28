@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DefaultWorkspace, NotificationsSettings, User, UserHints} from './user';
+import {DefaultWorkspace, User, UserHints} from './user';
 import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../organizations/payment/payment';
 import {UserHintsDto} from '../../dto/user.dto';
@@ -36,6 +36,10 @@ export enum UsersActionType {
 
   PATCH_CURRENT_USER = '[Users] Patch Current',
 
+  SET_TEAMS = '[Users] Set Teams',
+  SET_TEAMS_SUCCESS = '[Users] Set Teams :: Success',
+  SET_TEAMS_FAILURE = '[Users] Set Teams :: Failure',
+
   SAVE_DEFAULT_WORKSPACE = '[Users] Save default workspace',
   SAVE_DEFAULT_WORKSPACE_SUCCESS = '[Users] Save default workspace :: Success',
   SAVE_DEFAULT_WORKSPACE_FAILURE = '[Users] Save default workspace :: Failure',
@@ -47,6 +51,7 @@ export enum UsersActionType {
   INVITE = '[Users] Invite',
   INVITE_SUCCESS = '[Users] Invite :: Success',
   INVITE_FAILURE = '[Users] Invite :: Failure',
+  INVITATION_EXCEEDED = '[Users] Invitation Exceeded',
 
   UPDATE = '[Users] Update',
   UPDATE_SUCCESS = '[Users] Update :: Success',
@@ -68,9 +73,9 @@ export enum UsersActionType {
   GET_HINTS_SUCCESS = '[User] Get Hints :: Success',
   GET_HINTS_FAILURE = '[User] Get Hints :: Failure',
 
-  UPDATE_NOTIFICATIONS = '[User] Update Notifications',
-  UPDATE_NOTIFICATIONS_SUCCESS = '[User] Update Notifications :: Success',
-  UPDATE_NOTIFICATIONS_FAILURE = '[User] Update Notifications :: Failure',
+  PATCH_USER_SETTINGS = '[User] Patch User Settings',
+  PATCH_USER_SETTINGS_SUCCESS = '[User] Patch User Settings :: Success',
+  PATCH_USER_SETTINGS_FAILURE = '[User] Patch User Settings :: Failure',
 
   UPDATE_HINTS = '[User] Update Hints',
   UPDATE_HINTS_SUCCESS = '[User] Update Hints :: Success',
@@ -120,6 +125,24 @@ export namespace UsersAction {
     public readonly type = UsersActionType.PATCH_CURRENT_USER;
 
     public constructor(public payload: {user: Partial<User>; onSuccess?: () => void; onFailure?: () => void}) {}
+  }
+
+  export class SetTeams implements Action {
+    public readonly type = UsersActionType.SET_TEAMS;
+
+    public constructor(public payload: {organizationId: string; user: User; teams: string[]}) {}
+  }
+
+  export class SetTeamsSuccess implements Action {
+    public readonly type = UsersActionType.SET_TEAMS_SUCCESS;
+
+    public constructor(public payload: {user: User; groups: string[]}) {}
+  }
+
+  export class SetTeamsFailure implements Action {
+    public readonly type = UsersActionType.SET_TEAMS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
   }
 
   export class SaveDefaultWorkspace implements Action {
@@ -182,6 +205,12 @@ export namespace UsersAction {
     public readonly type = UsersActionType.INVITE_FAILURE;
 
     public constructor(public payload: {error: any; organizationId: string; projectId: string}) {}
+  }
+
+  export class InvitationExceeded implements Action {
+    public readonly type = UsersActionType.INVITATION_EXCEEDED;
+
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class Update implements Action {
@@ -262,26 +291,6 @@ export namespace UsersAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class UpdateNotifications implements Action {
-    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS;
-
-    public constructor(
-      public payload: {notifications: NotificationsSettings; onSuccess?: () => void; onFailure?: () => void}
-    ) {}
-  }
-
-  export class UpdateNotificationsSuccess implements Action {
-    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS_SUCCESS;
-
-    public constructor(public payload: {user: User}) {}
-  }
-
-  export class UpdateNotificationsFailure implements Action {
-    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS_FAILURE;
-
-    public constructor(public payload: {error: any}) {}
-  }
-
   export class UpdateHints implements Action {
     public readonly type = UsersActionType.UPDATE_HINTS;
 
@@ -347,15 +356,15 @@ export namespace UsersAction {
     | Referrals
     | ReferralsSuccess
     | ReferralsFailure
+    | SetTeams
+    | SetTeamsSuccess
+    | SetTeamsFailure
     | GetHints
     | GetHintsSuccess
     | GetHintsFailure
     | UpdateHints
     | UpdateHintsSuccess
     | UpdateHintsFailure
-    | UpdateNotifications
-    | UpdateNotificationsSuccess
-    | UpdateNotificationsFailure
     | SetHint
     | SetHintSuccess
     | SetHintFailure;

@@ -13,6 +13,7 @@
                      [canManageView]="canManageConfig"
                      [hidden]="part.columns.length >= 1"
                      [linkType]="data.linkType"
+                     [allowedPermissions]="permissions$ | async"
                      [collections]="data.linkType?.collections || []"
                      [switchingEnabled]="table | maxParts:3"
                      (addLinkColumn)="onAddLinkColumn()"

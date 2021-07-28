@@ -24,6 +24,7 @@ import {QueryItemType} from './query-item-type';
 import {COLOR_PRIMARY, COLOR_QUERY_FULLTEXT} from '../../../../../core/constants';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {getBaseCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
+import {getViewIcon} from '../../../../../core/store/views/view.utils';
 
 export class ViewQueryItem implements QueryItem {
   public type = QueryItemType.View;
@@ -32,7 +33,7 @@ export class ViewQueryItem implements QueryItem {
   public colors: string[];
 
   public constructor(public view: View, public primaryCollection?: Collection) {
-    this.icons = [perspectiveIconsMap[view.perspective]];
+    this.icons = [getViewIcon(view)];
     this.colors = this.parseColors();
   }
 
@@ -56,6 +57,10 @@ export class ViewQueryItem implements QueryItem {
 
   public get value(): string {
     return this.view.code;
+  }
+
+  public get stemId(): string {
+    return null;
   }
 
   public dependsOn(queryItem: QueryItem): boolean {

@@ -21,7 +21,6 @@ import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
 import {Perspective} from '../../../perspective';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {deepObjectCopy, objectValues} from '../../../../../shared/utils/common.utils';
@@ -54,10 +53,10 @@ export class ChartMainConfigComponent {
   public readonly sortTypePlaceholder: string;
   public readonly axisEmptyValue: string;
 
-  constructor(private i18n: I18n) {
-    this.sortPlaceholder = i18n({id: 'perspective.chart.config.sort.placeholder', value: 'Sort'});
-    this.sortTypePlaceholder = i18n({id: 'perspective.chart.config.sortType.placeholder', value: 'Sort order'});
-    this.axisEmptyValue = i18n({id: 'perspective.chart.config.axis.empty', value: 'Select axis'});
+  constructor() {
+    this.sortPlaceholder = $localize`:@@perspective.chart.config.sort.placeholder:Sort`;
+    this.sortTypePlaceholder = $localize`:@@perspective.chart.config.sortType.placeholder:Sort order`;
+    this.axisEmptyValue = $localize`:@@perspective.chart.config.axis.empty:Select axis`;
   }
 
   public onTypeSelect(type: ChartType) {

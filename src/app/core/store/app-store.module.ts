@@ -22,7 +22,6 @@ import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
 import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {environment} from '../../../environments/environment';
 import {AppState, initialAppState} from './app.state';
 import {calendarsReducer} from './calendars/calendars.reducer';
 import {chartsReducer} from './charts/charts.reducer';
@@ -36,8 +35,8 @@ import {fileAttachmentsReducer} from './file-attachments/file-attachments.reduce
 import {ganttChartsReducer} from './gantt-charts/gantt-charts.reducer';
 import {GeocodingEffects} from './geocoding/geocoding.effects';
 import {geocodingReducer} from './geocoding/geocoding.reducer';
-import {GroupsEffects} from './groups/groups.effects';
-import {groupsReducer} from './groups/groups.reducer';
+import {TeamsEffects} from './teams/teams.effects';
+import {teamsReducer} from './teams/teams.reducer';
 import {kanbansReducer} from './kanbans/kanbans.reducer';
 import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
@@ -83,13 +82,17 @@ import {userPermissionsReducer} from './user-permissions/user-permissions.reduce
 import {WorkflowsEffects} from './workflows/workflows.effects';
 import {dataResourcesReducer} from './data-resources/data-resources.reducer';
 import {DataResourcesEffects} from './data-resources/data-resources.effects';
+import {configuration} from '../../../environments/configuration';
+import {auditLogsReducer} from './audit-logs/audit-logs.reducer';
+import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
+import {detailsReducer} from './details/detail.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
   documents: documentsReducer,
   fileAttachments: fileAttachmentsReducer,
   geocoding: geocodingReducer,
-  groups: groupsReducer,
+  teams: teamsReducer,
   linkInstances: linkInstancesReducer,
   linkTypes: linkTypesReducer,
   dataResources: dataResourcesReducer,
@@ -111,6 +114,7 @@ const reducers: ActionReducerMap<AppState> = {
   ganttCharts: ganttChartsReducer,
   kanbans: kanbansReducer,
   searches: searchesReducer,
+  details: detailsReducer,
   sequences: sequencesReducer,
   constraintData: constraintDataReducer,
   publicData: publicDataReducer,
@@ -119,6 +123,7 @@ const reducers: ActionReducerMap<AppState> = {
   resourceComments: resourceCommentsReducer,
   modals: modalsReducer,
   userPermissions: userPermissionsReducer,
+  auditLogs: auditLogsReducer,
 };
 
 const effects = [
@@ -127,7 +132,7 @@ const effects = [
   DocumentsEffects,
   FileAttachmentsEffects,
   GeocodingEffects,
-  GroupsEffects,
+  TeamsEffects,
   LinkInstancesEffects,
   LinkTypesEffects,
   DataResourcesEffects,
@@ -148,6 +153,7 @@ const effects = [
   ResourceCommentsEffects,
   ModalsEffects,
   WorkflowsEffects,
+  AuditLogsEffects,
 ];
 
 @NgModule({
@@ -160,7 +166,7 @@ const effects = [
       },
     }),
     EffectsModule.forRoot(effects),
-    environment.storeDevtools
+    configuration.storeDevtools
       ? StoreDevtoolsModule.instrument({maxAge: 50, name: `Lumeer NgRx Store (${location.hostname})`})
       : [],
   ],

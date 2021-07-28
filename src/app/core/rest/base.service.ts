@@ -23,6 +23,7 @@ import {AppState} from '../store/app.state';
 import {selectWorkspaceWithIds} from '../store/common/common.selectors';
 import {filter} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace';
+import {viewIdHeader} from './interceptors/view.http-interceptor';
 
 @Injectable()
 export class BaseService {
@@ -67,5 +68,14 @@ export class BaseService {
     }
 
     return this.workspace.viewId;
+  }
+
+  protected workspaceHeaders(workspace?: Workspace): Record<string, string> {
+    return (
+      (workspace?.viewId && {
+        [viewIdHeader]: workspace?.viewId,
+      }) ||
+      {}
+    );
   }
 }

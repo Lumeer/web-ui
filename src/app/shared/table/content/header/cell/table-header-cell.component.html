@@ -2,17 +2,13 @@
   <div class="header-content h-100"
        (contextmenu)="onContextMenu($event)">
 
-    <div *ngIf="column.attribute"
-         class="position-relative cursor-pointer sort-wrapper d-flex align-items-center h-100"
-         title="Toggle sort" i18n-title="@@table.header.column.sort.toggle"
-         [style.width.px]="14" (click)="onSortToggle($event)"
+    <div #filterElement
+         class="filter-icon-wrapper mr-1 cursor-pointer"
+         [style.margin-bottom.px]="offsetHorizontal ? 2 : 0"
+         (click)="onFilterClick($event)"
          (dblclick)="$event.stopPropagation(); $event.preventDefault()">
-      <i class="fas fa-sort-up position-absolute"
-         [class.text-muted]="!column.sort || column.sort !== sortType.Ascending">
-      </i>
-      <i class="fas fa-sort-down position-absolute"
-         [class.text-muted]="!column.sort || column.sort !== sortType.Descending">
-      </i>
+      <i *ngIf="column.attribute" class="fas fa-filter icon"
+         [ngClass]="column.sort || column.filters.length ? 'text-primary': 'color-gray-600'"></i>
     </div>
 
     <table-header-input
@@ -21,27 +17,35 @@
       [restrictedNames]="restrictedNames"
       [offsetHorizontal]="offsetHorizontal"
       [default]="column.default"
+      [class.uninitialized-column]="!column?.attribute?.id"
+      [class.focused]="focused"
       [value]="editing && (editingValue | isNotNullOrUndefined) ? editingValue : column.name || column.attribute?.name"
       (save)="onHeaderSave($event)"
       (cancel)="onHeaderCancel()">
     </table-header-input>
 
     <ng-container *ngIf="{iconName: (column.attribute?.constraint | constraintTypeIcon)} as typeData">
-      <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
-           [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
-           (click)="onContextMenu($event)">
-        <i *ngIf="(column.attribute | attributeFunctionDefined)"
-           [class.mb-1]="typeData.iconName"
-           class="fas fa-function fa-xs fa-fw">
-        </i>
-        <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
-           [ngClass]="typeData.iconName"
-           [title]="column.attribute?.constraint | constraintTypeIconTitle"></i>
-        <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
-           title="Column settings..."
-           i18n-title="@@table.header.column.settings"
-           class="fa-xs fas fa-caret-down">
-        </i>
+      <div class="d-flex flex-row align-items-center justify-content-center icons"
+           [style.margin-bottom.px]="offsetHorizontal ? 2 : 0">
+        <div *ngIf="column?.attribute?.description && !editing" class="ml-1"
+             [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
+          <i class="far fa-question-circle ml-1"></i>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons cursor-pointer"
+             (click)="onContextMenu($event)">
+          <i *ngIf="(column.attribute | attributeFunctionDefined)"
+             [class.mb-1]="typeData.iconName"
+             class="fas fa-function fa-xs fa-fw">
+          </i>
+          <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
+             [ngClass]="typeData.iconName"
+             [title]="column.attribute?.constraint | constraintTypeIconTitle"></i>
+          <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
+             title="Column settings..."
+             i18n-title="@@table.header.column.settings"
+             class="fa-xs fas fa-caret-down">
+          </i>
+        </div>
       </div>
     </ng-container>
   </div>
@@ -49,6 +53,17 @@
                    [items]="column.menuItems"
                    (itemSelected)="menuSelected.emit($event)">
   </lmr-static-menu>
+  <cell-filter-builder *ngIf="column.attribute" [attribute]="column.attribute"
+                       [collectionId]="column.collectionId"
+                       [linkTypeId]="column.linkTypeId"
+                       [filters]="column.filters"
+                       [origin]="filterElement"
+                       [sort]="column.sort"
+                       (sortChanged)="sortChanged.emit($event)"
+                       (filterRemove)="filterRemove.emit($event)"
+                       (filterChange)="filterChange.emit($event)">
+  </cell-filter-builder>
+
 </ng-container>
 
 <ng-template #hiddenContent>

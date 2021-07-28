@@ -34,7 +34,7 @@ import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {COLOR_SUCCESS} from '../../../core/constants';
-import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {ColorDataInputConfiguration, CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ColorDataValue, ConstraintType} from '@lumeer/data-filters';
@@ -43,6 +43,7 @@ import {ColorDataValue, ConstraintType} from '@lumeer/data-filters';
   selector: 'color-data-input',
   templateUrl: './color-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./color-data-input.component.scss'],
 })
 export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
@@ -55,7 +56,10 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   public value: ColorDataValue;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
+
+  @Input()
+  public configuration: ColorDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<ColorDataValue>();
@@ -165,7 +169,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (!this.configuration?.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -181,7 +185,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
 
   private saveDataValue(dataValue: ColorDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {

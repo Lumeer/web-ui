@@ -21,20 +21,16 @@ import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {uniqueValues} from '../../../utils/array.utils';
 import {COLOR_GREEN} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class SetAttributeBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.setAttributeBlock',
-      value: 'Sets the value of an attribute in the given record.',
-    });
+    this.tooltip = $localize`:@@blockly.tooltip.setAttributeBlock:Sets the value of an attribute in the given record.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -64,7 +60,11 @@ export class SetAttributeBlocklyComponent extends BlocklyComponent {
             {
               type: 'input_value',
               name: 'DOCUMENT',
-              check: uniqueValues([...coreCollectionVarTypes, ...collectionTypes]),
+              check: uniqueValues([
+                ...coreCollectionVarTypes,
+                ...collectionTypes,
+                BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN,
+              ]),
             },
             {
               type: 'input_value',
@@ -99,9 +99,5 @@ export class SetAttributeBlocklyComponent extends BlocklyComponent {
         ');\n'
       );
     };
-  }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
   }
 }

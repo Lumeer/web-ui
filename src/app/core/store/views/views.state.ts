@@ -37,9 +37,12 @@ import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
-import {selectCurrentUser} from '../users/users.state';
-import {userHasManageRoleInResource} from '../../../shared/utils/resource.utils';
-import {isQuerySubset} from '../navigation/query/query.util';
+import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {selectDetailConfig} from '../details/detail.state';
+import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
+import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
+import {RoleType} from '../../model/role-type';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -61,12 +64,27 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
 export const selectViewsState = (state: AppState) => state.views;
 
 export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
+export const selectAllViewsSorted = createSelector(selectAllViews, views => sortResourcesByFavoriteAndLastUsed(views));
 export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
 export const selectViewByCode = (code: string) =>
   createSelector(selectAllViews, views => views.find(view => view.code === code));
+export const selectViewById = (id: string) => createSelector(selectViewsDictionary, viewsMap => viewsMap[id]);
+
+export const selectViewsDictionaryByCode = createSelector(selectAllViews, views =>
+  views.reduce((map, view) => ({...map, [view.code]: view}), {})
+);
+
 export const selectCurrentView = createSelector(selectViewCode, selectAllViews, (viewCode, views) =>
   viewCode ? views.find(view => view.code === viewCode) : null
 );
+
+export const selectDefaultDocumentView = (purpose: CollectionPurpose) =>
+  createSelector(selectAllViews, views => {
+    if (purpose?.type === CollectionPurposeType.Tasks && purpose.metaData?.defaultViewCode) {
+      return views.find(view => view.code === purpose.metaData.defaultViewCode);
+    }
+    return null;
+  });
 
 export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 
@@ -93,8 +111,9 @@ const selectConfigs1 = createSelector(
   })
 );
 
-const selectConfigs2 = createSelector(selectWorkflowConfig, workflowConfig => ({
+const selectConfigs2 = createSelector(selectWorkflowConfig, selectDetailConfig, (workflowConfig, detailConfig) => ({
   workflowConfig,
+  detailConfig,
 }));
 
 export const selectPerspectiveConfig = createSelector(
@@ -104,53 +123,51 @@ export const selectPerspectiveConfig = createSelector(
   (
     perspective,
     {tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig},
-    {workflowConfig}
-  ) =>
-    ({
-      [Perspective.Map]: mapConfig,
-      [Perspective.Table]: tableConfig,
-      [Perspective.Chart]: chartConfig,
-      [Perspective.GanttChart]: ganttChartConfig,
-      [Perspective.Calendar]: calendarConfig,
-      [Perspective.Kanban]: kanbanConfig,
-      [Perspective.Pivot]: pivotConfig,
-      [Perspective.Search]: searchConfig,
-      [Perspective.Workflow]: workflowConfig,
-    }[perspective])
-);
-
-export const selectPerspectiveViewConfig = createSelector(
-  selectCurrentView,
-  selectPerspective,
-  (view, perspective) => view?.config?.[perspective]
+    {workflowConfig, detailConfig}
+  ) => ({
+    [Perspective.Map]: mapConfig,
+    [Perspective.Table]: tableConfig,
+    [Perspective.Chart]: chartConfig,
+    [Perspective.GanttChart]: ganttChartConfig,
+    [Perspective.Calendar]: calendarConfig,
+    [Perspective.Kanban]: kanbanConfig,
+    [Perspective.Pivot]: pivotConfig,
+    [Perspective.Search]: searchConfig,
+    [Perspective.Workflow]: workflowConfig,
+    [Perspective.Detail]: detailConfig,
+  })
 );
 
 export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);
 
 export const selectViewConfigChanged = createSelector(
   selectPerspective,
+  selectViewConfig,
   selectPerspectiveConfig,
-  selectPerspectiveViewConfig,
   selectDocumentsDictionary,
   selectCollectionsDictionary,
   selectLinkTypesDictionary,
-  (perspective, perspectiveConfig, viewConfig, documentsMap, collectionsMap, linkTypesMap) =>
-    viewConfig &&
-    perspectiveConfig &&
+  (perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap) =>
     isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap)
 );
 
 export const selectViewQuery = createSelector(
   selectCurrentView,
   selectQuery,
-  selectCurrentUser,
-  (view, query, currentUser) => {
-    if (!view || userHasManageRoleInResource(currentUser, view) || isQuerySubset(query, view.query)) {
+  selectViewsPermissions,
+  (view, query, permissions) => {
+    if (
+      !view ||
+      permissions?.[view.id]?.roles?.QueryConfig ||
+      queryIsEmpty(view.query) ||
+      isQuerySubset(query, view.query)
+    ) {
       return query;
     }
     return view.query;
   }
 );
+
 export const selectViewQueryChanged = createSelector(
   selectCurrentView,
   selectViewQuery,

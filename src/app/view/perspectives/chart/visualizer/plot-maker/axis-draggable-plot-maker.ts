@@ -195,7 +195,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   }
 
   private getInitialValue(setIx: number, index: number): string | number {
-    return this.chartData.sets[setIx].points[index].y;
+    return this.chartData.sets[setIx]?.points[index]?.y;
   }
 
   private getElementOffset(element: Element) {

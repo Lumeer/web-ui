@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {createDateTimeOptions} from '../../../date-time/date-time-options';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
 import {Constraint, DateTimeConstraint, DateTimeConstraintConfig} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../utils/translation.utils';
 
 export enum DateReadableFormatType {
   Yearly = 'yearly',
@@ -54,9 +54,9 @@ export const dateReadableFormatsMap: Record<string, string> = {
 export class DateTimeConfigOverrideService extends ConstraintConfigOverrideService<DateTimeConstraintConfig> {
   private readonly defaultTitle: string;
 
-  constructor(private i18n: I18n) {
+  constructor() {
     super();
-    this.defaultTitle = i18n({id: 'default', value: 'Default'});
+    this.defaultTitle = $localize`:@@default:Default`;
   }
 
   public create(config: DateTimeConstraintConfig, withDefaultItem: boolean): SelectItemModel[] {
@@ -90,11 +90,8 @@ export class DateTimeConfigOverrideService extends ConstraintConfigOverrideServi
   private translateDateReadableFormat(format: string): string {
     const formatType = Object.entries(DateReadableFormatType).find(([, value]) => value === format);
     if (formatType && formatType[0] === DateReadableFormatType.Weekly) {
-      return this.i18n(
-        {
-          id: 'select.constraint.items.date.format',
-          value: '{format, select, weekly {[W]W YYYY} other {} }',
-        },
+      return parseSelectTranslation(
+        $localize`:@@select.constraint.items.date.format:{format, select, weekly {[W]W YYYY} other {}}`,
         {format: formatType[0]}
       );
     }
@@ -102,12 +99,8 @@ export class DateTimeConfigOverrideService extends ConstraintConfigOverrideServi
   }
 
   private translateDateReadableFormatType(type: DateReadableFormatType): string {
-    return this.i18n(
-      {
-        id: 'select.constraint.items.date.formatType',
-        value:
-          '{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }',
-      },
+    return parseSelectTranslation(
+      $localize`:@@select.constraint.items.date.formatType:{type, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }`,
       {type}
     );
   }

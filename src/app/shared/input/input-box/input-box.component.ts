@@ -16,9 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChange, ViewChild} from '@angular/core';
 
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 
 const DEFAULT_FONT_SIZE = 1;
 const DEFAULT_MAX_LINES = -1;
@@ -32,7 +41,7 @@ const warningStyle = ['border', 'border-danger', 'rounded'];
   templateUrl: './input-box.component.html',
   styleUrls: ['./input-box.component.scss'],
 })
-export class InputBoxComponent implements OnInit {
+export class InputBoxComponent implements OnInit, OnChanges {
   @ViewChild('input', {static: true}) public input: ElementRef<HTMLDivElement>;
   @ViewChild('inputParent', {static: true}) public inputParent: ElementRef;
 
@@ -68,13 +77,11 @@ export class InputBoxComponent implements OnInit {
   public mPaddingVRem: number;
   public mMaxHeightRem: number;
 
-  public constructor(private i18n: I18n) {}
-
   public ngOnInit() {
     this.computeProperties();
   }
 
-  public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
+  public ngOnChanges(changes: SimpleChanges) {
     this.computeProperties();
   }
 
@@ -183,10 +190,7 @@ export class InputBoxComponent implements OnInit {
   }
 
   private defaultPlaceholder() {
-    return this.i18n({
-      id: 'inputBox.placeholder.default',
-      value: 'Write text here...',
-    });
+    return $localize`:@@inputBox.placeholder.default:Write text here...`;
   }
 
   public onInterimNewValue(textContent: string | null) {

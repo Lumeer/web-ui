@@ -30,9 +30,7 @@ import {PivotConfig} from '../../../../core/store/pivots/pivot';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {environment} from '../../../../../environments/environment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {UnknownConstraint} from '@lumeer/data-filters';
+import {DocumentsAndLinksData, UnknownConstraint} from '@lumeer/data-filters';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},
@@ -50,7 +48,6 @@ const documents: DocumentModel[] = [
   {collectionId: 'C3', id: 'D32', data: {a1: 'xyz'}},
   {collectionId: 'C3', id: 'D33', data: {a1: 'vuw'}},
   {collectionId: 'C3', id: 'D34', data: {a1: 'vuw'}},
-  {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
   {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
   {collectionId: 'C3', id: 'D36', data: {a1: 'xyz'}},
 
@@ -267,6 +264,12 @@ const linkTypes: LinkType[] = [
 
 const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
+const data: DocumentsAndLinksData = {
+  uniqueLinkInstances: linkInstances,
+  uniqueDocuments: documents,
+  dataByStems: [{stem: query.stems[0], documents, linkInstances}],
+};
+
 describe('Pivot data converter', () => {
   let constraintReadableFormatter: SelectItemWithConstraintFormatter;
   let dataConverter: PivotDataConverter;
@@ -276,7 +279,7 @@ describe('Pivot data converter', () => {
       providers: [
         {
           provide: LOCALE_ID,
-          useFactory: () => environment.locale,
+          useFactory: () => 'en',
         },
         {
           provide: TRANSLATIONS,
@@ -285,9 +288,8 @@ describe('Pivot data converter', () => {
         },
         {
           provide: TRANSLATIONS_FORMAT,
-          useFactory: () => environment.i18nFormat,
+          useFactory: () => 'xlf',
         },
-        I18n,
       ],
     });
     constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);
@@ -296,7 +298,7 @@ describe('Pivot data converter', () => {
 
   it('should return empty data', () => {
     const config: PivotConfig = {stemsConfigs: [{rowAttributes: [], columnAttributes: [], valueAttributes: []}]};
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data).toEqual([]);
   });
 
@@ -312,7 +314,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'a',
@@ -341,6 +343,7 @@ describe('Pivot data converter', () => {
     ]);
     expect(pivotData.data[0].columnHeaders).toEqual([]);
     expect(pivotData.data[0].values).toEqual([[undefined], [undefined], [undefined]]);
+    expect(pivotData.data[0].dataResources).toEqual([[undefined], [undefined], [undefined]]);
   });
 
   it('should return by one column', () => {
@@ -355,7 +358,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {
@@ -376,6 +379,7 @@ describe('Pivot data converter', () => {
       },
     ]);
     expect(pivotData.data[0].values).toEqual([[undefined, undefined]]);
+    expect(pivotData.data[0].dataResources).toEqual([[undefined, undefined]]);
   });
 
   it('should return by two values', () => {
@@ -403,7 +407,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {
@@ -420,6 +424,14 @@ describe('Pivot data converter', () => {
       },
     ]);
     expect(pivotData.data[0].values).toEqual([[46, -10]]);
+    expect(pivotData.data[0].dataResources[0][0]).toHaveSize(9);
+    expect(pivotData.data[0].dataResources[0][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D42', 'D43', 'D44', 'D45', 'D46', 'D47', 'D48', 'D49'])
+    );
+    expect(pivotData.data[0].dataResources[0][1]).toHaveSize(9);
+    expect(pivotData.data[0].dataResources[0][1].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D42', 'D43', 'D44', 'D45', 'D46', 'D47', 'D48', 'D49'])
+    );
   });
 
   it('should return by row and value', () => {
@@ -442,7 +454,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'abc',
@@ -469,7 +481,14 @@ describe('Pivot data converter', () => {
         isValueHeader: true,
       },
     ]);
+
     expect(pivotData.data[0].values).toEqual([[37], [31]]);
+    expect(pivotData.data[0].dataResources[0][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D41', 'D42', 'D43', 'D43', 'D44', 'D43', 'D44', 'D43', 'D44', 'D45', 'D46'])
+    );
+    expect(pivotData.data[0].dataResources[1][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D47', 'D48', 'D49'])
+    );
   });
 
   it('should return by column and value', () => {
@@ -478,7 +497,7 @@ describe('Pivot data converter', () => {
         {
           rowAttributes: [],
           columnAttributes: [
-            {resourceId: 'C1', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
+            {resourceId: 'C2', resourceType: AttributesResourceType.Collection, attributeId: 'a1', resourceIndex: 2},
           ],
           valueAttributes: [
             {
@@ -492,7 +511,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {
@@ -501,7 +520,7 @@ describe('Pivot data converter', () => {
         color: undefined,
         constraint: new UnknownConstraint(),
         isValueHeader: false,
-        attributeName: collections[0].attributes[0].name,
+        attributeName: collections[1].attributes[0].name,
       },
       {
         title: 'c',
@@ -509,7 +528,7 @@ describe('Pivot data converter', () => {
         color: undefined,
         constraint: new UnknownConstraint(),
         isValueHeader: false,
-        attributeName: collections[0].attributes[0].name,
+        attributeName: collections[1].attributes[0].name,
       },
       {
         title: 'b',
@@ -517,10 +536,19 @@ describe('Pivot data converter', () => {
         color: undefined,
         constraint: new UnknownConstraint(),
         isValueHeader: false,
-        attributeName: collections[0].attributes[0].name,
+        attributeName: collections[1].attributes[0].name,
       },
     ]);
     expect(pivotData.data[0].values).toEqual([[-4, 9, -13]]);
+    expect(pivotData.data[0].dataResources[0][0].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D43', 'D44'])
+    );
+    expect(pivotData.data[0].dataResources[0][1].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D41', 'D42', 'D43', 'D47', 'D48', 'D49'])
+    );
+    expect(pivotData.data[0].dataResources[0][2].map(d => d.id)).toEqual(
+      jasmine.arrayContaining(['D43', 'D44', 'D43', 'D44', 'D45', 'D46'])
+    );
   });
 
   it('should return by two rows, column and three values', () => {
@@ -560,7 +588,7 @@ describe('Pivot data converter', () => {
         },
       ],
     };
-    const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
+    const pivotData = dataConverter.transform(config, collections, linkTypes, data, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
       {
         title: 'abc',
@@ -647,8 +675,8 @@ describe('Pivot data converter', () => {
     expect(pivotData.data[0].values).toEqual([
       [2, 2, 1, 7, 6, 2],
       [6, 4, 2, 6, 6, 1],
-      [null, null, null, 16, 6, 5],
-      [31, 20, 2, null, null, null],
+      [undefined, undefined, undefined, 16, 6, 6],
+      [31, 20, 3, undefined, undefined, undefined],
     ]);
     expect(pivotData.data[0].valueTitles).toEqual(valueTitles);
   });

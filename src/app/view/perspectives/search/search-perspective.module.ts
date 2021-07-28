@@ -23,15 +23,23 @@ import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.m
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
-import {SearchDocumentsModule} from './documents/search-documents.module';
+import {SearchTasksModule} from './tasks/search-tasks.module';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
-import {EmptyViewsComponent} from './views/content/empty-views/empty-views.component';
-import {SearchViewsComponent} from './views/search-views.component';
-import {ViewDetailComponent} from './views/content/view-detail/view-detail.component';
-import {SearchViewsContentComponent} from './views/content/search-views-content.component';
+import {EmptyViewsComponent} from './views/common/empty-views/empty-views.component';
+import {ViewDetailComponent} from './views/common/view-detail/view-detail.component';
 import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
 import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
+import {ViewIconSizePipe} from './views/pipes/view-icon-size.pipe';
+import {SearchViewsPreviewComponent} from './views/preview/search-views-preview.component';
+import {SearchViewsFoldersComponent} from './views/folders/search-views-folders.component';
+import {ViewsPreviewContentComponent} from './views/preview/content/views-preview-content.component';
+import {ViewsFoldersContentComponent} from './views/folders/content/views-folders-content.component';
+import {ViewsFoldersComponent} from './views/folders/content/folders/views-folders.component';
+import {ViewsFolderComponent} from './views/folders/content/folders/folder/views-folder.component';
+import {ViewFoldersByPathPipe} from './views/folders/content/pipes/view-folders-by-path.pipe';
+import {ViewsFoldersBreadcrumbComponent} from './views/folders/content/breadcrumb/views-folders-breadcrumb.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -40,17 +48,25 @@ import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guar
     SearchBoxModule,
     WarningMessageModule,
     SearchPerspectiveRoutingModule,
-    SearchDocumentsModule,
+    SearchTasksModule,
     CreateDocumentModalModule,
+    DragDropModule,
   ],
   declarations: [
     SearchAllComponent,
     SearchCollectionsComponent,
     SearchPerspectiveComponent,
-    SearchViewsComponent,
+    SearchViewsPreviewComponent,
+    SearchViewsFoldersComponent,
+    ViewsPreviewContentComponent,
+    ViewsFoldersContentComponent,
     EmptyViewsComponent,
     ViewDetailComponent,
-    SearchViewsContentComponent,
+    ViewIconSizePipe,
+    ViewsFoldersComponent,
+    ViewsFolderComponent,
+    ViewFoldersByPathPipe,
+    ViewsFoldersBreadcrumbComponent,
   ],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],

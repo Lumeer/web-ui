@@ -22,14 +22,12 @@ import {NotificationSettings, User} from '../../../core/store/users/user';
 import {UserNotificationGroupType, userNotificationGroupTypes} from '../../../core/model/user-notification';
 import {NotificationChannel} from '../../../core/model/notification-channel';
 import {NotificationFrequency} from '../../../core/model/notification-frequency';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
-import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {availableLanguages, LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'notification-settings',
   templateUrl: './notification-settings.component.html',
-  styleUrls: ['./notification-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationSettingsComponent implements OnInit {
@@ -47,11 +45,12 @@ export class NotificationSettingsComponent implements OnInit {
   public language: LanguageCode;
   public languageSelectItems: SelectItem2Model[];
 
-  constructor(private i18n: I18n) {
-    this.languageSelectItems = [
-      {id: LanguageCode.EN, icons: ['flag-icon flag-icon-gb'], value: i18n({id: 'language.english', value: 'English'})},
-      {id: LanguageCode.CZ, icons: ['flag-icon flag-icon-cz'], value: i18n({id: 'language.czech', value: 'Czech'})},
-    ];
+  constructor() {
+    this.languageSelectItems = availableLanguages.map(language => ({
+      id: language.code,
+      icons: [language.icon],
+      value: language.translatedName,
+    }));
   }
 
   public ngOnInit() {

@@ -19,10 +19,11 @@
 
 import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
-import {Permission, PermissionType} from '../permissions/permissions';
+import {Permissions, Role} from '../permissions/permissions';
 import {User} from '../users/user';
 import {DefaultViewConfig, View} from './view';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {Team} from '../teams/team';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -42,7 +43,7 @@ export enum ViewsActionType {
   DELETE_SUCCESS = '[Views] Delete :: Success',
   DELETE_FAILURE = '[Views] Delete :: Failure',
 
-  SET_USER_PERMISSIONS = '[Views] Set User Permission',
+  SET_PERMISSIONS = '[Views] Set User Permission',
   SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
   SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
@@ -53,6 +54,9 @@ export enum ViewsActionType {
   REMOVE_FAVORITE = '[Views] Remove Favorite',
   REMOVE_FAVORITE_SUCCESS = '[Views] Remove Favorite :: Success',
   REMOVE_FAVORITE_FAILURE = '[Views] Remove Favorite :: Failure',
+
+  SET_VIEW_FOLDERS = '[Views] Set View Folders',
+  SET_VIEW_FOLDERS_FAILURE = '[Views] Set View Folders :: Failure',
 
   SET_DEFAULT_CONFIG = '[Views] Set Default Config',
   SET_DEFAULT_CONFIG_SUCCESS = '[Views] Set Default Config :: Success',
@@ -143,17 +147,19 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
-  export class SetUserPermissions implements Action {
-    public readonly type = ViewsActionType.SET_USER_PERMISSIONS;
+  export class SetPermissions implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS;
 
     public constructor(
       public payload: {
         viewId: string;
-        permissions: Permission[];
+        permissions: Permissions;
         newUsers: User[];
-        newUsersRoles: Record<string, string[]>;
+        newUsersRoles: Record<string, Role[]>;
+        newTeams: Team[];
         onSuccess?: () => void;
         onFailure?: () => void;
+        onInviteFailure?: () => void;
       }
     ) {}
   }
@@ -161,7 +167,7 @@ export namespace ViewsAction {
   export class SetPermissionsSuccess implements Action {
     public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
 
-    public constructor(public payload: {viewId: string; type: PermissionType; permissions: Permission[]}) {}
+    public constructor(public payload: {viewId: string; permissions: Permissions}) {}
   }
 
   export class SetPermissionsFailure implements Action {
@@ -170,10 +176,28 @@ export namespace ViewsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class SetViewFolders implements Action {
+    public readonly type = ViewsActionType.SET_VIEW_FOLDERS;
+
+    public constructor(public payload: {viewId: string; folders: string[]}) {}
+  }
+
+  export class SetViewFoldersFailure implements Action {
+    public readonly type = ViewsActionType.SET_VIEW_FOLDERS_FAILURE;
+
+    public constructor(public payload: {error: any; viewId: string; previousFolders: string[]}) {}
+  }
+
   export class Delete implements Action {
     public readonly type = ViewsActionType.DELETE;
 
-    public constructor(public payload: {viewId: string}) {}
+    public constructor(
+      public payload: {
+        viewId: string;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class DeleteSuccess implements Action {
@@ -293,7 +317,7 @@ export namespace ViewsAction {
     | Create
     | CreateSuccess
     | CreateFailure
-    | SetUserPermissions
+    | SetPermissions
     | SetPermissionsSuccess
     | SetPermissionsFailure
     | Update
@@ -309,6 +333,8 @@ export namespace ViewsAction {
     | RemoveFavorite
     | RemoveFavoriteSuccess
     | RemoveFavoriteFailure
+    | SetViewFolders
+    | SetViewFoldersFailure
     | SetSidebarOpened
     | SetPanelWidth
     | SetDefaultConfig

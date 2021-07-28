@@ -20,151 +20,65 @@
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {combineLatest, Observable, of, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
-import {map, mergeMap, pairwise, startWith, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
-import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
-import {View} from '../../../core/store/views/view';
+import {map} from 'rxjs/operators';
+import {selectKanbanById} from '../../../core/store/kanbans/kanban.state';
+import {KanbanConfig} from '../../../core/store/kanbans/kanban';
+import {ViewConfig} from '../../../core/store/views/view';
 import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
 import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {
-  selectCollectionsPermissions,
-  selectLinkTypesPermissions,
-} from '../../../core/store/user-permissions/user-permissions.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
+import {DataPerspectiveComponent} from '../data-perspective.component';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
-  public config$: Observable<KanbanConfig>;
-  public canManageConfig$: Observable<boolean>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
-  public linkTypes$: Observable<LinkType[]>;
-  public collections$: Observable<Collection[]>;
-  public query$: Observable<Query>;
-  public constraintData$: Observable<ConstraintData>;
+export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
 
-  private subscriptions = new Subscription();
-  private kanbanId: string;
-
-  constructor(private store$: Store<AppState>) {}
+  constructor(protected store$: Store<AppState>) {
+    super(store$);
+  }
 
   public ngOnInit() {
-    this.initKanban();
-    this.subscribeToQuery();
-    this.subscribeData();
+    super.ngOnInit();
+    this.subscribeAdditionalData();
   }
 
-  private initKanban() {
-    const subscription = this.store$
-      .pipe(
-        select(selectCurrentView),
-        startWith(null as View),
-        pairwise(),
-        switchMap(([previousView, view]) =>
-          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
-      )
-      .subscribe(({kanbanId, config}: {kanbanId?: string; config?: KanbanConfig}) => {
-        if (kanbanId) {
-          this.kanbanId = kanbanId;
-          this.store$.dispatch(new KanbansAction.AddKanban({kanban: {id: kanbanId, config}}));
-        }
-      });
-    this.subscriptions.add(subscription);
-  }
-
-  private subscribeToView(previousView: View, view: View): Observable<{kanbanId?: string; config?: KanbanConfig}> {
-    const kanbanId = view.code;
+  public subscribeConfig$(perspectiveId: string): Observable<KanbanConfig> {
     return this.store$.pipe(
-      select(selectKanbanById(kanbanId)),
-      take(1),
-      mergeMap(kanbanEntity => {
-        const kanbanConfig = view.config?.kanban;
-        if (preferViewConfigUpdate(previousView?.config?.kanban, view?.config?.kanban, !!kanbanEntity)) {
-          return this.checkKanbanConfig(kanbanConfig).pipe(map(config => ({kanbanId, config})));
-        }
-        return of({kanbanId, config: kanbanEntity?.config || kanbanConfig});
-      })
+      select(selectKanbanById(perspectiveId)),
+      map(entity => entity?.config)
     );
   }
 
-  private checkKanbanConfig(config: KanbanConfig): Observable<KanbanConfig> {
-    return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => checkOrTransformKanbanConfig(config, query, collections, linkTypes))
-    );
+  public configChanged(perspectiveId: string, config: KanbanConfig) {
+    this.store$.dispatch(new KanbansAction.AddKanban({kanban: {id: perspectiveId, config}}));
   }
 
-  private subscribeToDefault(): Observable<{kanbanId?: string; config?: KanbanConfig}> {
-    const kanbanId = DEFAULT_KANBAN_ID;
-    return this.store$.pipe(
-      select(selectViewQuery),
-      withLatestFrom(this.store$.pipe(select(selectKanbanById(kanbanId)))),
-      mergeMap(([, kanban]) => this.checkKanbanConfig(kanban?.config)),
-      map(config => ({kanbanId, config}))
-    );
+  protected getConfig(viewConfig: ViewConfig): KanbanConfig {
+    return viewConfig?.kanban;
   }
 
-  private subscribeToQuery() {
-    this.query$ = this.store$.pipe(
-      select(selectViewQuery),
-      tap(query => this.fetchData(query))
-    );
+  public checkOrTransformConfig(
+    config: KanbanConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): KanbanConfig {
+    return checkOrTransformKanbanConfig(config, query, collections, linkTypes);
   }
 
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
-  }
-
-  private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-    this.config$ = this.store$.pipe(select(selectKanbanConfig));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+  private subscribeAdditionalData() {
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.linkTypesPermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 
   public onConfigChanged(config: KanbanConfig) {
-    if (this.kanbanId) {
-      this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: this.kanbanId, config}));
-    }
+    this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: this.perspectiveId$.value, config}));
   }
 }

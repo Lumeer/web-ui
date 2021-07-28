@@ -1,0 +1,29 @@
+footer {
+  width: 100%;
+  text-align: right;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+@media only screen {
+  .wrapper {
+    padding: 2rem;
+  }
+
+  footer {
+    padding: 2rem;
+  }
+}
+
+@media only print {
+  footer {
+    position: fixed;
+    bottom: 0;
+  }
+}
+
+img {
+  height: 1.2rem;
+}

@@ -18,108 +18,106 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
-import {CommonAction} from '../common/common.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {selectCollectionsByCustomQuery} from '../common/permissions.selectors';
 import {getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
-import {createCallbackActions, emitErrorActions} from '../store.utils';
+import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
 import {AttachmentsService} from '../../data-service';
 import {createFileApiPath, FileApiPath} from '../../data-service/attachments/attachments.service';
+import {selectLoadedFileAttachmentsCollections, selectLoadedFileAttachmentsLinkTypes} from './file-attachments.state';
+import {AppState} from '../app.state';
 
 @Injectable()
 export class FileAttachmentsEffects {
-  @Effect()
-  public create$: Observable<Action> = this.actions$.pipe(
-    ofType<FileAttachmentsAction.Create>(FileAttachmentsActionType.CREATE),
-    withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
-    mergeMap(([action, workspace]) => {
-      const path = createFileApiPath(workspace, action.payload.fileAttachment);
-      const dto = convertFileAttachmentModelToDto(action.payload.fileAttachment, workspace);
+  public create$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<FileAttachmentsAction.Create>(FileAttachmentsActionType.CREATE),
+      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([action, workspace]) => {
+        const path = createFileApiPath(workspace, action.payload.fileAttachment);
+        const dto = convertFileAttachmentModelToDto(action.payload.fileAttachment, workspace);
 
-      return this.attachmentsService.createFile(path, dto).pipe(
-        map(file => convertFileAttachmentDtoToModel(file, true)),
-        mergeMap(fileAttachment => [
-          new FileAttachmentsAction.CreateSuccess({fileAttachment}),
-          ...createCallbackActions(action.payload.onSuccess, fileAttachment),
-        ]),
-        catchError(error => emitErrorActions(error, action.payload.onFailure))
-      );
-    })
+        return this.attachmentsService.createFile(path, dto).pipe(
+          map(file => convertFileAttachmentDtoToModel(file, true)),
+          mergeMap(fileAttachment => [
+            new FileAttachmentsAction.CreateSuccess({fileAttachment}),
+            ...createCallbackActions(action.payload.onSuccess, fileAttachment),
+          ]),
+          catchError(error => emitErrorActions(error, action.payload.onFailure))
+        );
+      })
+    )
   );
 
-  @Effect()
-  public remove$: Observable<Action> = this.actions$.pipe(
-    ofType<FileAttachmentsAction.Remove>(FileAttachmentsActionType.REMOVE),
-    withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
-    mergeMap(([action, workspace]) => {
-      const {fileId, onSuccess, onFailure} = action.payload;
-      return this.attachmentsService.removeFile(workspace, fileId).pipe(
-        mergeMap(() => [new FileAttachmentsAction.RemoveSuccess({fileId}), ...createCallbackActions(onSuccess)]),
-        catchError(error => emitErrorActions(error, onFailure))
-      );
-    })
+  public remove$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<FileAttachmentsAction.Remove>(FileAttachmentsActionType.REMOVE),
+      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([action, workspace]) => {
+        const {fileId, onSuccess, onFailure} = action.payload;
+        return this.attachmentsService.removeFile(workspace, fileId).pipe(
+          mergeMap(() => [new FileAttachmentsAction.RemoveSuccess({fileId}), ...createCallbackActions(onSuccess)]),
+          catchError(error => emitErrorActions(error, onFailure))
+        );
+      })
+    )
   );
 
-  @Effect()
-  public get$: Observable<Action> = this.actions$.pipe(
-    ofType<FileAttachmentsAction.Get>(FileAttachmentsActionType.GET),
-    withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
-    mergeMap(([action, workspace]) => {
-      const path = createFileApiPath(workspace, action.payload);
+  public get$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<FileAttachmentsAction.Get>(FileAttachmentsActionType.GET),
+      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([action, workspace]) => {
+        const path = createFileApiPath(workspace, action.payload);
 
-      return (action.payload.collectionId ? this.getDocumentFiles(path) : this.getLinkFiles(path)).pipe(
-        map(files => files.map(file => convertFileAttachmentDtoToModel(file))),
-        mergeMap(fileAttachments => [
-          new FileAttachmentsAction.GetSuccess({fileAttachments}),
-          ...createCallbackActions(action.payload.onSuccess, fileAttachments),
-        ]),
-        catchError(error => emitErrorActions(error, action.payload.onFailure))
-      );
-    })
+        return (action.payload.collectionId ? this.getDocumentFiles(path) : this.getLinkFiles(path)).pipe(
+          map(files => files.map(file => convertFileAttachmentDtoToModel(file))),
+          mergeMap(fileAttachments => [
+            new FileAttachmentsAction.GetSuccess({fileAttachments, path}),
+            ...createCallbackActions(action.payload.onSuccess, fileAttachments),
+          ]),
+          catchError(error => emitErrorActions(error, action.payload.onFailure))
+        );
+      })
+    )
   );
 
-  @Effect()
-  public getByQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<FileAttachmentsAction.GetByQuery>(FileAttachmentsActionType.GET_BY_QUERY),
-    mergeMap(action => {
-      const {query} = action.payload;
+  public getByQuery$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<FileAttachmentsAction.GetByQuery>(FileAttachmentsActionType.GET_BY_QUERY),
+      mergeMap(action => {
+        const {query} = action.payload;
 
-      return this.store$.pipe(
-        select(selectCollectionsByCustomQuery(query)),
-        take(1),
-        mergeMap(collections => {
-          const collectionIds = collections.map(collection => collection.id);
-          const linkTypesIds = getAllLinkTypeIdsFromQuery(query);
+        return this.store$.pipe(
+          select(selectCollectionsByCustomQuery(query)),
+          take(1),
+          withLatestFrom(
+            this.store$.pipe(select(selectLoadedFileAttachmentsCollections)),
+            this.store$.pipe(select(selectLoadedFileAttachmentsLinkTypes))
+          ),
+          mergeMap(([collections, loadedCollections, loadedLinkTypes]) => {
+            const collectionIds = collections.map(collection => collection.id);
+            const linkTypesIds = getAllLinkTypeIdsFromQuery(query);
 
-          const actions: Action[] = [];
-          collectionIds.forEach(collectionId => actions.push(new FileAttachmentsAction.Get({collectionId})));
-          linkTypesIds.forEach(linkTypeId => actions.push(new FileAttachmentsAction.Get({linkTypeId})));
-          return actions;
-        })
-      );
-    })
-  );
-
-  @Effect()
-  public getDetails$: Observable<Action> = this.actions$.pipe(
-    ofType<FileAttachmentsAction.GetDetails>(FileAttachmentsActionType.GET_DETAILS),
-    withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
-    mergeMap(([action, workspace]) => {
-      const path = createFileApiPath(workspace, action.payload);
-
-      return this.attachmentsService.getFilesWithDetailsByDocumentAttribute(path).pipe(
-        map(files => files.map(file => convertFileAttachmentDtoToModel(file))),
-        map(fileAttachments => new FileAttachmentsAction.GetSuccess({fileAttachments})),
-        catchError(error => of(new CommonAction.HandleError({error})))
-      );
-    })
+            const actions: Action[] = [];
+            collectionIds
+              .filter(collectionId => !loadedCollections.includes(collectionId))
+              .forEach(collectionId => actions.push(new FileAttachmentsAction.Get({collectionId})));
+            linkTypesIds
+              .filter(linkTypeId => !loadedLinkTypes.includes(linkTypeId))
+              .forEach(linkTypeId => actions.push(new FileAttachmentsAction.Get({linkTypeId})));
+            return actions;
+          })
+        );
+      })
+    )
   );
 
   private getDocumentFiles(path: FileApiPath): Observable<FileAttachmentDto[]> {
@@ -146,5 +144,9 @@ export class FileAttachmentsEffects {
     return this.attachmentsService.getFilesByLinkType(path);
   }
 
-  constructor(private actions$: Actions, private attachmentsService: AttachmentsService, private store$: Store<{}>) {}
+  constructor(
+    private actions$: Actions,
+    private attachmentsService: AttachmentsService,
+    private store$: Store<AppState>
+  ) {}
 }

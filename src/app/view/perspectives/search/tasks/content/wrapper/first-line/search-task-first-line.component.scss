@@ -1,0 +1,27 @@
+.data-input-preview {
+  line-height: 1.4rem;
+}
+
+:host {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+
+  .task-info:not(.from-start) {
+    grid-column: 2 / 4;
+  }
+
+  .task-info.from-start {
+    grid-column: 1 / 4;
+  }
+}
+
+@media (min-width: 576px) {
+  :host {
+    grid-template-columns: auto 1fr auto auto;
+
+    .task-info {
+      grid-column: 3 / 4 !important;
+    }
+  }
+}

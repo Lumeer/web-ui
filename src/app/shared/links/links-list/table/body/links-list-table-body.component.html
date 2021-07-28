@@ -4,8 +4,8 @@
 
 <ng-container *ngIf="{rows: [rows, (newRows$ | async)] | concat} as data">
   <tr *ngIf="data.rows.length === 0">
-    <td [attr.colspan]="columns.length" class="text-center" i18n="@@shared.preview.results.noResults">
-      No records found.
+    <td [attr.colspan]="columns.length" class="text-center">
+      <span i18n="@@shared.preview.results.noResults">No records found.</span>
     </td>
   </tr>
 
@@ -14,11 +14,13 @@
       [columns]="columns"
       [constraintData]="constraintData"
       [row]="row"
-      [permissions]="permissions"
+      [linkPermissions]="row.linkInstance | dataResourcePermissions:linkType:linkTypePermissions:currentUser"
+      [documentPermissions]="row.document | dataResourcePermissions:collection:collectionPermissions:currentUser"
       [linkTypeId]="linkType?.id"
       [collectionId]="collection?.id"
       [documentId]="document?.id"
-      [allowSelectDocument]="allowSelectDocument"
+      [allowSelect]="allowSelect"
+      [allowUnlink]="allowUnlink"
       [preventEventBubble]="preventEventBubble"
       [attributeEditing]="attributeEditing$ | async"
       (onEdit)="onEdit(index,$event)"
@@ -29,6 +31,8 @@
       (columnEdit)="onColumnEdit(row, $event)"
       (detail)="detail.emit(row)"
       (unLink)="unlink.emit(row)"
-      (newLink)="newLink.emit($event)">
+      (newLink)="newLink.emit($event)"
+      (createLink)="createLink.emit($event)"
+      (updateLink)="updateLink.emit($event)">
   </tr>
 </ng-container>

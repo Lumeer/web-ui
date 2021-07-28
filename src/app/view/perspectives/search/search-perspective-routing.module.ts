@@ -21,10 +21,10 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
-import {SearchDocumentsComponent} from './documents/search-documents.component';
+import {SearchTasksComponent} from './tasks/search-tasks.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
-import {SearchViewsComponent} from './views/search-views.component';
 import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
+import {SearchViewsFoldersComponent} from './views/folders/search-views-folders.component';
 
 const searchRoutes: Routes = [
   {
@@ -42,12 +42,16 @@ const searchRoutes: Routes = [
         component: SearchCollectionsComponent,
       },
       {
-        path: 'records',
-        component: SearchDocumentsComponent,
+        path: 'tasks',
+        component: SearchTasksComponent,
       },
       {
         path: 'views',
-        component: SearchViewsComponent,
+        component: SearchViewsFoldersComponent,
+      },
+      {
+        path: 'records',
+        redirectTo: 'tasks',
       },
     ],
   },

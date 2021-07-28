@@ -22,6 +22,8 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {Organization} from './organization';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {sortResourcesByOrder} from '../../../shared/utils/resource.utils';
+import {selectOrganizationsPermissions} from '../user-permissions/user-permissions.state';
 
 export interface OrganizationsState extends EntityState<Organization> {
   organizationCodes: string[];
@@ -42,6 +44,14 @@ export const selectAllOrganizations = createSelector(
   selectOrganizationsState,
   organizationsAdapter.getSelectors().selectAll
 );
+export const selectReadableOrganizations = createSelector(
+  selectAllOrganizations,
+  selectOrganizationsPermissions,
+  (organizations, permissions) => organizations.filter(organization => permissions?.[organization.id]?.roles?.Read)
+);
+export const selectAllOrganizationsSorted = createSelector(selectReadableOrganizations, organizations =>
+  sortResourcesByOrder(organizations)
+);
 export const selectOrganizationsDictionary = createSelector(
   selectOrganizationsState,
   organizationsAdapter.getSelectors().selectEntities
@@ -57,9 +67,9 @@ export const selectOrganizationCodes = createSelector(
 
 export const selectOrganizationByWorkspace = createSelector(
   selectWorkspace,
-  selectAllOrganizations,
+  selectReadableOrganizations,
   (workspace, organizations) => {
-    return workspace && workspace.organizationCode
+    return workspace?.organizationCode
       ? organizations.find(organization => organization.code === workspace.organizationCode)
       : null;
   }

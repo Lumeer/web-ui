@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Annotations, Layout, PlotType} from 'plotly.js';
+import {Annotations, Layout, PlotMarker, PlotType} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ChartDataSet} from '../../data/convertor/chart-data';
@@ -96,7 +96,7 @@ export class PiePlotMaker extends PlotMaker {
 
     const data = {...dataStyle, labels, values, name: set.name};
     if (this.shouldSetColors(colors)) {
-      data.marker.colors = colors;
+      (data.marker as PlotMarker).colors = colors;
     }
 
     if (isNotNullOrUndefined(x) && isNotNullOrUndefined(y)) {

@@ -23,8 +23,7 @@ import {Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectDefaultViewConfig, selectDefaultViewConfigsLoaded} from '../../../core/store/views/views.state';
-import {Perspective} from '../perspective';
-import {DEFAULT_SEARCH_ID} from '../../../core/store/searches/search';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
 import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
 import {DefaultViewConfig} from '../../../core/store/views/view';
@@ -32,7 +31,6 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
-import {QueryParam} from '../../../core/store/navigation/query-param';
 
 @Injectable()
 export class SearchPerspectiveRedirectGuard implements CanActivate {
@@ -87,7 +85,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
         }
       }),
       skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_SEARCH_ID))))
+      mergeMap(() => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID))))
     );
   }
 

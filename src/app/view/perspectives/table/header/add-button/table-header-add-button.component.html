@@ -12,18 +12,21 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent
                *ngIf="{collections: collections$ | async, linkTypes: linkTypes$ | async, lastCol: parts | lastColumn} as data">
-    <button *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
-            mat-menu-item
-            (click)="onAddColumn()">
-      <icons-presenter [colors]="['#000']"
-                       [icons]="['fas fa-plus-circle']"
-                       class="mr-1">
-      </icons-presenter>
-      <span i18n="@@table.header.menu.add.column">
+    <ng-container *ngIf="permissions?.roles?.AttributeEdit">
+      <button *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
+              mat-menu-item
+              (click)="onClick($event); onAddColumn()">
+        <icons-presenter [colors]="['#000']"
+                         [icons]="['fas fa-plus-circle']"
+                         class="mr-1">
+        </icons-presenter>
+        <span i18n="@@table.header.menu.add.column">
       Add a new column
     </span>
-    </button>
-    <hr class="my-2" *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)">
+      </button>
+      <hr class="my-2"
+          *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)">
+    </ng-container>
 
     <small *ngIf="data.linkTypes && data.linkTypes.length > 0"
            class="text-muted mx-3 pb-2"
@@ -32,33 +35,35 @@
 
     <button *ngFor="let linkType of data.linkTypes"
             mat-menu-item
-            (click)="onUseLinkType(linkType[0])">
-      <icons-presenter [colors]="[linkType[1]?.color, linkType[2]?.color]"
-                       [icons]="[linkType[1]?.icon, linkType[2]?.icon]"
+            (click)="onClick($event); onUseLinkType(linkType)">
+      <icons-presenter [colors]="[linkType.collections[0]?.color, linkType.collections[1]?.color]"
+                       [icons]="[linkType.collections[0]?.icon, linkType.collections[1]?.icon]"
                        class="mr-1">
       </icons-presenter>
-      <span [title]="linkType[0]?.name"
+      <span [title]="linkType?.name"
             data-test="table-header-add-linktype-option">
-      {{linkType[0]?.name | truncate:20}}
+      {{linkType?.name | truncate:20}}
     </span>
     </button>
 
-    <hr class="my-2"
-        *ngIf="data.collections && data.collections.length > 0 && data.linkTypes && data.linkTypes.length > 0">
-    <small *ngIf="data.collections && data.collections.length > 0" class="text-muted mx-3 pb-2"
-           i18n="@@create.new.link">Create new link
-    </small>
-    <button *ngFor="let collection of data.collections"
-            mat-menu-item
-            (click)="onUseCollection(collection)">
-      <icons-presenter [colors]="[collection.color]"
-                       [icons]="[collection.icon]"
-                       class="mx-2">
-      </icons-presenter>
-      <span [title]="collection.name"
-            data-test="table-header-add-collection-option">
+    <ng-container *ngIf="canCreateLinks">
+      <hr class="my-2"
+          *ngIf="data.collections && data.collections.length > 0 && data.linkTypes && data.linkTypes.length > 0">
+      <small *ngIf="data.collections && data.collections.length > 0" class="text-muted mx-3 pb-2"
+             i18n="@@create.new.link">Create new link
+      </small>
+      <button *ngFor="let collection of data.collections"
+              mat-menu-item
+              (click)="onClick($event); onUseCollection(collection)"
+              data-test="table-header-add-collection-option">
+        <icons-presenter [colors]="[collection.color]"
+                         [icons]="[collection.icon]"
+                         class="mx-2">
+        </icons-presenter>
+        <span [title]="collection.name">
       {{collection.name | truncate:20}}
       </span>
-    </button>
+      </button>
+    </ng-container>
   </ng-template>
 </mat-menu>

@@ -31,7 +31,7 @@ export interface SelectItemWithConstraintId {
   templateUrl: './select-item-with-constraint.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemWithConstraint {
+export class SelectItemWithConstraintComponent {
   @Input()
   public attributesResources: AttributesResource[];
 

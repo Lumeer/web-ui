@@ -36,15 +36,21 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import * as moment from 'moment';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
   return isAllDayEventSingle(start) && isAllDayEventSingle(end);
 }
 
 export function isAllDayEventSingle(date: Date): boolean {
-  return date && date.getHours() === 0 && date.getMinutes() === 0 && date.getHours() === 0 && date.getMinutes() === 0;
+  return (
+    isDateValid(date) &&
+    date.getHours() === 0 &&
+    date.getMinutes() === 0 &&
+    date.getHours() === 0 &&
+    date.getMinutes() === 0
+  );
 }
 
 export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfig: CalendarConfig): boolean {
@@ -201,13 +207,12 @@ export function getCalendarDefaultStemConfig(
 
 export function calendarStemConfigIsWritable(
   stemConfig: CalendarStemConfig,
-  permissions: Record<string, AllowedPermissions>,
-  linkTypesMap: Record<string, LinkType>
+  permissions: ResourcesPermissions
 ): boolean {
   return (
     stemConfig?.start &&
-    queryAttributePermissions(stemConfig.start, permissions, linkTypesMap)?.writeWithView &&
-    (!stemConfig?.end || queryAttributePermissions(stemConfig.end, permissions, linkTypesMap)?.writeWithView)
+    queryAttributePermissions(stemConfig.start, permissions)?.rolesWithView?.DataContribute &&
+    (!stemConfig?.end || queryAttributePermissions(stemConfig.end, permissions)?.rolesWithView?.DataContribute)
   );
 }
 

@@ -28,6 +28,11 @@ import {QueryItemBorderPipe} from './query-item-border';
 import {QueryItemTextPipe} from './query-item-text.pipe';
 import {QueryItemAttributePipe} from './query-item-attribute.pipe';
 import {QueryItemFormPipe} from './query-item-form.pipe';
+import {QueryItemCollectionIdPipe} from './query-item-collection-id.pipe';
+import {QueryItemLinkTypeIdPipe} from './query-item-link-type-id.pipe';
+import {IsQueryItemEditablePipe} from './is-query-item-editable.pipe';
+import {CreateCompactQueryItemsPipe} from './create-compact-query-items.pipe';
+import {QueryItemForegroundPipe} from './query-item-foreground.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -36,20 +41,30 @@ import {QueryItemFormPipe} from './query-item-form.pipe';
     IsCollectionItemPipe,
     IsDeletedItemPipe,
     QueryItemBackgroundPipe,
+    QueryItemForegroundPipe,
     QueryItemBorderPipe,
     QueryItemTextPipe,
     QueryItemAttributePipe,
     QueryItemFormPipe,
+    QueryItemCollectionIdPipe,
+    QueryItemLinkTypeIdPipe,
+    IsQueryItemEditablePipe,
+    CreateCompactQueryItemsPipe,
   ],
   exports: [
     IsAttributeItemPipe,
     IsCollectionItemPipe,
     IsDeletedItemPipe,
     QueryItemBackgroundPipe,
+    QueryItemForegroundPipe,
     QueryItemBorderPipe,
     QueryItemTextPipe,
     QueryItemAttributePipe,
     QueryItemFormPipe,
+    QueryItemCollectionIdPipe,
+    QueryItemLinkTypeIdPipe,
+    IsQueryItemEditablePipe,
+    CreateCompactQueryItemsPipe,
   ],
 })
 export class SearchBoxPipesModule {}

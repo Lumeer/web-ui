@@ -16,7 +16,7 @@
 <form #orderForm="ngForm" class="mt-4">
   <div class="form-group">
     <label *ngIf="trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Duration</label>
-    <label *ngIf="!trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Extension</label>
+    <label *ngIf="!trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.extension">Subscription Extension</label>
     <div class="form-group">
       <div class="mb-2">{{subscriptionLength}} =
         <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
@@ -28,7 +28,7 @@
         <slider
           i18n-values="@@organizations.tab.detail.order.values"
           values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
-          default="4"
+          defaultValue="4"
           id="subscriptionLength"
           (onSlide)="sliderValue($event)">
         </slider>
@@ -37,7 +37,7 @@
   </div>
   <div class="form-group">
     <label *ngIf="trial" for="startFrom" i18n="@@organizations.tab.detail.order.start">Subscription Start Date</label>
-    <label *ngIf="!trial" for="startFrom" i18n="@@organizations.tab.detail.order.start">Subscription Extension Start Date</label>
+    <label *ngIf="!trial" for="startFrom" i18n="@@organizations.tab.detail.order.extension.start">Subscription Extension Start Date</label>
     <input class="form-control" type="date" [(ngModel)]="startDateText" (input)="updateStartDate($event)" required id="startFrom" name="startDate" />
   </div>
   <div class="form-group">

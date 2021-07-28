@@ -34,6 +34,7 @@ import {
   FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
 } from '../../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier} from '../../../../../../../shared/utils/html-modifier';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'table-column-input',
@@ -53,6 +54,9 @@ export class TableColumnInputComponent implements OnChanges {
 
   @Input()
   public value: any;
+
+  @Input()
+  public attribute: Attribute;
 
   @Output()
   public valueChange = new EventEmitter<string>();

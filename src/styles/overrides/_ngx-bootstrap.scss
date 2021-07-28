@@ -1,6 +1,10 @@
 @import '../variables';
 @import '~ngx-bootstrap/datepicker/bs-datepicker.css';
 
+.tooltip {
+  z-index: 1120;
+}
+
 .bs-datepicker-container div.bs-datepicker-head {
   background-color: $primary;
 }
@@ -27,4 +31,8 @@
       }
     }
   }
+}
+
+.bigger-tooltip .tooltip-inner {
+  max-width: 400px;
 }

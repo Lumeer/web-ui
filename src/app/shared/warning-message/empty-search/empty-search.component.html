@@ -1,7 +1,7 @@
 <div class="d-flex flex-column align-items-center justify-content-center"
-     [style.min-height.rem]="20">
+     [style.min-height.rem]="compact ? null : 20">
 
-  <i class="fa fa-5x fa-search" aria-hidden="true"></i>
+  <i class="fa fa-search" aria-hidden="true" [ngClass]="compact ? 'fa-3x' : 'fa-5x'"></i>
 
   <h4 i18n="@@search.result.empty" class="text-center mt-4">
     I am sorry but I did not find anything. Please try a more general search.

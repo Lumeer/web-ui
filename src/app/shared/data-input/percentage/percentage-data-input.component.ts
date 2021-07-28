@@ -23,6 +23,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   Input,
   OnChanges,
   Output,
@@ -34,11 +35,12 @@ import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {ConstraintType, PercentageDataValue} from '@lumeer/data-filters';
+import {ConstraintType, PercentageDataValue, PercentageDisplayStyle} from '@lumeer/data-filters';
 
 @Component({
   selector: 'percentage-data-input',
   templateUrl: './percentage-data-input.component.html',
+  styleUrls: ['./percentage-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PercentageDataInputComponent implements OnChanges, AfterViewChecked {
@@ -52,7 +54,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
   public value: PercentageDataValue;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<PercentageDataValue>();
@@ -69,9 +71,13 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
   @ViewChild('percentageInput')
   public percentageInput: ElementRef<HTMLInputElement>;
 
+  @HostBinding('class.progress-content')
+  public isProgressStyle: boolean;
+
   public readonly inputClass = constraintTypeClass(ConstraintType.Percentage);
 
   public valid = true;
+  public numericValue: number;
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
@@ -83,7 +89,13 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
     if (changes.readonly && !this.readonly && this.focus) {
       this.setFocus = true;
     }
-    this.valid = !this.value || this.value.isValid();
+    if (changes.value) {
+      this.valid = !this.value || this.value.isValid();
+      this.numericValue = this.value?.number?.toNumber() || 0;
+    }
+    if (changes.value || changes.readonly) {
+      this.isProgressStyle = this.value?.config?.style === PercentageDisplayStyle.ProgressBar && this.readonly;
+    }
   }
 
   public ngAfterViewChecked() {
@@ -123,7 +135,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
 
         event.preventDefault();
 
-        if (!this.configuration?.skipValidation && input && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -141,7 +153,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
 
   private saveDataValue(dataValue: PercentageDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {
@@ -171,7 +183,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.percentageInput.nativeElement.value);
-      if (this.configuration.skipValidation || dataValue.isValid()) {
+      if (this.commonConfiguration.skipValidation || dataValue.isValid()) {
         this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();

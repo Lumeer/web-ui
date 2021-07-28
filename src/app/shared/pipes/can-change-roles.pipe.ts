@@ -23,7 +23,7 @@ import {User} from '../../core/store/users/user';
 import {ResourceType} from '../../core/model/resource-type';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
-import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
+import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../utils/permission.utils';
 
 @Pipe({
   name: 'canChangeRoles',
@@ -33,8 +33,8 @@ export class CanChangeRolesPipe implements PipeTransform {
     if (resourceType === ResourceType.Organization) {
       return true;
     } else if (resourceType === ResourceType.Project) {
-      return !userHasManageRoleInResource(user, organization);
+      return !userCanReadAllInOrganization(organization, user);
     }
-    return !userIsManagerInWorkspace(user, organization, project);
+    return !userCanReadAllInWorkspace(organization, project, user);
   }
 }

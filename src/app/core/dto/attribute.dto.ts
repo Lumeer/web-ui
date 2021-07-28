@@ -21,6 +21,7 @@ export interface AttributeDto {
   id?: string;
   name: string;
   constraint?: ConstraintDto;
+  description?: string;
   function?: AttributeFunctionDto;
   usageCount?: number;
 }

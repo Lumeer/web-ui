@@ -18,6 +18,7 @@
  */
 
 import {DataValue} from '@lumeer/data-filters';
+import * as pressure from 'pressure';
 
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {
@@ -39,6 +40,15 @@ export function setCursorAtDataInputEnd(element: HTMLInputElement, dataValue: Da
   const value = dataValue.editValue() || '';
   element.setSelectionRange(value.length, value.length);
   element.focus();
+}
+
+export function checkDataInputElementValue(element: HTMLInputElement, dataValue: DataValue) {
+  if (element && dataValue) {
+    const value = dataValue.format();
+    if (element.value !== value) {
+      element.value = value;
+    }
+  }
 }
 
 export function shadeColor(color: string, percent: number): string {
@@ -111,4 +121,28 @@ export function clickedInsideElement(event: MouseEvent, tagName: string): boolea
     }
   }
   return false;
+}
+
+export function initForceTouch(element: HTMLElement, callback: (event: MouseEvent) => void) {
+  let fullyTouched = false;
+  let touchEvent = null;
+  pressure.set(
+    element,
+    {
+      change: (force, event) => {
+        fullyTouched = force >= 1;
+        touchEvent = event;
+      },
+      start: () => {
+        fullyTouched = false;
+        touchEvent = null;
+      },
+      end: () => {
+        if (fullyTouched && touchEvent) {
+          callback(touchEvent);
+        }
+      },
+    },
+    {only: 'touch', preventSelect: false}
+  );
 }

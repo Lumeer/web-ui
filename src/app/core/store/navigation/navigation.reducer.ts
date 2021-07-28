@@ -34,8 +34,9 @@ import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {initialNavigationState, NavigationState} from './navigation.state';
 import {QueryParam} from './query-param';
 import {convertQueryStringToModel} from './query/query.converter';
-import {parseSearchTabFromUrl, SearchTab, searchTabsMap} from './search-tab';
+import {parseSearchTabFromUrl} from './search-tab';
 import {convertStringToViewCursor} from './view-cursor/view-cursor';
+import {convertStringToPerspectiveSettings} from './settings/perspective-settings';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {params} = action.payload.routerState;
@@ -66,6 +67,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
 
   const query = convertQueryStringToModel(queryParams[QueryParam.Query]);
   const viewCursor = convertStringToViewCursor(queryParams[QueryParam.ViewCursor]);
+  const perspectiveSettings = convertStringToPerspectiveSettings(queryParams[QueryParam.PerspectiveSettings]);
 
   const workspace = {
     organizationCode: params['organizationCode'],
@@ -85,6 +87,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
     previousUrl: state.url,
     previousWorkspaceUrl: checkPreviousWorkspaceUrl(state.url) || state.previousWorkspaceUrl,
     url,
+    perspectiveSettings,
   };
 }
 

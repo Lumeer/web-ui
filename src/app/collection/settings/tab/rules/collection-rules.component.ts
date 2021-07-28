@@ -26,7 +26,6 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, first, map} from 'rxjs/operators';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {RouterAction} from '../../../../core/store/router/router.action';
@@ -49,14 +48,12 @@ export class CollectionRulesComponent implements OnInit {
 
   private readonly runRuleTitle: string;
   private readonly runRuleMessage: string;
+  private readonly copyOf: string;
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {
-    this.runRuleTitle = this.i18n({id: 'collection.config.tab.rules.run.title', value: 'Run the Rule'});
-    this.runRuleMessage = this.i18n({
-      id: 'collection.config.tab.rules.run.message',
-      value:
-        'Do you want to run the rule for all the rows in the table now? Please note that this might take significant time to complete.',
-    });
+  constructor(private store$: Store<AppState>) {
+    this.runRuleTitle = $localize`:@@collection.config.tab.rules.run.title:Run the Automation`;
+    this.runRuleMessage = $localize`:@@collection.config.tab.rules.run.message:Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.`;
+    this.copyOf = $localize`:@@collection.config.tab.rules.prefix.copyOf:Copy of`;
   }
 
   public ngOnInit(): void {
@@ -71,6 +68,10 @@ export class CollectionRulesComponent implements OnInit {
 
   public onNewRule(): void {
     this.addingRules.push(this.getEmptyRule());
+  }
+
+  public onDuplicateRule(rule: Rule): void {
+    this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name, id: generateId()});
   }
 
   private getEmptyRule(): AutoLinkRule {
@@ -147,17 +148,11 @@ export class CollectionRulesComponent implements OnInit {
   }
 
   private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
-    const title = this.i18n({id: 'collection.config.tab.rules.remove.title', value: 'Delete this rule?'});
-    let message = this.i18n({
-      id: 'collection.config.tab.rules.remove.message',
-      value: 'Do you really want to delete this rule?',
-    });
+    const title = $localize`:@@collection.config.tab.rules.remove.title:Delete this automation?`;
+    let message = $localize`:@@collection.config.tab.rules.remove.message:Do you really want to delete this automation?`;
 
     if (isBeingUsed) {
-      const additionalMessage = this.i18n({
-        id: 'collection.config.tab.rules.remove.message.used',
-        value: 'It is used in attribute configuration.',
-      });
+      const additionalMessage = $localize`:@@collection.config.tab.rules.remove.message.used:This automation is being used in an action button.`;
       message = `${message} ${additionalMessage}`;
     }
 

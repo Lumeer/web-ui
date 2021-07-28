@@ -35,6 +35,7 @@ import {
   TextConstraint,
   UnknownConstraint,
   UserConstraint,
+  ViewConstraint,
 } from '@lumeer/data-filters';
 
 export function createConstraint(type: string, config: any): Constraint {
@@ -67,6 +68,8 @@ export function createConstraint(type: string, config: any): Constraint {
       return new UserConstraint(config);
     case ConstraintType.Link:
       return new LinkConstraint(config);
+    case ConstraintType.View:
+      return new ViewConstraint(config);
     default:
       return new UnknownConstraint();
   }

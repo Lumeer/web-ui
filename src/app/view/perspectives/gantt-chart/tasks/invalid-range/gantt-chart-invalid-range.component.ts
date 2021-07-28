@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {GanttTask} from '@lumeer/lumeer-gantt';
 
 @Component({
   selector: 'gantt-chart-invalid-range',
@@ -27,5 +27,5 @@ import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 })
 export class GanttChartInvalidRangeComponent {
   @Input()
-  public info: {minTask: GanttChartTask; minDate: Date; maxTask: GanttChartTask; maxDate: Date};
+  public info: {minTask: GanttTask; minDate: Date; maxTask: GanttTask; maxDate: Date};
 }

@@ -1,0 +1,17 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <div class="card p-0 overflow-auto" [style.width.px]="280">
+
+    <attributes-settings [settings]="attributesSettings"
+                         [attributesResourcesData]="attributesResourcesData$ | async"
+                         (settingsChanged)="attributesSettingsChanged.emit($event)">
+    </attributes-settings>
+
+  </div>
+
+</dropdown>

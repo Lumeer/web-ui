@@ -20,15 +20,17 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {Query} from '../navigation/query/query';
-import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
 import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
-import {selectQuery} from '../navigation/navigation.state';
+import {DataQuery} from '../../model/data-query';
+import {isDataQueryLoaded} from '../utils/data-query-payload';
+import {configuration} from '../../../../environments/configuration';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId
-  queries: Query[];
+  queries: DataQuery[];
+  loadingQueries: DataQuery[];
   actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
@@ -37,28 +39,31 @@ export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: do
 export const initialDocumentsState: DocumentsState = documentsAdapter.getInitialState({
   pendingDataUpdates: {},
   queries: [],
+  loadingQueries: [],
   actionExecutedTimes: {},
 });
 
 export const selectDocumentsState = (state: AppState) => state.documents;
 
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
+export const selectAllDocumentsCount = createSelector(
+  selectDocumentsState,
+  documentsAdapter.getSelectors().selectTotal
+);
 export const selectDocumentsDictionary = createSelector(
   selectDocumentsState,
   documentsAdapter.getSelectors().selectEntities
 );
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
 
-export const selectCurrentQueryDocumentsLoaded = createSelector(
-  selectDocumentsQueries,
-  selectQuery,
-  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
+export const selectDocumentsLoadingQueries = createSelector(
+  selectDocumentsState,
+  documentsState => documentsState.loadingQueries
 );
 
-export const selectQueryDocumentsLoaded = (query: Query) =>
-  createSelector(
-    selectDocumentsQueries,
-    queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
+export const selectQueryDocumentsLoaded = (query: DataQuery) =>
+  createSelector(selectDocumentsQueries, selectResourcesPermissions, (queries, permissions) =>
+    isDataQueryLoaded(query, queries, configuration.publicView, permissions)
   );
 
 export const selectDocumentById = (id: string) =>

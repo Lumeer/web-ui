@@ -20,8 +20,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {AttributesSettingsDropdownComponent} from './dropdown/attributes-settings-dropdown.component';
-import {DropdownModule} from '../../dropdown/dropdown.module';
 import {AttributesSettingsComponent} from './attributes-settings.component';
 import {AttributesSettingsContentComponent} from './content/attributes-settings-content.component';
 import {PipesModule} from '../../pipes/pipes.module';
@@ -34,7 +32,6 @@ import {ResourceAttributesSettingsPipe} from './pipes/resource-attributes-settin
 
 @NgModule({
   declarations: [
-    AttributesSettingsDropdownComponent,
     AttributesSettingsComponent,
     AttributesSettingsContentComponent,
     AttributeSettingsComponent,
@@ -42,7 +39,7 @@ import {ResourceAttributesSettingsPipe} from './pipes/resource-attributes-settin
     CountShowedAttributesPipe,
     ResourceAttributesSettingsPipe,
   ],
-  imports: [CommonModule, DropdownModule, PipesModule, DragDropModule, AccordionModule, PresenterModule],
-  exports: [AttributesSettingsDropdownComponent, AttributesSettingsComponent, ResourceAttributesSettingsPipe],
+  imports: [CommonModule, PipesModule, DragDropModule, AccordionModule, PresenterModule],
+  exports: [AttributesSettingsComponent, ResourceAttributesSettingsPipe],
 })
 export class AttributesSettingsModule {}

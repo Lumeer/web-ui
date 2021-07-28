@@ -1,0 +1,65 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/bootstrap_var';
+
+:host {
+  & ::ng-deep.search-documents-value {
+    color: $primary;
+    font-style: normal;
+    font-size: 100%;
+  }
+}
+
+.detail {
+  &.card {
+    border: $card-border-width solid transparent;
+    box-shadow: $shadow-light;
+
+    &:hover {
+      border: $card-border-width solid $card-border-color;
+      box-shadow: $shadow-default;
+    }
+
+    .title {
+      font-size: 1rem;
+    }
+  }
+
+  cursor: pointer;
+  transition: box-shadow $animation-duration;
+}
+
+.border-bottom {
+  border-bottom-color: $table-border-color !important;
+}
+
+i.align-sub:before {
+  vertical-align: sub;
+}
+
+.data-input-preview {
+  line-height: 1.4rem;
+}
+
+.bigger-icon {
+  font-size: 150%;
+}
+
+.document-background {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  &.second-last {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.7));
+  }
+
+  &.last {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 1));
+  }
+}
+
+.card {
+  border: $card-border-width solid transparent;
+  box-shadow: $shadow-light;
+}

@@ -18,10 +18,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {User} from '../store/users/user';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
-import {selectCurrentUser} from '../store/users/users.state';
 import {Organization} from '../store/organizations/organization';
 import * as Colors from '../../shared/picker/colors';
 import {safeGetRandomIcon} from '../../shared/picker/icons';
@@ -44,11 +42,7 @@ type ProjectCreatePayload = {
   providedIn: 'root',
 })
 export class CreateProjectService {
-  private currentUser: User;
-
-  constructor(private store$: Store<AppState>) {
-    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public createProjectInOrganization(organization: Organization, initialCode: string, payload: ProjectCreatePayload) {
     this.store$

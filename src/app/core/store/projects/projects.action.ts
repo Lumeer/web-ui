@@ -22,6 +22,8 @@ import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
 import {Workspace} from '../navigation/workspace';
 import {NavigationExtras} from '@angular/router';
+import {SampleDataType} from '../../model/sample-data-type';
+import {HttpResponse} from '@angular/common/http';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -54,8 +56,13 @@ export enum ProjectsActionType {
   APPLY_TEMPLATE = '[Projects] Apply Template',
   APPLY_TEMPLATE_FAILURE = '[Projects] Apply Template :: Failure',
 
+  CREATE_SAMPLE_DATA = '[Projects] Create Sample Data',
+
   COPY = '[Projects] Copy',
   COPY_FAILURE = '[Projects] Copy :: Failure',
+
+  DELETE_SAMPLE_DATA = '[Projects] Delete Sample Data',
+  DELETE_SAMPLE_DATA_FAILURE = '[Projects] Delete Sample Data :: Failure',
 
   GET_TEMPLATES = '[Projects] Get Templates',
   GET_TEMPLATES_SUCCESS = '[Projects] Get Templates :: Success',
@@ -64,6 +71,12 @@ export enum ProjectsActionType {
   DISMISS_WARNING_MESSAGE = '[Projects] Dismiss Warning Message',
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
+
+  DOWNLOAD_RAW_CONTENT = '[Projects] Download Raw Content',
+  DOWNLOAD_RAW_CONTENT_SUCCESS = '[Projects] Download Raw Content :: Success',
+  DOWNLOAD_RAW_CONTENT_FAILURE = '[Projects] Download Raw Content :: Failure',
+
+  CLEAR = '[Projects] Clear',
 }
 
 export namespace ProjectsAction {
@@ -172,6 +185,14 @@ export namespace ProjectsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class CreateSampleData implements Action {
+    public readonly type = ProjectsActionType.CREATE_SAMPLE_DATA;
+
+    public constructor(
+      public payload: {type: SampleDataType; errorMessage: string; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
+  }
+
   export class Copy implements Action {
     public readonly type = ProjectsActionType.COPY;
 
@@ -202,6 +223,18 @@ export namespace ProjectsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class DeleteSampleData implements Action {
+    public readonly type = ProjectsActionType.DELETE_SAMPLE_DATA;
+
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
+  }
+
+  export class DeleteSampleDataFailure implements Action {
+    public readonly type = ProjectsActionType.DELETE_SAMPLE_DATA_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class GetTemplates implements Action {
     public readonly type = ProjectsActionType.GET_TEMPLATES;
   }
@@ -226,8 +259,6 @@ export namespace ProjectsAction {
         projectId: string;
         type: PermissionType;
         permissions: Permission[];
-        currentPermissions: Permission[];
-        workspace?: Workspace;
       }
     ) {}
   }
@@ -264,6 +295,28 @@ export namespace ProjectsAction {
     public constructor(public payload: {nextAction?: Action}) {}
   }
 
+  export class DownloadRawContent implements Action {
+    public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT;
+
+    public constructor(public payload: {organizationId: string; projectId: string; projectName?: string}) {}
+  }
+
+  export class DownloadRawContentFailure implements Action {
+    public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class DownloadRawContentSuccess implements Action {
+    public readonly type = ProjectsActionType.DOWNLOAD_RAW_CONTENT_SUCCESS;
+
+    public constructor(public payload: {data: HttpResponse<Blob>; projectName?: string}) {}
+  }
+
+  export class Clear implements Action {
+    public readonly type = ProjectsActionType.CLEAR;
+  }
+
   export type All =
     | Get
     | GetSingle
@@ -287,10 +340,16 @@ export namespace ProjectsAction {
     | ChangePermissionFailure
     | ApplyTemplate
     | ApplyTemplateFailure
+    | DeleteSampleData
+    | DeleteSampleDataFailure
+    | DownloadRawContent
+    | DownloadRawContentFailure
+    | DownloadRawContentSuccess
     | GetTemplates
     | GetTemplatesSuccess
     | GetTemplatesFailure
     | DismissWarningMessage
     | SwitchWorkspace
-    | ClearWorkspaceData;
+    | ClearWorkspaceData
+    | Clear;
 }

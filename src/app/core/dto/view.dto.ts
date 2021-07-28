@@ -25,7 +25,9 @@ export interface ViewDto extends ResourceDto {
   query: QueryDto;
   config: any;
   settings: any;
-  authorRights?: Record<string, string[]>;
+  authorCollectionsRights?: Record<string, string[]>;
+  authorLinkTypesRights?: Record<string, string[]>;
   favorite?: boolean;
   lastTimeUsed?: number;
+  folders?: string[];
 }

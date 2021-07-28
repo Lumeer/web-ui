@@ -29,17 +29,15 @@ import {Collection} from '../core/store/collections/collection';
 import {CollectionsAction} from '../core/store/collections/collections.action';
 import {Organization} from '../core/store/organizations/organization';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/utils/resource.utils';
 import {WorkspaceService} from '../workspace/workspace.service';
 import {User} from '../core/store/users/user';
 import {Project} from '../core/store/projects/project';
 import {CollectionService} from '../core/data-service';
+import {userCanManageCollectionDetail} from '../shared/utils/permission.utils';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
   constructor(
-    private i18n: I18n,
     private router: Router,
     private collectionService: CollectionService,
     private workspaceService: WorkspaceService,
@@ -54,18 +52,22 @@ export class CollectionSettingsGuard implements CanActivate {
     return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
       mergeMap(({user, organization, project}) => {
         if (!organization) {
-          const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+          const message = $localize`:@@organization.not.exist:Organization does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
         if (!project) {
-          const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+          const message = $localize`:@@project.not.exist:Project does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
 
         return this.selectCollection(organization, project, collectionId).pipe(
-          mergeMap(collection => this.checkCollection(user, collection, organization, project))
+          mergeMap(collection =>
+            this.checkCollection(user, collection, organization, project).pipe(
+              tap(() => this.dispatchDataEvents(organization, project, collection))
+            )
+          )
         );
       }),
       take(1),
@@ -103,7 +105,7 @@ export class CollectionSettingsGuard implements CanActivate {
       this.dispatchErrorActionsNotExist();
       return of(false);
     }
-    if (!userHasManageRoleInResource(user, collection) && !userIsManagerInWorkspace(user, organization, project)) {
+    if (!userCanManageCollectionDetail(organization, project, collection, user)) {
       this.dispatchErrorActionsNotPermission();
       return of(false);
     }
@@ -111,20 +113,26 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActionsNotExist() {
-    const message = this.i18n({id: 'file.not.exist', value: 'Table does not exist'});
+    const message = $localize`:@@file.not.exist:Table does not exist`;
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActionsNotPermission() {
-    const message = this.i18n({
-      id: 'file.permission.missing',
-      value: 'You do not have permission to access this table',
-    });
+    const message = $localize`:@@file.permission.missing:You do not have permission to access this table`;
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private dispatchDataEvents(organization: Organization, project: Project, collection: Collection) {
+    this.store$.dispatch(
+      new CollectionsAction.GetSingle({
+        collectionId: collection.id,
+        workspace: {organizationId: organization.id, projectId: project.id},
+      })
+    );
   }
 }

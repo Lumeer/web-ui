@@ -39,7 +39,7 @@ import {filter, map} from 'rxjs/operators';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
-import {DateTimeOptions, detectDatePickerViewMode} from '../date-time-options';
+import {DateTimeOptions, detectDatePickerViewMode, hasTimeOption} from '../date-time-options';
 
 @Component({
   selector: 'date-time-picker',
@@ -98,7 +98,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public timeZone;
 
   private subscriptions = new Subscription();
-
+  private hasTimeOptions: boolean;
   private selectedValue: Date;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -111,6 +111,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
         customTodayClass: 'date-time-today',
         minMode: detectDatePickerViewMode(this.options),
       };
+      this.hasTimeOptions = hasTimeOption(this.options);
     }
     if (changes.asUtc) {
       this.timeZone = this.asUtc
@@ -175,10 +176,13 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   public onDateChange(date: Date) {
     const parsedDate = date;
-    if (!this.dateControl.value && date) {
+    if (date && (!this.hasTimeOptions || !this.dateControl.value)) {
       parsedDate.setHours(0, 0, 0, 0);
     }
-    this.dateControl.setValue(parsedDate);
+    const currentDate = <Date>this.dateControl.value;
+    if (parsedDate?.getTime() !== currentDate?.getTime()) {
+      this.dateControl.setValue(parsedDate);
+    }
   }
 
   public onCancel(event?: MouseEvent) {

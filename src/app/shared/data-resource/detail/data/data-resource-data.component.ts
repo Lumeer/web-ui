@@ -53,6 +53,7 @@ import {selectLinkInstanceById} from '../../../../core/store/link-instances/link
 import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 @Component({
   selector: 'data-resource-data',
@@ -83,6 +84,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public workspace: Workspace;
 
   @Input()
+  public user: User;
+
+  @Input()
   public toolbarRef: TemplateRef<any>;
 
   @Input()
@@ -90,9 +94,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public editableKeys = false;
-
-  @Input()
-  public ignoreSettingsOnReadPermission: boolean;
 
   @Input()
   public attributeSettings: ResourceAttributeSettings[];
@@ -146,15 +147,23 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    const attributeSettings =
-      this.ignoreSettingsOnReadPermission && this.permissions?.read ? [] : this.attributeSettings;
     if (this.shouldRefreshObservables(changes)) {
-      this.dataRowService.init(this.resource, this.dataResource, attributeSettings);
+      this.dataRowService.init(this.resource, this.dataResource, this.attributeSettings);
       this.resource$ = this.selectResource$();
       this.dataResource$ = this.selectDataResource$();
-    } else if (changes.attributesSettings || changes.permissions || changes.ignoreSettingsOnReadPermission) {
-      this.dataRowService.setSettings(attributeSettings);
+    } else if (changes.attributeSettings || changes.permissions) {
+      this.dataRowService.setSettings(this.attributeSettings);
     }
+    if (changes.workspace) {
+      this.dataRowService.setWorkspace(this.workspace);
+    }
+    if (objectChanged(changes.dataResource)) {
+      this.focusFirstDataInput();
+    }
+  }
+
+  private focusFirstDataInput() {
+    setTimeout(() => this.rows?.first?.onValueFocus());
   }
 
   private selectResource$(): Observable<AttributesResource> {

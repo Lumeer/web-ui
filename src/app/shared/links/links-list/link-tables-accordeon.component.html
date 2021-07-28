@@ -1,0 +1,45 @@
+<accordion *ngIf="{documentByCollection: documentByCollectionMap$ | async, collections: collections$ | async} as data">
+  <accordion-group *ngFor="let collection of data.collections; trackBy:trackById"
+                   panelClass="lmr-accordion"
+                   [isOpen]="!(collapsedCollections | includes:collection.id)"
+                   [isDisabled]="false"
+                   (isOpenChange)="isOpenChanged($event, collection.id)">
+    <div class="header-wrapper" accordion-heading>
+      <div class="mr-2">
+        <i *ngIf="!(collapsedCollections | includes:collection.id)" class="fas fa-caret-down"></i>
+        <i *ngIf="collapsedCollections | includes:collection.id" class="fas fa-caret-right"></i>
+      </div>
+      <icons-presenter class="d-block mr-1"
+                       [colors]="[collection.color]"
+                       [icons]="[collection.icon]">
+      </icons-presenter>
+      <div class="font-weight-bold text-truncate mr-2" [title]="collection.name">{{collection.name}}</div>
+    </div>
+    <div>
+      <links-list-table
+        *ngIf="linkType | linkTypeOtherCollection:data.collections:collection.id as otherCollection"
+        class="d-block mt-2"
+        [visible]="!(collapsedCollections | includes:collection.id)"
+        [document]="data.documentByCollection[otherCollection.id]"
+        [linkInstance]="linkInstance"
+        [collection]="collection"
+        [collectionPermissions]="permissions?.collections && permissions.collections[collection.id]"
+        [linkTypePermissions]="permissions?.linkTypes && permissions.linkTypes[linkType.id]"
+        [query]="query$ | async"
+        [allowSelect]="allowSelectDocument"
+        [allowUnlink]="false"
+        [allowCreate]="false"
+        [preventEventBubble]="preventEventBubble"
+        [attributesSettings]="attributesSettings"
+        (detail)="onSelectDocument($event)"
+        (patchDocumentData)="patchDocumentData.emit($event)"
+        (attributesSettingsChanged)="attributesSettingsChanged.emit($event)"
+        (attributeDescription)="attributeDescription.emit($event)"
+        (attributeFunction)="attributeFunction.emit($event)"
+        (attributeType)="attributeType.emit($event)"
+        (createLink)="createLink.emit($event)"
+        (updateLink)="updateLink.emit($event)">
+      </links-list-table>
+    </div>
+  </accordion-group>
+</accordion>

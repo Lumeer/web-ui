@@ -24,10 +24,9 @@ import {BookmarkToolbarComponent} from './bookmark-toolbar/bookmark-toolbar.comp
 import {ViewsBookmarksComponent} from './views-bookmarks/views-bookmarks.component';
 import {QueryItemsPipe} from './views-bookmarks/query-items.pipe';
 import {PipesModule} from '../pipes/pipes.module';
-import {ViewLinkPipe} from './views-bookmarks/view-link.pipe';
 
 @NgModule({
-  declarations: [BookmarkComponent, BookmarkToolbarComponent, ViewsBookmarksComponent, QueryItemsPipe, ViewLinkPipe],
+  declarations: [BookmarkComponent, BookmarkToolbarComponent, ViewsBookmarksComponent, QueryItemsPipe],
   exports: [BookmarkToolbarComponent, BookmarkComponent, ViewsBookmarksComponent],
   imports: [CommonModule, PipesModule],
 })

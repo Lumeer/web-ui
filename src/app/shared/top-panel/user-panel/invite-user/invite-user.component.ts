@@ -17,20 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {InviteUserModalComponent} from './modal/invite-user-modal.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {ModalService} from '../../../modal/modal.service';
 import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {
-  selectOrganizationPermissions,
-  selectProjectPermissions,
-} from '../../../../core/store/user-permissions/user-permissions.state';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'invite-user',
@@ -38,21 +34,16 @@ import {
   styleUrls: ['./invite-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InviteUserComponent {
+export class InviteUserComponent implements OnInit {
   @Input()
   public mobile: boolean;
 
-  public organizationPermissions$: Observable<AllowedPermissions>;
   public projectPermissions$: Observable<AllowedPermissions>;
   public projectUsers$: Observable<number>;
-
-  public readonly organizationType = ResourceType.Organization;
-  public readonly projectType = ResourceType.Project;
 
   constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.projectUsers$ = this.store$.pipe(
       select(selectUsersForWorkspace),

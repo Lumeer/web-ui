@@ -21,10 +21,14 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NotificationSettingsComponent} from './notification-settings/notification-settings.component';
 import {SelectModule} from '../select/select.module';
+import {UserSettingsComponent} from './user-settings/user-settings.component';
+import {GravatarModule} from 'ngx-gravatar';
+import {InputModule} from '../input/input.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
-  declarations: [NotificationSettingsComponent],
-  imports: [CommonModule, SelectModule],
-  exports: [NotificationSettingsComponent],
+  declarations: [NotificationSettingsComponent, UserSettingsComponent],
+  imports: [CommonModule, SelectModule, GravatarModule, InputModule, TooltipModule],
+  exports: [NotificationSettingsComponent, UserSettingsComponent],
 })
 export class UserSettingsModule {}

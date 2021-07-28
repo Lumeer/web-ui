@@ -18,15 +18,16 @@
  */
 
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
-import {ADDRESS_DEFAULT_FIELDS, EXAMPLE_ADDRESS} from './address-constraint.constants';
+import {addressDefaultFields, addressExample} from './address-constraint.constants';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {objectValues} from '../../../../../utils/common.utils';
 import {AddressConstraintConfig, AddressDataValue, AddressesMap, AddressField} from '@lumeer/data-filters';
+import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'address-constraint-config-form',
@@ -34,13 +35,11 @@ import {AddressConstraintConfig, AddressDataValue, AddressesMap, AddressField} f
   styleUrls: ['./address-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressConstraintConfigFormComponent {
+export class AddressConstraintConfigFormComponent implements OnChanges {
   public readonly controls = AddressConstraintFormControl;
   public readonly fields = objectValues(AddressField);
 
-  private readonly exampleAddressesMap: AddressesMap = {
-    example: [EXAMPLE_ADDRESS],
-  };
+  private readonly exampleAddressesMap: AddressesMap;
 
   @Input()
   public config: AddressConstraintConfig;
@@ -49,6 +48,12 @@ export class AddressConstraintConfigFormComponent {
   public form: FormGroup;
 
   public exampleValue$: Observable<AddressDataValue>;
+
+  constructor(private configurationService: ConfigurationService) {
+    this.exampleAddressesMap = {
+      example: [addressExample(this.configurationService.getConfiguration())],
+    };
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -73,7 +78,10 @@ export class AddressConstraintConfigFormComponent {
   private createForm() {
     this.form.addControl(
       AddressConstraintFormControl.Fields,
-      new FormControl(this.config ? this.config.fields : ADDRESS_DEFAULT_FIELDS, fieldsValidator())
+      new FormControl(
+        this.config ? this.config.fields : addressDefaultFields(this.configurationService.getConfiguration()),
+        fieldsValidator()
+      )
     );
   }
 

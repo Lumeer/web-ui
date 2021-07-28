@@ -25,23 +25,28 @@ import {Attribute, Collection} from '../store/collections/collection';
 import {combineLatest, Observable, of} from 'rxjs';
 import {selectAllViews} from '../store/views/views.state';
 import {map} from 'rxjs/operators';
-import {sortResourcesLastUsed} from '../../shared/utils/resource.utils';
-import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
+import {generateId, sortResourcesLastUsed} from '../../shared/utils/resource.utils';
+import {
+  selectAllCollections,
+  selectCollectionsByIds,
+  selectCollectionsDictionary,
+} from '../store/collections/collections.state';
 import {LinkType} from '../store/link-types/link.type';
-import {selectAllLinkTypes} from '../store/link-types/link-types.state';
+import {selectAllLinkTypes, selectLinkTypesByIds} from '../store/link-types/link-types.state';
 import {QueryItem} from '../../shared/top-panel/search-box/query-item/model/query-item';
 import {ViewQueryItem} from '../../shared/top-panel/search-box/query-item/model/view.query-item';
 import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/link.query-item';
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {arrayIntersection, createRange, flattenMatrix} from '../../shared/utils/array.utils';
-import {getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
+import {arrayIntersection, createRange, flattenMatrix, uniqueValues} from '../../shared/utils/array.utils';
+import {collectionIdsChainForStem, getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {objectValues} from '../../shared/utils/common.utils';
 import {initialConditionType, initialConditionValues, removeAccentFromString} from '@lumeer/data-filters';
+import {convertQueryItemsToQueryModel} from '../../shared/top-panel/search-box/query-item/query-items.converter';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -139,9 +144,14 @@ interface FullTextSuggestion extends ObjectSuggestion {
 export class SuggestionsService {
   constructor(private store$: Store<AppState>) {}
 
-  public suggest(text: string, queryItems: QueryItem[]): Observable<QueryItem[]> {
+  public suggest(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean,
+    restrictedTypes: QueryItemType[]
+  ): Observable<QueryItem[]> {
     const textWithoutAccent = removeAccentFromString(text);
-    return this.selectObjectsSorted(text).pipe(
+    return this.selectObjectsSorted(text, queryItems, suggestByItems, restrictedTypes).pipe(
       map(suggestions => this.addScoreByCurrentItems(suggestions, textWithoutAccent, queryItems || [])),
       map(suggestions => this.filterAndSortSuggestions(suggestions)),
       map(suggestions => this.sliceTopSuggestions(suggestions, textWithoutAccent, queryItems)),
@@ -149,15 +159,30 @@ export class SuggestionsService {
     );
   }
 
-  private selectObjectsSorted(text: string): Observable<ObjectSuggestion[]> {
+  private selectObjectsSorted(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean,
+    restrictedTypes: QueryItemType[]
+  ): Observable<ObjectSuggestion[]> {
     const textWithoutAccent = removeAccentFromString(text);
     return combineLatest([
-      this.selectViewsSuggestions$(textWithoutAccent),
-      this.selectCollectionsSuggestions$(textWithoutAccent),
-      this.selectAttributesSuggestions$(textWithoutAccent),
-      this.selectLinkTypesSuggestions$(textWithoutAccent),
-      this.selectLinkAttributesSuggestions$(textWithoutAccent),
-      this.selectFullTextsSuggestions(text),
+      !restrictedTypes?.includes(QueryItemType.View)
+        ? this.selectViewsSuggestions$(textWithoutAccent, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Collection)
+        ? this.selectCollectionsSuggestions$(textWithoutAccent, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Attribute)
+        ? this.selectAttributesSuggestions$(textWithoutAccent, queryItems, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Link)
+        ? this.selectLinkTypesSuggestions$(textWithoutAccent, queryItems, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.LinkAttribute)
+        ? this.selectLinkAttributesSuggestions$(textWithoutAccent, queryItems, suggestByItems)
+        : of([]),
+      !restrictedTypes?.includes(QueryItemType.Fulltext) ? this.selectFullTextsSuggestions(text) : of([]),
     ]).pipe(map(suggestions => flattenMatrix<ObjectSuggestion>(suggestions)));
   }
 
@@ -282,7 +307,10 @@ export class SuggestionsService {
     return this.filterAndSortSuggestions(slicedSuggestions);
   }
 
-  private selectViewsSuggestions$(text: string): Observable<ViewSuggestion[]> {
+  private selectViewsSuggestions$(text: string, suggestByItems: boolean): Observable<ViewSuggestion[]> {
+    if (suggestByItems) {
+      return of([]);
+    }
     return combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectAllViews)),
@@ -305,7 +333,10 @@ export class SuggestionsService {
     );
   }
 
-  private selectCollectionsSuggestions$(text: string): Observable<CollectionSuggestion[]> {
+  private selectCollectionsSuggestions$(text: string, suggestByItems: boolean): Observable<CollectionSuggestion[]> {
+    if (suggestByItems) {
+      return of([]);
+    }
     return this.store$.pipe(
       select(selectAllCollections),
       map(collections => {
@@ -324,9 +355,18 @@ export class SuggestionsService {
     );
   }
 
-  private selectAttributesSuggestions$(text: string): Observable<AttributeSuggestion[]> {
-    return this.store$.pipe(
-      select(selectAllCollections),
+  private selectAttributesSuggestions$(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean
+  ): Observable<AttributeSuggestion[]> {
+    const collectionIds = (queryItems || [])
+      .filter(queryItem => queryItem.type === QueryItemType.Collection)
+      .map(queryItem => (<CollectionQueryItem>queryItem).collection?.id);
+    const collectionsObservable$ = suggestByItems
+      ? this.store$.pipe(select(selectCollectionsByIds(uniqueValues(collectionIds))))
+      : this.store$.pipe(select(selectAllCollections));
+    return collectionsObservable$.pipe(
       map(collections => {
         const sortedCollections = sortResourcesLastUsed<Collection>(collections).slice(0, lastUsedThreshold);
         const attributesOrder = createAttributesOrder(collections).slice(0, mostUsedThreshold);
@@ -356,11 +396,15 @@ export class SuggestionsService {
     );
   }
 
-  private selectLinkTypesSuggestions$(text: string): Observable<LinkTypeSuggestion[]> {
-    return combineLatest([
-      this.store$.pipe(select(selectCollectionsDictionary)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-    ]).pipe(
+  private selectLinkTypesSuggestions$(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean
+  ): Observable<LinkTypeSuggestion[]> {
+    const linkTypesObservable$ = suggestByItems
+      ? this.selectLinkTypesByLastCollectionId$(queryItems)
+      : this.store$.pipe(select(selectAllLinkTypes));
+    return combineLatest([this.store$.pipe(select(selectCollectionsDictionary)), linkTypesObservable$]).pipe(
       map(([collectionsMap, linkTypes]) => {
         const linkTypesWithCollections = linkTypes.map(linkType => mapLinkType(linkType, collectionsMap));
         const sortedCollections = sortResourcesLastUsed(objectValues(collectionsMap)).slice(0, lastUsedThreshold);
@@ -383,11 +427,36 @@ export class SuggestionsService {
     );
   }
 
-  private selectLinkAttributesSuggestions$(text: string): Observable<LinkAttributeSuggestion[]> {
-    return combineLatest([
-      this.store$.pipe(select(selectCollectionsDictionary)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-    ]).pipe(
+  private selectLinkTypesByLastCollectionId$(queryItems: QueryItem[]): Observable<LinkType[]> {
+    const query = convertQueryItemsToQueryModel(queryItems);
+    return this.store$.pipe(
+      select(selectAllLinkTypes),
+      map(linkTypes => {
+        const lastCollectionIds = (query.stems || []).reduce((ids, stem) => {
+          const collectionIdsChain = collectionIdsChainForStem(stem, linkTypes);
+          const lastCollectionId = collectionIdsChain[collectionIdsChain.length - 1];
+          if (lastCollectionId && !ids.includes(lastCollectionId)) {
+            ids.push(lastCollectionId);
+          }
+          return ids;
+        }, []);
+        return linkTypes.filter(linkType => arrayIntersection(linkType.collectionIds, lastCollectionIds).length > 0);
+      })
+    );
+  }
+
+  private selectLinkAttributesSuggestions$(
+    text: string,
+    queryItems: QueryItem[],
+    suggestByItems: boolean
+  ): Observable<LinkAttributeSuggestion[]> {
+    const linkTypeIds = (queryItems || [])
+      .filter(queryItem => queryItem.type === QueryItemType.Link)
+      .map(queryItem => (<LinkQueryItem>queryItem).linkType?.id);
+    const linkTypesObservable$ = suggestByItems
+      ? this.store$.pipe(select(selectLinkTypesByIds(uniqueValues(linkTypeIds))))
+      : this.store$.pipe(select(selectAllLinkTypes));
+    return combineLatest([this.store$.pipe(select(selectCollectionsDictionary)), linkTypesObservable$]).pipe(
       map(([collectionsMap, linkTypes]) => {
         const linkTypesWithCollections = linkTypes.map(linkType => mapLinkType(linkType, collectionsMap));
         const sortedCollections = sortResourcesLastUsed(objectValues(collectionsMap)).slice(0, lastUsedThreshold);
@@ -591,14 +660,15 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       const viewSuggestion = <ViewSuggestion>suggestion;
       return new ViewQueryItem(viewSuggestion.view, viewSuggestion.collection);
     case SuggestionType.Collection:
-      return new CollectionQueryItem((<CollectionSuggestion>suggestion).collection);
+      return new CollectionQueryItem(generateId(), (<CollectionSuggestion>suggestion).collection);
     case SuggestionType.LinkType:
-      return new LinkQueryItem((<LinkTypeSuggestion>suggestion).linkType);
+      return new LinkQueryItem(generateId(), (<LinkTypeSuggestion>suggestion).linkType);
     case SuggestionType.Attribute:
       const attributeSuggestion = <AttributeSuggestion>suggestion;
       const attributeCondition = initialConditionType(attributeSuggestion.attribute.constraint);
       const attributeValues = initialConditionValues(attributeCondition, attributeSuggestion.attribute.constraint);
       return new AttributeQueryItem(
+        generateId(),
         attributeSuggestion.collection,
         attributeSuggestion.attribute,
         attributeCondition,
@@ -610,6 +680,7 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       const linkCondition = initialConditionType(linkSuggestion.attribute.constraint);
       const linkValues = initialConditionValues(linkCondition, linkSuggestion.attribute.constraint);
       return new LinkAttributeQueryItem(
+        generateId(),
         linkSuggestion.linkType,
         linkSuggestion.attribute,
         linkCondition,

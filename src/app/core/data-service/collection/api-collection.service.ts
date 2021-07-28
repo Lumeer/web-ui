@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
@@ -28,12 +28,16 @@ import {AppState} from '../../store/app.state';
 import {AttributeDto, CollectionDto} from '../../dto';
 import {ApiPermissionService} from '../common/api-permission.service';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(httpClient, store$);
   }
 
@@ -41,8 +45,10 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection);
   }
 
-  public updateCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return this.httpClient.put<CollectionDto>(`${this.apiPrefix()}/${collection.id}`, collection);
+  public updateCollection(collection: CollectionDto, workspace?: Workspace): Observable<CollectionDto> {
+    return this.httpClient.put<CollectionDto>(`${this.apiPrefix(workspace)}/${collection.id}`, collection, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public updatePurpose(
@@ -67,13 +73,12 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     return this.httpClient.delete(`${this.apiPrefix(workspace)}/${collectionId}/favorite`);
   }
 
-  public getCollection(collectionId: string): Observable<CollectionDto> {
-    return this.httpClient.get<CollectionDto>(`${this.apiPrefix()}/${collectionId}`);
+  public getCollection(collectionId: string, workspace?: Workspace): Observable<CollectionDto> {
+    return this.httpClient.get<CollectionDto>(`${this.apiPrefix(workspace)}/${collectionId}`);
   }
 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
-    const queryParams = new HttpParams().append('fromViews', 'true');
-    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace), {params: queryParams});
+    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace));
   }
 
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {
@@ -90,8 +95,19 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     return this.httpClient.post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
   }
 
-  public updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient.put<AttributeDto>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
+  public updateAttribute(
+    collectionId: string,
+    id: string,
+    attribute: AttributeDto,
+    workspace?: Workspace
+  ): Observable<AttributeDto> {
+    return this.httpClient.put<AttributeDto>(
+      `${this.apiPrefix(workspace)}/${collectionId}/attributes/${id}`,
+      attribute,
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
+    );
   }
 
   public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {
@@ -116,6 +132,8 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/collections`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/collections`;
   }
 }

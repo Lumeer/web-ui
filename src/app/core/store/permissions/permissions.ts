@@ -17,14 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {RoleType} from '../../model/role-type';
+
 export enum PermissionType {
   Users = 'users',
   Groups = 'groups',
 }
 
+export interface Role {
+  type: RoleType;
+  transitive?: boolean;
+}
+
 export interface Permission {
   id: string;
-  roles: string[];
+  roles: Role[];
 }
 
 export interface Permissions {

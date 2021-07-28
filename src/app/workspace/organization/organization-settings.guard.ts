@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
@@ -29,12 +28,12 @@ import {NotificationsAction} from '../../core/store/notifications/notifications.
 import {Organization} from '../../core/store/organizations/organization';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {WorkspaceService} from '../workspace.service';
-import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {userCanManageOrganizationDetail} from '../../shared/utils/permission.utils';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
   public constructor(
-    private i18n: I18n,
     private router: Router,
     private workspaceService: WorkspaceService,
     private store$: Store<AppState>
@@ -50,7 +49,7 @@ export class OrganizationSettingsGuard implements CanActivate {
           return false;
         }
 
-        if (!userHasManageRoleInResource(user, organization)) {
+        if (!userCanManageOrganizationDetail(organization, user)) {
           this.dispatchErrorActionsNotPermission();
           return false;
         }
@@ -63,15 +62,12 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActionsNotExist() {
-    const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+    const message = $localize`:@@organization.not.exist:Organization does not exist`;
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActionsNotPermission() {
-    const message = this.i18n({
-      id: 'organization.permission.missing',
-      value: 'You do not have permission to access this organization',
-    });
+    const message = $localize`:@@organization.permission.missing:You do not have permission to access this organization`;
     this.dispatchErrorActions(message);
   }
 
@@ -81,6 +77,7 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchDataEvents(organization: Organization) {
+    this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: organization.id}));
     this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
   }
 }

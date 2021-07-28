@@ -18,14 +18,10 @@
  */
 
 import {LanguageTag} from '@lumeer/data-filters';
-import {environment} from '../../../environments/environment';
 import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 
 export const localeLanguageTags: Record<string, LanguageTag> = {
   [LanguageCode.EN]: LanguageTag.USA,
   [LanguageCode.CZ]: LanguageTag.Czech,
+  [LanguageCode.HU]: LanguageTag.Hungary,
 };
-
-export function getCurrentLocaleLanguageTag(): LanguageTag {
-  return localeLanguageTags[environment.locale];
-}

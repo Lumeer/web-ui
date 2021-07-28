@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'auto-link-form',
@@ -45,22 +44,9 @@ export class AutoLinkFormComponent implements OnInit {
   public attribute2Empty: string = '';
   public attribute2NoCollection: string;
 
-  constructor(public i18n: I18n) {}
-
   public ngOnInit(): void {
-    this.attribute1Empty = this.i18n(
-      {
-        id: 'collection.config.tab.rules.autoLink.selectFrom',
-        value: 'Select from {{collection}}',
-      },
-      {
-        collection: this.collection.name,
-      }
-    );
-    this.attribute2NoCollection = this.i18n({
-      id: 'collection.config.tab.rules.autoLink.linkTypeFirst',
-      value: 'Select link type first',
-    });
+    this.attribute1Empty = $localize`:@@collection.config.tab.rules.autoLink.selectFrom:Select from ${this.collection.name}:collection:`;
+    this.attribute2NoCollection = $localize`:@@collection.config.tab.rules.autoLink.linkTypeFirst:Select link type first`;
 
     const linkTypeId = this.form.get('linkType').value;
     if (linkTypeId) {
@@ -93,15 +79,7 @@ export class AutoLinkFormComponent implements OnInit {
           : this.selectedLinkType.collections[0]);
       this.form.get('collection2').setValue(this.linkedCollection?.id);
 
-      this.attribute2Empty = this.i18n(
-        {
-          id: 'collection.config.tab.rules.autoLink.selectFrom',
-          value: 'Select from {{collection}}',
-        },
-        {
-          collection: this.linkedCollection?.name,
-        }
-      );
+      this.attribute2Empty = $localize`:@@collection.config.tab.rules.autoLink.selectFrom:Select from ${this.linkedCollection?.name}:collection:`;
     }
   }
 

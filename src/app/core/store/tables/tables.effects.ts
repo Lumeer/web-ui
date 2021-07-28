@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {
@@ -38,16 +38,12 @@ import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
 import {CollectionsAction} from '../collections/collections.action';
-import {
-  selectCollectionById,
-  selectCollectionsDictionary,
-  selectCollectionsLoaded,
-} from '../collections/collections.state';
+import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
 import {
   selectDocumentsAndLinksByQuery,
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
-  selectDocumentsByQueryIncludingChildrenAndIds,
+  selectDocumentsByQueryAndIdsSortedByCreation,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -61,7 +57,7 @@ import {
 } from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
-import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
+import {selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {NavigationAction} from '../navigation/navigation.action';
 import {selectViewCode, selectViewCursor} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
@@ -123,228 +119,226 @@ import {selectTable} from './tables.state';
 import {AttributesResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
-import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
+import {
+  selectCollectionPermissions,
+  selectCollectionsPermissions,
+  selectResourcesPermissions,
+} from '../user-permissions/user-permissions.state';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
-import {DataResourcesAction} from '../data-resources/data-resources.action';
+import {objectsByIdMap} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class TablesEffects {
-  @Effect()
-  public createTable$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
-    filter(action => isSingleCollectionQuery(action.payload.query)),
-    withLatestFrom(
-      this.store$.pipe(
-        select(selectCollectionsLoaded),
-        filter(loaded => loaded),
-        mergeMap(() => this.store$.select(selectCollectionsDictionary))
+  public createTable$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
+      filter(action => isSingleCollectionQuery(action.payload.query)),
+      withLatestFrom(
+        this.store$.pipe(select(selectCollectionsDictionary)),
+        this.store$.pipe(select(selectCollectionsPermissions)),
+        this.store$.pipe(select(selectLinkTypesDictionary)),
+        this.store$.pipe(select(selectDocumentsByQuery)),
+        this.store$.pipe(select(selectViewCode))
       ),
-      this.store$.pipe(
-        select(selectLinkTypesLoaded),
-        filter(loaded => loaded),
-        mergeMap(() => this.store$.select(selectLinkTypesDictionary))
-      ),
-      this.store$.pipe(select(selectDocumentsByQuery)),
-      this.store$.pipe(select(selectViewCode))
-    ),
-    mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
-      const {config, query, embedded} = action.payload;
+      mergeMap(([action, collectionsMap, collectionsPermissions, linkTypesMap, documents, viewCode]) => {
+        const {config, query, embedded} = action.payload;
 
-      const queryStem = query.stems[0];
-      const primaryCollection = collectionsMap[queryStem.collectionId];
-      const linkTypeIds = queryStem.linkTypeIds || [];
+        const queryStem = query.stems[0];
+        const primaryCollection = collectionsMap[queryStem.collectionId];
+        const linkTypeIds = queryStem.linkTypeIds || [];
 
-      let lastCollectionId = queryStem.collectionId;
-      const parts: TableConfigPart[] = [
-        createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config),
-      ];
+        let lastCollectionId = queryStem.collectionId;
+        const permissions = collectionsPermissions[lastCollectionId];
+        const parts: TableConfigPart[] = [
+          createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config, permissions),
+        ];
 
-      linkTypeIds.forEach((linkTypeId, index) => {
-        const linkType = linkTypesMap[linkTypeId];
-        if (linkType) {
-          const linkTypePart = createLinkPart(linkType, index * 2 + 1, action.payload.config);
+        linkTypeIds.forEach((linkTypeId, index) => {
+          const linkType = linkTypesMap[linkTypeId];
+          if (linkType) {
+            const linkTypePart = createLinkPart(linkType, index * 2 + 1, action.payload.config);
 
-          const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastCollectionId);
-          const collection = collectionsMap[collectionId];
-          const collectionPart = createCollectionPart(
-            collection,
-            index * 2 + 2,
-            !viewCode && index === linkTypeIds.length - 1,
-            config
-          );
+            const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastCollectionId);
+            const collection = collectionsMap[collectionId];
+            const permissions = collectionsPermissions[collectionId];
+            const collectionPart = createCollectionPart(
+              collection,
+              index * 2 + 2,
+              !viewCode && index === linkTypeIds.length - 1,
+              config,
+              permissions
+            );
 
-          lastCollectionId = collectionId;
+            lastCollectionId = collectionId;
 
-          parts.push(linkTypePart, collectionPart);
+            parts.push(linkTypePart, collectionPart);
+          }
+        });
+
+        const documentIds = (documents || []).map(document => document.id);
+        const rows = filterTableRowsByDepth(
+          config?.rows || [createEmptyTableRow()],
+          Math.round(parts.length / 2),
+          documentIds
+        );
+
+        const actions: Action[] = [];
+
+        const table = {
+          id: action.payload.tableId,
+          config: {parts, rows},
+        };
+        actions.push(new TablesAction.AddTable({table}));
+
+        // if the table is embedded, file attachments are not loaded by guard
+        if (embedded) {
+          actions.push(new FileAttachmentsAction.GetByQuery({query}));
         }
-      });
 
-      const documentIds = (documents || []).map(document => document.id);
-      const rows = filterTableRowsByDepth(
-        (config && config.rows) || [createEmptyTableRow()],
-        Math.round(parts.length / 2),
-        documentIds
-      );
-
-      const actions: Action[] = [];
-
-      const table = {
-        id: action.payload.tableId,
-        config: {parts, rows},
-      };
-      actions.push(new TablesAction.AddTable({table}));
-
-      actions.push(new DataResourcesAction.Get({query}));
-
-      // if the table is embedded, file attachments are not loaded by guard
-      if (embedded) {
-        actions.push(new FileAttachmentsAction.GetByQuery({query}));
-      }
-
-      return actions;
-    })
+        return actions;
+      })
+    )
   );
 
-  @Effect()
-  public destroyTable$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
-    map(action => new TablesAction.RemoveTable({tableId: action.payload.tableId}))
+  public destroyTable$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
+      map(action => new TablesAction.RemoveTable({tableId: action.payload.tableId}))
+    )
   );
 
-  @Effect()
-  public createPart$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.CreatePart>(TablesActionType.CREATE_PART),
-    mergeMap(action =>
-      this.store$.select(selectTableById(action.payload.tableId)).pipe(
-        first(),
-        filter(table => !!table),
-        mergeMap(table =>
-          this.store$.select(selectLinkTypeById(action.payload.linkTypeId)).pipe(
-            first(),
-            mergeMap(linkType => {
-              const {parts} = table.config;
-              const lastPart = parts[parts.length - 1];
+  public createPart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.CreatePart>(TablesActionType.CREATE_PART),
+      mergeMap(action =>
+        this.store$.select(selectTableById(action.payload.tableId)).pipe(
+          first(),
+          filter(table => !!table),
+          mergeMap(table =>
+            this.store$.select(selectLinkTypeById(action.payload.linkTypeId)).pipe(
+              first(),
+              mergeMap(linkType => {
+                const {parts} = table.config;
+                const lastPart = parts[parts.length - 1];
 
-              const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastPart.collectionId);
-              return this.store$.select(selectCollectionById(collectionId)).pipe(
-                first(),
-                mergeMap(collection => {
-                  const lastPartIndex = table.config.parts.length - 1;
-                  const linkTypePart = createLinkPart(linkType, lastPartIndex + 1, action.payload.config);
-                  const collectionPart = createCollectionPart(
-                    collection,
-                    lastPartIndex + 2,
-                    action.payload.last,
-                    action.payload.config
-                  );
+                const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastPart.collectionId);
+                return this.store$.select(selectCollectionById(collectionId)).pipe(
+                  first(),
+                  mergeMap(collection => {
+                    const lastPartIndex = table.config.parts.length - 1;
+                    const linkTypePart = createLinkPart(linkType, lastPartIndex + 1, action.payload.config);
+                    const collectionPart = createCollectionPart(
+                      collection,
+                      lastPartIndex + 2,
+                      action.payload.last,
+                      action.payload.config
+                    );
 
-                  const query: Query = {
-                    stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
-                  };
+                    const removeColumnActions = isTablePartEmpty(table.config.parts[lastPartIndex])
+                      ? []
+                      : [new TablesAction.RemoveEmptyColumns({cursor: {tableId: table.id, partIndex: lastPartIndex}})];
 
-                  const removeColumnActions = isTablePartEmpty(table.config.parts[lastPartIndex])
-                    ? []
-                    : [new TablesAction.RemoveEmptyColumns({cursor: {tableId: table.id, partIndex: lastPartIndex}})];
-
-                  return [
-                    ...removeColumnActions,
-                    new TablesAction.AddPart({
-                      tableId: table.id,
-                      parts: [linkTypePart, collectionPart],
-                    }),
-                    // TODO get data only in guards
-                    new DataResourcesAction.Get({query}),
-                  ];
-                })
-              );
-            })
+                    return [
+                      ...removeColumnActions,
+                      new TablesAction.AddPart({
+                        tableId: table.id,
+                        parts: [linkTypePart, collectionPart],
+                      }),
+                    ];
+                  })
+                );
+              })
+            )
           )
         )
       )
     )
   );
 
-  @Effect()
-  public switchParts$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SwitchParts>(TablesActionType.SWITCH_PARTS),
-    mergeMap(action => this.getLatestTable(action)),
-    filter(({action, table}) => table.config.parts.length === 3),
-    withLatestFrom(this.store$.select(selectViewQuery)),
-    mergeMap(([{action, table}, query]) => {
-      const linkTypeIds = [table.config.parts[1].linkTypeId];
-      const collectionId = table.config.parts[2].collectionId;
+  public switchParts$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.SwitchParts>(TablesActionType.SWITCH_PARTS),
+      mergeMap(action => this.getLatestTable(action)),
+      filter(({action, table}) => table.config.parts.length === 3),
+      withLatestFrom(this.store$.select(selectViewQuery)),
+      mergeMap(([{action, table}, query]) => {
+        const linkTypeIds = [table.config.parts[1].linkTypeId];
+        const collectionId = table.config.parts[2].collectionId;
 
-      // in collection only one stem is considered as valid query
-      const firstStem = query.stems && query.stems[0];
-      const filters = firstStem && firstStem.filters;
-      const linkFilters = firstStem && firstStem.linkFilters;
-      const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
+        // in collection only one stem is considered as valid query
+        const firstStem = query.stems && query.stems[0];
+        const filters = firstStem && firstStem.filters;
+        const linkFilters = firstStem && firstStem.linkFilters;
+        const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
 
-      const actions: Action[] = [];
-      const parts = [...table.config.parts];
-      parts.reverse();
-      const newConfig: TableConfig = {parts, rows: []};
-      actions.push(new TablesAction.SetConfig({tableId: table.id, config: newConfig}));
+        const actions: Action[] = [];
+        const parts = [...table.config.parts];
+        parts.reverse();
+        const newConfig: TableConfig = {parts, rows: []};
+        actions.push(new TablesAction.SetConfig({tableId: table.id, config: newConfig}));
 
-      return [
-        ...actions,
-        new RouterAction.Go({
+        return [
+          ...actions,
+          new RouterAction.Go({
+            path: [],
+            queryParams: {
+              [QueryParam.Query]: convertQueryModelToString(newQuery),
+              [QueryParam.ViewCursor]: null,
+            },
+            extras: {
+              queryParamsHandling: 'merge',
+            },
+          }),
+        ];
+      })
+    )
+  );
+
+  public removePart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.RemovePart>(TablesActionType.REMOVE_PART),
+      mergeMap(action => this.getLatestTable(action)),
+      withLatestFrom(this.store$.select(selectViewQuery)),
+      map(([{action, table}, query]) => {
+        const linkTypeIds = table.config.parts.slice(0, action.payload.cursor.partIndex).reduce((ids, part) => {
+          if (part.linkTypeId) {
+            ids.push(part.linkTypeId);
+          }
+          return ids;
+        }, []);
+
+        const stem = {...query.stems[0], linkTypeIds};
+        const newQuery: Query = {...query, stems: [stem]};
+
+        return new RouterAction.Go({
           path: [],
           queryParams: {
-            [QueryParam.Query]: convertQueryModelToString(newQuery),
-            [QueryParam.ViewCursor]: null,
+            q: convertQueryModelToString(newQuery),
           },
           extras: {
             queryParamsHandling: 'merge',
           },
-        }),
-      ];
-    })
+        });
+      })
+    )
   );
 
-  @Effect()
-  public removePart$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.RemovePart>(TablesActionType.REMOVE_PART),
-    mergeMap(action => this.getLatestTable(action)),
-    withLatestFrom(this.store$.select(selectViewQuery)),
-    map(([{action, table}, query]) => {
-      const linkTypeIds = table.config.parts.slice(0, action.payload.cursor.partIndex).reduce((ids, part) => {
-        if (part.linkTypeId) {
-          ids.push(part.linkTypeId);
-        }
-        return ids;
-      }, []);
-
-      const stem = {...query.stems[0], linkTypeIds};
-      const newQuery: Query = {...query, stems: [stem]};
-
-      return new RouterAction.Go({
-        path: [],
-        queryParams: {
-          q: convertQueryModelToString(newQuery),
-        },
-        extras: {
-          queryParamsHandling: 'merge',
-        },
-      });
-    })
-  );
-
-  @Effect()
-  public addColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.AddColumn>(TablesActionType.ADD_COLUMN),
-    mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) =>
-      this.createNewEmptyColumn(table, action.payload.cursor).pipe(
-        map(
-          column =>
-            new TablesAction.ReplaceColumns({
-              cursor: action.payload.cursor,
-              deleteCount: 0,
-              columns: [column],
-            })
+  public addColumn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.AddColumn>(TablesActionType.ADD_COLUMN),
+      mergeMap(action => this.getLatestTable(action)),
+      mergeMap(({action, table}) =>
+        this.createNewEmptyColumn(table, action.payload.cursor).pipe(
+          map(
+            column =>
+              new TablesAction.ReplaceColumns({
+                cursor: action.payload.cursor,
+                deleteCount: 0,
+                columns: [column],
+              })
+          )
         )
       )
     )
@@ -381,236 +375,253 @@ export class TablesEffects {
     }
   }
 
-  @Effect()
-  public splitColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SplitColumn>(TablesActionType.SPLIT_COLUMN),
-    mergeMap(action =>
-      this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
-        first(),
-        mergeMap(table => {
-          const part = table.config.parts[action.payload.cursor.partIndex];
-          return this.store$.select(selectCollectionById(part.collectionId)).pipe(
-            // TODO linktype as well
-            first(),
-            map(collection => ({action, part, collection}))
+  public splitColumn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.SplitColumn>(TablesActionType.SPLIT_COLUMN),
+      mergeMap(action =>
+        this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+          first(),
+          mergeMap(table => {
+            const part = table.config.parts[action.payload.cursor.partIndex];
+            return this.store$.select(selectCollectionById(part.collectionId)).pipe(
+              // TODO linktype as well
+              first(),
+              map(collection => ({action, part, collection}))
+            );
+          })
+        )
+      ),
+      mergeMap(({action, part, collection}) => {
+        const childNames = ['A', 'B'];
+
+        const {cursor} = action.payload;
+        const column = findTableColumn(part.columns, cursor.columnPath);
+
+        const oldAttribute = collection.attributes.find(attribute => attribute.id === column.attributeIds[0]);
+
+        const replaceColumnAction = createReplaceColumnAction(action, column, oldAttribute.name, childNames);
+        const parentAttributeAction = createParentAttributeAction(collection, oldAttribute, replaceColumnAction);
+        const secondChildAttributeAction = createSecondChildAttributeAction(
+          collection,
+          oldAttribute,
+          childNames[1],
+          parentAttributeAction
+        );
+        const firstChildAttributeAction = createFirstChildAttributeAction(
+          collection,
+          oldAttribute,
+          childNames[0],
+          secondChildAttributeAction
+        );
+
+        return [firstChildAttributeAction, new TablesAction.SetCursor({cursor: null})];
+      })
+    )
+  );
+
+  public hideColumn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.HideColumn>(TablesActionType.HIDE_COLUMN),
+      mergeMap(action => this.getLatestTable(action)),
+      mergeMap(({action, table}) => {
+        const {cursor} = action.payload;
+        const part: TableConfigPart = table.config.parts[cursor.partIndex];
+        const {parentPath, columnIndex} = splitColumnPath(cursor.columnPath);
+
+        const column = findTableColumn(part.columns, cursor.columnPath);
+
+        const pathBefore = parentPath.concat(columnIndex - 1);
+        const columnBefore = columnIndex > 0 ? findTableColumn(part.columns, pathBefore) : null;
+        const hiddenBefore: boolean = columnBefore && columnBefore.type === TableColumnType.HIDDEN;
+
+        const columnAfter = findTableColumn(part.columns, parentPath.concat(columnIndex + 1));
+        const hiddenAfter: boolean = columnAfter && columnAfter.type === TableColumnType.HIDDEN;
+
+        const actions: Action[] = [];
+
+        if (hiddenBefore && hiddenAfter) {
+          const mergedColumn = mergeHiddenColumns(columnBefore, columnAfter);
+          actions.push(
+            new TablesAction.ReplaceColumns({
+              cursor: {...cursor, columnPath: pathBefore},
+              deleteCount: 3,
+              columns: [extendHiddenColumn(mergedColumn, column.attributeIds[0])],
+            })
           );
-        })
-      )
-    ),
-    mergeMap(({action, part, collection}) => {
-      const childNames = ['A', 'B'];
+        }
+        if (hiddenBefore && !hiddenAfter) {
+          actions.push(
+            new TablesAction.ReplaceColumns({
+              cursor: {...cursor, columnPath: pathBefore},
+              deleteCount: 2,
+              columns: [extendHiddenColumn(columnBefore, column.attributeIds[0])],
+            })
+          );
+        }
+        if (!hiddenBefore && hiddenAfter) {
+          actions.push(
+            new TablesAction.ReplaceColumns({
+              cursor,
+              deleteCount: 2,
+              columns: [extendHiddenColumn(columnAfter, column.attributeIds[0])],
+            })
+          );
+        }
+        if (!hiddenBefore && !hiddenAfter) {
+          actions.push(
+            new TablesAction.ReplaceColumns({
+              cursor,
+              deleteCount: 1,
+              columns: [
+                {
+                  type: TableColumnType.HIDDEN,
+                  attributeIds: [...column.attributeIds],
+                },
+              ],
+            })
+          );
+        }
 
-      const {cursor} = action.payload;
-      const column = findTableColumn(part.columns, cursor.columnPath);
-
-      const oldAttribute = collection.attributes.find(attribute => attribute.id === column.attributeIds[0]);
-
-      const replaceColumnAction = createReplaceColumnAction(action, column, oldAttribute.name, childNames);
-      const parentAttributeAction = createParentAttributeAction(collection, oldAttribute, replaceColumnAction);
-      const secondChildAttributeAction = createSecondChildAttributeAction(
-        collection,
-        oldAttribute,
-        childNames[1],
-        parentAttributeAction
-      );
-      const firstChildAttributeAction = createFirstChildAttributeAction(
-        collection,
-        oldAttribute,
-        childNames[0],
-        secondChildAttributeAction
-      );
-
-      return [firstChildAttributeAction, new TablesAction.SetCursor({cursor: null})];
-    })
+        return actions;
+      })
+    )
   );
 
-  @Effect()
-  public hideColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.HideColumn>(TablesActionType.HIDE_COLUMN),
-    mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
-      const {cursor} = action.payload;
-      const part: TableConfigPart = table.config.parts[cursor.partIndex];
-      const {parentPath, columnIndex} = splitColumnPath(cursor.columnPath);
+  public showColumns$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.ShowColumns>(TablesActionType.SHOW_COLUMNS),
+      mergeMap(action => this.getLatestTable(action)),
+      mergeMap(({action, table}) => {
+        const part = table.config.parts[action.payload.cursor.partIndex];
+        if (part.collectionId) {
+          return this.store$.select(selectCollectionById(part.collectionId)).pipe(
+            first(),
+            map(collection => ({action, part, attributes: collection.attributes}))
+          );
+        }
+        if (part.linkTypeId) {
+          return this.store$.select(selectLinkTypeById(part.linkTypeId)).pipe(
+            first(),
+            map(collection => ({action, part, attributes: collection.attributes}))
+          );
+        }
+      }),
+      map(({action, part, attributes}) => {
+        const {cursor, attributeIds} = action.payload;
 
-      const column = findTableColumn(part.columns, cursor.columnPath);
+        const hiddenColumn = findTableColumn(part.columns, cursor.columnPath);
 
-      const pathBefore = parentPath.concat(columnIndex - 1);
-      const columnBefore = columnIndex > 0 ? findTableColumn(part.columns, pathBefore) : null;
-      const hiddenBefore: boolean = columnBefore && columnBefore.type === TableColumnType.HIDDEN;
+        const columns = createTableColumnsBySiblingAttributeIds(attributes, attributeIds);
 
-      const columnAfter = findTableColumn(part.columns, parentPath.concat(columnIndex + 1));
-      const hiddenAfter: boolean = columnAfter && columnAfter.type === TableColumnType.HIDDEN;
+        const hiddenAttributeIds = getArrayDifference(hiddenColumn.attributeIds, attributeIds);
+        if (hiddenAttributeIds.length > 0) {
+          const updatedHiddenColumn: TableConfigColumn = {...hiddenColumn, attributeIds: hiddenAttributeIds};
+          columns.push(updatedHiddenColumn);
+        }
 
-      const actions: Action[] = [];
-
-      if (hiddenBefore && hiddenAfter) {
-        const mergedColumn = mergeHiddenColumns(columnBefore, columnAfter);
-        actions.push(
-          new TablesAction.ReplaceColumns({
-            cursor: {...cursor, columnPath: pathBefore},
-            deleteCount: 3,
-            columns: [extendHiddenColumn(mergedColumn, column.attributeIds[0])],
-          })
-        );
-      }
-      if (hiddenBefore && !hiddenAfter) {
-        actions.push(
-          new TablesAction.ReplaceColumns({
-            cursor: {...cursor, columnPath: pathBefore},
-            deleteCount: 2,
-            columns: [extendHiddenColumn(columnBefore, column.attributeIds[0])],
-          })
-        );
-      }
-      if (!hiddenBefore && hiddenAfter) {
-        actions.push(
-          new TablesAction.ReplaceColumns({
-            cursor,
-            deleteCount: 2,
-            columns: [extendHiddenColumn(columnAfter, column.attributeIds[0])],
-          })
-        );
-      }
-      if (!hiddenBefore && !hiddenAfter) {
-        actions.push(
-          new TablesAction.ReplaceColumns({
-            cursor,
-            deleteCount: 1,
-            columns: [
-              {
-                type: TableColumnType.HIDDEN,
-                attributeIds: [...column.attributeIds],
-              },
-            ],
-          })
-        );
-      }
-
-      return actions;
-    })
+        return new TablesAction.ReplaceColumns({
+          cursor: action.payload.cursor,
+          deleteCount: 1,
+          columns,
+        });
+      })
+    )
   );
 
-  @Effect()
-  public showColumns$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.ShowColumns>(TablesActionType.SHOW_COLUMNS),
-    mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
-      const part = table.config.parts[action.payload.cursor.partIndex];
-      if (part.collectionId) {
-        return this.store$.select(selectCollectionById(part.collectionId)).pipe(
+  public removeColumn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.RemoveColumn>(TablesActionType.REMOVE_COLUMN),
+      mergeMap(action =>
+        this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
           first(),
-          map(collection => ({action, part, attributes: collection.attributes}))
-        );
-      }
-      if (part.linkTypeId) {
-        return this.store$.select(selectLinkTypeById(part.linkTypeId)).pipe(
-          first(),
-          map(collection => ({action, part, attributes: collection.attributes}))
-        );
-      }
-    }),
-    map(({action, part, attributes}) => {
-      const {cursor, attributeIds} = action.payload;
+          mergeMap(table => {
+            const {cursor} = action.payload;
+            const part = table.config.parts[cursor.partIndex];
+            const column = findTableColumn(part.columns, cursor.columnPath);
+            const attributeId = getAttributeIdFromColumn(column);
 
-      const hiddenColumn = findTableColumn(part.columns, cursor.columnPath);
-
-      const columns = createTableColumnsBySiblingAttributeIds(attributes, attributeIds);
-
-      const hiddenAttributeIds = getArrayDifference(hiddenColumn.attributeIds, attributeIds);
-      if (hiddenAttributeIds.length > 0) {
-        const updatedHiddenColumn: TableConfigColumn = {...hiddenColumn, attributeIds: hiddenAttributeIds};
-        columns.push(updatedHiddenColumn);
-      }
-
-      return new TablesAction.ReplaceColumns({
-        cursor: action.payload.cursor,
-        deleteCount: 1,
-        columns,
-      });
-    })
-  );
-
-  @Effect()
-  public removeColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.RemoveColumn>(TablesActionType.REMOVE_COLUMN),
-    mergeMap(action =>
-      this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
-        first(),
-        mergeMap(table => {
-          const {cursor} = action.payload;
-          const part = table.config.parts[cursor.partIndex];
-          const column = findTableColumn(part.columns, cursor.columnPath);
-          const attributeId = getAttributeIdFromColumn(column);
-
-          const actions: Action[] = [new TablesAction.ReplaceColumns({cursor, deleteCount: 1})];
-          if (attributeId && part.collectionId) {
-            actions.push(new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId}));
-          }
-          if (attributeId && part.linkTypeId) {
-            actions.push(new LinkTypesAction.DeleteAttribute({linkTypeId: part.linkTypeId, attributeId}));
-          }
-          return actions;
-        })
+            const actions: Action[] = [new TablesAction.ReplaceColumns({cursor, deleteCount: 1})];
+            if (attributeId && part.collectionId) {
+              actions.push(new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId}));
+            }
+            if (attributeId && part.linkTypeId) {
+              actions.push(new LinkTypesAction.DeleteAttribute({linkTypeId: part.linkTypeId, attributeId}));
+            }
+            return actions;
+          })
+        )
       )
     )
   );
 
-  @Effect()
-  public resizeColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
-    mergeMap(action => this.getLatestTable(action)),
-    map(({action, table}) => {
-      const {cursor} = action.payload;
-      const part = table.config.parts[cursor.partIndex];
-      const column = findTableColumn(part.columns, cursor.columnPath);
-      const resizedColumn = resizeLastColumnChild(column, action.payload.delta);
+  public resizeColumn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
+      mergeMap(action => this.getLatestTable(action)),
+      map(({action, table}) => {
+        const {cursor} = action.payload;
+        const part = table.config.parts[cursor.partIndex];
+        const column = findTableColumn(part.columns, cursor.columnPath);
+        const resizedColumn = resizeLastColumnChild(column, action.payload.delta);
 
-      return new TablesAction.ReplaceColumns({
-        cursor,
-        deleteCount: 1,
-        columns: [resizedColumn],
-      });
-    })
+        return new TablesAction.ReplaceColumns({
+          cursor,
+          deleteCount: 1,
+          columns: [resizedColumn],
+        });
+      })
+    )
   );
 
-  @Effect()
-  public syncColumns$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SyncColumns>(TablesActionType.SYNC_COLUMNS),
-    mergeMap(action => {
-      const {cursor} = action.payload;
-      return this.store$.pipe(
-        select(selectTablePart(cursor)),
-        filter(part => !!part),
-        take(1),
-        withLatestFrom(this.store$.pipe(select(selectTableById(cursor.tableId)))),
-        mergeMap(([part, table]: [TableConfigPart, TableModel]) =>
-          this.selectResource$(part).pipe(
-            filter(entity => !!entity),
-            take(1),
-            withLatestFrom(this.store$.pipe(select(selectViewCode))),
-            mergeMap(([entity, viewCode]) => {
-              const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
-              const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
-              const columns = addMissingTableColumns(initializedColumns, entity.attributes, false);
+  public syncColumns$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.SyncColumns>(TablesActionType.SYNC_COLUMNS),
+      mergeMap(action => {
+        const {cursor} = action.payload;
+        return this.store$.pipe(
+          select(selectTablePart(cursor)),
+          filter(part => !!part),
+          take(1),
+          withLatestFrom(this.store$.pipe(select(selectTableById(cursor.tableId)))),
+          mergeMap(([part, table]: [TableConfigPart, TableModel]) =>
+            this.selectResource$(part).pipe(
+              filter(entity => !!entity),
+              take(1),
+              withLatestFrom(
+                this.store$.pipe(select(selectViewCode)),
+                this.store$.pipe(select(selectResourcesPermissions))
+              ),
+              mergeMap(([entity, viewCode, resourcesPermissions]) => {
+                const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
+                const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
+                const columns = addMissingTableColumns(initializedColumns, entity.attributes, false);
 
-              const lastColumn = columns[columns.length - 1];
-              const lastPartIndex = table.config.parts.length - 1;
-              if (!viewCode && cursor.partIndex === lastPartIndex && (!lastColumn || lastColumn.attributeIds.length)) {
-                columns.push(createEmptyColumn(entity.attributes, columns));
-              }
+                const permissions = part.collectionId
+                  ? resourcesPermissions?.collections?.[part.collectionId]
+                  : resourcesPermissions?.linkTypes?.[part.linkTypeId];
+                const lastColumn = columns[columns.length - 1];
+                const lastPartIndex = table.config.parts.length - 1;
+                if (
+                  permissions?.rolesWithView?.AttributeEdit &&
+                  !viewCode &&
+                  cursor.partIndex === lastPartIndex &&
+                  (!lastColumn || lastColumn.attributeIds.length)
+                ) {
+                  columns.push(createEmptyColumn(entity.attributes, columns));
+                }
 
-              if (areTableColumnsListsEqual(part.columns, columns)) {
-                return [];
-              }
+                if (areTableColumnsListsEqual(part.columns, columns)) {
+                  return [];
+                }
 
-              // TODO double check if deletion works as expected
-              return [new TablesAction.UpdateColumns({cursor, columns})];
-            })
+                // TODO double check if deletion works as expected
+                return [new TablesAction.UpdateColumns({cursor, columns})];
+              })
+            )
           )
-        )
-      );
-    })
+        );
+      })
+    )
   );
 
   private selectResource$(part: TableConfigPart): Observable<AttributesResource> {
@@ -620,637 +631,679 @@ export class TablesEffects {
     return this.store$.pipe(select(selectLinkTypeById(part.linkTypeId)));
   }
 
-  @Effect()
-  public syncPrimaryRows$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
-    debounceTime(100), // otherwise unwanted parallel syncing occurs
-    switchMap(action =>
-      combineLatest([
-        this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))),
-        this.store$.pipe(select(selectMoveTableCursorDown)),
-        this.store$.pipe(select(selectTableCursor)),
-      ]).pipe(
-        take(1),
-        filter(([table]) => !!table),
-        mergeMap(([table, documents, moveCursorDown, tableCursor]) => {
-          const {collectionId} = table.config.parts[0];
-          const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
-          return this.store$.pipe(
-            select(selectCollectionPermissions(collectionId)),
-            map(permissions => permissions?.writeWithView),
-            distinctUntilChanged(),
-            mergeMap(canCreateDocuments => {
-              const {cursor} = action.payload;
-              const {rows} = table.config;
-
-              const createdDocuments = filterNewlyCreatedDocuments(rows, documentsByCollection);
-              const unknownDocuments = filterUnknownDocuments(rows, documentsByCollection);
-
-              const actions: Action[] = [];
-
-              if (createdDocuments.length > 0) {
-                actions.push(
-                  new TablesAction.InitRows({
-                    cursor: {...cursor, rowPath: []},
-                    documents: createdDocuments,
-                    linkInstances: [],
-                  })
-                );
-                if (moveCursorDown) {
-                  actions.push(new TablesAction.MoveCursor({direction: Direction.Down}));
-                }
-              }
-
-              const documentIds = new Set(documentsByCollection.map(doc => doc.id));
-              if (rows.some(row => row.documentId && !documentIds.has(row.documentId))) {
-                actions.push(new TablesAction.CleanRows({cursor, documents: documentsByCollection, linkInstances: []}));
-              }
-
-              if (unknownDocuments.length > 0) {
-                actions.push(
-                  new TablesAction.AddPrimaryRows({
-                    cursor,
-                    rows: unknownDocuments.map(document => createTableRow(document)),
-                    append: true,
-                  })
-                );
-              }
-
-              // add last empty row if user has write permissions
-              if ((isLastTableRowInitialized(rows) || rows.length === 0) && canCreateDocuments) {
-                actions.push(
-                  new TablesAction.AddPrimaryRows({
-                    cursor,
-                    rows: [createEmptyTableRow()],
-                    append: true,
-                  })
-                );
-              }
-
-              // remove last empty row when user loses write permissions
-              if (
-                !isLastTableRowInitialized(rows) &&
-                !canCreateDocuments &&
-                rows.length > 0 &&
-                createdDocuments.length === 0 &&
-                unknownDocuments.length === 0
-              ) {
-                actions.push(new TablesAction.RemoveRow({cursor: {...cursor, rowPath: [rows.length - 1]}}));
-              }
-
-              if (!tableCursor) {
-                actions.push(new TablesAction.UseViewCursor());
-              }
-
-              return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
-            })
-          );
-        })
-      )
-    )
-  );
-
-  @Effect()
-  public syncLinkedRows$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
-    mergeMap(action => {
-      const {cursor} = action.payload;
-      return combineLatest([
-        this.store$.pipe(select(selectTablePart(cursor))),
-        this.store$.pipe(select(selectTableRows(cursor.tableId))),
-      ]).pipe(
-        take(1),
-        filter(([part]) => !!part),
-        mergeMap(([part, rows]) => {
-          const rowsWithPath = findTableRowsIncludingCollapsed(rows, cursor.rowPath);
-          const rowDocumentIds = rowsWithPath
-            .map(rowWithPath => rowWithPath.row.documentId)
-            .filter(documentId => !!documentId);
-          if (rowDocumentIds.length === 0) {
-            return [];
-          }
-
-          return this.store$.pipe(
-            select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, rowDocumentIds)),
-            take(1),
-            mergeMap(linkInstances => {
-              const documentIds = linkInstances.reduce((ids, linkInstance) => {
-                const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
-                if (!ids.includes(documentId)) {
-                  ids.push(documentId);
-                }
-                return ids;
-              }, []);
-              return this.store$.pipe(
-                select(selectDocumentsByQueryIncludingChildrenAndIds(documentIds)),
-                take(1),
-                map(documents =>
-                  documents.map(document => {
-                    const linkInstance = linkInstances.find(link => link.documentIds.includes(document.id));
-                    return {
-                      ...document,
-                      correlationId: document.correlationId || (linkInstance && linkInstance.correlationId),
-                    };
-                  })
-                ),
-                mergeMap(documents => {
-                  const linkedRows = findLinkedTableRows(rows, cursor.rowPath);
-                  const createdLinkInstances = filterNewlyCreatedLinkInstances(linkedRows, linkInstances);
-                  const unknownLinkInstances = filterUnknownLinkInstances(linkedRows, linkInstances);
-
-                  const actions: Action[] = [];
-
-                  if (createdLinkInstances.length > 0) {
-                    actions.push(new TablesAction.InitLinkedRows({cursor, linkInstances}));
-                  }
-
-                  // documentIds on LinkInstance was updated
-                  const changedRowIndex = linkedRows.findIndex(row => {
-                    const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
-                    return linkInstance && !linkInstance.documentIds.includes(row.documentId);
-                  });
-                  if (changedRowIndex >= 0) {
-                    const changedRow = linkedRows[changedRowIndex];
-                    const linkInstance = linkInstances.find(li => li.id === changedRow.linkInstanceId);
-                    if (linkInstance) {
-                      const otherDocumentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
-                      const newDocument = documents.find(doc => doc.id === otherDocumentId);
-                      if (newDocument) {
-                        actions.push(
-                          new TablesAction.ReplaceRows({
-                            cursor: {
-                              ...cursor,
-                              rowPath: [...cursor.rowPath, changedRowIndex],
-                            },
-                            deleteCount: 1,
-                            rows: [{...changedRow, documentId: newDocument.id}],
-                          })
-                        );
-                      }
-                    }
-                  }
-
-                  if (unknownLinkInstances.length > 0) {
-                    rowsWithPath.forEach(rowWithPath => {
-                      const addedLinkedRows = unknownLinkInstances
-                        .filter(linkInstance => linkInstance.documentIds.includes(rowWithPath.row.documentId))
-                        .reduce((newRows, linkInstance) => {
-                          const document = documents.find(doc => linkInstance.documentIds.includes(doc.id));
-                          if (document) {
-                            newRows.push(createTableRow(document, linkInstance));
-                          }
-                          return newRows;
-                        }, []);
-
-                      if (addedLinkedRows.length) {
-                        actions.push(
-                          new TablesAction.AddLinkedRows({
-                            cursor: {...cursor, rowPath: rowWithPath.path},
-                            linkedRows: addedLinkedRows,
-                            append: true,
-                          })
-                        );
-                      }
-                    });
-                  }
-
-                  return actions;
-                })
-              );
-            })
-          );
-        })
-      );
-    })
-  );
-
-  @Effect()
-  public cloneRow$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.CloneRow>(TablesActionType.CLONE_ROW),
-    mergeMap(action => {
-      const {cursor} = action.payload;
-      return this.store$.pipe(
-        select(selectTableRow(cursor)),
-        take(1),
-        filter(row => row && !!row.documentId),
-        withLatestFrom(
-          this.store$.pipe(select(selectDocumentsDictionary)),
-          this.store$.pipe(select(selectLinkInstancesDictionary))
-        ),
-        mergeMap(([row, documentsMap, linkInstancesMap]) => {
-          const document = documentsMap[row.documentId];
-          if (!document) {
-            return [];
-          }
-
-          const emptyRow = createEmptyTableRow();
-
-          const duplicateLinkInstances = (newDocumentId, documents: DocumentModel[]) => {
-            const linkInstanceIds = (row.linkedRows || [])
-              .map(linkedRow => linkedRow.linkInstanceId)
-              .filter(id => id && linkInstancesMap[id]);
-            const documentIdsMap = documents.reduce((idsMap, doc) => {
-              idsMap[doc.metaData.originalDocumentId] = doc.id;
-              return idsMap;
-            }, {});
-
-            this.store$.dispatch(
-              new LinkInstancesAction.Duplicate({
-                originalDocumentId: row.documentId,
-                newDocumentId,
-                linkInstanceIds,
-                documentIdsMap,
-              })
-            );
-          };
-
-          const duplicateLinkedDocuments = (documentId: string) => {
-            const linkedDocumentIds = (row.linkedRows || [])
-              .map(linkedRow => linkedRow.documentId)
-              .filter(id => id && documentsMap[id]);
-
-            if (linkedDocumentIds.length > 0) {
-              this.store$.dispatch(
-                new DocumentsAction.Duplicate({
-                  collectionId: documentsMap[linkedDocumentIds[0]].collectionId,
-                  documentIds: linkedDocumentIds,
-                  onSuccess: documents => duplicateLinkInstances(documentId, documents),
-                })
-              );
-            }
-          };
-
-          return [
-            new TablesAction.AddPrimaryRows({cursor: {...cursor, rowPath: [cursor.rowPath[0] + 1]}, rows: [emptyRow]}),
-            new DocumentsAction.Duplicate({
-              correlationId: emptyRow.correlationId,
-              collectionId: document.collectionId,
-              documentIds: [document.id],
-              onSuccess: documents => duplicateLinkedDocuments(documents[0].id),
-            }),
-          ];
-        })
-      );
-    })
-  );
-
-  @Effect()
-  public indentRow$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.IndentRow>(TablesActionType.INDENT_ROW),
-    map(action => action.payload.cursor),
-    filter(cursor => cursor.partIndex === 0 && cursor.rowPath[0] > 0),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-    mergeMap(([cursor, documentsMap]) =>
-      this.store$.pipe(
-        select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
-        first(),
-        map(rows => {
-          const rowIndex = cursor.rowPath[0];
-          const {row, level} = rows[rowIndex];
-          const {row: newParentRow = undefined} =
-            rows
-              .slice(0, cursor.rowPath[0])
-              .reverse()
-              .find(hierarchyRow => hierarchyRow.level === level) || {};
-          const parentDocumentId = newParentRow && newParentRow.documentId;
-
-          if (row.documentId) {
-            const {collectionId, id: documentId} = documentsMap[row.documentId];
-            return new DocumentsAction.PatchMetaData({
-              collectionId,
-              documentId,
-              metaData: {parentId: parentDocumentId},
-            });
-          } else {
-            const updatedRow: TableConfigRow = {...row, parentDocumentId};
-            return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
-          }
-        })
-      )
-    )
-  );
-
-  @Effect()
-  public outdentRow$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.OutdentRow>(TablesActionType.OUTDENT_ROW),
-    map(action => action.payload.cursor),
-    filter(cursor => cursor.partIndex === 0),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-    mergeMap(([cursor, documentsMap]) =>
-      this.store$.pipe(
-        select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
-        first(),
-        map(rows => {
-          const rowIndex = cursor.rowPath[0];
-          const {row, level} = rows[rowIndex];
-          const {row: previousParentRow = undefined} =
-            rows
-              .slice(0, cursor.rowPath[0])
-              .reverse()
-              .find(hierarchyRow => hierarchyRow.level === level - 1) || {};
-          const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
-          const parentDocumentId =
-            (previousParentDocument && previousParentDocument.metaData && previousParentDocument.metaData.parentId) ||
-            null;
-
-          if (row.documentId) {
-            const {collectionId, id: documentId} = documentsMap[row.documentId];
-            return new DocumentsAction.PatchMetaData({
-              collectionId,
-              documentId,
-              metaData: {parentId: parentDocumentId},
-            });
-          } else {
-            const updatedRow: TableConfigRow = {...row, parentDocumentId};
-            return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
-          }
-        })
-      )
-    )
-  );
-
-  @Effect()
-  public copyValue$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.CopyValue>(TablesActionType.COPY_VALUE),
-    mergeMap(action =>
-      combineLatest([
-        this.store$.pipe(select(selectTablePart(action.payload.cursor))),
-        this.store$.pipe(select(selectTableRow(action.payload.cursor))),
-        this.store$.pipe(select(selectTableColumn(action.payload.cursor))),
-      ]).pipe(
-        take(1),
-        mergeMap(([tablePart, tableRow, tableColumn]) => {
-          const tableCursor = action.payload.cursor;
-          if (tableRow) {
-            const column = tablePart?.columns?.[tableCursor.columnIndex];
-            const attributeId = column?.attributeIds?.[0];
-            if (attributeId) {
-              if (tablePart.collectionId) {
-                this.copyValueService.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);
-              } else if (tablePart.linkTypeId) {
-                this.copyValueService.copyLinkValue(tableRow.linkInstanceId, tablePart.linkTypeId, attributeId);
-              }
-            }
-          } else if (tableColumn) {
-            const attributeId = tableColumn.attributeIds?.[0];
-            if (tablePart.collectionId) {
-              this.copyValueService.copyCollectionAttribute(tablePart.collectionId, attributeId);
-            } else if (tablePart.linkTypeId) {
-              this.copyValueService.copyLinkTypeAttribute(tablePart.linkTypeId, attributeId);
-            }
-          }
-          return EMPTY;
-        })
-      )
-    )
-  );
-
-  @Effect({dispatch: false})
-  public copyRowValues$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.CopyRowValues>(TablesActionType.COPY_ROW_VALUES),
-    mergeMap(action =>
-      combineLatest([
-        this.store$.pipe(select(selectTablePart(action.payload.cursor))),
-        this.store$.pipe(select(selectTableColumn(action.payload.cursor))),
-      ]).pipe(
-        take(1),
-        mergeMap(([tablePart, tableColumn]) => {
-          if (tableColumn) {
-            const attributeId = tableColumn.attributeIds?.[0];
+  public syncPrimaryRows$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
+      debounceTime(100), // otherwise unwanted parallel syncing occurs
+      switchMap(action =>
+        combineLatest([
+          this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
+          this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false))),
+          this.store$.pipe(select(selectMoveTableCursorDown)),
+          this.store$.pipe(select(selectTableCursor)),
+        ]).pipe(
+          take(1),
+          filter(([table]) => !!table),
+          mergeMap(([table, documents, moveCursorDown, tableCursor]) => {
+            const {collectionId} = table.config.parts[0];
+            const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
             return this.store$.pipe(
-              select(selectDocumentsAndLinksByQuery),
-              withLatestFrom(
-                this.store$.pipe(select(selectCollectionsDictionary)),
-                this.store$.pipe(select(selectLinkTypesDictionary)),
-                this.store$.pipe(select(selectConstraintData))
-              ),
-              map(([{documents, linkInstances}, collectionsMap, linkTypesMap, constraintData]) => {
-                let dataValues = [];
-                let constraint = null;
-                if (tablePart.collectionId) {
-                  constraint = findAttributeConstraint(collectionsMap[tablePart.collectionId]?.attributes, attributeId);
-                  dataValues = documents
-                    .filter(document => document.collectionId === tablePart.collectionId)
-                    .map(document => constraint?.createDataValue(document.data?.[attributeId], constraintData));
-                } else if (tablePart.linkTypeId) {
-                  constraint = findAttributeConstraint(linkTypesMap[tablePart.linkTypeId]?.attributes, attributeId);
-                  dataValues = linkInstances
-                    .filter(link => link.linkTypeId === tablePart.linkTypeId)
-                    .map(linkInstance => constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData));
+              select(selectCollectionPermissions(collectionId)),
+              map(permissions => permissions?.roles?.DataContribute),
+              distinctUntilChanged(),
+              mergeMap(canCreateDocuments => {
+                const {cursor} = action.payload;
+                const {rows} = table.config;
+
+                const createdDocuments = filterNewlyCreatedDocuments(rows, documentsByCollection);
+                const unknownDocuments = filterUnknownDocuments(rows, documentsByCollection);
+
+                const actions: Action[] = [];
+
+                if (createdDocuments.length > 0) {
+                  actions.push(
+                    new TablesAction.InitRows({
+                      cursor: {...cursor, rowPath: []},
+                      documents: createdDocuments,
+                      linkInstances: [],
+                    })
+                  );
+                  if (moveCursorDown) {
+                    actions.push(new TablesAction.MoveCursor({direction: Direction.Down}));
+                  }
                 }
-                return {dataValues, constraint};
-              }),
-              take(1),
-              mergeMap(({dataValues, constraint}) => {
-                this.copyValueService.copyDataValues(dataValues, constraint, action.payload.unique);
-                return EMPTY;
+
+                const documentIds = new Set(documentsByCollection.map(doc => doc.id));
+                if (rows.some(row => row.documentId && !documentIds.has(row.documentId))) {
+                  actions.push(
+                    new TablesAction.CleanRows({cursor, documents: documentsByCollection, linkInstances: []})
+                  );
+                }
+
+                if (unknownDocuments.length > 0) {
+                  actions.push(
+                    new TablesAction.AddPrimaryRows({
+                      cursor,
+                      rows: unknownDocuments.map(document => createTableRow(document)),
+                      append: true,
+                    })
+                  );
+                }
+
+                // add last empty row if user has write permissions
+                if ((isLastTableRowInitialized(rows) || rows.length === 0) && canCreateDocuments) {
+                  actions.push(
+                    new TablesAction.AddPrimaryRows({
+                      cursor,
+                      rows: [createEmptyTableRow()],
+                      append: true,
+                    })
+                  );
+                }
+
+                // remove last empty row when user loses write permissions
+                if (
+                  !isLastTableRowInitialized(rows) &&
+                  !canCreateDocuments &&
+                  rows.length > 0 &&
+                  createdDocuments.length === 0 &&
+                  unknownDocuments.length === 0
+                ) {
+                  actions.push(new TablesAction.RemoveRow({cursor: {...cursor, rowPath: [rows.length - 1]}}));
+                }
+
+                if (!tableCursor) {
+                  actions.push(new TablesAction.UseViewCursor());
+                }
+
+                return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
               })
             );
-          }
-        })
+          })
+        )
       )
     )
   );
 
-  @Effect()
-  public moveRowUp$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.MoveRowUp>(TablesActionType.MOVE_ROW_UP),
-    mergeMap(action => {
-      const {cursor} = action.payload;
-      const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
-      if (rowIndex === 0) {
-        return [];
-      }
-
-      return combineLatest([
-        this.store$.pipe(select(selectTableRows(cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsDictionary)),
-      ]).pipe(
-        first(),
-        mergeMap(([rows, documentsMap]) => {
-          const row = findTableRow(rows, cursor.rowPath);
-          const document = documentsMap[row && row.documentId];
-          const parentId =
-            (document && document.metaData && document.metaData.parentId) || (row && row.parentDocumentId) || null;
-
-          const previousCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex - 1)};
-          const previousRow = findTableRow(rows, previousCursor.rowPath);
-          const previousDocument = documentsMap[previousRow && previousRow.documentId];
-          const previousParentId =
-            (previousDocument && previousDocument.metaData && previousDocument.metaData.parentId) ||
-            (previousRow && previousRow.parentDocumentId) ||
-            null;
-
-          const actions: Action[] = [
-            new TablesAction.RemoveRow({cursor}),
-            new TablesAction.ReplaceRows({cursor: previousCursor, rows: [row], deleteCount: 0}),
-          ];
-
-          if (cursor.partIndex === 0 && parentId !== previousParentId) {
-            if (row.documentId) {
-              return [
-                new DocumentsAction.PatchMetaData({
-                  collectionId: document.collectionId,
-                  documentId: document.id,
-                  metaData: {parentId: previousParentId},
-                  onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
-                }),
-              ];
-            } else {
-              return [
-                new TablesAction.RemoveRow({cursor}),
-                new TablesAction.ReplaceRows({
-                  cursor: previousCursor,
-                  rows: [{...row, parentDocumentId: previousParentId}],
-                  deleteCount: 0,
-                }),
-              ];
-            }
-          }
-
-          return actions;
-        })
-      );
-    })
-  );
-
-  @Effect()
-  public moveRowDown$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.MoveRowDown>(TablesActionType.MOVE_ROW_DOWN),
-    mergeMap(action => {
-      const {cursor} = action.payload;
-      const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
-
-      return combineLatest([
-        this.store$.pipe(select(selectTableRows(cursor.tableId))),
-        this.store$.pipe(select(selectTableRowsWithHierarchyLevels(cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsDictionary)),
-      ]).pipe(
-        first(),
-        mergeMap(([rows, hierarchyRows, documentsMap]) => {
-          if (cursor.partIndex > 0) {
-            const row = findTableRow(rows, cursor.rowPath);
-            const nextLinkedCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex + 1)};
-            const nextLinkedRow = findTableRow(rows, nextLinkedCursor.rowPath);
-            if (!nextLinkedRow) {
+  public syncLinkedRows$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
+      mergeMap(action => {
+        const {cursor} = action.payload;
+        return combineLatest([
+          this.store$.pipe(select(selectTablePart(cursor))),
+          this.store$.pipe(select(selectTableRows(cursor.tableId))),
+        ]).pipe(
+          take(1),
+          filter(([part]) => !!part),
+          mergeMap(([part, rows]) => {
+            const rowsWithPath = findTableRowsIncludingCollapsed(rows, cursor.rowPath);
+            const rowDocumentIds = rowsWithPath
+              .map(rowWithPath => rowWithPath.row.documentId)
+              .filter(documentId => !!documentId);
+            if (rowDocumentIds.length === 0) {
               return [];
             }
 
-            const targetLinkedCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex + 2)};
+            return this.store$.pipe(
+              select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, rowDocumentIds)),
+              take(1),
+              mergeMap(linkInstances => {
+                const documentIds = linkInstances.reduce((ids, linkInstance) => {
+                  const documentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
+                  if (!ids.includes(documentId)) {
+                    ids.push(documentId);
+                  }
+                  return ids;
+                }, []);
+                return this.store$.pipe(
+                  select(selectDocumentsByQueryAndIdsSortedByCreation(documentIds)),
+                  take(1),
+                  map(documents =>
+                    documents.map(document => {
+                      const linkInstance = linkInstances.find(link => link.documentIds.includes(document.id));
+                      return {
+                        ...document,
+                        correlationId: document.correlationId || (linkInstance && linkInstance.correlationId),
+                      };
+                    })
+                  ),
+                  mergeMap(documents => {
+                    const linkedRows = findLinkedTableRows(rows, cursor.rowPath);
+                    const createdLinkInstances = filterNewlyCreatedLinkInstances(linkedRows, linkInstances);
+                    const unknownLinkInstances = filterUnknownLinkInstances(linkedRows, linkInstances);
+                    const documentsMap = objectsByIdMap(documents);
+
+                    const actions: Action[] = [];
+
+                    if (createdLinkInstances.length > 0) {
+                      actions.push(new TablesAction.InitLinkedRows({cursor, linkInstances}));
+                    }
+
+                    linkedRows.forEach((row, index) => {
+                      // documentIds on LinkInstance was updated
+                      const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
+                      if (linkInstance && !linkInstance.documentIds.includes(row.documentId)) {
+                        const otherDocumentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
+                        const newDocument = otherDocumentId && documentsMap[otherDocumentId];
+                        if (newDocument) {
+                          actions.push(
+                            new TablesAction.ReplaceRows({
+                              cursor: {
+                                ...cursor,
+                                rowPath: [...cursor.rowPath, index],
+                              },
+                              deleteCount: 1,
+                              rows: [{...row, documentId: newDocument.id}],
+                            })
+                          );
+                        }
+                      }
+                    });
+
+                    if (unknownLinkInstances.length > 0) {
+                      rowsWithPath.forEach(rowWithPath => {
+                        const addedLinkedRows = unknownLinkInstances
+                          .filter(linkInstance => linkInstance.documentIds.includes(rowWithPath.row.documentId))
+                          .reduce((newRows, linkInstance) => {
+                            const document = documents.find(doc => linkInstance.documentIds.includes(doc.id));
+                            if (document) {
+                              newRows.push(createTableRow(document, linkInstance));
+                            }
+                            return newRows;
+                          }, []);
+
+                        if (addedLinkedRows.length) {
+                          actions.push(
+                            new TablesAction.AddLinkedRows({
+                              cursor: {...cursor, rowPath: rowWithPath.path},
+                              linkedRows: addedLinkedRows,
+                              append: true,
+                            })
+                          );
+                        }
+                      });
+                    }
+
+                    const removedIndexes = linkedRows.reduce((indexes, row, index) => {
+                      const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
+                      if (row.linkInstanceId && !linkInstance) {
+                        indexes.push(index);
+                      }
+                      return indexes;
+                    }, []);
+
+                    if (removedIndexes.length > 0) {
+                      actions.push(new TablesAction.RemoveRows({cursor, lastPathIndexes: removedIndexes}));
+                    }
+
+                    return actions;
+                  })
+                );
+              })
+            );
+          })
+        );
+      })
+    )
+  );
+
+  public cloneRow$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.CloneRow>(TablesActionType.CLONE_ROW),
+      mergeMap(action => {
+        const {cursor} = action.payload;
+        return this.store$.pipe(
+          select(selectTableRow(cursor)),
+          take(1),
+          filter(row => row && !!row.documentId),
+          withLatestFrom(
+            this.store$.pipe(select(selectDocumentsDictionary)),
+            this.store$.pipe(select(selectLinkInstancesDictionary))
+          ),
+          mergeMap(([row, documentsMap, linkInstancesMap]) => {
+            const document = documentsMap[row.documentId];
+            if (!document) {
+              return [];
+            }
+
+            const emptyRow = createEmptyTableRow();
+
+            const duplicateLinkInstances = (newDocumentId, documents: DocumentModel[]) => {
+              const linkInstanceIds = (row.linkedRows || [])
+                .map(linkedRow => linkedRow.linkInstanceId)
+                .filter(id => id && linkInstancesMap[id]);
+              const documentIdsMap = documents.reduce((idsMap, doc) => {
+                idsMap[doc.metaData.originalDocumentId] = doc.id;
+                return idsMap;
+              }, {});
+
+              this.store$.dispatch(
+                new LinkInstancesAction.Duplicate({
+                  originalDocumentId: row.documentId,
+                  newDocumentId,
+                  linkInstanceIds,
+                  documentIdsMap,
+                })
+              );
+            };
+
+            const duplicateLinkedDocuments = (documentId: string) => {
+              const linkedDocumentIds = (row.linkedRows || [])
+                .map(linkedRow => linkedRow.documentId)
+                .filter(id => id && documentsMap[id]);
+
+              if (linkedDocumentIds.length > 0) {
+                this.store$.dispatch(
+                  new DocumentsAction.Duplicate({
+                    collectionId: documentsMap[linkedDocumentIds[0]].collectionId,
+                    documentIds: linkedDocumentIds,
+                    onSuccess: documents => duplicateLinkInstances(documentId, documents),
+                  })
+                );
+              }
+            };
 
             return [
-              new TablesAction.ReplaceRows({cursor: targetLinkedCursor, rows: [row], deleteCount: 0}),
-              new TablesAction.RemoveRow({cursor}),
+              new TablesAction.AddPrimaryRows({
+                cursor: {...cursor, rowPath: [cursor.rowPath[0] + 1]},
+                rows: [emptyRow],
+              }),
+              new DocumentsAction.Duplicate({
+                correlationId: emptyRow.correlationId,
+                collectionId: document.collectionId,
+                documentIds: [document.id],
+                onSuccess: documents => duplicateLinkedDocuments(documents[0].id),
+              }),
             ];
-          }
+          })
+        );
+      })
+    )
+  );
 
-          const sourceRow = hierarchyRows[cursor.rowPath[0]];
-          const document = documentsMap[sourceRow && sourceRow.row.documentId];
-          const parentId =
-            (document && document.metaData && document.metaData.parentId) ||
-            (sourceRow && sourceRow.row.parentDocumentId) ||
-            null;
+  public indentRow$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.IndentRow>(TablesActionType.INDENT_ROW),
+      map(action => action.payload.cursor),
+      filter(cursor => cursor.partIndex === 0 && cursor.rowPath[0] > 0),
+      withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+      mergeMap(([cursor, documentsMap]) =>
+        this.store$.pipe(
+          select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+          first(),
+          map(rows => {
+            const rowIndex = cursor.rowPath[0];
+            const {row, level} = rows[rowIndex];
+            const {row: newParentRow = undefined} =
+              rows
+                .slice(0, cursor.rowPath[0])
+                .reverse()
+                .find(hierarchyRow => hierarchyRow.level === level) || {};
+            const parentDocumentId = newParentRow && newParentRow.documentId;
 
-          const nextRow = hierarchyRows.slice(rowIndex + 1).find(row => row.level <= sourceRow.level);
-          if (!nextRow) {
-            return [];
-          }
-
-          const targetRowIndex = hierarchyRows.indexOf(nextRow) + 1;
-          const targetRow = hierarchyRows[targetRowIndex];
-          const targetCursor: TableBodyCursor = {...cursor, rowPath: [targetRowIndex]};
-          const targetDocument = documentsMap[targetRow && targetRow.row.documentId];
-          const targetParentId =
-            (targetDocument && targetDocument.metaData && targetDocument.metaData.parentId) ||
-            (targetRow && targetRow.row.parentDocumentId) ||
-            null;
-
-          const deleteCount = targetRowIndex - rowIndex - 1;
-          const childRows = rows.slice(rowIndex + 1, rowIndex + deleteCount);
-
-          const actions: Action[] = [
-            new TablesAction.ReplaceRows({cursor: targetCursor, rows: [sourceRow.row, ...childRows], deleteCount: 0}),
-            new TablesAction.ReplaceRows({cursor, rows: [], deleteCount}),
-          ];
-
-          if (parentId !== targetParentId) {
-            if (sourceRow.row.documentId) {
-              return [
-                new DocumentsAction.PatchMetaData({
-                  collectionId: document.collectionId,
-                  documentId: document.id,
-                  metaData: {parentId: targetParentId},
-                  onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
-                }),
-              ];
+            if (row.documentId) {
+              const {collectionId, id: documentId} = documentsMap[row.documentId];
+              return new DocumentsAction.PatchMetaData({
+                collectionId,
+                documentId,
+                metaData: {parentId: parentDocumentId},
+              });
             } else {
+              const updatedRow: TableConfigRow = {...row, parentDocumentId};
+              return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+            }
+          })
+        )
+      )
+    )
+  );
+
+  public outdentRow$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.OutdentRow>(TablesActionType.OUTDENT_ROW),
+      map(action => action.payload.cursor),
+      filter(cursor => cursor.partIndex === 0),
+      withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+      mergeMap(([cursor, documentsMap]) =>
+        this.store$.pipe(
+          select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+          first(),
+          map(rows => {
+            const rowIndex = cursor.rowPath[0];
+            const {row, level} = rows[rowIndex];
+            const {row: previousParentRow = undefined} =
+              rows
+                .slice(0, cursor.rowPath[0])
+                .reverse()
+                .find(hierarchyRow => hierarchyRow.level === level - 1) || {};
+            const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
+            const parentDocumentId =
+              (previousParentDocument && previousParentDocument.metaData && previousParentDocument.metaData.parentId) ||
+              null;
+
+            if (row.documentId) {
+              const {collectionId, id: documentId} = documentsMap[row.documentId];
+              return new DocumentsAction.PatchMetaData({
+                collectionId,
+                documentId,
+                metaData: {parentId: parentDocumentId},
+              });
+            } else {
+              const updatedRow: TableConfigRow = {...row, parentDocumentId};
+              return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+            }
+          })
+        )
+      )
+    )
+  );
+
+  public copyValue$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<TablesAction.CopyValue>(TablesActionType.COPY_VALUE),
+        mergeMap(action =>
+          combineLatest([
+            this.store$.pipe(select(selectTablePart(action.payload.cursor))),
+            this.store$.pipe(select(selectTableRow(action.payload.cursor))),
+            this.store$.pipe(select(selectTableColumn(action.payload.cursor))),
+          ]).pipe(
+            take(1),
+            mergeMap(([tablePart, tableRow, tableColumn]) => {
+              const tableCursor = action.payload.cursor;
+              if (tableRow) {
+                const column = tablePart?.columns?.[tableCursor.columnIndex];
+                const attributeId = column?.attributeIds?.[0];
+                if (attributeId) {
+                  if (tablePart.collectionId) {
+                    this.copyValueService.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);
+                  } else if (tablePart.linkTypeId) {
+                    this.copyValueService.copyLinkValue(tableRow.linkInstanceId, tablePart.linkTypeId, attributeId);
+                  }
+                }
+              } else if (tableColumn) {
+                const attributeId = tableColumn.attributeIds?.[0];
+                if (tablePart.collectionId) {
+                  this.copyValueService.copyCollectionAttribute(tablePart.collectionId, attributeId);
+                } else if (tablePart.linkTypeId) {
+                  this.copyValueService.copyLinkTypeAttribute(tablePart.linkTypeId, attributeId);
+                }
+              }
+              return EMPTY;
+            })
+          )
+        )
+      ),
+    {dispatch: false}
+  );
+
+  public copyRowValues$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType<TablesAction.CopyRowValues>(TablesActionType.COPY_ROW_VALUES),
+        mergeMap(action =>
+          combineLatest([
+            this.store$.pipe(select(selectTablePart(action.payload.cursor))),
+            this.store$.pipe(select(selectTableColumn(action.payload.cursor))),
+          ]).pipe(
+            take(1),
+            mergeMap(([tablePart, tableColumn]) => {
+              if (tableColumn) {
+                const attributeId = tableColumn.attributeIds?.[0];
+                return this.store$.pipe(
+                  select(selectDocumentsAndLinksByQuery),
+                  withLatestFrom(
+                    this.store$.pipe(select(selectCollectionsDictionary)),
+                    this.store$.pipe(select(selectLinkTypesDictionary)),
+                    this.store$.pipe(select(selectConstraintData))
+                  ),
+                  map(([{documents, linkInstances}, collectionsMap, linkTypesMap, constraintData]) => {
+                    let dataValues = [];
+                    let constraint = null;
+                    if (tablePart.collectionId) {
+                      constraint = findAttributeConstraint(
+                        collectionsMap[tablePart.collectionId]?.attributes,
+                        attributeId
+                      );
+                      dataValues =
+                        (constraint &&
+                          documents
+                            .filter(document => document.collectionId === tablePart.collectionId)
+                            .map(document =>
+                              constraint?.createDataValue(document.data?.[attributeId], constraintData)
+                            )) ||
+                        [];
+                    } else if (tablePart.linkTypeId) {
+                      constraint = findAttributeConstraint(linkTypesMap[tablePart.linkTypeId]?.attributes, attributeId);
+                      dataValues =
+                        (constraint &&
+                          linkInstances
+                            .filter(link => link.linkTypeId === tablePart.linkTypeId)
+                            .map(linkInstance =>
+                              constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData)
+                            )) ||
+                        [];
+                    }
+                    return {dataValues, constraint};
+                  }),
+                  take(1),
+                  mergeMap(({dataValues, constraint}) => {
+                    this.copyValueService.copyDataValues(dataValues, constraint, action.payload.unique);
+                    return EMPTY;
+                  })
+                );
+              }
+            })
+          )
+        )
+      ),
+    {dispatch: false}
+  );
+
+  public moveRowUp$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.MoveRowUp>(TablesActionType.MOVE_ROW_UP),
+      mergeMap(action => {
+        const {cursor} = action.payload;
+        const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+        if (rowIndex === 0) {
+          return [];
+        }
+
+        return combineLatest([
+          this.store$.pipe(select(selectTableRows(cursor.tableId))),
+          this.store$.pipe(select(selectDocumentsDictionary)),
+        ]).pipe(
+          first(),
+          mergeMap(([rows, documentsMap]) => {
+            const row = findTableRow(rows, cursor.rowPath);
+            const document = documentsMap[row && row.documentId];
+            const parentId =
+              (document && document.metaData && document.metaData.parentId) || (row && row.parentDocumentId) || null;
+
+            const previousCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex - 1)};
+            const previousRow = findTableRow(rows, previousCursor.rowPath);
+            const previousDocument = documentsMap[previousRow && previousRow.documentId];
+            const previousParentId =
+              (previousDocument && previousDocument.metaData && previousDocument.metaData.parentId) ||
+              (previousRow && previousRow.parentDocumentId) ||
+              null;
+
+            const actions: Action[] = [
+              new TablesAction.RemoveRow({cursor}),
+              new TablesAction.ReplaceRows({cursor: previousCursor, rows: [row], deleteCount: 0}),
+            ];
+
+            if (cursor.partIndex === 0 && parentId !== previousParentId) {
+              if (row.documentId) {
+                return [
+                  new DocumentsAction.PatchMetaData({
+                    collectionId: document.collectionId,
+                    documentId: document.id,
+                    metaData: {parentId: previousParentId},
+                    onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
+                  }),
+                ];
+              } else {
+                return [
+                  new TablesAction.RemoveRow({cursor}),
+                  new TablesAction.ReplaceRows({
+                    cursor: previousCursor,
+                    rows: [{...row, parentDocumentId: previousParentId}],
+                    deleteCount: 0,
+                  }),
+                ];
+              }
+            }
+
+            return actions;
+          })
+        );
+      })
+    )
+  );
+
+  public moveRowDown$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.MoveRowDown>(TablesActionType.MOVE_ROW_DOWN),
+      mergeMap(action => {
+        const {cursor} = action.payload;
+        const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
+
+        return combineLatest([
+          this.store$.pipe(select(selectTableRows(cursor.tableId))),
+          this.store$.pipe(select(selectTableRowsWithHierarchyLevels(cursor.tableId))),
+          this.store$.pipe(select(selectDocumentsDictionary)),
+        ]).pipe(
+          first(),
+          mergeMap(([rows, hierarchyRows, documentsMap]) => {
+            if (cursor.partIndex > 0) {
+              const row = findTableRow(rows, cursor.rowPath);
+              const nextLinkedCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex + 1)};
+              const nextLinkedRow = findTableRow(rows, nextLinkedCursor.rowPath);
+              if (!nextLinkedRow) {
+                return [];
+              }
+
+              const targetLinkedCursor: TableBodyCursor = {...cursor, rowPath: parentPath.concat(rowIndex + 2)};
+
               return [
-                new TablesAction.ReplaceRows({
-                  cursor: targetCursor,
-                  rows: [{...sourceRow.row, parentDocumentId: targetParentId}, ...childRows],
-                  deleteCount: 0,
-                }),
-                new TablesAction.ReplaceRows({cursor, rows: [], deleteCount}),
+                new TablesAction.ReplaceRows({cursor: targetLinkedCursor, rows: [row], deleteCount: 0}),
+                new TablesAction.RemoveRow({cursor}),
               ];
             }
-          }
 
-          return actions;
-        })
-      );
-    })
+            const sourceRow = hierarchyRows[cursor.rowPath[0]];
+            const document = documentsMap[sourceRow && sourceRow.row.documentId];
+            const parentId =
+              (document && document.metaData && document.metaData.parentId) ||
+              (sourceRow && sourceRow.row.parentDocumentId) ||
+              null;
+
+            const nextRow = hierarchyRows.slice(rowIndex + 1).find(row => row.level <= sourceRow.level);
+            if (!nextRow) {
+              return [];
+            }
+
+            const targetRowIndex = hierarchyRows.indexOf(nextRow) + 1;
+            const targetRow = hierarchyRows[targetRowIndex];
+            const targetCursor: TableBodyCursor = {...cursor, rowPath: [targetRowIndex]};
+            const targetDocument = documentsMap[targetRow && targetRow.row.documentId];
+            const targetParentId =
+              (targetDocument && targetDocument.metaData && targetDocument.metaData.parentId) ||
+              (targetRow && targetRow.row.parentDocumentId) ||
+              null;
+
+            const deleteCount = targetRowIndex - rowIndex - 1;
+            const childRows = rows.slice(rowIndex + 1, rowIndex + deleteCount);
+
+            const actions: Action[] = [
+              new TablesAction.ReplaceRows({cursor: targetCursor, rows: [sourceRow.row, ...childRows], deleteCount: 0}),
+              new TablesAction.ReplaceRows({cursor, rows: [], deleteCount}),
+            ];
+
+            if (parentId !== targetParentId) {
+              if (sourceRow.row.documentId) {
+                return [
+                  new DocumentsAction.PatchMetaData({
+                    collectionId: document.collectionId,
+                    documentId: document.id,
+                    metaData: {parentId: targetParentId},
+                    onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
+                  }),
+                ];
+              } else {
+                return [
+                  new TablesAction.ReplaceRows({
+                    cursor: targetCursor,
+                    rows: [{...sourceRow.row, parentDocumentId: targetParentId}, ...childRows],
+                    deleteCount: 0,
+                  }),
+                  new TablesAction.ReplaceRows({cursor, rows: [], deleteCount}),
+                ];
+              }
+            }
+
+            return actions;
+          })
+        );
+      })
+    )
   );
 
-  @Effect()
-  public setCursor$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
-    mergeMap(action => {
-      const {cursor} = action.payload;
-      return this.store$.pipe(
-        select(selectTableById(cursor?.tableId)),
-        take(1),
-        map(table => new NavigationAction.SetViewCursor({cursor: createViewCursorFromTableCursor(cursor, table)}))
-      );
-    })
+  public setCursor$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
+      mergeMap(action => {
+        const {cursor} = action.payload;
+        return this.store$.pipe(
+          select(selectTableById(cursor?.tableId)),
+          take(1),
+          map(table => new NavigationAction.SetViewCursor({cursor: createViewCursorFromTableCursor(cursor, table)}))
+        );
+      })
+    )
   );
 
-  @Effect()
-  public moveCursor$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
-    withLatestFrom(this.store$.select(selectTableCursor).pipe(filter(cursor => !!cursor))),
-    concatMap(([action, cursor]) =>
-      this.store$.select(selectTableById(cursor.tableId)).pipe(
-        first(),
-        map(table => ({action, cursor, table}))
-      )
-    ),
-    mergeMap(({action, cursor, table}) => {
-      try {
-        const nextCursor = moveTableCursor(table, cursor, action.payload.direction);
-        return [new TablesAction.SetCursor({cursor: nextCursor})];
-      } catch (error) {
-        return [];
-      }
-    })
+  public moveCursor$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
+      withLatestFrom(this.store$.select(selectTableCursor).pipe(filter(cursor => !!cursor))),
+      concatMap(([action, cursor]) =>
+        this.store$.select(selectTableById(cursor.tableId)).pipe(
+          first(),
+          map(table => ({action, cursor, table}))
+        )
+      ),
+      mergeMap(({action, cursor, table}) => {
+        try {
+          const nextCursor = moveTableCursor(table, cursor, action.payload.direction);
+          return [new TablesAction.SetCursor({cursor: nextCursor})];
+        } catch (error) {
+          return [];
+        }
+      })
+    )
   );
 
-  @Effect()
-  public useViewCursor$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.UseViewCursor>(TablesActionType.USE_VIEW_CURSOR),
-    withLatestFrom(
-      this.store$.pipe(select(selectViewCursor)),
-      this.store$.pipe(select(selectTableCursor)),
-      this.store$.pipe(select(selectTable))
-    ),
-    mergeMap(([, viewCursor, tableCursor, table]) => {
-      if (tableCursor || !viewCursor) {
-        return [];
-      }
+  public useViewCursor$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<TablesAction.UseViewCursor>(TablesActionType.USE_VIEW_CURSOR),
+      withLatestFrom(
+        this.store$.pipe(select(selectViewCursor)),
+        this.store$.pipe(select(selectTableCursor)),
+        this.store$.pipe(select(selectTable))
+      ),
+      mergeMap(([, viewCursor, tableCursor, table]) => {
+        if (tableCursor || !viewCursor) {
+          return [];
+        }
 
-      const cursor = createTableCursorFromViewCursor(viewCursor, table);
-      return cursor ? [new TablesAction.SetCursor({cursor})] : [];
-    })
+        const cursor = createTableCursorFromViewCursor(viewCursor, table);
+        return cursor ? [new TablesAction.SetCursor({cursor})] : [];
+      })
+    )
   );
 
   public constructor(

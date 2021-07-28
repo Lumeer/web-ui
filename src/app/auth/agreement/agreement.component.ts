@@ -23,12 +23,13 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {UsersAction} from '../../core/store/users/users.action';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalsAction} from '../../core/store/modals/modals.action';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 
 const termsOfServiceLinks = {
   cs: 'https://www.lumeer.io/cs/vseobecne-obchodni-podminky/',
@@ -54,9 +55,9 @@ export class AgreementComponent implements OnInit, OnDestroy {
   public readonly agreementName = 'agreement';
   public readonly newsletterName = 'newsletter';
 
-  public readonly termsOfServiceLink = termsOfServiceLinks[environment.locale];
-  public readonly privacyPolicyLink = privacyPolicyLinks[environment.locale];
-  public readonly dataProcessingAgreementLink = dataProcessingAgreementLinks[environment.locale];
+  public readonly termsOfServiceLink: string;
+  public readonly privacyPolicyLink: string;
+  public readonly dataProcessingAgreementLink: string;
 
   public stage = 0;
 
@@ -69,7 +70,19 @@ export class AgreementComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  public constructor(private authService: AuthService, private router: Router, private store$: Store<AppState>) {}
+  public constructor(
+    private configurationService: ConfigurationService,
+    private authService: AuthService,
+    private router: Router,
+    private store$: Store<AppState>
+  ) {
+    const locale = this.configurationService.getConfiguration().locale;
+    const supportedLocales = [LanguageCode.CZ.toString(), LanguageCode.EN.toString()];
+    const supportedLocale = supportedLocales.includes(locale) ? locale : LanguageCode.EN;
+    this.termsOfServiceLink = termsOfServiceLinks[supportedLocale];
+    this.privacyPolicyLink = privacyPolicyLinks[supportedLocale];
+    this.dataProcessingAgreementLink = dataProcessingAgreementLinks[supportedLocale];
+  }
 
   public ngOnInit() {
     this.store$.dispatch(new ModalsAction.Hide());
@@ -122,7 +135,7 @@ export class AgreementComponent implements OnInit, OnDestroy {
   }
 
   private navigateToApplication() {
-    const path = this.authService.getLoginRedirectPath();
+    const path = this.authService.getAndClearLoginRedirectPath();
     this.router.navigate([path]);
   }
 

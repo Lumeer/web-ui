@@ -1,0 +1,20 @@
+<div [formGroup]="form" class="mt-4">
+
+  <label i18n="@@constraint.action.confirmation.label">Confirmation</label>
+
+  <div class="d-flex flex-row flex-nowrap align-items-center">
+    <label class="switch" [for]="formControlName.RequiresConfirmation">
+      <input type="checkbox" [formControlName]="formControlName.RequiresConfirmation" [id]="formControlName.RequiresConfirmation" #confirmation>
+      <span class="slider round" (click)="$event.stopPropagation()"></span>
+    </label>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.action.confirmation.required"
+          (click)="confirmation.click()">Require confirmation</span>
+  </div>
+
+  <div class="form-group mt-2">
+    <input class="form-control"
+           [formControlName]="formControlName.ConfirmationTitle"
+           [placeholder]="placeholder$ | async"
+           [id]="formControlName.ConfirmationTitle" type="text">
+  </div>
+</div>

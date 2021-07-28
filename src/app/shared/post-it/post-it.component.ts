@@ -41,7 +41,7 @@ import {PostItRowComponent} from './row/post-it-row.component';
 import {Query} from '../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {AppState} from '../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
@@ -49,9 +49,11 @@ import {ModalService} from '../modal/modal.service';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {PostItLayoutType} from './post-it-layout-type';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
-import {fromEvent, Subscription} from 'rxjs';
+import {fromEvent, Observable, Subscription} from 'rxjs';
 import {objectChanged} from '../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
 
 export interface PostItTag {
   title: string;
@@ -106,6 +108,8 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
+  public currentUser$: Observable<User>;
+
   public unusedAttributes: Attribute[] = [];
   public resourceType: AttributesResourceType;
 
@@ -131,6 +135,7 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
       this.dataRowFocusService.onKeyDown(event as KeyboardEvent, {column: !this.editableKeys});
     });
     this.subscriptions.add(subscription);
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

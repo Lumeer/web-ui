@@ -1,23 +1,23 @@
 <ng-container
-  *ngIf="{collections: collections$ | async, documents: documents$ | async, loaded: loaded$ | async } as data">
-  <ng-container *ngIf="data.collections && data.documents">
-
+  *ngIf="{collections: collections$ | async, documentsData: documentsData$ | async} as data">
+  <ng-container *ngIf="data.collections && data.documentsData?.documents && data.documentsData?.loaded">
     <div *ngIf="data.collections.length; else noData">
-      <ng-container *ngIf="data.collections.length > 1 || data.documents.length > 0; else noData">
+      <ng-container *ngIf="data.collections.length > 1 || data.documentsData.documents.length > 0; else noData">
         <preview-results-tabs
           *ngIf="data.collections.length > 1"
-          [collections]="data.collections"
-          [selectedCollection]="selectedCollection?.id"
-          (selectCollection)="setActiveCollection($event)">
+          [resources]="data.collections"
+          [selectedId]="selectedCollection?.id"
+          (selectResource)="setActiveCollection($event)">
         </preview-results-tabs>
         <preview-results-table
-          *ngIf="data.loaded && selectedCollection"
-          [documents]="data.documents | documentsByCollection:selectedCollection?.id"
-          [selectedDocumentId]="selectedDocument?.id"
-          [loaded]="data.loaded"
-          [collection]="selectedCollection"
+          *ngIf="selectedCollection"
+          [dataResources]="data.documentsData.documents | documentsByCollection:selectedCollection?.id"
+          [selectedId]="selectedDocument?.id"
+          [loaded]="data.documentsData.loaded"
+          [attributesSettings]="attributesSettings"
+          [resource]="selectedCollection"
           [constraintData]="constraintData$ | async"
-          (selectDocument)="setActiveDocument($event)">
+          (selectDataResource)="setActiveDocument($event)">
         </preview-results-table>
 
       </ng-container>

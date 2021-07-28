@@ -24,48 +24,74 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
-import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
-import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
+import {DocumentDto, LinkInstanceDto, QueryDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {SearchService} from './search.service';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiSearchService extends BaseService implements SearchService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
-  public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
-    return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
-  }
-
-  public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
-    return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query, {
-      params: {l: environment.locale},
+  public searchLinkInstances(
+    query: QueryDto,
+    includeSubItems: boolean,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto[]> {
+    return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query || {}, {
+      params: {subItems: (includeSubItems || false)?.toString()},
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
-  public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
-    return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query, {
-      params: {l: environment.locale},
+  public searchDocuments(query: QueryDto, includeSubItems: boolean, workspace?: Workspace): Observable<DocumentDto[]> {
+    return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query || {}, {
+      params: {subItems: (includeSubItems || false)?.toString()},
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
   public searchDocumentsAndLinks(
     query: QueryDto,
+    includeSubItems: boolean,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.searchPath(workspace)}/documentsAndLinks`,
-      query,
-      {params: {l: environment.locale}}
+      query || {},
+      {
+        params: {subItems: (includeSubItems || false)?.toString()},
+        headers: {...this.workspaceHeaders(workspace)},
+      }
+    );
+  }
+
+  public searchTaskDocumentsAndLinks(
+    query: QueryDto,
+    includeSubItems: boolean,
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.http.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+      `${this.searchPath(workspace)}/tasks`,
+      query || {},
+      {
+        params: {subItems: (includeSubItems || false)?.toString()},
+        headers: {...this.workspaceHeaders(workspace)},
+      }
     );
   }
 
   private searchPath(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/search`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/search`;
   }
 }

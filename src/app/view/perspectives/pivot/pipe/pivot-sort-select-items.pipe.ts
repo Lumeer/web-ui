@@ -21,7 +21,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {PivotStemData} from '../util/pivot-data';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 @Pipe({
@@ -30,8 +29,8 @@ import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 export class PivotSortSelectItemsPipe implements PipeTransform {
   public readonly summaryString: string;
 
-  constructor(private i18n: I18n) {
-    this.summaryString = i18n({id: 'perspective.pivot.table.summary.total', value: 'Summary'});
+  constructor() {
+    this.summaryString = $localize`:@@perspective.pivot.table.summary.total:Summary`;
   }
 
   public transform(

@@ -23,13 +23,13 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, switchMap, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
@@ -49,7 +49,6 @@ import {Direction} from '../../../../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
 import {
   extractAttributeLastName,
-  extractAttributeParentName,
   filterAttributesByDepth,
   filterOutInvalidAttributeNameCharacters,
 } from '../../../../../../shared/utils/attribute.utils';
@@ -66,7 +65,7 @@ import {computeElementPositionInParent, preventEvent} from '../../../../../../sh
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'position-relative'},
 })
-export class TableSingleColumnComponent implements OnInit, OnChanges {
+export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public table: TableModel;
 
@@ -118,7 +117,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     private attributeNameChangedPipe: AttributeNameChangedPipe,
     private changeDetector: ChangeDetectorRef,
     private modalService: ModalService,
-    private i18n: I18n,
     private store$: Store<AppState>
   ) {}
 
@@ -178,7 +176,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => {
-        if (this.allowedPermissions?.writeWithView) {
+        if (this.allowedPermissions?.roles?.AttributeEdit) {
           if (action.payload.clear) {
             this.lastName$.next('');
           }
@@ -228,86 +226,85 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
       this.lastName$.next(lastName);
       this.renameAttribute(this.attribute, lastName);
     } else {
-      const previousName = this.lastName$.value;
-      this.lastName$.next(this.attribute?.name || previousName);
+      const previousName = this.attribute?.name || this.lastName$.value;
+      this.lastName$.next(previousName);
+      if (lastName !== previousName) {
+        this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name: lastName}));
+      }
     }
   }
 
-  private renameAttribute(oldAttribute: Attribute, lastName: string) {
-    const parentName = extractAttributeParentName(oldAttribute.name);
-    const name = parentName ? `${parentName}.${lastName}` : lastName;
-    const attribute = {...oldAttribute, name};
-
+  private renameAttribute(oldAttribute: Attribute, name: string) {
     if (this.collection) {
-      this.renameCollectionAttribute(attribute);
+      this.renameCollectionAttribute(oldAttribute, name);
     }
     if (this.linkType) {
-      this.renameLinkTypeAttribute(attribute);
+      this.renameLinkTypeAttribute(oldAttribute, name);
     }
   }
 
-  private renameCollectionAttribute(attribute: Attribute) {
+  private renameCollectionAttribute(attribute: Attribute, name: string) {
     if (attribute.id) {
-      this.updateCollectionAttribute(attribute);
+      this.renameExistingCollectionAttribute(attribute, name);
     } else {
-      this.renameUninitializedTableColumn(attribute);
-      this.createCollectionAttribute(attribute);
+      this.renameUninitializedTableColumn(name);
+      this.createCollectionAttribute(attribute, name);
     }
   }
 
-  private renameUninitializedTableColumn(attribute: Attribute) {
+  private renameUninitializedTableColumn(name: string) {
     this.store$.dispatch(
       new TablesAction.ReplaceColumns({
         cursor: this.cursor,
         deleteCount: 1,
-        columns: [{...this.column, attributeName: extractAttributeLastName(attribute.name)}],
+        columns: [{...this.column, attributeName: name}],
       })
     );
   }
 
-  private createCollectionAttribute(attribute: Attribute) {
+  private createCollectionAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
       new CollectionsAction.CreateAttributes({
         collectionId: this.collection.id,
-        attributes: [attribute],
+        attributes: [{...attribute, name}],
       })
     );
   }
 
-  private updateCollectionAttribute(attribute: Attribute) {
+  private renameExistingCollectionAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
-      new CollectionsAction.ChangeAttribute({
+      new CollectionsAction.RenameAttribute({
         collectionId: this.collection.id,
         attributeId: attribute.id,
-        attribute,
+        name,
       })
     );
   }
 
-  private renameLinkTypeAttribute(attribute: Attribute) {
+  private renameLinkTypeAttribute(attribute: Attribute, name: string) {
     if (attribute.id) {
-      this.updateLinkTypeAttribute(attribute);
+      this.renameExistingLinkTypeAttribute(attribute, name);
     } else {
-      this.renameUninitializedTableColumn(attribute);
-      this.createLinkTypeAttribute(attribute);
+      this.renameUninitializedTableColumn(name);
+      this.createLinkTypeAttribute(attribute, name);
     }
   }
 
-  private createLinkTypeAttribute(attribute: Attribute) {
+  private createLinkTypeAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
       new LinkTypesAction.CreateAttributes({
         linkTypeId: this.linkType.id,
-        attributes: [attribute],
+        attributes: [{...attribute, name}],
       })
     );
   }
 
-  private updateLinkTypeAttribute(attribute: Attribute) {
+  private renameExistingLinkTypeAttribute(attribute: Attribute, name: string) {
     this.store$.dispatch(
-      new LinkTypesAction.UpdateAttribute({
+      new LinkTypesAction.RenameAttribute({
         linkTypeId: this.linkType.id,
         attributeId: attribute.id,
-        attribute,
+        name,
       })
     );
   }
@@ -340,17 +337,11 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   public onConfigure() {
-    const collectionId = this.collection && this.collection.id;
-    const linkTypeId = this.linkType && this.linkType.id;
-    this.modalService.showAttributeType(this.attribute.id, collectionId, linkTypeId);
+    this.modalService.showAttributeType(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
 
   public onFunctionEdit() {
-    this.modalService.showAttributeFunction(
-      this.attribute.id,
-      this.collection && this.collection.id,
-      this.linkType && this.linkType.id
-    );
+    this.modalService.showAttributeFunction(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
 
   public onEdit() {
@@ -380,11 +371,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   private createConfirmAction(action: Action): NotificationsAction.Confirm {
-    const title = this.i18n({id: 'table.delete.column.dialog.title', value: 'Delete this column?'});
-    const message = this.i18n({
-      id: 'table.delete.column.dialog.message',
-      value: 'Do you really want to delete the column? This will permanently remove the attribute and all its data.',
-    });
+    const title = $localize`:@@table.delete.column.dialog.title:Delete this column?`;
+    const message = $localize`:@@table.delete.column.dialog.message:Do you really want to delete the column? This will permanently remove the attribute and all its data.`;
 
     return new NotificationsAction.Confirm({title, message, action, type: 'danger'});
   }
@@ -398,7 +386,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   private startEditing() {
-    if (this.allowedPermissions && this.allowedPermissions.writeWithView) {
+    if (this.allowedPermissions?.roles?.AttributeEdit) {
       this.edited$.next(true);
     }
   }
@@ -459,5 +447,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     this.contextMenuComponent?.open(x, y);
 
     preventEvent(event);
+  }
+
+  public onDescriptionEdit() {
+    this.modalService.showAttributeDescription(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
 }

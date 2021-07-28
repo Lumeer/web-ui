@@ -31,7 +31,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {FileApiService} from '../../../core/service/file-api.service';
@@ -43,6 +42,7 @@ import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
 import {KeyCode} from '../../key-code';
 import {preventEvent} from '../../utils/common.utils';
 import {FilesDataValue} from '@lumeer/data-filters';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'files-data-input',
@@ -85,9 +85,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   constructor(
     public element: ElementRef,
     private fileApiService: FileApiService,
-    private i18n: I18n,
     private notificationService: NotificationService,
-    private store$: Store<{}>
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
@@ -200,12 +199,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   private showSuccessNotification() {
-    this.notificationService.success(
-      this.i18n({
-        id: 'file.attachment.upload.success',
-        value: 'The file is successfully saved.',
-      })
-    );
+    this.notificationService.success($localize`:@@file.attachment.upload.success:The file is successfully saved.`);
   }
 
   private onCreateFailure() {
@@ -224,19 +218,13 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
 
   private showErrorNotification() {
     this.notificationService.error(
-      this.i18n({
-        id: 'file.attachment.upload.failure',
-        value: 'Could not save the file. Please try again later.',
-      })
+      $localize`:@@file.attachment.upload.failure:Could not save the file. Please try again later.`
     );
   }
 
   public onRemove(fileId: string, fileAttachments: FileAttachment[]) {
-    const message = this.i18n({
-      id: 'file.attachment.delete.confirm.message',
-      value: 'Do you really want to permanently delete this file?',
-    });
-    const title = this.i18n({id: 'file.attachment.delete.confirm.title', value: 'Delete file?'});
+    const message = $localize`:@@file.attachment.delete.confirm.message:Do you really want to permanently delete this file?`;
+    const title = $localize`:@@file.attachment.delete.confirm.title:Delete file?`;
 
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => {
       this.removeFileAttachment(fileId);

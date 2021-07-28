@@ -28,8 +28,7 @@ import {
 } from '../../../../../../shared/table/model/table-model';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../../core/store/views/view';
 import {
@@ -38,17 +37,15 @@ import {
   objectsByIdMap,
   objectValues,
 } from '../../../../../../shared/utils/common.utils';
-import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
-import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -58,34 +55,34 @@ export class WorkflowTablesStateService {
 
   private currentCollectionsMap: Record<string, Collection>;
   private currentLinkTypesMap: Record<string, LinkType>;
-  private currentDocuments: DocumentModel[];
-  private currentLinkInstances: LinkInstance[];
+  private currentData: DocumentsAndLinksData;
   private currentQuery: Query;
   private currentViewSettings: ViewSettings;
   private currentConfig: WorkflowConfig;
-  private currentPermissions: Record<string, AllowedPermissions>;
+  private currentPermissions: ResourcesPermissions;
   private currentConstraintData: ConstraintData;
+  private currentCanManageConfig: boolean;
 
   public updateData(
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     config: WorkflowConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: ResourcesPermissions,
     query: Query,
     viewSettings: ViewSettings,
-    constraintData: ConstraintData
+    constraintData: ConstraintData,
+    canManageConfig: boolean
   ) {
     this.currentCollectionsMap = objectsByIdMap(collections);
     this.currentLinkTypesMap = objectsByIdMap(linkTypes);
-    this.currentDocuments = documents;
-    this.currentLinkInstances = linkInstances;
+    this.currentData = data;
     this.currentConfig = config;
     this.currentPermissions = permissions;
     this.currentQuery = query;
     this.currentViewSettings = viewSettings;
     this.currentConstraintData = constraintData;
+    this.currentCanManageConfig = canManageConfig;
   }
 
   public setTables(tables: WorkflowTable[]) {
@@ -128,7 +125,7 @@ export class WorkflowTablesStateService {
     return this.currentConfig;
   }
 
-  public get permissions(): Record<string, AllowedPermissions> {
+  public get permissions(): ResourcesPermissions {
     return this.currentPermissions;
   }
 
@@ -136,16 +133,16 @@ export class WorkflowTablesStateService {
     return this.currentConstraintData;
   }
 
+  public get canManageConfig(): boolean {
+    return this.currentCanManageConfig;
+  }
+
   public get viewSettings(): ViewSettings {
     return this.currentViewSettings;
   }
 
-  public get documents(): DocumentModel[] {
-    return this.currentDocuments;
-  }
-
-  public get linkInstances(): LinkInstance[] {
-    return this.currentLinkInstances;
+  public get data(): DocumentsAndLinksData {
+    return this.currentData;
   }
 
   public columns(tableId: string): TableColumn[] {
@@ -159,8 +156,7 @@ export class WorkflowTablesStateService {
           resourceId: column.collectionId,
           resourceType: AttributesResourceType.Collection,
         },
-        this.currentPermissions,
-        this.linkTypesMap
+        this.currentPermissions
       );
     } else if (column.linkTypeId) {
       return queryAttributePermissions(
@@ -168,8 +164,7 @@ export class WorkflowTablesStateService {
           resourceId: column.linkTypeId,
           resourceType: AttributesResourceType.LinkType,
         },
-        this.currentPermissions,
-        this.linkTypesMap
+        this.currentPermissions
       );
     }
     return {};
@@ -201,16 +196,21 @@ export class WorkflowTablesStateService {
   }
 
   public resetSelectedCell() {
-    this.selectedCell$.next(null);
+    if (this.isSelected()) {
+      this.selectedCell$.next(null);
+    }
   }
 
   public resetEditedCell() {
-    this.editedCell$.next(null);
+    if (this.isEditing()) {
+      this.editedCell$.next(null);
+    }
   }
 
   public setEditedCell(cell: TableCell, inputValue?: any) {
     const column = this.findTableColumn(cell.tableId, cell.columnId);
-    if (canEditCell(cell, column)) {
+    const row = this.findTableRow(cell.tableId, cell.rowId);
+    if (canEditCell(cell, column, row)) {
       this.selectedCell$.next(null);
       this.editedCell$.next({...cell, inputValue});
     }
@@ -284,11 +284,7 @@ export class WorkflowTablesStateService {
   public moveSelectionDownFromEdited() {
     const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell);
     if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
-      if (tableHasNewRowPresented(this.tables[tableIndex])) {
-        this.selectCell(tableIndex, null, columnIndex, TableCellType.NewRow);
-      } else {
-        this.setSelectedCell(this.editedCell);
-      }
+      this.setSelectedCell(this.editedCell);
     } else {
       this.selectCell(tableIndex, rowIndex + 1, columnIndex);
       this.resetEditedCell();
@@ -331,23 +327,12 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private setNewRowProperty(tableId: string, properties: Partial<Record<keyof TableNewRow, any>>) {
-    const newTables = [...this.tables];
-    const tableIndex = newTables.findIndex(table => table.id === tableId);
-    const newRow = newTables[tableIndex]?.newRow;
-    if (tableIndex !== -1 && newRow) {
-      newTables[tableIndex] = {...newTables[tableIndex], newRow: setObjectProperties(newRow, properties)};
-
-      this.setTables(newTables);
-    }
-  }
-
-  private setRowProperty(tableId: string, row: TableRow, properties: Partial<Record<keyof TableRow, any>>) {
+  private setRowProperty(tableId: string, rowId: string, properties: Partial<Record<keyof TableRow, any>>) {
     const newTables = [...this.tables];
     const tableIndex = newTables.findIndex(table => table.id === tableId);
     if (tableIndex !== -1) {
       const rows = [...newTables[tableIndex].rows];
-      const rowIndex = rows.findIndex(r => r.id === row.id);
+      const rowIndex = rows.findIndex(r => r.id === rowId);
       if (rowIndex !== -1) {
         rows[rowIndex] = setObjectProperties(rows[rowIndex], properties);
         newTables[tableIndex] = {...newTables[tableIndex], rows};
@@ -405,11 +390,7 @@ export class WorkflowTablesStateService {
   }
 
   public setRowValue(row: TableRow, column: TableColumn, value: any) {
-    this.setRowProperty(column.tableId, row, {[`data.${column.id}`]: value});
-  }
-
-  public setNewRowValue(column: TableColumn, value: any) {
-    this.setNewRowProperty(column.tableId, {[`data.${column.id}`]: value});
+    this.setRowProperty(column.tableId, row.id, {[`data.${column.id}`]: value});
   }
 
   public removeRow(row: TableRow) {
@@ -435,20 +416,31 @@ export class WorkflowTablesStateService {
     this.setColumnProperty(table, column, {creating: false});
   }
 
-  public initiateNewRow(tableId: string, linkedDocumentId?: string) {
-    this.setNewRowProperty(tableId, {initialized: true, linkedDocumentId});
+  public addRow(tableId: string, newRow: TableRow) {
+    const tableIndex = this.findTableIndexById(tableId);
+    if (tableIndex >= 0) {
+      const table = this.tables[tableIndex];
+      const newTables = [...this.tables];
+      const rows = [...newTables[tableIndex].rows, newRow];
+      newTables[tableIndex] = {...newTables[tableIndex], rows};
+
+      this.setTables(newTables);
+
+      const columnIndex = table.columns.findIndex(column => column.default);
+      setTimeout(() => this.selectCell(tableIndex, rows.length - 1, Math.max(columnIndex, 0)));
+    }
   }
 
   public startRowCreatingWithValue(row: TableRow, column: TableColumn, value: any) {
-    this.setNewRowProperty(row.tableId, {creating: true, [`data.${column.id}`]: value});
+    this.setRowProperty(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
   }
 
   public startRowCreating(row: TableRow, data: Record<string, any>, documentId: string) {
-    this.setNewRowProperty(row.tableId, {creating: true, data, documentId});
+    this.setRowProperty(row.tableId, row.id, {creating: true, data, documentId});
   }
 
   public endRowCreating(row: TableRow) {
-    this.setNewRowProperty(row.tableId, {creating: false});
+    this.setRowProperty(row.tableId, row.id, {creating: false});
   }
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {
@@ -537,14 +529,15 @@ function cellsAreSame(c1: TableCell, c2: TableCell): boolean {
   return columnAndTableAreSame;
 }
 
-function canEditCell(cell: TableCell, column: TableColumn): boolean {
+function canEditCell(cell: TableCell, column: TableColumn, row?: TableRow): boolean {
   if (column.hidden) {
     return false;
   }
   if (cell.type === TableCellType.Header) {
-    return column.permissions?.manageWithView && !column.creating;
-  } else if (cell.type === TableCellType.Body || cell.type === TableCellType.NewRow) {
-    return column.editable;
+    return column.permissions?.roles?.AttributeEdit && !column.creating;
+  } else if (cell.type === TableCellType.Body) {
+    const rowEditable = column.collectionId ? row?.documentEditable : row?.linkEditable;
+    return column.editable && rowEditable;
   }
   return false;
 }

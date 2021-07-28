@@ -19,30 +19,30 @@
 
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   ElementRef,
   ViewChild,
   Output,
   EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {Observable} from 'rxjs';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AppState} from '../../../core/store/app.state';
 import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'filter-builder',
   templateUrl: './filter-builder.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConstraintDataService],
 })
-export class FilterBuilderComponent implements OnInit {
+export class FilterBuilderComponent implements OnChanges {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -54,6 +54,12 @@ export class FilterBuilderComponent implements OnInit {
 
   @Input()
   public condition: ConditionType;
+
+  @Input()
+  public collectionId: string;
+
+  @Input()
+  public linkTypeId: string;
 
   @Output()
   public valueChange = new EventEmitter<{condition: ConditionType; values: ConditionValue[]}>();
@@ -71,10 +77,16 @@ export class FilterBuilderComponent implements OnInit {
 
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private constraintDataService: ConstraintDataService) {}
 
-  public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.attribute || changes.collectionId || changes.linkTypeId) {
+      this.constraintData$ = this.constraintDataService.selectWithInvalidValues$(
+        this.attribute,
+        this.collectionId,
+        this.linkTypeId
+      );
+    }
   }
 
   public toggle() {

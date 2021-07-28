@@ -21,7 +21,7 @@ import {Attribute} from '../../../core/store/collections/collection';
 import {AttributeSortType} from '../../../core/store/views/view';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {MenuItem} from '../../menu/model/menu-item';
-import {Constraint, UnknownConstraint} from '@lumeer/data-filters';
+import {AttributeFilter, Constraint, UnknownConstraint} from '@lumeer/data-filters';
 
 export interface TableColumnGroup {
   id: string;
@@ -45,9 +45,14 @@ export interface TableColumn {
   default?: boolean;
   hidden?: boolean;
   editable: boolean;
+  filters: AttributeFilter[];
   permissions: AllowedPermissions;
   sort?: AttributeSortType;
   menuItems: MenuItem[];
+}
+
+export interface ColumnFilter extends AttributeFilter {
+  deletable: boolean;
 }
 
 export function columnConstraint(column: TableColumn): Constraint {

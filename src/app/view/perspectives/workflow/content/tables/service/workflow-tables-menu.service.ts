@@ -18,18 +18,19 @@
  */
 
 import {Injectable} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConstraintType} from '@lumeer/data-filters';
+import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
 
 export enum HeaderMenuId {
   Edit = 'edit',
   Type = 'type',
   Function = 'function',
+  Description = 'description',
   Hide = 'hide',
   Copy = 'copy',
   CopyName = 'copyName',
@@ -55,14 +56,12 @@ export enum RowMenuId {
 export class WorkflowTablesMenuService {
   public readonly macOS = isMacOS();
 
-  constructor(private i18n: I18n) {}
-
-  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked?: boolean): MenuItem[] {
+  public createRowMenu(dataPermissions: DataResourcePermissions, row: TableRow, linked?: boolean): MenuItem[] {
     const items: MenuItem[] = [
       {
         id: RowMenuId.Edit,
         title: this.translateRowMenuItem(RowMenuId.Edit),
-        disabled: !permissions?.manageWithView,
+        disabled: !dataPermissions?.edit,
         icons: ['fa fa-edit'],
         shortcut: this.macOS ? '↩' : 'Enter',
         group: 0,
@@ -73,7 +72,7 @@ export class WorkflowTablesMenuService {
       items.push({
         id: RowMenuId.Detail,
         title: this.translateRowMenuItem(RowMenuId.Detail),
-        disabled: !permissions?.read,
+        disabled: !dataPermissions?.read,
         icons: ['far fa-file-search'],
         group: 0,
       });
@@ -88,24 +87,22 @@ export class WorkflowTablesMenuService {
       group: 0,
     });
 
-    if (row.documentId) {
-      if (linked) {
-        items.push({
-          id: RowMenuId.Unlink,
-          title: this.translateRowMenuItem(RowMenuId.Unlink),
-          disabled: !permissions?.writeWithView,
-          icons: ['fa fa-unlink text-warning'],
-          group: 1,
-        });
-      } else {
-        items.push({
-          id: RowMenuId.Delete,
-          title: this.translateRowMenuItem(RowMenuId.Delete),
-          disabled: !permissions?.writeWithView,
-          icons: ['far fa-trash-alt text-danger'],
-          group: 1,
-        });
-      }
+    if (row.documentId && linked) {
+      items.push({
+        id: RowMenuId.Unlink,
+        title: this.translateRowMenuItem(RowMenuId.Unlink),
+        disabled: !dataPermissions?.delete,
+        icons: ['fa fa-unlink text-warning'],
+        group: 1,
+      });
+    } else {
+      items.push({
+        id: RowMenuId.Delete,
+        title: this.translateRowMenuItem(RowMenuId.Delete),
+        disabled: !dataPermissions?.delete,
+        icons: ['far fa-trash-alt text-danger'],
+        group: 1,
+      });
     }
 
     return items;
@@ -114,15 +111,15 @@ export class WorkflowTablesMenuService {
   private translateRowMenuItem(id: string): string {
     switch (id) {
       case RowMenuId.Edit:
-        return this.i18n({id: 'table.body.row.edit', value: 'Edit value'});
+        return $localize`:@@table.body.row.edit:Edit value`;
       case RowMenuId.Detail:
-        return this.i18n({id: 'table.body.row.show.detail', value: 'Show detail'});
+        return $localize`:@@table.body.row.show.detail:Show detail`;
       case RowMenuId.Copy:
-        return this.i18n({id: 'table.body.row.copy.value', value: 'Copy value'});
+        return $localize`:@@table.body.row.copy.value:Copy value`;
       case RowMenuId.Delete:
-        return this.i18n({id: 'remove.row', value: 'Remove row'});
+        return $localize`:@@remove.row:Remove row`;
       case RowMenuId.Unlink:
-        return this.i18n({id: 'table.body.row.unlink', value: 'Unlink row'});
+        return $localize`:@@table.body.row.unlink:Unlink row`;
       default:
         return '';
     }
@@ -138,7 +135,7 @@ export class WorkflowTablesMenuService {
       {
         id: HeaderMenuId.Edit,
         title: this.translateHeaderMenuItem(HeaderMenuId.Edit),
-        disabled: !permissions?.manageWithView,
+        disabled: !permissions?.roles?.AttributeEdit,
         icons: ['fa fa-edit'],
         group: 0,
       },
@@ -149,7 +146,7 @@ export class WorkflowTablesMenuService {
         {
           id: HeaderMenuId.Type,
           title: this.translateHeaderMenuItem(HeaderMenuId.Type),
-          disabled: !permissions?.manageWithView,
+          disabled: !permissions?.roles?.AttributeEdit,
           icons: ['fa fa-shapes'],
           group: 0,
         },
@@ -158,9 +155,16 @@ export class WorkflowTablesMenuService {
           title: this.translateHeaderMenuItem(
             column.attribute?.constraint?.type === ConstraintType.Action ? HeaderMenuId.Rule : HeaderMenuId.Function
           ),
-          disabled: !permissions?.manageWithView,
+          disabled: !permissions?.roles?.TechConfig,
           icons: ['fa fa-function'],
           group: 0,
+        },
+        {
+          id: HeaderMenuId.Description,
+          title: this.translateHeaderMenuItem(HeaderMenuId.Description),
+          disabled: !permissions?.roles?.AttributeEdit,
+          icons: ['fa fa-file-edit'],
+          group: 1,
         }
       );
     }
@@ -194,7 +198,7 @@ export class WorkflowTablesMenuService {
       items.push({
         id: HeaderMenuId.Displayed,
         title: this.translateHeaderMenuItem(HeaderMenuId.Displayed),
-        disabled: !permissions?.manageWithView,
+        disabled: !permissions?.roles?.AttributeEdit,
         icons: ['fa fa-check-square'],
         group: 1,
       });
@@ -203,7 +207,7 @@ export class WorkflowTablesMenuService {
     items.push({
       id: HeaderMenuId.AddToLeft,
       title: this.translateHeaderMenuItem(HeaderMenuId.AddToLeft),
-      disabled: !permissions?.manageWithView,
+      disabled: !permissions?.roles?.AttributeEdit,
       icons: ['fa fa-arrow-alt-circle-left'],
       group: 2,
     });
@@ -211,12 +215,12 @@ export class WorkflowTablesMenuService {
     items.push({
       id: HeaderMenuId.AddToRight,
       title: this.translateHeaderMenuItem(HeaderMenuId.AddToRight),
-      disabled: !permissions?.manageWithView,
+      disabled: !permissions?.roles?.AttributeEdit,
       icons: ['fa fa-arrow-alt-circle-right'],
       group: 2,
     });
 
-    if (column.collectionId && otherPermissions?.manageWithView) {
+    if (column.collectionId && otherPermissions?.roles?.AttributeEdit) {
       items.push({
         id: HeaderMenuId.AddLinkColumn,
         title: this.translateHeaderMenuItem(HeaderMenuId.AddLinkColumn),
@@ -239,7 +243,7 @@ export class WorkflowTablesMenuService {
     items.push({
       id: HeaderMenuId.Delete,
       title: this.translateHeaderMenuItem(HeaderMenuId.Delete),
-      disabled: !permissions?.manageWithView,
+      disabled: !permissions?.roles?.AttributeEdit,
       icons: ['far fa-trash-alt text-danger'],
       group: 3,
     });
@@ -250,33 +254,35 @@ export class WorkflowTablesMenuService {
   private translateHeaderMenuItem(id: string): string {
     switch (id) {
       case HeaderMenuId.Edit:
-        return this.i18n({id: 'table.header.menu.edit', value: 'Edit name'});
+        return $localize`:@@table.header.menu.edit:Edit name`;
       case HeaderMenuId.Type:
-        return this.i18n({id: 'table.header.menu.changeType', value: 'Attribute type...'});
+        return $localize`:@@table.header.menu.changeAttribute:Attribute settings...`;
       case HeaderMenuId.Function:
-        return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
+        return $localize`:@@table.header.menu.editFunction:Edit function...`;
+      case HeaderMenuId.Description:
+        return $localize`:@@table.header.menu.editDescription:Edit description...`;
       case HeaderMenuId.Rule:
-        return this.i18n({id: 'table.header.menu.editAutomation', value: 'Edit automation...'});
+        return $localize`:@@table.header.menu.editAutomation:Edit automation...`;
       case HeaderMenuId.Displayed:
-        return this.i18n({id: 'table.header.menu.defaultAttribute', value: 'Set as displayed attribute'});
+        return $localize`:@@table.header.menu.defaultAttribute:Set as displayed attribute`;
       case HeaderMenuId.Hide:
-        return this.i18n({id: 'table.header.menu.hide', value: 'Hide column'});
+        return $localize`:@@table.header.menu.hide:Hide column`;
       case HeaderMenuId.Copy:
-        return this.i18n({id: 'copy', value: 'Copy'});
+        return $localize`:@@copy:Copy`;
       case HeaderMenuId.CopyName:
-        return this.i18n({id: 'resource.attribute.name', value: 'Copy column name'});
+        return $localize`:@@resource.attribute.name:Copy column name`;
       case HeaderMenuId.CopyValues:
-        return this.i18n({id: 'table.header.menu.copy.values', value: 'Copy all column values'});
+        return $localize`:@@table.header.menu.copy.values:Copy all column values`;
       case HeaderMenuId.CopyValuesUnique:
-        return this.i18n({id: 'table.header.menu.copy.values.unique', value: 'Copy unique column values'});
+        return $localize`:@@table.header.menu.copy.values.unique:Copy unique column values`;
       case HeaderMenuId.Delete:
-        return this.i18n({id: 'table.header.menu.remove', value: 'Delete column'});
-      case HeaderMenuId.AddToRight:
-        return this.i18n({id: 'table.header.menu.add.column.next', value: 'Add column left'});
+        return $localize`:@@table.header.menu.remove:Delete column`;
       case HeaderMenuId.AddToLeft:
-        return this.i18n({id: 'table.header.menu.add.column.previous', value: 'Add column right'});
+        return $localize`:@@table.header.menu.add.column.previous:Add column left`;
+      case HeaderMenuId.AddToRight:
+        return $localize`:@@table.header.menu.add.column.next:Add column right`;
       case HeaderMenuId.AddLinkColumn:
-        return this.i18n({id: 'table.header.menu.add.linkColumn', value: 'Add Link column'});
+        return $localize`:@@table.header.menu.add.linkColumn:Add Link column`;
       default:
         return '';
     }

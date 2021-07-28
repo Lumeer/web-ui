@@ -23,7 +23,6 @@ import {select, Store} from '@ngrx/store';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
-import {environment} from '../../../../environments/environment';
 import {selectPublicProject} from '../../../core/store/projects/projects.state';
 import {map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {selectPerspective, selectWorkspace} from '../../../core/store/navigation/navigation.state';
@@ -31,6 +30,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {Router} from '@angular/router';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -42,7 +42,7 @@ export class TopPanelWrapperComponent implements OnInit {
   @Input()
   public searchBoxShown: boolean;
 
-  public readonly showHelp = !environment.publicView;
+  public readonly showHelp: boolean;
 
   public mobile$ = new BehaviorSubject(true);
 
@@ -50,7 +50,14 @@ export class TopPanelWrapperComponent implements OnInit {
   public showTopPanel$: Observable<boolean>;
   public showBackArrow$: Observable<boolean>;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>, private router: Router) {}
+  constructor(
+    private element: ElementRef,
+    private store$: Store<AppState>,
+    private router: Router,
+    private configurationService: ConfigurationService
+  ) {
+    this.showHelp = !this.configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.detectMobileResolution();
@@ -60,7 +67,7 @@ export class TopPanelWrapperComponent implements OnInit {
   }
 
   private bindShowTopPanel$(): Observable<boolean> {
-    if (environment.publicView) {
+    if (this.configurationService.getConfiguration().publicView) {
       return this.store$.pipe(
         select(selectPublicShowTopPanel),
         switchMap(showTopPanel => {

@@ -1,10 +1,12 @@
 <button class="btn btn-sm btn-lmr-primary h-100"
-        (click)="attributesSettings.open()">
+        (click)="viewSettings.open()">
   <i class="far fa-line-columns"></i>
 </button>
 
-<attributes-settings-dropdown #attributesSettings
-                              [origin]="element"
-                              [settings]="(viewSettings$ | async)?.attributes"
-                              (settingsChanged)="onAttributesSettingsChanged($event)">
-</attributes-settings-dropdown>
+<view-settings-dropdown #viewSettings
+                        [origin]="element"
+                        [showAttributes]="showAttributes"
+                        [settings]="viewSettings$ | async"
+                        (attributeSettingsChanged)="onAttributesSettingsChanged($event)"
+                        (dataSettingsChange)="onDataSettingsChanged($event)">
+</view-settings-dropdown>

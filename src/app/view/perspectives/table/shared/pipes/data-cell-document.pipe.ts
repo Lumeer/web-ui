@@ -38,7 +38,7 @@ export class DataCellDocumentPipe implements PipeTransform {
     collections: Collection[],
     constraintData: ConstraintData
   ): DocumentModel {
-    if (documents && documents[0]) {
+    if (documents?.[0]) {
       return documents[0];
     }
 

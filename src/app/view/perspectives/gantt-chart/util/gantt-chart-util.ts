@@ -26,6 +26,7 @@ import {
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttTask} from '@lumeer/lumeer-gantt';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -38,9 +39,8 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {
@@ -194,14 +194,14 @@ export function createDefaultGanttChartStemConfig(
   return {stem};
 }
 
-export function createLinkDocumentsDataNewTask(task: GanttChartTask, otherTasks: GanttChartTask[]): string[] {
+export function createLinkDocumentsDataNewTask(task: GanttTask, otherTasks: GanttTask[]): string[] {
   const swimlaneChains = (otherTasks || [])
     .filter(otherTask => tasksHasSameSwimlanes(otherTask, task))
     .map(otherTask => (otherTask.metadata && (<GanttTaskMetadata>otherTask.metadata).dataResourceChain) || []);
   return createPossibleLinkingDocuments(swimlaneChains);
 }
 
-function tasksHasSameSwimlanes(task1: GanttChartTask, task2: GanttChartTask): boolean {
+function tasksHasSameSwimlanes(task1: GanttTask, task2: GanttTask): boolean {
   return (task1.swimlanes || []).every((swimlane, index) => {
     const otherSwimlane = (task2.swimlanes || [])[index];
     return swimlane?.value === otherSwimlane?.value;
@@ -209,8 +209,8 @@ function tasksHasSameSwimlanes(task1: GanttChartTask, task2: GanttChartTask): bo
 }
 
 export function createLinkDocumentsData(
-  task: GanttChartTask,
-  otherTasks: GanttChartTask[],
+  task: GanttTask,
+  otherTasks: GanttTask[],
   linkInstances: LinkInstance[]
 ): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
   const swimlaneChains = (otherTasks || [])
@@ -220,21 +220,17 @@ export function createLinkDocumentsData(
   return createPossibleLinkingDocumentsByChains(dataResourceChain, swimlaneChains, linkInstances);
 }
 
-export function ganttTaskDataResourceId(task: GanttChartTask): string {
+export function ganttTaskDataResourceId(task: GanttTask): string {
   const metadata = task.metadata as GanttTaskMetadata;
   return metadata && (metadata.nameDataId || metadata.startDataId);
 }
 
-export function ganttTaskBarModel(task: GanttChartTask): GanttChartBarModel {
+export function ganttTaskBarModel(task: GanttTask): GanttChartBarModel {
   const metadata = task.metadata as GanttTaskMetadata;
   return metadata && metadata.stemConfig && (metadata.stemConfig.name || metadata.stemConfig.start);
 }
 
-export function canCreateTaskByStemConfig(
-  config: GanttChartStemConfig,
-  permissions: Record<string, AllowedPermissions>,
-  linkTypesMap: Record<string, LinkType>
-): boolean {
+export function canCreateTaskByStemConfig(config: GanttChartStemConfig, permissions: ResourcesPermissions): boolean {
   if (!config.start || !config.end) {
     return false;
   }
@@ -245,35 +241,28 @@ export function canCreateTaskByStemConfig(
       ganttModelsAreAtDistance(config.name, config.start, maxDistance) &&
       ganttModelsAreAtDistance(config.name, config.end, maxDistance) &&
       ganttModelsAreAtDistance(config.start, config.end, maxDistance) &&
-      hasPermissionByConfig(config, permissions, linkTypesMap)
+      hasPermissionByConfig(config, permissions)
     );
   }
 
-  return (
-    ganttModelsAreAtDistance(config.start, config.end, maxDistance) &&
-    hasPermissionByConfig(config, permissions, linkTypesMap)
-  );
+  return ganttModelsAreAtDistance(config.start, config.end, maxDistance) && hasPermissionByConfig(config, permissions);
 }
 
-function hasPermissionByConfig(
-  config: GanttChartStemConfig,
-  permissions: Record<string, AllowedPermissions>,
-  linkTypesMap: Record<string, LinkType>
-): boolean {
+function hasPermissionByConfig(config: GanttChartStemConfig, permissions: ResourcesPermissions): boolean {
   let hasPermission = true;
   if (config.name) {
-    const permission = queryAttributePermissions(config.name, permissions, linkTypesMap);
-    hasPermission = hasPermission && permission && permission.writeWithView;
+    const permission = queryAttributePermissions(config.name, permissions);
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   if (config.start) {
-    const permission = queryAttributePermissions(config.start, permissions, linkTypesMap);
-    hasPermission = hasPermission && permission.writeWithView;
+    const permission = queryAttributePermissions(config.start, permissions);
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   if (config.end) {
-    const permission = queryAttributePermissions(config.end, permissions, linkTypesMap);
-    hasPermission = hasPermission && permission.writeWithView;
+    const permission = queryAttributePermissions(config.end, permissions);
+    hasPermission = hasPermission && permission?.rolesWithView?.DataContribute;
   }
 
   return hasPermission;

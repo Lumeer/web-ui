@@ -37,11 +37,42 @@ import {
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
   queryStemsAreSame,
-  uniqueStems,
+  queryStemWithoutFilters,
 } from '../navigation/query/query.util';
 
 export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentConfig: WorkflowConfig): boolean {
-  return !deepObjectsEquals(createWorkflowSaveConfig(previousConfig), createWorkflowSaveConfig(currentConfig));
+  const previous = createWorkflowSaveConfig(previousConfig);
+  const current = createWorkflowSaveConfig(currentConfig);
+
+  if (workflowStemsConfigsChanged(previous?.stemsConfigs || [], current?.stemsConfigs || [])) {
+    return true;
+  }
+
+  if (!deepObjectsEquals(previous?.columns, current?.columns)) {
+    return true;
+  }
+
+  if (!deepObjectsEquals(previous?.tables, current?.tables)) {
+    return true;
+  }
+
+  return false;
+}
+
+function workflowStemsConfigsChanged(c1: WorkflowStemConfig[], c2: WorkflowStemConfig[]): boolean {
+  if (c1.length !== c2.length) {
+    return true;
+  }
+
+  return c1.some((config, index) => workflowStemConfigsChanged(config, c2[index]));
+}
+
+function workflowStemConfigsChanged(c1: WorkflowStemConfig, c2: WorkflowStemConfig): boolean {
+  return (
+    !queryStemsAreSame(c1.stem, c2.stem) ||
+    !deepObjectsEquals(c1.collection, c2.collection) ||
+    !deepObjectsEquals(c1.attribute, c2.attribute)
+  );
 }
 
 export function checkOrTransformWorkflowConfig(
@@ -67,7 +98,7 @@ function checkOrTransformWorkflowStemsConfig(
   linkTypes: LinkType[]
 ): WorkflowStemConfig[] {
   const stemsConfigsCopy = [...stemsConfigs];
-  return uniqueStems(query?.stems).reduce<WorkflowStemConfig[]>((newConfigs, stem) => {
+  return (query?.stems || []).reduce<WorkflowStemConfig[]>((newConfigs, stem) => {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
@@ -75,7 +106,7 @@ function checkOrTransformWorkflowStemsConfig(
       newConfigs.push(checkOrTransformWorkflowStemConfig(stemConfig[0], stem, collections, linkTypes));
     } else {
       newConfigs.push({
-        stem,
+        stem: queryStemWithoutFilters(stem),
         collection: {resourceId: stem.collectionId, resourceIndex: 0, resourceType: AttributesResourceType.Collection},
       });
     }
@@ -92,24 +123,23 @@ function checkOrTransformWorkflowStemConfig(
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   return {
     ...stemConfig,
-    stem,
+    stem: queryStemWithoutFilters(stem),
     collection: checkOrTransformQueryResource(stemConfig.collection, attributesResourcesOrder),
     attribute: checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder),
   };
 }
 
 function createDefaultConfig(query: Query): WorkflowConfig {
-  const stem = query.stems?.[0];
-  if (stem) {
+  const stemsConfigs = (query?.stems || []).reduce((configs, stem) => {
     const resource: WorkflowResource = {
       resourceId: stem.collectionId,
       resourceIndex: 0,
       resourceType: AttributesResourceType.Collection,
     };
-    return {stemsConfigs: [{stem, collection: resource}], version: latestWorkflowVersion, columns: {}, tables: []};
-  }
-
-  return {stemsConfigs: [], version: latestWorkflowVersion, columns: {}, tables: []};
+    configs.push({stem, collection: resource});
+    return configs;
+  }, []);
+  return {stemsConfigs, version: latestWorkflowVersion, columns: {}, tables: []};
 }
 
 export function createWorkflowSaveConfig(config: WorkflowConfig): WorkflowConfig {
@@ -154,4 +184,13 @@ function cleanWorkflowColumns(config: WorkflowConfig): WorkflowColumnsSettings {
   });
 
   return columns;
+}
+
+export function filterUniqueWorkflowConfigStems(config: WorkflowConfig): WorkflowStemConfig[] {
+  return (config?.stemsConfigs || []).reduce<WorkflowStemConfig[]>((stemsConfigs, currentConfig) => {
+    if (!stemsConfigs.some(stemConfig => queryStemsAreSame(stemConfig.stem, currentConfig.stem))) {
+      stemsConfigs.push(currentConfig);
+    }
+    return stemsConfigs;
+  }, []);
 }

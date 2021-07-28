@@ -1,0 +1,22 @@
+<modal-wrapper dialogType="primary"
+               [performingAction]="performingAction$ | async"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()">
+
+  <span class="title" i18n="@@modal.settings.title">User Settings</span>
+
+  <div class="body p-3">
+    <user-settings [user]="user$ | async"
+                   (nameChange)="onNameChange($event)">
+    </user-settings>
+    <hr>
+    <notification-settings [user]="user$ | async"
+                           (settingsChange)="onSettingsChange($event)"
+                           (languageChange)="onLanguageChange($event)">
+    </notification-settings>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@button.save">Save</span>
+
+</modal-wrapper>

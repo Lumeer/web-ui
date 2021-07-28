@@ -21,6 +21,10 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChi
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {InputBoxComponent} from '../../../../../shared/input/input-box/input-box.component';
 import {ConstraintType} from '@lumeer/data-filters';
+import {AppState} from '../../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'collection-attributes-table',
@@ -31,6 +35,9 @@ import {ConstraintType} from '@lumeer/data-filters';
 export class CollectionAttributesTableComponent {
   @Input()
   public collection: Collection;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public setDefault = new EventEmitter<Attribute>();
@@ -55,6 +62,8 @@ export class CollectionAttributesTableComponent {
 
   public searchString: string;
 
+  constructor(private store$: Store<AppState>) {}
+
   public setDefaultAttribute(attribute: Attribute) {
     this.setDefault.emit(attribute);
   }
@@ -77,6 +86,7 @@ export class CollectionAttributesTableComponent {
     const trimmedValue = (newName || '').trim();
     if (trimmedValue !== attribute.name) {
       if (this.attributeExist(trimmedValue, attribute.id)) {
+        this.store$.dispatch(new NotificationsAction.ExistingAttributeWarning({name: trimmedValue}));
         this.resetAttributeName(attribute);
       } else {
         this.rename.emit({attribute, newName});

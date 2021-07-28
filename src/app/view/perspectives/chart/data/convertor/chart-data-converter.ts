@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {
   ChartAxis,
@@ -64,7 +64,8 @@ import {
   PercentageConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../../core/model/language-tag';
+import {userCanEditDataResource} from '../../../../../shared/utils/permission.utils';
+import {User} from '../../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {
   X = 'x',
@@ -93,6 +94,7 @@ const MAX_TICKS = 5;
 @Injectable()
 export class ChartDataConverter {
   private constraintData: ConstraintData;
+  private user: User;
 
   private currentConfig: ChartConfig;
   private y1Sets: ChartDataSet[];
@@ -125,18 +127,20 @@ export class ChartDataConverter {
   public updateData(
     collections: Collection[],
     documents: DocumentModel[],
-    permissions: Record<string, AllowedPermissions>,
+    permissions: ResourcesPermissions,
     query: Query,
     config: ChartConfig,
     linkTypes?: LinkType[],
     linkInstances?: LinkInstance[],
-    constraintData?: ConstraintData
+    constraintData?: ConstraintData,
+    user?: User
   ) {
     this.constraintData = constraintData;
+    this.user = user;
 
     this.dataObjectAggregator.updateData(
       collections,
-      this.sortDocuments(documents, config, collections, linkTypes, constraintData),
+      documents,
       linkTypes,
       linkInstances,
       query.stems?.[0],
@@ -145,36 +149,25 @@ export class ChartDataConverter {
     );
   }
 
-  private sortDocuments(
-    documents: DocumentModel[],
-    config: ChartConfig,
-    collections: Collection[],
-    linkTypes: LinkType[],
-    constraintData: ConstraintData
-  ): DocumentModel[] {
-    const sort = config.sort;
-    const sortAxis = sort?.axis || config.axes?.x?.axis;
-    if (!sortAxis) {
-      return [...documents];
-    }
+  private sortDataSets(config: ChartConfig, sets: ChartDataSet[], constraintData: ConstraintData): ChartDataSet[] {
+    return sets.map(set => ({...set, points: this.sortPoints(config, set.points, constraintData)}));
+  }
 
+  private sortPoints(config: ChartConfig, points: ChartPoint[], constraintData: ConstraintData): ChartPoint[] {
+    const sort = config.sort;
     const asc = !sort || sort.type === ChartSortType.Ascending;
 
-    const resource =
-      sortAxis.resourceType === AttributesResourceType.Collection
-        ? collections.find(coll => coll.id === sortAxis.resourceId)
-        : linkTypes.find(lt => lt.id === sortAxis.resourceId);
-    const attribute = findAttribute(resource?.attributes, sortAxis.attributeId);
+    const sortAxis = sort?.axis || config.axes?.x?.axis;
+    if (!sortAxis) {
+      return points;
+    }
 
-    const constraint = this.constraintForAttribute(attribute, sortAxis.constraint);
-    return [...documents].sort((a, b) => {
-      if (a.collectionId !== b.collectionId || a.collectionId !== sortAxis.resourceId) {
-        return 0;
-      }
+    const constraint = this.dataObjectAggregator.findAttributeConstraint(sortAxis);
 
+    return (points || []).sort((a, b) => {
       const multiplier = asc ? 1 : -1;
-      const aValue = constraint.createDataValue(a.data[sortAxis.attributeId], constraintData);
-      const bValue = constraint.createDataValue(b.data[sortAxis.attributeId], constraintData);
+      const aValue = constraint.createDataValue(a.xSort || a.x, constraintData);
+      const bValue = constraint.createDataValue(b.xSort || b.x, constraintData);
       return aValue.compareTo(bValue) * multiplier;
     });
   }
@@ -201,7 +194,11 @@ export class ChartDataConverter {
 
     return {
       type,
-      sets: [...(this.y1Sets || []), ...(this.y2Sets || [])],
+      sets: this.sortDataSets(
+        this.currentConfig,
+        [...(this.y1Sets || []), ...(this.y2Sets || [])],
+        this.constraintData
+      ),
       xAxisData,
       y1AxisData,
       y2AxisData,
@@ -386,32 +383,41 @@ export class ChartDataConverter {
     const yAxis = config.axes?.[yAxisType]?.axis;
 
     if (!xAxis || !yAxis) {
-      return this.convertAxisSimple(yAxisType, xAxis, yAxis);
+      return this.convertAxisSimple(yAxisType, xAxis, yAxis, config.sort?.axis || xAxis);
     }
 
     return this.convertAxisWithAggregation(config, yAxisType);
   }
 
-  private convertAxisSimple(yAxisType: ChartYAxisType, xAxis: ChartAxis, yAxis: ChartAxis): ChartConvertData {
+  private convertAxisSimple(
+    yAxisType: ChartYAxisType,
+    xAxis: ChartAxis,
+    yAxis: ChartAxis,
+    sortAxis: ChartAxis
+  ): ChartConvertData {
     const definedAxis = yAxis || xAxis;
     if (!definedAxis) {
       return {sets: []};
     }
 
     const actualValues = new Set();
-    const draggable = this.canDragAxis(yAxis);
+    const canDragAxis = this.canDragAxis(yAxis);
     const constraint = this.constraintForAxis(definedAxis);
     const points: ChartPoint[] = [];
     let isNum = true;
 
     const dataResources = this.dataObjectAggregator.getDataResources(definedAxis);
+    const resource = this.dataObjectAggregator.getResource(definedAxis);
+    const permissions = this.dataObjectAggregator.attributePermissions(definedAxis);
     const pointColor = this.dataObjectAggregator.getAttributeResourceColor(definedAxis);
 
     const ticks: ChartAxisTick[] = [];
 
     for (const dataObject of dataResources) {
       const value = dataObject.data?.[(xAxis || yAxis)?.attributeId];
+      const xSort = sortAxis && dataObject.data?.[sortAxis.attributeId];
       const values = isArray(value) ? value : [value];
+      const draggable = canDragAxis && userCanEditDataResource(dataObject, resource, permissions, this.user);
       for (let i = 0; i < values.length; i++) {
         const formattedValue = this.formatChartAxisValue(values[i], definedAxis);
         if (isNullOrUndefined(formattedValue) || actualValues.has(formattedValue)) {
@@ -426,6 +432,7 @@ export class ChartDataConverter {
           id,
           x: xAxis ? formattedValue : null,
           y: yAxis ? formattedValue : null,
+          xSort,
           color: pointColor,
           title: yAxis ? title : null,
           xTitle: xAxis ? title : null,
@@ -450,7 +457,7 @@ export class ChartDataConverter {
       points,
       yAxisType,
       name,
-      draggable,
+      draggable: canDragAxis,
       resourceType: definedAxis.resourceType,
       color: pointColor,
     };
@@ -475,7 +482,7 @@ export class ChartDataConverter {
 
   private constraintAxisConfig(axisConfig: ChartAxisConfig): Constraint {
     if (!isValueAggregation(axisConfig.aggregation)) {
-      return new NumberConstraint({locale: getCurrentLocaleLanguageTag()});
+      return new NumberConstraint({});
     }
 
     return this.constraintForAxis(axisConfig.axis);
@@ -545,6 +552,7 @@ export class ChartDataConverter {
     const xAxis = xAxisConfig?.axis;
     const yAxisConfig = config.axes?.[yAxisType];
     const yAxis = yAxisConfig?.axis;
+    const sortAxis = config.sort?.axis || xAxis;
     const yConstraint = this.constraintAxisConfig(yAxisConfig);
     const xConstraint = this.constraintAxisConfig(xAxisConfig);
     const sizeConstraint = this.constraintForAxis(yAxisConfig?.size);
@@ -552,6 +560,8 @@ export class ChartDataConverter {
     const isDataSetDefined = !!yAxisConfig?.name;
     const colorAxis = yAxisConfig?.color;
     const canDragAxis = this.canDragAxis(yAxis);
+    const permissions = this.dataObjectAggregator.attributePermissions(yAxis);
+    const resource = this.dataObjectAggregator.getResource(yAxis);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(yAxis);
     const numSets = uniqueValues(dataObjectsInfo.map(dataObject => dataObject.groupingObjects?.[0] || '')).length;
     const colorAlphaStep = 70 / Math.max(1, numSets - 1); // min alpha is 30
@@ -600,15 +610,15 @@ export class ChartDataConverter {
 
       const xDataResource = dataObject.objectDataResources[DataObjectInfoKeyType.X];
       const xValue = this.formatChartAxisValue(xDataResource.data?.[xAxis.attributeId], xAxis);
+      const xSort = sortAxis && xDataResource?.data?.[sortAxis.attributeId];
       const xTitle = this.formatPointTitleValue(xDataResource.data?.[xAxis.attributeId], xAxis);
 
-      const valueObjects = (dataObject.metaDataResources[DataObjectInfoKeyType.Y] || [])
-        .map(object => ({id: object.id, value: object.data[yAxis.attributeId]}))
-        .filter(
-          obj => yConstraint?.type === ConstraintType.Boolean || (obj.value !== '' && isNotNullOrUndefined(obj.value))
-        );
+      const yDataResources = (dataObject.metaDataResources[DataObjectInfoKeyType.Y] || []).filter(obj => {
+        const value = obj.data?.[yAxis.attributeId];
+        return yConstraint?.type === ConstraintType.Boolean || (value !== '' && isNotNullOrUndefined(value));
+      });
 
-      const values = valueObjects.map(obj => obj.value);
+      const values = yDataResources.map(object => object.data[yAxis.attributeId]);
       const aggregation = yAxisConfig?.aggregation;
       let yValue = aggregateDataValues(aggregation, values, yConstraint);
       const title = isValueAggregation(aggregation)
@@ -622,13 +632,19 @@ export class ChartDataConverter {
         const sizes = sizeDataResources.map(dataResource => dataResource?.data[yAxisConfig?.size?.attributeId]);
         const size = yAxisConfig?.size ? aggregateDataValues(aggregation, sizes, sizeConstraint, true) : null;
 
-        const id =
-          canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
+        let id = null;
+        if (yDataResources.length === 1 && isValueAggregation(aggregation)) {
+          id =
+            canDragAxis &&
+            userCanEditDataResource(yDataResources[0], resource, permissions, this.user) &&
+            yDataResources[0].id;
+        }
 
         const sizeTitle = yAxisConfig?.size ? this.formatPointTitleValue(size, yAxisConfig?.size) : null;
         set.points.push({
           id,
           x: xValue,
+          xSort,
           y: yValue,
           color: pointColor,
           title: sizeTitle || title,

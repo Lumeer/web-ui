@@ -21,17 +21,23 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
+import {ConfigurationService} from '../../../configuration/configuration.service';
+
+export const correlationIdHeader = 'X-Lumeer-Correlation-Id';
+export const correlationIdHeaderBackup = 'X-Lumeer-Correlation-Id-2';
 
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
+  constructor(private configurationService: ConfigurationService) {}
+
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(request.url)) {
+    if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {
       return next.handle(request);
     }
 
-    if (request.body && request.body.correlationId) {
+    if (request.body?.correlationId) {
       const requestClone = request.clone({
-        setHeaders: {correlation_id: request.body.correlationId},
+        setHeaders: {[correlationIdHeader]: request.body.correlationId},
       });
       return next.handle(requestClone);
     }

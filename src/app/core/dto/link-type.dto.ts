@@ -19,9 +19,10 @@
 
 import {AttributeDto} from './attribute.dto';
 import {RuleDto} from './rule.dto';
+import {PermissionsDto} from './permissions.dto';
 
 export interface LinkTypeDto {
-  id?: string; // TODO make compulsory
+  id?: string;
   correlationId?: string;
   name: string;
   version?: number;
@@ -30,4 +31,7 @@ export interface LinkTypeDto {
   attributes?: AttributeDto[];
   linksCount?: number;
   rules?: Record<string, RuleDto>;
+
+  permissions?: PermissionsDto;
+  permissionsType?: string;
 }

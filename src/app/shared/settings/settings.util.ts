@@ -26,6 +26,17 @@ import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {objectValues} from '../utils/common.utils';
 
+const composedIdSeparator = ':';
+
+export function parseViewSettingsLinkTypeCollectionIds(composedId: string): {collectionId: string; linkTypeId: string} {
+  const ids = (composedId || '').split(composedIdSeparator, 2);
+  return {collectionId: ids[1], linkTypeId: ids[0]};
+}
+
+export function composeViewSettingsLinkTypeCollectionId(collectionId: string, linkTypeId: string): string {
+  return `${linkTypeId}${composedIdSeparator}${collectionId}`;
+}
+
 export function createAttributesSettingsOrder(
   attributes: Attribute[],
   settings: ResourceAttributeSettings[]
@@ -53,6 +64,14 @@ export function viewAttributeSettingsSortDefined(settings: ViewSettings): boolea
   return attributesSettings.some(attributeSettings => attributeSettings.some(setting => setting.sort));
 }
 
+export function viewAttributesSettingsIsEmpty(settings: AttributesSettings): boolean {
+  return (
+    Object.keys(settings?.collections || {}).length === 0 &&
+    Object.keys(settings?.linkTypes || {}).length === 0 &&
+    Object.keys(settings?.linkTypesCollections || {}).length === 0
+  );
+}
+
 export function viewAttributeSettingsChanged(
   previousSettings: AttributesSettings,
   currentSettings: AttributesSettings,
@@ -64,21 +83,56 @@ export function viewAttributeSettingsChanged(
       previousSettings?.collections,
       currentSettings?.collections,
       collectionsMap
-    ) || viewResourceAttributesSettingsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes, linkTypesMap)
+    ) ||
+    viewResourceAttributesSettingsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes, linkTypesMap) ||
+    viewResourceAttributesSettingsChanged(
+      previousSettings?.linkTypesCollections,
+      currentSettings?.linkTypesCollections,
+      collectionsMap,
+      true
+    )
+  );
+}
+
+export function viewAttributeSettingsSortChanged(
+  previousSettings: AttributesSettings,
+  currentSettings: AttributesSettings
+): boolean {
+  return (
+    viewResourceAttributesSortSettingsChanged(previousSettings?.collections, currentSettings?.collections) ||
+    viewResourceAttributesSortSettingsChanged(previousSettings?.linkTypes, currentSettings?.linkTypes) ||
+    viewResourceAttributesSortSettingsChanged(
+      previousSettings?.linkTypesCollections,
+      currentSettings?.linkTypesCollections
+    )
   );
 }
 
 function viewResourceAttributesSettingsChanged(
   previousSettings: Record<string, ResourceAttributeSettings[]>,
   currentSettings: Record<string, ResourceAttributeSettings[]>,
-  resourcesMap: Record<string, AttributesResource>
+  resourcesMap: Record<string, AttributesResource>,
+  composed?: boolean
 ): boolean {
-  return Object.keys(currentSettings || {}).some(resourceId => {
+  return Object.keys(currentSettings || {}).some(key => {
+    const resourceId = composed ? parseViewSettingsLinkTypeCollectionIds(key).collectionId : key;
     const attributes = resourcesMap[resourceId]?.attributes || [];
-    const previousOrder = createAttributesSettingsOrder(attributes, previousSettings?.[resourceId]);
-    const currentOrder = createAttributesSettingsOrder(attributes, currentSettings?.[resourceId]);
+    const previousOrder = createAttributesSettingsOrder(attributes, previousSettings?.[key]);
+    const currentOrder = createAttributesSettingsOrder(attributes, currentSettings?.[key]);
 
     return !deepArrayEquals(previousOrder, currentOrder);
+  });
+}
+
+function viewResourceAttributesSortSettingsChanged(
+  previousSettings: Record<string, ResourceAttributeSettings[]>,
+  currentSettings: Record<string, ResourceAttributeSettings[]>
+): boolean {
+  return Object.keys(currentSettings || {}).some(key => {
+    const previousAttributeSettings = previousSettings?.[key]?.map(val => val.sort);
+    const currentAttributeSettings = currentSettings?.[key]?.map(val => val.sort);
+
+    return !deepArrayEquals(previousAttributeSettings, currentAttributeSettings);
   });
 }
 
@@ -101,6 +155,11 @@ export function createSaveAttributesSettings(
       filterResourcesMap(collectionIds, collectionsMap)
     ),
     linkTypes: createSaveResourceAttributesSettings(settings.linkTypes, filterResourcesMap(linkTypeIds, linkTypesMap)),
+    linkTypesCollections: createSaveResourceAttributesSettings(
+      settings.linkTypesCollections,
+      filterResourcesMap(collectionIds, collectionsMap),
+      true
+    ),
   };
 }
 
@@ -118,13 +177,15 @@ function filterResourcesMap(
 
 function createSaveResourceAttributesSettings(
   settings: Record<string, ResourceAttributeSettings[]>,
-  resourcesMap: Record<string, AttributesResource>
+  resourcesMap: Record<string, AttributesResource>,
+  composite?: boolean
 ): Record<string, ResourceAttributeSettings[]> {
   if (Object.keys(settings || {}).length === 0) {
     return settings;
   }
 
-  return Object.keys(settings || {}).reduce((map, resourceId) => {
+  return Object.keys(settings || {}).reduce((map, key) => {
+    const resourceId = composite ? parseViewSettingsLinkTypeCollectionIds(key).collectionId : key;
     const resource = resourcesMap[resourceId];
     if (resource) {
       return {...map, [resourceId]: createAttributesSettingsOrder(resource.attributes, settings[resourceId])};
@@ -133,22 +194,37 @@ function createSaveResourceAttributesSettings(
   }, {});
 }
 
-export function createAndModifyAttributesSettings(
+export function createAndModifyViewSettings(
   settings: ViewSettings,
   resource: AttributesResource,
   type: AttributesResourceType,
   modify: (array: ResourceAttributeSettings[]) => ResourceAttributeSettings[]
 ): ViewSettings {
-  const property = type === AttributesResourceType.LinkType ? 'linkTypes' : 'collections';
-  const attributesSettings = {...settings?.attributes};
-  const resourceSettings = {...attributesSettings?.[property]};
+  return {
+    ...settings,
+    attributes: createAndModifyAttributesSettings(settings?.attributes, resource, type, modify),
+  };
+}
+
+export function createAndModifyAttributesSettings(
+  attributesSettings: AttributesSettings,
+  resource: AttributesResource,
+  type: AttributesResourceType,
+  modify: (array: ResourceAttributeSettings[]) => ResourceAttributeSettings[],
+  composedId?: string
+): AttributesSettings {
+  const property =
+    type === AttributesResourceType.LinkType ? 'linkTypes' : composedId ? 'linkTypesCollections' : 'collections';
+  const resourceId = composedId ? composeViewSettingsLinkTypeCollectionId(resource.id, composedId) : resource.id;
+  const nonNulLAttributesSettings = {...attributesSettings};
+  const resourceSettings = {...nonNulLAttributesSettings[property]};
   const orderedSettingsAttributes = createAttributesSettingsOrder(
     resource.attributes,
-    resourceSettings?.[resource.id] || []
+    resourceSettings?.[resourceId] || []
   );
-  resourceSettings[resource.id] = modify(orderedSettingsAttributes);
-  attributesSettings[property] = resourceSettings;
-  return {...settings, attributes: attributesSettings};
+  resourceSettings[resourceId] = modify(orderedSettingsAttributes);
+  nonNulLAttributesSettings[property] = resourceSettings;
+  return nonNulLAttributesSettings;
 }
 
 export function moveAttributeInSettings(
@@ -159,7 +235,7 @@ export function moveAttributeInSettings(
   linkType?: LinkType
 ): ViewSettings {
   const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
-  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, attributesSettings =>
+  return createAndModifyViewSettings(state, linkType || collection, resourceType, attributesSettings =>
     moveItemsInArray(attributesSettings, from, to)
   );
 }
@@ -172,10 +248,22 @@ export function addAttributeToSettings(
   linkType?: LinkType
 ): ViewSettings {
   const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
-  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, attributesSettings => {
+  return createAndModifyViewSettings(state, linkType || collection, resourceType, attributesSettings => {
     attributesSettings.splice(position, 0, {attributeId});
     return attributesSettings;
   });
+}
+
+export function setAttributeToAttributeSettings(
+  attributeId: string,
+  settingAttributes: ResourceAttributeSettings[],
+  settings: Partial<ResourceAttributeSettings>
+): ResourceAttributeSettings[] {
+  const attributeIndex = (settingAttributes || []).findIndex(setting => setting.attributeId === attributeId);
+  if (attributeIndex !== -1) {
+    settingAttributes[attributeIndex] = {...settingAttributes[attributeIndex], ...settings};
+  }
+  return settingAttributes;
 }
 
 export function resourceAttributeSettings(

@@ -32,7 +32,7 @@ import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {QueryAttribute, queryAttributePermissions} from '../../../core/model/query-attribute';
 import {deepObjectCopy, objectsByIdMap} from '../common.utils';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissions, ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {
   findAttributeConstraint,
   isCollectionAttributeEditable,
@@ -43,9 +43,13 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  PercentageConstraint,
   SelectConstraint,
   UnknownConstraint,
+  ViewConstraint,
 } from '@lumeer/data-filters';
+import {View} from '../../../core/store/views/view';
+import {getViewColor} from '../../../core/store/views/view.utils';
 
 export interface DataObjectInfo<T> {
   objectDataResources: Record<DataObjectInfoKey, DataResource>;
@@ -71,8 +75,9 @@ export interface DataObjectInput<T> {
 export class DataObjectAggregator<T> {
   private collectionsMap: Record<string, Collection>;
   private linkTypesMap: Record<string, LinkType>;
-  private permissions: Record<string, AllowedPermissions>;
+  private permissions: ResourcesPermissions;
   private query: Query;
+  private constraintData: ConstraintData;
 
   private dataAggregator: DataAggregator;
 
@@ -93,13 +98,14 @@ export class DataObjectAggregator<T> {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     queryStem: QueryStem,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: ResourcesPermissions,
     constraintData?: ConstraintData
   ) {
     this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem, constraintData);
     this.collectionsMap = objectsByIdMap(collections);
     this.linkTypesMap = objectsByIdMap(linkTypes);
     this.permissions = permissions;
+    this.constraintData = constraintData;
     this.query = {stems: [queryStem]};
   }
 
@@ -219,9 +225,9 @@ export class DataObjectAggregator<T> {
   }
 
   public getResource(model: QueryAttribute): AttributesResource {
-    if (model.resourceType === AttributesResourceType.Collection) {
+    if (model?.resourceType === AttributesResourceType.Collection) {
       return this.collectionsMap[model.resourceId];
-    } else if (model.resourceType === AttributesResourceType.LinkType) {
+    } else if (model?.resourceType === AttributesResourceType.LinkType) {
       return this.linkTypesMap[model.resourceId];
     }
 
@@ -251,7 +257,7 @@ export class DataObjectAggregator<T> {
       return {};
     }
 
-    return queryAttributePermissions(model, this.permissions, this.linkTypesMap);
+    return queryAttributePermissions(model, this.permissions);
   }
 
   public getAttributeResourceColor(model: QueryAttribute): string {
@@ -278,7 +284,10 @@ export class DataObjectAggregator<T> {
   }
 
   private parseColor(constraint: Constraint, values: any[]): string {
-    if (constraint?.type === ConstraintType.Select) {
+    if (constraint?.type === ConstraintType.View) {
+      const views = (<ViewConstraint>constraint).createDataValue(values, this.constraintData).views;
+      return views?.map(view => getViewColor(<View>view, this.collectionsMap)).filter(color => !!color)?.[0];
+    } else if (constraint?.type === ConstraintType.Select) {
       for (let i = 0; i < values.length; i++) {
         const options = (<SelectConstraint>constraint).createDataValue(values[i]).options;
         if (options.length > 0 && options[0].background) {
@@ -291,6 +300,8 @@ export class DataObjectAggregator<T> {
       } else {
         return '#ea9999';
       }
+    } else if (constraint?.type === ConstraintType.Percentage) {
+      return (<PercentageConstraint>constraint).config?.color;
     }
 
     const colorConstraint = new ColorConstraint({});

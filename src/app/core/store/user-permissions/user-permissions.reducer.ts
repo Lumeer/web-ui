@@ -26,9 +26,13 @@ export function userPermissionsReducer(
 ): UserPermissionsState {
   switch (action.type) {
     case UserPermissionsActionType.SET_ORGANIZATION_PERMISSIONS:
-      return {...state, organization: action.payload.permissions};
+      return {...state, currentOrganization: action.payload.permissions};
     case UserPermissionsActionType.SET_PROJECT_PERMISSIONS:
-      return {...state, project: action.payload.permissions};
+      return {...state, currentProject: action.payload.permissions};
+    case UserPermissionsActionType.SET_ORGANIZATIONS_PERMISSIONS:
+      return {...state, organizations: action.payload.permissions};
+    case UserPermissionsActionType.SET_PROJECTS_PERMISSIONS:
+      return {...state, projects: action.payload.permissions};
     case UserPermissionsActionType.SET_COLLECTIONS_PERMISSIONS:
       return {...state, collections: action.payload.permissions};
     case UserPermissionsActionType.SET_LINK_TYPES_PERMISSIONS:

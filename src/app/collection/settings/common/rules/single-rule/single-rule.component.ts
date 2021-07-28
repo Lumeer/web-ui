@@ -18,12 +18,11 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {Rule, RuleTiming, RuleType} from '../../../../../core/model/rule';
+import {Rule, RuleType} from '../../../../../core/model/rule';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NotificationService} from '../../../../../core/notifications/notification.service';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'single-rule',
@@ -34,13 +33,22 @@ export class SingleRuleComponent {
   @Input()
   public rule: Rule;
 
+  @Input()
+  public canDuplicate: boolean = false;
+
+  @Input()
+  public attributes: Attribute[];
+
   @Output()
   public onEdit = new EventEmitter<string>();
 
   @Output()
   public onDelete = new EventEmitter<string>();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  @Output()
+  public onDuplicate = new EventEmitter<Rule>();
+
+  constructor(private store$: Store<AppState>) {}
 
   public fireEdit(rule: Rule): void {
     if (rule.type === RuleType.Zapier) {
@@ -58,15 +66,17 @@ export class SingleRuleComponent {
     }
   }
 
+  public fireDuplicate(rule: Rule): void {
+    if (rule.type === RuleType.Zapier) {
+      this.showZapierWarning();
+    } else {
+      this.onDuplicate.emit(rule);
+    }
+  }
+
   public showZapierWarning(): void {
-    const title = this.i18n({
-      id: 'collection.config.tab.rules.zapier.warning.title',
-      value: 'Zapier Automation',
-    });
-    const message = this.i18n({
-      id: 'collection.config.tab.rules.zapier.warning.text',
-      value: 'This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).',
-    });
+    const title = $localize`:@@collection.config.tab.rules.zapier.warning.title:Zapier Automation`;
+    const message = $localize`:@@collection.config.tab.rules.zapier.warning.text:This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).`;
 
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }

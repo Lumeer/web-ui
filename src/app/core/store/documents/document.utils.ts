@@ -16,22 +16,67 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Collection} from '../collections/collection';
-import {Query} from '../navigation/query/query';
-import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
+
+import {Collection, CollectionPurposeType} from '../collections/collection';
+import {Query, QueryStem} from '../navigation/query/query';
+import {
+  getQueryFiltersForCollection,
+  getQueryFiltersForLinkType,
+  queryStemsAreSame,
+} from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
-import {findAttribute} from '../collections/collection.util';
+import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {
   AttributeFilter,
+  ConditionType,
   conditionTypeNumberOfInputs,
   Constraint,
   ConstraintData,
+  ConstraintType,
+  DataValue,
+  DateTimeConstraint,
+  DocumentsAndLinksData,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {LinkInstance} from '../link-instances/link.instance';
+import {User} from '../users/user';
+
+export function isDocumentOwnerByPurpose(document: DocumentModel, collection: Collection, user: User): boolean {
+  if (!document || !collection || !user) {
+    return false;
+  }
+  if (collection.purpose?.type === CollectionPurposeType.Tasks) {
+    const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
+    const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
+    if (assigneeAttribute) {
+      const assigneeData = document?.data?.[assigneeAttribute.id];
+      const assignees = (isArray(assigneeData) ? assigneeData : [assigneeData]).filter(value =>
+        isNotNullOrUndefined(value)
+      );
+      return assignees.includes(user.email);
+    }
+  }
+  return false;
+}
+
+export function getDocumentsAndLinksByStemData(
+  data: DocumentsAndLinksData,
+  stem: QueryStem
+): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
+  const stemsData = (data?.dataByStems || []).filter(dataByStem => queryStemsAreSame(dataByStem.stem, stem));
+  return stemsData.reduce(
+    (documentsAndLinks, stemData) => {
+      documentsAndLinks.documents.push(...stemData.documents);
+      documentsAndLinks.linkInstances.push(...stemData.linkInstances);
+      return documentsAndLinks;
+    },
+    {documents: [], linkInstances: []}
+  );
+}
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -42,20 +87,90 @@ export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc
 
 export function sortDocumentsByFavoriteAndLastUsed(documents: DocumentModel[]): DocumentModel[] {
   return [...documents].sort((a, b) => {
-    const aLastUsed = a.updateDate || a.creationDate;
-    const bLastUsed = b.updateDate || b.creationDate;
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      if (aLastUsed && bLastUsed) {
-        return bLastUsed.getTime() - aLastUsed.getTime();
-      } else if (aLastUsed && !bLastUsed) {
-        return -1;
-      } else if (bLastUsed && !aLastUsed) {
-        return 1;
+      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate, true);
+      if (isNotNullOrUndefined(datesCompare)) {
+        return datesCompare;
       }
       return b.id.localeCompare(a.id);
     }
     return a.favorite ? -1 : 1;
   });
+}
+
+function compareDocumentsDates(date1: Date, date2: Date, sortDesc?: boolean): number {
+  const multiplier = sortDesc ? -1 : 1;
+  if (date1 && date2) {
+    return (date1.getTime() - date2.getTime()) * multiplier;
+  } else if (date1 && !date2) {
+    return multiplier;
+  } else if (date2 && !date1) {
+    return -multiplier;
+  }
+  return null;
+}
+
+export function sortDocumentsTasks(documents: DocumentModel[], collections: Collection[]): DocumentModel[] {
+  const collectionsMap = objectsByIdMap(collections);
+  return [...documents].sort((a, b) => {
+    if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
+      const dueDateCompare = compareDataValues(
+        getDocumentDueDateDataValue(a, collectionsMap),
+        getDocumentDueDateDataValue(b, collectionsMap)
+      );
+      if (dueDateCompare) {
+        return dueDateCompare;
+      }
+
+      const priorityCompare = compareDataValues(
+        getDocumentPriorityDataValue(a, collectionsMap),
+        getDocumentPriorityDataValue(b, collectionsMap)
+      );
+      if (priorityCompare) {
+        return priorityCompare;
+      }
+
+      const datesCompare = compareDocumentsDates(a.updateDate || a.creationDate, b.updateDate || b.creationDate);
+      if (datesCompare) {
+        return datesCompare;
+      }
+      return a.id.localeCompare(b.id);
+    }
+    return a.favorite ? -1 : 1;
+  });
+}
+
+export function getDocumentDueDateDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>
+): DataValue {
+  const collection = collectionsMap?.[document.collectionId];
+  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.dueDateAttributeId);
+  if (attribute?.constraint?.type === ConstraintType.DateTime) {
+    const constraint = <DateTimeConstraint>attribute.constraint;
+    return constraint.createDataValue(document?.data?.[attribute.id]);
+  }
+  return null;
+}
+
+export function getDocumentPriorityDataValue(
+  document: DocumentModel,
+  collectionsMap: Record<string, Collection>
+): DataValue {
+  const collection = collectionsMap?.[document.collectionId];
+  const attribute = findAttribute(collection?.attributes, collection?.purpose?.metaData?.priorityAttributeId);
+  return attribute?.constraint?.createDataValue(document?.data?.[attribute.id]);
+}
+
+function compareDataValues(dv1: DataValue, dv2: DataValue): number {
+  if (dv1 && dv2) {
+    return dv1.compareTo(dv2);
+  } else if (dv1 && !dv2) {
+    return 1;
+  } else if (dv2 && !dv1) {
+    return -1;
+  }
+  return null;
 }
 
 export function mergeDocuments(documentsA: DocumentModel[], documentsB: DocumentModel[]): DocumentModel[] {
@@ -164,6 +279,69 @@ export function calculateDocumentHierarchyLevel(
   }
 
   const document = documentsMap[documentId];
-  const parentDocumentId = document && document.metaData && document.metaData.parentId;
+  const parentDocumentId = document?.metaData?.parentId;
   return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
+}
+
+interface CollectionTaskDataMap {
+  stateConstraint: Constraint;
+  doneStates: Set<any>;
+  doneStatesArray: any[];
+}
+
+export function filterTaskDocuments(
+  documents: DocumentModel[],
+  collections: Collection[],
+  constraintData: ConstraintData
+): DocumentModel[] {
+  const tasks = [];
+  const collectionsMap = objectsByIdMap(collections);
+  const collectionsTasksDataMap = getCollectionTaskDataMap(collections);
+  for (const document of documents) {
+    const collection = collectionsMap[document.collectionId];
+    const tasksData = collection && collectionsTasksDataMap[collection.id];
+    if (collection && tasksData) {
+      const rawValue = document?.data[collection?.purpose?.metaData?.stateAttributeId];
+      if (isNotDoneState(rawValue, tasksData, constraintData)) {
+        tasks.push(document);
+      }
+    }
+  }
+  return tasks;
+}
+
+function isNotDoneState(value: any, data: CollectionTaskDataMap, constraintData: ConstraintData): boolean {
+  const dataValue = data.stateConstraint.createDataValue(value, constraintData);
+  if (data.stateConstraint.type === ConstraintType.Boolean) {
+    return data.doneStatesArray.every(doneState =>
+      dataValue.meetCondition(ConditionType.NotEquals, [{value: doneState}])
+    );
+  } else if (data.stateConstraint.type === ConstraintType.User || data.stateConstraint.type === ConstraintType.Select) {
+    return dataValue.meetCondition(ConditionType.HasNoneOf, [{value: data.doneStatesArray}]);
+  }
+  return !dataValueHasValue(dataValue, data.doneStates);
+}
+
+function dataValueHasValue(dataValue: DataValue, set: Set<any>): boolean {
+  const serialized = dataValue.serialize();
+  if (isArray(serialized)) {
+    return serialized.some(value => set.has(value));
+  }
+  return set.has(serialized);
+}
+
+function getCollectionTaskDataMap(collections: Collection[]): Record<string, CollectionTaskDataMap> {
+  return collections.reduce((map, collection) => {
+    const stateConstraint =
+      findAttributeConstraint(collection.attributes, collection.purpose?.metaData?.stateAttributeId) ||
+      new UnknownConstraint();
+    const doneStates = collection.purpose?.metaData?.finalStatesList;
+    const doneStatesArray = isNotNullOrUndefined(doneStates) ? (isArray(doneStates) ? doneStates : [doneStates]) : [];
+    map[collection.id] = {
+      stateConstraint,
+      doneStates: new Set(doneStatesArray),
+      doneStatesArray,
+    };
+    return map;
+  }, {});
 }

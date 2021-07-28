@@ -40,28 +40,27 @@ import {SelectItemWithConstraintFormatter} from '../../../../shared/select/selec
 import {KanbanConverter} from '../util/kanban-converter';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {ViewsAction} from '../../../../core/store/views/views.action';
-import {selectCurrentView, selectSidebarOpened} from '../../../../core/store/views/views.state';
-import {debounceTime, filter, map, take, withLatestFrom} from 'rxjs/operators';
-import {View} from '../../../../core/store/views/view';
+import {Store} from '@ngrx/store';
+import {debounceTime, filter, map} from 'rxjs/operators';
+import {ViewSettings} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {User} from '../../../../core/store/users/user';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
+  data: DocumentsAndLinksData;
   config: KanbanConfig;
   constraintData: ConstraintData;
-  permissions: Record<string, AllowedPermissions>;
+  permissions: ResourcesPermissions;
   query: Query;
+  settings: ViewSettings;
 }
 
 @Component({
@@ -78,16 +77,16 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public config: KanbanConfig;
 
   @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
+  public canManageConfig: boolean;
 
   @Input()
-  public canManageConfig: boolean;
+  public sidebarOpened: boolean;
 
   @Input()
   public query: Query;
@@ -99,17 +98,22 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public workspace: Workspace;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public settings: ViewSettings;
 
   @Input()
-  public linkTypesPermissions: Record<string, AllowedPermissions>;
+  public permissions: ResourcesPermissions;
+
+  @Input()
+  public currentUser: User;
 
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 
+  @Output()
+  public sidebarToggle = new EventEmitter();
+
   private readonly converter: KanbanConverter;
 
-  public sidebarOpened$ = new BehaviorSubject(false);
   public data$ = new BehaviorSubject<KanbanData>(null);
 
   private dataSubject = new BehaviorSubject<Data>(null);
@@ -121,7 +125,6 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnInit() {
-    this.setupSidebar();
     this.subscribeData();
   }
 
@@ -148,9 +151,9 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
       transformedConfig,
       data.collections,
       data.linkTypes,
-      data.documents,
-      data.linkInstances,
+      data.data,
       data.permissions,
+      data.settings,
       data.constraintData
     );
   }
@@ -163,13 +166,13 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
 
   private shouldConvertData(changes: SimpleChanges): boolean {
     return (
-      (changes.documents ||
+      (changes.data ||
         (changes.config && this.configChanged(changes.config)) ||
         changes.collections ||
         changes.linkTypes ||
         changes.query ||
+        changes.settings ||
         changes.permissions ||
-        changes.linkInstances ||
         changes.constraintData) &&
       !!this.config
     );
@@ -192,33 +195,13 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
     this.dataSubject.next({
       config,
       collections: this.collections,
-      documents: this.documents,
       linkTypes: this.linkTypes,
-      linkInstances: this.linkInstances,
+      data: this.data,
       query: this.query,
       constraintData: this.constraintData,
       permissions: this.permissions,
+      settings: this.settings,
     });
-  }
-
-  private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
-      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
-  }
-
-  private openOrCloseSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
-      this.sidebarOpened$.next(true);
-    }
-  }
-
-  public onSidebarToggle() {
-    const opened = !this.sidebarOpened$.getValue();
-    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
-    this.sidebarOpened$.next(opened);
   }
 
   public onColumnMoved(event: {previousIndex: number; currentIndex: number}) {

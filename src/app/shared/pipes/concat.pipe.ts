@@ -23,7 +23,7 @@ import {Pipe, PipeTransform} from '@angular/core';
   name: 'concat',
 })
 export class ConcatPipe implements PipeTransform {
-  public transform(values: any[][]): any[] {
+  public transform<T>(values: T[][]): T[] {
     return (values || []).reduce((arr, val) => {
       arr.push(...val);
       return arr;

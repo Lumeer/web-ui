@@ -31,6 +31,7 @@ import {AttributeFunctionContentComponent} from './content/attribute-function-co
 import {AttributeFunctionEmptyComponent} from './content/empty/attribute-function-empty.component';
 import {AttributeFunctionRestrictedComponent} from './content/restricted/attribute-function-restricted.component';
 import {AttributeFunctionBlocklyComponent} from './content/blockly/attribute-function-blockly.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {AttributeFunctionBlocklyComponent} from './content/blockly/attribute-fun
     BlocklyModule,
     PresenterModule,
     PipesModule,
+    TooltipModule,
   ],
   exports: [AttributeFunctionModalComponent],
 })

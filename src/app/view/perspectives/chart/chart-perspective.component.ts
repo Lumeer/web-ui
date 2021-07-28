@@ -19,46 +19,23 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
-import {Collection} from '../../../core/store/collections/collection';
-import {
-  distinctUntilChanged,
-  map,
-  mergeMap,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  withLatestFrom,
-} from 'rxjs/operators';
-import {ChartConfig, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
-import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
-import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
+import {map} from 'rxjs/operators';
+import {ChartConfig} from '../../../core/store/charts/chart';
+import {selectChartById} from '../../../core/store/charts/charts.state';
+import {ViewConfig} from '../../../core/store/views/view';
 import {ChartAction} from '../../../core/store/charts/charts.action';
-import {Query} from '../../../core/store/navigation/query/query';
-import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ChartDataComponent} from './data/chart-data.component';
-import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformChartConfig} from './visualizer/chart-util';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
+import {DataPerspectiveComponent} from '../data-perspective.component';
+import {Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {Query} from '../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'chart-perspective',
@@ -66,120 +43,40 @@ import {DataResourcesAction} from '../../../core/store/data-resources/data-resou
   styleUrls: ['./chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartPerspectiveComponent implements OnInit, OnDestroy {
+export class ChartPerspectiveComponent extends DataPerspectiveComponent<ChartConfig> implements OnInit, OnDestroy {
   @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 
-  public collections$: Observable<Collection[]>;
-  public linkTypes$: Observable<LinkType[]>;
-  public config$: Observable<ChartConfig>;
-  public canManageConfig$: Observable<boolean>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
-  public constraintData$: Observable<ConstraintData>;
-
-  public sidebarOpened$ = new BehaviorSubject(false);
-  public query$ = new BehaviorSubject<Query>(null);
-
-  private chartId: string;
-  private subscriptions = new Subscription();
-
-  constructor(private store$: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.initChart();
-    this.subscribeToQuery();
-    this.subscribeData();
-    this.setupSidebar();
+  constructor(protected store$: Store<AppState>) {
+    super(store$);
   }
 
-  private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
-      this.query$.next(query);
-      this.fetchData(query);
-    });
-    this.subscriptions.add(subscription);
-  }
-
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
-  }
-
-  private initChart() {
-    const subscription = this.store$
-      .pipe(
-        select(selectCurrentView),
-        startWith(null as View),
-        pairwise(),
-        switchMap(([previousView, view]) =>
-          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
-      )
-      .subscribe(({chartId, config}: {chartId?: string; config?: ChartConfig}) => {
-        if (chartId) {
-          this.chartId = chartId;
-          this.store$.dispatch(new ChartAction.AddChart({chart: {id: chartId, config}}));
-        }
-      });
-    this.subscriptions.add(subscription);
-  }
-
-  private subscribeToView(previousView: View, view: View): Observable<{chartId?: string; config?: ChartConfig}> {
-    const chartId = view.code;
+  public subscribeConfig$(perspectiveId: string): Observable<ChartConfig> {
     return this.store$.pipe(
-      select(selectChartById(chartId)),
-      take(1),
-      mergeMap(chartEntity => {
-        const chartConfig = view.config?.chart;
-        if (preferViewConfigUpdate(previousView?.config?.chart, view?.config?.chart, !!chartEntity)) {
-          return this.checkChartConfig(chartConfig).pipe(map(config => ({chartId, config})));
-        }
-        return of({chartId, config: chartEntity?.config || chartConfig});
-      })
+      select(selectChartById(perspectiveId)),
+      map(entity => entity?.config)
     );
   }
 
-  private checkChartConfig(config: ChartConfig): Observable<ChartConfig> {
-    return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => checkOrTransformChartConfig(config, query, collections, linkTypes))
-    );
+  public configChanged(perspectiveId: string, config: ChartConfig) {
+    this.store$.dispatch(new ChartAction.AddChart({chart: {id: perspectiveId, config}}));
   }
 
-  private subscribeToDefault(): Observable<{chartId?: string; config?: ChartConfig}> {
-    const chartId = DEFAULT_CHART_ID;
-    return this.store$.pipe(
-      select(selectViewQuery),
-      withLatestFrom(this.store$.pipe(select(selectChartById(chartId)))),
-      mergeMap(([, chart]) => this.checkChartConfig(chart?.config)),
-      map(config => ({chartId, config}))
-    );
+  public checkOrTransformConfig(
+    config: ChartConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): ChartConfig {
+    return checkOrTransformChartConfig(config, query, collections, linkTypes);
   }
 
-  private subscribeData() {
-    this.documentsAndLinks$ = this.store$.pipe(
-      select(selectDocumentsAndLinksByQuerySorted),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-
-    this.config$ = this.store$.pipe(select(selectChartConfig));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+  public getConfig(viewConfig: ViewConfig): ChartConfig {
+    return viewConfig?.chart;
   }
 
   public onConfigChanged(config: ChartConfig) {
-    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.chartId, config}));
+    this.store$.dispatch(new ChartAction.SetConfig({chartId: this.perspectiveId$.value, config}));
   }
 
   public patchDocumentData(document: DocumentModel) {
@@ -191,24 +88,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onSidebarToggle() {
+    super.onSidebarToggle();
     this.chartDataComponent?.resize();
-
-    const opened = !this.sidebarOpened$.getValue();
-    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
-    this.sidebarOpened$.next(opened);
-  }
-
-  private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
-      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
-  }
-
-  private openOrCloseSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
-      this.sidebarOpened$.next(true);
-    }
   }
 }

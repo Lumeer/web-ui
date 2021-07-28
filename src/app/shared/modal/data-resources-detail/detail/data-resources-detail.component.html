@@ -1,0 +1,15 @@
+<div class="mb-3 px-3">
+  <div class="btn-link text-success cursor-pointer text-nowrap d-inline-block" (click)="back.emit()">
+    <i class="far fa-chevron-left"></i>&nbsp;<span i18n="@@go.back">Go back</span>
+  </div>
+</div>
+<data-resource-detail class="overflow-auto px-3"
+                      [resource]="selectedResource$ | async"
+                      [dataResource]="selectedDataResource$ | async"
+                      [query]="query$ | async"
+                      [settingsQuery]="settingsQuery$ | async"
+                      [settingsStem]="detailSettingsQueryStem"
+                      [preventEventBubble]="true"
+                      (routingPerformed)="routingPerformed.emit()"
+                      (documentSelect)="onDocumentSelect($event)">
+</data-resource-detail>

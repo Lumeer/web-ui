@@ -20,8 +20,6 @@
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute, QueryResource} from '../../model/query-attribute';
 
-export const DEFAULT_WORKFLOW_ID = 'default';
-
 export interface Workflow {
   id: string;
   config?: WorkflowConfig;

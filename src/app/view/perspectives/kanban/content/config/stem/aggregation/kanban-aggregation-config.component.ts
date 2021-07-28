@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {KanbanAggregation, KanbanValueType} from '../../../../../../../core/store/kanbans/kanban';
 import {objectValues} from '../../../../../../../shared/utils/common.utils';
 
@@ -42,8 +41,8 @@ export class KanbanAggregationConfigComponent {
   public readonly valueType = KanbanValueType;
   public readonly aggregationType = DataAggregationType;
 
-  constructor(private i18n: I18n) {
-    this.aggregationPlaceholder = i18n({id: 'aggregation', value: 'Aggregation'});
+  constructor() {
+    this.aggregationPlaceholder = $localize`:@@aggregation:Aggregation`;
   }
 
   public onAggregationSelect(aggregation: DataAggregationType) {

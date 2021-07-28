@@ -39,7 +39,6 @@ import {Attribute, Collection} from '../../../../../../../core/store/collections
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {
   selectAllCollections,
-  selectCollectionsByIds,
   selectCollectionsDictionary,
 } from '../../../../../../../core/store/collections/collections.state';
 import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
@@ -220,9 +219,9 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   public createLinkType(collection: Collection) {
     this.selected.emit();
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
-    this.store$
-      .pipe(select(selectCollectionsByIds([this.collection.id, collection.id])), first())
-      .subscribe(collections => this.modalService.showCreateLink(collections, linkType => this.useLinkType(linkType)));
+    this.modalService.showCreateLink([this.collection?.id, collection.id], null, linkType =>
+      this.useLinkType(linkType)
+    );
     this.close();
   }
 

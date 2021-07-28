@@ -23,8 +23,8 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-s
 import {AuthGuard} from './auth/auth.guard';
 import {CurrentUserGuard} from './core/guards/current-user.guard';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
-import {HomeComponent} from './core/home.component';
-import {RedirectComponent} from './core/redirect.component';
+import {HomeComponent} from './core/components/home.component';
+import {RedirectComponent} from './core/components/redirect.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
 
 const appRoutes: Routes = [
@@ -56,7 +56,10 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'top'}), StoreRouterConnectingModule.forRoot()],
+  imports: [
+    RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'top', relativeLinkResolution: 'legacy'}),
+    StoreRouterConnectingModule.forRoot(),
+  ],
   exports: [RouterModule],
   providers: [
     {

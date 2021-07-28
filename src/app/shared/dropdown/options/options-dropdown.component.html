@@ -11,8 +11,9 @@
        class="card overflow-auto" [class.w-100]="fitParent">
     <a *ngFor="let option of options | reverseArrayByDropdownPosition:(dropdownPosition$ | async); let index = index"
        [class.active]="(activeValue$ | async) === option.value"
+       [class.cursor-default]="!editable"
        (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
-       (click)="onOptionSelect($event, option)"
+       (click)="editable && onOptionSelect($event, option)"
        class="dropdown-item text-truncate"
        [class.dropdown-item-multi]="multiSelect"
        data-test="select-item-option"

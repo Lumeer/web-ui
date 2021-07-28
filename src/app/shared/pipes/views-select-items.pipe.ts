@@ -20,24 +20,24 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {View} from '../../core/store/views/view';
 import {SelectItemModel} from '../select/select-item/select-item.model';
-import {QueryData} from '../top-panel/search-box/util/query-data';
-import {perspectiveIconsMap} from '../../view/perspectives/perspective';
-import {QueryItemsConverter} from '../top-panel/search-box/query-item/query-items.converter';
-import {queryItemsColor} from '../../core/store/navigation/query/query.util';
+import {getViewColor, getViewIcon} from '../../core/store/views/view.utils';
+import {Collection} from '../../core/store/collections/collection';
+import {objectsByIdMap} from '../utils/common.utils';
 
 @Pipe({
   name: 'viewsSelectItems',
 })
 export class ViewsSelectItemsPipe implements PipeTransform {
-  public transform(views: View[], queryData: QueryData): SelectItemModel[] {
-    const converter = new QueryItemsConverter(queryData);
-    return views?.map(view => this.viewSelectItem(view, converter)) || [];
+  public transform(views: View[], collections: Collection[]): SelectItemModel[] {
+    return views?.map(view => this.viewSelectItem(view, objectsByIdMap(collections))) || [];
   }
 
-  private viewSelectItem(view: View, converter: QueryItemsConverter): SelectItemModel {
-    const icon = perspectiveIconsMap[view.perspective] || '';
-    const queryItems = converter.fromQuery(view.query);
-    const color = queryItemsColor(queryItems);
-    return {id: view.code, value: view.name, icons: [icon], iconColors: [color]};
+  private viewSelectItem(view: View, collectionsMap: Record<string, Collection>): SelectItemModel {
+    return {
+      id: view.code,
+      value: view.name,
+      icons: [getViewIcon(view)],
+      iconColors: [getViewColor(view, collectionsMap)],
+    };
   }
 }

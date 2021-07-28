@@ -20,6 +20,7 @@
 export enum DetailTabType {
   Detail = 'detail',
   Links = 'links',
+  Tables = 'tables',
   Comments = 'comments',
   Activity = 'activity',
 }

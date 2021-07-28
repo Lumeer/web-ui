@@ -21,7 +21,6 @@ import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, OnChanges,
 import {Project, TemplateMetadata} from '../../../../core/store/projects/project';
 import {View} from '../../../../core/store/views/view';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {Subscription} from 'rxjs';
 import {UpdateProjectService} from '../update-project.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -29,11 +28,11 @@ import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
 import * as moment from 'moment';
 import {PublicScriptType} from './script/public-script-type';
 import {removeAllFormArrayControls} from '../../../../shared/utils/form.utils';
+import {Collection} from '../../../../core/store/collections/collection';
 
 @Component({
   selector: 'project-template-metadata',
   templateUrl: './project-template-metadata.component.html',
-  styleUrls: ['./project-template-metadata.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UpdateProjectService],
 })
@@ -45,7 +44,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDe
   public views: View[];
 
   @Input()
-  public queryData: QueryData;
+  public collections: Collection[];
 
   @Input()
   public workspace: Workspace;

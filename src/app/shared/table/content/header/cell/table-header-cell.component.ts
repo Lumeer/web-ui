@@ -24,6 +24,8 @@ import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-
 import {AttributeSortType} from '../../../../../core/store/views/view';
 import {MenuItem} from '../../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../../menu/static-menu/static-menu.component';
+import {CellFilterBuilderComponent} from './filter-builder/cell-filter-builder.component';
+import {ConditionType, ConditionValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'table-header-cell',
@@ -51,6 +53,9 @@ export class TableHeaderCellComponent {
   @Input()
   public offsetHorizontal: boolean;
 
+  @Input()
+  public focused: boolean;
+
   @Output()
   public onCancel = new EventEmitter();
 
@@ -59,6 +64,17 @@ export class TableHeaderCellComponent {
 
   @Output()
   public sortChanged = new EventEmitter<AttributeSortType | null>();
+
+  @Output()
+  public filterRemove = new EventEmitter<number>();
+
+  @Output()
+  public filterChange = new EventEmitter<{
+    index: number;
+    condition: ConditionType;
+    values: ConditionValue[];
+    new?: boolean;
+  }>();
 
   @Output()
   public menuSelected = new EventEmitter<MenuItem>();
@@ -71,6 +87,9 @@ export class TableHeaderCellComponent {
 
   @ViewChild(TableHeaderHiddenMenuComponent)
   public hiddenMenuComponent: TableHeaderHiddenMenuComponent;
+
+  @ViewChild(CellFilterBuilderComponent)
+  public filterBuilderComponent: CellFilterBuilderComponent;
 
   public readonly sortType = AttributeSortType;
 
@@ -116,5 +135,11 @@ export class TableHeaderCellComponent {
     } else {
       this.sortChanged.emit(null);
     }
+  }
+
+  public onFilterClick(event: MouseEvent) {
+    preventEvent(event);
+
+    this.filterBuilderComponent?.toggle();
   }
 }

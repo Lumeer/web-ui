@@ -23,6 +23,7 @@ export interface ServiceLimitsDto {
   projects: number;
   files: number;
   documents: number;
+  groups?: boolean;
   dbSizeMb: number;
   validUntil: number;
   rulesPerCollection: number;

@@ -1,0 +1,13 @@
+@import 'src/styles/variables';
+
+:host {
+  display: grid;
+  grid-template-columns: 1fr 2fr min-content;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  :host {
+    grid-template-columns: 1fr 1fr min-content;
+  }
+}

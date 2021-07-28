@@ -18,12 +18,18 @@
  */
 
 import {Feature, FeatureCollection, Point} from 'geojson';
-import {GeoJSONSourceRaw, Layer, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
+import {AnyLayer, GeoJSONSourceRaw, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
 import {MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
+import {Configuration} from '../../../../../../../environments/configuration-type';
 
-export function createMapboxMap(elementId: string, position: MapPosition, locale: Record<string, string>): Map {
+export function createMapboxMap(
+  elementId: string,
+  position: MapPosition,
+  configuration: Configuration,
+  locale: Record<string, string>
+): Map {
   const positionOptions: Partial<MapboxOptions> = position?.center
     ? {
         bearing: position.bearing,
@@ -35,7 +41,7 @@ export function createMapboxMap(elementId: string, position: MapPosition, locale
 
   return new Map({
     container: elementId,
-    style: mapStyleUrls[MapStyle.MapTilerStreets],
+    style: mapStyleUrls(MapStyle.MapTilerStreets, configuration.mapTilerKey),
     minZoom: 1,
     maxZoom: 20,
     locale,
@@ -71,7 +77,7 @@ export function createMapClusterMarkersSource(markers: MapMarkerProperties[]): G
   };
 }
 
-export function createMapClustersLayer(id: string, source: string): Layer {
+export function createMapClustersLayer(id: string, source: string): AnyLayer {
   return {
     id,
     type: 'circle',
@@ -89,7 +95,7 @@ export function createMapClustersLayer(id: string, source: string): Layer {
   };
 }
 
-export function createMapClusterCountsLayer(id: string, source: string): Layer {
+export function createMapClusterCountsLayer(id: string, source: string): AnyLayer {
   return {
     id,
     type: 'symbol',

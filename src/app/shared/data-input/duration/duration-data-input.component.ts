@@ -30,7 +30,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {KeyCode} from '../../key-code';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -52,7 +52,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
   public value: DurationDataValue;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<DurationDataValue>();
@@ -85,6 +85,9 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
     }
     if (changes.value && this.value) {
       this.valid = this.value.isValid();
+      if (this.readonly) {
+        checkDataInputElementValue(this.durationInput?.nativeElement, this.value);
+      }
     }
   }
 
@@ -125,7 +128,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (!this.configuration.skipValidation && input && !dataValue.isValid()) {
+        if (!this.commonConfiguration.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -143,7 +146,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
 
   private saveDataValue(dataValue: DurationDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {
@@ -173,7 +176,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.durationInput.nativeElement.value);
-      if (this.configuration.skipValidation || dataValue.isValid()) {
+      if (this.commonConfiguration.skipValidation || dataValue.isValid()) {
         this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();

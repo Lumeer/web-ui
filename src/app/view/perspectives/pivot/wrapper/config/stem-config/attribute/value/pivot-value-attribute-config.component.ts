@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributesResource} from '../../../../../../../../core/model/resource';
 import {PivotAttribute, PivotValueAttribute, PivotValueType} from '../../../../../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
@@ -59,9 +58,9 @@ export class PivotValueAttributeConfigComponent {
   public readonly valueType = PivotValueType;
   public readonly emptyValueString: string;
 
-  constructor(private i18n: I18n) {
-    this.aggregationPlaceholder = i18n({id: 'aggregation', value: 'Aggregation'});
-    this.emptyValueString = i18n({id: 'pivot.config.attribute.empty', value: 'Select attribute'});
+  constructor() {
+    this.aggregationPlaceholder = $localize`:@@aggregation:Aggregation`;
+    this.emptyValueString = $localize`:@@pivot.config.attribute.empty:Select attribute`;
   }
 
   public onAggregationSelect(aggregation: DataAggregationType) {

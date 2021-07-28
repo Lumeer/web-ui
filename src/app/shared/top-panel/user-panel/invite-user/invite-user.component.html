@@ -1,5 +1,5 @@
 <div class="panel-item invite ml-2 mr-1 position-relative"
-     *ngIf="(organizationPermissions$ | async)?.manage ||(projectPermissions$ | async)?.manage">
+     *ngIf="(projectPermissions$ | async)?.roles?.UserConfig">
   <button *ngIf="!mobile; else mobileIcon"
           class="btn btn-success btn-sm align-baseline font-weight-bold"
           tooltip="Invite a colleague"

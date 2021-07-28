@@ -9,14 +9,15 @@
        [ngClass]="inputClass"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        autocomplete="off"
+       inputmode="numeric"
        type="text">
 
 <date-time-picker *ngIf="!readonly"
-                  [min]="configuration?.skipValidation ? null : value?.config?.minValue"
-                  [max]="configuration?.skipValidation ? null : value?.config?.maxValue"
+                  [min]="commonConfiguration?.skipValidation ? null : value?.config?.minValue"
+                  [max]="commonConfiguration?.skipValidation ? null : value?.config?.maxValue"
                   [options]="options"
                   [origin]="element"
-                  [asUtc]="value?.config?.asUtc"
+                  [asUtc]="value?.isUtc"
                   [value]="date"
                   (save)="onSave($event)"
                   (valueChange)="onValueChange($event)"

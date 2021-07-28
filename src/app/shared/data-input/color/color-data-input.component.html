@@ -1,10 +1,11 @@
 <input [readonly]="readonly" #colorInput
+       *ngIf="!configuration?.compactMode"
        [title]="value | formatDataValueTitle"
        [value]="(!valid || !readonly ? (value | formatDataValue) : '') | unescapeHtml"
        class="border-0 w-100 h-100 px-1 outline-none"
        [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"
-       [class.bg-danger-light]="!configuration?.skipValidation && readonly && !valid"
-       [class.invalid-value]="!configuration?.skipValidation && readonly && !(value | isDataValueValid)"
+       [class.bg-danger-light]="!commonConfiguration?.skipValidation && readonly && !valid"
+       [class.invalid-value]="!commonConfiguration?.skipValidation && readonly && !(value | isDataValueValid)"
        (input)="onInput($event.target.value)"
        (blur)="!readonly && onBlur()"
        (focus)="!readonly && onFocus()"
@@ -13,11 +14,16 @@
        [spellcheck]="false"
        type="text">
 
+<div class="compact" *ngIf="configuration?.compactMode"
+     [title]="value | formatDataValueTitle"
+     [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}">
+</div>
+
 <color-picker *ngIf="!readonly"
               [color]="value | formatDataValue:defaultColor"
               [origin]="element"
               (valueChange)="onValueChange($event)"
               (save)="onSave($event)"
-              (saveOnClose)="onSaveOnClose(colorInput.value || $event)"
+              (saveOnClose)="onSaveOnClose(colorInput?.nativeElement?.value || $event)"
               (cancel)="onCancel()">
 </color-picker>

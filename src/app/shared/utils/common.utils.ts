@@ -187,6 +187,23 @@ export function findLastItem<T>(array: Array<T>, predicate: (value: T, index: nu
   return null;
 }
 
+export function findIthItemIndex<T>(
+  array: T[],
+  num: number,
+  predicate: (value: T, index: number, obj: T[]) => boolean
+): number {
+  let currentNum = 0;
+  for (let i = 0; i < (array || []).length; i++) {
+    if (predicate(array[i], i, array)) {
+      currentNum++;
+      if (currentNum === num) {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
+
 export function escapeHtml<T extends string | number>(value: T): T {
   const unescaped = unescapeHtml(value);
   return <T>(
@@ -223,4 +240,8 @@ export function computeElementPositionInParent(event: MouseEvent, parentTag: str
 
 export function objectChanged(change: SimpleChange): boolean {
   return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
+}
+
+export function getLastUrlPart(url: string): string {
+  return (url || '').split('?')[0]?.split('/')?.pop();
 }

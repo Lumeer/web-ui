@@ -1,43 +1,46 @@
-<hidden-input (newInput)="onNewHiddenInput($event)"
-              class="position-fixed">
-</hidden-input>
+<ng-container
+  *ngIf="dataResource | dataResourcePermissions:resource:allowedPermissions:(currentUser$ | async) as dataPermissions">
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
 
-<post-it-header *ngIf="(resource | resourceIconsColors) as data"
-                class="card-header p-2"
-                cdkDragHandle
-                [class.cursor-move]="canDrag"
-                [resource]="resource"
-                [allowedPermissions]="allowedPermissions"
-                [tag]="tag"
-                [icons]="data.icons"
-                [colors]="data.colors"
-                [favorite]="dataResource | dataResourceFavorite"
-                [resourceType]="resourceType"
-                (remove)="onRemove()"
-                (toggleFavorite)="toggleFavorite.emit()"
-                (detail)="onDetail()">
-</post-it-header>
+  <post-it-header *ngIf="(resource | resourceIconsColors) as data"
+                  class="card-header p-2"
+                  cdkDragHandle
+                  [class.cursor-move]="canDrag"
+                  [resource]="resource"
+                  [dataPermissions]="dataPermissions"
+                  [tag]="tag"
+                  [icons]="data.icons"
+                  [colors]="data.colors"
+                  [favorite]="dataResource | dataResourceFavorite"
+                  [resourceType]="resourceType"
+                  (remove)="onRemove()"
+                  (toggleFavorite)="toggleFavorite.emit()"
+                  (detail)="onDetail()">
+  </post-it-header>
 
-<div class="card-body px-2 pt-0 pb-1">
+  <div class="card-body px-2 pt-0 pb-1">
 
-  <post-it-row
-    *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index;"
-    [class.row-top-divider]="index > 0"
-    [row]="row"
-    [ngClass]="layoutType | postItLayoutTypeClass"
-    [layoutType]="layoutType"
-    [permissions]="allowedPermissions"
-    [cursor]="dataResource | dataCursor : row.attribute?.id"
-    [constraintData]="constraintData"
-    [readonly]="!(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
-    [unusedAttributes]="unusedAttributes"
-    [editableKey]="editableKeys"
-    (newValue)="onNewValue($event, row, index)"
-    (newKey)="onNewKey($event, index)"
-    (deleteRow)="onRemoveRow(index)"
-    (onFocus)="onFocus(index, $event)"
-    (onEdit)="onEdit(index, $event)"
-    (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
-  </post-it-row>
+    <post-it-row
+      *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index;"
+      [class.row-top-divider]="index > 0"
+      [row]="row"
+      [ngClass]="layoutType | postItLayoutTypeClass"
+      [layoutType]="layoutType"
+      [permissions]="allowedPermissions"
+      [cursor]="dataResource | dataCursor : row.attribute?.id"
+      [constraintData]="constraintData"
+      [readonly]="!dataPermissions?.edit || !(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
+      [unusedAttributes]="unusedAttributes"
+      [editableKey]="editableKeys"
+      (newValue)="onNewValue($event, row, index)"
+      (newKey)="onNewKey($event, index)"
+      (deleteRow)="onRemoveRow(index)"
+      (onFocus)="onFocus(index, $event)"
+      (onEdit)="onEdit(index, $event)"
+      (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
+    </post-it-row>
 
-</div>
+  </div>
+</ng-container>

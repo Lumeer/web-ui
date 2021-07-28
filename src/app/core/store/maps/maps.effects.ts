@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {ContentService} from '../../rest/content.service';
 import {EMPTY, Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
@@ -33,32 +33,46 @@ import DOMPurify from 'dompurify';
 
 @Injectable()
 export class MapsEffects {
-  @Effect()
-  public downloadImageData$: Observable<Action> = this.actions$.pipe(
-    ofType<MapsAction.DownloadImageData>(MapsActionType.DOWNLOAD_IMAGE_DATA),
-    withLatestFrom(this.store$.pipe(select(selectMapsState))),
-    mergeMap(([action, mapState]) => {
-      const {url} = action.payload;
-      if (!!mapState.imagesLoaded[url] || mapState.imagesLoading.includes(url)) {
-        return EMPTY;
-      }
+  public downloadImageData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<MapsAction.DownloadImageData>(MapsActionType.DOWNLOAD_IMAGE_DATA),
+      withLatestFrom(this.store$.pipe(select(selectMapsState))),
+      mergeMap(([action, mapState]) => {
+        const {url} = action.payload;
+        if (!!mapState.imagesLoaded[url] || mapState.imagesLoading.includes(url)) {
+          return EMPTY;
+        }
 
-      this.store$.dispatch(new MapsAction.SetImageDataLoading({url, loading: true}));
+        this.store$.dispatch(new MapsAction.SetImageDataLoading({url, loading: true}));
 
-      return this.contentService.getDataSize(url).pipe(
-        mergeMap(response => {
-          const mimeType = mimeTypesMap[response.mimeType];
-          if (!mimeType || !supportedImageMimeTypes.includes(mimeType)) {
-            return imageLoadedActions(url, MapImageLoadResult.NotSupported);
-          }
-          if (response.size > supportedImageSize) {
-            return imageLoadedActions(url, MapImageLoadResult.SizeExceeded);
-          }
+        return this.contentService.getDataSize(url).pipe(
+          mergeMap(response => {
+            const mimeType = mimeTypesMap[response.mimeType];
+            if (!mimeType || !supportedImageMimeTypes.includes(mimeType)) {
+              return imageLoadedActions(url, MapImageLoadResult.NotSupported);
+            }
+            if (response.size > supportedImageSize) {
+              return imageLoadedActions(url, MapImageLoadResult.SizeExceeded);
+            }
 
-          if (mimeType === MimeType.Svg) {
-            return this.contentService.downloadData(url).pipe(
-              map(data => DOMPurify.sanitize(data)),
-              mergeMap(data => checkSvgSize(data)),
+            if (mimeType === MimeType.Svg) {
+              return this.contentService.downloadData(url).pipe(
+                map(data => DOMPurify.sanitize(data)),
+                mergeMap(data => checkSvgSize(data)),
+                map(data => ({...data, mimeType})),
+                mergeMap(data => [
+                  new MapsAction.DownloadImageDataSuccess({
+                    url,
+                    data,
+                  }),
+                  ...imageLoadedActions(url, MapImageLoadResult.Success),
+                ])
+              );
+            }
+
+            return this.contentService.downloadBlob(url).pipe(
+              map(blob => URL.createObjectURL(blob)),
+              mergeMap(data => checkBlobUrlSize(data)),
               map(data => ({...data, mimeType})),
               mergeMap(data => [
                 new MapsAction.DownloadImageDataSuccess({
@@ -68,24 +82,11 @@ export class MapsEffects {
                 ...imageLoadedActions(url, MapImageLoadResult.Success),
               ])
             );
-          }
-
-          return this.contentService.downloadBlob(url).pipe(
-            map(blob => URL.createObjectURL(blob)),
-            mergeMap(data => checkBlobUrlSize(data)),
-            map(data => ({...data, mimeType})),
-            mergeMap(data => [
-              new MapsAction.DownloadImageDataSuccess({
-                url,
-                data,
-              }),
-              ...imageLoadedActions(url, MapImageLoadResult.Success),
-            ])
-          );
-        }),
-        catchError(() => of(...imageLoadedActions(url, MapImageLoadResult.FetchFailure)))
-      );
-    })
+          }),
+          catchError(() => of(...imageLoadedActions(url, MapImageLoadResult.FetchFailure)))
+        );
+      })
+    )
   );
 
   constructor(

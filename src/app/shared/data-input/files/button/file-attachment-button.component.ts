@@ -20,15 +20,15 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {saveAs} from 'file-saver';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {environment} from '../../../../../environments/environment';
 import {FileApiService} from '../../../../core/service/file-api.service';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {FileAttachmentsAction} from '../../../../core/store/file-attachments/file-attachments.action';
+import {AppState} from '../../../../core/store/app.state';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'file-attachment-button',
@@ -44,9 +44,9 @@ export class FileAttachmentButtonComponent {
 
   constructor(
     private fileApiService: FileApiService,
-    private i18n: I18n,
     private notificationService: NotificationService,
-    private store$: Store<{}>
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
   ) {}
 
   public onClick() {
@@ -58,7 +58,9 @@ export class FileAttachmentButtonComponent {
 
     if (
       this.fileAttachment.refreshTime &&
-      this.fileAttachment.refreshTime.getTime() + environment.presignedUrlTimeout * 1000 > Date.now()
+      this.fileAttachment.refreshTime.getTime() +
+        this.configurationService.getConfiguration().presignedUrlTimeout * 1000 >
+        Date.now()
     ) {
       this.downloadFileAttachment(this.fileAttachment);
       return;
@@ -112,19 +114,11 @@ export class FileAttachmentButtonComponent {
 
   private showDownloadErrorNotification() {
     this.notificationService.error(
-      this.i18n({
-        id: 'file.attachment.download.failure',
-        value: 'Could not download the file attachment. Please try again later.',
-      })
+      $localize`:@@file.attachment.download.failure:Could not download the file attachment. Please try again later.`
     );
   }
 
   private showFileNotExistNotification() {
-    this.notificationService.error(
-      this.i18n({
-        id: 'file.attachment.not.exist',
-        value: 'Could not find the file attachment.',
-      })
-    );
+    this.notificationService.error($localize`:@@file.attachment.not.exist:Could not find the file attachment.`);
   }
 }

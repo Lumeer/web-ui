@@ -26,7 +26,7 @@ import {isNullOrUndefined} from '../utils/common.utils';
 })
 export class PerspectiveDisplayablePipe implements PipeTransform {
   public transform(query: Query, minStems: number, maxStems?: number): boolean {
-    const numStems = ((query && query.stems) || []).length;
+    const numStems = (query?.stems || []).length;
     return numStems >= minStems && (isNullOrUndefined(maxStems) || numStems <= maxStems);
   }
 }

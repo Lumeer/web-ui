@@ -21,8 +21,6 @@ import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute} from '../../model/query-attribute';
 
-export const DEFAULT_PIVOT_ID = 'default';
-
 export interface Pivot {
   id: string;
   config?: PivotConfig;

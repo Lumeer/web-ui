@@ -27,14 +27,12 @@ export interface TableRow {
   documentId?: string;
   data?: Record<string, any>; // columnId -> string
   linkInstanceId?: string;
+  linkedDocumentId?: string; // used for newly created row
   correlationId?: string;
   commentsCount?: number;
+  documentEditable: boolean;
+  linkEditable: boolean;
+  canSuggest: boolean;
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
-}
-
-export interface TableNewRow extends TableRow {
-  linkedDocumentId?: string;
-  creating?: boolean;
-  initialized?: boolean;
 }

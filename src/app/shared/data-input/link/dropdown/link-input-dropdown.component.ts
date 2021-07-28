@@ -26,6 +26,7 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
@@ -43,7 +44,7 @@ import {parseLinkValue} from '@lumeer/data-filters';
   styleUrls: ['./link-input-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkInputDropdownComponent implements OnInit {
+export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
   @Input()
   public titleValue: string;
 

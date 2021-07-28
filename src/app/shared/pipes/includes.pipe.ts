@@ -24,6 +24,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class IncludesPipe implements PipeTransform {
   public transform(items: any[], item: any): boolean {
-    return items && items.includes(item);
+    return items?.includes(item);
   }
 }

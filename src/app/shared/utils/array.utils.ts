@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {deepObjectsEquals, isNotNullOrUndefined} from './common.utils';
+
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from './common.utils';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -37,6 +38,9 @@ export function getLastFromArray<T>(array: T[]): T {
 }
 
 export function isArraySubset(superset: any[], subset: any[]): boolean {
+  if (subset.length === 0 && superset.length !== 0) {
+    return false;
+  }
   return subset.every(item => superset.includes(item));
 }
 
@@ -61,7 +65,7 @@ export function containsSameElements(array1: any[], array2: any[]): boolean {
 export function arrayIntersection<T>(array1: T[], array2: T[]): T[] {
   const a = array1 || [];
   const b = array2 || [];
-  return a.filter(x => b.includes(x));
+  return a.filter(x => b.some(y => deepObjectsEquals(x, y)));
 }
 
 export function shiftArray<T>(array: T[], fromItem: T): T[] {
@@ -78,6 +82,29 @@ export function shiftArrayFromIndex<T>(array: T[], fromIndex: number): T[] {
 
 export function uniqueValues<T>(array: T[]): T[] {
   return Array.from(new Set(array));
+}
+
+export function flattenValues<T>(array: any[]): T[] {
+  return (array || []).reduce((flatArray, val) => {
+    if (isArray(val)) {
+      flatArray.push(...val);
+    } else {
+      flatArray.push(val);
+    }
+    return flatArray;
+  }, []);
+}
+
+export function uniqueArrays<T>(arrays: T[][]): T[][] {
+  const uniqueArrays: T[][] = [];
+  for (const array of arrays) {
+    if (
+      !uniqueArrays.some(ua => ua.length === array.length && ua.every((element, index) => element === array[index]))
+    ) {
+      uniqueArrays.push(array);
+    }
+  }
+  return uniqueArrays;
 }
 
 export function flattenMatrix<T>(array: T[][]): T[] {
@@ -99,6 +126,14 @@ export function createRangeInclusive(from: number, to: number): number[] {
     }
   }
   return range;
+}
+
+export function appendToArray<T>(array: T[], item: T): T[] {
+  return [...(array || []), item];
+}
+
+export function removeFromArray<T>(array: T[], item: T): T[] {
+  return [...(array || [])].filter(it => it !== item);
 }
 
 export function createRange(from: number, to: number): number[] {

@@ -32,6 +32,9 @@ export class SizeSliderComponent {
   @Input()
   public defaultSize: SizeType;
 
+  @Input()
+  public numItems = 3;
+
   @Output()
   public newSize: EventEmitter<SizeType> = new EventEmitter();
 

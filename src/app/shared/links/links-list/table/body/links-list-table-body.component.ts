@@ -37,10 +37,6 @@ import {LinkRow} from '../../model/link-row';
 import {LinksListTableRowComponent} from './row/links-list-table-row.component';
 import {DataRowFocusService} from '../../../../data/data-row-focus-service';
 import {HiddenInputComponent} from '../../../../input/hidden-input/hidden-input.component';
-import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -49,6 +45,9 @@ import {generateCorrelationId} from '../../../../utils/resource.utils';
 import {debounceTime} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {Action} from '@ngrx/store';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
   selector: '[links-list-table-body]',
@@ -63,7 +62,13 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public collectionPermissions: AllowedPermissions;
+
+  @Input()
+  public linkTypePermissions: AllowedPermissions;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public rows: LinkRow[];
@@ -81,7 +86,13 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public preventEventBubble: boolean;
 
   @Input()
-  public allowSelectDocument: boolean;
+  public allowSelect: boolean;
+
+  @Input()
+  public allowCreate: boolean;
+
+  @Input()
+  public allowUnlink: boolean;
 
   @ViewChildren('tableRow')
   public tableRows: QueryList<LinksListTableRowComponent>;
@@ -99,7 +110,19 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public detail = new EventEmitter<LinkRow>();
 
   @Output()
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
+
+  @Output()
   public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   private dataRowFocusService: DataRowFocusService;
 
@@ -109,7 +132,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
 
   private attributeEditingSubject = new Subject<{documentId?: string; attributeId?: string}>();
 
-  constructor(private store$: Store<AppState>) {
+  constructor() {
     this.dataRowFocusService = new DataRowFocusService(
       () => this.columns.length,
       () => this.rows.length + this.newRows$.value.length,
@@ -137,10 +160,12 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   }
 
   private checkNewRow() {
-    if (this.permissions.writeWithView) {
+    if (this.linkTypePermissions?.rolesWithView?.DataContribute && this.allowCreate) {
       if (this.newRows$.value.length === 0) {
         this.newRows$.next([{correlationId: generateCorrelationId()}]);
       }
+    } else {
+      this.newRows$.next([]);
     }
   }
 
@@ -172,10 +197,10 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
       const patchData = {[column.attribute.id]: data.value};
       if (column.collectionId && linkRow.document) {
         const document = {...linkRow.document, data: patchData};
-        this.store$.dispatch(new DocumentsAction.PatchData({document}));
+        this.patchDocumentData.emit(document);
       } else if (column.linkTypeId && linkRow.linkInstance) {
         const linkInstance = {...linkRow.linkInstance, data: patchData};
-        this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+        this.patchLinkData.emit(linkInstance);
       }
     }
   }

@@ -18,24 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Pipe({
   name: 'ganttChartBarEmptyValue',
 })
 export class GanttChartBarEmptyValuePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
   public transform(emptyProperty: string): string {
-    return this.i18n(
-      {
-        id: 'ganttChart.empty.placeholder',
-        value:
-          'Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color}}',
-      },
-      {
-        emptyProperty,
-      }
+    return parseSelectTranslation(
+      $localize`:@@ganttChart.empty.placeholder:Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color}}`,
+      {emptyProperty}
     );
   }
 }

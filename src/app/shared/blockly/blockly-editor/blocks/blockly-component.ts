@@ -18,17 +18,22 @@
  */
 
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 export abstract class BlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {}
+  public constructor(public blocklyUtils: BlocklyUtils) {}
 
   public abstract getVisibility(): MasterBlockType[];
 
   public abstract registerBlock(workspace: any): void;
 
-  public abstract getDocumentVariablesXml(workspace: any): string;
+  public getDocumentVariablesXml(workspace: any): string {
+    return null;
+  }
 
-  // tslint:disable-next-line:no-empty
+  public getLinkVariablesXml(workspace: any): string {
+    return null;
+  }
+
+  // eslint-disable-next-line no-empty, @typescript-eslint/no-empty-function
   public onWorkspaceChange(workspace, changeEvent) {}
 }

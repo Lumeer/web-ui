@@ -20,8 +20,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatMenuModule} from '@angular/material/menu';
 
-import {LinksListComponent} from './links-list.component';
 import {LinksListTabsComponent} from './tabs/links-list-tabs.component';
 import {PresenterModule} from '../../presenter/presenter.module';
 import {PipesModule} from '../../pipes/pipes.module';
@@ -43,11 +43,12 @@ import {LinksAccordeonComponent} from './links-accordeon.component';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {AsAttributeResourcePipe} from './pipes/as-attribute-resource.pipe';
 import {LinksCountPipe} from './pipes/links-count.pipe';
-import {MatMenuModule} from '@angular/material/menu';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {SortLinkRowsPipe} from './pipes/sort-link-rows.pipe';
+import {LinkTablesAccordeonComponent} from './link-tables-accordeon.component';
 
 @NgModule({
   declarations: [
-    LinksListComponent,
     LinksListTabsComponent,
     LinksListTableComponent,
     LinksListTableHeaderComponent,
@@ -60,6 +61,8 @@ import {MatMenuModule} from '@angular/material/menu';
     LinksAccordeonComponent,
     AsAttributeResourcePipe,
     LinksCountPipe,
+    SortLinkRowsPipe,
+    LinkTablesAccordeonComponent,
   ],
   imports: [
     CommonModule,
@@ -74,7 +77,8 @@ import {MatMenuModule} from '@angular/material/menu';
     DocumentHintsModule,
     AccordionModule,
     MatMenuModule,
+    TooltipModule,
   ],
-  exports: [LinksListComponent, LinksAccordeonComponent],
+  exports: [LinksAccordeonComponent, LinkTablesAccordeonComponent],
 })
 export class LinksListModule {}

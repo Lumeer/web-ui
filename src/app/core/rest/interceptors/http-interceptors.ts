@@ -24,6 +24,7 @@ import {ViewHttpInterceptor} from './view.http-interceptor';
 import {ResponseTimeHttpInterceptor} from './response.time.http-interceptor';
 import {CorrelationIdHttpInterceptor} from './correlation-id.http-interceptor';
 import {EnvironmentHttpInterceptor} from './environment.http-interceptor';
+import {TimezoneHttpInterceptor} from './timezone.http-interceptor';
 
 export const httpInterceptorProviders = [
   {provide: HTTP_INTERCEPTORS, useClass: ResponseTimeHttpInterceptor, multi: true},
@@ -32,4 +33,5 @@ export const httpInterceptorProviders = [
   {provide: HTTP_INTERCEPTORS, useClass: EnvironmentHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: ViewHttpInterceptor, multi: true},
   {provide: HTTP_INTERCEPTORS, useClass: CorrelationIdHttpInterceptor, multi: true},
+  {provide: HTTP_INTERCEPTORS, useClass: TimezoneHttpInterceptor, multi: true},
 ];

@@ -22,7 +22,6 @@ import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {DocumentService} from './document.service';
-import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
@@ -33,10 +32,8 @@ import {convertDocumentModelToDto} from '../../store/documents/document.converte
 import {DocumentModel} from '../../store/documents/document.model';
 
 @Injectable()
-export class PublicDocumentService extends BaseService implements DocumentService {
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
-  }
+export class PublicDocumentService implements DocumentService {
+  constructor(private store$: Store<AppState>) {}
 
   public createDocument(document: DocumentDto): Observable<DocumentDto> {
     return of({...document, id: generateId(), dataVersion: 1, creationDate: new Date().getTime()});
@@ -164,7 +161,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     );
   }
 
-  public runRule(collectionId: string, documentId: string, attributeId: string): Observable<any> {
+  public runRule(collectionId: string, documentId: string, attributeId: string, actionName?: string): Observable<any> {
     return of(true);
   }
 }

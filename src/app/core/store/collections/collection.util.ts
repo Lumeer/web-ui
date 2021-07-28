@@ -31,11 +31,7 @@ export function isCollectionAttributeEditable(
   query?: Query
 ): boolean {
   const attribute = attributeId && (collection?.attributes || []).find(attr => attr.id === attributeId);
-  return (
-    isAttributeEditable(attribute) &&
-    permissions?.writeWithView &&
-    !isCollectionAttributeLockedByQuery(query, collection, attributeId)
-  );
+  return isAttributeEditable(attribute) && !isCollectionAttributeLockedByQuery(query, collection, attributeId);
 }
 
 export function isCollectionAttributeLockedByQuery(query: Query, collection: Collection, attributeId: string): boolean {
@@ -60,11 +56,7 @@ export function isLinkTypeAttributeEditable(
   query?: Query
 ): boolean {
   const attribute = attributeId && (linkType?.attributes || []).find(attr => attr.id === attributeId);
-  return (
-    isAttributeEditable(attribute) &&
-    permissions?.writeWithView &&
-    !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId)
-  );
+  return isAttributeEditable(attribute) && !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId);
 }
 
 export function isLinkTypeAttributeLockedByQuery(query: Query, linkType: LinkType, attributeId: string): boolean {
@@ -89,9 +81,7 @@ export function isAttributeEditableWithQuery(
     return true;
   }
 
-  return (
-    isAttributeEditable(attribute) && permissions?.writeWithView && !isAttributeLockedByFilters(filters, attribute.id)
-  );
+  return isAttributeEditable(attribute) && !isAttributeLockedByFilters(filters, attribute.id);
 }
 
 function isAttributeEditable(attribute: Attribute): boolean {
@@ -121,15 +111,6 @@ export function mergeCollections(collectionsA: Collection[], collectionsB: Colle
   const collectionsAIds = (collectionsA || []).map(collection => collection.id);
   const collectionsBToAdd = (collectionsB || []).filter(collection => !collectionsAIds.includes(collection.id));
   return (collectionsA || []).concat(collectionsBToAdd);
-}
-
-export function createAttributesMap(attributes: Attribute[]): Record<string, Attribute> {
-  return (attributes || []).reduce((attributesMap, attribute) => {
-    if (attribute.id) {
-      attributesMap[attribute.id] = attribute;
-    }
-    return attributesMap;
-  }, {});
 }
 
 export function findAttribute(attributes: Attribute[], attributeId: string): Attribute {

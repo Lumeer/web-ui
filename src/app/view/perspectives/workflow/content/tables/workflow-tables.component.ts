@@ -34,7 +34,7 @@ import {Query} from '../../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/view';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {WorkflowTablesService} from './service/workflow-tables.service';
 import {
@@ -52,12 +52,7 @@ import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hid
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {TableRow} from '../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../shared/table/model/table-column';
-import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service';
-import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
-import {WorkflowTablesStateService} from './service/workflow-tables-state.service';
-import {WorkflowTablesKeyboardService} from './service/workflow-tables-keyboard.service';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig, WorkflowStemConfig} from '../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../model/workflow-table';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
@@ -66,20 +61,14 @@ import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
 import {APP_NAME_SELECTOR} from '../../../../../core/constants';
 import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'workflow-tables',
   templateUrl: './workflow-tables.component.html',
   styleUrls: ['./workflow-tables.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    WorkflowTablesService,
-    WorkflowTablesMenuService,
-    WorkflowTablesDataService,
-    WorkflowTablesStateService,
-    WorkflowTablesKeyboardService,
-  ],
 })
 export class WorkflowTablesComponent implements OnChanges {
   @Input()
@@ -89,7 +78,7 @@ export class WorkflowTablesComponent implements OnChanges {
   public query: Query;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public collections: Collection[];
@@ -98,10 +87,7 @@ export class WorkflowTablesComponent implements OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
-
-  @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public config: WorkflowConfig;
@@ -148,22 +134,22 @@ export class WorkflowTablesComponent implements OnChanges {
       changes.query ||
       changes.permissions ||
       changes.viewSettings ||
-      changes.documents ||
+      changes.data ||
       changes.linkTypes ||
-      changes.linkInstances ||
       changes.config ||
-      changes.constraintData
+      changes.constraintData ||
+      changes.canManageConfig
     ) {
       this.tablesService.onUpdateData(
         this.collections,
-        this.documents,
         this.linkTypes,
-        this.linkInstances,
+        this.data,
         this.config,
         this.permissions,
         this.query,
         this.viewSettings,
-        this.constraintData
+        this.constraintData,
+        this.canManageConfig
       );
     }
   }
@@ -262,9 +248,28 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.onColumnSortChanged(data.column, data.type);
   }
 
-  public onStemConfigChange(stemConfig: WorkflowStemConfig, index: number) {
+  public onColumnFilterChanged(data: {
+    column: TableColumn;
+    index: number;
+    condition: ConditionType;
+    values: ConditionValue[];
+    new?: boolean;
+  }) {
+    this.tablesService.onColumnFilterChanged(data.column, data.index, data.condition, data.values, data.new);
+  }
+
+  public onColumnFilterRemoved(data: {column: TableColumn; index: number}) {
+    this.tablesService.onColumnFilterRemoved(data.column, data.index);
+  }
+
+  public onStemConfigChange(newStemConfig: WorkflowStemConfig, index: number) {
     const stemsConfigs = [...this.config.stemsConfigs];
-    stemsConfigs.splice(index, 1, stemConfig);
+    for (let i = 0; i < stemsConfigs.length; i++) {
+      const stemConfig = stemsConfigs[i];
+      if (queryStemsAreSame(stemConfig.stem, newStemConfig.stem)) {
+        stemsConfigs[i] = {...newStemConfig, stem: stemConfig.stem};
+      }
+    }
     const newConfig = {...this.config, stemsConfigs};
     this.configChange.emit(newConfig);
   }

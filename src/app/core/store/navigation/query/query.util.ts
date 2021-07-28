@@ -25,15 +25,16 @@ import {
   conditionTypeNumberOfInputs,
   ConditionValue,
   ConstraintType,
+  UserConstraintConditionValue,
 } from '@lumeer/data-filters';
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {areArraysSame, createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
-import {Attribute, Collection} from '../../collections/collection';
+import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
 import {AttributesResource, AttributesResourceType} from '../../../model/resource';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
@@ -43,6 +44,13 @@ import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
+import {DataQuery} from '../../../model/data-query';
+import {AllowedPermissionsMap} from '../../../model/allowed-permissions';
+import {normalizeQueryStem} from './query.converter';
+import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
+import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
+import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
+import {RoleType} from '../../../model/role-type';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -67,9 +75,90 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
           condition: new FormControl(queryItem.condition),
           conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
           constraintType: new FormControl(queryItemConstraintType(queryItem)),
+          fromSuggestion: new FormControl(queryItem.fromSuggestion),
         },
         attributeQueryValidator
       );
+  }
+}
+
+export function isQueryItemEditable(
+  index: number,
+  queryItems: QueryItem[],
+  canManageQuery: boolean,
+  viewQuery: Query
+): boolean {
+  if (canManageQuery) {
+    return true;
+  }
+
+  const queryItem = queryItems[index];
+  const stemIndex = getStemIndexForQueryItems(index, queryItems);
+  const sameItemsInStem = findSameItemsCountInStem(index, queryItems);
+  const stem = viewQuery?.stems?.[stemIndex];
+  const stemIndexQuery: Query = {stems: [stem].filter(s => !!s)};
+
+  if (queryItem.type === QueryItemType.Attribute) {
+    const collectionFilter = (<AttributeQueryItem>queryItem).getAttributeFilter();
+    const sameFilters = getQueryFiltersForCollection(
+      stemIndexQuery,
+      collectionFilter.collectionId
+    ).filter(currentFilter => deepObjectsEquals(collectionFilter, currentFilter));
+    return sameFilters.length <= sameItemsInStem;
+  } else if (queryItem.type === QueryItemType.LinkAttribute) {
+    const linkFilter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();
+    const sameFilters = getQueryFiltersForLinkType(stemIndexQuery, linkFilter.linkTypeId).filter(currentFilter =>
+      deepObjectsEquals(linkFilter, currentFilter)
+    );
+    return sameFilters.length <= sameItemsInStem;
+  } else if (queryItem.type === QueryItemType.Collection) {
+    const collectionId = (<CollectionQueryItem>queryItem).collection?.id;
+    const sameCollectionIds = getBaseCollectionIdsFromQuery(viewQuery).filter(id => collectionId === id);
+    return sameCollectionIds.length <= sameItemsInStem;
+  }
+
+  return false;
+}
+
+function getStemIndexForQueryItems(to: number, queryItems: QueryItem[]): number {
+  return queryItems.slice(0, to + 1).filter(item => item.type === QueryItemType.Collection).length - 1;
+}
+
+function findSameItemsCountInStem(to: number, queryItems: QueryItem[]): number {
+  let count = 0;
+  const queryItem = queryItems[to];
+  for (let i = to - 1; i >= 0; i--) {
+    if (queryItems[i].type === QueryItemType.Collection) {
+      break;
+    }
+    if (queryItemsAreSame(queryItems[i], queryItem)) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function queryItemsAreSame(q1: QueryItem, q2: QueryItem): boolean {
+  if (q1.type !== q2.type) {
+    return false;
+  }
+  switch (q1.type) {
+    case QueryItemType.Collection:
+      return (<CollectionQueryItem>q1).collection.id === (<CollectionQueryItem>q2).collection.id;
+    case QueryItemType.Link:
+      return (<LinkQueryItem>q1).linkType.id === (<LinkQueryItem>q2).linkType.id;
+    case QueryItemType.Attribute:
+      return deepObjectsEquals(
+        (<AttributeQueryItem>q1).getAttributeFilter(),
+        (<AttributeQueryItem>q2).getAttributeFilter()
+      );
+    case QueryItemType.LinkAttribute:
+      return deepObjectsEquals(
+        (<LinkAttributeQueryItem>q1).getLinkAttributeFilter(),
+        (<LinkAttributeQueryItem>q2).getLinkAttributeFilter()
+      );
+    case QueryItemType.Fulltext:
+      return (<FulltextQueryItem>q1).value === (<FulltextQueryItem>q2).value;
   }
 }
 
@@ -120,12 +209,7 @@ export function areConditionValuesDefined(
 }
 
 export function queryIsNotEmpty(query: Query): boolean {
-  return (
-    (query.stems && query.stems.length > 0) ||
-    (query.fulltexts && query.fulltexts.length > 0) ||
-    !isNullOrUndefined(query.page) ||
-    !!query.pageSize
-  );
+  return queryIsNotEmptyExceptPagination(query) || !isNullOrUndefined(query.page) || !!query.pageSize;
 }
 
 export function queryIsEmpty(query: Query): boolean {
@@ -133,7 +217,7 @@ export function queryIsEmpty(query: Query): boolean {
 }
 
 export function queryIsNotEmptyExceptPagination(query: Query): boolean {
-  return (query.stems && query.stems.length > 0) || (query.fulltexts && query.fulltexts.length > 0);
+  return (query?.stems || []).length > 0 || (query?.fulltexts || []).length > 0;
 }
 
 export function queryIsEmptyExceptPagination(query: Query): boolean {
@@ -141,11 +225,11 @@ export function queryIsEmptyExceptPagination(query: Query): boolean {
 }
 
 export function isSingleCollectionQuery(query: Query): boolean {
-  return query && query.stems && query.stems.length === 1;
+  return query?.stems && query.stems.length === 1;
 }
 
 export function isAnyCollectionQuery(query: Query): boolean {
-  return query && query.stems && query.stems.length > 0;
+  return query?.stems && query.stems.length > 0;
 }
 
 export function queryItemsColor(queryItems: QueryItem[]): string {
@@ -154,6 +238,21 @@ export function queryItemsColor(queryItems: QueryItem[]): string {
   }
 
   return queryItems[0].colors[0];
+}
+
+export function filterQueryByStem(query: Query, filterStem: QueryStem): Query {
+  if (!query || !filterStem) {
+    return query;
+  }
+  const stems = query.stems?.filter(stem => queryStemsAreSame(stem, filterStem));
+  return {...query, stems};
+}
+
+export function getQueryFiltersForResource(query: Query, id: string, type: AttributesResourceType): AttributeFilter[] {
+  return (query?.stems || []).reduce((filters, stem) => {
+    filters.push(...getQueryStemFiltersForResource(stem, id, type));
+    return filters;
+  }, []);
 }
 
 export function getQueryStemFiltersForResource(
@@ -170,8 +269,7 @@ export function getQueryStemFiltersForResource(
 }
 
 export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {
-  const stems = (query && query.stems) || [];
-  return stems.reduce((filters, stem) => {
+  return (query?.stems || []).reduce((filters, stem) => {
     const newFilters = (stem.filters || []).filter(
       filter => filter.collectionId === collectionId && !filters.find(f => deepObjectsEquals(f, filter))
     );
@@ -181,8 +279,7 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
 }
 
 export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): LinkAttributeFilter[] {
-  const stems = (query && query.stems) || [];
-  return stems.reduce((filters, stem) => {
+  return (query?.stems || []).reduce((filters, stem) => {
     const newFilters = (stem.linkFilters || []).filter(
       filter => filter.linkTypeId === linkTypeId && !filters.find(f => deepObjectsEquals(f, filter))
     );
@@ -192,15 +289,10 @@ export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): Li
 }
 
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
-  return (
-    (query &&
-      query.stems &&
-      query.stems.reduce((ids, stem) => {
-        (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
-        return ids;
-      }, [])) ||
-    []
-  );
+  return (query?.stems || []).reduce((ids, stem) => {
+    (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
+    return ids;
+  }, []);
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
@@ -215,32 +307,91 @@ export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]
 }
 
 export function getBaseCollectionIdsFromQuery(query: Query): string[] {
-  return (query && query.stems && query.stems.map(stem => stem.collectionId)) || [];
+  return query?.stems?.map(stem => stem.collectionId) || [];
 }
 
-export function isQuerySubset(superset: Query, subset: Query): boolean {
+export function isQuerySubset(superset: Query, subset: Query, excludeLinksTypes?: boolean): boolean {
   if (!isArraySubset(superset?.fulltexts || [], subset?.fulltexts || [])) {
     return false;
   }
 
-  if (subset?.stems?.length > superset?.stems?.length) {
+  if ((superset?.stems?.length || 0) > (subset?.stems?.length || 0)) {
     return false;
   }
 
-  return subset?.stems?.every(stem => {
-    const supersetStem = superset?.stems?.find(s => s.collectionId === stem.collectionId);
-    return supersetStem && isQueryStemSubset(supersetStem, stem);
-  });
+  const subsetStems = [...(subset?.stems || [])];
+  const unpairedStems = [];
+
+  for (const stem of superset?.stems || []) {
+    const stemIndex = subsetStems.findIndex(
+      subsetStem => queryStemsAreSame(subsetStem, stem) && isQueryStemSubset(stem, subsetStem, excludeLinksTypes)
+    );
+    if (stemIndex >= 0) {
+      subsetStems.splice(stemIndex, 1);
+    } else {
+      unpairedStems.push(stem);
+    }
+  }
+
+  for (const stem of unpairedStems) {
+    const subsetStem = subsetStems.find(s => s.collectionId === stem.collectionId);
+    if (!subsetStem || !isQueryStemSubset(stem, subsetStem, excludeLinksTypes)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
-export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boolean {
+export function isQueryStemSubset(superset: QueryStem, subset: QueryStem, excludeLinksTypes?: boolean): boolean {
   return (
     superset.collectionId === subset.collectionId &&
-    isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || []) &&
+    (excludeLinksTypes
+      ? areArraysSame(superset.linkTypeIds || [], subset.linkTypeIds || [])
+      : isArraySubset(superset.linkTypeIds || [], subset.linkTypeIds || [])) &&
     isArraySubset(superset.documentIds || [], subset.documentIds || []) &&
     isQueryFiltersSubset(superset.filters || [], subset.filters || []) &&
     isQueryLinkFiltersSubset(superset.linkFilters || [], subset.linkFilters || [])
   );
+}
+
+export function checkTasksCollectionsQuery(
+  collections: Collection[],
+  query: DataQuery,
+  permissions: AllowedPermissionsMap
+): DataQuery {
+  if (queryIsEmptyExceptPagination(query)) {
+    return tasksCollectionsQuery(collections, permissions);
+  }
+  return query;
+}
+
+export function tasksCollectionsQuery(collections: Collection[], permissions: AllowedPermissionsMap): Query {
+  const stems = collections.map(collection => tasksCollectionQueryStem(collection, permissions)).filter(stem => !!stem);
+  return {stems};
+}
+
+export function tasksCollectionQueryStem(collection: Collection, permissions: AllowedPermissionsMap): QueryStem {
+  if (collection.purpose?.type === CollectionPurposeType.Tasks) {
+    const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
+    const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
+    if (assigneeAttribute) {
+      return {
+        collectionId: collection.id,
+        filters: [
+          {
+            attributeId: assigneeAttribute.id,
+            condition: ConditionType.HasSome,
+            collectionId: collection.id,
+            conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+          },
+        ],
+      };
+    }
+  } else if (permissions?.[collection.id]?.roles?.DataRead || permissions?.[collection.id]?.roles?.DataContribute) {
+    return {collectionId: collection.id};
+  }
+  return null;
 }
 
 function isQueryFiltersSubset(superset: CollectionAttributeFilter[], subset: CollectionAttributeFilter[]): boolean {
@@ -249,6 +400,10 @@ function isQueryFiltersSubset(superset: CollectionAttributeFilter[], subset: Col
 
 function isQueryLinkFiltersSubset(superset: LinkAttributeFilter[], subset: LinkAttributeFilter[]): boolean {
   return subset.every(sub => superset.some(sup => deepObjectsEquals(sub, sup)));
+}
+
+export function queryContainsOnlyFulltexts(query: Query): boolean {
+  return query && queryIsEmpty({...query, fulltexts: []}) && query?.fulltexts?.length > 0;
 }
 
 export function queryWithoutLinks(query: Query): Query {
@@ -265,7 +420,7 @@ export function queryWithoutFilters(query: Query): Query {
     return query;
   }
 
-  const stems: QueryStem[] = query.stems && query.stems.map(stem => queryStemWithoutFilters(stem));
+  const stems: QueryStem[] = query.stems?.map(stem => queryStemWithoutFilters(stem));
   return {...query, stems, fulltexts: []};
 }
 
@@ -273,8 +428,15 @@ export function queryStemWithoutFilters(stem: QueryStem): QueryStem {
   return stem && {...stem, filters: [], linkFilters: []};
 }
 
+export function queryStemWithoutFiltersAndId(stem: QueryStem): QueryStem {
+  return stem && {...queryStemWithoutFilters(stem), id: undefined};
+}
+
 export function queryStemsAreSame(s1: QueryStem, s2: QueryStem): boolean {
-  return deepObjectsEquals(queryStemWithoutFilters(s1), queryStemWithoutFilters(s2));
+  return deepObjectsEquals(
+    normalizeQueryStem(queryStemWithoutFiltersAndId(s1)),
+    normalizeQueryStem(queryStemWithoutFiltersAndId(s2))
+  );
 }
 
 export function uniqueStems(stems: QueryStem[]): QueryStem[] {
@@ -291,12 +453,8 @@ export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTy
   const stemCopy = {...stem, linkTypeIds: stem.linkTypeIds.slice(0, linkIndex)};
   const notRemovedCollectionIds = collectionIdsChainForStem(stemCopy, linkTypes);
 
-  stemCopy.filters =
-    stem.filters && stem.filters.filter(filter => notRemovedCollectionIds.includes(filter.collectionId));
-  stemCopy.linkFilters =
-    stem.linkFilters && stem.linkFilters.filter(filter => stem.linkTypeIds.includes(filter.linkTypeId));
-
-  // TODO filter documents once implemented
+  stemCopy.filters = stem.filters?.filter(filter => notRemovedCollectionIds.includes(filter.collectionId));
+  stemCopy.linkFilters = stem.linkFilters?.filter(filter => stem.linkTypeIds.includes(filter.linkTypeId));
 
   return stemCopy;
 }
@@ -402,7 +560,7 @@ export function findBestStemConfigIndex(
   return 0;
 }
 
-export function filterStemsForCollection(collectionId: string, query: Query): Query {
+export function filterStemsForCollection(collectionId: string, query: DataQuery): DataQuery {
   if (query && (query.stems || []).length > 0) {
     return {
       ...query,
@@ -410,7 +568,7 @@ export function filterStemsForCollection(collectionId: string, query: Query): Qu
       fulltexts: query.fulltexts,
     };
   } else {
-    return {stems: [{collectionId}], fulltexts: query && query.fulltexts};
+    return {...query, stems: [{collectionId}]};
   }
 }
 

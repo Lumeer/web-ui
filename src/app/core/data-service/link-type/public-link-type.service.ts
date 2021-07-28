@@ -26,15 +26,19 @@ import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectLinkTypeById} from '../../store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
 import {convertLinkTypeModelToDto} from '../../store/link-types/link-type.converter';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class PublicLinkTypeService extends BaseService implements LinkTypeService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -77,6 +81,8 @@ export class PublicLinkTypeService extends BaseService implements LinkTypeServic
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/link-types`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/p/organizations/${organizationId}/projects/${projectId}/link-types`;
   }
 }

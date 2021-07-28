@@ -19,9 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
@@ -29,6 +28,8 @@ import {CollectionsAction} from '../../../../core/store/collections/collections.
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {CollectionAttributesTableComponent} from './table/collection-attributes-table.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
@@ -39,11 +40,11 @@ export class CollectionAttributesComponent implements OnInit {
   public tableComponent: CollectionAttributesTableComponent;
 
   public collection$: Observable<Collection>;
+  public permissions$: Observable<AllowedPermissions>;
 
   private collection: Collection;
 
   constructor(
-    private i18n: I18n,
     private notificationService: NotificationService,
     private modalService: ModalService,
     private store$: Store<AppState>
@@ -53,6 +54,9 @@ export class CollectionAttributesComponent implements OnInit {
     this.collection$ = this.store$.pipe(
       select(selectCollectionByWorkspace),
       tap(collection => (this.collection = collection))
+    );
+    this.permissions$ = this.collection$.pipe(
+      switchMap(collection => this.store$.pipe(select(selectCollectionPermissions(collection.id))))
     );
   }
 
@@ -95,13 +99,8 @@ export class CollectionAttributesComponent implements OnInit {
   }
 
   public showAttributeDeleteDialog(attribute: Attribute, onCancel?: () => void) {
-    const title = this.i18n({id: 'collection.tab.attributes.delete.title', value: 'Delete attribute?'});
-    const message = this.i18n(
-      {id: 'collection.tab.attributes.delete.message', value: 'Do you really want to delete attribute "{{name}}"?'},
-      {
-        name: attribute.name,
-      }
-    );
+    const title = $localize`:@@collection.tab.attributes.delete.title:Delete attribute?`;
+    const message = $localize`:@@collection.tab.attributes.delete.message:Do you really want to delete attribute "${attribute.name}:name:"?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteAttribute(attribute), onCancel);
   }
 

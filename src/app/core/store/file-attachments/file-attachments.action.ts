@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {Query} from '../navigation/query/query';
 import {FileAttachment} from './file-attachment.model';
+import {FileApiPath} from '../../data-service/attachments/attachments.service';
 
 export enum FileAttachmentsActionType {
   CREATE = '[File Attachments] Create',
@@ -34,8 +35,6 @@ export enum FileAttachmentsActionType {
   GET_SUCCESS = '[File Attachments] Get :: Success',
 
   GET_BY_QUERY = '[File Attachments] Get By Query',
-
-  GET_DETAILS = '[File Attachments] Get Details',
 
   CLEAR = '[File Attachments] Clear',
 }
@@ -96,7 +95,7 @@ export namespace FileAttachmentsAction {
   export class GetSuccess implements Action {
     public readonly type = FileAttachmentsActionType.GET_SUCCESS;
 
-    constructor(public payload: {fileAttachments: FileAttachment[]}) {}
+    constructor(public payload: {fileAttachments: FileAttachment[]; path: FileApiPath}) {}
   }
 
   export class GetByQuery implements Action {
@@ -109,12 +108,6 @@ export namespace FileAttachmentsAction {
         query: Query;
       }
     ) {}
-  }
-
-  export class GetDetails implements Action {
-    public readonly type = FileAttachmentsActionType.GET_DETAILS;
-
-    constructor(public payload: {collectionId: string; documentId: string; attributeId: string}) {}
   }
 
   export class Clear implements Action {
@@ -130,6 +123,5 @@ export namespace FileAttachmentsAction {
     | Get
     | GetSuccess
     | GetByQuery
-    | GetDetails
     | Clear;
 }

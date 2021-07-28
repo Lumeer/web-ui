@@ -1,12 +1,15 @@
 <ul class="nav nav-tabs">
-  <li *ngFor="let collection of collections;" class="nav-item">
+  <li *ngFor="let resource of resources;" class="nav-item">
     <a
       class="nav-link"
-      [class.active]="collection.id === selectedCollection"
-      title="{{collection.name}}"
-      (click)="setActiveCollection(collection)">
-      <i class="{{collection.icon}}" [style.color]="collection.color"></i>
-      {{collection.name}}
+      [class.active]="resource.id === selectedId"
+      title="{{resource.name}}"
+      (click)="setActiveResource(resource)">
+      <icons-presenter *ngIf="resource | resourceIconsColors as iconsColors"
+                       [icons]="iconsColors.icons"
+                       [colors]="iconsColors.colors">
+      </icons-presenter>
+      {{resource.name}}
     </a>
   </li>
 </ul>

@@ -17,19 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
+import {parseSelectTranslation} from '../../utils/translation.utils';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
   styleUrls: ['./resource-header.component.scss'],
 })
-export class ResourceHeaderComponent {
+export class ResourceHeaderComponent implements OnInit {
   @Input()
   public resourceType: ResourceType;
 
@@ -38,6 +39,9 @@ export class ResourceHeaderComponent {
 
   @Input()
   public restrictedValues: string[];
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public codeChange: EventEmitter<string> = new EventEmitter();
@@ -62,9 +66,9 @@ export class ResourceHeaderComponent {
 
   public isDuplicate: boolean;
 
-  private shouldEmitFirstLine: boolean;
+  public deleteTitle: string;
 
-  constructor(private i18n: I18n) {}
+  private shouldEmitFirstLine: boolean;
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
@@ -150,24 +154,11 @@ export class ResourceHeaderComponent {
   }
 
   public getCodePlaceholder(): string {
-    return this.i18n({
-      id: 'resource.postit.code',
-      value: 'Set code',
-    });
+    return $localize`:@@resource.postit.code:Set code`;
   }
 
   public getNamePlaceholder(): string {
-    return this.i18n({
-      id: 'resource.postit.name',
-      value: 'Fill in name',
-    });
-  }
-
-  public getDescriptionPlaceholder(): string {
-    return this.i18n({
-      id: 'resource.description',
-      value: 'Fill in description',
-    });
+    return $localize`:@@resource.postit.name:Fill in name`;
   }
 
   public getFilter(): RegExp {
@@ -179,7 +170,7 @@ export class ResourceHeaderComponent {
   }
 
   public togglePicker() {
-    this.iconColorDropdownComponent.toggle();
+    this.iconColorDropdownComponent?.toggle();
   }
 
   public onIconColorChange(data: {icon: string; color: string}) {
@@ -189,5 +180,12 @@ export class ResourceHeaderComponent {
 
   public onIconColorSubmit(data: {icon: string; color: string}) {
     this.colorIconChange.emit(data);
+  }
+
+  public ngOnInit(): void {
+    this.deleteTitle = parseSelectTranslation(
+      $localize`:@@resource.settings.deleteResource.title:Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}`,
+      {resourceType: this.resourceType}
+    );
   }
 }

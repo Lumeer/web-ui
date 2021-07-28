@@ -21,14 +21,13 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
-import {Query} from '../navigation/query/query';
 import {isLinkInstanceValid, sortLinkInstances} from './link-instance.utils';
-import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
-import {selectQuery} from '../navigation/navigation.state';
 import {selectDocumentsDictionary} from '../documents/documents.state';
+import {DataQuery} from '../../model/data-query';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
-  queries: Query[];
+  queries: DataQuery[];
+  loadingQueries: DataQuery[];
   actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
@@ -36,6 +35,7 @@ export const linkInstancesAdapter = createEntityAdapter<LinkInstance>();
 
 export const initialLinkInstancesState: LinkInstancesState = linkInstancesAdapter.getInitialState({
   queries: [],
+  loadingQueries: [],
   actionExecutedTimes: {},
 });
 
@@ -54,17 +54,10 @@ export const selectLinkInstancesQueries = createSelector(
   linkInstancesState => linkInstancesState.queries
 );
 
-export const selectCurrentQueryLinkInstancesLoaded = createSelector(
-  selectLinkInstancesQueries,
-  selectQuery,
-  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
+export const selectLinkInstancesLoadingQueries = createSelector(
+  selectLinkInstancesState,
+  linkInstancesState => linkInstancesState.loadingQueries
 );
-
-export const selectQueryLinkInstancesLoaded = (query: Query) =>
-  createSelector(
-    selectLinkInstancesQueries,
-    queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
-  );
 
 export const selectLinkInstanceById = (id: string) =>
   createSelector(selectLinkInstancesDictionary, linkInstancesMap => linkInstancesMap[id]);

@@ -24,6 +24,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -47,6 +48,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {MenuItem} from '../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {initForceTouch} from '../../../utils/html-modifier';
 
 @Component({
   selector: '[table-row]',
@@ -54,7 +56,7 @@ import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lum
   styleUrls: ['./table-row.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowComponent implements OnChanges {
+export class TableRowComponent implements OnInit, OnChanges {
   @Input()
   public columnGroups: TableColumnGroup[];
 
@@ -75,9 +77,6 @@ export class TableRowComponent implements OnChanges {
 
   @Input()
   public cellType: TableCellType = TableCellType.Body;
-
-  @Input()
-  public linkedDocumentId: string;
 
   @Input()
   public collectionId: string;
@@ -127,6 +126,10 @@ export class TableRowComponent implements OnChanges {
 
   constructor(public element: ElementRef) {}
 
+  public ngOnInit() {
+    initForceTouch(this.element.nativeElement, event => this.onContextMenu(this.selectedCell.columnId, event));
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.editedCell) {
       this.checkEdited();
@@ -136,17 +139,37 @@ export class TableRowComponent implements OnChanges {
   private checkEdited() {
     if (this.isEditing()) {
       const column = this.columnById(this.editedCell.columnId);
-      if (column?.editable) {
+      if (this.isColumnEditable(column)) {
         this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
-        if (column.collectionId) {
+        if (this.canSuggestInColumn(column)) {
           this.suggestedColumn = column;
           this.suggesting$.next(this.editedValue);
+        } else {
+          this.suggestedColumn = null;
         }
+      } else {
+        this.suggestedColumn = null;
       }
+    } else {
+      this.suggestedColumn = null;
     }
+
     if (!this.suggestedColumn) {
       this.endSuggesting();
     }
+  }
+
+  private isColumnEditable(column: TableColumn): boolean {
+    if (column?.collectionId) {
+      return column.editable && this.row?.documentEditable;
+    } else if (column?.linkTypeId) {
+      return column.editable && this.row?.linkEditable;
+    }
+    return false;
+  }
+
+  private canSuggestInColumn(column: TableColumn): boolean {
+    return column.collectionId && this.row?.canSuggest;
   }
 
   private isEditing(): boolean {
@@ -191,7 +214,8 @@ export class TableRowComponent implements OnChanges {
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
-    if (!column.editable) {
+    if (!this.isColumnEditable(column)) {
+      this.onDataInputCancel(column, DataInputSaveAction.Direct);
       return;
     }
 
@@ -238,10 +262,6 @@ export class TableRowComponent implements OnChanges {
     return column.id;
   }
 
-  public onRowEdit(columnId: string) {
-    this.onDoubleClick.emit(columnId);
-  }
-
   public onContextMenu(columnId: string, event: MouseEvent) {
     const columnIndex = this.columnGroups?.findIndex(group => group.column?.id === columnId);
     const column = this.columnGroups[columnIndex]?.column;
@@ -249,7 +269,7 @@ export class TableRowComponent implements OnChanges {
       this.menuComponent.id = columnId;
       this.menuComponent.items = column.collectionId ? this.row.documentMenuItems : this.row.linkMenuItems;
 
-      const {x, y} = computeElementPositionInParent(event, 'table');
+      const {x, y} = computeElementPositionInParent(event, 'tr');
       this.menuComponent.open(x, y);
     }
 

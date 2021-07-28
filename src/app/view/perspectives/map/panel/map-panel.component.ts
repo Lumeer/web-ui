@@ -26,6 +26,7 @@ import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createMapDefaultStemConfig} from '../../../../core/store/maps/map-config.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'map-panel',
@@ -46,7 +47,7 @@ export class MapPanelComponent {
   @Input()
   public query: Query;
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public readonly defaultStemConfig = createMapDefaultStemConfig();
 

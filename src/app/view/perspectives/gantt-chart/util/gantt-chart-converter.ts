@@ -19,10 +19,9 @@
 
 import {GanttOptions, GanttSwimlane, GanttSwimlaneInfo, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
-import {environment} from '../../../../../environments/environment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -32,7 +31,6 @@ import {
   GanttChartConfig,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -43,7 +41,6 @@ import {
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
-  objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
@@ -67,13 +64,21 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DocumentsAndLinksData,
   PercentageConstraintConfig,
   SelectConstraint,
   UnknownConstraint,
   UserConstraint,
 } from '@lumeer/data-filters';
+import {Configuration} from '../../../../../environments/configuration-type';
+import {ViewSettings} from '../../../../core/store/views/view';
+import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
+import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
+import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 
 export interface GanttTaskMetadata {
+  dataResource: DataResource;
+  resource: AttributesResource;
   nameDataId: string;
   startDataId: string;
   endDataId: string;
@@ -103,28 +108,28 @@ export class GanttChartConverter {
       this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
   );
 
-  constructor(private formatter: SelectItemWithConstraintFormatter) {}
+  constructor(private formatter: SelectItemWithConstraintFormatter, private configuration: Configuration) {}
 
   public convert(
     config: GanttChartConfig,
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
-    permissions: Record<string, AllowedPermissions>,
-    constraintData: ConstraintData,
+    data: DocumentsAndLinksData,
+    permissions: ResourcesPermissions,
     query: Query,
-    sortDefined?: boolean
+    settings: ViewSettings,
+    constraintData: ConstraintData
   ): {options: GanttOptions; tasks: GanttTask[]} {
     this.config = config;
     this.constraintData = constraintData;
 
-    let tasks = (query?.stems || []).reduce((allTasks, stem, index) => {
+    let tasks = (query?.stems || []).reduce<GanttTask[]>((allTasks, stem, index) => {
+      const stemData = data.dataByStems?.[index];
       this.dataObjectAggregator.updateData(
         collections,
-        documents,
+        stemData?.documents || [],
         linkTypes,
-        linkInstances,
+        stemData?.linkInstances || [],
         stem,
         permissions,
         constraintData
@@ -133,12 +138,22 @@ export class GanttChartConverter {
       return allTasks;
     }, []);
 
-    if (!sortDefined) {
+    if (viewAttributeSettingsSortDefined(settings)) {
+      tasks = sortDataResourcesObjectsByViewSettings(
+        tasks,
+        settings,
+        collections,
+        linkTypes,
+        constraintData,
+        task => task.metadata.dataResource,
+        task => task.metadata.resource,
+        (a, b) => this.compareTasks(a, b)
+      );
+    } else {
       tasks = tasks.sort((t1, t2) => this.compareTasks(t1, t2));
     }
 
-    const options = this.createGanttOptions(config, permissions, linkTypes);
-
+    const options = this.createGanttOptions(config, permissions);
     this.convertCount++;
     return {options, tasks};
   }
@@ -149,14 +164,9 @@ export class GanttChartConverter {
     return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
   }
 
-  private createGanttOptions(
-    config: GanttChartConfig,
-    permissions: Record<string, AllowedPermissions>,
-    linkTypes: LinkType[]
-  ): GanttOptions {
-    const linkTypesMap = objectsByIdMap(linkTypes);
+  private createGanttOptions(config: GanttChartConfig, permissions: ResourcesPermissions): GanttOptions {
     const createTasks = (config.stemsConfigs || []).some(stemConfig =>
-      canCreateTaskByStemConfig(stemConfig, permissions, linkTypesMap)
+      canCreateTaskByStemConfig(stemConfig, permissions)
     );
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
@@ -166,7 +176,7 @@ export class GanttChartConverter {
       resizeSwimlanes: true,
       dragTaskSwimlanes: true,
       createTasks,
-      language: environment.locale,
+      language: this.configuration.locale,
       lockResize: config.lockResize || false,
       padding: config.padding,
       dateFormat: GANTT_DATE_FORMAT,
@@ -218,8 +228,7 @@ export class GanttChartConverter {
     if (model) {
       const resource = this.dataObjectAggregator.getResource(model);
       background = shadeColor((<Collection>resource).color, 0.5);
-      const attribute = resource && findAttribute(resource.attributes, model.attributeId);
-      title = attribute && attribute.name;
+      title = findAttribute(resource?.attributes, model.attributeId)?.name;
     }
     return {
       background,
@@ -276,7 +285,13 @@ export class GanttChartConverter {
     showDatesAsSwimlanes: boolean
   ): GanttTask[] {
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
-    const endConstraint = stemConfig.end && this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
+    const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
+
+    const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
+    const namePermission = this.dataObjectAggregator.attributePermissions(stemConfig.name);
+    const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
+    const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
+    const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
 
     const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = dataObjectsInfo.reduce((map, item) => {
@@ -288,7 +303,9 @@ export class GanttChartConverter {
       const end = stemConfig.end && endDataResource && endDataResource.data[stemConfig.end.attributeId];
       if (isTaskValid(start, end, endConstraint)) {
         const id = helperDataId(item);
-        validTaskIds.push(id);
+        if (userCanEditDataResource(nameDataResource, nameResource, namePermission, this.constraintData?.currentUser)) {
+          validTaskIds.push(id);
+        }
         const dataResource = nameDataResource || startDataResource;
         const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
         if (parentId) {
@@ -369,6 +386,8 @@ export class GanttChartConverter {
       }
 
       const metadata: GanttTaskMetadata = {
+        dataResource: nameDataResource || (interval ? endDataResource : startDataResource),
+        resource: nameResource || (interval ? endResource : startResource),
         nameDataId: nameDataResource?.id,
         startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
         endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
@@ -378,6 +397,19 @@ export class GanttChartConverter {
         swimlanes: [...(item.groupingObjects || [])],
         stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
       };
+
+      const userCanEditStart = userCanEditDataResource(
+        startDataResource,
+        startResource,
+        startPermission,
+        this.constraintData?.currentUser
+      );
+      const userCanEditEnd = userCanEditDataResource(
+        endDataResource,
+        endResource,
+        endPermission,
+        this.constraintData?.currentUser
+      );
 
       const names = isArray(name) ? name : [name];
       for (let i = 0; i < names.length; i++) {
@@ -403,10 +435,18 @@ export class GanttChartConverter {
           allowedDependencies: canEditDependencies ? validTaskIds.filter(id => id !== taskId) : [],
           barColor,
           progressColor: taskColor || shadeColor(resourceColor, 0.3),
-          startDrag: startEditable && startPermission.writeWithView,
-          endDrag: endEditable && endPermission.writeWithView,
-          progressDrag: progressEditable && metadata.progressDataIds.length === 1 && progressPermission.writeWithView,
-          editable: startPermission.writeWithView && endPermission.writeWithView,
+          startDrag: startEditable && userCanEditStart,
+          endDrag: endEditable && userCanEditEnd,
+          progressDrag:
+            progressEditable &&
+            metadata.progressDataIds.length === 1 &&
+            userCanEditDataResource(
+              progressDataResources[0],
+              progressResource,
+              progressPermission,
+              this.constraintData?.currentUser
+            ),
+          editable: userCanEditStart && userCanEditEnd,
           textColor: contrastColor(barColor),
           swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
           minProgress,
@@ -490,8 +530,10 @@ export class GanttChartConverter {
     switch (finalConstraint.type) {
       case ConstraintType.Select:
       case ConstraintType.User:
+      case ConstraintType.View:
       case ConstraintType.Boolean:
-        return dataValue.serialize();
+        const value = dataValue.serialize();
+        return isArray(value) ? value[0] : value;
       default:
         return dataValue.format();
     }

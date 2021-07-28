@@ -27,7 +27,7 @@ import {
   UserNotificationType,
   ViewSharedUserNotification,
 } from '../../../../core/model/user-notification';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, combineLatest} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {
@@ -50,6 +50,20 @@ import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {Collection} from '../../../../core/store/collections/collection';
+import {selectViewsDictionaryByCode} from '../../../../core/store/views/views.state';
+import {selectDocumentsDictionary} from '../../../../core/store/documents/documents.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {View} from '../../../../core/store/views/view';
+import {
+  selectCollectionsPermissions,
+  selectViewsPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
+import {ModalService} from '../../../modal/modal.service';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {QueryParam} from '../../../../core/store/navigation/query-param';
 
 @Component({
   selector: 'notifications-menu',
@@ -71,6 +85,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private router: Router,
     private selectService: WorkspaceSelectService,
+    private modalService: ModalService,
     private validNotificationFilter: ValidNotificationFilterPipe
   ) {}
 
@@ -146,6 +161,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       case UserNotificationType.DueDateChanged:
       case UserNotificationType.StateUpdate:
       case UserNotificationType.TaskUpdated:
+      case UserNotificationType.TaskChanged:
       case UserNotificationType.TaskRemoved:
       case UserNotificationType.TaskUnassigned:
       case UserNotificationType.TaskCommented:
@@ -188,42 +204,93 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
         const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Table];
 
         if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
-          const buildUrl = this.router.createUrlTree(path, {queryParams: {q: query}}).toString();
+          const buildUrl = this.router.createUrlTree(path, {queryParams: {[QueryParam.Query]: query}}).toString();
           if (!this.startsWithCurrentUrl(buildUrl)) {
-            this.router.navigate(path, {queryParams: {q: query}});
+            this.router.navigate(path, {queryParams: {[QueryParam.Query]: query}});
           }
         } else {
-          this.router.navigate(path, {queryParams: {q: query}});
+          this.router.navigate(path, {queryParams: {[QueryParam.Query]: query}});
         }
       }
     });
   }
 
   private navigateToTask(notification: TaskUserNotification) {
-    this.getOrganization(notification.organizationId, organization => {
-      if (organization) {
-        const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
-        const cursor = notification.documentCursor;
-        const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Workflow];
+    this.subscribeTaskData$(notification).subscribe(
+      ([organization, collection, viewsMap, viewsPermissions, documentsMap, collectionsPermissions]) => {
+        if (organization) {
+          if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
+            let query: string;
+            const path: any[] = ['w', organization.code, notification.projectCode, 'view'];
+            const defaultView = viewsMap[collection?.purpose?.metaData?.defaultViewCode];
+            if (defaultView && viewsPermissions[defaultView.id]?.roles?.Read) {
+              query = '';
+              path.push({vc: defaultView.code});
+            } else if (collection && collectionsPermissions[collection.id]?.roles?.Read) {
+              query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
+              path.push(Perspective.Workflow);
+            } else {
+              const document = documentsMap[notification.documentId];
+              if (document && collection) {
+                this.modalService.showDocumentDetail(document.id);
+              } else {
+                const message = $localize`:@@notification.task.notVisible:I am sorry, you can not see selected task`;
+                this.store$.dispatch(new NotificationsAction.Error({message}));
+              }
+              return;
+            }
 
-        if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
-          const buildUrl = this.router.createUrlTree(path, {queryParams: {q: query, c: cursor}}).toString();
-          if (!this.startsWithCurrentUrl(buildUrl)) {
-            this.router.navigate(path, {queryParams: {q: query, c: cursor}});
+            const cursor = notification.documentCursor;
+            const buildUrl = this.router
+              .createUrlTree(path, {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}})
+              .toString();
+            if (!this.startsWithCurrentUrl(buildUrl)) {
+              this.router.navigate(path, {queryParams: {[QueryParam.Query]: query, [QueryParam.ViewCursor]: cursor}});
+            }
+          } else {
+            const path: any[] = [
+              'w',
+              organization.code,
+              notification.projectCode,
+              'document',
+              notification.collectionId,
+              notification.documentId,
+            ];
+            this.router.navigate(path);
           }
-        } else {
-          this.router.navigate(path, {queryParams: {q: query, c: cursor}});
         }
       }
-    });
+    );
   }
 
   private startsWithCurrentUrl(url: string): boolean {
     return this.currentUrl?.startsWith(url);
   }
 
-  private getOrganization(id: string, action: (Organization) => void) {
+  private getOrganization(id: string, action: (organization: Organization) => void) {
     this.store$.pipe(select(selectOrganizationById(id)), take(1)).subscribe(organization => action(organization));
+  }
+
+  private subscribeTaskData$(
+    notification: TaskUserNotification
+  ): Observable<
+    [
+      Organization,
+      Collection,
+      Record<string, View>,
+      AllowedPermissionsMap,
+      Record<string, DocumentModel>,
+      AllowedPermissionsMap
+    ]
+  > {
+    return combineLatest([
+      this.store$.pipe(select(selectOrganizationById(notification.organizationId))),
+      this.store$.pipe(select(selectCollectionById(notification.collectionId))),
+      this.store$.pipe(select(selectViewsDictionaryByCode)),
+      this.store$.pipe(select(selectViewsPermissions)),
+      this.store$.pipe(select(selectDocumentsDictionary)),
+      this.store$.pipe(select(selectCollectionsPermissions)),
+    ]).pipe(take(1));
   }
 
   private navigateToView(notification: ViewSharedUserNotification) {

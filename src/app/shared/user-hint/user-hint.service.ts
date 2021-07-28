@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {EMPTY, Observable, of} from 'rxjs';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -31,7 +30,7 @@ import {PercentageConstraint} from '@lumeer/data-filters';
   providedIn: 'root',
 })
 export class UserHintService {
-  public constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public processDataHints(values: any[], entry: [string, any], collection: Collection): Observable<any> {
     if (values.length === 3) {
@@ -50,17 +49,9 @@ export class UserHintService {
   }
 
   private getPercentageHint(collection: Collection, attribute: Attribute): NotificationsAction.Hint {
-    const message = this.i18n(
-      {
-        id: 'lumeer.advice.percentage',
-        value: 'I suggest to set the column type of {{attrName}} to percentage. Do you agree?',
-      },
-      {
-        attrName: attribute.name,
-      }
-    );
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+    const message = $localize`:@@lumeer.advice.percentage:I suggest to set the column type of ${attribute.name}:attributeName: to percentage. Do you agree?`;
+    const yesButtonText = $localize`:@@button.yes:Yes`;
+    const noButtonText = $localize`:@@button.no:No`;
 
     return new NotificationsAction.Hint({
       message,

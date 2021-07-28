@@ -27,7 +27,7 @@ import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
 export abstract class UserService {
   public abstract createUser(organizationId: string, user: UserDto): Observable<UserDto>;
 
-  public abstract createUserInWorkspace(
+  public abstract createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],
@@ -41,6 +41,8 @@ export abstract class UserService {
   public abstract getUsers(organizationId: string): Observable<UserDto[]>;
 
   public abstract getCurrentUser(): Observable<UserDto>;
+
+  public abstract setTeams(organizationId: string, userId: string, teams: string[]): Observable<any>;
 
   public abstract resendVerificationEmail(): Observable<any>;
 
@@ -59,6 +61,4 @@ export abstract class UserService {
   public abstract getHints(): Observable<UserHintsDto>;
 
   public abstract updateHints(hints: UserHintsDto): Observable<UserHintsDto>;
-
-  public abstract updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto>;
 }

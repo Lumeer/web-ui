@@ -20,6 +20,8 @@
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
+import {addDataQueryUnique, removeDataQuery} from '../navigation/query/query.helper';
+import SetDocumentLinksSuccess = LinkInstancesAction.SetDocumentLinksSuccess;
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -27,7 +29,16 @@ export function linkInstancesReducer(
 ): LinkInstancesState {
   switch (action.type) {
     case LinkInstancesActionType.GET_SUCCESS:
-      return addLinkInstances(state, action);
+      const getSuccessState = {
+        ...state,
+        queries: addDataQueryUnique(state.queries, action.payload.query),
+        loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query),
+      };
+      return addLinkInstances(getSuccessState, action);
+    case LinkInstancesActionType.GET_FAILURE:
+      return {...state, loadingQueries: removeDataQuery(state.loadingQueries, action.payload.query)};
+    case LinkInstancesActionType.SET_LOADING_QUERY:
+      return {...state, loadingQueries: addDataQueryUnique(state.loadingQueries, action.payload.query)};
     case LinkInstancesActionType.CREATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.CREATE_MULTIPLE_SUCCESS:
@@ -48,6 +59,16 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.DUPLICATE_SUCCESS:
       return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
+    case LinkInstancesActionType.SET_DOCUMENT_LINKS_SUCCESS:
+      return setDocumentLinks(state, action);
+    case LinkInstancesActionType.REVERT_DATA:
+      return linkInstancesAdapter.updateOne(
+        {
+          id: action.payload.linkInstance.id,
+          changes: {data: action.payload.linkInstance.data},
+        },
+        state
+      );
     case LinkInstancesActionType.RUN_RULE:
       return setActionExecutionTime(
         state,
@@ -62,11 +83,34 @@ export function linkInstancesReducer(
         linkInstance => linkInstance.linkTypeId === action.payload.linkTypeId,
         state
       );
+    case LinkInstancesActionType.CLEAR_QUERIES:
+      if (action.payload.linkTypeId) {
+        return {
+          ...state,
+          queries: state.queries.filter(
+            query => !query.stems?.some(stem => stem.linkTypeIds?.includes(action.payload.linkTypeId))
+          ),
+        };
+      }
+      return {...state, queries: []};
     case LinkInstancesActionType.CLEAR:
       return initialLinkInstancesState;
     default:
       return state;
   }
+}
+
+function setDocumentLinks(state: LinkInstancesState, action: SetDocumentLinksSuccess): LinkInstancesState {
+  let newState = state;
+  if (action.payload.removedLinkInstancesIds?.length) {
+    newState = linkInstancesAdapter.removeMany(action.payload.removedLinkInstancesIds, newState);
+  }
+
+  if (action.payload.linkInstances?.length) {
+    newState = linkInstancesAdapter.upsertMany(action.payload.linkInstances, newState);
+  }
+
+  return newState;
 }
 
 function setActionExecutionTime(
@@ -97,7 +141,6 @@ function updateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstanc
 }
 
 function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction.GetSuccess): LinkInstancesState {
-  const newState = action.payload.query ? {...state, queries: state.queries.concat(action.payload.query)} : state;
   const filteredLinkInstances = action.payload.linkInstances.filter(linkInstance => {
     const oldLinkInstance = state.entities[linkInstance.id];
     return !oldLinkInstance || isLinkInstanceNewer(linkInstance, oldLinkInstance);
@@ -114,7 +157,7 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
     return result;
   }, []);
 
-  return linkInstancesAdapter.upsertMany([...filteredLinkInstances, ...changedTransientProperties], newState);
+  return linkInstancesAdapter.upsertMany([...filteredLinkInstances, ...changedTransientProperties], state);
 }
 
 function isTransientModified(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {

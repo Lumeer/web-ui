@@ -19,8 +19,7 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_CYAN, COLOR_PINK} from '../../../../core/constants';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {COLOR_PINK} from '../../../../core/constants';
 
 declare var Blockly: any;
 
@@ -29,20 +28,16 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
   private units: string[];
   private ops: string[];
 
-  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
-    super(blocklyUtils, i18n);
+  private readonly BUSINESS_DAY = 'businessDay';
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.dateChangeBlock',
-      value:
-        'Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.',
-    });
-    this.units = i18n({
-      id: 'blockly.dropdown.units.dateChangeBlock',
-      value:
-        'second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)',
-    }).split(',');
-    this.ops = i18n({id: 'blockly.dropdown.ops.dateChangeBlock', value: 'add,subtract,set'}).split(',');
+  public constructor(public blocklyUtils: BlocklyUtils) {
+    super(blocklyUtils);
+
+    this.tooltip = $localize`:@@blockly.tooltip.dateChangeBlock:Changes a date object returning the new updated date object. Apply date to ISO to store it in a date/time attribute.`;
+    this.units = $localize`:@@blockly.dropdown.units.dateChangeBlock:second(s),minute(s),hour(s),day(s),business day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)`
+      .replace(/ /g, '\u00A0')
+      .split(',');
+    this.ops = $localize`:@@blockly.dropdown.ops.dateChangeBlock:add,subtract,set`.split(',');
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -79,13 +74,14 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
                 [this_.units[1], 'minutes'],
                 [this_.units[2], 'hours'],
                 [this_.units[3], 'days'],
-                [this_.units[4], 'weeks'],
-                [this_.units[5], 'months'],
-                [this_.units[6], 'sticky_months'],
-                [this_.units[7], 'quarters'],
-                [this_.units[8], 'sticky_quarters'],
-                [this_.units[9], 'years'],
-                [this_.units[10], 'sticky_years'],
+                [this_.units[4], 'businessDays'],
+                [this_.units[5], 'weeks'],
+                [this_.units[6], 'months'],
+                [this_.units[7], 'sticky_months'],
+                [this_.units[8], 'quarters'],
+                [this_.units[9], 'sticky_quarters'],
+                [this_.units[10], 'years'],
+                [this_.units[11], 'sticky_years'],
               ],
             },
             {
@@ -121,10 +117,14 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
           // (l = moment(startdate)).daysInMonth() === l.date() ? l.add(3, 'months').endOf('months') : l.add(3, 'months')
           code += `((${tmpDateVar} = moment(${input_date})).daysInMonth() === ${tmpDateVar}.date() ? ${tmpDateVar}.add((${count}), '${unit}').endOf('${unit}') : ${tmpDateVar}.add((${count}), '${unit}')).toDate()`;
         } else {
-          code += `moment(${input_date}).${op}((${count}), '${unit}').toDate()`;
+          if (unit === 'businessDays') {
+            code += `moment(${input_date}).businessAdd(${op === 'add' ? '' : '-'}(${count})).toDate()`;
+          } else {
+            code += `moment(${input_date}).${op}((${count}), '${unit}').toDate()`;
+          }
         }
       } else {
-        if (unit === 'days') {
+        if (unit === 'days' || unit === 'businessDays') {
           code += `moment(${input_date}).date((${count}) - 1).toDate()`;
         } else {
           const fce = unit.substring(0, unit.length - 1);
@@ -138,9 +138,5 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
-  }
-
-  public getDocumentVariablesXml(workspace: any): string {
-    return null;
   }
 }

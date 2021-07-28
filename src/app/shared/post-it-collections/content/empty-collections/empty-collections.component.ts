@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CollectionImportData} from '../import-button/post-it-collection-import-button.component';
 import {AppState} from '../../../../core/store/app.state';
@@ -48,7 +47,7 @@ export class EmptyCollectionsComponent implements OnInit {
 
   public projectPermissions$: Observable<AllowedPermissions>;
 
-  constructor(public i18n: I18n, private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));

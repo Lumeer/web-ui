@@ -28,6 +28,7 @@ import {
   selectTableRowStriped,
 } from '../../../../../../../core/store/tables/tables.selector';
 import {filter, switchMap} from 'rxjs/operators';
+import {AppState} from '../../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-linked-row',
@@ -60,7 +61,7 @@ export class TableLinkedRowComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscriptions.add(

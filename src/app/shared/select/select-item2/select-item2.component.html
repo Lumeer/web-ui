@@ -15,7 +15,7 @@
                      (remove)="remove.emit()">
     </select-item-row>
 
-    <i class="fas fa-caret-down" *ngIf="data.selectedItem"></i>
+    <i class="fas fa-caret-down" *ngIf="data.selectedItem && !disabled"></i>
   </button>
 
   <ng-template #empty>

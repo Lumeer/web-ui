@@ -20,58 +20,31 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  map,
-  mergeMap,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {debounceTime, filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectCollectionsInQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {DEFAULT_MAP_CONFIG, MapConfig, MapModel, MapPosition} from '../../../core/store/maps/map.model';
+import {selectCollectionsInQuery} from '../../../core/store/common/permissions.selectors';
+import {DEFAULT_MAP_CONFIG, MapConfig, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
-import {DEFAULT_MAP_ID, selectMap, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
+import {selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
 import {selectMapPosition} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
+import {DefaultViewConfig, ViewConfig} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {
-  selectCurrentView,
   selectDefaultViewConfig,
   selectDefaultViewConfigSnapshot,
-  selectSidebarOpened,
   selectViewQuery,
 } from '../../../core/store/views/views.state';
 import {MapContentComponent} from './content/map-content.component';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
-import {Perspective} from '../perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.utils';
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {ConstraintData} from '@lumeer/data-filters';
-import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
+import {DataPerspectiveComponent} from '../data-perspective.component';
+import {AppState} from '../../../core/store/app.state';
+import {selectMap} from '../../../core/store/maps/maps.state';
 
 @Component({
   selector: 'map-perspective',
@@ -79,127 +52,79 @@ import {DataResourcesAction} from '../../../core/store/data-resources/data-resou
   styleUrls: ['./map-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapPerspectiveComponent implements OnInit, OnDestroy {
+export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig> implements OnInit, OnDestroy {
   @Input()
   public query: Query;
 
   @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;
 
-  public collections$: Observable<Collection[]>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
-  public linkTypes$: Observable<LinkType[]>;
-  public constraintData$: Observable<ConstraintData>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public map$: Observable<MapModel>;
-  public query$: Observable<Query>;
-  public canManageConfig$: Observable<boolean>;
-  public sidebarOpened$ = new BehaviorSubject(false);
-
-  private subscriptions = new Subscription();
-
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, protected store$: Store<AppState>) {
+    super(store$);
+  }
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-    this.map$ = this.store$.pipe(select(selectMap));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-
-    this.subscriptions.add(this.subscribeToConfig());
-    this.subscriptions.add(this.subscribeToMapConfigPosition());
-    this.subscriptions.add(this.subscribeToMapConfig());
-
-    this.setupSidebar();
-    this.subscribeToQuery();
+    super.ngOnInit();
+    this.subscribeAdditionalData();
     this.resetDefaultConfigSnapshot();
   }
 
-  private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
-      this.fetchData(query);
-    });
-    this.subscriptions.add(subscription);
+  private subscribeAdditionalData() {
+    this.subscriptions.add(this.subscribeToMapConfigPosition());
+    this.subscriptions.add(this.subscribeToMapConfig());
   }
 
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
+  public configChanged(perspectiveId: string, config: MapConfig) {
+    this.store$.dispatch(new MapsAction.CreateMap({mapId: perspectiveId, config}));
+    if (this.isDefaultPerspective(perspectiveId)) {
+      this.checkConfigSnapshot(config);
+    }
   }
 
-  private subscribeToConfig(): Subscription {
-    return this.store$
-      .pipe(
-        select(selectCurrentView),
-        startWith(null as View),
-        pairwise(),
-        switchMap(([previousView, view]) =>
-          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
-      )
-      .subscribe(({mapId, config}: {mapId?: string; config?: MapConfig}) => {
-        if (mapId) {
-          this.store$.dispatch(new MapsAction.CreateMap({mapId, config}));
-        }
-      });
+  public getDefaultConfig(): MapConfig {
+    return DEFAULT_MAP_CONFIG;
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{mapId?: string; config?: MapConfig}> {
-    const mapId = view.code;
+  public getConfig(viewConfig: ViewConfig): MapConfig {
+    return viewConfig?.map;
+  }
+
+  public checkOrTransformConfig(
+    config: MapConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): MapConfig {
+    return checkOrTransformMapConfig(config, query, collections, linkTypes);
+  }
+
+  public subscribeConfig$(perspectiveId: string): Observable<MapConfig> {
     return this.store$.pipe(
-      select(selectMapById(mapId)),
+      select(selectMapById(perspectiveId)),
+      map(entity => entity?.config)
+    );
+  }
+
+  public checkConfigWithDefaultView(config: MapConfig, defaultConfig?: DefaultViewConfig): Observable<MapConfig> {
+    return this.store$.pipe(
+      select(selectMapPosition),
       take(1),
-      withLatestFrom(this.store$.pipe(select(selectMapPosition))),
-      mergeMap(([mapEntity, position]) => {
-        const mapConfig = view.config && view.config.map;
-        if (preferViewConfigUpdate(previousView?.config?.map, view?.config?.map, !!mapEntity)) {
-          const configToCheck: MapConfig = {
-            ...mapConfig,
-            position: mapConfig?.positionSaved ? mapConfig.position : position,
-          };
-          return this.checkMapConfig(configToCheck).pipe(map(config => ({mapId, config})));
+      map(position => {
+        const defaultPosition = defaultConfig?.config?.map?.position;
+        if (defaultPosition) {
+          return {...config, position: defaultPosition};
         }
-        return of({mapId, config: mapEntity?.config || mapConfig || DEFAULT_MAP_CONFIG});
+        return {
+          ...config,
+          position: (config?.positionSaved ? config?.position : position) || position,
+        };
       })
     );
   }
 
-  private checkMapConfig(config: MapConfig): Observable<MapConfig> {
-    return combineLatest([
-      this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => checkOrTransformMapConfig(config, query, collections, linkTypes))
-    );
-  }
-
-  private subscribeToDefault(): Observable<{mapId?: string; config?: MapConfig}> {
-    const mapId = DEFAULT_MAP_ID;
-    return this.store$.pipe(
-      select(selectViewQuery),
-      switchMap(() =>
-        this.selectCurrentDefaultViewConfig$().pipe(
-          distinctUntilChanged((a, b) => deepObjectsEquals(defaultViewMapPosition(a), defaultViewMapPosition(b))),
-          withLatestFrom(this.store$.pipe(select(selectMapById(mapId))), this.store$.pipe(select(selectMapPosition))),
-          mergeMap(([defaultConfig, mapEntity, position]) =>
-            this.checkMapConfig(mapEntity?.config).pipe(
-              map(checkedConfig => {
-                const config: MapConfig = {
-                  ...checkedConfig,
-                  position: defaultConfig?.config?.map?.position || mapEntity?.config?.position || position,
-                };
-                return {mapId, config};
-              })
-            )
-          ),
-          tap(({config}) => this.checkConfigSnapshot(config))
-        )
-      )
+  public selectDefaultViewConfig$(): Observable<DefaultViewConfig> {
+    return this.selectMapDefaultConfigId$().pipe(
+      mergeMap(collectionId => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Map, collectionId))))
     );
   }
 
@@ -224,11 +149,11 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
         select(selectMap),
         debounceTime(1000),
         filter(mapEntity => !!mapEntity),
-        withLatestFrom(this.store$.pipe(select(selectCollectionsInQuery)), this.selectCurrentDefaultViewConfig$()),
+        withLatestFrom(this.store$.pipe(select(selectCollectionsInQuery)), this.selectDefaultViewConfig$()),
         filter(([, collections]) => collections.length > 0)
       )
       .subscribe(([mapEntity, collections, currentViewConfig]) => {
-        if (mapEntity.id === DEFAULT_MAP_ID && mapEntity.config?.position) {
+        if (mapEntity.id === DEFAULT_PERSPECTIVE_ID && mapEntity.config?.position) {
           const savedPosition = defaultViewMapPosition(currentViewConfig);
           if (!deepObjectsEquals(mapEntity.config.position, savedPosition)) {
             this.saveMapDefaultViewConfig(collections, mapEntity.config);
@@ -239,12 +164,6 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
           this.redirectToMapPosition(mapEntity.config.position);
         }
       });
-  }
-
-  private selectCurrentDefaultViewConfig$(): Observable<DefaultViewConfig> {
-    return this.selectMapDefaultConfigId$().pipe(
-      mergeMap(collectionId => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Map, collectionId))))
-    );
   }
 
   private selectMapDefaultConfigId$(): Observable<string> {
@@ -278,32 +197,11 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
-      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
-  }
-
-  private openOrCloseSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
-      this.sidebarOpened$.next(true);
-    }
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
   public onSidebarToggle() {
+    super.onSidebarToggle();
     if (this.mapContentComponent) {
       setTimeout(() => this.mapContentComponent.refreshMapSize());
     }
-
-    const opened = !this.sidebarOpened$.getValue();
-    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
-    this.sidebarOpened$.next(opened);
   }
 
   private resetDefaultConfigSnapshot() {

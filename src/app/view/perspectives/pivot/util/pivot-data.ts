@@ -20,6 +20,7 @@
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
+import {DataResource} from '../../../../core/model/resource';
 
 export interface PivotData {
   data: PivotStemData[];
@@ -34,6 +35,7 @@ export interface PivotStemData {
   rowHeaders: PivotDataHeader[];
   valueTitles: string[];
   values: any[][];
+  dataResources: DataResource[][][];
   valuesConstraints?: Constraint[];
   valueTypes?: PivotValueType[];
   valueAggregations?: DataAggregationType[];

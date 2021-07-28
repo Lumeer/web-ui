@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 import {View} from '../../core/store/views/view';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
@@ -31,27 +31,24 @@ export class ViewControlsInfoPipe implements PipeTransform {
   public transform(
     currentView: View,
     projectPermissions: AllowedPermissions,
-    collectionsPermissions: Record<string, AllowedPermissions>,
-    viewsPermissions: Record<string, AllowedPermissions>,
+    collectionsPermissions: AllowedPermissionsMap,
+    viewsPermissions: AllowedPermissionsMap,
     linkTypes: LinkType[]
-  ): {canClone: boolean; canManage: boolean; canShare: boolean} {
+  ): {canClone?: boolean; canShare?: boolean; canSave?: boolean; canConfig?: boolean} {
     if (!currentView || !currentView.code) {
-      return {canClone: false, canManage: projectPermissions?.write, canShare: false};
-    }
-
-    if (projectPermissions?.manage) {
-      return {canClone: true, canManage: true, canShare: true};
+      return {canSave: projectPermissions?.roles?.ViewContribute};
     }
 
     const hasDirectAccessToView = getAllCollectionIdsFromQuery(currentView.query, linkTypes).every(
-      collectionId => collectionsPermissions?.[collectionId]?.read
+      collectionId => collectionsPermissions?.[collectionId]?.roles?.Read
     );
 
     const viewPermissions = viewsPermissions?.[currentView.id];
     return {
-      canClone: hasDirectAccessToView && projectPermissions?.write,
-      canManage: viewPermissions?.manage,
-      canShare: viewPermissions?.share,
+      canClone: hasDirectAccessToView && projectPermissions?.roles?.ViewContribute,
+      canSave: viewPermissions?.roles?.PerspectiveConfig || viewPermissions?.roles?.QueryConfig,
+      canConfig: viewPermissions?.roles?.PerspectiveConfig,
+      canShare: viewPermissions?.roles?.UserConfig,
     };
   }
 }

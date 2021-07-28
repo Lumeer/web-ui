@@ -22,7 +22,7 @@ import {CollectionsState, initialCollectionsState} from './collections/collectio
 import {DocumentsState, initialDocumentsState} from './documents/documents.state';
 import {FileAttachmentsState, initialFileAttachmentsState} from './file-attachments/file-attachments.state';
 import {GeocodingState, initialGeocodingState} from './geocoding/geocoding.state';
-import {GroupsState, initialGroupsState} from './groups/groups.state';
+import {TeamsState, initialTeamsState} from './teams/teams.state';
 import {initialLinkInstancesState, LinkInstancesState} from './link-instances/link-instances.state';
 import {initialLinkTypesState, LinkTypesState} from './link-types/link-types.state';
 import {initialMapsState, MapsState} from './maps/maps.state';
@@ -52,13 +52,15 @@ import {initialResourceCommentsState, ResourceCommentsState} from './resource-co
 import {initialModalsState, ModalsState} from './modals/modals.state';
 import {initialUserPermissionsState, UserPermissionsState} from './user-permissions/user-permissions.state';
 import {DataResourcesState, initialDataResourcesState} from './data-resources/data-resources.state';
+import {AuditLogsState, initialAuditLogsState} from './audit-logs/audit-logs.state';
+import {DetailsState, initialDetailsState} from './details/detail.state';
 
 export interface AppState {
   collections: CollectionsState;
   documents: DocumentsState;
   fileAttachments: FileAttachmentsState;
   geocoding: GeocodingState;
-  groups: GroupsState;
+  teams: TeamsState;
   linkInstances: LinkInstancesState;
   linkTypes: LinkTypesState;
   dataResources: DataResourcesState;
@@ -80,6 +82,7 @@ export interface AppState {
   ganttCharts: GanttChartsState;
   kanbans: KanbansState;
   searches: SearchesState;
+  details: DetailsState;
   sequences: SequencesState;
   constraintData: ConstraintDataState;
   publicData: PublicDataState;
@@ -88,6 +91,7 @@ export interface AppState {
   resourceComments: ResourceCommentsState;
   modals: ModalsState;
   userPermissions: UserPermissionsState;
+  auditLogs: AuditLogsState;
 }
 
 export function initialAppState(): AppState {
@@ -96,7 +100,7 @@ export function initialAppState(): AppState {
     documents: initialDocumentsState,
     fileAttachments: initialFileAttachmentsState,
     geocoding: initialGeocodingState,
-    groups: initialGroupsState,
+    teams: initialTeamsState,
     linkInstances: initialLinkInstancesState,
     linkTypes: initialLinkTypesState,
     dataResources: initialDataResourcesState,
@@ -118,6 +122,7 @@ export function initialAppState(): AppState {
     ganttCharts: initialGanttChartsState,
     kanbans: initialKanbansState,
     searches: initialSearchesState,
+    details: initialDetailsState,
     sequences: initialSequencesState,
     constraintData: initialConstraintDataState,
     publicData: initialPublicDataState,
@@ -126,5 +131,6 @@ export function initialAppState(): AppState {
     resourceComments: initialResourceCommentsState,
     modals: initialModalsState,
     userPermissions: initialUserPermissionsState,
+    auditLogs: initialAuditLogsState,
   };
 }

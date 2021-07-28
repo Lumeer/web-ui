@@ -22,9 +22,7 @@ import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
 import {of, timer} from 'rxjs';
 import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
-import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType, resourceTypesMap} from '../model/resource-type';
 import {AppState} from '../store/app.state';
@@ -41,7 +39,6 @@ import {selectLinkInstanceById} from '../store/link-instances/link-instances.sta
 import {convertLinkTypeDtoToModel} from '../store/link-types/link-type.converter';
 import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary} from '../store/link-types/link-types.state';
-import {NotificationsAction} from '../store/notifications/notifications.action';
 import {ContactConverter} from '../store/organizations/contact/contact.converter';
 import {ContactsAction} from '../store/organizations/contact/contacts.action';
 import {Organization} from '../store/organizations/organization';
@@ -61,11 +58,11 @@ import {UserNotificationsAction} from '../store/user-notifications/user-notifica
 import {User} from '../store/users/user';
 import {convertUserDtoToModel} from '../store/users/user.converter';
 import {UsersAction} from '../store/users/users.action';
-import {selectCurrentUser} from '../store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {View} from '../store/views/view';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
-import {selectViewsDictionary} from '../store/views/views.state';
+import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {SequenceConverter} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
@@ -74,8 +71,19 @@ import {convertResourceCommentDtoToModel} from '../store/resource-comments/resou
 import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
 import {NotificationService} from '../notifications/notification.service';
 import {AppIdService} from '../service/app-id.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationButton} from '../notifications/notification-button';
+import {Router} from '@angular/router';
+import {LocationStrategy} from '@angular/common';
+import {convertQueryModelToString} from '../store/navigation/query/query.converter';
+import {convertViewCursorToString} from '../store/navigation/view-cursor/view-cursor';
+import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {PrintService} from '../service/print.service';
+import {userCanReadAllInOrganization, userCanReadAllInWorkspace} from '../../shared/utils/permission.utils';
+import {TeamsAction} from '../store/teams/teams.action';
+import {convertTeamDtoToModel} from '../store/teams/teams.converter';
+import {Team} from '../store/teams/team';
+import {selectTeamById} from '../store/teams/teams.state';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +94,7 @@ export class PusherService implements OnDestroy {
   private currentOrganization: Organization;
   private currentProject: Project;
   private user: User;
+  private pusherInitiated: boolean;
 
   private userNotificationTitle: {success: string; info: string; warning: string; error: string};
   private dismissButton: NotificationButton;
@@ -97,21 +106,24 @@ export class PusherService implements OnDestroy {
     private projectService: ProjectService,
     private notificationService: NotificationService,
     private appId: AppIdService,
-    private i18n: I18n
+    private router: Router,
+    private locationStrategy: LocationStrategy,
+    private configurationService: ConfigurationService,
+    private printService: PrintService
   ) {
     this.userNotificationTitle = {
-      success: i18n({id: 'rules.blockly.action.message.success', value: 'Success'}),
-      info: i18n({id: 'rules.blockly.action.message.info', value: 'Information'}),
-      warning: i18n({id: 'rules.blockly.action.message.warning', value: 'Warning'}),
-      error: i18n({id: 'rules.blockly.action.message.error', value: 'Error'}),
+      success: $localize`:@@rules.blockly.action.message.success:Success`,
+      info: $localize`:@@rules.blockly.action.message.info:Information`,
+      warning: $localize`:@@rules.blockly.action.message.warning:Warning`,
+      error: $localize`:@@rules.blockly.action.message.error:Error`,
     };
 
-    const okBtn = i18n({id: 'button.ok', value: 'OK'});
+    const okBtn = $localize`:@@button.ok:OK`;
     this.dismissButton = {text: okBtn, bold: true};
   }
 
   public init(): void {
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       this.subscribeToUser();
     }
     this.subscribeToWorkspace();
@@ -120,21 +132,23 @@ export class PusherService implements OnDestroy {
   private subscribeToUser() {
     this.store$
       .pipe(
-        select(selectCurrentUser),
+        select(selectCurrentUserForWorkspace),
         filter(user => !!user),
-        take(1),
         tap(user => (this.user = user))
       )
       .subscribe(user => {
-        this.subscribePusher(user);
+        if (!this.pusherInitiated) {
+          this.pusherInitiated = true;
+          this.subscribePusher(user);
+        }
       });
   }
 
   private subscribePusher(user: User): void {
-    Pusher.logToConsole = !environment.pusherLogDisabled;
-    this.pusher = new Pusher(environment.pusherKey, {
-      cluster: environment.pusherCluster,
-      authEndpoint: `${environment.apiUrl}/rest/pusher`,
+    Pusher.logToConsole = !this.configurationService.getConfiguration().pusherLogDisabled;
+    this.pusher = new Pusher(this.configurationService.getConfiguration().pusherKey, {
+      cluster: this.configurationService.getConfiguration().pusherCluster,
+      authEndpoint: `${this.configurationService.getConfiguration().apiUrl}/rest/pusher`,
       auth: {
         params: {},
         headers: {
@@ -155,10 +169,14 @@ export class PusherService implements OnDestroy {
     this.bindOtherEvents();
     this.bindFavoriteEvents();
     this.bindUserEvents();
+    this.bindGroupEvents();
     this.bindSequenceEvents();
     this.bindUserMessageEvents();
     this.bindTemplateEvents();
     this.bindResourceCommentEvents();
+    this.bindPrintEvents();
+    this.bindNavigateEvents();
+    this.bindSendEmailEvents();
   }
 
   private bindOrganizationEvents() {
@@ -170,11 +188,10 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Organization:update', data => {
       if (data.id === this.getCurrentOrganizationId()) {
-        this.checkIfUserGainManage(data);
-        this.checkIfUserLostManage(data, ResourceType.Organization);
+        this.checkIfUserGainReadAll(data, ResourceType.Organization);
       }
       this.getOrganization(data.id, oldOrganization => {
-        const oldCode = oldOrganization && oldOrganization.code;
+        const oldCode = oldOrganization?.code;
         this.store$.dispatch(
           new OrganizationsAction.UpdateSuccess({organization: OrganizationConverter.fromDto(data), oldCode})
         );
@@ -186,11 +203,10 @@ export class PusherService implements OnDestroy {
         map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
         map((newOrganization: Organization) => {
           if (data.id === this.getCurrentOrganizationId()) {
-            this.checkIfUserGainManage(newOrganization);
-            this.checkIfUserLostManage(newOrganization, ResourceType.Organization);
+            this.checkIfUserGainReadAll(newOrganization, ResourceType.Organization);
           }
           this.getOrganization(data.id, oldOrganization => {
-            const oldCode = oldOrganization && oldOrganization.code;
+            const oldCode = oldOrganization?.code;
             this.store$.dispatch(new OrganizationsAction.UpdateSuccess({organization: newOrganization, oldCode}));
           });
         }),
@@ -215,30 +231,33 @@ export class PusherService implements OnDestroy {
       .subscribe(oldOrganization => action(oldOrganization));
   }
 
-  private checkIfUserGainManage(resource: Organization | Project) {
-    const hasManage = userHasManageRoleInResource(this.user, resource);
-    const hadManageInOrg = userHasManageRoleInResource(this.user, this.currentOrganization);
-    const hadManageInProj = userHasManageRoleInResource(this.user, this.currentProject);
+  private checkIfUserGainReadAll(resource: Organization | Project, type: ResourceType) {
+    let hasReadAll;
+    let hasReadAllInWorkspace;
+    if (type === ResourceType.Organization) {
+      hasReadAll = userCanReadAllInOrganization(resource, this.user);
+      hasReadAllInWorkspace = userCanReadAllInOrganization(this.currentOrganization, this.user);
+    } else {
+      hasReadAll = userCanReadAllInWorkspace(this.currentOrganization, resource, this.user);
+      hasReadAllInWorkspace = userCanReadAllInWorkspace(this.currentOrganization, this.currentProject, this.user);
+    }
 
-    if (hasManage && !hadManageInOrg && !hadManageInProj) {
-      this.store$.dispatch(new ProjectsAction.Get({organizationId: this.getCurrentOrganizationId(), force: true}));
-      this.store$.dispatch(new CollectionsAction.Get({force: true}));
-      this.store$.dispatch(new LinkTypesAction.Get({force: true}));
-      this.store$.dispatch(new ViewsAction.Get({force: true}));
+    if (hasReadAll && !hasReadAllInWorkspace) {
+      this.forceRefreshWorkspaceData();
     }
   }
 
-  private checkIfUserLostManage(resource: Organization | Project, type: ResourceType) {
-    const hasManage = userHasManageRoleInResource(this.user, resource);
-    const hadManageInOrg = userHasManageRoleInResource(this.user, this.currentOrganization);
-    const hadManageInProj = userHasManageRoleInResource(this.user, this.currentProject);
-
-    if (
-      !hasManage &&
-      hadManageInOrg !== hadManageInProj &&
-      ((type === ResourceType.Organization && hadManageInOrg) || (type === ResourceType.Project && hadManageInProj))
-    ) {
-      this.store$.dispatch(new NotificationsAction.ForceRefresh());
+  private forceRefreshWorkspaceData() {
+    const organizationId = this.getCurrentOrganizationId();
+    const projectId = this.getCurrentProjectId();
+    if (organizationId) {
+      this.store$.dispatch(new ProjectsAction.Get({organizationId, force: true}));
+      if (projectId) {
+        const workspace = {organizationId, projectId};
+        this.store$.dispatch(new CollectionsAction.Get({workspace, force: true}));
+        this.store$.dispatch(new LinkTypesAction.Get({workspace, force: true}));
+        this.store$.dispatch(new ViewsAction.Get({workspace, force: true}));
+      }
     }
   }
 
@@ -254,8 +273,7 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Project:update', data => {
       this.getProject(data.object.id, oldProject => {
         if (data.object.id === this.getCurrentProjectId()) {
-          this.checkIfUserGainManage(data.object);
-          this.checkIfUserLostManage(data.object, ResourceType.Project);
+          this.checkIfUserGainReadAll(data.object, ResourceType.Project);
         }
         const oldCode = oldProject && oldProject.code;
         this.store$.dispatch(
@@ -273,8 +291,7 @@ export class PusherService implements OnDestroy {
           map((dto: ProjectDto) => ProjectConverter.fromDto(dto, data.organizationId)),
           map((newProject: Project) => {
             if (data.id === this.getCurrentProjectId()) {
-              this.checkIfUserGainManage(newProject);
-              this.checkIfUserLostManage(newProject, ResourceType.Project);
+              this.checkIfUserGainReadAll(newProject, ResourceType.Project);
             }
             const oldCode = oldProject && oldProject.code;
             this.store$.dispatch(new ProjectsAction.UpdateSuccess({project: newProject, oldCode}));
@@ -385,6 +402,92 @@ export class PusherService implements OnDestroy {
             force: true,
           })
         );
+      }
+    });
+  }
+
+  private bindPrintEvents() {
+    this.channel.bind('PrintRequest', data => {
+      if (data.correlationId === this.appId.getAppId()) {
+        const a = document.createElement('a');
+        a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+          data.object.projectCode
+        }/${data.object.type.toLowerCase()}/${data.object.resourceId}/${data.object.documentId}/${
+          data.object.attributeId
+        }`;
+        a.target = '_blank';
+        a.click();
+      }
+    });
+
+    this.channel.bind('TextPrintRequest', data => {
+      if (data.correlationId === this.appId.getAppId()) {
+        this.printService.setContent(data.object.text);
+        const a = document.createElement('a');
+        a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
+          data.object.projectCode
+        }/text`;
+        a.target = '_blank';
+        a.click();
+      }
+    });
+  }
+
+  private bindNavigateEvents() {
+    this.channel.bind('NavigationRequest', data => {
+      if (this.isCurrentWorkspace(data) && data.correlationId === this.appId.getAppId()) {
+        this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
+          if (view) {
+            const encodedQuery = convertQueryModelToString(view.query);
+            const encodedCursor = isNotNullOrUndefined(data.object.documentId)
+              ? convertViewCursorToString({
+                  collectionId: data.object.collectionId,
+                  documentId: data.object.documentId,
+                  attributeId: data.object.attributeId,
+                  sidebar: data.object.sidebar,
+                })
+              : '';
+
+            if (data.object.newWindow) {
+              const a = document.createElement('a');
+              a.href = `${this.locationStrategy.getBaseHref()}w/${data.object.organizationCode}/${
+                data.object.projectCode
+              }/view;vc=${view.code}/${view.perspective}?q=${encodedQuery}&c=${encodedCursor}`;
+
+              if (data.object.newWindow) {
+                a.target = '_blank';
+              }
+
+              a.click();
+            } else {
+              this.router.navigate(
+                [
+                  '/w',
+                  data.object.organizationCode,
+                  data.object.projectCode,
+                  'view',
+                  {vc: view.code},
+                  view.perspective,
+                ],
+                {queryParams: {q: encodedQuery, c: encodedCursor}}
+              );
+            }
+          }
+        });
+      }
+    });
+  }
+
+  private bindSendEmailEvents() {
+    // SendEmailRequest
+    this.channel.bind('SendEmailRequest', data => {
+      if (data.correlationId === this.appId.getAppId()) {
+        const a = document.createElement('a');
+        a.href = `mailto:${encodeURIComponent(data.object.email)}?subject=${encodeURIComponent(
+          data.object.subject
+        )}&body=${encodeURIComponent(data.object.body)}`;
+        a.target = '_blank';
+        a.click();
       }
     });
   }
@@ -607,6 +710,24 @@ export class PusherService implements OnDestroy {
       }
     });
 
+    this.channel.bind('SetDocumentLinks:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        const removedLinkInstancesIds: string[] = data.object.removedLinkInstancesIds || [];
+        const createdLinkInstancesIds: string[] = data.object.createdLinkInstancesIds || [];
+        if (removedLinkInstancesIds.length) {
+          this.store$.dispatch(
+            new LinkInstancesAction.SetDocumentLinksSuccess({
+              linkInstances: [],
+              removedLinkInstancesIds,
+            })
+          );
+        }
+        if (createdLinkInstancesIds.length) {
+          this.store$.dispatch(new LinkInstancesAction.GetByIds({linkInstancesIds: createdLinkInstancesIds}));
+        }
+      }
+    });
+
     this.channel.bind('CompanyContact:update', data => {
       this.store$.dispatch(new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(data)}));
     });
@@ -626,9 +747,10 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel.bind('UserNotification:create', data => {
-      this.store$.dispatch(
-        new UserNotificationsAction.UpdateSuccess({userNotification: UserNotificationConverter.fromDto(data)})
-      );
+      const userNotification = UserNotificationConverter.fromDto(data);
+      if (userNotification) {
+        this.store$.dispatch(new UserNotificationsAction.UpdateSuccess({userNotification}));
+      }
     });
     this.channel.bind('UserNotification:remove', data => {
       this.store$.dispatch(new UserNotificationsAction.DeleteSuccess({id: data.id}));
@@ -678,6 +800,42 @@ export class PusherService implements OnDestroy {
     this.channel.bind('User:remove', data => {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(new UsersAction.DeleteSuccess({userId: data.id}));
+      }
+    });
+
+    this.channel.bind('User:reload', data => {
+      this.store$.dispatch(new UsersAction.UpdateSuccess({user: convertUserDtoToModel(data)}));
+    });
+  }
+
+  private bindGroupEvents() {
+    this.channel.bind('Group:update', data => {
+      const team = convertTeamDtoToModel(data.object);
+      const isCurrentOrganization = this.isCurrentOrganization(data);
+      this.checkIfUserGainedTeam(team, isCurrentOrganization);
+      this.store$.dispatch(new TeamsAction.UpdateSuccess({team}));
+    });
+
+    this.channel.bind('Group:remove', data => {
+      this.store$.dispatch(new TeamsAction.DeleteSuccess({teamId: data.id}));
+    });
+
+    this.channel.bind('Group:reload', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new TeamsAction.Get({organizationId: data.organizationId}));
+      }
+    });
+  }
+
+  private checkIfUserGainedTeam(team: Team, isCurrentOrganization: boolean) {
+    this.store$.pipe(select(selectTeamById(team.id)), take(1)).subscribe(originalTeam => {
+      const usersBefore = originalTeam?.users || [];
+      const usersNow = team.users || [];
+      if (!usersBefore.includes(this.user.id) && usersNow.includes(this.user.id)) {
+        this.store$.dispatch(new OrganizationsAction.GetSingle({organizationId: team.organizationId}));
+        if (isCurrentOrganization) {
+          this.forceRefreshWorkspaceData();
+        }
       }
     });
   }
@@ -733,7 +891,7 @@ export class PusherService implements OnDestroy {
   }
 
   private bindUserMessageEvents() {
-    this.channel.bind('UserMessage:create', data => {
+    this.channel.bind('UserMessageRequest:create', data => {
       if (this.isCurrentWorkspace(data)) {
         if (data.correlationId === this.appId.getAppId()) {
           switch (data.object?.type) {
@@ -767,7 +925,7 @@ export class PusherService implements OnDestroy {
                 data.object?.message,
                 this.userNotificationTitle.error,
                 [this.dismissButton],
-                'error'
+                'danger'
               );
               break;
           }
@@ -866,7 +1024,11 @@ export class PusherService implements OnDestroy {
       )
       .subscribe(models => {
         this.currentOrganization = models.organization;
-        this.currentProject = models.project;
+        if (models.organization) {
+          this.currentProject = models.project || this.currentProject;
+        } else {
+          this.currentProject = null;
+        }
       });
   }
 

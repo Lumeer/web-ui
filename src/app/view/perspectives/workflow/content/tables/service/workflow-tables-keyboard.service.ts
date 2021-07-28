@@ -22,7 +22,6 @@ import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {KeyCode} from '../../../../../../shared/key-code';
 import {preventEvent} from '../../../../../../shared/utils/common.utils';
 import {TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
-import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
 
 @Injectable()
 export class WorkflowTablesKeyboardService {
@@ -172,11 +171,7 @@ export class WorkflowTablesKeyboardService {
       case TableCellType.Header:
         if (tableIndex > 0) {
           const nextTableIndex = tableIndex - 1;
-          const nextTable = this.tables[nextTableIndex];
-          if (tableHasNewRowPresented(nextTable)) {
-            // selecting new row
-            this.stateService.selectCell(nextTableIndex, null, columnIndex, TableCellType.NewRow);
-          } else if (this.numberOfRowsInTable(nextTableIndex) > 0) {
+          if (this.numberOfRowsInTable(nextTableIndex) > 0) {
             // selecting last row in previous table
             const nextRowIndex = this.numberOfRowsInTable(nextTableIndex) - 1;
             const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
@@ -187,12 +182,6 @@ export class WorkflowTablesKeyboardService {
           }
         }
         break;
-      case TableCellType.NewRow:
-        if (this.numberOfRowsInTable(tableIndex) > 0) {
-          this.stateService.selectCell(tableIndex, this.numberOfRowsInTable(tableIndex) - 1, columnIndex);
-        } else {
-          this.stateService.selectCell(tableIndex, null, columnIndex, TableCellType.Header);
-        }
     }
   }
 
@@ -200,13 +189,9 @@ export class WorkflowTablesKeyboardService {
     switch (type) {
       case TableCellType.Body:
         if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
-          if (tableHasNewRowPresented(this.tables[tableIndex])) {
-            this.stateService.selectCell(tableIndex, null, columnIndex, TableCellType.NewRow);
-          } else {
-            const nextTableIndex = tableIndex + 1;
-            const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
-            this.stateService.selectCell(nextTableIndex, null, nextColumnIndex, TableCellType.Header);
-          }
+          const nextTableIndex = tableIndex + 1;
+          const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
+          this.stateService.selectCell(nextTableIndex, null, nextColumnIndex, TableCellType.Header);
         } else {
           this.stateService.selectCell(tableIndex, rowIndex + 1, columnIndex);
         }
@@ -214,14 +199,9 @@ export class WorkflowTablesKeyboardService {
       case TableCellType.Header:
         if (this.numberOfRowsInTable(tableIndex) > 0) {
           this.stateService.selectCell(tableIndex, 0, columnIndex);
-        } else if (tableHasNewRowPresented(this.tables[tableIndex])) {
-          this.stateService.selectCell(tableIndex, null, columnIndex, TableCellType.NewRow);
         } else {
           this.stateService.selectCell(tableIndex + 1, null, columnIndex, TableCellType.Header);
         }
-        break;
-      case TableCellType.NewRow:
-        this.stateService.selectCell(tableIndex + 1, null, columnIndex, TableCellType.Header);
         break;
     }
   }

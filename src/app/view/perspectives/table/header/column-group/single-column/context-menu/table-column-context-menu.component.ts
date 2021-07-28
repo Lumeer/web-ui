@@ -78,6 +78,9 @@ export class TableColumnContextMenuComponent {
   @Output()
   public functionEdit = new EventEmitter();
 
+  @Output()
+  public descriptionEdit = new EventEmitter();
+
   @ViewChild(MatMenuTrigger)
   public contextMenu: MatMenuTrigger;
 
@@ -112,5 +115,10 @@ export class TableColumnContextMenuComponent {
     this.contextMenuPosition = {x, y};
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
+  }
+
+  public onClick(event: MouseEvent) {
+    this.contextMenu?.closeMenu();
+    event.stopPropagation();
   }
 }

@@ -18,16 +18,19 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, take, takeUntil, tap} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousWorkspaceUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {
+  selectNavigatingToOtherWorkspace,
+  selectPreviousWorkspaceUrl,
+  selectWorkspace,
+} from '../../core/store/navigation/navigation.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
@@ -39,6 +42,9 @@ import {selectProjectsForWorkspace} from '../../core/store/projects/projects.sta
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectOrganizationPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {getLastUrlPart} from '../../shared/utils/common.utils';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -47,6 +53,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
+  public permissions$: Observable<AllowedPermissions>;
   public organizationCodes$: Observable<string[]>;
   public organization$ = new BehaviorSubject<Organization>(null);
 
@@ -58,8 +65,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
-    private i18n: I18n,
     private router: Router,
+    private route: ActivatedRoute,
     private store$: Store<AppState>,
     private notificationService: NotificationService
   ) {}
@@ -73,11 +80,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete() {
-    const message = this.i18n({
-      id: 'organization.delete.dialog.message',
-      value: 'Do you really want to permanently delete this organization?',
-    });
-    const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
+    const message = $localize`:@@organization.delete.dialog.message:Do you really want to permanently delete this organization?`;
+    const title = $localize`:@@organization.delete.dialog.title:Delete organization?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteOrganization());
   }
 
@@ -136,6 +140,20 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
         )
         .subscribe(organization => this.organization$.next({...organization}))
     );
+    this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
+
+    this.subscriptions.add(
+      this.permissions$
+        .pipe(
+          takeUntil(
+            this.store$.pipe(
+              select(selectNavigatingToOtherWorkspace),
+              filter(navigating => navigating)
+            )
+          )
+        )
+        .subscribe(permissions => this.checkCurrentTab(permissions))
+    );
 
     this.subscriptions.add(
       this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url))
@@ -161,6 +179,35 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       ),
       map(({codes, organization}) => (codes && codes.filter(code => code !== organization.code)) || [])
     );
+  }
+
+  private checkCurrentTab(permissions: AllowedPermissions) {
+    const currentTab = getLastUrlPart(this.router.url);
+    if (this.isInTabWithoutPermissions(permissions, currentTab)) {
+      this.navigateToAnyTab(permissions);
+    }
+  }
+
+  private isInTabWithoutPermissions(permissions: AllowedPermissions, tab: string) {
+    switch (tab) {
+      case 'detail':
+        return !permissions?.roles?.Manage;
+      case 'users':
+      case 'teams':
+        return !permissions?.roles?.UserConfig;
+      default:
+        return false;
+    }
+  }
+
+  private navigateToAnyTab(permissions: AllowedPermissions) {
+    if (permissions?.roles?.Manage) {
+      this.router.navigate(['detail'], {relativeTo: this.route});
+    } else if (permissions?.roles?.UserConfig) {
+      this.router.navigate(['users'], {relativeTo: this.route});
+    } else {
+      this.goBack();
+    }
   }
 
   private deleteOrganization() {

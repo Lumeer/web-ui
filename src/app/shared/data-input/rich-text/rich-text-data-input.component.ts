@@ -57,7 +57,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   @HostBinding('class.multiline')
@@ -68,6 +68,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   @Input()
   public placeholder: string;
+
+  @Input()
+  public editableInReadonly: boolean;
 
   @Output()
   public valueChange = new EventEmitter<DataValue>();
@@ -144,18 +147,18 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private refreshBackgroundClass(value: DataValue) {
-    this.invalidBackground = !this.readonly && value && !value.isValid() && !this.configuration?.skipValidation;
+    this.invalidBackground = !this.readonly && value && !value.isValid() && !this.commonConfiguration?.skipValidation;
   }
 
   private saveValue(value: string, action: DataInputSaveAction) {
     const dataValue = this.value.parseInput(value);
-    if (this.configuration?.skipValidation || dataValue.isValid()) {
+    if (this.commonConfiguration?.skipValidation || dataValue.isValid()) {
       this.save.emit({action, dataValue});
     }
   }
 
-  public openTextEditor(event: MouseEvent) {
-    preventEvent(event);
+  public openTextEditor(event?: MouseEvent) {
+    event && preventEvent(event);
 
     const content = this.text;
     this.preventSaveAndBlur();
@@ -165,6 +168,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       backdrop: 'static',
       class: 'modal-xxl modal-xxl-height',
       initialState: {
+        readonly: this.readonly && !this.editableInReadonly,
         content,
         minLength: this.value?.config?.minLength,
         maxLength: this.value?.config?.maxLength,
@@ -189,6 +193,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onEditorCreated(editor: any) {
+    editor.root.addEventListener('blur', () => this.onBlur());
     editor.setSelection(Number.MAX_SAFE_INTEGER);
 
     const isMultiLine = editor.root.childElementCount > 1;
@@ -220,7 +225,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
         event.preventDefault();
 
-        if (!this.configuration?.skipValidation && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -238,7 +243,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   private saveDataValue(dataValue: TextDataValue, event: KeyboardEvent) {
     const action = keyboardEventInputSaveAction(event);
-    if (this.configuration?.delaySaveAction) {
+    if (this.commonConfiguration?.delaySaveAction) {
       // needs to be executed after parent event handlers
       setTimeout(() => this.save.emit({action, dataValue}));
     } else {
@@ -253,12 +258,18 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onBlur(data: {editor: any; source: string}) {
+  public onBlur() {
     this.removeKeyDownListener();
     if (this.preventSave) {
       this.preventSave = false;
     } else {
       this.saveValue(this.text, DataInputSaveAction.Blur);
+    }
+  }
+
+  public onDoubleClick() {
+    if (this.readonly && !this.editableInReadonly) {
+      this.openTextEditor();
     }
   }
 }

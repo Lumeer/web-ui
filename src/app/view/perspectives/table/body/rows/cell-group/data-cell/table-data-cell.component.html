@@ -5,40 +5,48 @@
                         [linkInstance]="linkInstance"
                         [canManageConfig]="canManageConfig"
                         [allowedPermissions]="allowedPermissions"
+                        [linkAllowedPermissions]="linkAllowedPermissions"
+                        [dataPermissions]="dataPermissions"
+                        [linkDataPermissions]="linkDataPermissions"
                         (edit)="onEdit()">
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editable: (editing$ | async) as dataInputInfo">
+    *ngIf="{editable: editable && (data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)} as dataInputData">
+    <ng-container
+      *ngIf="data.attribute | dataInputEditInfo:data.dataValue:dataInputData.editable: (editing$ | async) as dataInputInfo">
 
-    <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
-         [innerHTML]="data.dataValue | previewDataValue | safeHtml"
-         class="text-pre overflow-hidden mx-1 align-middle"
-         [title]="data.dataValue | formatDataValueTitle"
-         [ngClass]="data.attribute?.constraint | constraintClass"
-         [class.invalid-value]="!(data.dataValue | isDataValueValid)"
-         readonly data-test="table-data-input">
-    </div>
+      <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
+           [innerHTML]="data.dataValue | previewDataValue | safeHtml"
+           class="text-pre overflow-hidden mx-1 align-middle"
+           [title]="data.dataValue | formatDataValueTitle"
+           [ngClass]="data.attribute?.constraint | constraintClass"
+           [class.invalid-value]="!(data.dataValue | isDataValueValid)"
+           readonly data-test="table-data-input">
+      </div>
 
-    <data-input *ngIf="dataInputInfo.showDataInput"
-                [style.width.px]="columnWidth"
-                [constraint]="data.attribute?.constraint"
-                [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
-                [dataValue]="data.dataValue"
-                [focus]="true"
-                [configuration]="configuration"
-                [readonly]="dataInputInfo.readonly"
-                (valueChange)="onValueChange($event)"
-                (save)="onValueSave($event)"
-                (cancel)="onCancelEditing()"
-                (enterInvalid)="onEnterInvalid()"
-                class="d-block h-100"
-                [class.mr-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
-                [class.ml-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
-                [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
-                data-test="table-data-input">
-    </data-input>
+      <data-input *ngIf="dataInputInfo.showDataInput"
+                  [style.width.px]="columnWidth"
+                  [constraint]="data.attribute?.constraint"
+                  [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
+                  [dataValue]="data.dataValue"
+                  [focus]="true"
+                  [configuration]="configuration"
+                  [readonly]="dataInputInfo.readonly"
+                  [editableInReadonly]="dataInputData.editable"
+                  (valueChange)="onValueChange($event)"
+                  (save)="onValueSave($event)"
+                  (cancel)="onCancelEditing()"
+                  (enterInvalid)="onEnterInvalid()"
+                  class="d-block h-100"
+                  [ngClass]="data.attribute?.constraint?.type | lowercase"
+                  [class.mr-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
+                  [class.ml-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
+                  [class.cursor-default]="!dataInputData.editable"
+                  data-test="table-data-input">
+      </data-input>
 
+    </ng-container>
   </ng-container>
 
   <ng-container
@@ -57,7 +65,9 @@
       [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
       [dataValue]="editedValue"
       [origin]="element"
-      (useHint)="onUseDocumentHint()">
+      (useHint)="onUseDocumentHint()"
+      (createLink)="onCreateLink($event)"
+      (updateLink)="onUpdateLink($event)">
     </document-hints>
   </ng-container>
 </ng-container>

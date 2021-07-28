@@ -22,13 +22,13 @@ import {SharedModule} from '../../../shared/shared.module';
 import {DetailPerspectiveComponent} from './detail-perspective.component';
 import {RouterModule} from '@angular/router';
 import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
-import {DetailGuard} from './detail-guard';
+import {DetailQueryStemPipe} from './pipes/detail-query-stem.pipe';
+import {CanCreateNewRecordPipe} from './pipes/can-create-new-record.pipe';
 
 @NgModule({
   imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
-  declarations: [DetailPerspectiveComponent],
+  declarations: [DetailPerspectiveComponent, DetailQueryStemPipe, CanCreateNewRecordPipe],
   exports: [DetailPerspectiveComponent],
-  providers: [DetailGuard],
 })
 export class DetailPerspectiveModule {}
 

@@ -19,24 +19,24 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {
-  selectTableFirstCollectionId,
   selectTableRowIndentable,
   selectTableRowOutdentable,
 } from '../../../../../../../../core/store/tables/tables.selector';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
-import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
-import {mergeMap} from 'rxjs/operators';
-import {selectCollectionPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
+import {AppState} from '../../../../../../../../core/store/app.state';
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
+import {TableDataPermissionsService} from '../../../../../service/table-data-permissions.service';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
   templateUrl: './table-hierarchy-cell-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TableDataPermissionsService],
 })
 export class TableHierarchyCellMenuComponent implements OnChanges {
   @Input()
@@ -53,9 +53,9 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
 
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
-  public allowedPermissions$: Observable<AllowedPermissions>;
+  public dataPermissions$: Observable<DataResourcePermissions>;
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>, private dataPermissionsService: TableDataPermissionsService) {}
 
   public open(x: number, y: number) {
     this.contextMenuPosition = {x, y};
@@ -67,15 +67,8 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
     if (changes.cursor && this.cursor) {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
-      this.allowedPermissions$ = this.selectAllowedPermissions$();
+      this.dataPermissions$ = this.dataPermissionsService.selectDataPermissions$(this.cursor);
     }
-  }
-
-  private selectAllowedPermissions$(): Observable<AllowedPermissions> {
-    return this.store$.pipe(
-      select(selectTableFirstCollectionId(this.cursor.tableId)),
-      mergeMap(collectionId => this.store$.pipe(select(selectCollectionPermissions(collectionId))))
-    );
   }
 
   public onIndent() {

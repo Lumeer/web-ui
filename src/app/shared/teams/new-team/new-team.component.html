@@ -1,0 +1,19 @@
+<form class="input-group" (submit)="onAddTeam()">
+  <input ngModel [value]="name" name="nameField" #nameField="ngModel"
+         id="nameField" class="form-control form-control-sm" type="text"
+         i18n-placeholder="@@team.add.placeholder"
+         placeholder="Type team name (e.g. Managers)"
+         (input)="onInputChanged(nameField.control.value)">
+  <div class="input-group-append">
+    <button type="button"
+            class="btn btn-sm btn-primary"
+            [disabled]="invalid || !name || isDuplicate"
+            (click)="onAddTeam()">
+      <i class="fas fa-plus mr-2"></i>
+      <span class="font-weight-bold" i18n="@@teams.add.button">Create Team</span>
+    </button>
+  </div>
+</form>
+<small class="invalid-message" *ngIf="!invalid && isDuplicate" i18n="@@teams.name.duplicate">
+  This team already exists. Try another name please.
+</small>

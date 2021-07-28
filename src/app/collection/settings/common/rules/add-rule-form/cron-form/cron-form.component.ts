@@ -27,12 +27,14 @@ import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type'
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
 import {
-  selectCollectionsByWritePermission,
-  selectLinkTypesByWritePermission,
+  selectContributeAndWritableCollections,
+  selectContributeAndWritableLinkTypes,
+  selectViewsByRead,
 } from '../../../../../../core/store/common/permissions.selectors';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'cron-form',
@@ -54,6 +56,7 @@ export class CronFormComponent implements OnInit {
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
+  public views$: Observable<View[]>;
 
   public variables: RuleVariable[];
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
@@ -92,8 +95,9 @@ export class CronFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.collections$ = this.store$.select(selectCollectionsByWritePermission);
-    this.linkTypes$ = this.store$.select(selectLinkTypesByWritePermission);
+    this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
+    this.views$ = this.store$.pipe(select(selectViewsByRead));
+    this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
     if (this.collection) {
       this.variables = [{name: 'records', collectionId: this.collection.id, list: true}];
     }

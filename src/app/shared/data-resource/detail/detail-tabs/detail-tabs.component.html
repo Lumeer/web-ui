@@ -5,9 +5,7 @@
        title="Detail"
        i18n-title="@@document.detail.tabs.detail"
        i18n="@@document.detail.tabs.detail"
-       (click)="onTabSelect.emit(detailTabTypes.Detail)">
-      Detail
-    </a>
+       (click)="onTabSelect.emit(detailTabTypes.Detail)">Detail</a>
   </li>
   <li *ngIf="showLinks" class="nav-item">
     <a class="nav-link text-truncate"
@@ -19,7 +17,17 @@
       <span class="small">{{linksCount ? ' (' + linksCount + ')' : ''}}</span>
     </a>
   </li>
-  <li class="nav-item">
+  <li *ngIf="showTables" class="nav-item">
+    <a class="nav-link text-truncate"
+       [class.active]="activeTab === detailTabTypes.Tables"
+       title="Tables"
+       i18n-title="@@document.detail.tabs.tables"
+       (click)="onTabSelect.emit(detailTabTypes.Tables)">
+      <span i18n="@@document.detail.tabs.tables">Tables</span>
+      <span class="small">{{documentsCount ? ' (' + documentsCount + ')' : ''}}</span>
+    </a>
+  </li>
+  <li *ngIf="showComments" class="nav-item">
     <a class="nav-link text-truncate"
        [class.active]="activeTab === detailTabTypes.Comments"
        title="Comments"
@@ -29,14 +37,12 @@
       <span class="small">{{commentsCount ? ' (' + commentsCount + ')' : ''}}</span>
     </a>
   </li>
-  <li class="nav-item">
+  <li *ngIf="showActivity" class="nav-item">
     <a class="nav-link text-truncate"
        [class.active]="activeTab === detailTabTypes.Activity"
        title="Activity"
        i18n-title="@@document.detail.tabs.activity"
        i18n="@@document.detail.tabs.activity"
-       (click)="onTabSelect.emit(detailTabTypes.Activity)">
-      Activity
-    </a>
+       (click)="onTabSelect.emit(detailTabTypes.Activity)">Activity</a>
   </li>
 </ul>

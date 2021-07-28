@@ -18,6 +18,7 @@
  */
 
 import {Constraint} from '@lumeer/data-filters';
+import {DataResource} from '../../../../core/model/resource';
 
 export interface PivotTable {
   cells: PivotTableCell[][];
@@ -25,6 +26,7 @@ export interface PivotTable {
 
 export interface PivotTableCell {
   value: any;
+  dataResources?: DataResource[];
   constraint?: Constraint;
   summary?: string;
   rowSpan: number;

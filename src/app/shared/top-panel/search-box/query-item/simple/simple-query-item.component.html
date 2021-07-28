@@ -1,0 +1,46 @@
+<div [style.background-color]="queryItem | queryItemBackground"
+     [style.border-color]="queryItem | queryItemBorder:(readonly || !queryItemForm || queryItemForm.valid)"
+     [class.pr-2]="readonly"
+     class="query-item px-1 d-flex align-items-center h-100">
+  <icons-presenter [colors]="queryItem.colors"
+                   [icons]="queryItem.icons">
+  </icons-presenter>
+
+  <em *ngIf="queryItem | isDeletedItem"
+      class="mx-1"
+      [title]="queryItem | queryItemText">
+    {{queryItem | queryItemText}}
+  </em>
+
+  <span *ngIf="!(queryItem | isDeletedItem)"
+        [class.font-weight-bold]="queryItem | isCollectionItem"
+        [title]="queryItem | queryItemText"
+        [class.text-truncate]="!(queryItem | isAttributeItem)"
+        class="mx-1">
+    {{queryItem | queryItemText | truncate:30}}
+  </span>
+
+  <filter-preview class="mr-1  flex-grow-1" *ngIf="attribute"
+                  [attribute]="attribute"
+                  [constraintData]="constraintData"
+                  [condition]="conditionControl?.value"
+                  [conditionValues]="conditionValuesControl?.value">
+  </filter-preview>
+
+  <i *ngIf="!readonly"
+     (click)="onRemove()"
+     class="mr-1 fas fa-times remove"
+     title="Delete query item" i18n-title="@@query.item.button.remove">
+  </i>
+</div>
+
+<filter-builder *ngIf="!readonly && (queryItem | isAttributeItem)"
+                [attribute]="attribute"
+                [origin]="hostElement"
+                [collectionId]="queryItem | queryItemCollectionId"
+                [linkTypeId]="queryItem | queryItemLinkTypeId"
+                [condition]="conditionControl?.value"
+                [conditionValues]="conditionValuesControl?.value"
+                (valueChange)="onConditionChange($event)"
+                (finishEditing)="onFinishBuilderEditing()">
+</filter-builder>

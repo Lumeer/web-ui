@@ -22,9 +22,9 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {TextConstraintFormControl} from './text-constraint-form-control';
 import {CaseStyle, TextConstraintConfig} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../../utils/translation.utils';
 
 @Component({
   selector: 'text-constraint-config-form',
@@ -42,14 +42,10 @@ export class TextConstraintConfigFormComponent implements OnChanges {
 
   public textConstraintFormControl = TextConstraintFormControl;
 
-  public constructor(private i18n: I18n) {
+  public constructor() {
     this.items = Object.keys(CaseStyle).map(caseStyle => {
-      const value = i18n(
-        {
-          id: 'constraint.text.caseStyle.value',
-          value:
-            '{caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case}}',
-        },
+      const value = parseSelectTranslation(
+        $localize`:@@constraint.text.caseStyle.value:{caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case}}`,
         {caseStyle}
       );
       return {id: caseStyle, value};

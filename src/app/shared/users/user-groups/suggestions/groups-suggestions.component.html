@@ -1,9 +1,0 @@
-<div class="dropdown" *ngIf="groups.length > 0">
-  <div class="dropdown-menu show">
-    <div *ngFor="let group of groups"
-         class="dropdown-item cursor-pointer"
-         (mousedown)="onSelectGroup(group)">
-      {{group.name}}
-    </div>
-  </div>
-</div>

@@ -18,27 +18,26 @@
  */
 
 import {createSelector} from '@ngrx/store';
-import {DurationUnit} from '@lumeer/data-filters';
+import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../app.state';
-import {selectAllUsers, selectCurrentUser} from '../users/users.state';
+import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
+import {selectAllViews} from '../views/views.state';
 
-export interface ConstraintDataState {
-  durationUnitsMap: Record<DurationUnit, string>;
-}
+export type ConstraintDataState = Partial<ConstraintData>;
 
-export const initialConstraintDataState: ConstraintDataState = {
-  durationUnitsMap: null,
-};
+export const initialConstraintDataState: ConstraintDataState = {};
 
 export const selectConstraintDataState = (state: AppState) => state.constraintData;
 
 export const selectConstraintData = createSelector(
   selectConstraintDataState,
   selectAllUsers,
-  selectCurrentUser,
-  (state, users, currentUser) => ({
+  selectAllViews,
+  selectCurrentUserForWorkspace,
+  (state, users, views, currentUser) => ({
+    ...state,
     users,
+    views,
     currentUser,
-    durationUnitsMap: state.durationUnitsMap,
   })
 );

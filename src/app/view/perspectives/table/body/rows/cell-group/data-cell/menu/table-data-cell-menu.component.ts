@@ -28,8 +28,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
-import {first, map, take} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {first, map, switchMap, take, tap} from 'rxjs/operators';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../../../core/store/app.state';
@@ -53,6 +53,9 @@ import {selectCollectionById} from '../../../../../../../../core/store/collectio
 import {ModalService} from '../../../../../../../../shared/modal/modal.service';
 import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
 import {MatMenuTrigger} from '@angular/material/menu';
+import {CanCreateLinksPipe} from '../../../../../../../../shared/pipes/can-create-links.pipe';
+import {selectLinkTypesPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
+import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -75,6 +78,15 @@ export class TableDataCellMenuComponent implements OnChanges {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
+  @Input()
+  public linkAllowedPermissions: AllowedPermissions;
+
+  @Input()
+  public dataPermissions: DataResourcePermissions;
+
+  @Input()
+  public linkDataPermissions: DataResourcePermissions;
+
   @Output()
   public edit = new EventEmitter();
 
@@ -88,10 +100,17 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
+  public setLinks$: Observable<boolean>;
   public tableRow$: Observable<TableConfigRow>;
   public tableParts$: Observable<TableConfigPart[]>;
 
-  public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  private tableParts: TableConfigPart[];
+
+  public constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService,
+    private canCreateLinksPipe: CanCreateLinksPipe
+  ) {}
 
   public open(x: number, y: number) {
     this.contextMenuPosition = {x, y};
@@ -110,8 +129,30 @@ export class TableDataCellMenuComponent implements OnChanges {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
       this.tableRow$ = this.store$.pipe(select(selectTableRow(this.cursor)));
-      this.tableParts$ = this.store$.pipe(select(selectTableParts(this.cursor)));
+      this.tableParts$ = this.store$.pipe(
+        select(selectTableParts(this.cursor)),
+        tap(parts => (this.tableParts = parts))
+      );
+      this.setLinks$ = this.bindSetLinks$();
     }
+  }
+
+  private bindSetLinks$(): Observable<boolean> {
+    if (this.created && this.cursor.partIndex % 2 === 0) {
+      return this.tableParts$.pipe(
+        switchMap(parts => {
+          const linkPart = parts[this.cursor.partIndex + 1];
+          if (linkPart?.linkTypeId) {
+            return combineLatest([
+              this.store$.pipe(select(selectLinkTypeById(linkPart.linkTypeId))),
+              this.store$.pipe(select(selectLinkTypesPermissions)),
+            ]).pipe(map(([linkType, permissions]) => this.canCreateLinksPipe.transform(linkType, permissions)));
+          }
+          return of(false);
+        })
+      );
+    }
+    return of(false);
   }
 
   public onAddRow(indexDelta: number) {
@@ -248,5 +289,12 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public onCopyValue() {
     this.store$.dispatch(new TablesAction.CopyValue({cursor: this.cursor}));
+  }
+
+  public onUpdateLinks() {
+    const linkTypeId = this.tableParts?.[this.cursor.partIndex + 1]?.linkTypeId;
+    if (this.document && linkTypeId) {
+      this.modalService.showModifyDocumentLinks(this.document.id, this.document.collectionId, linkTypeId);
+    }
   }
 }

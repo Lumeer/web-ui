@@ -4,14 +4,19 @@
       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
       [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"
-      scope="col" title="{{column.attribute.name}}" #tableHeader
+      [title]="column.attribute | attributeTitle:'':true"
+      scope="col" #tableHeader
       (contextmenu)="onContextMenu(index, $event)">
     <div class="d-flex flex-nowrap flex-row align-items-center">
       <div class="flex-grow-1 overflow-hidden">{{column.attribute.name}}</div>
 
+      <div *ngIf="column?.attribute?.description" class="ml-1"
+           [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
+        <i class="far fa-question-circle ml-1"></i>
+      </div>
       <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
         <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
-          (click)="onContextMenu(index, $event)">
+             (click)="onContextMenu(index, $event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"
              class="fas fa-function fa-xs fa-fw">
@@ -27,13 +32,14 @@
         </div>
       </ng-container>
     </div>
-    <links-list-header-menu [permissions]="permissions"
+    <links-list-header-menu [permissions]="column.collectionId ? collectionPermissions : linkTypePermissions"
                             [attribute]="column?.attribute"
                             (attributeFunction)="onAttributeFunction(index)"
-                            (attributeType)="onAttributeType(index)">
+                            (attributeType)="onAttributeType(index)"
+                            (attributeDescription)="onAttributeDescription(index)">
     </links-list-header-menu>
   </th>
-  <th class="border-0 bg-white fixed-header" *ngIf="permissions?.read && permissions?.writeWithView">&nbsp;</th>
+  <th class="border-0 bg-white fixed-header">&nbsp;</th>
 </tr>
 <div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
      [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.5rem)'" cdkDragLockAxis="x" cdkDrag

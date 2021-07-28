@@ -1,0 +1,11 @@
+@import 'src/styles/variables';
+
+.container {
+  background-color: $primary;
+  color: $light;
+}
+
+.link {
+  background-color: white;
+  color: $success !important;
+}

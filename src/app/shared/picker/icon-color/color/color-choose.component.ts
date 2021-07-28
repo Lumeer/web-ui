@@ -29,7 +29,6 @@ import {
 } from '@angular/core';
 import * as colors from '../../colors';
 import {shadeColor} from '../../../utils/html-modifier';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'color-choose',
@@ -57,9 +56,9 @@ export class ColorChooseComponent implements OnChanges {
   public readonly okButtonText: string;
   public readonly cancelButtonText: string;
 
-  constructor(private renderer: Renderer2, private i18n: I18n) {
-    this.okButtonText = this.i18n({id: 'button.select', value: 'Select'});
-    this.cancelButtonText = this.i18n({id: 'button.cancel', value: 'Cancel'});
+  constructor(private renderer: Renderer2) {
+    this.okButtonText = $localize`:@@button.select:Select`;
+    this.cancelButtonText = $localize`:@@button.cancel:Cancel`;
   }
 
   public ngOnChanges(changes: SimpleChanges) {

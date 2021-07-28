@@ -1,0 +1,17 @@
+<img ngxGravatar
+     [email]="user.email"
+     [size]="avatarSize"
+     [style.min-width.px]="avatarSize"
+     [style.min-height.px]="avatarSize"
+     tooltip="Change your profile icon at www.gravatar.com"
+     i18n-tooltip="@@user.settings.avatar.tooltip">
+
+<input-box
+  class="ml-2 flex-grow-1"
+  [userData]="false"
+  [canStayEmpty]="true"
+  placeholder="Enter name"
+  i18n-placeholder="@@user.settings.name.placeholder"
+  [initialValue]="user.name"
+  (newValue)="nameChange.emit($event)">
+</input-box>

@@ -33,7 +33,7 @@
       </span>
       <br/>
       <div *ngIf="data.ref?.paidCommissions && data.ref?.paidCommissions?.length">
-        <span i18n="@@referralDialog.unpaidEarnings.label" class="font-weight-bold">Your paid earnings are: </span>
+        <span i18n="@@referralDialog.paidEarnings.label" class="font-weight-bold">Your paid earnings are: </span>
         <span *ngFor="let commission of data.ref?.paidCommissions; let idx = index;">
           {{idx === 0 ? '' : ', '}} {{commission.currency}} {{commission.amount}}
         </span>

@@ -18,11 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {PercentageConstraintFormControl} from './percentage-constraint-form-control';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
-import {PercentageConstraintConfig} from '@lumeer/data-filters';
+import {PercentageConstraintConfig, PercentageDisplayStyle} from '@lumeer/data-filters';
+import {COLOR_SUCCESS} from '../../../../../../core/constants';
 
 @Component({
   selector: 'percentage-constraint-config-form',
@@ -53,12 +54,13 @@ export class PercentageConstraintConfigFormComponent implements OnChanges {
     this.form.addControl(PercentageConstraintFormControl.Decimals, new FormControl(this.config?.decimals));
     this.form.addControl(PercentageConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
     this.form.addControl(PercentageConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue));
+    this.form.addControl(PercentageConstraintFormControl.Color, new FormControl(this.config?.color || COLOR_SUCCESS));
+    this.form.addControl(
+      PercentageConstraintFormControl.Style,
+      new FormControl(this.config?.style || PercentageDisplayStyle.Text)
+    );
     this.form.setValidators(
       minMaxValidator(PercentageConstraintFormControl.MinValue, PercentageConstraintFormControl.MaxValue)
     );
-  }
-
-  public get decimalsControl(): AbstractControl {
-    return this.form.get(PercentageConstraintFormControl.Decimals);
   }
 }

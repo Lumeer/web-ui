@@ -36,7 +36,12 @@ export class DataInputEditInfoPipe implements PipeTransform {
     const hasValue = dataValue && !!dataValue.format();
     const readonly = !editable || !editing;
 
-    const forceDataInput = [ConstraintType.Action, ConstraintType.Files].includes(constraint.type);
+    let forceDataInput;
+    if ([ConstraintType.Action, ConstraintType.Files, ConstraintType.Text].includes(constraint.type)) {
+      forceDataInput = true;
+    } else if (constraint.type === ConstraintType.Percentage) {
+      forceDataInput = !asText;
+    }
     return {
       readonly,
       hasValue,

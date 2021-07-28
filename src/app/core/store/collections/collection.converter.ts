@@ -19,7 +19,7 @@
 
 import {CollectionDto} from '../../dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {
   Collection,
@@ -28,7 +28,7 @@ import {
   CollectionPurposeType,
   ImportedCollection,
 } from './collection';
-import {convertRulesFromDto, convertRulesToDto} from '../store.utils';
+import {convertRulesFromDto, convertRulesToDto} from '../utils/store.utils';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 export function convertCollectionDtoToModel(
@@ -44,11 +44,12 @@ export function convertCollectionDtoToModel(
     description: dto.description,
     color: dto.color,
     icon: dto.icon,
+    priority: dto.priority,
     attributes: !preventSortAttributes
       ? attributes.sort((a, b) => +a.id?.substring(1) - +b.id?.substring(1))
       : attributes,
     defaultAttributeId: dto.defaultAttributeId,
-    permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
+    permissions: dto.permissions ? convertPermissionsDtoToModel(dto.permissions) : null,
     documentsCount: dto.documentsCount,
     correlationId: correlationId,
     favorite: dto.favorite,
@@ -71,8 +72,8 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     description: model.description,
     color: model.color,
     icon: model.icon,
-    attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
-    permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
+    priority: model.priority,
+    attributes: model.attributes?.map(convertAttributeModelToDto) || [],
     rules: convertRulesToDto(model.rules),
     purpose: convertCollectionPurposeModelToDto(model.purpose),
   };

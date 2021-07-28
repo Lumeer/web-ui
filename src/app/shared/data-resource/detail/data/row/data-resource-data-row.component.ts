@@ -30,7 +30,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
 import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
@@ -40,6 +39,7 @@ import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {Workspace} from '../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'data-resource-data-row',
@@ -56,6 +56,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   @Input()
   public permissions: AllowedPermissions;
+
+  @Input()
+  public workspace: Workspace;
 
   @Input()
   public constraintData: ConstraintData;
@@ -121,8 +124,8 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
     return this.row?.attribute?.constraint?.type;
   }
 
-  constructor(private i18n: I18n) {
-    this.placeholder = i18n({id: 'dataResource.attribute.placeholder', value: 'Enter attribute name'});
+  constructor() {
+    this.placeholder = $localize`:@@dataResource.attribute.placeholder:Enter attribute name`;
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -139,7 +142,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private createDataValue(value?: any, typed?: boolean): DataValue {
-    const constraint = (this.row.attribute && this.row.attribute.constraint) || new UnknownConstraint();
+    const constraint = this.row.attribute?.constraint || new UnknownConstraint();
     if (typed) {
       return constraint.createInputDataValue(value, this.row.value, this.constraintData);
     }
@@ -161,6 +164,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   public onNewValue(dataValue: DataValue) {
     if (!this.isEditable()) {
+      this.onDataInputCancel();
       return;
     }
 
@@ -217,7 +221,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private startKeyEditing(value?: any): boolean {
-    if (this.isManageable() && !this.keyEditing$.value) {
+    if (this.editableKey && !this.keyEditing$.value) {
       this.keyDataValue = this.createKeyDataValue(value);
       this.keyEditing$.next(true);
       return true;
@@ -236,7 +240,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isEditable(): boolean {
-    return this.permissions?.writeWithView && !this.readonly;
+    return !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
@@ -264,10 +268,6 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
     }
-  }
-
-  private isManageable(): boolean {
-    return this.permissions && this.permissions.manageWithView;
   }
 
   public focusColumn(column: number) {
