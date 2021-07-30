@@ -102,6 +102,8 @@ import {GetDocumentCreatedDateBlocklyComponent} from './blocks/get-document-crea
 import {GetDocumentUpdatedDateBlocklyComponent} from './blocks/get-document-updated-date-blockly-component';
 import {GetDocumentCreatedAuthorBlocklyComponent} from './blocks/get-document-created-author-blockly-component';
 import {GetDocumentUpdatedAuthorBlocklyComponent} from './blocks/get-document-updated-author-blockly-component';
+import {CurrentTeamsBlocklyComponent} from './blocks/current-teams-blockly-component';
+import {IsUserInTeamBlocklyComponent} from './blocks/is-user-in-team-blockly-component';
 
 declare var Blockly: any;
 
@@ -232,6 +234,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetDocumentCreatedAuthorBlocklyComponent(this.blocklyUtils),
       new GetDocumentUpdatedDateBlocklyComponent(this.blocklyUtils),
       new GetDocumentUpdatedAuthorBlocklyComponent(this.blocklyUtils),
+      new CurrentTeamsBlocklyComponent(this.blocklyUtils),
+      new IsUserInTeamBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
