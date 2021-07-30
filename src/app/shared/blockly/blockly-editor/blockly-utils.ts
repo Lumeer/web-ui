@@ -83,6 +83,8 @@ export class BlocklyUtils {
   public static readonly FORMAT_DATE = 'format_date';
   public static readonly CURRENT_DATE = 'current_date';
   public static readonly CURRENT_USER = 'current_user';
+  public static readonly CURRENT_TEAMS = 'current_teams';
+  public static readonly IS_USER_IN_TEAM = 'is_user_in_team';
   public static readonly CURRENT_LOCALE = 'current_locale';
   public static readonly ESCAPE_HTML = 'escape_html';
   public static readonly UNESCAPE_HTML = 'unescape_html';
