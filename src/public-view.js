@@ -32,7 +32,9 @@ if (typeof lumeer_public_view_fce !== 'function') {
     const organization = params.get('_o');
     const project = params.get('_p');
 
-    params.set('tp', 'true');
+    if (!params.has('tp')) {
+      params.set('tp', 'true');
+    }
 
     const urls = getElementUrls(language, organization, project);
 
