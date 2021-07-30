@@ -29,7 +29,17 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Rule, RuleConfiguration, RuleTiming, RuleType, ruleTypeMap} from '../../../../../core/model/rule';
+import {
+  createRuleTiming,
+  Rule,
+  RuleConfiguration,
+  RuleTiming,
+  ruleTimingHasCreate,
+  ruleTimingHasDelete,
+  ruleTimingHasUpdate,
+  RuleType,
+  ruleTypeMap,
+} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
@@ -85,9 +95,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.ruleNames) {
       // there can be a new rule added that clashes with currently entered name
-      if (this.form) {
-        this.form.get('name').updateValueAndValidity();
-      }
+      this.nameControl?.updateValueAndValidity();
     }
   }
 
@@ -95,11 +103,11 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     this.form = this.fb.group({
       id: this.rule.id,
       name: [this.rule.name, [Validators.required, this.usedNameValidator()]],
-      timingCreate: this.hasCreate(this.rule.timing),
-      timingUpdate: this.hasUpdate(this.rule.timing),
+      timingCreate: ruleTimingHasCreate(this.rule.timing),
+      timingUpdate: ruleTimingHasUpdate(this.rule.timing),
       timingDelete: [
         {
-          value: this.rule.type === RuleType.AutoLink || this.hasDelete(this.rule.timing),
+          value: this.rule.type === RuleType.AutoLink || ruleTimingHasDelete(this.rule.timing),
           disabled: this.rule.type === RuleType.AutoLink,
         },
       ],
@@ -116,27 +124,19 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     });
     this.form.setValidators(this.formValidator());
 
-    this.formSubscription = this.form.get('type').valueChanges.subscribe(type => {
-      if (type === RuleType.AutoLink) {
-        const timingDelete = this.form.get('timingDelete');
-        timingDelete.setValue(this.hasDelete(this.rule.timing));
-        timingDelete.disable();
+    this.formSubscription = this.typeControl.valueChanges.subscribe(type => this.checkTimers(type));
+  }
+
+  private checkTimers(type: RuleType) {
+    switch (type) {
+      case RuleType.AutoLink: {
+        this.timingDeleteControl.setValue(true);
+        this.timingDeleteControl.disable();
+        break;
       }
-      if (type === RuleType.Cron) {
-        const timingCreate = this.form.get('timingCreate');
-        timingCreate.setValue(false);
-        timingCreate.disable();
-        const timingUpdate = this.form.get('timingUpdate');
-        timingUpdate.setValue(false);
-        timingUpdate.disable();
-        const timingDelete = this.form.get('timingDelete');
-        timingDelete.setValue(false);
-        timingDelete.disable();
-      } else {
-        const timingDelete = this.form.get('timingDelete');
-        timingDelete.enable();
-      }
-    });
+      default:
+        this.timingDeleteControl.enable();
+    }
   }
 
   private getBlocklyGroup() {
@@ -199,62 +199,40 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private hasCreate(timing: RuleTiming): boolean {
-    return [RuleTiming.All, RuleTiming.Create, RuleTiming.CreateUpdate, RuleTiming.CreateDelete].indexOf(timing) >= 0;
-  }
-
-  private hasUpdate(timing: RuleTiming): boolean {
-    return [RuleTiming.All, RuleTiming.Update, RuleTiming.CreateUpdate, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
-  }
-
-  private hasDelete(timing: RuleTiming): boolean {
-    return [RuleTiming.All, RuleTiming.Delete, RuleTiming.CreateDelete, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
-  }
-
-  private toTiming(hasCreate: boolean, hasUpdate: boolean, hasDelete: boolean): RuleTiming {
-    if (hasCreate) {
-      if (hasUpdate) {
-        if (hasDelete) {
-          return RuleTiming.All;
-        }
-        return RuleTiming.CreateUpdate;
-      }
-      if (hasDelete) {
-        return RuleTiming.CreateDelete;
-      }
-      return RuleTiming.Create;
-    } else {
-      if (hasUpdate) {
-        if (hasDelete) {
-          return RuleTiming.UpdateDelete;
-        }
-        return RuleTiming.Update;
-      }
-      if (hasDelete) {
-        return RuleTiming.Delete;
-      }
-    }
-    return null;
-  }
-
   public get typeControl(): AbstractControl {
-    return this.form.get('type');
+    return this.form?.get('type');
   }
 
-  public get name(): AbstractControl {
-    return this.form.get('name');
+  public get nameControl(): AbstractControl {
+    return this.form?.get('name');
   }
 
-  public get configAutoLink(): AbstractControl {
-    return this.form.get('configAutoLink');
+  public get timingCreateControl(): AbstractControl {
+    return this.form?.get('timingCreate');
   }
 
-  public get configBlockly(): AbstractControl {
-    return this.form.get('configBlockly');
+  public get timingUpdateControl(): AbstractControl {
+    return this.form?.get('timingUpdate');
   }
 
-  public get configCron(): AbstractControl {
-    return this.form.get('configCron');
+  public get allTimings(): AbstractControl[] {
+    return [this.timingCreateControl, this.timingUpdateControl, this.timingDeleteControl].filter(timer => !!timer);
+  }
+
+  public get timingDeleteControl(): AbstractControl {
+    return this.form?.get('timingDelete');
+  }
+
+  public get configAutoLink(): FormGroup {
+    return this.form.get('configAutoLink') as FormGroup;
+  }
+
+  public get configBlockly(): FormGroup {
+    return this.form.get('configBlockly') as FormGroup;
+  }
+
+  public get configCron(): FormGroup {
+    return this.form.get('configCron') as FormGroup;
   }
 
   public getRuleConfiguration(ruleType: RuleType): RuleConfiguration {
@@ -277,15 +255,26 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   public getRuleFromForm(): Rule {
     return {
       id: this.form.get('id').value,
-      type: this.form.get('type').value,
-      name: this.form.get('name').value,
-      timing: this.toTiming(
-        this.form.get('timingCreate').value,
-        this.form.get('timingUpdate').value,
-        this.form.get('timingDelete').value
-      ),
-      configuration: this.getRuleConfiguration(this.form.get('type').value),
+      type: this.typeControl.value,
+      name: this.nameControl.value,
+      timing: this.createRuleTiming(),
+      configuration: this.getRuleConfiguration(this.typeControl.value),
     } as Rule;
+  }
+
+  private createRuleTiming(): RuleTiming {
+    switch (this.typeControl.value) {
+      case RuleType.Cron:
+        return null;
+      case RuleType.AutoLink:
+        return createRuleTiming(this.timingCreateControl.value, this.timingUpdateControl.value, true);
+      default:
+        return createRuleTiming(
+          this.timingCreateControl.value,
+          this.timingUpdateControl.value,
+          this.timingDeleteControl.value
+        );
+    }
   }
 
   public fireCancelNewRule(): void {

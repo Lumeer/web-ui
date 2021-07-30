@@ -149,3 +149,41 @@ export type RuleConfiguration =
   | BlocklyRuleConfiguration
   | ZapierRuleConfiguration
   | CronRuleConfiguration;
+
+export function ruleTimingHasCreate(timing: RuleTiming): boolean {
+  return [RuleTiming.All, RuleTiming.Create, RuleTiming.CreateUpdate, RuleTiming.CreateDelete].indexOf(timing) >= 0;
+}
+
+export function ruleTimingHasUpdate(timing: RuleTiming): boolean {
+  return [RuleTiming.All, RuleTiming.Update, RuleTiming.CreateUpdate, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
+}
+
+export function ruleTimingHasDelete(timing: RuleTiming): boolean {
+  return [RuleTiming.All, RuleTiming.Delete, RuleTiming.CreateDelete, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
+}
+
+export function createRuleTiming(hasCreate: boolean, hasUpdate: boolean, hasDelete: boolean): RuleTiming {
+  if (hasCreate) {
+    if (hasUpdate) {
+      if (hasDelete) {
+        return RuleTiming.All;
+      }
+      return RuleTiming.CreateUpdate;
+    }
+    if (hasDelete) {
+      return RuleTiming.CreateDelete;
+    }
+    return RuleTiming.Create;
+  } else {
+    if (hasUpdate) {
+      if (hasDelete) {
+        return RuleTiming.UpdateDelete;
+      }
+      return RuleTiming.Update;
+    }
+    if (hasDelete) {
+      return RuleTiming.Delete;
+    }
+  }
+  return null;
+}

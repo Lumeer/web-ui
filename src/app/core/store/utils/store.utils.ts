@@ -21,7 +21,15 @@ import {Action} from '@ngrx/store';
 import {from} from 'rxjs';
 import {CommonAction} from '../common/common.action';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
-import {chronoUnitMap, CronRuleConfiguration, Rule, ruleTimingMap, RuleType, ruleTypeMap} from '../../model/rule';
+import {
+  chronoUnitMap,
+  CronRuleConfiguration,
+  Rule,
+  RuleConfiguration,
+  ruleTimingMap,
+  RuleType,
+  ruleTypeMap,
+} from '../../model/rule';
 import {CronRuleConfigurationDto, RuleDto} from '../../dto/rule.dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
 import {languageCodeMap} from '../../../shared/top-panel/user-panel/user-menu/language';
@@ -47,13 +55,20 @@ export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
           name: dto[id].name,
           type: ruleTypeMap[dto[id].type],
           timing: ruleTimingMap[dto[id].timing],
-          configuration:
-            ruleTypeMap[dto[id].type] === RuleType.Cron
-              ? convertCronRuleConfigurationDtoToModel(dto[id].configuration as CronRuleConfigurationDto)
-              : dto[id].configuration,
+          configuration: convertRulesConfigurationFromDto(dto[id]),
         } as Rule)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function convertRulesConfigurationFromDto(dto: RuleDto): RuleConfiguration {
+  const type = ruleTypeMap[dto?.type];
+  switch (type) {
+    case RuleType.Cron:
+      return convertCronRuleConfigurationDtoToModel(dto.configuration as CronRuleConfigurationDto);
+    default:
+      return dto.configuration as RuleConfiguration;
+  }
 }
 
 function convertCronRuleConfigurationDtoToModel(dto: CronRuleConfigurationDto): CronRuleConfiguration {
