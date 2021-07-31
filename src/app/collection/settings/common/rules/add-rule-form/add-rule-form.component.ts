@@ -318,7 +318,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
       .map(type => ({
         id: type,
         value: parseSelectTranslation(
-          $localize`:@@collection.config.tab.rules.type:{VAR_SELECT, select, AUTO_LINK {Automated link} CRON {Timer} BLOCKLY {Blockly} ZAPIER {Zapier}}`,
+          $localize`:@@collection.config.tab.rules.type:{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow}}`,
           {VAR_SELECT: type}
         ),
       }));
