@@ -31,7 +31,6 @@ import {
   ruleTypeMap,
 } from '../../model/rule';
 import {CronRuleConfigurationDto, RuleDto} from '../../dto/rule.dto';
-import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
 import {languageCodeMap} from '../../../shared/top-panel/user-panel/user-menu/language';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
@@ -74,16 +73,16 @@ export function convertRulesConfigurationFromDto(dto: RuleDto): RuleConfiguratio
 function convertCronRuleConfigurationDtoToModel(dto: CronRuleConfigurationDto): CronRuleConfiguration {
   return {
     ...dto, // get blockly config
-    since: dto.since && new Date(dto.since),
-    until: dto.until && new Date(dto.until),
-    when: dto.when,
+    startsOn: dto.startsOn && new Date(dto.startsOn),
+    endsOn: dto.endsOn && new Date(dto.endsOn),
+    hour: dto.hour,
     interval: dto.interval,
-    dow: dto.dow, // days of week - stored as binary number starting with Monday as the least significant bit
+    daysOfWeek: dto.daysOfWeek, // days of week - stored as binary number starting with Monday as the least significant bit
     occurence: dto.occurence,
     lastRun: dto.lastRun,
+    executionsLeft: dto.executionsLeft,
     unit: chronoUnitMap[dto.unit],
-    executing: dto.executing,
-    query: convertQueryDtoToModel(dto.query),
+    viewId: dto.viewId,
     language: languageCodeMap[dto.language],
   };
 }
@@ -98,26 +97,34 @@ export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
       name: rule.name,
       type: rule.type,
       timing: rule.timing,
-      configuration:
-        rule.type === RuleType.Cron ? convertCronRuleConfigurationModelToDto(rule.configuration) : rule.configuration,
+      configuration: convertRulesConfigurationToDto(rule),
     };
     return result;
   }, {});
 }
 
+export function convertRulesConfigurationToDto(rule: Rule): Record<string, any> {
+  switch (rule.type) {
+    case RuleType.Cron:
+      return convertCronRuleConfigurationModelToDto(rule.configuration);
+    default:
+      return rule.configuration;
+  }
+}
+
 function convertCronRuleConfigurationModelToDto(model: CronRuleConfiguration): CronRuleConfigurationDto {
   return {
     ...model, // to convert blockly part
-    since: model.since?.toISOString(),
-    until: model.until?.toISOString(),
-    when: model.when,
+    startsOn: model.startsOn?.toISOString(),
+    endsOn: model.endsOn?.toISOString(),
+    hour: model.hour,
     interval: model.interval,
-    dow: model.dow,
+    daysOfWeek: model.daysOfWeek,
     occurence: model.occurence,
     lastRun: model.lastRun,
+    executionsLeft: model.executionsLeft,
     unit: model.unit,
-    executing: model.executing,
-    query: convertQueryModelToDto(model.query),
+    viewId: model.viewId,
     language: model.language,
   };
 }

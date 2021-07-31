@@ -1,0 +1,33 @@
+.config-form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-gap: 1rem;
+
+  label {
+    margin-bottom: 0;
+  }
+}
+
+.hour-input {
+  width: 70px;
+}
+
+.interval-input {
+  width: 90px;
+}
+
+.type-input {
+  min-width: 150px;
+}
+
+.date-input {
+  max-width: min(100%, 150px);
+}
+
+.ends-on-form {
+  display: grid;
+  grid-template-columns: min-content auto 1fr;
+  align-items: center;
+  grid-gap: 0.5rem;
+}

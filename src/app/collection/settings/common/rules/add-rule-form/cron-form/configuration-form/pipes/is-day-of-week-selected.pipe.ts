@@ -17,25 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BlocklyRuleConfiguration} from '../model/rule';
+import {Pipe, PipeTransform} from '@angular/core';
+import {bitTest} from '../../../../../../../../shared/utils/common.utils';
 
-export interface RuleDto {
-  name: string;
-  type: string;
-  timing: string;
-  configuration: Record<string, any>;
-}
-
-export interface CronRuleConfigurationDto extends BlocklyRuleConfiguration {
-  unit: string;
-  interval: number;
-  daysOfWeek: number; // stored as binary number starting with Monday as the least significant bit
-  hour: number;
-  occurence?: number;
-  startsOn?: string;
-  endsOn?: string;
-  executionsLeft?: number;
-  lastRun?: string;
-  viewId: string;
-  language: string;
+@Pipe({
+  name: 'isDayOfWeekSelected',
+})
+export class IsDayOfWeekSelectedPipe implements PipeTransform {
+  public transform(dayOfWeeks: number, bit: number): boolean {
+    return bitTest(dayOfWeeks, bit);
+  }
 }

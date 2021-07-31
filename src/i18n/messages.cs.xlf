@@ -2391,7 +2391,7 @@
       </trans-unit>
             <trans-unit id="organizations.tab.detail.order.perUserMonth" datatype="html">
                 <source> per user and month</source>
-                <target>za uživatele a měsíc</target>
+                <target> za uživatele a měsíc</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.order.bestOffer" datatype="html">

@@ -1,0 +1,109 @@
+<div class="form-group text-muted small" i18n="@@collection.config.tab.rules.cron.info">
+  An automation executed regularly according to the timer settings.
+</div>
+
+<div [formGroup]="configForm" class="config-form">
+
+  <label>Repeat every</label>
+  <div class="d-flex align-items-center flex-nowrap">
+    <input class="form-control mr-2 interval-input" type="number"
+           min="1" [max]="unitControl.value | maxIntervalByUnit" id="interval" formControlName="interval"
+           integer minValue="1" [maxValue]="unitControl.value | maxIntervalByUnit"/>
+    <select-item class="type-input" [items]="unitsItems"
+                 [selectedId]="unitControl.value"
+                 (selected)="onUnitSelect($event)">
+    </select-item>
+  </div>
+
+  <ng-container *ngIf="unitControl.value | showDaysOfWeek">
+    <label>Repeat on</label>
+    <div class="d-flex align-items-center flex-wrap">
+      <custom-checkbox *ngFor="let dayOfWeek of dayOfWeeks; let last = last"
+                       [class.mr-3]="!last"
+                       [checkboxTitle]="dayOfWeek.title"
+                       [checkboxId]="dayOfWeek.id"
+                       [title]="dayOfWeek.tooltip"
+                       [checked]="daysOfWeekControl.value | isDayOfWeekSelected:dayOfWeek.bit"
+                       (checkedChange)="onDayOfWeekChange(dayOfWeek, $event)">
+      </custom-checkbox>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="unitControl.value | showOccurence">
+    <label>Run on</label>
+    <div class="d-flex align-items-center flex-nowrap">
+      <input class="form-control hour-input mr-2" type="number"
+             min="1" max="31" id="occurence" formControlName="occurence" integer minValue="1" maxValue="31"/>
+      <span>day in month</span>
+    </div>
+  </ng-container>
+
+  <label>Start on</label>
+  <date-time-input class="date-input"
+                   id="startsOnDate"
+                   [format]="dateFormat"
+                   [value]="startsOnControl.value"
+                   [max]="endsOnControl.value"
+                   [asUtc]="true"
+                   (valueChange)="startsOnControl.setValue($event)">
+  </date-time-input>
+
+  <label>Execute at</label>
+  <div class="d-flex align-items-center flex-nowrap">
+    <input class="form-control hour-input mr-2" type="number"
+           min="0" max="23" id="hour" formControlName="hour" integer minValue="0" maxValue="23"/>
+    <span>hour</span>
+  </div>
+
+  <label class="align-self-start">Ends</label>
+  <div class="ends-on-form">
+
+    <input type="radio" name="never" id="never" value="never"
+           (change)="onNeverChecked($event.target.checked)"
+           [checked]="!(endsOnControl.value | isDateValid) && !(executionsControl.value > 0)">
+    <label for="never">Never</label>
+    <div>&nbsp;</div>
+
+    <input type="radio" name="date" id="date" value="date"
+           (change)="onEndsOnChecked($event.target.checked)"
+           [checked]="endsOnControl.value | isDateValid">
+    <label for="date">On</label>
+    <date-time-input class="date-input"
+                     id="endsOnDate"
+                     [format]="dateFormat"
+                     [value]="endsOnControl.value"
+                     [asUtc]="true"
+                     [min]="startsOnControl.value"
+                     (valueChange)="onEndDateChange($event)">
+    </date-time-input>
+
+    <input type="radio" name="num" id="num" value="num"
+           (change)="onExecutionsChecked($event.target.checked)"
+           [checked]="executionsControl.value > 0">
+    <label for="num">After</label>
+    <div class="d-flex align-items-center">
+      <input class="form-control mr-2 interval-input" type="number"
+             min="1" max="1000" id="executions"
+             integer minValue="1" maxValue="1000" formControlName="executionsLeft"/>
+      <span>executions</span>
+    </div>
+
+  </div>
+
+  <label class="align-self-start py-2">View</label>
+  <div>
+    <select-item [items]="viewsByCollection$ | async | viewsSelectItems:(collections$ | async)"
+                 class="w-100"
+                 buttonClasses="w-100"
+                 emptyValue="Select view"
+                 i18n-emptyValue="@@projects.tab.template.metadata.defaultView.empty"
+                 [removable]="true"
+                 [selectedId]="viewControl.value"
+                 [fitParent]="true"
+                 (selected)="onSelectView($event)"
+                 (remove)="onRemoveView()">
+    </select-item>
+    <div class="text-muted small mt-1">Limit records</div>
+  </div>
+
+</div>

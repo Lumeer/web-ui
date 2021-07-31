@@ -18,7 +18,6 @@
  */
 
 import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
-import {Query} from '../store/navigation/query/query';
 
 export enum RuleType {
   AutoLink = 'AUTO_LINK',
@@ -128,16 +127,16 @@ export const chronoUnitMap = {
 };
 
 export interface CronRuleConfiguration extends BlocklyRuleConfiguration {
-  since?: Date;
-  until?: Date;
-  when: number;
-  interval: number;
-  dow: number; // days of week - stored as binary number starting with Monday as the least significant bit
-  occurence?: number;
-  lastRun?: string;
   unit: ChronoUnit;
-  executing?: string;
-  query: Query;
+  interval: number;
+  daysOfWeek: number; // stored as binary number starting with Monday as the least significant bit
+  hour: number;
+  occurence?: number;
+  startsOn?: Date;
+  endsOn?: Date;
+  executionsLeft?: number;
+  lastRun?: string;
+  viewId: string;
   language: LanguageCode;
 }
 
@@ -149,6 +148,17 @@ export type RuleConfiguration =
   | BlocklyRuleConfiguration
   | ZapierRuleConfiguration
   | CronRuleConfiguration;
+
+export function maxIntervalByChronoUnit(unit: ChronoUnit): number {
+  switch (unit) {
+    case ChronoUnit.Days:
+      return 365;
+    case ChronoUnit.Weeks:
+      return 160;
+    case ChronoUnit.Months:
+      return 36;
+  }
+}
 
 export function ruleTimingHasCreate(timing: RuleTiming): boolean {
   return [RuleTiming.All, RuleTiming.Create, RuleTiming.CreateUpdate, RuleTiming.CreateDelete].indexOf(timing) >= 0;

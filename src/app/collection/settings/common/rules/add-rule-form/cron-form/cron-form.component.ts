@@ -82,7 +82,7 @@ export class CronFormComponent implements OnInit {
     return this.form.get('blocklyError').value;
   }
 
-  public get blocklyResultTimestamp(): string {
+  public get blocklyResultTimestamp(): number {
     return this.form.get('blocklyResultTimestamp').value;
   }
 

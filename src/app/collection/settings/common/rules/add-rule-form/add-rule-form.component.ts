@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {
+  ChronoUnit,
   createRuleTiming,
   Rule,
   RuleConfiguration,
@@ -44,9 +45,10 @@ import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {objectValues} from '../../../../../shared/utils/common.utils';
+import {objectChanged, objectValues} from '../../../../../shared/utils/common.utils';
 import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'add-rule-form',
@@ -80,22 +82,23 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   public onSaveRule = new EventEmitter<Rule>();
 
   public readonly types = objectValues(ruleTypeMap);
-  public readonly typeItems: SelectItemModel[];
 
   public form: FormGroup;
+  public typeItems: SelectItemModel[];
 
   private formSubscription: Subscription;
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder, private configuration: ConfigurationService) {
-    this.typeItems = this.createTypeItems();
-  }
+  constructor(private fb: FormBuilder, private configuration: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.ruleNames) {
       // there can be a new rule added that clashes with currently entered name
       this.nameControl?.updateValueAndValidity();
+    }
+    if (objectChanged(changes.collection) || objectChanged(changes.linkType)) {
+      this.typeItems = this.createTypeItems();
     }
   }
 
@@ -113,11 +116,11 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
       ],
       type: this.rule.type,
       configAutoLink: this.fb.group({
-        collection1: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection1 : ''],
-        collection2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection2 : ''],
-        attribute1: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute1 : ''],
-        attribute2: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute2 : ''],
-        linkType: [this.rule.type === RuleType.AutoLink ? this.rule.configuration.linkType : ''],
+        collection1: this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection1 : '',
+        collection2: this.rule.type === RuleType.AutoLink ? this.rule.configuration.collection2 : '',
+        attribute1: this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute1 : '',
+        attribute2: this.rule.type === RuleType.AutoLink ? this.rule.configuration.attribute2 : '',
+        linkType: this.rule.type === RuleType.AutoLink ? this.rule.configuration.linkType : '',
       }),
       configBlockly: this.fb.group(this.getBlocklyGroup()),
       configCron: this.fb.group({...this.getBlocklyGroup(), ...this.getCronGroup()}),
@@ -142,23 +145,23 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   private getBlocklyGroup() {
     if (this.rule.type === RuleType.Blockly || this.rule.type === RuleType.Cron) {
       return {
-        blocklyXml: [this.rule.configuration.blocklyXml],
-        blocklyJs: [this.rule.configuration.blocklyJs],
-        blocklyDryRun: [this.rule.configuration.blocklyDryRun],
-        blocklyDryRunResult: [this.rule.configuration.blocklyDryRunResult],
-        blocklyError: [this.rule.configuration.blocklyError],
-        blocklyResultTimestamp: [this.rule.configuration.blocklyResultTimestamp],
-        blocklyRecursive: [this.rule.configuration.blocklyRecursive],
+        blocklyXml: this.rule.configuration.blocklyXml,
+        blocklyJs: this.rule.configuration.blocklyJs,
+        blocklyDryRun: this.rule.configuration.blocklyDryRun,
+        blocklyDryRunResult: this.rule.configuration.blocklyDryRunResult,
+        blocklyError: this.rule.configuration.blocklyError,
+        blocklyResultTimestamp: this.rule.configuration.blocklyResultTimestamp,
+        blocklyRecursive: this.rule.configuration.blocklyRecursive,
       };
     } else {
       return {
-        blocklyXml: [''],
-        blocklyJs: [''],
-        blocklyDryRun: [false],
-        blocklyDryRunResult: [''],
-        blocklyError: [''],
-        blocklyResultTimestamp: [''],
-        blocklyRecursive: [false],
+        blocklyXml: '',
+        blocklyJs: '',
+        blocklyDryRun: false,
+        blocklyDryRunResult: '',
+        blocklyError: '',
+        blocklyResultTimestamp: '',
+        blocklyRecursive: false,
       };
     }
   }
@@ -166,28 +169,28 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   private getCronGroup() {
     if (this.rule.type === RuleType.Cron) {
       return {
-        since: [this.rule.configuration.since],
-        until: [this.rule.configuration.until],
-        when: [this.rule.configuration.when],
-        interval: [this.rule.configuration.interval],
-        dow: [this.rule.configuration.dow],
-        occurence: [this.rule.configuration.occurence],
-        unit: [this.rule.configuration.unit],
-        query: [this.rule.configuration.query],
-        executing: [''],
+        startsOn: this.rule.configuration.startsOn,
+        endsOn: this.rule.configuration.endsOn,
+        hour: this.rule.configuration.hour,
+        interval: this.rule.configuration.interval,
+        daysOfWeek: this.rule.configuration.daysOfWeek,
+        occurence: this.rule.configuration.occurence,
+        unit: this.rule.configuration.unit || ChronoUnit.Weeks,
+        viewId: this.rule.configuration.viewId,
+        executionsLeft: this.rule.configuration.executionsLeft,
         language: this.configuration.getConfiguration().locale,
       };
     } else {
       return {
-        since: [null],
-        until: [null],
-        when: [0],
-        interval: [0],
-        dow: [0],
-        occurence: [0],
-        unit: [null],
-        query: [{}],
-        executing: [''],
+        startsOn: moment.utc().startOf('day').toDate(),
+        endsOn: undefined,
+        hour: 0,
+        interval: 1,
+        daysOfWeek: 0,
+        occurence: 1,
+        unit: ChronoUnit.Weeks,
+        viewId: undefined,
+        executionsLeft: undefined,
         language: this.configuration.getConfiguration().locale,
       };
     }
