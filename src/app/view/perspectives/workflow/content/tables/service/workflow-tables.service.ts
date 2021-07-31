@@ -28,25 +28,23 @@ import {
 } from '../../../../../../shared/table/model/table-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
-import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
-import {distinctUntilChanged, skip} from 'rxjs/operators';
+import {skip} from 'rxjs/operators';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './workflow-tables-data.service';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
-import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -57,18 +55,13 @@ export class WorkflowTablesService {
     private keyboardService: WorkflowTablesKeyboardService,
     private dataService: WorkflowTablesDataService
   ) {
-    this.stateService.selectedCell$
-      .pipe(
-        skip(1),
-        distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
-      )
-      .subscribe(() => {
-        if (this.isSelected()) {
-          this.hiddenComponent()?.focus();
-        } else {
-          this.hiddenComponent()?.blur();
-        }
-      });
+    this.stateService.selectedCell$.pipe(skip(1)).subscribe(() => {
+      if (this.isSelected()) {
+        this.hiddenComponent()?.focus();
+      } else {
+        this.hiddenComponent()?.blur();
+      }
+    });
   }
 
   public get selectedCell$(): Observable<SelectedTableCell> {
@@ -120,8 +113,8 @@ export class WorkflowTablesService {
   }
 
   public onRowDetail(row: TableRow) {
-    this.dataService.showRowDocumentDetail(row);
-    this.stateService.resetSelectedCell();
+    this.stateService.resetSelection();
+    this.dataService.showRowDocumentDetail(row, null, true);
   }
 
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {
@@ -130,6 +123,20 @@ export class WorkflowTablesService {
 
   public onColumnSortChanged(column: TableColumn, sort: AttributeSortType) {
     this.dataService.changeSort(column, sort);
+  }
+
+  public onColumnFilterRemoved(column: TableColumn, index: number) {
+    this.dataService.removeFilter(column, index);
+  }
+
+  public onColumnFilterChanged(
+    column: TableColumn,
+    index: number,
+    condition: ConditionType,
+    values: ConditionValue[],
+    isNew?: boolean
+  ) {
+    this.dataService.changeFilter(column, index, condition, values, isNew);
   }
 
   public onColumnMenuSelected(column: TableColumn, item: MenuItem) {
@@ -143,6 +150,9 @@ export class WorkflowTablesService {
         break;
       case HeaderMenuId.Type:
         this.dataService.showAttributeType(column);
+        break;
+      case HeaderMenuId.Description:
+        this.dataService.showAttributeDescription(column);
         break;
       case HeaderMenuId.Function:
       case HeaderMenuId.Rule:
@@ -216,8 +226,8 @@ export class WorkflowTablesService {
   ) {
     if (row.documentId) {
       this.dataService.saveRowNewValue(row, column, value);
-    } else if (cellType === TableCellType.NewRow) {
-      this.dataService.createNewDocument(<TableNewRow>row, column, value);
+    } else {
+      this.dataService.createNewDocument(row, column, value);
     }
 
     const cell: TableCell = {
@@ -320,25 +330,25 @@ export class WorkflowTablesService {
 
   public onUpdateData(
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
+    data: DocumentsAndLinksData,
     config: WorkflowConfig,
-    permissions: Record<string, AllowedPermissions>,
+    permissions: ResourcesPermissions,
     query: Query,
     viewSettings: ViewSettings,
-    constraintData: ConstraintData
+    constraintData: ConstraintData,
+    canManageConfig: boolean
   ) {
     this.dataService.createAndSyncTables(
       collections,
-      documents,
       linkTypes,
-      linkInstances,
+      data,
       config,
       permissions,
       query,
       viewSettings,
-      constraintData
+      constraintData,
+      canManageConfig
     );
   }
 

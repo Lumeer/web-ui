@@ -19,6 +19,7 @@
 <ng-container *ngIf="visible && (config | isAnyKanbanAttributeSelected)">
   <h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
   <size-slider class="d-block w-100" [defaultSize]="config?.columnSize"
+               [numItems]="4"
                (newSize)="onColumnSizeChanged($event)">
 
   </size-slider>

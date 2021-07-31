@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -27,24 +27,32 @@ import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiLinkTypeService extends BaseService implements LinkTypeService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
-  public createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(), linkType);
+  public createLinkType(linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto> {
+    return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(null, workspace), linkType, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public getLinkType(id: string): Observable<LinkTypeDto> {
     return this.httpClient.get<LinkTypeDto>(this.restApiPrefix(id));
   }
 
-  public updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id), linkType);
+  public updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto> {
+    return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id, workspace), linkType, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
   }
 
   public deleteLinkType(id: string): Observable<string> {
@@ -52,16 +60,26 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
   }
 
   public getLinkTypes(workspace?: Workspace): Observable<LinkTypeDto[]> {
-    const queryParams = new HttpParams().set('fromViews', 'true');
-    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace), {params: queryParams});
+    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace));
   }
 
   public createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
     return this.httpClient.post<AttributeDto[]>(`${this.restApiPrefix()}/${linkTypeId}/attributes`, attributes);
   }
 
-  public updateAttribute(linkTypeId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient.put<AttributeDto>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`, attribute);
+  public updateAttribute(
+    linkTypeId: string,
+    id: string,
+    attribute: AttributeDto,
+    workspace?: Workspace
+  ): Observable<AttributeDto> {
+    return this.httpClient.put<AttributeDto>(
+      `${this.restApiPrefix(null, workspace)}/${linkTypeId}/attributes/${id}`,
+      attribute,
+      {
+        headers: {...this.workspaceHeaders(workspace)},
+      }
+    );
   }
 
   public deleteAttribute(linkTypeId: string, id: string): Observable<any> {
@@ -73,6 +91,8 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
     const projectId = this.getOrCurrentProjectId(workspace);
     const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
   }
 }

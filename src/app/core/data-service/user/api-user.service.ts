@@ -28,18 +28,18 @@ import {InvitationType} from '../../model/invitation-type';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {FeedbackDto} from '../../dto/feedback.dto';
-import {environment} from '../../../../environments/environment';
-import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {UserHintsDto} from '../../dto/user.dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiUserService implements UserService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private configurationService: ConfigurationService) {}
 
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {
     return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
   }
 
-  public createUserInWorkspace(
+  public createUsersInWorkspace(
     organizationId: string,
     projectId: string,
     users: UserDto[],
@@ -73,6 +73,10 @@ export class ApiUserService implements UserService {
 
   private organizationUsersApiPrefix(organizationId: string, userId?: string): string {
     return `${this.organizationApiPrefix(organizationId)}users${userId ? `/${userId}` : ''}`;
+  }
+
+  public setTeams(organizationId: string, userId: string, teams: string[]): Observable<any> {
+    return this.httpClient.post(`${this.organizationUsersApiPrefix(organizationId, userId)}/groups`, teams);
   }
 
   public getCurrentUser(): Observable<UserDto> {
@@ -116,11 +120,7 @@ export class ApiUserService implements UserService {
     return this.httpClient.put<UserHintsDto>(`${this.usersApiPrefix()}/current/hints`, hints);
   }
 
-  public updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto> {
-    return this.httpClient.put<UserDto>(`${this.usersApiPrefix()}/current/notifications`, notifications);
-  }
-
   private usersApiPrefix(): string {
-    return `${environment.apiUrl}/rest/users`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/users`;
   }
 }

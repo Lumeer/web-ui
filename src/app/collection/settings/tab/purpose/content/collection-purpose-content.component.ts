@@ -116,6 +116,9 @@ export class CollectionPurposeContentComponent implements OnInit, OnChanges, OnD
           stateAttributeId,
           finalStatesList: stateAttributeId ? this.metaDataForm.get(TaskPurposeFormControl.StateList)?.value : [],
           observersAttributeId: this.metaDataForm.get(TaskPurposeFormControl.Observers)?.value,
+          tagsAttributeId: this.metaDataForm.get(TaskPurposeFormControl.Tags)?.value,
+          priorityAttributeId: this.metaDataForm.get(TaskPurposeFormControl.Priority)?.value,
+          defaultViewCode: this.metaDataForm.get(TaskPurposeFormControl.View)?.value,
         };
       default:
         return {};

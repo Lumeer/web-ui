@@ -18,8 +18,10 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query/query';
 import {LinkInstance} from './link.instance';
+import {DataQuery} from '../../model/data-query';
+import {DataQueryPayload} from '../utils/data-query-payload';
+import {Workspace} from '../navigation/workspace';
 
 export enum LinkInstancesActionType {
   GET = '[Link Instances] Get',
@@ -34,6 +36,10 @@ export enum LinkInstancesActionType {
   CREATE_MULTIPLE_SUCCESS = '[Link Instances] Create Multiple :: Success',
   CREATE_FAILURE = '[Link Instances] Create :: Failure',
 
+  SET_DOCUMENT_LINKS = '[Link Instances] Set Document Links',
+  SET_DOCUMENT_LINKS_SUCCESS = '[Link Instances] Set Document Links :: Success',
+  SET_DOCUMENT_LINKS_FAILURE = '[Link Instances] Set Document Links :: Failure',
+
   UPDATE = '[Link Instances] Update',
   UPDATE_INTERNAL = '[Link Instances] Update :: Internal',
 
@@ -41,6 +47,8 @@ export enum LinkInstancesActionType {
   UPDATE_DATA_INTERNAL = '[Link Instances] Update Data Internal',
   PATCH_DATA = '[Link Instances] Patch Data',
   PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
+
+  REVERT_DATA = '[Link Instances] Revert Data',
 
   UPDATE_SUCCESS = '[Link Instances] Update :: Success',
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
@@ -59,6 +67,8 @@ export enum LinkInstancesActionType {
   CLEAR_QUERIES = '[Link Instances] Clear Queries',
   CLEAR_BY_LINK_TYPE = '[Link Instances] Clear By Link Type',
 
+  SET_LOADING_QUERY = '[Link Instances] Set Loading Query',
+
   RUN_RULE = '[Link Instances] Run Rule',
   RUN_RULE_FAILURE = '[Link Instances] Run Rule :: Failure',
 }
@@ -67,7 +77,7 @@ export namespace LinkInstancesAction {
   export class Get implements Action {
     public readonly type = LinkInstancesActionType.GET;
 
-    public constructor(public payload: {query: Query; force?: boolean}) {}
+    public constructor(public payload: DataQueryPayload) {}
   }
 
   export class GetSingle implements Action {
@@ -85,13 +95,13 @@ export namespace LinkInstancesAction {
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {linkInstances: LinkInstance[]; query?: Query}) {}
+    public constructor(public payload: {linkInstances: LinkInstance[]; query?: DataQuery}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = LinkInstancesActionType.GET_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; query?: DataQuery}) {}
   }
 
   export class Create implements Action {
@@ -103,6 +113,7 @@ export namespace LinkInstancesAction {
         onSuccess?: (linkInstanceId: string) => void;
         onFailure?: () => void;
         afterSuccess?: (linkInstanceId: string) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -125,28 +136,36 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class RevertData implements Action {
+    public readonly type = LinkInstancesActionType.REVERT_DATA;
+
+    public constructor(public payload: {linkInstance: LinkInstance}) {}
+  }
+
   export class PatchData implements Action {
     public readonly type = LinkInstancesActionType.PATCH_DATA;
 
-    public constructor(public payload: {linkInstance: LinkInstance}) {}
+    public constructor(public payload: {linkInstance: LinkInstance; workspace?: Workspace}) {}
   }
 
   export class PatchDataInternal implements Action {
     public readonly type = LinkInstancesActionType.PATCH_DATA_INTERNAL;
 
-    public constructor(public payload: {linkInstanceId: string; data: Record<string, any>}) {}
+    public constructor(public payload: {linkInstanceId: string; data: Record<string, any>; workspace?: Workspace}) {}
   }
 
   export class UpdateData implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_DATA;
 
-    public constructor(public payload: {linkInstance: LinkInstance}) {}
+    public constructor(public payload: {linkInstance: LinkInstance; workspace?: Workspace}) {}
   }
 
   export class UpdateDataInternal implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_DATA_INTERNAL;
 
-    public constructor(public payload: {linkInstance: LinkInstance; originalLinkInstance?: LinkInstance}) {}
+    public constructor(
+      public payload: {linkInstance: LinkInstance; originalLinkInstance?: LinkInstance; workspace?: Workspace}
+    ) {}
   }
 
   export class Update implements Action {
@@ -159,6 +178,7 @@ export namespace LinkInstancesAction {
         onFailure?: () => void;
         afterSuccess?: () => void;
         nextAction?: Action;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -166,7 +186,7 @@ export namespace LinkInstancesAction {
   export class UpdateInternal implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_INTERNAL;
 
-    public constructor(public payload: {linkInstance: LinkInstance}) {}
+    public constructor(public payload: {linkInstance: LinkInstance; workspace?: Workspace}) {}
   }
 
   export class UpdateSuccess implements Action {
@@ -181,6 +201,34 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {error: any; originalLinkInstance?: LinkInstance}) {}
   }
 
+  export class SetDocumentLinks implements Action {
+    public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS;
+
+    public constructor(
+      public payload: {
+        linkTypeId: string;
+        documentId: string;
+        linkInstances: LinkInstance[];
+        removedLinkInstancesIds: string[];
+        onSuccess?: () => void;
+        onFailure?: () => void;
+        workspace?: Workspace;
+      }
+    ) {}
+  }
+
+  export class SetDocumentLinksSuccess implements Action {
+    public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS_SUCCESS;
+
+    public constructor(public payload: {linkInstances: LinkInstance[]; removedLinkInstancesIds: string[]}) {}
+  }
+
+  export class SetDocumentLinksFailure implements Action {
+    public readonly type = LinkInstancesActionType.SET_DOCUMENT_LINKS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class ChangeDocuments implements Action {
     public readonly type = LinkInstancesActionType.CHANGE_DOCUMENTS;
 
@@ -191,6 +239,7 @@ export namespace LinkInstancesAction {
         onSuccess?: () => void;
         onFailure?: () => void;
         afterSuccess?: () => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -198,13 +247,13 @@ export namespace LinkInstancesAction {
   export class Delete implements Action {
     public readonly type = LinkInstancesActionType.DELETE;
 
-    public constructor(public payload: {linkInstanceId: string; nextAction?: Action}) {}
+    public constructor(public payload: {linkInstanceId: string; nextAction?: Action; workspace?: Workspace}) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = LinkInstancesActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: {linkInstanceId: string; nextAction?: Action}) {}
+    public constructor(public payload: {linkInstanceId: string; nextAction?: Action; workspace?: Workspace}) {}
   }
 
   export class DeleteSuccess implements Action {
@@ -230,6 +279,7 @@ export namespace LinkInstancesAction {
         documentIdsMap: Record<string, string>;
         onSuccess?: (linkInstances: LinkInstance[]) => void;
         onFailure?: (error: any) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -256,10 +306,24 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkTypeId?: string}) {}
   }
 
+  export class SetLoadingQuery implements Action {
+    public readonly type = LinkInstancesActionType.SET_LOADING_QUERY;
+
+    public constructor(public payload: {query: DataQuery}) {}
+  }
+
   export class RunRule implements Action {
     public readonly type = LinkInstancesActionType.RUN_RULE;
 
-    public constructor(public payload: {linkTypeId: string; linkInstanceId: string; attributeId: string}) {}
+    public constructor(
+      public payload: {
+        linkTypeId: string;
+        linkInstanceId: string;
+        attributeId: string;
+        actionName?: string;
+        workspace?: Workspace;
+      }
+    ) {}
   }
 
   export class RunRuleFailure implements Action {
@@ -281,6 +345,7 @@ export namespace LinkInstancesAction {
     | UpdateDataInternal
     | PatchData
     | PatchDataInternal
+    | RevertData
     | Update
     | UpdateInternal
     | UpdateSuccess
@@ -291,9 +356,13 @@ export namespace LinkInstancesAction {
     | DeleteFailure
     | Duplicate
     | DuplicateSuccess
+    | SetDocumentLinks
+    | SetDocumentLinksSuccess
+    | SetDocumentLinksFailure
     | Clear
     | ClearQueries
     | ClearByLinkType
+    | SetLoadingQuery
     | RunRule
     | RunRuleFailure;
 }

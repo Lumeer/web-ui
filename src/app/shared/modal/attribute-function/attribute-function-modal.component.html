@@ -1,5 +1,5 @@
 <modal-wrapper
-  *ngIf="{collection: collection$ | async, linkType: linkType$ | async,  attribute: attribute$ | async, function: attributeFunction$ | async} as data"
+  *ngIf="{collection: collection$ | async, linkType: linkType$ | async, attribute: attribute$ | async, function: attributeFunction$ | async} as data"
   [dialogType]="dialogType.Primary"
   [performingAction]="performingAction$ | async"
   [customHeader]="true"
@@ -15,6 +15,7 @@
   <attribute-function-content class="body d-block p-4"
                               [linkTypes]="linkTypes$ | async"
                               [collections]="collections$ | async"
+                              [views]="views$ | async"
                               [form]="form"
                               [attributeFunction]="data.function"
                               [collection]="data.collection"

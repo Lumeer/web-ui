@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Sequence} from '../../../core/model/sequence';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: '[sequence-item]',
@@ -37,14 +36,11 @@ export class SequenceItemComponent {
   @Output()
   public updateSequence = new EventEmitter<Sequence>();
 
-  constructor(private notificationService: NotificationService, private i18n: I18n) {}
+  constructor(private notificationService: NotificationService) {}
 
   public remove(): void {
-    const message = this.i18n({
-      id: 'sequence.item.delete.message',
-      value: 'Do you want to permanently remove this sequence?',
-    });
-    const title = this.i18n({id: 'sequence.item.delete.title', value: 'Remove sequence?'});
+    const message = $localize`:@@sequence.item.delete.message:Do you want to permanently remove this sequence?`;
+    const title = $localize`:@@sequence.item.delete.title:Remove sequence?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeSequence.emit(this.sequence));
   }
 

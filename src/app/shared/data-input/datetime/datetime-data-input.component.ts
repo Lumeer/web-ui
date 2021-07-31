@@ -30,7 +30,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {environment} from '../../../../environments/environment';
 import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
@@ -39,8 +38,9 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType, DateTimeDataValue} from '@lumeer/data-filters';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'datetime-data-input',
@@ -87,7 +87,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   private keyDownListener: (event: KeyboardEvent) => void;
   private setFocus: boolean;
 
-  constructor(public element: ElementRef) {}
+  constructor(public element: ElementRef, private configurationService: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
@@ -105,7 +105,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
     if (changes.value && this.value) {
       this.date = this.value.toDate?.();
       this.options = createDateTimeOptions(this.value.config?.format);
-      this.dateTimeInput.nativeElement.value = this.value.format();
+      if (this.readonly) {
+        checkDataInputElementValue(this.dateTimeInput?.nativeElement, this.value);
+      }
     }
   }
 
@@ -215,7 +217,17 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   }
 
   public ngAfterViewInit(): void {
-    document.body.style.setProperty('--first-day-of-week', environment.locale === LanguageCode.CZ ? '8' : '2');
+    document.body.style.setProperty('--first-day-of-week', this.firstDayOfWeek());
+  }
+
+  private firstDayOfWeek(): string {
+    const locale = this.configurationService.getConfiguration().locale;
+    switch (locale) {
+      case LanguageCode.EN:
+        return '2';
+      default:
+        return '8';
+    }
   }
 
   public onValueChange(date: Date) {

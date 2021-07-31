@@ -24,13 +24,17 @@ import {ApiPermissionService} from '../common/api-permission.service';
 import {ProjectService} from './project.service';
 import {ProjectDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiProjectService extends ApiPermissionService implements ProjectService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(httpClient, store$);
   }
 
@@ -62,11 +66,11 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
   }
 
   public applyTemplate(organizationId: string, projectId: string, template: string): Observable<any> {
-    return this.httpClient.post(
-      `${this.baseApiPrefix(organizationId)}/${projectId}/templates/${template}`,
-      {},
-      {params: {l: environment.locale}}
-    );
+    return this.httpClient.post(`${this.baseApiPrefix(organizationId)}/${projectId}/templates/${template}`, {});
+  }
+
+  public createSampleData(organizationId: string, projectId: string, type: string): Observable<any> {
+    return this.httpClient.post(`${this.baseApiPrefix(organizationId)}/${projectId}/sample/${type}`, {});
   }
 
   public copyProject(
@@ -86,12 +90,23 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     return this.httpClient.put<ProjectDto>(this.apiPrefix(organizationId, projectId), project);
   }
 
+  public deleteSampleData(organizationId: string, projectId: string, confirmation: string): Observable<any> {
+    return this.httpClient.delete(`${this.apiPrefix(organizationId, projectId)}/sample-data`, {params: {confirmation}});
+  }
+
+  public downloadRawContent(organizationId: string, projectId: string): Observable<HttpResponse<Blob>> {
+    return this.httpClient.get(`${this.apiPrefix(organizationId, projectId)}/raw`, {
+      observe: 'response',
+      responseType: 'blob',
+    });
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }
 
   private baseApiPrefix(organizationId: string): string {
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/organizations/${organizationId}/projects`;
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {

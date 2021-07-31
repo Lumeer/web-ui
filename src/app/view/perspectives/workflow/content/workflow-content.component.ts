@@ -17,26 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
-import {checkOrTransformWorkflowConfig} from '../../../../core/store/workflows/workflow.utils';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {WorkflowTablesService} from './tables/service/workflow-tables.service';
+import {WorkflowTablesStateService} from './tables/service/workflow-tables-state.service';
+import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
+import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.service';
+import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
 
 @Component({
   selector: 'workflow-content',
   templateUrl: './workflow-content.component.html',
-  styleUrls: ['./workflow-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    WorkflowTablesService,
+    WorkflowTablesMenuService,
+    WorkflowTablesDataService,
+    WorkflowTablesStateService,
+    WorkflowTablesKeyboardService,
+  ],
 })
-export class WorkflowContentComponent implements OnChanges {
+export class WorkflowContentComponent {
   @Input()
   public viewSettings: ViewSettings;
 
@@ -44,7 +52,7 @@ export class WorkflowContentComponent implements OnChanges {
   public query: Query;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public collections: Collection[];
@@ -53,10 +61,7 @@ export class WorkflowContentComponent implements OnChanges {
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
-
-  @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public config: WorkflowConfig;
@@ -68,7 +73,10 @@ export class WorkflowContentComponent implements OnChanges {
   public canManageConfig: boolean;
 
   @Input()
-  public selectedDocumentId: string;
+  public selectedDocument: DocumentModel;
+
+  @Input()
+  public selectedCollection: Collection;
 
   @Input()
   public sidebarWidth: number;
@@ -84,30 +92,4 @@ export class WorkflowContentComponent implements OnChanges {
 
   @Output()
   public sidebarResize = new EventEmitter<number>();
-
-  public selectedDocument: DocumentModel;
-  public selectedCollection: Collection;
-
-  public ngOnChanges(changes: SimpleChanges) {
-    this.checkSelectedDocument(changes);
-    this.checkConfig();
-  }
-
-  private checkSelectedDocument(changes: SimpleChanges) {
-    if (changes.selectedDocumentId || changes.collections || changes.documents) {
-      this.selectedDocument =
-        this.selectedDocumentId && this.documents.find(document => document.id === this.selectedDocumentId);
-      this.selectedCollection =
-        this.selectedDocument &&
-        this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
-    }
-  }
-
-  private checkConfig() {
-    const previousConfig = {...this.config};
-    this.config = checkOrTransformWorkflowConfig(this.config, this.query, this.collections, this.linkTypes);
-    if (!deepObjectsEquals(previousConfig, this.config)) {
-      this.configChange.emit(this.config);
-    }
-  }
 }

@@ -19,27 +19,49 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {Query} from '../navigation/query/query';
-import {selectQuery} from '../navigation/navigation.state';
-import {isQueryLoaded} from '../navigation/query/query.helper';
+import {DataQuery} from '../../model/data-query';
+import {selectViewDataQuery} from '../view-settings/view-settings.state';
+import {isDataQueryLoaded} from '../utils/data-query-payload';
+import {configuration} from '../../../../environments/configuration';
 
 export interface DataResourcesState {
-  queries: Query[];
+  queries: DataQuery[];
+  tasksQueries: DataQuery[];
+  loadingQueries: DataQuery[];
+  loadingTasksQueries: DataQuery[];
 }
 
 export const initialDataResourcesState: DataResourcesState = {
   queries: [],
+  tasksQueries: [],
+  loadingQueries: [],
+  loadingTasksQueries: [],
 };
 
 export const selectDataResourcesState = (state: AppState) => state.dataResources;
 
 export const selectDataResourcesQueries = createSelector(selectDataResourcesState, state => state.queries);
 
-export const selectCurrentQueryDataResourcesLoaded = createSelector(
-  selectDataResourcesQueries,
-  selectQuery,
-  (queries, currentQuery) => isQueryLoaded(currentQuery, queries)
+export const selectDataResourcesLoadingQueries = createSelector(
+  selectDataResourcesState,
+  state => state.loadingQueries
 );
 
-export const selectQueryDataResourcesLoaded = (query: Query) =>
-  createSelector(selectDataResourcesQueries, queries => isQueryLoaded(query, queries));
+export const selectTasksQueries = createSelector(selectDataResourcesState, state => state.tasksQueries);
+
+export const selectTasksLoadingQueries = createSelector(selectDataResourcesState, state => state.loadingTasksQueries);
+
+export const selectCurrentQueryDataResourcesLoaded = createSelector(
+  selectDataResourcesQueries,
+  selectViewDataQuery,
+  (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries, configuration.publicView)
+);
+
+export const selectCurrentQueryTasksLoaded = createSelector(
+  selectTasksQueries,
+  selectViewDataQuery,
+  (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries, configuration.publicView)
+);
+
+export const selectQueryDataResourcesLoaded = (query: DataQuery) =>
+  createSelector(selectDataResourcesQueries, queries => isDataQueryLoaded(query, queries, configuration.publicView));

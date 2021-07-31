@@ -23,7 +23,7 @@ import {
 } from '../../../view/perspectives/calendar/util/calendar-util';
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
-import {Perspective} from '../../../view/perspectives/perspective';
+import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {createChartSaveConfig, isChartConfigChanged} from '../charts/chart.util';
 import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
@@ -32,17 +32,43 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig, ViewSettings} from './view';
+import {DataSettings, PerspectiveConfig, View, ViewConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
-import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
+import {
+  createSaveAttributesSettings,
+  viewAttributeSettingsChanged,
+  viewAttributeSettingsSortChanged,
+} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
 import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
 import {WorkflowConfig} from '../workflows/workflow';
+import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
+import {DetailConfig} from '../details/detail';
 
 export function isViewConfigChanged(
+  perspective: Perspective,
+  viewConfig: ViewConfig,
+  perspectiveConfig: ViewConfig,
+  documentsMap: Record<string, DocumentModel>,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
+  return getPerspectiveSavedPerspectives(perspective).some(savedPerspective =>
+    isPerspectiveConfigChanged(
+      savedPerspective,
+      viewConfig?.[savedPerspective],
+      perspectiveConfig?.[savedPerspective],
+      documentsMap,
+      collectionsMap,
+      linkTypesMap
+    )
+  );
+}
+
+export function isPerspectiveConfigChanged(
   perspective: Perspective,
   viewConfig: any,
   perspectiveConfig: any,
@@ -50,6 +76,9 @@ export function isViewConfigChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
+  if (isNullOrUndefined(viewConfig) || isNullOrUndefined(perspectiveConfig)) {
+    return false;
+  }
   switch (perspective) {
     case Perspective.Table:
       return isTableConfigChanged(viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap);
@@ -67,6 +96,8 @@ export function isViewConfigChanged(
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Workflow:
       return isWorkflowConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Detail:
+      return isDetailConfigChanged(viewConfig, perspectiveConfig, collectionsMap, linkTypesMap);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
@@ -85,8 +116,38 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createWorkflowSaveConfig(config as WorkflowConfig);
     case Perspective.Chart:
       return createChartSaveConfig(config as ChartConfig);
+    case Perspective.Detail:
+      return createDetailSaveConfig(config as DetailConfig);
     default:
       return config;
+  }
+}
+
+/**
+ * Creates perspective config with modifications before saving in a view
+ */
+export function createViewSaveConfig(perspective: Perspective, config: ViewConfig, currentView: View): ViewConfig {
+  return getPerspectiveSavedPerspectives(perspective).reduce(
+    (savedConfig, savedPerspective) => ({
+      ...savedConfig,
+      [savedPerspective]: createPerspectiveSaveConfig(
+        savedPerspective,
+        config?.[savedPerspective] || currentView?.config?.[savedPerspective]
+      ),
+    }),
+    {}
+  );
+}
+
+/**
+ * In some cases multiple configs are saved (i.e. workflow + detail)
+ */
+export function getPerspectiveSavedPerspectives(perspective: Perspective): Perspective[] {
+  switch (perspective) {
+    case Perspective.Detail:
+      return [perspective];
+    default:
+      return [perspective, Perspective.Detail];
   }
 }
 
@@ -107,12 +168,23 @@ export function viewSettingsChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
-  return viewAttributeSettingsChanged(
-    previousSettings?.attributes,
-    currentSettings?.attributes,
-    collectionsMap,
-    linkTypesMap
+  return (
+    viewDataSettingsChanged(previousSettings?.data, currentSettings?.data) ||
+    viewAttributeSettingsChanged(
+      previousSettings?.attributes,
+      currentSettings?.attributes,
+      collectionsMap,
+      linkTypesMap
+    )
   );
+}
+
+export function viewSettingsSortChanged(previousSettings: ViewSettings, currentSettings: ViewSettings): boolean {
+  return viewAttributeSettingsSortChanged(previousSettings?.attributes, currentSettings?.attributes);
+}
+
+export function viewDataSettingsChanged(previousSettings: DataSettings, currentSettings: DataSettings): boolean {
+  return !!previousSettings?.includeSubItems !== !!currentSettings?.includeSubItems;
 }
 
 export function createSaveViewSettings(
@@ -127,4 +199,21 @@ export function createSaveViewSettings(
       attributes: createSaveAttributesSettings(settings.attributes, query, collectionsMap, linkTypesMap),
     }
   );
+}
+
+export function getViewColor(view: View, collectionsMap: Record<string, Collection>): string {
+  return view?.color || defaultViewColorFromQuery(view, collectionsMap);
+}
+
+export function defaultViewColorFromQuery(view: View, collectionsMap: Record<string, Collection>): string {
+  const firstStemCollectionId = view?.query?.stems?.[0]?.collectionId;
+  return (firstStemCollectionId && collectionsMap?.[firstStemCollectionId]?.color) || '';
+}
+
+export function getViewIcon(view: View): string {
+  return view?.icon || defaultViewIcon(view);
+}
+
+export function defaultViewIcon(view: View): string {
+  return perspectiveIconsMap[view?.perspective] || '';
 }

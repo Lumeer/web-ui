@@ -27,9 +27,8 @@ import {selectAllCollections, selectCollectionById} from '../../../core/store/co
 import {map, take, tap} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
 import {isAllDayEvent, isAllDayEventSingle} from '../../../view/perspectives/calendar/util/calendar-util';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
 import {
@@ -88,7 +87,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   public query$: Observable<Query>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   public allDay$ = new BehaviorSubject(false);
   public stemIndex$ = new BehaviorSubject<number>(0);
@@ -96,7 +95,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   private currentResource: AttributesResource;
   private currentDataResource: DataResource;
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -231,7 +230,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private getInitialTitleName(): string {
-    return this.i18n({id: 'dialog.create.calendar.event.default.title', value: 'New event'});
+    return $localize`:@@dialog.create.calendar.event.default.title:New event`;
   }
 
   public onDataResourceChanged(dataResource: DataResource) {
@@ -250,10 +249,10 @@ export class CalendarEventDetailModalComponent implements OnInit {
       if (startProperty) {
         if (allDay) {
           const start = this.currentDataResource?.data?.[startProperty.attributeId];
-          newStart = start && this.cleanDateWhenAllDay(start);
+          newStart = start && this.cleanDateWhenAllDay(start, startProperty);
           data[startProperty.attributeId] = newStart;
         } else if (endProperty ? isAllDayEvent(this.start, end) : isAllDayEventSingle(this.start)) {
-          const cleaned = this.cleanDateWhenAllDay(this.start);
+          const cleaned = this.cleanDateWhenAllDay(this.start, startProperty);
           cleaned.setHours(9);
           newStart = cleaned;
           data[startProperty.attributeId] = cleaned;
@@ -264,14 +263,14 @@ export class CalendarEventDetailModalComponent implements OnInit {
       }
 
       if (endProperty) {
-        const start = this.currentDataResource?.data?.[endProperty.attributeId];
+        const currentEnd = this.currentDataResource?.data?.[endProperty.attributeId];
         if (allDay) {
           if (this.end) {
-            data[endProperty.attributeId] = this.cleanDateWhenAllDay(this.end);
+            data[endProperty.attributeId] = this.cleanDateWhenAllDay(this.end, endProperty);
           } else {
-            data[endProperty.attributeId] = start && this.cleanDateWhenAllDay(start);
+            data[endProperty.attributeId] = currentEnd && this.cleanDateWhenAllDay(currentEnd, endProperty);
           }
-        } else if (isAllDayEvent(this.start, end)) {
+        } else if (isAllDayEvent(this.start, currentEnd)) {
           data[endProperty.attributeId] = moment(newStart).add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
         } else if (this.end) {
           data[endProperty.attributeId] = this.end;
@@ -332,7 +331,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
     this.stemIndex$.next(index);
   }
 
-  private cleanDateWhenAllDay(date: any): Date {
+  private cleanDateWhenAllDay(date: any, property: CalendarBar): Date {
     return moment(date).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
   }
 }

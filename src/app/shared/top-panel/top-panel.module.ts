@@ -20,6 +20,8 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
+import {MatMenuModule} from '@angular/material/menu';
+
 import {PipesModule} from '../pipes/pipes.module';
 import {ControlsToggleComponent} from './controls-toggle/controls-toggle.component';
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
@@ -40,7 +42,6 @@ import {NewUserComponent} from './user-panel/invite-user/modal/new-user/new-user
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputModule} from '../input/input.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
-import {UserMenuDropdownComponent} from './user-panel/user-menu/dropdown/user-menu-dropdown.component';
 import {UserFeedbackModalComponent} from './user-panel/user-menu/user-feedback-modal/user-feedback-modal.component';
 import {BookmarksModule} from '../bookmarks/bookmarks.module';
 import {GravatarModule} from 'ngx-gravatar';
@@ -67,6 +68,7 @@ import {RedDotModule} from '../red-dot/red-dot.module';
     GravatarModule,
     TooltipModule.forRoot(),
     RedDotModule,
+    MatMenuModule,
   ],
   declarations: [
     TopPanelComponent,
@@ -80,7 +82,6 @@ import {RedDotModule} from '../red-dot/red-dot.module';
     InviteUserComponent,
     InviteUserModalComponent,
     NewUserComponent,
-    UserMenuDropdownComponent,
     UserFeedbackModalComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],

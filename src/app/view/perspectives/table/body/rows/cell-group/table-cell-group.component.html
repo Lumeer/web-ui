@@ -1,23 +1,31 @@
 <ng-container
-  *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, collection: collections$ | async, permissions: permissions$ | async, part: part$ | async, query: query$ | async, constraintData: constraintData$ | async} as data">
+  *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, currentUser: currentUser$ | async, resource: resource$ | async, linkType: linkType$ | async,
+  collection: collections$ | async, permissions: permissions$ | async, linkTypePermissions: linkTypePermissions$ | async, part: part$ | async, query: query$ | async, constraintData: constraintData$ | async} as data">
 
   <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
     <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
-      <table-data-cell *ngIf="!(cursor | cellCollapsed | async); else collapsedCell"
-                       tableCellScroll
-                       [column]="column"
-                       [cursor]="cursor | columnCursor:columnIndex"
-                       [document]="data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: data.query:data.collection :data.constraintData"
-                       [canManageConfig]="canManageConfig"
-                       [linkInstance]="data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0]"
-                       [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
-                       [table]="table$ | async"
-                       [allowedPermissions]="data.permissions"
-                       [query]="data.query"
-                       data-test="table-data-cell"
-                       [constraintData]="data.constraintData"
-                       (affect)="onAffect()">
-      </table-data-cell>
+      <ng-container *ngIf="!(cursor | cellCollapsed | async); else collapsedCell">
+        <table-data-cell
+          *ngIf="{document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: data.query:data.collection :data.constraintData,
+                  linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0]} as cellData"
+          tableCellScroll
+          [column]="column"
+          [cursor]="cursor | columnCursor:columnIndex"
+          [document]="cellData.document"
+          [canManageConfig]="canManageConfig"
+          [linkInstance]="cellData.linkInstance"
+          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
+          [table]="table$ | async"
+          [allowedPermissions]="data.permissions"
+          [linkAllowedPermissions]="data.linkTypePermissions"
+          [dataPermissions]="(cellData.document || cellData.linkInstance) | dataResourcePermissions:data.resource:data.permissions:data.currentUser"
+          [linkDataPermissions]="cellData.linkInstance | dataResourcePermissions:data.linkType:data.linkTypePermissions:data.currentUser"
+          [query]="data.query"
+          data-test="table-data-cell"
+          [constraintData]="data.constraintData"
+          (affect)="onAffect()">
+        </table-data-cell>
+      </ng-container>
 
       <ng-template #collapsedCell>
         <table-collapsed-cell tableCellScroll

@@ -3,6 +3,7 @@
   [showHeader]="false"
   (onClose)="cancelDialog()"
   (onSubmit)="submitDialog()"
+  [showSubmit]="!readonly"
   [submitDisabled]="!valid || readonly">
 
   <div class="body" #dialogBody>

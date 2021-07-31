@@ -1,0 +1,26 @@
+<div *ngIf="!text && !suggesting" class="mr-2">
+  <i class="far fa-plus-circle text-primary clickable" (click)="onStartSuggesting()"></i>
+</div>
+<ng-container *ngIf="text || suggesting">
+
+  <input #searchInput
+         [value]="text"
+         (blur)="onBlur()"
+         (focus)="onFocus()"
+         (input)="onInput($event)"
+         (keydown)="onKeyDown($event)"
+         (keyup.enter)="onEnterKeyUp()"
+         autoSizeInput
+         class="mw-100 py-1 px-2"/>
+
+  <search-suggestions [queryItems]="queryItem.stemItems"
+                      class="cursor-default"
+                      [origin]="searchInput"
+                      [suggestByItems]="true"
+                      [restrictedTypes]="restrictedItemTypes"
+                      [text]="suggesting ? (text || '') : null"
+                      (useSuggestion)="onUseSuggestion($event)"
+                      (onCloseByClickOutside)="searchInput.blur()">
+  </search-suggestions>
+
+</ng-container>

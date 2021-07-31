@@ -38,11 +38,12 @@ import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.st
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {AddressDataValue, ConstraintType} from '@lumeer/data-filters';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'address-data-input',
@@ -86,7 +87,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   private keyDownListener: (event: KeyboardEvent) => void;
   private setFocus: boolean;
 
-  constructor(private store$: Store<{}>, private element: ElementRef) {}
+  constructor(private store$: Store<AppState>, private element: ElementRef) {}
 
   public ngOnInit() {
     this.addressOptions$ = this.bindAddressOptions();
@@ -118,8 +119,11 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
     if (changes.readonly && !this.readonly && this.focus) {
       this.setFocus = true;
     }
-    if (changes.value) {
+    if (changes.value && this.value) {
       this.value$.next(this.value.format());
+      if (this.readonly) {
+        checkDataInputElementValue(this.addressInput?.nativeElement, this.value);
+      }
     }
   }
 

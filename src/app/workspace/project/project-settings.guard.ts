@@ -21,18 +21,19 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, mergeMap, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {WorkspaceService} from '../workspace.service';
-import {userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
+import {userCanManageProjectDetail} from '../../shared/utils/permission.utils';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {Organization} from '../../core/store/organizations/organization';
+import {Project} from '../../core/store/projects/project';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
   public constructor(
-    private i18n: I18n,
     private router: Router,
     private workspaceService: WorkspaceService,
     private store$: Store<AppState>
@@ -45,22 +46,23 @@ export class ProjectSettingsGuard implements CanActivate {
     return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
       mergeMap(({user, organization, project}) => {
         if (!organization) {
-          const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+          const message = $localize`:@@organization.not.exist:Organization does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
 
         if (!project) {
-          const message = this.i18n({id: 'project.not.exist', value: 'Project does not exist'});
+          const message = $localize`:@@project.not.exist:Project does not exist`;
           this.dispatchErrorActions(message);
           return of(false);
         }
 
-        if (!userIsManagerInWorkspace(user, organization, project)) {
+        if (!userCanManageProjectDetail(organization, project, user)) {
           this.dispatchErrorActionsNotPermission();
           return of(false);
         }
 
+        this.dispatchDataEvents(organization, project);
         return this.workspaceService.switchWorkspace(organization, project);
       }),
       take(1),
@@ -69,15 +71,16 @@ export class ProjectSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActionsNotPermission() {
-    const message = this.i18n({
-      id: 'project.permission.missing',
-      value: 'You do not have permission to access this project',
-    });
+    const message = $localize`:@@project.permission.missing:You do not have permission to access this project`;
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActions(message: string) {
     this.router.navigate(['/auth']);
     this.store$.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private dispatchDataEvents(organization: Organization, project: Project) {
+    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
   }
 }

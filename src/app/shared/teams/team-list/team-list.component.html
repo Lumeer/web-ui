@@ -1,0 +1,29 @@
+<div *ngIf="groupsAreEditable && (resourceType | isOrganizationType)" class="mt-4">
+  <h4 class="card-title" i18n="@@teams.header.title.main">Start building a new team</h4>
+  <new-team [teams]="teams$ | async"
+            (teamCreated)="teamCreated.emit($event)">
+  </new-team>
+</div>
+<hint-box [condition]="resourceType | isOrganizationType" [hintKey]="userHintsKeys.organizationTeamsHintDismissed" additionalClasses="mt-4">
+  <span i18n="@@teams.header.info.organization">Edit rights of the teams for this organization.</span>
+</hint-box>
+<hint-box [condition]="resourceType | isProjectType" [hintKey]="userHintsKeys.projectTeamsHintDismissed" additionalClasses="mt-4">
+  <span i18n="@@teams.header.info.project">Edit rights of the teams for this project.</span>
+</hint-box>
+<team-table class="d-block mt-4"
+            [editableTeams]="groupsAreEditable"
+            [resourceType]="resourceType"
+            [permissions]="permissions$ | async"
+            [teams]="teams$ | async"
+            [users]="users$ | async"
+            [color]="resource.color"
+            [editable]="groupsAreEditable && (resourceType | isOrganizationType)"
+            [changeRoles]="groupsAreEditable"
+            [deletableTeamIds]="groupsAreEditable && (resourceType | isOrganizationType) ? teamIds : []"
+            [organization]="organization"
+            [project]="project"
+            (teamUpdated)="onTeamUpdated($event)"
+            (teamDeleted)="onTeamDeleted($event)"
+            (teamRemoved)="onTeamRemoved($event)"
+            (teamRolesChange)="onTeamRolesChange($event)">
+</team-table>

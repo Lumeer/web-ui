@@ -24,8 +24,9 @@ import {Resource} from '../../core/model/resource';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {ResourceType} from '../../core/model/resource-type';
-import {ResourceRolesPipe} from './resource-roles.pipe';
-import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/resource.utils';
+import {Permission} from '../../core/store/permissions/permissions';
+import {RoleType} from '../../core/model/role-type';
+import {userRoleTypesInOrganization, userRoleTypesInProject, userRoleTypesInResource} from '../utils/permission.utils';
 
 @Pipe({
   name: 'userRolesInResource',
@@ -34,35 +35,20 @@ import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../utils/re
   providedIn: 'root',
 })
 export class UserRolesInResourcePipe implements PipeTransform {
-  constructor(private resourceRolesPipe: ResourceRolesPipe) {}
-
   public transform(
     user: User,
     resource: Resource,
     resourceType: ResourceType,
     organization?: Organization,
-    project?: Project
-  ): string[] {
-    const userPermission =
-      resource &&
-      resource.permissions &&
-      resource.permissions.users &&
-      resource.permissions.users.find(perm => perm.id === user.id);
-    const roles = userPermission ? userPermission.roles : [];
-
+    project?: Project,
+    overridePermissions?: Record<string, {new: Permission}>
+  ): RoleType[] {
     if (resourceType === ResourceType.Organization) {
-      return roles;
+      return userRoleTypesInOrganization(organization, user);
     } else if (resourceType === ResourceType.Project) {
-      if (userHasManageRoleInResource(user, organization)) {
-        return this.resourceRolesPipe.transform(resourceType);
-      }
-      return roles;
+      return userRoleTypesInProject(organization, project, user);
     }
 
-    if (userIsManagerInWorkspace(user, organization, project)) {
-      return this.resourceRolesPipe.transform(resourceType);
-    }
-
-    return roles;
+    return userRoleTypesInResource(organization, project, resource, user);
   }
 }

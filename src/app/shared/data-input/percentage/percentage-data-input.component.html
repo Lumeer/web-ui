@@ -1,9 +1,17 @@
+<progress-bar *ngIf="isProgressStyle"
+              [color]="value?.config?.color"
+              [style.height.px]="15"
+              [value]="numericValue">
+</progress-bar>
+
 <input #percentageInput
+       *ngIf="!isProgressStyle"
        [title]="value | formatDataValueTitle"
        [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        type="text"
        percentage
        class="border-0 w-100 h-100 px-1 bg-transparent"
+       inputmode="numeric"
        (blur)="!readonly && onBlur()"
        (focus)="!readonly && onFocus()"
        (input)="onInput($event)"

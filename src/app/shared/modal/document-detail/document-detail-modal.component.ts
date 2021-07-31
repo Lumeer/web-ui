@@ -42,12 +42,8 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
-import {ViewSettings} from '../../../core/store/views/view';
 import {AttributesResourceType} from '../../../core/model/resource';
-import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'document-detail-modal',
@@ -76,8 +72,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public query$: Observable<Query>;
   public collection$: Observable<Collection>;
   public document$: Observable<DocumentModel>;
-  public permissions$: Observable<AllowedPermissions>;
-  public viewSettings$: Observable<ViewSettings>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -94,7 +88,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
@@ -105,7 +98,6 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   private initData() {
     this.collection$ = of(this.collection);
     this.document$ = of(this.document);
-    this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collection?.id)));
 
     this.subscribeExist(this.collection, this.document);
   }
@@ -113,8 +105,8 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   private subscribeExist(collection: Collection, document: DocumentModel) {
     this.dataExistSubscription.unsubscribe();
     this.dataExistSubscription = combineLatest([
-      (collection.id && this.store$.pipe(select(selectCollectionById(collection.id)))) || of(true),
-      (document.id && this.store$.pipe(select(selectDocumentById(document.id)))) || of(true),
+      (collection?.id && this.store$.pipe(select(selectCollectionById(collection.id)))) || of(true),
+      (document?.id && this.store$.pipe(select(selectDocumentById(document.id)))) || of(true),
     ]).subscribe(([currentCollection, currentDocument]) => {
       if (!currentCollection || !currentDocument) {
         this.hideDialog();

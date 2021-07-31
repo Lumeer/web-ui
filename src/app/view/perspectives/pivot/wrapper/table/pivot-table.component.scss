@@ -26,6 +26,14 @@
   }
 }
 
+data-input-preview.clickable-cell {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .data-input {
   min-height: 30px;
 }

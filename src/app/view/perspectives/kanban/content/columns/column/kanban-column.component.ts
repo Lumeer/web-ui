@@ -38,6 +38,7 @@ import {ViewSettings} from '../../../../../../core/store/views/view';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, throttleTime} from 'rxjs/operators';
 import {ConstraintData} from '@lumeer/data-filters';
+import {User} from '../../../../../../core/store/users/user';
 
 @Component({
   selector: 'kanban-column',
@@ -65,6 +66,9 @@ export class KanbanColumnComponent implements OnInit {
   public query: Query;
 
   @Input()
+  public currentUser: User;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -79,9 +83,6 @@ export class KanbanColumnComponent implements OnInit {
 
   @Output()
   public createDataResource = new EventEmitter<KanbanCreateResource>();
-
-  @Output()
-  public cardMove = new EventEmitter<{}>();
 
   @Output()
   public removeColumn = new EventEmitter();

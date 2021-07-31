@@ -28,6 +28,7 @@ export interface ShortenedQuery {
 }
 
 export interface ShortenedQueryStem {
+  i: string; // id
   c: string; // collectionId
   l: string[]; // linkTypeIds
   d: string[]; // documentIds
@@ -57,7 +58,7 @@ export interface ShortenedLinkAttributeFilter extends ShortenedAttributeFilter {
 export function shortenQuery(query: Query): ShortenedQuery {
   return (
     query && {
-      s: query.stems && query.stems.map(stem => shortenQueryStem(stem)),
+      s: query.stems?.map(stem => shortenQueryStem(stem)),
       f: query.fulltexts,
       p: query.page,
       l: query.pageSize,
@@ -67,11 +68,12 @@ export function shortenQuery(query: Query): ShortenedQuery {
 
 function shortenQueryStem(stem: QueryStem): ShortenedQueryStem {
   return {
+    i: stem.id,
     c: stem.collectionId,
     l: stem.linkTypeIds,
     d: stem.documentIds,
-    f: stem.filters && stem.filters.map(filter => shortenCollectionAttributeFilter(filter)),
-    lf: stem.linkFilters && stem.linkFilters.map(filter => shortenLinkAttributeFilter(filter)),
+    f: stem.filters?.map(filter => shortenCollectionAttributeFilter(filter)),
+    lf: stem.linkFilters?.map(filter => shortenLinkAttributeFilter(filter)),
   };
 }
 
@@ -98,7 +100,7 @@ function shortenConditionValue(value: ConditionValue): ShortenedConditionValue {
 export function prolongQuery(query: ShortenedQuery): Query {
   return (
     query && {
-      stems: query.s && query.s.map(stem => prolongQueryStem(stem)),
+      stems: query.s?.map(stem => prolongQueryStem(stem)),
       fulltexts: query.f,
       page: query.p,
       pageSize: query.l,
@@ -108,11 +110,12 @@ export function prolongQuery(query: ShortenedQuery): Query {
 
 function prolongQueryStem(stem: ShortenedQueryStem): QueryStem {
   return {
+    id: stem.i,
     collectionId: stem.c,
     linkTypeIds: stem.l,
     documentIds: stem.d,
-    filters: stem.f && stem.f.map(filter => prolongCollectionAttributeFilter(filter)),
-    linkFilters: stem.lf && stem.lf.map(filter => prolongLinkAttributeFilter(filter)),
+    filters: stem.f?.map(filter => prolongCollectionAttributeFilter(filter)),
+    linkFilters: stem.lf?.map(filter => prolongLinkAttributeFilter(filter)),
   };
 }
 

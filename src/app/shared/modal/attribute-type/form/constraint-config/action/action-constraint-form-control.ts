@@ -25,6 +25,8 @@ export enum ActionConstraintFormControl {
   Rule = 'rule',
   Role = 'role',
   Filters = 'filters',
+  RequiresConfirmation = 'requiresConfirmation',
+  ConfirmationTitle = 'confirmationTitle',
 }
 
 export enum ActionConstraintFiltersFormControl {

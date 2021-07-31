@@ -18,7 +18,7 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
+import {NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router} from '@angular/router';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
 @Injectable({
@@ -40,7 +40,7 @@ export class ModuleLazyLoadingService implements OnDestroy {
       if (event instanceof RouteConfigLoadStart) {
         this.lazyLoading$.next(true);
       }
-      if (event instanceof RouteConfigLoadEnd) {
+      if (event instanceof RouteConfigLoadEnd || event instanceof NavigationEnd) {
         this.lazyLoading$.next(false);
       }
     });

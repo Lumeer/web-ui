@@ -4,6 +4,7 @@ dist/
 node_modules/
 target/
 .env.json
+config.json
 package.json
 package-lock.json
 *.html

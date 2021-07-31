@@ -1,11 +1,19 @@
 <button type="button"
         class="btn btn-sm btn-primary"
-        [disabled]="disabled"
-        [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
         title="Add table"
         i18n-title="@@collection.post.it.create.title"
         (click)="add()"
         data-tour="collection-add">
   <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
   <span class="font-weight-bold" i18n="@@create.new.collection">Create New Table</span>
+</button>
+
+<button type="button"
+        *ngIf="showAddTaskTable"
+        class="btn btn-sm btn-primary ml-2"
+        (click)="onCreate()"
+        data-tour="collection-add">
+  <i *ngIf="!(creatingData$ | async)" class="fa fa-tasks mr-1" aria-hidden="true"></i>
+  <span *ngIf="creatingData$ | async" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+  <span class="font-weight-bold" i18n="@@tasks.empty.collections.button">Create Tasks Table</span>
 </button>

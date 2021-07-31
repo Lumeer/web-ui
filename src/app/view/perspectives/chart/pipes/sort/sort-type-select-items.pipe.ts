@@ -20,24 +20,19 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {ChartSortType} from '../../../../../core/store/charts/chart';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
 
 @Pipe({
   name: 'sortTypeSelectItems',
 })
 export class SortTypeSelectItemsPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
   public transform(types: ChartSortType[]): SelectItemModel[] {
     return types.map(type => ({id: type, value: this.chartSortTypeName(type)}));
   }
 
   private chartSortTypeName(type: ChartSortType): string {
-    return this.i18n(
-      {
-        id: 'perspective.chart.config.sortType.name',
-        value: '{type, select, asc {Ascending} desc {Descending}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@perspective.chart.config.sortType.name:{type, select, asc {Ascending} desc {Descending}}`,
       {type}
     );
   }

@@ -20,9 +20,13 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AttributesSettingsModule} from './attributes/attributes-settings.module';
+import {DataSettingsModule} from './data/data-settings.module';
+import {ViewSettingsDropdownComponent} from './dropdown/view-settings-dropdown.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
 
 @NgModule({
-  imports: [CommonModule, AttributesSettingsModule],
-  exports: [AttributesSettingsModule],
+  declarations: [ViewSettingsDropdownComponent],
+  imports: [CommonModule, AttributesSettingsModule, DropdownModule, DataSettingsModule],
+  exports: [AttributesSettingsModule, ViewSettingsDropdownComponent],
 })
 export class SettingsModule {}

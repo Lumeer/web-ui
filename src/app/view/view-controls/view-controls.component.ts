@@ -31,13 +31,17 @@ import {
 } from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {debounceTime, map, take, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPerspective, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {
+  selectPerspective,
+  selectPerspectiveSettings,
+  selectViewCursor,
+  selectWorkspace,
+} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
 import {View} from '../../core/store/views/view';
@@ -57,18 +61,23 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {ViewsAction} from '../../core/store/views/views.action';
-import {environment} from '../../../environments/environment';
 import {objectValues} from '../../shared/utils/common.utils';
 import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
 import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {
   selectCollectionsPermissions,
   selectProjectPermissions,
   selectViewsPermissions,
 } from '../../core/store/user-permissions/user-permissions.state';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {convertViewCursorToString, ViewCursor} from '../../core/store/navigation/view-cursor/view-cursor';
+import {
+  convertPerspectiveSettingsToString,
+  PerspectiveSettings,
+} from '../../core/store/navigation/settings/perspective-settings';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -103,15 +112,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public viewChanged$: Observable<boolean>;
   public linkTypes$: Observable<LinkType[]>;
   public projectPermissions$: Observable<AllowedPermissions>;
-  public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
-  public viewsPermissions$: Observable<Record<string, AllowedPermissions>>;
+  public collectionsPermissions$: Observable<AllowedPermissionsMap>;
+  public viewsPermissions$: Observable<AllowedPermissionsMap>;
 
   private configChanged: boolean;
   private queryChanged: boolean;
   private currentPerspective: Perspective;
   private workspace: Workspace;
 
-  public readonly canShareView = !environment.publicView;
+  public readonly canShareView: boolean;
   public readonly perspectives = objectValues(Perspective);
 
   private subscriptions = new Subscription();
@@ -119,9 +128,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private i18n: I18n,
-    private store$: Store<AppState>
-  ) {}
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
+    this.canShareView = !this.configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
@@ -192,13 +203,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private askToDiscardChanges() {
-    const message = this.i18n({
-      id: 'view.discard.changes.message',
-      value: 'The view was changed. Do you want to save the changes?',
-    });
-    const title = this.i18n({id: 'view.discard.changes.message.title', value: 'Save view'});
-    const discard = this.i18n({id: 'button.discard', value: 'Discard'});
-    const save = this.i18n({id: 'button.save', value: 'Save'});
+    const message = $localize`:@@view.discard.changes.message:The view was changed. Do you want to save the changes?`;
+    const title = $localize`:@@view.discard.changes.message.title:Save view`;
+    const discard = $localize`:@@button.discard:Discard`;
+    const save = $localize`:@@button.save:Save`;
 
     this.notificationService.confirm(
       message,
@@ -215,17 +223,17 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 
-  public onSelectPerspective(perspective: string, canManage: boolean) {
+  public onSelectPerspective(perspective: string, canConfig: boolean) {
     if (perspective === this.currentPerspective) {
       return;
     }
 
     const path: any[] = [...this.workspacePaths(), 'view'];
-    if (canManage && this.workspace.viewCode) {
+    if (canConfig && this.workspace.viewCode) {
       path.push({vc: this.workspace.viewCode});
     }
     let extras: NavigationExtras = null;
-    if (canManage || !this.workspace.viewCode) {
+    if (canConfig || !this.workspace.viewCode) {
       extras = {queryParamsHandling: 'merge'};
     }
     path.push(perspective);
@@ -291,16 +299,27 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public revertChanges() {
-    this.store$.pipe(select(selectCurrentView), take(1)).subscribe(view => {
-      if (!view || !this.workspace) {
-        return;
-      }
-      const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
-      this.revertChangesForView(view, workspacePath);
-    });
+    combineLatest([
+      this.store$.pipe(select(selectCurrentView)),
+      this.store$.pipe(select(selectViewCursor)),
+      this.store$.pipe(select(selectPerspectiveSettings)),
+    ])
+      .pipe(take(1))
+      .subscribe(([view, cursor, perspectiveSettings]) => {
+        if (!view || !this.workspace) {
+          return;
+        }
+        const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
+        this.revertChangesForView(view, workspacePath, cursor, perspectiveSettings);
+      });
   }
 
-  private revertChangesForView(view: View, workspacePath: any[]) {
+  private revertChangesForView(
+    view: View,
+    workspacePath: any[],
+    cursor: ViewCursor,
+    perspectiveSettings: PerspectiveSettings
+  ) {
     this.resetName(view);
     this.resetViewSettings(view);
     this.resetViewConfig(view);
@@ -308,11 +327,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       case Perspective.Search:
         const searchConfig = view.config?.search;
         const searchPath = [...workspacePath, searchConfig?.searchTab || SearchTab.All];
-        this.revertQueryWithUrl(searchPath, view.query);
+        this.revertQueryWithUrl(searchPath, view.query, cursor, perspectiveSettings);
         this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
         return;
       default:
-        this.revertQueryWithUrl(workspacePath, view.query);
+        this.revertQueryWithUrl(workspacePath, view.query, cursor, perspectiveSettings);
         return;
     }
   }
@@ -330,11 +349,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new ViewsAction.ResetViewConfig({viewId: view.id}));
   }
 
-  private revertQueryWithUrl(path: any[], query: Query) {
+  private revertQueryWithUrl(path: any[], query: Query, cursor: ViewCursor, perspectiveSettings: PerspectiveSettings) {
     this.store$.dispatch(
       new RouterAction.Go({
         path,
-        queryParams: {[QueryParam.Query]: convertQueryModelToString(query)},
+        queryParams: {
+          [QueryParam.Query]: convertQueryModelToString(query),
+          [QueryParam.ViewCursor]: convertViewCursorToString(cursor),
+          [QueryParam.PerspectiveSettings]: convertPerspectiveSettingsToString(perspectiveSettings),
+        },
       })
     );
   }

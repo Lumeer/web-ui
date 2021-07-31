@@ -4,17 +4,15 @@
   <ng-container *ngIf="projectPermissions$ | async as projectPermissions">
     <h3 i18n="@@search.collections.empty.title">There are no tables yet!</h3>
     <div i18n="@@search.collections.empty.subtitle.norights"
-         *ngIf="!projectPermissions?.write">I am sorry but you do not have permissions to add tables.
+         *ngIf="!projectPermissions?.roles?.CollectionContribute">I am sorry but you do not have permissions to add tables.
     </div>
 
-    <div *ngIf="projectPermissions?.write">
+    <div *ngIf="projectPermissions?.roles?.CollectionContribute">
       <div i18n="@@search.collections.empty.subtitle" class="text-center mb-3">Add your first table or import one.</div>
-      <post-it-collection-add-button [disabled]="false"
-                                     (clicked)="onNewCollection()">
+      <post-it-collection-add-button (clicked)="onNewCollection()">
       </post-it-collection-add-button>
 
       <post-it-collection-import-button class="ml-2"
-                                        [disabled]="false"
                                         (error)="onError($event)"
                                         (import)="onImport($event)">
       </post-it-collection-import-button>

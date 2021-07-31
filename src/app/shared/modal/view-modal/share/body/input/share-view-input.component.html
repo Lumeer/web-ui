@@ -1,0 +1,31 @@
+<div class="input-group flex-row p-0" *ngIf="{canAddUser: text | canAddNewUser:currentUsers} as data">
+  <input class="form-control form-control-sm"
+         [(ngModel)]="text"
+         (keydown)="onKeyDown($event, data.canAddUser)"
+         (focus)="onFocus()"
+         (blur)="onBlur()"
+         (input)="onInput()"
+         inputmode="email"
+         type="email"
+         placeholder="Enter user email and press Enter"
+         i18n-placeholder="@@view.share.dialog.input.placeholder"/>
+
+  <div class="input-group-append">
+    <button type="button" class="btn btn-sm btn-primary text-nowrap"
+            [disabled]="!data.canAddUser"
+            (click)="onEnter()">
+      <i class="fas fa-plus mr-2"></i>
+      <span class="font-weight-bold" i18n="@@view.share.dialog.input.button">Add</span>
+    </button>
+  </div>
+</div>
+
+<options-dropdown *ngIf="text.length && availableUsers.length"
+                  [options]="availableUsers | filterUsers:text"
+                  [showBackdrop]="false"
+                  [closeOnClickOutside]="false"
+                  [origin]="element"
+                  [highlightedText]="text"
+                  [firstItemActive]="false"
+                  (selectOption)="onSelectOption($event)">
+</options-dropdown>

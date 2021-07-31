@@ -1,4 +1,5 @@
-<div class="d-flex flex-column flex-lg-row" *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
+<div class="d-flex flex-column flex-lg-row"
+     *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
   <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
     <icons-presenter class="mr-2"
                      [icons]="data.iconColors.icons"
@@ -16,29 +17,45 @@
   </div>
 
   <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
-    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates" *ngIf="resourceType === collectionResourceType">
+    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates"
+         *ngIf="resourceType === collectionResourceType">
       <span (click)="versionClick.emit()" class="mr-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
       <span *ngIf="(dataResource.creationDate | isDateValid) && users.createdBy">
-        <short-date [date]="dataResource.creationDate" format="ll" [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')" icon="fa-file"></short-date>
-        <user-avatar class="ml-2" [email]="users.createdBy.email" [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
+        <short-date [date]="dataResource.creationDate" format="ll"
+                    [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')"
+                    icon="fa-file"></short-date>
+        <user-avatar class="ml-2" [email]="users.createdBy.email"
+                     [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
       </span>
       <span *ngIf="(dataResource.updateDate | isDateValid) && users.updatedBy">
         <br/>
-        <short-date [date]="dataResource.updateDate" format="ll" [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')" icon="fa-pencil"></short-date>
-        <user-avatar class="ml-2" [email]="users.updatedBy.email" [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
+        <short-date [date]="dataResource.updateDate" format="ll"
+                    [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')"
+                    icon="fa-pencil"></short-date>
+        <user-avatar class="ml-2" [email]="users.updatedBy.email"
+                     [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
       </span>
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
+      <detail-settings-button *ngIf="permissions?.rolesWithView?.PerspectiveConfig"
+                              [style.line-height.px]="0"
+                              class="mr-2"
+                              [resource]="resource"
+                              [resourceType]="resourceType"
+                              [attributesSettings]="attributesSettings"
+                              (attributesSettingsChanged)="attributesSettingsChanged.emit($event)">
+      </detail-settings-button>
       <i class="{{tableIcon}} mr-2 clickable"
          aria-hidden="true"
-         *ngIf="permissions?.writeWithView"
+         *ngIf="permissions?.roles?.Read"
          tooltip="Switch to Table perspective"
          i18n-tooltip="@@document.detail.switch.table"
          title="Switch to Table perspective"
          i18n-title="@@document.detail.switch.table"
          (click)="onSwitchToTable()"></i>
-      <ng-container *ngIf="permissions?.read && resourceType === collectionResourceType && document">
+      <ng-container
+        *ngIf="dataPermissions?.read && resourceType === collectionResourceType && document">
         <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
@@ -55,7 +72,7 @@
       </ng-container>
       <i class="far fa-fw fa-trash-alt text-danger clickable"
          aria-hidden="true"
-         *ngIf="permissions?.writeWithView && resourceType === collectionResourceType"
+         *ngIf="dataPermissions?.delete && resourceType === collectionResourceType"
          title="Remove Record"
          i18n-title="@@document.detail.remove"
          tooltip="Remove Record"
@@ -64,7 +81,7 @@
       ></i>
       <i class="fas fa-fw fa-unlink text-warning clickable"
          aria-hidden="true"
-         *ngIf="permissions?.writeWithView  && resourceType !== collectionResourceType"
+         *ngIf="dataPermissions?.delete && resourceType !== collectionResourceType"
          title="Unlink"
          i18n-title="@@link.detail.unlink"
          tooltip="Unlink"

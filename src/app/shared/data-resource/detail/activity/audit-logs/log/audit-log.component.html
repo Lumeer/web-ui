@@ -1,0 +1,51 @@
+<div class="icon mr-2 align-self-center" [style.height.px]="20">
+  <user-avatar [avatarSize]="20"
+               class="d-inline-block"
+               [style.height.px]="20"
+               placement="top"
+               [email]="user?.email || auditLog?.userEmail || unknownUserEmail"
+               [tooltipText]="updatedByMsg + ' ' + (user?.name || auditLog?.userName || unknownUser)">
+  </user-avatar>
+</div>
+
+<div class="title d-flex">
+  <div class="flex-grow-1 text-truncate">
+    <span i18n="@@audit.title.data.update">{auditLog.type, select, updated {Updated} created {Created}}</span>
+    <span *ngIf="auditLog.automation" class="badge badge-info ml-2"
+          placement="top"
+          [tooltip]="auditLog | auditLogAutomationTitle:parent?.attributes">{{auditLog | auditLogAutomationString}}</span>
+  </div>
+  <span *ngIf="allowRevert && !reverting" class="clickable ml-2" (click)="revert.emit()"
+        title="Revert"
+        i18n-title="@@audit.action.revert">
+    <i class="far fa-undo" aria-hidden="true"></i>
+  </span>
+  <span *ngIf="allowRevert && reverting" class="spinner-grow spinner-grow-sm ml-2" role="status" aria-hidden="true"></span>
+</div>
+
+<div class="line pr-2 d-flex justify-content-center py-1">
+  <div *ngIf="!last" class="horizontal-line"></div>
+</div>
+
+<div class="content pb-4">
+  <short-date class="small text-secondary d-block"
+              [date]="auditLog.changeDate"
+              [tooltipText]="updatedOnMsg + ' ' + (auditLog.changeDate | date:'medium')"
+              placement="top"
+              format="ll">
+  </short-date>
+  <audit-log-entries class="d-block"
+                     *ngIf="hasNewState"
+                     [constraintData]="constraintData"
+                     [parent]="parent"
+                     [changes]="auditLog.newState">
+  </audit-log-entries>
+  <audit-log-entries class="d-block"
+                     *ngIf="hasOldState"
+                     valueClasses="text-line-through"
+                     [constraintData]="constraintData"
+                     [parent]="parent"
+                     [changes]="auditLog.oldState">
+  </audit-log-entries>
+</div>
+

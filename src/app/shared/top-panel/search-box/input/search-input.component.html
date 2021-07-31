@@ -1,6 +1,6 @@
 <input #searchInput
        [value]="text"
-       [placeholder]="queryItems.length === 0 ? placeholder : ''"
+       [placeholder]="queryItems.length === 0 ? emptyPlaceholder : placeholder"
        (blur)="onBlur()"
        [disabled]="readonly"
        (focus)="onFocus()"
@@ -13,6 +13,9 @@
 <search-suggestions [queryItems]="queryItems"
                     class="cursor-default"
                     [origin]="hostElement"
+                    [suggestByItems]="restrictedMode"
+                    [restrictedTypes]="restrictedMode ? restrictedItemTypes : []"
                     [text]="suggesting ? (text || '') : null"
-                    (useSuggestion)="onUseSuggestion($event)">
+                    (useSuggestion)="onUseSuggestion($event)"
+                    (onCloseByClickOutside)="searchInput.blur()">
 </search-suggestions>

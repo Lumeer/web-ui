@@ -16,12 +16,13 @@
 
     <chart-data
       *ngIf="data.config"
-      class="flex-grow-1 mx-4"
+      class="flex-grow-1 mx-4 mb-5"
       [collections]="data.collections"
       [documents]="data.documentsAndLinks.documents"
       [linkTypes]="linkTypes$ | async"
       [linkInstances]="data.documentsAndLinks.linkInstances"
       [query]="data.query"
+      [user]="currentUser$ | async"
       [permissions]="permissions$ | async"
       [constraintData]="constraintData$ | async"
       [config]="data.config"

@@ -1,0 +1,12 @@
+<collection-filter *ngFor="let filter of filters$ | async; trackBy: trackByAttributeFilter; let index = index"
+                   class="form-control cursor-pointer p-0 h-auto d-block mb-1"
+                   [attributes]="collection?.attributes"
+                   [filter]="filter"
+                   [attributeSelectItems]="attributeSelectItems"
+                   (remove)="onFilterDelete(index)"
+                   (filterChange)="onFilterChange(index, $event)">
+</collection-filter>
+
+<button class="btn btn-link px-0 small d-block mt-1" (click)="onNewFilter()">
+  <i class="fas fa-plus-circle mr-2"></i><span i18n="@@modal.links.modify.filter.add">Add filter</span>
+</button>

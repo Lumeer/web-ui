@@ -18,15 +18,14 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {Dictionary} from '@ngrx/entity/src/models';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {Group} from '../groups/group';
-import {selectGroupsDictionary} from '../groups/groups.state';
+import {Team} from '../teams/team';
+import {selectTeamsByOrganization, selectTeamsForWorkspace} from '../teams/teams.state';
+import {User} from './user';
+import {filterUsersByOrganization} from './user.filters';
 import {Organization} from '../organizations/organization';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {User} from './user';
-import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
 
 export interface UsersState extends EntityState<User> {
   pending: boolean;
@@ -44,9 +43,9 @@ export const initialUsersState: UsersState = usersAdapter.getInitialState({
 
 export const selectUsersState = (state: AppState) => state.users;
 
-const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
+export const selectAllUsers = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
 export const selectUsersDictionary = createSelector(selectUsersState, usersAdapter.getSelectors().selectEntities);
-export const selectAllUsers = createSelector(selectAllUsersRaw, users => filterUserFunctions(users));
+
 export const selectUsersLoadedForOrganization = createSelector(
   selectUsersState,
   usersState => usersState.loadedForOrganizationId
@@ -66,30 +65,29 @@ export const selectUsersByEmails = (emails: string[]) =>
 
 export const selectCurrentUserForWorkspace = createSelector(
   selectCurrentUser,
-  selectGroupsDictionary,
-  selectOrganizationByWorkspace,
-  (user, groups, organization) =>
-    user ? (organization ? mapGroupsOnUser(user, organization.id, groups) : user) : undefined
+  selectTeamsForWorkspace,
+  (user, groups) => user && mapGroupsOnUser(user, groups)
 );
 
 export const selectCurrentUserForOrganization = (organization: Organization) =>
   createSelector(
     selectCurrentUser,
-    selectGroupsDictionary,
-    (user, groups) => user && mapGroupsOnUser(user, organization.id, groups)
+    selectTeamsByOrganization(organization.id),
+    (user, groups) => user && mapGroupsOnUser(user, groups)
   );
 
 export const selectUsersForWorkspace = createSelector(
   selectAllUsers,
-  selectGroupsDictionary,
+  selectTeamsForWorkspace,
   selectOrganizationByWorkspace,
   (users, groups, organization) => {
-    return filterUsersByOrganization(users, organization).map(user => mapGroupsOnUser(user, organization.id, groups));
+    return filterUsersByOrganization(users, organization).map(user => mapGroupsOnUser(user, groups));
   }
 );
 
-export function mapGroupsOnUser(user: User, organizationId: string, groupsMap: Dictionary<Group>) {
-  const groupIds = (user.groupsMap && user.groupsMap[organizationId]) || [];
-  const groups = groupIds.map(id => groupsMap[id]).filter(group => !!group);
-  return {...user, groups};
+export function mapGroupsOnUser(user: User, groups: Team[]): User {
+  return {
+    ...user,
+    teams: groups.filter(group => group.users?.includes(user.id)),
+  };
 }

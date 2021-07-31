@@ -86,6 +86,17 @@ export class OptionsDropdownComponent implements OnChanges {
   @Input()
   public minWidth: number;
 
+  @Input()
+  public editable = true;
+
+  @Input()
+  public dropdownPositions = [
+    DropdownPosition.BottomStart,
+    DropdownPosition.TopStart,
+    DropdownPosition.BottomEnd,
+    DropdownPosition.TopEnd,
+  ];
+
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
 
@@ -100,17 +111,14 @@ export class OptionsDropdownComponent implements OnChanges {
   public activeValue$ = new BehaviorSubject<any>(null);
   public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
-  public readonly dropdownPositions = [
-    DropdownPosition.BottomStart,
-    DropdownPosition.TopStart,
-    DropdownPosition.BottomEnd,
-    DropdownPosition.TopEnd,
-  ];
-
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {
       this.activeValue$.next(this.firstItemActive ? this.firstOptionValue() : null);
     }
+  }
+
+  public updatePosition() {
+    this.dropdown?.updatePosition();
   }
 
   private firstOptionValue(): any {
@@ -122,8 +130,7 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private optionValue(index: number): any {
-    const option = (this.options || [])[index];
-    return option && option.value;
+    return (this.options || [])[index]?.value;
   }
 
   private shouldResetActiveItem(changes: SimpleChanges): boolean {
@@ -156,6 +163,14 @@ export class OptionsDropdownComponent implements OnChanges {
     }
   }
 
+  public toggle() {
+    if (this.dropdown?.isOpen()) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
   public open() {
     if (this.dropdown) {
       this.dropdown.open();
@@ -177,7 +192,7 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public isOpen(): boolean {
-    return this.dropdown && this.dropdown.isOpen();
+    return this.dropdown?.isOpen();
   }
 
   public onKeyDown(event: KeyboardEvent) {

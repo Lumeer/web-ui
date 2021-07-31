@@ -27,6 +27,7 @@
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <input class="form-control" type="text" formControlName="imageUrl" id="imageUrl"
                (keydown.enter)="$event.target.blur()"
+               inputmode="url"
                (focus)="editingControl = 'imageUrl'"
                (blur)="editingControl = null"
                placeholder="https://..."/>
@@ -58,6 +59,7 @@
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <input class="form-control" type="text" formControlName="relativeDate" id="relativeDate"
                bsDatepicker
+               inputmode="numeric"
                (focus)="editingControl = 'relativeDate'"
                (blur)="editingControl = null"
                [bsConfig]="datePickerConfig"/>
@@ -71,12 +73,12 @@
 
     <div class="row m-0 mt-2">
       <label class="col-sm-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">
-        Open with view
+        Open in View
       </label>
 
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <select-item class="p-0"
-                     [items]="views | viewsSelectItems:queryData"
+                     [items]="views | viewsSelectItems:collections"
                      emptyValue="Select view"
                      i18n-emptyValue="@@projects.tab.template.metadata.defaultView.empty"
                      [removable]="true"
@@ -96,11 +98,12 @@
       <label class="col-sm-3 px-0 col-lg-2 col-form-label"
              i18n="@@projects.tab.template.metadata.tags">Tags</label>
 
-      <project-template-tags class="col-sm-9 col-lg-10 p-0 tags-container"
-                             (blur)="editingControl = 'tags'"
-                             (focus)="editingControl = null"
-                             [formGroup]="metadataFormGroup">
-      </project-template-tags>
+      <input-tags class="col-sm-9 col-lg-10 p-0"
+                  (blur)="editingControl = 'tags'"
+                  (focus)="editingControl = null"
+                  [formGroup]="metadataFormGroup"
+                  controlName="tags">
+      </input-tags>
     </div>
 
     <div class="row m-0 mt-2">
@@ -126,7 +129,7 @@
   <div class="mt-5" formGroupName="script" *ngIf="isPublicControl.value">
     <project-template-script [formGroup]="scriptFormGroup"
                              [views]="views"
-                             [queryData]="queryData"
+                             [collections]="collections"
                              [workspace]="workspace">
     </project-template-script>
   </div>

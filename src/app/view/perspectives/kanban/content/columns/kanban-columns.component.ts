@@ -55,13 +55,12 @@ import {generateCorrelationId, getAttributesResourceType} from '../../../../../s
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {groupLinkInstancesByLinkTypes} from '../../../../../core/store/link-instances/link-instance.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
 import {
   createPossibleLinkingDocuments,
   createPossibleLinkingDocumentsByChains,
 } from '../../../../../shared/utils/data/data-aggregator-util';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
@@ -71,9 +70,11 @@ import {
   Constraint,
   ConstraintData,
   ConstraintType,
+  DocumentsAndLinksData,
   filterDocumentsAndLinksByStem,
   UnknownConstraint,
 } from '@lumeer/data-filters';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
   selector: 'kanban-columns',
@@ -96,25 +97,22 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public kanbanData: KanbanData;
 
   @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
-
-  @Input()
   public canManageConfig: boolean;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
-
-  @Input()
-  public linkTypesPermissions: Record<string, AllowedPermissions>;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public query: Query;
+
+  @Input()
+  public currentUser: User;
 
   @Input()
   public constraintData: ConstraintData;
@@ -149,8 +147,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private modalService: ModalService,
-    private toggleService: DocumentFavoriteToggleService,
-    private i18n: I18n
+    private toggleService: DocumentFavoriteToggleService
   ) {}
 
   public ngOnInit() {
@@ -230,10 +227,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const failureMessage = this.i18n({
-      id: 'perspective.kanban.create.card.failure',
-      value: 'Could not create card',
-    });
+    const failureMessage = $localize`:@@perspective.kanban.create.card.failure:Could not create card`;
 
     let lastDataResource: DataResource;
     const reversed = createResource.kanbanAttribute.resourceIndex > kanbanResource.resourceIndex;
@@ -273,7 +267,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
           dataResourceChain => !!dataResourceChain.linkInstanceId
         );
         const linkInstance =
-          linkInstanceChain && (this.linkInstances || []).find(li => li.id === linkInstanceChain.linkInstanceId);
+          linkInstanceChain &&
+          (this.data?.uniqueLinkInstances || []).find(li => li.id === linkInstanceChain.linkInstanceId);
         if (linkInstance) {
           chain[chainRange[chainRange.length - 2]] = linkInstance;
         }
@@ -393,7 +388,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
-            afterSuccess: documentId => this.onObjectCreated(documentId, column),
+            afterSuccess: document => this.onObjectCreated(document.id, column),
           })
         );
       }
@@ -443,11 +438,11 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   private getPipelineDocuments(pipelineIndex: number, stem: QueryStem): DocumentModel[] {
     const {pipelineDocuments} = filterDocumentsAndLinksByStem(
       this.collections,
-      groupDocumentsByCollection(this.documents),
+      groupDocumentsByCollection(this.data?.uniqueDocuments),
       this.linkTypes,
-      groupLinkInstancesByLinkTypes(this.linkInstances),
-      this.permissions,
-      this.linkTypesPermissions,
+      groupLinkInstancesByLinkTypes(this.data?.uniqueLinkInstances),
+      this.permissions?.collections,
+      this.permissions?.linkTypes,
       this.constraintData,
       stem,
       this.query?.fulltexts || []
@@ -540,7 +535,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       const {linkInstanceId, documentId, otherDocumentIds} = createPossibleLinkingDocumentsByChains(
         kanbanCard.dataResourcesChain,
         dataResourcesChains,
-        this.linkInstances
+        this.data?.uniqueLinkInstances
       );
       if (otherDocumentIds.length === 1) {
         this.updateLinkDocuments.emit({linkInstanceId, documentIds: [documentId, otherDocumentIds[0]]});
@@ -604,10 +599,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
     if (documents.length === 0 || linkInstances.length === 0) {
       return;
     }
-    const failureMessage = this.i18n({
-      id: 'perspective.kanban.create.card.failure',
-      value: 'Could not move card',
-    });
+    const failureMessage = $localize`:@@perspective.kanban.move.card.failure:Could not move card`;
     this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
   }
 
@@ -639,13 +631,17 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   ): any {
     if (
       constraint &&
-      (constraint.type === ConstraintType.Select || constraint.type === ConstraintType.User) &&
+      (constraint.type === ConstraintType.Select ||
+        constraint.type === ConstraintType.User ||
+        constraint.type === ConstraintType.View) &&
       isNotNullOrUndefined(previousValue) &&
       isArray(documentValue)
     ) {
-      const changedIndex = documentValue.findIndex(value => value === previousValue);
+      const changedIndex = documentValue.findIndex(value => String(value) === String(previousValue));
       const newArray = [...documentValue];
-      if (!newArray.includes(newValue)) {
+      if (newArray.some(value => String(value) === String(newValue))) {
+        newArray.splice(changedIndex, 1);
+      } else {
         newArray[changedIndex] = newValue;
       }
       return constraint.createDataValue(newArray, this.constraintData).serialize();

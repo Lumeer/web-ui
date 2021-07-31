@@ -21,7 +21,7 @@ import {Perspective, perspectivesMap} from '../../../view/perspectives/perspecti
 import {ViewDto} from '../../dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
 import {DefaultViewConfig, View, ViewConfig} from './view';
-import {PermissionsConverter} from '../permissions/permissions.converter';
+import {convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
 import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
 import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
@@ -29,6 +29,7 @@ import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter'
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
 import {convertMapDtoConfigToModel} from '../maps/map-config-converter';
 import {convertChartDtoConfigToModel} from '../charts/chart-config-converter';
+import {RoleType, roleTypesMap} from '../../model/role-type';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -36,16 +37,31 @@ export function convertViewDtoToModel(dto: ViewDto): View {
     code: dto.code,
     name: dto.name,
     description: dto.description,
+    color: dto.color,
+    icon: dto.icon,
+    priority: dto.priority,
     query: convertQueryDtoToModel(dto.query),
     perspective: perspectivesMap[dto.perspective],
     config: convertViewConfigDtoToModel(perspectivesMap[dto.perspective], dto.config),
     settings: dto.settings,
-    permissions: PermissionsConverter.fromDto(dto.permissions),
-    authorRights: dto.authorRights,
+    permissions: convertPermissionsDtoToModel(dto.permissions),
+    authorCollectionsRoles: convertViewAuthorRights(dto.authorCollectionsRights),
+    authorLinkTypesRoles: convertViewAuthorRights(dto.authorLinkTypesRights),
     version: dto.version,
     favorite: dto.favorite,
     lastTimeUsed: new Date(dto.lastTimeUsed),
+    folders: dto.folders,
   };
+}
+
+function convertViewAuthorRights(authorRights: Record<string, string[]>): Record<string, RoleType[]> {
+  return Object.keys(authorRights || {}).reduce(
+    (rights, id) => ({
+      ...rights,
+      [id]: (authorRights[id] || []).map(role => roleTypesMap[role]).filter(role => !!role),
+    }),
+    {}
+  );
 }
 
 export function convertViewModelToDto(model: View): ViewDto {
@@ -53,11 +69,15 @@ export function convertViewModelToDto(model: View): ViewDto {
     id: model.id,
     code: model.code,
     name: model.name,
+    description: model.description,
+    color: model.color,
+    icon: model.icon,
+    priority: model.priority,
     query: convertQueryModelToDto(model.query),
     settings: model.settings,
     perspective: model.perspective,
     config: model.config,
-    description: model.description,
+    folders: model.folders,
   };
 }
 

@@ -20,10 +20,12 @@
 import {Resource} from '../../model/resource';
 import {Rule} from '../../model/rule';
 import {Constraint} from '@lumeer/data-filters';
+import {RoleType} from '../../model/role-type';
 
 export interface Attribute {
   id?: string;
   name: string;
+  description?: string;
 
   constraint?: Constraint;
   function?: AttributeFunction;
@@ -42,6 +44,7 @@ export interface AttributeFunction {
   editable?: boolean;
   dryRun?: boolean;
   dryRunResult?: string;
+  recursive?: boolean;
 }
 
 export interface Collection extends Resource {
@@ -85,6 +88,22 @@ export interface TaskPurposeMetadata {
   dueDateAttributeId?: string;
   assigneeAttributeId?: string;
   stateAttributeId?: string;
-  finalStatesList?: string[];
+  finalStatesList?: any[];
   observersAttributeId?: string;
+  tagsAttributeId?: string;
+  priorityAttributeId?: string;
+  defaultViewCode?: string;
 }
+
+export const collectionRoleTypes = [
+  RoleType.Read,
+  RoleType.DataRead,
+  RoleType.DataWrite,
+  RoleType.DataContribute,
+  RoleType.DataDelete,
+  RoleType.AttributeEdit,
+  RoleType.Manage,
+  RoleType.CommentContribute,
+  RoleType.TechConfig,
+  RoleType.UserConfig,
+];

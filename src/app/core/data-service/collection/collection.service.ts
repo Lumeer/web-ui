@@ -26,7 +26,7 @@ import {CollectionPurposeDto} from '../../dto/collection.dto';
 export abstract class CollectionService extends PermissionService {
   public abstract createCollection(collection: CollectionDto): Observable<CollectionDto>;
 
-  public abstract updateCollection(collection: CollectionDto): Observable<CollectionDto>;
+  public abstract updateCollection(collection: CollectionDto, workspace?: Workspace): Observable<CollectionDto>;
 
   public abstract updatePurpose(
     collectionId: string,
@@ -40,7 +40,7 @@ export abstract class CollectionService extends PermissionService {
 
   public abstract removeFavorite(collectionId: string, workspace?: Workspace): Observable<any>;
 
-  public abstract getCollection(collectionId: string): Observable<CollectionDto>;
+  public abstract getCollection(collectionId: string, workspace?: Workspace): Observable<CollectionDto>;
 
   public abstract getCollections(workspace?: Workspace): Observable<CollectionDto[]>;
 
@@ -50,7 +50,12 @@ export abstract class CollectionService extends PermissionService {
 
   public abstract createAttributes(collectionId: string, attributes: AttributeDto[]): Observable<AttributeDto[]>;
 
-  public abstract updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto>;
+  public abstract updateAttribute(
+    collectionId: string,
+    id: string,
+    attribute: AttributeDto,
+    workspace?: Workspace
+  ): Observable<AttributeDto>;
 
   public abstract removeAttribute(collectionId: string, id: string): Observable<any>;
 

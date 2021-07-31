@@ -5,7 +5,8 @@
   <i class="fa-fw {{ resource.icon }} cursor-pointer"
      [style.fontSize.rem]="2"
      [style.color]="resource.color" (click)="togglePicker()" #pickerOrigin></i>
-  <icon-color-picker [origin]="pickerOrigin"
+  <icon-color-picker *ngIf="permissions?.roles?.Manage"
+                     [origin]="pickerOrigin"
                      [color]="resource.color"
                      [icon]="resource.icon"
                      (preview)="onIconColorChange($event)"
@@ -23,6 +24,7 @@
     [emitAllChanges]="true"
     [fontSizeRem]="2"
     [maxLines]="1"
+    [editable]="permissions?.roles?.Manage"
     [maxLength]="hasVisibleCode() ? 5 : undefined"
     [title]="firstLineValue()"
     (blur)="onFirstLineBlur()"
@@ -33,12 +35,13 @@
   </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
-    <i *ngIf="!resource.nonRemovable" class="far fa-fw fa-trash-alt text-danger mr-3 cursor-pointer"
-       (click)="onDelete()"
-       title="Delete" i18n-title="@@resource.settings.delete"
-       aria-hidden="true"></i>
     <ng-content></ng-content>
-
+    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger">
+      <i *ngIf="!resource.nonRemovable && permissions?.roles?.Manage" class="far fa-fw fa-trash-alt"
+         (click)="onDelete()"
+         [title]="deleteTitle"
+         aria-hidden="true"></i>
+    </div>
   </div>
 
 </div>
@@ -55,6 +58,7 @@
     [color]="resource.color"
     [canStayEmpty]="true"
     [fontSizeRem]="1.5"
+    [editable]="permissions?.roles?.Manage"
     [maxLines]="1"
     [title]="secondLineValue()"
     [placeholder]="secondLinePlaceholder()"
@@ -69,10 +73,12 @@
     class="d-flex pb-3 pt-1"
     [initialValue]="resource.description"
     [canStayEmpty]="true"
+    [editable]="permissions?.roles?.Manage"
     [fontSizeRem]="1"
     [maxLines]="2"
     [title]="resource.description"
-    [placeholder]="getDescriptionPlaceholder()"
+    placeholder="Fill in description"
+    i18n-placeholder="@@resource.description"
     (newValue)="onNewDescription($event)">
   </input-box>
 </div>

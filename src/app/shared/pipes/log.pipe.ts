@@ -25,7 +25,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class LogPipe implements PipeTransform {
   public transform(value: any, label?: string, skip?: boolean): any {
     if (!skip) {
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       label ? console.log(label, value) : console.log(value);
     }
     return value;

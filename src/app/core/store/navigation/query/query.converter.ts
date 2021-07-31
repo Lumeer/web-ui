@@ -31,40 +31,46 @@ import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
 import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
-  return {
-    stems: dto.stems && dto.stems.map(stem => convertQueryStemDtoToModel(stem)),
-    fulltexts: dto.fulltexts,
-    page: dto.page,
-    pageSize: dto.pageSize,
-  };
+  return (
+    dto && {
+      stems: dto.stems?.map(stem => convertQueryStemDtoToModel(stem)),
+      fulltexts: dto.fulltexts,
+      page: dto.page,
+      pageSize: dto.pageSize,
+    }
+  );
 }
 
 export function convertQueryModelToDto(model: Query): QueryDto {
-  return {
-    stems: model.stems && model.stems.map(stem => convertQueryStemModelToDto(stem)),
-    fulltexts: model.fulltexts,
-    page: model.page,
-    pageSize: model.pageSize,
-  };
+  return (
+    model && {
+      stems: model.stems?.map(stem => convertQueryStemModelToDto(stem)),
+      fulltexts: model.fulltexts,
+      page: model.page,
+      pageSize: model.pageSize,
+    }
+  );
 }
 
 function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
   return {
+    id: dto.id,
     collectionId: dto.collectionId,
     documentIds: dto.documentIds,
     linkTypeIds: dto.linkTypeIds,
-    filters: dto.filters && dto.filters.map(filter => convertCollectionAttributeFilterDtoToModel(filter)),
-    linkFilters: dto.linkFilters && dto.linkFilters.map(filter => convertLinkAttributeFilterDtoToModel(filter)),
+    filters: dto.filters?.map(filter => convertCollectionAttributeFilterDtoToModel(filter)),
+    linkFilters: dto.linkFilters?.map(filter => convertLinkAttributeFilterDtoToModel(filter)),
   };
 }
 
 function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
   return {
+    id: model.id,
     collectionId: model.collectionId,
     documentIds: model.documentIds,
     linkTypeIds: model.linkTypeIds,
-    filters: model.filters && model.filters.map(filter => convertCollectionAttributeFilterModelToDto(filter)),
-    linkFilters: model.linkFilters && model.linkFilters.map(filter => convertLinkAttributeFilterModelToDto(filter)),
+    filters: model.filters?.map(filter => convertCollectionAttributeFilterModelToDto(filter)),
+    linkFilters: model.linkFilters?.map(filter => convertLinkAttributeFilterModelToDto(filter)),
   };
 }
 
@@ -143,15 +149,16 @@ function parseStringQuery(stringQuery: string): ShortenedQuery {
 
 export function normalizeQueryModel(query: Query): Query {
   return {
-    stems: ((query && query.stems) || []).map(stem => normalizeQueryStem(stem)),
-    fulltexts: (query && query.fulltexts) || [],
-    page: isNullOrUndefined(query && query.page) ? null : query.page,
-    pageSize: isNullOrUndefined(query && query.pageSize) ? null : query.pageSize,
+    stems: (query?.stems || []).map(stem => normalizeQueryStem(stem)),
+    fulltexts: query?.fulltexts || [],
+    page: isNullOrUndefined(query?.page) ? null : query.page,
+    pageSize: isNullOrUndefined(query?.pageSize) ? null : query.pageSize,
   };
 }
 
 export function normalizeQueryStem(stem: QueryStem): QueryStem {
   return {
+    id: stem.id,
     collectionId: stem.collectionId,
     documentIds: stem.documentIds || [],
     filters: (stem.filters || []).map(filter => normalizeFilter(filter)),

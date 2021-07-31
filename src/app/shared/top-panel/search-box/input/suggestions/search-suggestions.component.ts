@@ -54,8 +54,17 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   @Input()
   public origin: ElementRef | HTMLElement;
 
+  @Input()
+  public suggestByItems: boolean;
+
+  @Input()
+  public restrictedTypes: QueryItemType[] = [];
+
   @Output()
   public useSuggestion = new EventEmitter<QueryItem>();
+
+  @Output()
+  public onCloseByClickOutside = new EventEmitter();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -102,10 +111,10 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private onNewSuggestions(suggestions: QueryItem[]) {
-    this.suggestions$.next(suggestions);
+    this.suggestions$.next(suggestions || []);
     this.selectedIndex$.next(-1);
 
-    if (suggestions.length > 0) {
+    if (isNotNullOrUndefined(suggestions)) {
       this.open();
     } else {
       this.close();
@@ -113,22 +122,22 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   public open() {
-    this.dropdown && this.dropdown.open();
+    this.dropdown?.open();
   }
 
   public close() {
-    this.dropdown && this.dropdown.close();
+    this.dropdown?.close();
   }
 
   private updatePosition() {
-    this.dropdown && this.dropdown.updatePosition();
+    this.dropdown?.updatePosition();
   }
 
   private retrieveSuggestions(text: string): Observable<QueryItem[]> {
     if (this.suggesting && isNotNullOrUndefined(text)) {
-      return this.suggestionsService.suggest(text, this.queryItems);
+      return this.suggestionsService.suggest(text, this.queryItems, this.suggestByItems, this.restrictedTypes);
     }
-    return of([]);
+    return of(null);
   }
 
   public moveSelection(direction: number) {

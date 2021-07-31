@@ -13,6 +13,7 @@
     <context.root>ui</context.root>
     <source.root>/</source.root>
     <public.path>/</public.path>
+    <module.name>app</module.name>
   </properties>
 
    <build>
@@ -34,7 +35,13 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>2.1.1</version>
+            <version>2.4</version>
+            <executions>
+               <execution>
+                 <id>package-war</id>
+                 <phase>deploy</phase>
+               </execution>
+            </executions>
             <configuration>
                <webResources>
                   <resource>
@@ -86,13 +93,13 @@
                </execution>
               <execution>
                 <id>sentry-upload-sourcemaps</id>
-                <phase>generate-sources</phase>
+                <phase>none</phase>
                 <configuration>
                   <executable>./sentry-upload-sourcemaps.sh</executable>
                   <workingDirectory>${basedir}</workingDirectory>
                   <environmentVariables>
                     <SOURCE_ROOT>/${source.root}/</SOURCE_ROOT>
-                    <PUBLIC_PATH>/${public.path}/</PUBLIC_PATH>
+                    <PUBLIC_PATH>/${source.root}/</PUBLIC_PATH>
                   </environmentVariables>
                 </configuration>
                 <goals>

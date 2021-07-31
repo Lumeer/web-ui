@@ -1,0 +1,16 @@
+@import '../../../../../styles/variables';
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 2fr min-content;
+
+  .roles {
+    display: grid;
+    grid-template-columns: auto minmax(200px, max-content);
+    align-items: center;
+  }
+}
+
+.user:not(:last-child) {
+  border-bottom: 1px solid $gray-200;
+}

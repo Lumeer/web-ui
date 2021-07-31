@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {User} from '../../../core/store/users/user';
+import {removeAccentFromString} from '@lumeer/data-filters';
 
 @Component({
   selector: 'new-user',
@@ -37,11 +37,11 @@ export class NewUserComponent {
   public email: string;
   public isDuplicate: boolean = false;
 
-  constructor(private i18n: I18n) {}
-
   public onAddUser() {
-    this.userCreated.emit(this.email);
-    this.clearInputs();
+    if (this.email && !this.isDuplicate) {
+      this.userCreated.emit(this.email);
+      this.clearInputs();
+    }
   }
 
   public onInputChanged(value: string) {
@@ -50,17 +50,11 @@ export class NewUserComponent {
   }
 
   public checkDuplicates() {
-    this.isDuplicate = !!this.users.find(user => user.email === this.email);
+    const emailCleaned = removeAccentFromString(this.email, true).trim();
+    this.isDuplicate = !!this.users.find(user => removeAccentFromString(user.email, true) === emailCleaned);
   }
 
   private clearInputs() {
     this.email = '';
-  }
-
-  public emailPlaceHolder(): string {
-    return this.i18n({
-      id: 'user.add.placeholder',
-      value: 'Type email to invite another user',
-    });
   }
 }

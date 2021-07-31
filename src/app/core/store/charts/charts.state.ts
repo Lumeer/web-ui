@@ -19,9 +19,10 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {Chart, DEFAULT_CHART_ID} from './chart';
+import {Chart} from './chart';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface ChartsState extends EntityState<Chart> {}
 
@@ -33,7 +34,10 @@ export const selectChartState = (state: AppState) => state.charts;
 export const selectChartsDictionary = createSelector(selectChartState, chartsAdapter.getSelectors().selectEntities);
 export const selectChartById = id => createSelector(selectChartsDictionary, charts => charts[id]);
 
-export const selectChartId = createSelector(selectWorkspace, workspace => workspace?.viewCode || DEFAULT_CHART_ID);
+export const selectChartId = createSelector(
+  selectWorkspace,
+  workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID
+);
 
 export const selectChart = createSelector(selectChartsDictionary, selectChartId, (chartsMap, id) => chartsMap[id]);
 export const selectChartConfig = createSelector(selectChart, chart => chart?.config);

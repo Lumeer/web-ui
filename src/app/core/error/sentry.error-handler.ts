@@ -19,20 +19,31 @@
 
 import {ErrorHandler, Injectable} from '@angular/core';
 import * as Sentry from '@sentry/browser';
-import {environment} from '../../../environments/environment';
-
-if (environment.sentryDsn) {
-  Sentry.init({
-    dsn: environment.sentryDsn,
-    release: environment.buildNumber,
-    environment: environment.name || '',
-  });
-}
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
+  constructor(private configurationService: ConfigurationService) {
+    this.init();
+  }
+
+  private init() {
+    if (this.configurationService.getConfiguration().sentryDsn) {
+      Sentry.init({
+        dsn: this.configurationService.getConfiguration().sentryDsn,
+        release: this.configurationService.getConfiguration().buildNumber,
+        environment: this.configurationService.getConfiguration().name || '',
+      });
+    }
+  }
+
   public handleError(error: any): void {
-    if (environment.sentryDsn) {
+    if (/Loading chunk [\d]+ failed/.test(error?.message)) {
+      window.location.reload();
+      return;
+    }
+
+    if (this.configurationService.getConfiguration().sentryDsn) {
       Sentry.captureException(error.originalError || error);
     }
 

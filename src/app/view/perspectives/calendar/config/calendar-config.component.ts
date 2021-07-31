@@ -24,7 +24,6 @@ import {
   CalendarConfig,
   SlotDuration,
   CalendarMode,
-  slotDurationsMap,
 } from '../../../../core/store/calendars/calendar';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
@@ -32,7 +31,7 @@ import {getCalendarDefaultStemConfig} from '../util/calendar-util';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Component({
   selector: 'calendar-config',
@@ -60,8 +59,6 @@ export class CalendarConfigComponent {
   public readonly slotDurations = this.getSlotDurationItems();
   public readonly defaultDuration = SlotDuration.Half;
   public readonly configModeMonth = CalendarMode.Month;
-
-  public constructor(private i18n: I18n) {}
 
   public onStemConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<CalendarConfig>(this.config);
@@ -98,14 +95,9 @@ export class CalendarConfigComponent {
   }
 
   private getDurationString(key: string) {
-    return this.i18n(
-      {
-        id: 'perspective.calendar.config.slotDuration.value',
-        value: '{key, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes}}',
-      },
-      {
-        key,
-      }
+    return parseSelectTranslation(
+      $localize`:@@perspective.calendar.config.slotDuration.value:{key, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes}}`,
+      {key}
     );
   }
 

@@ -1,27 +1,37 @@
 <div class="overflow-auto" #tableWrapper>
   <table class="table position-relative"
-         *ngIf="{columns: columns$ | async} as data">
+         *ngIf="{columns: columns$ | async, constraintData: constraintData$ | async} as data">
     <thead links-list-table-header
            [columns]="data.columns"
-           [permissions]="permissions"
+           [collectionPermissions]="collectionPermissions"
+           [linkTypePermissions]="linkTypePermissions"
            (resizeColumn)="onResizeColumn($event)"
            (attributeType)="onAttributeType($event)"
-           (attributeFunction)="onAttributeFunction($event)">
+           (attributeFunction)="onAttributeFunction($event)"
+           (attributeDescription)="onAttributeDescription($event)">
     </thead>
     <tbody links-list-table-body
-           [permissions]="permissions"
+           [collectionPermissions]="collectionPermissions"
+           [linkTypePermissions]="linkTypePermissions"
            [columns]="data.columns"
-           [constraintData]="constraintData$ | async"
-           [rows]="rows$ | async"
+           [constraintData]="data.constraintData"
+           [rows]="rows$ | async | sortLinkRows:collection:linkType:attributesSettings:data.constraintData"
            [linkType]="linkType"
            [collection]="collection"
            [document]="document"
-           [allowSelectDocument]="allowSelectDocument"
+           [currentUser]="currentUser$ | async"
+           [allowSelect]="allowSelect"
+           [allowCreate]="allowCreate"
+           [allowUnlink]="allowUnlink"
            [preventEventBubble]="preventEventBubble"
            (columnFocus)="onColumnFocus($event)"
            (detail)="onDetail($event)"
            (unlink)="onUnLink($event)"
-           (newLink)="onNewLink($event)">
+           (newLink)="onNewLink($event)"
+           (patchDocumentData)="patchDocumentData.emit($event)"
+           (patchLinkData)="patchLinkData.emit($event)"
+           (createLink)="createLink.emit($event)"
+           (updateLink)="updateLink.emit($event)">
     </tbody>
 
   </table>

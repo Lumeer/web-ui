@@ -22,7 +22,7 @@
       id="{{postItIdPrefix}}#{{card.dataResource.id}}"
       class="post-it"
       [tag]="card.dueHours | kanbanDueHoursTag"
-      [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
+      [cdkDragDisabled]="!(card | kanbanPostItDraggable:currentUser)"
       [cdkDragData]="card"
       [cdkDragStartDelay]="dragDelay"
       [layoutType]="postItLayout"
@@ -30,10 +30,10 @@
       [dataResource]="card.dataResource"
       [resource]="card.resource"
       [query]="query"
-      [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
+      [canDrag]="(card | kanbanPostItDraggable: currentUser)"
       [allowedPermissions]="card.permissions"
       [constraintData]="constraintData"
-      [attributesSettings]="viewSettings | resourceAttributesSettings:card.resourceType:card.resource.id"
+      [attributesSettings]="viewSettings?.attributes | resourceAttributesSettings:card.resourceType:card.resource.id"
       (toggleFavorite)="onToggleFavorite(card)">
     </post-it>
 

@@ -48,6 +48,9 @@ export class IconColorPickerComponent implements OnDestroy {
   @Input()
   public color: string;
 
+  @Input()
+  public showClearIcon: boolean;
+
   @Output()
   public cancel = new EventEmitter<{icon: string; color: string}>();
 
@@ -93,7 +96,7 @@ export class IconColorPickerComponent implements OnDestroy {
   }
 
   public close() {
-    this.dropdown && this.dropdown.close();
+    this.dropdown?.close();
     this.cancel.emit({color: this.initialColor, icon: this.initialIcon});
   }
 
@@ -108,7 +111,13 @@ export class IconColorPickerComponent implements OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.dropdown && this.dropdown.close();
+    this.dropdown?.close();
+  }
+
+  public onClear() {
+    const color = this.selectedColor$.getValue();
+    this.selected.emit({icon: null, color});
+    this.selectedIcon$.next(null);
   }
 
   public onCancel() {
@@ -119,7 +128,7 @@ export class IconColorPickerComponent implements OnDestroy {
     const color = this.selectedColor$.getValue();
     const icon = this.selectedIcon$.getValue();
     this.save.emit({icon, color});
-    this.dropdown && this.dropdown.close();
+    this.dropdown?.close();
   }
 
   public onColorPreview(colorPreview: string) {

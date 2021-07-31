@@ -7,7 +7,7 @@
       <ng-container *ngFor="let cell of row">
         <td *ngIf="cell && {hasValue: cell | pivotTableCellHasValue} as cellData"
             class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}} text-truncate"
-            [style.max-width.px]="200"
+            [style.max-width.px]="300"
             [rowSpan]="cell.rowSpan"
             [colSpan]="cell.colSpan"
             [ngClass]="cell.cssClass"
@@ -18,17 +18,21 @@
               <span class="summary">{{cell.summary}}</span>
               <data-input-preview *ngIf="cellData.hasValue"
                                   class="ml-2 flex-grow-1 h-100 text-truncate"
+                                  [class.clickable-cell]="cell | pivotCellClickable"
                                   [constraint]="cell.constraint"
                                   [configuration]="cell | pivotCellConfiguration"
-                                  [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
+                                  [dataValue]="cell.value | dataValue:cell.constraint:constraintData"
+                                  (click)="onCellClick(cell)">
               </data-input-preview>
             </div>
           </ng-container>
           <ng-container *ngIf="!cell.summary">
             <data-input-preview *ngIf="cellData.hasValue"
+                                [class.clickable-cell]="cell | pivotCellClickable"
                                 [constraint]="cell.constraint"
                                 [configuration]="cell | pivotCellConfiguration"
-                                [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
+                                [dataValue]="cell.value | dataValue:cell.constraint:constraintData"
+                                (click)="onCellClick(cell)">
             </data-input-preview>
             <ng-container *ngIf="!cellData.hasValue">&nbsp;</ng-container>
           </ng-container>

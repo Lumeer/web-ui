@@ -18,9 +18,16 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
 import {COLOR_SUCCESS} from '../../../../../../core/constants';
 import {Subscription} from 'rxjs';
@@ -28,10 +35,10 @@ import {Rule, RuleType} from '../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {IconColorPickerComponent} from '../../../../../picker/icon-color/icon-color-picker.component';
-import {Role} from '../../../../../../core/model/role';
+import {RoleType} from '../../../../../../core/model/role-type';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {ActionConstraintConfig} from '@lumeer/data-filters';
+import {ActionConstraintConfig, ConstraintType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-config-form',
@@ -66,8 +73,8 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   private savedColor: string;
   private subscription = new Subscription();
 
-  constructor(private i18n: I18n) {
-    this.defaultTitle = this.i18n({id: 'constraint.action.title.default', value: 'Action'});
+  constructor() {
+    this.defaultTitle = $localize`:@@constraint.action.title.default:Action`;
   }
 
   public get titleControl(): AbstractControl {
@@ -125,27 +132,41 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   private createForm() {
     this.addPermissionsForm();
     this.addButtonForms();
+    this.addConfirmationForms();
     this.addRuleForm();
     this.addConditionsForm();
   }
 
   private addPermissionsForm() {
-    this.form.addControl(ActionConstraintFormControl.Role, new FormControl(this.config?.role || Role.Read));
+    this.form.addControl(ActionConstraintFormControl.Role, new FormControl(this.config?.role || RoleType.Read));
   }
 
   private addButtonForms() {
     const currentTitle = cleanTitle(this.config?.title);
+    const title = currentTitle || (this.attribute?.constraint?.type === ConstraintType.Action ? '' : this.defaultTitle);
     this.form.addControl(ActionConstraintFormControl.Icon, new FormControl(this.config?.icon));
-    this.form.addControl(ActionConstraintFormControl.Title, new FormControl(currentTitle || this.defaultTitle));
-    this.form.addControl(ActionConstraintFormControl.TitleUser, new FormControl(currentTitle));
+    this.form.addControl(ActionConstraintFormControl.Title, new FormControl(title));
+    this.form.addControl(ActionConstraintFormControl.TitleUser, new FormControl(title));
     this.form.addControl(
       ActionConstraintFormControl.Background,
       new FormControl(this.config?.background || COLOR_SUCCESS)
     );
+    this.form.setValidators(titleOrIconValidator());
     this.subscription.add(
       this.titleUserControl.valueChanges.subscribe(value => {
-        this.titleControl.setValue(cleanTitle(value) || this.defaultTitle);
+        this.titleControl.setValue(cleanTitle(value));
       })
+    );
+  }
+
+  private addConfirmationForms() {
+    this.form.addControl(
+      ActionConstraintFormControl.RequiresConfirmation,
+      new FormControl(this.config?.requiresConfirmation)
+    );
+    this.form.addControl(
+      ActionConstraintFormControl.ConfirmationTitle,
+      new FormControl(this.config?.confirmationTitle)
     );
   }
 
@@ -168,10 +189,6 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     this.subscription.unsubscribe();
   }
 
-  public onColorChange(color: string) {
-    this.colorControl.setValue(color);
-  }
-
   public togglePicker() {
     this.savedColor = this.colorControl.value;
     this.iconColorDropdownComponent?.toggle();
@@ -181,6 +198,24 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     this.colorControl.setValue(data.color);
     this.iconControl.setValue(data.icon);
   }
+
+  public onIconColorRemove() {
+    this.colorControl.setValue(null);
+    this.iconControl.setValue(null);
+  }
+}
+
+export function titleOrIconValidator(): ValidatorFn {
+  return (form: FormGroup): ValidationErrors | null => {
+    const icon = form.get(ActionConstraintFormControl.Icon)?.value;
+    const title = form.get(ActionConstraintFormControl.Title)?.value;
+
+    if (!icon && !title) {
+      return {iconOrTitleEmpty: true};
+    }
+
+    return null;
+  };
 }
 
 function cleanTitle(value: string): string {

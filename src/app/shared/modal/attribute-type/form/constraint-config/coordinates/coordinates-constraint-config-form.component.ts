@@ -24,9 +24,9 @@ import {map, startWith} from 'rxjs/operators';
 import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-control';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {objectValues} from '../../../../../utils/common.utils';
 import {CoordinatesConstraintConfig, CoordinatesDataValue, CoordinatesFormat} from '@lumeer/data-filters';
+import {parseSelectTranslation} from '../../../../../utils/translation.utils';
 
 @Component({
   selector: 'coordinates-constraint-config-form',
@@ -55,7 +55,7 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
 
   public exampleValue$: Observable<CoordinatesDataValue>;
 
-  constructor(private i18n: I18n) {
+  constructor() {
     this.formatItems = this.createFormatItems();
     this.ddPrecisionItems = this.createDdPrecisionItems();
     this.dmsPrecisionItems = this.createDmsPrecisionItems();
@@ -113,11 +113,8 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   private createFormatItems(): SelectItemModel[] {
     return this.formats.map(format => ({
       id: format,
-      value: this.i18n(
-        {
-          id: 'constraint.coordinates.format.types',
-          value: '{format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds}}',
-        },
+      value: parseSelectTranslation(
+        $localize`:@@constraint.coordinates.format.types:{format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds}}`,
         {format}
       ),
     }));
@@ -126,12 +123,8 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   private createDdPrecisionItems(): SelectItemModel[] {
     return this.precisions[CoordinatesFormat.DecimalDegrees].map(precision => ({
       id: precision,
-      value: this.i18n(
-        {
-          id: 'constraint.coordinates.precisions.dd',
-          value:
-            '{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)}}',
-        },
+      value: parseSelectTranslation(
+        $localize`:@@constraint.coordinates.precisions.dd:{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)}}`,
         {precision: precision.toString()}
       ),
     }));
@@ -140,11 +133,8 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   private createDmsPrecisionItems(): SelectItemModel[] {
     return this.precisions[CoordinatesFormat.DegreesMinutesSeconds].map(precision => ({
       id: precision,
-      value: this.i18n(
-        {
-          id: 'constraint.coordinates.precisions.dms',
-          value: '{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)}}',
-        },
+      value: parseSelectTranslation(
+        $localize`:@@constraint.coordinates.precisions.dms:{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)}}`,
         {precision: precision.toString()}
       ),
     }));

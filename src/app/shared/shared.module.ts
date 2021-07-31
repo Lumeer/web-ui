@@ -30,7 +30,6 @@ import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DataResourceModule} from './data-resource/data-resource.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
-import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
@@ -58,6 +57,10 @@ import {ResizableSidebarModule} from './resizable-sidebar/resizable-sidebar.modu
 import {ResourceCommentsModule} from './resource-comments/resource-comments.module';
 import {RedDotModule} from './red-dot/red-dot.module';
 import {MenuModule} from './menu/menu.module';
+import {ButtonModule} from './button/button.module';
+import {LoadingModule} from './loading/loading.module';
+import {ProgressModule} from './progress/progress.module';
+import {HintBoxModule} from './hint-box/hint-box.module';
 
 @NgModule({
   imports: [
@@ -82,6 +85,7 @@ import {MenuModule} from './menu/menu.module';
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
+    LoadingModule,
     BlocklyModule,
     DateTimeModule,
     ModalModule,
@@ -96,8 +100,11 @@ import {MenuModule} from './menu/menu.module';
     ResourceCommentsModule,
     RedDotModule,
     MenuModule,
+    ButtonModule,
+    ProgressModule,
+    HintBoxModule,
   ],
-  declarations: [PerspectiveDirective, ResourceHeaderComponent, LoadingIndicatorComponent, TourComponent],
+  declarations: [PerspectiveDirective, ResourceHeaderComponent, TourComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -122,7 +129,7 @@ import {MenuModule} from './menu/menu.module';
     DocumentHintsModule,
     SelectModule,
     CollapsibleSidebarModule,
-    LoadingIndicatorComponent,
+    LoadingModule,
     BlocklyModule,
     DateTimeModule,
     ModalModule,
@@ -139,6 +146,9 @@ import {MenuModule} from './menu/menu.module';
     ResourceCommentsModule,
     RedDotModule,
     MenuModule,
+    ButtonModule,
+    ProgressModule,
+    HintBoxModule,
   ],
 })
 export class SharedModule {}

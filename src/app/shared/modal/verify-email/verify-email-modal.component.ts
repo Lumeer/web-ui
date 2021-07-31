@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {User} from '../../../core/store/users/user';
@@ -26,7 +26,7 @@ import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {filter, first} from 'rxjs/operators';
 import {UsersAction} from '../../../core/store/users/users.action';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'verify-email-modal',
@@ -34,7 +34,7 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./verify-email-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerifyEmailModalComponent implements OnInit {
+export class VerifyEmailModalComponent implements OnInit, OnDestroy {
   @Input()
   public user: User;
 
@@ -44,10 +44,12 @@ export class VerifyEmailModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
+  private subscription: Subscription;
+
   public constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.store$
+    this.subscription = this.store$
       .pipe(
         select(selectCurrentUser),
         filter(user => !!user && user.emailVerified),
@@ -78,5 +80,9 @@ export class VerifyEmailModalComponent implements OnInit {
         onFailure: () => this.emailSent$.next(2),
       })
     );
+  }
+
+  public ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 }

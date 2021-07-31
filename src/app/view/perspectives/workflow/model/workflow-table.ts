@@ -27,9 +27,7 @@ export interface WorkflowTable extends TableModel {
   stem: QueryStem;
   height: number;
   minHeight: number;
-  maxHeight: number;
   width: number;
-  newRowData: Record<string, any>;
   linkingDocumentIds?: string[];
   linkingCollectionId?: string;
 }

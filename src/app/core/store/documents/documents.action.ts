@@ -18,10 +18,11 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Query} from '../navigation/query/query';
 import {Workspace} from '../navigation/workspace';
 import {DocumentMetaData, DocumentModel} from './document.model';
 import {LinkInstance} from '../link-instances/link.instance';
+import {DataQuery} from '../../model/data-query';
+import {DataQueryPayload} from '../utils/data-query-payload';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -53,6 +54,8 @@ export enum DocumentsActionType {
   PATCH_DATA_INTERNAL = '[Documents] Patch Data Internal',
   PATCH_DATA_PENDING = '[Documents] Patch Data Pending',
 
+  REVERT_DATA = '[Documents] Revert Data',
+
   CHECK_DATA_HINT = '[Documents] Check Data Hint',
 
   UPDATE_META_DATA = '[Documents] Update Meta Data',
@@ -71,6 +74,8 @@ export enum DocumentsActionType {
   DELETE_SUCCESS = '[Documents] Delete :: Success',
   DELETE_FAILURE = '[Documents] Delete :: Failure',
 
+  SET_LOADING_QUERY = '[Documents] Set Loading Query',
+
   CLEAR = '[Documents] Clear',
   CLEAR_QUERIES = '[Documents] Clear Queries',
   CLEAR_BY_COLLECTION = '[Documents] Clear by collection',
@@ -83,7 +88,7 @@ export namespace DocumentsAction {
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: DataQueryPayload) {}
   }
 
   export class GetSingle implements Action {
@@ -101,13 +106,13 @@ export namespace DocumentsAction {
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {documents: DocumentModel[]; query?: Query}) {}
+    public constructor(public payload: {documents: DocumentModel[]; query?: DataQuery}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = DocumentsActionType.GET_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; query?: DataQuery}) {}
   }
 
   export class Create implements Action {
@@ -118,7 +123,8 @@ export namespace DocumentsAction {
         document: DocumentModel;
         onSuccess?: (documentId: string) => void;
         onFailure?: () => void;
-        afterSuccess?: (documentId: string) => void;
+        afterSuccess?: (document: DocumentModel) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -146,6 +152,7 @@ export namespace DocumentsAction {
         onSuccess?: ({documentId, linkInstanceId}) => void;
         onFailure?: () => void;
         afterSuccess?: ({documentId, linkInstanceId}) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -154,7 +161,12 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.CREATE_CHAIN;
 
     public constructor(
-      public payload: {documents: DocumentModel[]; linkInstances: LinkInstance[]; failureMessage: string}
+      public payload: {
+        documents: DocumentModel[];
+        linkInstances: LinkInstance[];
+        failureMessage: string;
+        workspace?: Workspace;
+      }
     ) {}
   }
 
@@ -167,7 +179,14 @@ export namespace DocumentsAction {
   export class Patch implements Action {
     public readonly type = DocumentsActionType.PATCH;
 
-    public constructor(public payload: {collectionId: string; documentId: string; document: Partial<DocumentModel>}) {}
+    public constructor(
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        document: Partial<DocumentModel>;
+        workspace?: Workspace;
+      }
+    ) {}
   }
 
   export class UpdateSuccess implements Action {
@@ -192,6 +211,7 @@ export namespace DocumentsAction {
         documentIds: string[];
         onSuccess?: (documents: DocumentModel[]) => void;
         onFailure?: (error: any) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -205,25 +225,35 @@ export namespace DocumentsAction {
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
   }
 
   export class UpdateDataInternal implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA_INTERNAL;
 
-    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+    public constructor(
+      public payload: {document: DocumentModel; originalDocument?: DocumentModel; workspace?: Workspace}
+    ) {}
+  }
+
+  export class RevertData implements Action {
+    public readonly type = DocumentsActionType.REVERT_DATA;
+
+    public constructor(public payload: {document: DocumentModel}) {}
   }
 
   export class PatchData implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
   }
 
   export class PatchDataInternal implements Action {
     public readonly type = DocumentsActionType.PATCH_DATA_INTERNAL;
 
-    public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
+    public constructor(
+      public payload: {document: DocumentModel; originalDocument?: DocumentModel; workspace?: Workspace}
+    ) {}
   }
 
   export class CheckDataHint implements Action {
@@ -244,7 +274,7 @@ export namespace DocumentsAction {
   export class UpdateMetaData implements Action {
     public readonly type = DocumentsActionType.UPDATE_META_DATA;
 
-    public constructor(public payload: {document: DocumentModel}) {}
+    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
   }
 
   export class PatchMetaData implements Action {
@@ -256,6 +286,7 @@ export namespace DocumentsAction {
         documentId: string;
         metaData: DocumentMetaData;
         onSuccess?: (document: DocumentModel) => void;
+        workspace?: Workspace;
       }
     ) {}
   }
@@ -263,13 +294,17 @@ export namespace DocumentsAction {
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
-    public constructor(public payload: {collectionId: string; documentId: string; nextAction?: Action}) {}
+    public constructor(
+      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+    ) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: {collectionId: string; documentId: string; nextAction?: Action}) {}
+    public constructor(
+      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+    ) {}
   }
 
   export class DeleteSuccess implements Action {
@@ -336,10 +371,24 @@ export namespace DocumentsAction {
     public constructor(public payload: {collectionId: string}) {}
   }
 
+  export class SetLoadingQuery implements Action {
+    public readonly type = DocumentsActionType.SET_LOADING_QUERY;
+
+    public constructor(public payload: {query: DataQuery}) {}
+  }
+
   export class RunRule implements Action {
     public readonly type = DocumentsActionType.RUN_RULE;
 
-    public constructor(public payload: {collectionId: string; documentId: string; attributeId: string}) {}
+    public constructor(
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        attributeId: string;
+        actionName?: string;
+        workspace?: Workspace;
+      }
+    ) {}
   }
 
   export class RunRuleFailure implements Action {
@@ -370,6 +419,7 @@ export namespace DocumentsAction {
     | DuplicateSuccess
     | UpdateData
     | UpdateDataInternal
+    | RevertData
     | PatchData
     | PatchDataInternal
     | PatchDataPending
@@ -385,6 +435,7 @@ export namespace DocumentsAction {
     | Clear
     | ClearQueries
     | ClearByCollection
+    | SetLoadingQuery
     | RunRule
     | RunRuleFailure;
 }

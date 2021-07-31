@@ -37,6 +37,8 @@ import {isNotNullOrUndefined} from '../utils/common.utils';
 import {KeyCode} from '../key-code';
 import {DataInputSaveAction} from './data-input-save-action';
 import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 @Component({
   selector: 'data-input',
@@ -71,6 +73,15 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   @Input()
   public preventEventBubble: boolean;
+
+  @Input()
+  public editableInReadonly: boolean;
+
+  @Input()
+  public workspace: Workspace;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public valueChange = new EventEmitter<DataValue>();
@@ -153,7 +164,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private computationNotNecessary(): boolean {
     const constraintType = this.constraint?.type;
-    return [ConstraintType.Select, ConstraintType.User].includes(constraintType);
+    return [ConstraintType.Select, ConstraintType.User, ConstraintType.View].includes(constraintType);
   }
 
   private createTempElement(): HTMLElement {

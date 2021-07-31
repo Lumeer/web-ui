@@ -1,7 +1,9 @@
 <div [formGroup]="form">
-  <div class="form-group text-muted small" i18n="@@collection.config.tab.rules.cron.info">
-    An automation executed regularly according to the timer settings.
-  </div>
+  <cron-configuration-form class="d-block pb-4"
+                           [configForm]="form"
+                           [collection]="collection"
+                           [linkType]="linkType">
+  </cron-configuration-form>
   <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
     <div>
       <span class="text-nowrap font-weight-bold" i18n="@@collection.config.tab.rules.blockly.edit.message">Edit Rule Code:</span>
@@ -33,6 +35,7 @@
     (onXmlUpdate)="onXmlUpdate($event)"
     [toolbox]="functionToolbox"
     [collections]="collections$ | async"
+    [views]="views$ | async"
     [linkTypes]="linkTypes$ | async"
     [variables]="variables"
     [xml]="blocklyXml">

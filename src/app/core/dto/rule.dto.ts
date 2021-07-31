@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from './query.dto';
 import {BlocklyRuleConfiguration} from '../model/rule';
 
 export interface RuleDto {
@@ -28,15 +27,15 @@ export interface RuleDto {
 }
 
 export interface CronRuleConfigurationDto extends BlocklyRuleConfiguration {
-  since?: string;
-  until?: string;
-  when: number;
-  interval: number;
-  dow: number;
-  occurence?: number;
-  lastRun?: string;
   unit: string;
-  executing?: string;
-  query: QueryDto;
-  language?: string;
+  interval: number;
+  daysOfWeek: number; // stored as binary number starting with Monday as the least significant bit
+  hour: number;
+  occurence?: number;
+  startsOn?: string;
+  endsOn?: string;
+  executionsLeft?: number;
+  lastRun?: string;
+  viewId: string;
+  language: string;
 }

@@ -80,35 +80,15 @@ export namespace UserNotificationConverter {
           viewPerspective: perspectivesMap[dto.data.viewPerspective],
         };
       case UserNotificationType.TaskAssigned:
+      case UserNotificationType.TaskReopened:
       case UserNotificationType.DueDateSoon:
       case UserNotificationType.PastDueDate:
       case UserNotificationType.DueDateChanged:
       case UserNotificationType.StateUpdate:
       case UserNotificationType.TaskUpdated:
+      case UserNotificationType.TaskChanged:
       case UserNotificationType.TaskRemoved:
       case UserNotificationType.TaskUnassigned:
-        return {
-          ...model,
-          organizationId: dto.data.organizationId,
-          projectId: dto.data.projectId,
-          projectIcon: dto.data.projectIcon,
-          projectColor: dto.data.projectColor,
-          projectCode: dto.data.projectCode,
-          projectName: dto.data.projectName,
-          collectionId: dto.data.collectionId,
-          collectionIcon: dto.data.collectionIcon,
-          collectionColor: dto.data.collectionColor,
-          collectionName: dto.data.collectionName,
-          documentId: dto.data.documentId,
-          taskName: dto.data.taskName,
-          taskNameAttribute: dto.data.taskNameAttribute,
-          taskDueDate: dto.data.taskDueDate,
-          taskState: dto.data.taskState,
-          taskCompleted: dto.data.taskCompleted,
-          assignee: dto.data.assignee,
-          collectionQuery: dto.data.collectionQuery,
-          documentCursor: dto.data.documentCursor,
-        };
       case UserNotificationType.TaskCommented:
       case UserNotificationType.TaskMentioned:
         return {

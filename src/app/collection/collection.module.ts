@@ -50,9 +50,19 @@ import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/for
 import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
 import {DataInputModule} from '../shared/data-input/data-input.module';
 import {CronFormComponent} from './settings/common/rules/add-rule-form/cron-form/cron-form.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {AttributeNamesPipe} from './settings/common/rules/single-rule/attribute-names.pipe';
+import {CollectionTeamsComponent} from './settings/tab/teams/collection-teams.component';
+import {TeamsModule} from '../shared/teams/teams.module';
+import {CollectionTabGuard} from './collection-tab.guard';
+import {CronConfigurationFormComponent} from './settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component';
+import {IsDayOfWeekSelectedPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/is-day-of-week-selected.pipe';
+import {MaxIntervalByUnitPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/max-interval-by-unit.pipe';
+import {ShowDaysOfWeekPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
+import {ShowOccurencePipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-occurence.pipe';
 
 @NgModule({
-  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule],
+  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule, TeamsModule],
   declarations: [
     AttributeFilterPipe,
     LinkTypeFilterPipe,
@@ -71,6 +81,7 @@ import {CronFormComponent} from './settings/common/rules/add-rule-form/cron-form
     HasCreatePipe,
     HasUpdatePipe,
     HasDeletePipe,
+    AttributeNamesPipe,
     AddCollectionAttributeComponent,
     CollectionAttributesTableComponent,
     LinkTypeRulesComponent,
@@ -80,7 +91,13 @@ import {CronFormComponent} from './settings/common/rules/add-rule-form/cron-form
     CollectionPurposeFormComponent,
     CollectionPurposeTasksComponent,
     CronFormComponent,
+    CollectionTeamsComponent,
+    CronConfigurationFormComponent,
+    IsDayOfWeekSelectedPipe,
+    MaxIntervalByUnitPipe,
+    ShowDaysOfWeekPipe,
+    ShowOccurencePipe,
   ],
-  providers: [CollectionSettingsGuard],
+  providers: [CollectionSettingsGuard, CollectionTabGuard],
 })
 export class CollectionModule {}

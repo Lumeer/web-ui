@@ -18,9 +18,34 @@
  */
 
 import {FormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {isNullOrUndefined} from '../../shared/utils/common.utils';
 
 export function notEmptyValidator(): ValidatorFn {
   return (control: FormControl): ValidationErrors | null => {
     return String(control.value || '').trim() ? null : {notEmpty: true};
+  };
+}
+
+export function integerValidator(): ValidatorFn {
+  return (control: FormControl): ValidationErrors | null => {
+    const value = control.value;
+
+    if (isNullOrUndefined(value)) {
+      return null;
+    }
+    if (!Number.isInteger(value)) {
+      return {invalid: true};
+    }
+    if (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER) {
+      return {invalidRange: true};
+    }
+
+    return null;
+  };
+}
+
+export function minLengthValidator(length: number): ValidatorFn {
+  return (control: FormControl): ValidationErrors | null => {
+    return String(control.value || '').trim().length >= length ? null : {minLength: true};
   };
 }

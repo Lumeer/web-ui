@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {environment} from '../../../../../../../environments/environment';
+import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 
 @Component({
   selector: 'template-detail',
@@ -37,7 +37,7 @@ export class TemplateDetailComponent implements OnChanges {
 
   public publicViewUrl: SafeUrl;
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  constructor(private domSanitizer: DomSanitizer, private configurationService: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.template && this.template) {
@@ -46,7 +46,9 @@ export class TemplateDetailComponent implements OnChanges {
   }
 
   private createPublicViewUrl(): SafeUrl {
-    const url = `${environment.publicViewCdn}?o=${this.template.templateMetadata?.organizationId}&p=${this.template.id}`;
+    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${
+      this.template.templateMetadata?.organizationId
+    }&p=${this.template.id}`;
     return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

@@ -22,19 +22,19 @@ import {FormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
-import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
 import {
-  selectCollectionsByWritePermission,
-  selectLinkTypesByWritePermission,
+  selectContributeAndWritableCollections,
+  selectContributeAndWritableLinkTypes,
+  selectViewsByRead,
 } from '../../../../../../core/store/common/permissions.selectors';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'blockly-form',
@@ -56,6 +56,7 @@ export class BlocklyFormComponent implements OnInit {
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
+  public views$: Observable<View[]>;
 
   public variables: RuleVariable[];
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
@@ -81,8 +82,12 @@ export class BlocklyFormComponent implements OnInit {
     return this.form.get('blocklyError').value;
   }
 
-  public get blocklyResultTimestamp(): string {
+  public get blocklyResultTimestamp(): number {
     return this.form.get('blocklyResultTimestamp').value;
+  }
+
+  public get blocklyRecursive(): string {
+    return this.form.get('blocklyRecursive').value;
   }
 
   public display(type: BlocklyDebugDisplay) {
@@ -94,8 +99,9 @@ export class BlocklyFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.collections$ = this.store$.select(selectCollectionsByWritePermission);
-    this.linkTypes$ = this.store$.select(selectLinkTypesByWritePermission);
+    this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
+    this.views$ = this.store$.pipe(select(selectViewsByRead));
+    this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
     if (this.collection) {
       this.variables = [
         {name: 'oldRecord', collectionId: this.collection.id},

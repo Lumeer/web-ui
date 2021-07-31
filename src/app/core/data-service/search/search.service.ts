@@ -18,19 +18,31 @@
  */
 
 import {Observable} from 'rxjs';
-import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
-import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
+import {DocumentDto, LinkInstanceDto, QueryDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class SearchService {
-  public abstract suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto>;
+  public abstract searchLinkInstances(
+    query: QueryDto,
+    includeSubItems?: boolean,
+    workspace?: Workspace
+  ): Observable<LinkInstanceDto[]>;
 
-  public abstract searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]>;
-
-  public abstract searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]>;
+  public abstract searchDocuments(
+    query: QueryDto,
+    includeSubItems?: boolean,
+    workspace?: Workspace
+  ): Observable<DocumentDto[]>;
 
   public abstract searchDocumentsAndLinks(
     query: QueryDto,
+    includeSubItems?: boolean,
+    workspace?: Workspace
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>;
+
+  public abstract searchTaskDocumentsAndLinks(
+    query: QueryDto,
+    includeSubItems?: boolean,
     workspace?: Workspace
   ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>;
 }

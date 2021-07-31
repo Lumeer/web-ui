@@ -26,6 +26,7 @@ export interface ResourceDto {
   color?: string;
   icon?: string;
   version?: number;
+  priority?: number;
   description?: string;
   nonRemovable?: boolean;
   permissions?: PermissionsDto;

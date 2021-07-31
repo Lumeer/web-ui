@@ -23,8 +23,6 @@ import {QueryAttribute, QueryResource} from '../../model/query-attribute';
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
 
-export const DEFAULT_KANBAN_ID = 'default';
-
 export interface Kanban {
   id: string;
   config?: KanbanConfig;

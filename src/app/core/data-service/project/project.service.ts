@@ -36,6 +36,8 @@ export abstract class ProjectService extends PermissionService {
 
   public abstract applyTemplate(organizationId: string, projectId: string, template: string): Observable<any>;
 
+  public abstract createSampleData(organizationId: string, projectId: string, type: string): Observable<any>;
+
   public abstract copyProject(
     organizationId: string,
     projectId: string,
@@ -44,4 +46,8 @@ export abstract class ProjectService extends PermissionService {
   ): Observable<any>;
 
   public abstract updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto>;
+
+  public abstract deleteSampleData(organizationId: string, projectId: string, confirmation: string): Observable<any>;
+
+  public abstract downloadRawContent(organizationId: string, projectId: string): Observable<any>;
 }

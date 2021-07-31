@@ -26,14 +26,13 @@ import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
 import {
-  selectAllOrganizations,
+  selectAllOrganizationsSorted,
   selectOrganizationByWorkspace,
 } from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
-import {ResourceMenuComponent} from './resource-menu/resource-menu.component';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'workspace-panel',
@@ -48,7 +47,7 @@ export class WorkspacePanelComponent implements OnInit {
   @Input()
   public contentHeight: number;
 
-  public readonly showDropdowns = !environment.publicView;
+  public readonly showDropdowns: boolean;
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 
@@ -61,13 +60,16 @@ export class WorkspacePanelComponent implements OnInit {
     public element: ElementRef<HTMLElement>,
     private router: Router,
     private selectService: WorkspaceSelectService,
-    private store$: Store<AppState>
-  ) {}
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
+    this.showDropdowns = !this.configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
-    this.organizations$ = this.store$.pipe(select(selectAllOrganizations));
+    this.organizations$ = this.store$.pipe(select(selectAllOrganizationsSorted));
     this.projects$ = this.store$.pipe(select(selectProjectsForWorkspace));
   }
 

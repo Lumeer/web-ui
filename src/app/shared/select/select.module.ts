@@ -23,7 +23,7 @@ import {NgModule} from '@angular/core';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {PickerModule} from '../picker/picker.module';
 import {PipesModule} from '../pipes/pipes.module';
-import {SelectItemWithConstraint} from './select-constraint-item/select-item-with-constraint.component';
+import {SelectItemWithConstraintComponent} from './select-constraint-item/select-item-with-constraint.component';
 import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
 import {SelectItemsWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
 import {AreIdsEqualPipe} from './select-item/pipes/are-ids-equal.pipe';
@@ -63,7 +63,7 @@ import {MatMenuModule} from '@angular/material/menu';
     GetSelectItemPipe,
     GetSelectedItemsPipe,
     AreIdsEqualPipe,
-    SelectItemWithConstraint,
+    SelectItemWithConstraintComponent,
     SelectItemWithConstraint2Component,
     SelectItemWithConstraintConfigPipe,
     SelectItemsWithConstraintPipe,
@@ -77,7 +77,7 @@ import {MatMenuModule} from '@angular/material/menu';
   exports: [
     SelectItemComponent,
     SelectItem2Component,
-    SelectItemWithConstraint,
+    SelectItemWithConstraintComponent,
     SelectItemWithConstraint2Component,
     SelectDataItemComponent,
     SelectCollectionComponent,

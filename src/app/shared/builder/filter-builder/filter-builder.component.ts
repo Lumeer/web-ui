@@ -33,8 +33,6 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {Observable} from 'rxjs';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
 import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
 import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
@@ -79,7 +77,7 @@ export class FilterBuilderComponent implements OnChanges {
 
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private store$: Store<AppState>, private constraintDataService: ConstraintDataService) {}
+  constructor(private constraintDataService: ConstraintDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute || changes.collectionId || changes.linkTypeId) {

@@ -23,12 +23,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, timer} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {AuthService} from '../auth.service';
 import {SessionService} from '../session.service';
 import {ModalsAction} from '../../core/store/modals/modals.action';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Component({
   selector: 'session-expired',
@@ -36,7 +36,7 @@ import {ModalsAction} from '../../core/store/modals/modals.action';
   styleUrls: ['./session-expired.component.scss'],
 })
 export class SessionExpiredComponent implements OnInit {
-  public readonly sessionTimeout = environment.sessionTimeout;
+  public readonly sessionTimeout;
 
   public redirecting$ = new BehaviorSubject(false);
   public isAuthenticated$: Observable<boolean>;
@@ -49,8 +49,11 @@ export class SessionExpiredComponent implements OnInit {
     private store$: Store<AppState>,
     private sessionService: SessionService,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private configurationService: ConfigurationService
+  ) {
+    this.sessionTimeout = this.configurationService.getConfiguration().sessionTimeout;
+  }
 
   public ngOnInit() {
     this.store$.dispatch(new ModalsAction.Hide());

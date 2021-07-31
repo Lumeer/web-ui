@@ -19,16 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 
 @Pipe({
   name: 'tasksInvalidRangeInfo',
 })
 export class TasksInvalidRangeInfoPipe implements PipeTransform {
-  public transform(
-    tasks: GanttChartTask[]
-  ): {minTask: GanttChartTask; minDate: Date; maxTask: GanttChartTask; maxDate: Date} {
+  public transform(tasks: GanttTask[]): {minTask: GanttTask; minDate: Date; maxTask: GanttTask; maxDate: Date} {
     let minDate: Date = null;
     let minTask = null;
     let maxDate: Date = null;

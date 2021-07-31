@@ -1,0 +1,25 @@
+<div>
+  <div class="d-flex flex-row flex-nowrap align-items-center" *ngIf="hasDuplicates">
+    <label class="switch">
+      <input type="checkbox" #duplicates [checked]="showDuplicates"
+             (change)="showDuplicatesChange.emit($event.target.checked)">
+      <span class="slider round" (click)="$event.stopPropagation()"></span>
+    </label>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@dialog.dataResources.config.duplicates"
+          (click)="duplicates.click()">Show duplicates</span>
+  </div>
+</div>
+
+<preview-results-tabs class="d-block mt-3"
+                      [resources]="resources"
+                      [selectedId]="selectedResource?.id"
+                      (selectResource)="selectResource.emit($event)">
+</preview-results-tabs>
+<preview-results-table class="mt-2 overflow-hidden results-table"
+                       [dataResources]="dataResources"
+                       [resource]="selectedResource"
+                       [loaded]="true"
+                       [resizeable]="false"
+                       [constraintData]="constraintData"
+                       (selectDataResource)="selectDataResource.emit($event)">
+</preview-results-table>

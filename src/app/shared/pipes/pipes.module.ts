@@ -50,9 +50,8 @@ import {PageSlicePipe} from './page-slice.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
-import {ResourceRolesPipe} from './resource-roles.pipe';
-import {RoleIconPipe} from './role-icon.pipe';
-import {RoleTitlePipe} from './role-title.pipe';
+import {ActionRoleIconPipe} from './action-role-icon.pipe';
+import {ActionRoleTitlePipe} from './action-role-title.pipe';
 import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
@@ -79,7 +78,6 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
 import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
-import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
 import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
@@ -101,9 +99,19 @@ import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
 import {StateListConstraintPipe} from './state-list-constraint.pipe';
 import {TruncatePipe} from './truncate.pipe';
 import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
+import {AttributeTitlePipe} from './attribute-title.pipe';
+import {ModifyAttributeForQueryFilterPipe} from './modify-attribute-for-query-filter.pipe';
+import {StateListDataValuePipe} from './state-list-data-value.pipe';
+import {CanCreateLinksPipe} from './can-create-links.pipe';
+import {ViewIconPipe} from './view-icon.pipe';
+import {ViewColorPipe} from './view-color.pipe';
+import {ViewLinkPipe} from './view-link.pipe';
+import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
+import {IsProjectTypePipe} from './is-project-type.pipe';
 
 @NgModule({
-  imports: [CommonModule, DataPipesModule],
+  imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
   declarations: [
     LightenColorPipe,
     IconsPipe,
@@ -120,9 +128,8 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ResourceRolesPipe,
-    RoleIconPipe,
-    RoleTitlePipe,
+    ActionRoleIconPipe,
+    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -130,6 +137,7 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     LogPipe,
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
+    IsProjectTypePipe,
     CanChangeRolesPipe,
     CollectionAttributePipe,
     ContrastColorPipe,
@@ -164,7 +172,6 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
@@ -186,8 +193,18 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     StateListConstraintPipe,
     TruncatePipe,
     AreObjectsEqualPipe,
+    AttributeTitlePipe,
+    ModifyAttributeForQueryFilterPipe,
+    StateListDataValuePipe,
+    CanCreateLinksPipe,
+    ViewIconPipe,
+    ViewColorPipe,
+    ViewLinkPipe,
   ],
   exports: [
+    DataPipesModule,
+    DataResourcesPipesModule,
+    PermissionsPipesModule,
     LightenColorPipe,
     IconsPipe,
     ColorsPipe,
@@ -203,9 +220,8 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ResourceRolesPipe,
-    RoleIconPipe,
-    RoleTitlePipe,
+    ActionRoleIconPipe,
+    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -213,8 +229,8 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     LogPipe,
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
+    IsProjectTypePipe,
     CanChangeRolesPipe,
-    DataPipesModule,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,
@@ -248,7 +264,6 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
-    RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
@@ -270,6 +285,13 @@ import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
     StateListConstraintPipe,
     TruncatePipe,
     AreObjectsEqualPipe,
+    AttributeTitlePipe,
+    ModifyAttributeForQueryFilterPipe,
+    StateListDataValuePipe,
+    CanCreateLinksPipe,
+    ViewIconPipe,
+    ViewColorPipe,
+    ViewLinkPipe,
   ],
 })
 export class PipesModule {}

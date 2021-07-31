@@ -44,8 +44,10 @@ import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-typ
 import {Attribute} from '../../../../core/store/collections/collection';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {User} from '../../../../core/store/users/user';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesSettings} from '../../../../core/store/views/view';
+import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
 
 @Component({
   selector: 'document-detail-header',
@@ -65,6 +67,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public resourceType: AttributesResourceType;
 
   @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -72,6 +77,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public dataPermissions: DataResourcePermissions;
 
   @Output()
   public switchToTable = new EventEmitter();
@@ -81,6 +89,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   @Output()
   public versionClick = new EventEmitter();
+
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
 
   public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
@@ -101,15 +112,11 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public readonly updatedOnMsg;
   public readonly updatedByMsg;
 
-  constructor(
-    private store$: Store<AppState>,
-    private toggleService: DocumentFavoriteToggleService,
-    private i18n: I18n
-  ) {
-    this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
-    this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
-    this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
-    this.updatedByMsg = this.i18n({id: 'document.detail.header.updatedBy', value: 'Updated by'});
+  constructor(private store$: Store<AppState>, private toggleService: DocumentFavoriteToggleService) {
+    this.createdOnMsg = $localize`:@@document.detail.header.createdOn:Created on`;
+    this.createdByMsg = $localize`:@@document.detail.header.createdBy:Created by`;
+    this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
+    this.updatedByMsg = $localize`:@@document.detail.header.updatedBy:Updated by`;
   }
 
   public ngOnInit() {
@@ -175,8 +182,8 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   }
 
   public onFavoriteToggle() {
-    if (this.dataResource && this.resourceType === AttributesResourceType.Collection) {
-      const document = <DocumentModel>this.dataResource;
+    const document = <DocumentModel>this.dataResource;
+    if (document && this.resourceType === AttributesResourceType.Collection) {
       this.toggleService.set(document.id, !document.favorite, document);
     }
   }

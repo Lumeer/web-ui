@@ -26,6 +26,7 @@ import {RuleVariable} from '../rule-variable-type';
 import {shadeColor} from '../../utils/html-modifier';
 import {BlocklyComponent} from './blocks/blockly-component';
 import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
+import {View} from '../../../core/store/views/view';
 
 declare var Blockly: any;
 
@@ -60,6 +61,8 @@ export class BlocklyUtils {
   public static readonly GET_LINK_DOCUMENT = 'get_link_document';
   public static readonly VARIABLES_GET_PREFIX = 'variables_get_';
   public static readonly VARIABLES_SET = 'variables_set';
+  public static readonly VARIABLES_GET = 'variables_get';
+  public static readonly GET_LINK_DOCUMENT_UNKNOWN = 'link_document_unknown';
   public static readonly UNKNOWN = 'unknown';
   public static readonly STATEMENT_CONTAINER = 'statement_container';
   public static readonly VALUE_CONTAINER = 'value_container';
@@ -81,10 +84,42 @@ export class BlocklyUtils {
   public static readonly CURRENT_DATE = 'current_date';
   public static readonly CURRENT_USER = 'current_user';
   public static readonly CURRENT_LOCALE = 'current_locale';
+  public static readonly ESCAPE_HTML = 'escape_html';
+  public static readonly UNESCAPE_HTML = 'unescape_html';
+  public static readonly FORMAT_CURRENCY = 'format_currency';
   public static readonly CREATE_DOCUMENT = 'create_document';
+  public static readonly DELETE_DOCUMENT = 'delete_document';
+  public static readonly LINK_DOCUMENTS_NO_RETURN = 'link_documents_no_return';
+  public static readonly LINK_DOCUMENTS_RETURN = 'link_documents_return';
+  public static readonly READ_DOCUMENTS = 'read_documents';
+  public static readonly GET_SIBLINGS = 'get_siblings';
+  public static readonly GET_HIERARCHY_SIBLINGS = 'get_hierarchy_siblings';
+  public static readonly GET_PARENT_DOCUMENT = 'get_parent_document';
+  public static readonly GET_CHILD_DOCUMENTS = 'get_child_documents';
   public static readonly IS_EMPTY = 'is_empty';
+  public static readonly IS_ARRAY = 'is_array';
+  public static readonly IS_STRING = 'is_string';
+  public static readonly IS_NUMBER = 'is_number';
+  public static readonly IS_BOOLEAN = 'is_boolean';
+  public static readonly COUNT_OCCURRENCES = 'count_occurrences';
+  public static readonly FILTER_OBJECTS = 'filter_objects';
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
-  public static readonly CREATE_DOCUMENTS_LIMIT = 25;
+  public static readonly PRINT_ATTRIBUTE = 'print_attribute';
+  public static readonly PRINT_TEXT = 'print_text';
+  public static readonly SEND_EMAIL = 'send_email';
+  public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
+  public static readonly NAVIGATE_TO_VIEW_BY_ID = 'navigate_to_view_by_id';
+  public static readonly SHARE_VIEW = 'share_view';
+  public static readonly STRING_REPLACE = 'string_replace';
+  public static readonly LOOP_BREAK = 'loop_break';
+  public static readonly LOOP_CONTINUE = 'loop_continue';
+  public static readonly BLOCK_COMMENT = 'block_comment';
+  public static readonly GET_DOCUMENT_CREATED_DATE = 'get_document_created_date';
+  public static readonly GET_DOCUMENT_CREATED_AUTHOR = 'get_document_created_author';
+  public static readonly GET_DOCUMENT_UPDATED_DATE = 'get_document_updated_date';
+  public static readonly GET_DOCUMENT_UPDATED_AUTHOR = 'get_document_updated_author';
+  public static readonly CREATE_DELETE_DOCUMENTS_LINKS_LIMIT = 25;
+  public static readonly MAXIMUM_DOCUMENTS_RETURNED = 1000;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
 
   private components: BlocklyComponent[] = [];
@@ -97,6 +132,7 @@ export class BlocklyUtils {
     private masterType: MasterBlockType,
     private collections: Collection[],
     private linkTypes: LinkType[],
+    private views: View[],
     private variables: RuleVariable[]
   ) {}
 
@@ -146,6 +182,62 @@ export class BlocklyUtils {
       const children = block.getChildren(false);
       this.preventDeletionOfInitialVariables(block);
 
+      // set output type of read documents block
+      if (block.type === BlocklyUtils.READ_DOCUMENTS) {
+        const viewId = block.getField('VIEW_ID').value_;
+        const view = this.views.find(v => v.id === viewId);
+
+        if (view) {
+          const collectionId = view.query?.stems[0]?.collectionId;
+          if (collectionId) {
+            block.setOutput(true, collectionId + BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX);
+          }
+        }
+      }
+
+      // set output type of get child documents block
+      if (block.type === BlocklyUtils.GET_PARENT_DOCUMENT) {
+        const input = block.getInput('DOCUMENT');
+
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+          const inputType =
+            input.connection.targetConnection?.check_ instanceof Array
+              ? input.connection.targetConnection?.check_[0]
+              : input.connection.targetConnection?.check_;
+
+          block.setOutput(true, inputType);
+        }
+      }
+
+      // set output type of get siblings block, and
+      // set output type of get siblings in hierarchy block, and
+      // set output type of get child documents block
+      if (
+        block.type === BlocklyUtils.GET_SIBLINGS ||
+        block.type === BlocklyUtils.GET_HIERARCHY_SIBLINGS ||
+        block.type === BlocklyUtils.GET_CHILD_DOCUMENTS
+      ) {
+        const input = block.getInput('DOCUMENT');
+
+        if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+          const inputType =
+            input.connection.targetConnection?.check_ instanceof Array
+              ? input.connection.targetConnection?.check_[0]
+              : input.connection.targetConnection?.check_;
+
+          block.setOutput(
+            true,
+            inputType.replace(BlocklyUtils.DOCUMENT_VAR_SUFFIX, BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+          );
+        }
+      }
+
+      // set output type of link creation block
+      if (block.type === BlocklyUtils.LINK_DOCUMENTS_RETURN) {
+        const linkTypeId = block.getField('LINKTYPE').value_;
+        block.setOutput(true, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
+      }
+
       // set output type of all links
       if (block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX)) {
         if (children && children.length > 0) {
@@ -187,6 +279,23 @@ export class BlocklyUtils {
           if (
             childOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
             childOutputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+          ) {
+            const value = block.getField('ATTR').getValue();
+            this.setterAndGetterOutputType(block, child, true);
+            block.getField('ATTR').setValue(value);
+          }
+        }
+      }
+
+      // print attribute
+      if (block.type === BlocklyUtils.PRINT_ATTRIBUTE) {
+        if (children && children.length > 0) {
+          const child = children[0];
+          const childOutputType = this.getOutputConnectionCheck(child);
+
+          if (
+            childOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+            childOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)
           ) {
             const value = block.getField('ATTR').getValue();
             this.setterAndGetterOutputType(block, child, true);
@@ -258,6 +367,8 @@ export class BlocklyUtils {
 
   public setLinkDocumentOutputType(parentBlock: any, block: any) {
     const options = parentBlock.getField('COLLECTION').getOptions();
+    const originalValue = parentBlock.getField('COLLECTION').getValue();
+    let originalValuePresent = false;
     const originalLength = options.length;
     const blockOutputType = this.getOutputConnectionCheck(block);
     const linkTypeId = blockOutputType.split('_')[0];
@@ -266,9 +377,13 @@ export class BlocklyUtils {
     linkType.collectionIds.forEach(collectionId => {
       const collection = this.getCollection(collectionId);
       options.push([collection.name, collection.id]);
+
+      if (collection.id === originalValue) {
+        originalValuePresent = true;
+      }
     });
 
-    const firstCollection = this.getCollection(linkType.collectionIds[0]);
+    const firstCollection = this.getCollection(originalValuePresent ? originalValue : linkType.collectionIds[0]);
     const firstCollectionId = firstCollection.id;
     const firstCollectionName = firstCollection.name;
 
@@ -289,54 +404,68 @@ export class BlocklyUtils {
   }
 
   public setterAndGetterOutputType(parentBlock: any, block: any, skipDisconnect = false) {
-    const options = parentBlock.getField('ATTR').getOptions();
-    const originalLength = options.length;
-    const blockOutputType = this.getOutputConnectionCheck(block);
+    if (isNotNullOrUndefined(parentBlock.getField('ATTR'))) {
+      const options = parentBlock.getField('ATTR').getOptions();
+      const originalLength = options.length;
+      const blockOutputType = this.getOutputConnectionCheck(block);
 
-    let attributes: Attribute[];
-    let defaultAttributeId = '';
-    if (parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE || parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE) {
-      const linkType = this.getLinkType(blockOutputType.split('_')[0]);
-      attributes = linkType.attributes;
-    } else {
-      const collection = this.getCollection(blockOutputType.split('_')[0]);
-      attributes = collection.attributes;
-      defaultAttributeId = collection.defaultAttributeId;
-    }
-
-    let defaultValue = '',
-      defaultText = '';
-    attributes.forEach(attribute => {
-      options.push([attribute.name, attribute.id]);
-      if (attribute.id === defaultAttributeId) {
-        defaultValue = attribute.id;
-        defaultText = attribute.name;
+      let attributes: Attribute[];
+      let defaultAttributeId = '';
+      if (
+        parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
+        parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE ||
+        (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+      ) {
+        const linkType = this.getLinkType(blockOutputType.split('_')[0]);
+        attributes = linkType.attributes;
+      } else if (
+        parentBlock.type === BlocklyUtils.GET_ATTRIBUTE ||
+        parentBlock.type === BlocklyUtils.SET_ATTRIBUTE ||
+        (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE &&
+          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
+      ) {
+        const collection = this.getCollection(blockOutputType.split('_')[0]);
+        attributes = collection.attributes;
+        defaultAttributeId = collection.defaultAttributeId;
       }
-    });
 
-    if (!defaultValue && attributes && attributes.length > 0) {
-      defaultValue = attributes[0].id;
-      defaultText = attributes[0].name;
-    }
+      let defaultValue = '',
+        defaultText = '';
+      attributes.forEach(attribute => {
+        options.push([attribute.name, attribute.id]);
+        if (attribute.id === defaultAttributeId) {
+          defaultValue = attribute.id;
+          defaultText = attribute.name;
+        }
+      });
 
-    parentBlock.getField('ATTR').setValue(defaultValue);
-
-    // force attribute name render when the same value was already selected
-    parentBlock.getField('ATTR').text_ = defaultText;
-    parentBlock.getField('ATTR').forceRerender();
-    options.splice(0, originalLength);
-
-    if (parentBlock.type === BlocklyUtils.GET_ATTRIBUTE || parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
-      const newType =
-        block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
-        block.type.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
-          ? ['Array']
-          : ['', 'Number', 'String', 'Boolean', 'Colour'];
-      const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
-      if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
-        this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+      if (!defaultValue && attributes && attributes.length > 0) {
+        defaultValue = attributes[0].id;
+        defaultText = attributes[0].name;
       }
-      parentBlock.outputConnection.check_ = newType;
+
+      parentBlock.getField('ATTR').setValue(defaultValue);
+
+      // force attribute name render when the same value was already selected
+      parentBlock.getField('ATTR').text_ = defaultText;
+      parentBlock.getField('ATTR').forceRerender();
+      options.splice(0, originalLength);
+
+      if (parentBlock.type === BlocklyUtils.GET_ATTRIBUTE || parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE) {
+        const newType =
+          block.type.endsWith(BlocklyUtils.GET_HIERARCHY_SIBLINGS) ||
+          block.type.endsWith(BlocklyUtils.GET_CHILD_DOCUMENTS) ||
+          block.type.endsWith(BlocklyUtils.GET_SIBLINGS) ||
+          block.type.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
+          block.type.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
+            ? ['Array']
+            : ['', 'Number', 'String', 'Boolean', 'Colour'];
+        const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
+        if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
+          this.tryDisconnect(parentBlock, parentBlock.outputConnection);
+        }
+        parentBlock.outputConnection.check_ = newType;
+      }
     }
   }
 
@@ -347,8 +476,10 @@ export class BlocklyUtils {
       const children = block.getChildren();
       const idx = (children || []).findIndex(
         child =>
-          child.type?.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX) &&
-          child.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)
+          (child.type?.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX) &&
+            child.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) ||
+          child.type === BlocklyUtils.GET_PARENT_DOCUMENT ||
+          child.type === BlocklyUtils.GET_LINK_DOCUMENT
       );
 
       // search for all variable setters connected to document variables and set the variable type accordingly
@@ -356,32 +487,79 @@ export class BlocklyUtils {
         if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
           const variable = block.inputList[0].fieldRow[1].getVariable();
           if (variable) {
-            const [, , collectionId] = children[idx].type.split('_');
-            this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
-            block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+            if (children[idx].type === BlocklyUtils.GET_PARENT_DOCUMENT) {
+              const input = children[idx].getInput('DOCUMENT');
+
+              if (isNotNullOrUndefined(input.connection.targetConnection?.check_)) {
+                const inputType =
+                  input.connection.targetConnection?.check_ instanceof Array
+                    ? input.connection.targetConnection?.check_[0]
+                    : input.connection.targetConnection?.check_;
+                const [collectionId] = inputType.split('_');
+                this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+                block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+              }
+            } else if (children[idx].type === BlocklyUtils.GET_LINK_DOCUMENT) {
+              const outputType = this.getOutputConnectionCheck(children[idx]);
+              const [collectionId] = outputType.split('_');
+
+              // the get link document block must already be connected to a document
+              if (collectionId !== BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN.split('_')[0]) {
+                // the variable already existed and its type changed
+                if (variable.type !== collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
+                  // disconnect and dispose all variable getters because they now have wrong name, color and icon
+                  this.disposeVariableGetters(workspace, variable);
+                }
+
+                this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+                block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+              } else {
+                this.tryDisconnect(children[idx], children[idx].outputConnection);
+              }
+            } else {
+              if (children[idx].type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+                const [, , collectionId] = children[idx].type.split('_');
+                this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+                block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+              } else if (children[idx].type?.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
+                const [, , linkTypeId] = children[idx].type.split('_');
+                this.updateVariableType(workspace, variable, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
+                block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+              }
+            }
           }
         }
       } else {
-        // search for all variable setters connected to CREATE_DOCUMENT blocks with changed variable type
         const idx2 = (children || []).findIndex(child => child.type === BlocklyUtils.CREATE_DOCUMENT);
+        const idx3 = (children || []).findIndex(child => child.type === BlocklyUtils.LINK_DOCUMENTS_RETURN);
 
-        if (idx2 >= 0 && children[idx2].outputConnection?.check_?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+        // search for all variable setters connected to CREATE_DOCUMENT blocks with changed variable type
+        if (idx2 >= 0 && this.getOutputConnectionCheck(children[idx2])?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
           const variable = block.inputList[0].fieldRow[1].getVariable();
           if (variable) {
-            const [collectionId] = children[idx2].outputConnection.check_.split('_');
+            const [collectionId] = this.getOutputConnectionCheck(children[idx2])?.split('_');
 
             if (variable.type !== collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
               // disconnect and dispose all variable getters because they now have wrong name, color and icon
-              this.forEachVariableGetter(workspace, variable, innerBlock => {
-                if (innerBlock.outputConnection) {
-                  this.tryDisconnect(innerBlock, innerBlock.outputConnection);
-                }
-
-                setTimeout(() => innerBlock.dispose());
-              });
+              this.disposeVariableGetters(workspace, variable);
 
               // update variable type
               this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+              block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+            }
+          }
+          // search for all variable setters connected to LINK_DOCUMENTS_RETURN blocks with changed variable type
+        } else if (idx3 >= 0 && this.getOutputConnectionCheck(children[idx3])?.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
+          const variable = block.inputList[0].fieldRow[1].getVariable();
+          if (variable) {
+            const [linkTypeId] = this.getOutputConnectionCheck(children[idx3])?.split('_');
+
+            if (variable.type !== linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX) {
+              // disconnect and dispose all variable getters because they now have wrong name, color and icon
+              this.disposeVariableGetters(workspace, variable);
+
+              // update variable type
+              this.updateVariableType(workspace, variable, linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX);
               block.inputList[0].fieldRow[1].variableTypes = [variable.type];
             }
           }
@@ -389,7 +567,12 @@ export class BlocklyUtils {
           // search for all variable setters with no childs and existing variable type, then reset the variable type
           if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
             const variable = block.inputList[0].fieldRow[1].getVariable();
-            if (variable && variable.type !== '' && variable.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+            if (
+              variable &&
+              variable.type !== '' &&
+              (variable.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+                variable.type?.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+            ) {
               this.forEachVariableGetter(workspace, variable, innerBlock => {
                 if (innerBlock.outputConnection) {
                   this.tryDisconnect(innerBlock, innerBlock.outputConnection);
@@ -406,13 +589,31 @@ export class BlocklyUtils {
     });
   }
 
+  private disposeVariableGetters(workspace, variable) {
+    // disconnect and dispose all variable getters because they now have wrong name, color and icon
+    this.forEachVariableGetter(workspace, variable, innerBlock => {
+      if (innerBlock.outputConnection) {
+        this.tryDisconnect(innerBlock, innerBlock.outputConnection);
+      }
+
+      setTimeout(() => innerBlock.dispose());
+    });
+  }
+
   public forEachVariableGetter(workspace, variable, fce: (block) => void) {
-    workspace.getBlocksByType(BlocklyUtils.VARIABLES_GET_PREFIX + variable.type).forEach(innerBlock => {
-      if (innerBlock.inputList?.length > 0 && innerBlock.inputList[0].fieldRow?.length > 2) {
-        const innerVariable = innerBlock.inputList[0].fieldRow[2].getVariable();
-        if (innerVariable.getId() === variable.getId()) {
-          fce(innerBlock);
-        }
+    [
+      ...workspace.getBlocksByType(BlocklyUtils.VARIABLES_GET_PREFIX + variable.type),
+      ...workspace.getBlocksByType(BlocklyUtils.VARIABLES_GET),
+    ].forEach(innerBlock => {
+      if (innerBlock.inputList?.length > 0) {
+        innerBlock.inputList[0].fieldRow
+          .filter(row => row?.name === 'VAR')
+          .forEach(row => {
+            const innerVariable = row.getVariable();
+            if (innerVariable.getId() === variable.getId()) {
+              fce(innerBlock);
+            }
+          });
       }
     });
   }
@@ -556,7 +757,8 @@ export class BlocklyUtils {
 
   public getLinkType(id: string): LinkType {
     const currentLinkType = this.linkTypes?.find(linkType => linkType.id === id);
-    const collections = this.collections?.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
+    const collections =
+      currentLinkType && this.collections?.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
     if (collections?.length === 2) {
       return {...currentLinkType, collections: [collections[0], collections[1]]};
     }
@@ -694,6 +896,16 @@ export class BlocklyUtils {
       Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_DOCUMENT + '"></block></xml>').firstChild
     );
 
+    const xmls = this.components
+      .filter(component => component.getVisibility().includes(this.masterType))
+      .map(component => component.getLinkVariablesXml(workspace))
+      .filter(xml => isNotNullOrUndefined(xml));
+    if (xmls?.length > 0) {
+      xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
+
+      xmls.forEach(xml => xmlList.push(Blockly.Xml.textToDom(xml).firstChild));
+    }
+
     xmlList.push(Blockly.Xml.textToDom('<xml><sep gap="48"></sep></xml>').firstChild);
 
     this.linkTypes.forEach(linkType => {
@@ -787,6 +999,7 @@ export class BlocklyUtils {
                 check: [
                   linkType.collectionIds[0] + BlocklyUtils.DOCUMENT_VAR_SUFFIX,
                   linkType.collectionIds[1] + BlocklyUtils.DOCUMENT_VAR_SUFFIX,
+                  BlocklyUtils.GET_LINK_DOCUMENT_UNKNOWN,
                 ],
               },
             ],

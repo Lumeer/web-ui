@@ -23,7 +23,6 @@ import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {LinkInstanceService} from './link-instance.service';
-import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
@@ -31,12 +30,11 @@ import {generateId} from '../../../shared/utils/resource.utils';
 import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
 import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
 import {LinkInstance} from '../../store/link-instances/link.instance';
+import {DocumentLinksDto} from '../../dto/document-links.dto';
 
 @Injectable()
-export class PublicLinkInstanceService extends BaseService implements LinkInstanceService {
-  constructor(protected store$: Store<AppState>) {
-    super(store$);
-  }
+export class PublicLinkInstanceService implements LinkInstanceService {
+  constructor(private store$: Store<AppState>) {}
 
   public getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto> {
     return of(null);
@@ -107,6 +105,10 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
     );
   }
 
+  public setDocumentLinks(linkTypeId: string, dto: DocumentLinksDto): Observable<LinkInstanceDto[]> {
+    return of(dto.createdLinkInstances.map(linkInstance => ({...linkInstance, id: generateId()})));
+  }
+
   private convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {
     return (
       model && {
@@ -118,7 +120,12 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
     );
   }
 
-  public runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any> {
+  public runRule(
+    linkTypeId: string,
+    linkInstanceId: string,
+    attributeId: string,
+    actionName?: string
+  ): Observable<any> {
     return of(true);
   }
 }

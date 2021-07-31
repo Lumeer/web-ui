@@ -20,10 +20,8 @@
 import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {userHasRoleInResource} from '../../shared/utils/resource.utils';
-import {Role} from '../model/role';
+import {RoleType} from '../model/role-type';
 import {AppState} from '../store/app.state';
 import {NotificationsAction} from '../store/notifications/notifications.action';
 import {Organization} from '../store/organizations/organization';
@@ -31,12 +29,13 @@ import {Project} from '../store/projects/project';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {User} from '../store/users/user';
-import {selectCurrentUser} from '../store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {ResourceType} from '../model/resource-type';
 import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
 import {ModalService} from '../../shared/modal/modal.service';
 import {Perspective} from '../../view/perspectives/perspective';
+import {userHasRoleInOrganization} from '../../shared/utils/permission.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -44,13 +43,8 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class WorkspaceSelectService {
   private currentUser: User;
 
-  constructor(
-    private store$: Store<AppState>,
-    private i18n: I18n,
-    private router: Router,
-    private modalService: ModalService
-  ) {
-    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
+  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {
+    this.store$.pipe(select(selectCurrentUserForWorkspace)).subscribe(user => (this.currentUser = user));
   }
 
   public selectOrganization(organization: Organization) {
@@ -84,7 +78,7 @@ export class WorkspaceSelectService {
   }
 
   private checkAndCreateNewProject(organization: Organization) {
-    if (userHasRoleInResource(this.currentUser, organization, Role.Write)) {
+    if (userHasRoleInOrganization(organization, this.currentUser, RoleType.ProjectContribute)) {
       this.createNewProject([organization]);
     } else {
       this.dispatchErrorCreateProjectNotification();
@@ -92,10 +86,7 @@ export class WorkspaceSelectService {
   }
 
   private dispatchErrorCreateProjectNotification() {
-    const message = this.i18n({
-      id: 'projects.notPermissions',
-      value: 'I am sorry, you are not allowed to view or create any project in this organization.',
-    });
+    const message = $localize`:@@projects.notPermissions:I am sorry, you are not allowed to view or create any project in this organization.`;
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 

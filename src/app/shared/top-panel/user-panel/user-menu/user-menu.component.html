@@ -1,28 +1,131 @@
-<div tooltip="User menu"
-     i18n-tooltip="@@topPanel.userMenu.title"
-     placement="bottom"
-     class="ml-2 cursor-pointer"
-     data-tour="user-menu"
-     (click)="dropdown.open()" #origin>
-  <img *ngIf="userEmail; else userIcon"
-       ngxGravatar
-       [email]="userEmail"
-       [size]="30">
-</div>
+<ng-container *ngIf="{currentUser: currentUser$ | async, freePlan: freePlan$ | async, url: url$ | async } as data">
+  <div tooltip="User menu"
+       i18n-tooltip="@@topPanel.userMenu.title"
+       placement="bottom"
+       class="ml-2 cursor-pointer"
+       data-tour="user-menu"
+       [matMenuTriggerFor]="contextMenu">
+    <img *ngIf="userEmail"
+         ngxGravatar
+         [email]="userEmail"
+         [size]="30">
+    <i *ngIf="!userEmail" class="fa fa-user-circle fa-2x"></i>
+  </div>
 
-<user-menu-dropdown [origin]="origin" #dropdown
-                    [currentUser]="currentUser$ | async"
-                    [freePlan]="freePlan$ | async"
-                    [url]="url$ | async"
-                    (feedback)="onFeedbackClick()"
-                    (logout)="onLogoutClick()"
-                    (organizationDetail)="goToOrganizationDetail()"
-                    (startTour)="onStartTour()"
-                    (notificationSettings)="onNotificationSettings()"
-                    (affiliate)="onAffiliateClick()"
-                    (hintsToggle)="onHintsToggle($event)">
-</user-menu-dropdown>
+  <mat-menu #contextMenu="matMenu" classList="menu-edges-content">
+    <ng-template matMenuContent>
+      <div class="profile-dropdown" aria-labelledby="profileDropdownLink">
+        <button *ngIf="data.freePlan" mat-menu-item
+                class="text-start bg-danger text-white free-plan"
+                (click)="goToOrganizationDetail()">
+          <span i18n="@@panel.plan.free">Free&nbsp;Plan: Upgrade now!</span>
+        </button>
+        <button *ngIf="data.currentUser" mat-menu-item
+                class="text-secondary" [disabled]="true">
+          {{ data.currentUser.email }}
+        </button>
 
-<ng-template #userIcon>
-  <i class="fa fa-user-circle fa-2x"></i>
-</ng-template>
+        <button mat-menu-item [matMenuTriggerFor]="languageMenu">
+          <span [ngClass]="currentLanguage.icon"></span>
+          <span>{{currentLanguage.name}}</span>&nbsp;(<span>{{currentLanguage.translatedName}}</span>)
+        </button>
+        <button mat-menu-item (click)="onSettings()"
+                title="User Settings" i18n-title="@@menu.user.settings">
+          <i class="far fa-fw fa-cog"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.user.settings">User Settings</span>
+        </button>
+        <button mat-menu-item (click)="onFeedbackClick()"
+                title="Send Feedback"
+                i18n-title="@@menu.sendFeedback">
+          <i class="far fa-fw fa-comment"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.sendFeedback">Send Feedback</span>
+        </button>
+        <button mat-menu-item (click)="onStartTour()"
+                title="Application Tour"
+                i18n-title="@@menu.applicationTour">
+          <i class="far fa-fw fa-map-signs"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.applicationTour">Application Tour</span>
+        </button>
+        <button mat-menu-item
+                *ngIf="data.currentUser.hints.applicationHints === false"
+                (click)="onHintsToggle($event, true)"
+                title="Show Hints"
+                i18n-title="@@menu.hintsEnable">
+          <i class="fad fa-fw fa-dot-circle"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.hintsEnable">Show Hints</span>
+        </button>
+        <button mat-menu-item *ngIf="data.currentUser.hints.applicationHints !== false"
+                (click)="onHintsToggle($event, false)"
+                title="Hide Hints"
+                i18n-title="@@menu.hintsDisable">
+          <i class="fad fa-fw fa-dot-circle color-danger"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.hintsDisable">Hide Hints</span>
+        </button>
+        <button mat-menu-item (click)="onAffiliateClick()"
+                title="Affiliate Program"
+                i18n-title="@@menu.affiliateProgram">
+          <i class="far fa-fw fa-wallet"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.affiliateProgramMenuItem">Earn with Lumeer</span>
+        </button>
+        <button mat-menu-item
+                class="dropdown-item"
+                title="Solutions and Support"
+                i18n-title="@@menu.solutionsSupport">
+          <a class="color-inherit" [href]="helpLink" target="_blank">
+            <i class="fas fa-fw fa-life-ring"
+               data-fa-transform="left-4"
+               aria-hidden="true"></i>&nbsp;
+            <span i18n="@@menu.getHelp">Get Help</span>
+          </a>
+        </button>
+        <button mat-menu-item *ngIf="false"
+                title="Account"
+                i18n-title="@@menu.account">
+          <i class="fas fa-fw fa-user"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.account">Account</span>
+        </button>
+        <button mat-menu-item
+                (click)="onLogoutClick()"
+                title="Log out"
+                i18n-title="@@menu.logout">
+          <i class="fas fa-fw fa-sign-in"
+             data-fa-transform="left-4"
+             aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.logout">Log out</span>
+        </button>
+        <ng-container *ngIf="buildNumber">
+          <hr class="my-2">
+          <button *ngIf="data.currentUser" mat-menu-item [disabled]="true">
+            <div class="small pb-2 text-secondary">Build #{{buildNumber}}</div>
+          </button>
+        </ng-container>
+      </div>
+    </ng-template>
+  </mat-menu>
+  <mat-menu #languageMenu="matMenu">
+    <ng-template matMenuContent>
+      <button mat-menu-item *ngFor="let language of languages">
+        <a class="color-inherit" [href]="data.url| languageLink:language.code">
+          <span [ngClass]="language.icon"></span>
+          <span>{{language.name}}</span>&nbsp;(<span>{{language.translatedName}}</span>)
+        </a>
+      </button>
+    </ng-template>
+  </mat-menu>
+</ng-container>
+
+

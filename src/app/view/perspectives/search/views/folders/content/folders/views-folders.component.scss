@@ -1,0 +1,13 @@
+@import 'src/styles/variables';
+
+.views-folder.active {
+  background: lighten($success, 60%);
+  box-shadow: $shadow-default;
+}
+
+.dragging-area {
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  top: 0;
+}

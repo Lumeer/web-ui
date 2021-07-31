@@ -18,10 +18,8 @@
  */
 
 import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {
   DataObjectAggregator,
@@ -30,6 +28,9 @@ import {
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {mapMarkerDataId} from './map-content.utils';
+import {DocumentsAndLinksData} from '@lumeer/data-filters';
+import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
+import {User} from '../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {
   Color = 'color',
@@ -38,26 +39,36 @@ enum DataObjectInfoKeyType {
 
 export class MapDataConverter {
   private config: MapConfig;
+  private user: User;
 
   private dataObjectAggregator = new DataObjectAggregator<any>();
 
   public convert(
     config: MapConfig,
     collections: Collection[],
-    documents: DocumentModel[],
     linkTypes: LinkType[],
-    linkInstances: LinkInstance[],
-    permissions: Record<string, AllowedPermissions>,
-    query: Query
+    data: DocumentsAndLinksData,
+    permissions: ResourcesPermissions,
+    query: Query,
+    user: User
   ): MapMarkerData[] {
     this.config = config;
+    this.user = user;
 
-    const data = (query?.stems || []).reduce((allData, stem, index) => {
-      this.dataObjectAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, permissions);
+    const mapData = (query?.stems || []).reduce((allData, stem, index) => {
+      const stemData = data.dataByStems?.[index];
+      this.dataObjectAggregator.updateData(
+        collections,
+        stemData?.documents || [],
+        linkTypes,
+        stemData?.linkInstances || [],
+        stem,
+        permissions
+      );
       allData.push(...this.convertByStem(index));
       return allData;
     }, []);
-    return filterUniqueData(data);
+    return filterUniqueData(mapData);
   }
 
   private convertByStem(index: number): MapMarkerData[] {
@@ -96,9 +107,10 @@ export class MapDataConverter {
     dataObjectsInfo: DataObjectInfo<any>[]
   ): MapMarkerData[] {
     const resource = this.dataObjectAggregator.getResource(attribute);
+    const permissions = this.dataObjectAggregator.attributePermissions(attribute);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(attribute);
     const resourceIcons = this.dataObjectAggregator.getAttributeIcons(attribute);
-    const editable = this.dataObjectAggregator.isAttributeEditable(attribute);
+    const attributeEditable = this.dataObjectAggregator.isAttributeEditable(attribute);
     const resourceType = attribute.resourceType;
 
     return dataObjectsInfo.reduce<MapMarkerData[]>((data, item) => {
@@ -106,6 +118,7 @@ export class MapDataConverter {
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const color = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources) || resourceColor;
+      const editable = attributeEditable && userCanEditDataResource(dataResource, resource, permissions, this.user);
 
       data.push({
         resource,

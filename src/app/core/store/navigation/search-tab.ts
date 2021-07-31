@@ -22,14 +22,14 @@ import {Perspective, perspectivesMap} from '../../../view/perspectives/perspecti
 export enum SearchTab {
   All = 'all',
   Collections = 'tables',
-  Records = 'records',
+  Tasks = 'tasks',
   Views = 'views',
 }
 
 export const searchTabsMap: Record<string, SearchTab> = {
   [SearchTab.All]: SearchTab.All,
   [SearchTab.Collections]: SearchTab.Collections,
-  [SearchTab.Records]: SearchTab.Records,
+  [SearchTab.Tasks]: SearchTab.Tasks,
   [SearchTab.Views]: SearchTab.Views,
 };
 

@@ -7,7 +7,8 @@
       "i18n": {
         "sourceLocale": "en",
         "locales": {
-          "cs": "src/i18n/messages.cs.xlf"
+          "cs": "src/i18n/messages.cs.xlf",
+          "hu": "src/i18n/messages.hu.xlf"
         }
       },
       "root": "",
@@ -15,21 +16,21 @@
       "projectType": "application",
       "prefix": "",
       "schematics": {
-        "@schematics/angular:component": {
+        "@ngrx/schematics:component": {
           "changeDetection": "OnPush",
           "skipTests": true,
           "style": "scss"
         },
-        "@schematics/angular:guard": {
+        "@ngrx/schematics:guard": {
           "skipTests": true
         },
-        "@schematics/angular:module": {
+        "@ngrx/schematics:module": {
           "skipTests": true
         },
-        "@schematics/angular:pipe": {
+        "@ngrx/schematics:pipe": {
           "skipTests": true
         },
-        "@schematics/angular:service": {
+        "@ngrx/schematics:service": {
           "skipTests": true
         }
       },
@@ -72,13 +73,16 @@
               "plotly.js",
               "big.js",
               "file-saver",
+              "moment-timezone",
               "coordinate-parser",
-              "util"
+              "util",
+              "pressure"
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/pusher-js/dist/web/pusher.min.js",
-              "node_modules/quill/dist/quill.js",
+              "node_modules/quill/dist/quill.min.js",
+              "node_modules/pressure/dist/pressure.min.js",
               "node_modules/numbro/dist/languages.min.js"
             ],
             "vendorChunk": false
@@ -93,12 +97,11 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.production.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.production.ts"
                 }
               ],
               "namedChunks": true,
@@ -117,12 +120,11 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.public.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.public.ts"
                 }
               ],
               "namedChunks": true,
@@ -141,12 +143,11 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.staging.ts"
                 }
               ],
               "namedChunks": true,
@@ -161,7 +162,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "baseline": "6mb",
+                  "baseline": "8mb",
                   "maximumWarning": "10%",
                   "maximumError": "25%"
                 },
@@ -199,12 +200,11 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.testing.ts"
+                  "replace": "src/environments/configuration.ts",
+                  "with": "src/environments/configuration.testing.ts"
                 }
               ],
               "namedChunks": true,
@@ -214,6 +214,10 @@
               "sourceMap": true,
               "vendorChunk": false
             },
+            "local": {
+              "progress": true,
+              "baseHref": "/ui/"
+            },
             "cs": {
               "aot": true,
               "budgets": [
@@ -222,13 +226,29 @@
                   "maximumWarning": "6kb"
                 }
               ],
+              "baseHref": "/ui/",
               "buildOptimizer": false,
               "localize": ["cs"],
               "optimization": false,
               "sourceMap": true
             },
+            "hu": {
+              "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "baseHref": "/ui/",
+              "buildOptimizer": false,
+              "localize": ["hu"],
+              "optimization": false,
+              "sourceMap": true
+            },
             "en": {
               "aot": true,
+              "baseHref": "/ui/",
               "buildOptimizer": false,
               "localize": ["en"],
               "optimization": false,
@@ -245,15 +265,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "baseHref": "/ui/",
-            "browserTarget": "lumeer:build",
-            "port": 7000,
-            "progress": true,
-            "sourceMap": false
+            "browserTarget": "lumeer:build:local",
+            "port": 7000
           },
           "configurations": {
             "cs": {
               "browserTarget": "lumeer:build:cs"
+            },
+            "hu": {
+              "browserTarget": "lumeer:build:hu"
             },
             "en": {
               "browserTarget": "lumeer:build:en"
@@ -283,15 +303,16 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tslintConfig": "tslint.json",
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": ["src/app/**/*.ts", "src/app/**/*.html"]
           }
         }
       }
     }
   },
-  "defaultProject": "lumeer"
+  "defaultProject": "lumeer",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

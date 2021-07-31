@@ -25,14 +25,16 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
   selectCollectionsByQuery,
-  selectDocumentsByQuery,
+  selectTasksCollections,
+  selectTasksDocumentsByQuery,
   selectViewsByQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {selectAllViews, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
-import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
+import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
+import {queryIsEmpty} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -41,7 +43,8 @@ import {Query} from '../../../../core/store/navigation/query/query';
 export class SearchAllComponent implements OnInit, OnDestroy {
   public dataLoaded$: Observable<boolean>;
   public hasCollection$: Observable<boolean>;
-  public hasDocument$: Observable<boolean>;
+  public hasTaskCollection$: Observable<boolean>;
+  public showTaskTab$: Observable<boolean>;
   public hasView$: Observable<boolean>;
   public hasAnyView$: Observable<boolean>;
   public query$ = new BehaviorSubject<Query>(null);
@@ -62,10 +65,8 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectViewsLoaded)),
-      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
-    ]).pipe(
-      map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
-    );
+      this.store$.pipe(select(selectCurrentQueryTasksLoaded)),
+    ]).pipe(map(([collectionsLoaded, viewLoaded, tasksLoaded]) => collectionsLoaded && viewLoaded && tasksLoaded));
 
     const workspace$ = this.store$.pipe(select(selectWorkspace), distinctUntilChanged());
 
@@ -95,13 +96,23 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       map(views => views && views.length > 0)
     );
 
-    this.hasDocument$ = this.store$.pipe(
-      select(selectDocumentsByQuery),
-      map(documents => documents && documents.length > 0)
+    this.hasTaskCollection$ = this.store$.pipe(
+      select(selectTasksCollections),
+      map(collections => collections && collections.length > 0)
+    );
+
+    this.showTaskTab$ = combineLatest([
+      this.hasTaskCollection$,
+      this.store$.pipe(select(selectTasksDocumentsByQuery)),
+      this.store$.pipe(select(selectViewQuery)),
+    ]).pipe(
+      map(
+        ([hasTaskCollection, documents, query]) => hasTaskCollection && (documents?.length > 0 || queryIsEmpty(query))
+      )
     );
   }
 
   private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new DataResourcesAction.GetTasks({query}));
   }
 }

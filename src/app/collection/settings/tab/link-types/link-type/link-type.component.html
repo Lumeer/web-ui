@@ -8,6 +8,7 @@
   <input-box
     class="ml-2 flex-grow-1"
     innerClass="bg-transparent"
+    [editable]="permissions?.roles?.Manage"
     [title]="linkType.name"
     [initialValue]="linkType.name"
     (newValue)="onNewName($event)"
@@ -25,7 +26,7 @@
     <span>{{linkType.linksCount || 0}}</span>
   </span>
 
-  <i class="far fa-fw fa-trash-alt text-danger cursor-pointer delete"
+  <i *ngIf="permissions?.roles?.Manage" class="far fa-fw fa-trash-alt text-danger cursor-pointer delete"
      (click)="onDelete()"
      title="Delete" i18n-title="@@delete"
      aria-hidden="true"></i>

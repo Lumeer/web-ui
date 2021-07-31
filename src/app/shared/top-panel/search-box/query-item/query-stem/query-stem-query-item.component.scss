@@ -1,0 +1,21 @@
+@import '~src/styles/variables';
+
+.icon-wrapper {
+  position: relative;
+
+  .icon {
+    padding: 0 0.25rem;
+  }
+
+  .count {
+    padding: 0 0.25rem;
+    position: absolute;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    top: -3px;
+    left: 1rem;
+    color: $primary;
+    line-height: 0.9rem;
+    min-width: 0.9rem;
+  }
+}

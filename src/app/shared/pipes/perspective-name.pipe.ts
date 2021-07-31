@@ -18,7 +18,7 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {parseSelectTranslation} from '../utils/translation.utils';
 
 @Pipe({
   name: 'perspectiveName',
@@ -27,18 +27,10 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   providedIn: 'root',
 })
 export class PerspectiveNamePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
   public transform(perspective: string): string {
-    return this.i18n(
-      {
-        id: 'view.perspective.name',
-        value:
-          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}',
-      },
-      {
-        perspective,
-      }
+    return parseSelectTranslation(
+      $localize`:@@view.perspective.name:{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}`,
+      {perspective}
     );
   }
 }

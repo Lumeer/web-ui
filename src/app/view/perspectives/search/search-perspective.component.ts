@@ -17,42 +17,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectNavigation, selectSearchTab} from '../../../core/store/navigation/navigation.state';
+import {
+  selectNavigation,
+  selectPerspectiveSettings,
+  selectSearchTab,
+} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {Query} from '../../../core/store/navigation/query/query';
 import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {Observable, Subscription} from 'rxjs';
-import {createDefaultSearchConfig, DEFAULT_SEARCH_ID, Search, SearchConfig} from '../../../core/store/searches/search';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
-import {Perspective} from '../perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
+import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
+import {QueryParam} from '../../../core/store/navigation/query-param';
 
 @Component({
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
   host: {class: 'search-perspective'},
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public readonly searchTab = SearchTab;
 
-  public stringQuery: string;
+  public queryParams$: Observable<Record<string, string>>;
 
   private initialSearchTab: SearchTab;
-  private query: Query = {};
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private activatedRoute: ActivatedRoute, private router: Router) {}
+  constructor(private store$: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
     this.initialSearchTab = parseSearchTabFromUrl(this.router.url);
@@ -63,15 +68,32 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
-      this.query = query;
-      this.stringQuery = convertQueryModelToString(query);
-    });
-    this.subscriptions.add(subscription);
-  }
+    const stringQuery$ = this.store$.pipe(
+      select(selectViewQuery),
+      map(query => convertQueryModelToString(query))
+    );
+    const perspectiveSettingsString$ = this.store$.pipe(
+      select(selectPerspectiveSettings),
+      map(settings => convertPerspectiveSettingsToString(settings))
+    );
 
-  public isLinkActive(url: string): boolean {
-    return this.activatedRoute.firstChild.snapshot.url.join('/').includes(url);
+    this.queryParams$ = combineLatest([stringQuery$, perspectiveSettingsString$]).pipe(
+      map(([query, perspectiveSettings]) => {
+        const queryParams = {};
+        if (query) {
+          queryParams[QueryParam.Query] = query;
+        }
+        if (perspectiveSettings) {
+          queryParams[QueryParam.PerspectiveSettings] = perspectiveSettings;
+        }
+
+        if (Object.keys(queryParams).length) {
+          return queryParams;
+        }
+
+        return null;
+      })
+    );
   }
 
   private subscribeToConfig() {
@@ -117,7 +139,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToDefault(): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
-    const searchId = DEFAULT_SEARCH_ID;
+    const searchId = DEFAULT_PERSPECTIVE_ID;
     return this.store$.pipe(
       select(selectDefaultViewConfig(Perspective.Search, searchId)),
       withLatestFrom(this.store$.pipe(select(selectSearchById(searchId)))),
@@ -159,7 +181,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToSearchTab() {
     const subscription = this.selectCurrentTabWithSearch$().subscribe(({searchTab, search}) => {
       const {id: searchId, config} = search;
-      if (searchId === DEFAULT_SEARCH_ID) {
+      if (searchId === DEFAULT_PERSPECTIVE_ID) {
         const searchConfig: SearchConfig = {...config, searchTab};
         this.store$.dispatch(
           new ViewsAction.SetDefaultConfig({
@@ -187,10 +209,10 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       select(selectSearchTab),
       distinctUntilChanged(),
       withLatestFrom(this.store$.pipe(select(selectSearch))),
-      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_SEARCH_ID)))),
+      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)))),
       filter(([[searchTab, search], defaultConfig]) => {
         const config =
-          defaultConfig?.config?.search && search?.id === DEFAULT_SEARCH_ID
+          defaultConfig?.config?.search && search?.id === DEFAULT_PERSPECTIVE_ID
             ? defaultConfig.config.search
             : search?.config;
         return search && config?.searchTab !== searchTab;

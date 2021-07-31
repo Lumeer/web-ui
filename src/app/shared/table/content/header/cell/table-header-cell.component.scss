@@ -8,8 +8,16 @@
 
 .header-content {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: min-content 1fr min-content;
   align-items: center;
+}
+
+.filter-icon-wrapper {
+  position: relative;
+
+  .icon {
+    font-size: 80%;
+  }
 }
 
 .icons {
@@ -17,5 +25,11 @@
 }
 
 .fa-caret-down {
-  color: $secondary;
+  color: $gray-700;
+}
+
+::ng-deep {
+  .uninitialized-column:not(.focused) input:not(.editable) {
+    color: $dark !important;
+  }
 }

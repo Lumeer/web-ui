@@ -1,8 +1,11 @@
 :host {
-  display: flex;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto;
 }
 
-input {
+input,
+.title {
   background: unset;
   border: unset;
   font-style: italic;

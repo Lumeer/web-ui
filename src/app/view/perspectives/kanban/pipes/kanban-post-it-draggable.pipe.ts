@@ -19,12 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {KanbanCard} from '../util/kanban-data';
+import {User} from '../../../../core/store/users/user';
+import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 
 @Pipe({
   name: 'kanbanPostItDraggable',
 })
 export class KanbanPostItDraggablePipe implements PipeTransform {
-  public transform(card: KanbanCard): boolean {
-    return !!card; // TODO
+  public transform(card: KanbanCard, user: User): boolean {
+    return userCanEditDataResource(card.dataResource, card.resource, card.permissions, user);
   }
 }

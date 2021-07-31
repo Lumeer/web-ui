@@ -19,7 +19,6 @@
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
@@ -28,7 +27,7 @@ import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
-import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
+import {createViewSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
 import {
   selectCurrentView,
@@ -42,7 +41,8 @@ import {selectCurrentUser} from '../core/store/users/users.state';
 import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
 import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
-import {environment} from '../../environments/environment';
+import {parseSelectTranslation} from '../shared/utils/translation.utils';
+import {ConfigurationService} from '../configuration/configuration.service';
 
 @Component({
   templateUrl: './view.component.html',
@@ -61,10 +61,10 @@ export class ViewComponent implements OnInit {
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
     private viewSettingsService: ViewSettingsService,
-    private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private configurationService: ConfigurationService
   ) {}
 
   public ngOnInit() {
@@ -74,7 +74,7 @@ export class ViewComponent implements OnInit {
     this.fileAttachmentsService.init();
     this.viewSettingsService.init();
 
-    if (environment.auth) {
+    if (this.configurationService.getConfiguration().auth) {
       this.checkEmailVerified();
     }
   }
@@ -112,7 +112,7 @@ export class ViewComponent implements OnInit {
             filter(view => !!view)
           );
         } else {
-          return of({name: viewName || '', query, perspective: null, config: {}});
+          return of({name: viewName || '', query, perspective: null, config: {}, folders: []});
         }
       })
     );
@@ -144,12 +144,12 @@ export class ViewComponent implements OnInit {
           ...currentView,
           query,
           name,
-          config: {[perspective]: createPerspectiveSaveConfig(perspective, config)},
+          config: createViewSaveConfig(perspective, config, currentView),
           settings,
           perspective,
         };
 
-        if (viewByName && (!view.code || view.code !== viewByName.code)) {
+        if (this.viewWithNameAlreadyExists(viewByName, view, currentView?.name)) {
           this.informAboutSameNameView(view);
         } else if (view.code) {
           if (clone) {
@@ -163,6 +163,11 @@ export class ViewComponent implements OnInit {
       });
   }
 
+  private viewWithNameAlreadyExists(viewByName: View, newView: View, previousName: string): boolean {
+    const nameChanged = newView.name !== previousName;
+    return viewByName && (!newView.code || (newView.code !== viewByName.code && nameChanged));
+  }
+
   private getViewByName(viewName: string): Observable<View> {
     return this.store$.pipe(select(selectViewsByRead)).pipe(
       first(),
@@ -171,15 +176,9 @@ export class ViewComponent implements OnInit {
   }
 
   private informAboutSameNameView(view: View) {
-    const title = this.i18n({
-      id: 'view.name.exists',
-      value: 'View already exist',
-    });
-    const message = this.i18n(
-      {
-        id: 'view.name.exists.message',
-        value: 'Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?',
-      },
+    const title = $localize`:@@view.name.exists:View already exist`;
+    const message = parseSelectTranslation(
+      $localize`:@@view.name.exists.message:Do you really want to {create, select, 1 {create view with the same name} 0 {change view name}}?`,
       {create: !!view.code ? '0' : '1'}
     );
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.createOrUpdateView(view));
@@ -195,12 +194,9 @@ export class ViewComponent implements OnInit {
 
   private askToCloneView(view: View) {
     const title = null;
-    const message = this.i18n({
-      id: 'view.dialog.clone.message',
-      value: 'Do you want to make a copy of the view or rename the existing one?',
-    });
-    const cloneButtonText = this.i18n({id: 'view.dialog.clone.clone', value: 'Make a copy'});
-    const renameButtonText = this.i18n({id: 'view.dialog.clone.update', value: 'Rename'});
+    const message = $localize`:@@view.dialog.clone.message:Do you want to make a copy of the view or rename the existing one?`;
+    const cloneButtonText = $localize`:@@view.dialog.clone.clone:Make a copy`;
+    const renameButtonText = $localize`:@@view.dialog.clone.update:Rename`;
 
     this.notificationService.confirm(
       message,

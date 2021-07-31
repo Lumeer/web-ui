@@ -23,8 +23,13 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {selectCurrentView} from '../store/views/views.state';
 import {View} from '../store/views/view';
-import {pairwise, startWith} from 'rxjs/operators';
+import {pairwise, startWith, withLatestFrom} from 'rxjs/operators';
 import {ViewSettingsAction} from '../store/view-settings/view-settings.action';
+import {viewSettingsChanged} from '../store/views/view.utils';
+import {selectCollectionsDictionary} from '../store/collections/collections.state';
+import {selectLinkTypesDictionary} from '../store/link-types/link-types.state';
+import {Collection} from '../store/collections/collection';
+import {LinkType} from '../store/link-types/link.type';
 
 @Injectable()
 export class ViewSettingsService implements OnDestroy {
@@ -38,14 +43,29 @@ export class ViewSettingsService implements OnDestroy {
 
   private subscribeToView(): Subscription {
     return this.store$
-      .pipe(select(selectCurrentView), startWith(null as View), pairwise())
-      .subscribe(([previousView, currentView]) => this.checkViewSettings(previousView, currentView));
+      .pipe(
+        select(selectCurrentView),
+        startWith(null as View),
+        pairwise(),
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectLinkTypesDictionary))
+        )
+      )
+      .subscribe(([[previousView, currentView], collectionsMap, linkTypesMap]) =>
+        this.checkViewSettings(previousView, currentView, collectionsMap, linkTypesMap)
+      );
   }
 
-  private checkViewSettings(previousView: View, currentView: View) {
+  private checkViewSettings(
+    previousView: View,
+    currentView: View,
+    collectionsMap: Record<string, Collection>,
+    linkTypesMap: Record<string, LinkType>
+  ) {
     if (previousView && !currentView) {
       this.store$.dispatch(new ViewSettingsAction.ResetSettings());
-    } else if (currentView && (!previousView || previousView.id !== currentView.id)) {
+    } else if (currentView && settingsChanged(previousView, currentView, collectionsMap, linkTypesMap)) {
       this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: currentView.settings}));
     }
   }
@@ -53,4 +73,17 @@ export class ViewSettingsService implements OnDestroy {
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
+}
+
+function settingsChanged(
+  previousView: View,
+  currentView: View,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
+  if (!previousView || previousView.id !== currentView.id) {
+    return true;
+  }
+
+  return viewSettingsChanged(previousView?.settings, currentView?.settings, collectionsMap, linkTypesMap);
 }

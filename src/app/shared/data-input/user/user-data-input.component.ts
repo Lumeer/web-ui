@@ -93,6 +93,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public users: User[];
   public selectedUsers$ = new BehaviorSubject<User[]>([]);
   public multi: boolean;
+  public onlyIcon: boolean;
 
   private setFocus: boolean;
   private preventSave: boolean;
@@ -112,6 +113,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.users = this.bindUsers();
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
+    }
+    if (changes.value || changes.configuration) {
+      this.onlyIcon = this.configuration?.onlyIcon || this.value?.config?.onlyIcon;
     }
   }
 
@@ -184,7 +188,6 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
-          this.dropdown.resetActiveOption();
         } else {
           this.preventSaveAndBlur();
           const action = keyboardEventInputSaveAction(event);
@@ -242,7 +245,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.saveValueByOption(action, activeOption);
     } else if (
       this.name &&
-      (this.commonConfiguration.skipValidation || (this.value.config && this.value.config.externalUsers)) &&
+      (this.commonConfiguration.skipValidation || this.value.config?.externalUsers) &&
       inputIsEmail
     ) {
       if (this.multi) {
@@ -303,6 +306,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public onSelectOption(option: DropdownOption) {
     if (this.multi) {
       this.toggleOption(option);
+      this.dropdown?.resetActiveOption();
     } else {
       this.preventSaveAndBlur();
       this.saveValue(DataInputSaveAction.Select, option);

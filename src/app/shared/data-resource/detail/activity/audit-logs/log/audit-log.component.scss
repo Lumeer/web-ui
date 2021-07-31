@@ -1,0 +1,16 @@
+@import '~src/styles/variables';
+
+:host {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'icon title'
+    'line content';
+}
+
+.horizontal-line {
+  width: 1px;
+  height: 100%;
+  background: $gray-400;
+}

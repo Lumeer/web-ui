@@ -27,18 +27,15 @@ import {first, map, mergeMap, take} from 'rxjs/operators';
 import {combineLatest} from 'rxjs';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {userHasManageRoleInResource} from '../utils/resource.utils';
 import {Organization} from '../../core/store/organizations/organization';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
-import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
-import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
 import {View} from '../../core/store/views/view';
-import {ShareViewModalComponent} from './share-view/share-view-modal.component';
+import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
@@ -53,6 +50,13 @@ import {OrganizationsAction} from '../../core/store/organizations/organizations.
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
+import {AttributeDescriptionModalComponent} from './attribute-description/attribute-description-modal.component';
+import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
+import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
+import {Workspace} from '../../core/store/navigation/workspace';
+import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
+import {userHasRoleInOrganization} from '../utils/permission.utils';
+import {RoleType} from '../../core/model/role-type';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -60,7 +64,7 @@ type Options = ModalOptions & {initialState: any};
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
+  constructor(private store$: Store<AppState>, private bsModalService: BsModalService) {}
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
@@ -77,6 +81,24 @@ export class ModalService {
   ): BsModalRef {
     const config = {initialState: {collectionId, callback}, keyboard: true, class: 'modal-lg'};
     return this.show(ChooseLinkDocumentModalComponent, config);
+  }
+
+  public showModifyDocumentLinks(
+    documentId: string,
+    collectionId: string,
+    linkTypeId: string,
+    workspace?: Workspace
+  ): BsModalRef {
+    return this.showStaticDialog(
+      {
+        documentId,
+        collectionId,
+        linkTypeIds: [linkTypeId],
+        workspace,
+      },
+      ModifyDocumentLinksModalComponent,
+      'modal-xxl'
+    );
   }
 
   public showDocumentDetail(id: string) {
@@ -130,18 +152,43 @@ export class ModalService {
     return this.show(DataResourceDetailModalComponent, config);
   }
 
-  public showShareView(view: View): BsModalRef {
-    const initialState = {view};
-    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
+  public showDataResourcesDetail(dataResources: DataResource[], title: string): BsModalRef {
+    const config = {
+      initialState: {dataResources, title},
+      keyboard: true,
+      class: 'modal-lg modal-xxl-height',
+    };
+    return this.show(DataResourcesDetailModalComponent, config);
   }
 
-  public showCreateLink(collections: Collection[], callback?: (linkType: LinkType) => void): BsModalRef {
-    const initialState = {collections, callback};
+  public showShareView(view: View): BsModalRef {
+    const initialState = {view};
+    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
+  }
+
+  public showViewSettings(view: View) {
+    this.store$.pipe(select(selectAllCollections), take(1)).subscribe(collections => {
+      const initialState = {view, collections};
+      this.showStaticDialog(initialState, ViewSettingsModalComponent);
+    });
+  }
+
+  public showCreateLink(
+    collectionIds: string[],
+    workspace?: Workspace,
+    callback?: (linkType: LinkType) => void
+  ): BsModalRef {
+    const initialState = {collectionIds, workspace, callback};
     return this.showStaticDialog(initialState, CreateLinkModalComponent);
   }
 
-  public showAttributeType(attributeId: string, collectionId: string, linkTypeId?: string): BsModalRef {
-    const initialState = {attributeId, collectionId, linkTypeId};
+  public showAttributeType(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId?: string,
+    workspace?: Workspace
+  ): BsModalRef {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
     return this.showStaticDialog(initialState, AttributeTypeModalComponent);
   }
 
@@ -160,7 +207,17 @@ export class ModalService {
     return modalRef;
   }
 
-  public showAttributeFunction(attributeId: string, collectionId: string, linkTypeId?: string) {
+  public showAttributeDescription(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId?: string,
+    workspace?: Workspace
+  ) {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
+    return this.showStaticDialog(initialState, AttributeDescriptionModalComponent);
+  }
+
+  public showAttributeFunction(attributeId: string, collectionId: string, linkTypeId?: string, workspace?: Workspace) {
     const attributesResourceObservable =
       (collectionId && this.store$.pipe(select(selectCollectionById(collectionId)))) ||
       this.store$.pipe(select(selectLinkTypeById(linkTypeId)));
@@ -176,13 +233,18 @@ export class ModalService {
         if (!hasAnyFunction && limits?.functionsPerCollection !== -1 && functions >= limits?.functionsPerCollection) {
           this.notifyFunctionsLimit();
         } else {
-          this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId);
+          this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId, workspace);
         }
       });
   }
 
-  private showAttributeFunctionDialog(attributeId: string, collectionId: string, linkTypeId: string): BsModalRef {
-    const initialState = {attributeId, collectionId, linkTypeId};
+  private showAttributeFunctionDialog(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId: string,
+    workspace?: Workspace
+  ): BsModalRef {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace};
     const config = {initialState, keyboard: false, class: 'modal-xxl'};
     config['backdrop'] = 'static';
     return this.show(AttributeFunctionModalComponent, config);
@@ -195,7 +257,7 @@ export class ModalService {
     ])
       .pipe(take(1))
       .subscribe(([currentUser, organization]) => {
-        if (userHasManageRoleInResource(currentUser, organization)) {
+        if (userHasRoleInOrganization(organization, currentUser, RoleType.Manage)) {
           this.notifyFunctionsLimitWithRedirect(organization);
         } else {
           this.notifyFunctionsLimitWithoutRights();
@@ -204,20 +266,13 @@ export class ModalService {
   }
 
   private notifyFunctionsLimitWithRedirect(organization: Organization) {
-    const message = this.i18n({
-      id: 'function.create.serviceLimits',
-      value:
-        'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
-    });
+    const message = $localize`:@@function.create.serviceLimits:You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?`;
     this.store$.dispatch(new OrganizationsAction.OfferPayment({message, organizationCode: organization.code}));
   }
 
   private notifyFunctionsLimitWithoutRights() {
-    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-    const message = this.i18n({
-      id: 'function.create.serviceLimits.noRights',
-      value: 'You can have only a single function per table/link type in the Free Plan.',
-    });
+    const title = $localize`:@@serviceLimits.trial:Free Service`;
+    const message = $localize`:@@function.create.serviceLimits.noRights:You can have only a single function per table/link type in the Free Plan.`;
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }
 

@@ -31,7 +31,7 @@ import {DataCursor} from '../data-cursor';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
 import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
 import {
@@ -52,18 +52,29 @@ import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {filterAttributesByFilters} from '../../utils/attribute.utils';
 import {
+  actionButtonEnabledStats,
+  ActionButtonFiltersStats,
   ActionConstraintConfig,
   ActionDataValue,
   ConstraintData,
   createDataValuesMap,
-  isActionButtonEnabled,
 } from '@lumeer/data-filters';
+import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute-type/form/constraint-config/action/action-constraint.utils';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {Attribute} from '../../../core/store/collections/collection';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 const loadingTime = 2000;
+
+export type ActionButtonFiltersStatsWithData = ActionButtonFiltersStats & {
+  constraintData?: ConstraintData;
+  attributesMap?: Record<string, Attribute>;
+};
 
 @Component({
   selector: 'action-data-input',
   templateUrl: './action-data-input.component.html',
+  styleUrls: ['./action-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-flex align-items-center'},
 })
@@ -83,15 +94,25 @@ export class ActionDataInputComponent implements OnChanges {
   @Input()
   public configuration: ActionDataInputConfiguration;
 
+  @Input()
+  public workspace: Workspace;
+
+  @Input()
+  public permissions: AllowedPermissions;
+
   @Output()
   public cancel = new EventEmitter();
 
   @HostBinding('class.justify-content-center')
   public center: boolean;
 
-  public enabled$: Observable<boolean>;
+  public stats$: Observable<ActionButtonFiltersStatsWithData>;
   public loading$: Observable<boolean>;
   public config$ = new BehaviorSubject<ActionConstraintConfig>(null);
+  public overridePermissions$ = new BehaviorSubject<AllowedPermissions>(null);
+
+  public title: string;
+  public icon: string;
 
   private enabled: boolean;
   private loading: boolean;
@@ -110,11 +131,16 @@ export class ActionDataInputComponent implements OnChanges {
     }
     if (changes.cursor) {
       this.loading$ = this.bindLoading$().pipe(tap(loading => (this.loading = loading)));
-      this.enabled$ = this.bindEnabled$().pipe(tap(enabled => (this.enabled = enabled)));
+      this.stats$ = this.bindStats$().pipe(tap(stats => (this.enabled = stats?.satisfy)));
     }
     if (changes.config) {
       this.config$.next(this.config);
     }
+    if (changes.permissions) {
+      this.overridePermissions$.next(this.permissions);
+    }
+    this.title = this.value?.config?.title;
+    this.icon = this.value?.config?.icon;
   }
 
   private bindLoading$(): Observable<boolean> {
@@ -144,36 +170,38 @@ export class ActionDataInputComponent implements OnChanges {
     return of(false);
   }
 
-  private bindEnabled$(): Observable<boolean> {
+  private bindStats$(): Observable<ActionButtonFiltersStatsWithData> {
     if (this.cursor?.collectionId && this.cursor?.documentId) {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
+        this.overridePermissions$.asObservable(),
         this.store$.pipe(select(selectCollectionPermissions(this.cursor.collectionId))),
-        this.config$,
+        this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([collection, document, permissions, config, constraintData]) =>
-          this.checkEnabled(collection, document, permissions, config, constraintData)
+        map(([collection, document, overridePermissions, permissions, config, constraintData]) =>
+          this.checkEnabled(collection, document, overridePermissions || permissions, config, constraintData)
         )
       );
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
+        this.overridePermissions$.asObservable(),
         this.store$.pipe(select(selectLinkTypePermissions(this.cursor.linkTypeId))),
-        this.config$,
+        this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([linkType, linkInstance, permissions, config, constraintData]) =>
-          this.checkEnabled(linkType, linkInstance, permissions, config, constraintData)
+        map(([linkType, linkInstance, overridePermissions, permissions, config, constraintData]) =>
+          this.checkEnabled(linkType, linkInstance, overridePermissions || permissions, config, constraintData)
         )
       );
     }
 
-    return of(false);
+    return of({});
   }
 
   private checkEnabled(
@@ -182,9 +210,9 @@ export class ActionDataInputComponent implements OnChanges {
     permissions: AllowedPermissions,
     config: ActionConstraintConfig,
     constraintData?: ConstraintData
-  ): boolean {
+  ): ActionButtonFiltersStatsWithData {
     if (!resource || !dataResource) {
-      return false;
+      return {};
     }
     const filters = config.equation?.equations?.map(eq => eq.filter) || [];
     const dataValues = createDataValuesMap(
@@ -193,31 +221,68 @@ export class ActionDataInputComponent implements OnChanges {
       constraintData
     );
     const attributesMap = objectsByIdMap(resource.attributes);
-    return isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
+    return {
+      ...actionButtonEnabledStats(
+        dataResource,
+        dataValues,
+        resource,
+        attributesMap,
+        permissions,
+        config,
+        constraintData
+      ),
+      attributesMap,
+      constraintData,
+    };
   }
 
   public onClick(event: MouseEvent) {
-    preventEvent(event);
-    this.runRule();
+    if (this.enabled) {
+      preventEvent(event);
+      if (this.value.config?.requiresConfirmation) {
+        this.showConfirmation();
+      } else {
+        this.runRule();
+      }
+    }
+  }
+
+  private showConfirmation() {
+    const title = $localize`:@@constraint.action.confirmation.label:Confirmation`;
+    const message =
+      this.value.config?.confirmationTitle?.trim() ||
+      actionConstraintConfirmationPlaceholder(this.value.config?.title || '');
+    const action = this.runRuleAction();
+    if (action) {
+      this.store$.dispatch(new NotificationsAction.Confirm({title, message, action, type: 'warning'}));
+    }
   }
 
   private runRule() {
-    if (this.cursor?.collectionId && this.cursor?.documentId) {
-      this.store$.dispatch(
-        new DocumentsAction.RunRule({
-          collectionId: this.cursor.collectionId,
-          documentId: this.cursor.documentId,
-          attributeId: this.cursor.attributeId,
-        })
-      );
-    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
-      this.store$.dispatch(
-        new LinkInstancesAction.RunRule({
-          linkTypeId: this.cursor.linkTypeId,
-          linkInstanceId: this.cursor.linkInstanceId,
-          attributeId: this.cursor.attributeId,
-        })
-      );
+    const action = this.runRuleAction();
+    if (action) {
+      this.store$.dispatch(action);
     }
+  }
+
+  private runRuleAction(): Action {
+    if (this.cursor?.collectionId && this.cursor?.documentId) {
+      return new DocumentsAction.RunRule({
+        collectionId: this.cursor.collectionId,
+        documentId: this.cursor.documentId,
+        attributeId: this.cursor.attributeId,
+        actionName: this.config.title,
+        workspace: this.workspace,
+      });
+    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
+      return new LinkInstancesAction.RunRule({
+        linkTypeId: this.cursor.linkTypeId,
+        linkInstanceId: this.cursor.linkInstanceId,
+        attributeId: this.cursor.attributeId,
+        actionName: this.config.title,
+        workspace: this.workspace,
+      });
+    }
+    return null;
   }
 }

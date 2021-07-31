@@ -20,8 +20,9 @@
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {DEFAULT_PIVOT_ID, Pivot} from './pivot';
+import {Pivot} from './pivot';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface PivotsState extends EntityState<Pivot> {}
 
@@ -34,7 +35,7 @@ export const selectPivotsDictionary = createSelector(selectPivotsState, pivotsAd
 
 export const selectPivotId = createSelector(
   selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_PIVOT_ID
+  workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID
 );
 
 export const selectPivot = createSelector(selectPivotsDictionary, selectPivotId, (map, id) => map[id]);

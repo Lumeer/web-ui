@@ -108,6 +108,10 @@ $foreground-color: theme-foreground(mat-color($primary-mat-palette, 500));
   )
 );
 
+.menu-edges-content .mat-menu-content {
+  padding: 0 !important;
+}
+
 button.mat-menu-item {
   outline: none;
 }

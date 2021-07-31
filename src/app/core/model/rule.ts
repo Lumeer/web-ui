@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from '../dto';
-import {Language, LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
-import {Query} from '../store/navigation/query/query';
+import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 
 export enum RuleType {
   AutoLink = 'AUTO_LINK',
@@ -104,6 +102,7 @@ export interface BlocklyRuleConfiguration {
   blocklyResultTimestamp: number;
   blocklyDryRun: boolean;
   blocklyDryRunResult: string;
+  blocklyRecursive: boolean;
 }
 
 export interface ZapierRuleConfiguration {
@@ -128,16 +127,16 @@ export const chronoUnitMap = {
 };
 
 export interface CronRuleConfiguration extends BlocklyRuleConfiguration {
-  since?: Date;
-  until?: Date;
-  when: number;
-  interval: number;
-  dow: number; // days of week - stored as binary number starting with Monday as the least significant bit
-  occurence?: number;
-  lastRun?: string;
   unit: ChronoUnit;
-  executing?: string;
-  query: Query;
+  interval: number;
+  daysOfWeek: number; // stored as binary number starting with Monday as the least significant bit
+  hour: number;
+  occurence?: number;
+  startsOn?: Date;
+  endsOn?: Date;
+  executionsLeft?: number;
+  lastRun?: string;
+  viewId: string;
   language: LanguageCode;
 }
 
@@ -149,3 +148,52 @@ export type RuleConfiguration =
   | BlocklyRuleConfiguration
   | ZapierRuleConfiguration
   | CronRuleConfiguration;
+
+export function maxIntervalByChronoUnit(unit: ChronoUnit): number {
+  switch (unit) {
+    case ChronoUnit.Days:
+      return 365;
+    case ChronoUnit.Weeks:
+      return 160;
+    case ChronoUnit.Months:
+      return 36;
+  }
+}
+
+export function ruleTimingHasCreate(timing: RuleTiming): boolean {
+  return [RuleTiming.All, RuleTiming.Create, RuleTiming.CreateUpdate, RuleTiming.CreateDelete].indexOf(timing) >= 0;
+}
+
+export function ruleTimingHasUpdate(timing: RuleTiming): boolean {
+  return [RuleTiming.All, RuleTiming.Update, RuleTiming.CreateUpdate, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
+}
+
+export function ruleTimingHasDelete(timing: RuleTiming): boolean {
+  return [RuleTiming.All, RuleTiming.Delete, RuleTiming.CreateDelete, RuleTiming.UpdateDelete].indexOf(timing) >= 0;
+}
+
+export function createRuleTiming(hasCreate: boolean, hasUpdate: boolean, hasDelete: boolean): RuleTiming {
+  if (hasCreate) {
+    if (hasUpdate) {
+      if (hasDelete) {
+        return RuleTiming.All;
+      }
+      return RuleTiming.CreateUpdate;
+    }
+    if (hasDelete) {
+      return RuleTiming.CreateDelete;
+    }
+    return RuleTiming.Create;
+  } else {
+    if (hasUpdate) {
+      if (hasDelete) {
+        return RuleTiming.UpdateDelete;
+      }
+      return RuleTiming.Update;
+    }
+    if (hasDelete) {
+      return RuleTiming.Delete;
+    }
+  }
+  return null;
+}

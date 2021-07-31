@@ -1,0 +1,29 @@
+<div *ngFor="let folder of viewFolders.folders; trackBy: trackByFolder"
+     class="position-relative"
+     [class.pb-2]="viewSize !== sizeType.S"
+     [class.pb-1]="viewSize === sizeType.S"
+     (dragenter)="onDragEnter(folder.name)"
+     (dragleave)="onDragLeave(folder.name)"
+     (dragover)="$event.preventDefault()"
+     (drop)="onDrop(folder.name)">
+  <views-folder
+    class="views-folder d-block"
+    [folder]="folder"
+    [class.active]="(draggedFolder$ | async) === folder.name"
+    [viewSize]="viewSize"
+    (clicked)="folderClick.emit(folder.name)">
+  </views-folder>
+  <div *ngIf="dragging$ | async" class="dragging-area position-absolute"></div>
+</div>
+<view-detail *ngFor="let view of viewFolders.objects; trackBy: trackByView"
+             [draggable]="permissions && permissions[view.id]?.roles?.Manage"
+             (dragstart)="onDragStart(view)"
+             (dragend)="onDragEnd()"
+             class="d-block"
+             [permissions]="permissions && permissions[view.id]"
+             [queryData]="queryData"
+             [view]="view"
+             [viewSize]="viewSize"
+             [workspace]="workspace"
+             (favoriteToggle)="favoriteToggle.emit(view)">
+</view-detail>

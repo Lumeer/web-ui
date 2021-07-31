@@ -28,17 +28,14 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
-import {first, map, mergeMap} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
+import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
 import {
-  selectCollectionsByIds,
-  selectCollectionsDictionary,
-} from '../../../../../core/store/collections/collections.state';
-import {
-  selectCollectionsByReadPermission,
-  selectCollectionsByWritePermission,
-  selectLinkTypesByReadPermission,
+  selectReadableCollections,
+  selectReadableLinkTypes,
 } from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
@@ -49,7 +46,8 @@ import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
-import {MatMenuTrigger} from '@angular/material/menu';
+import {AppState} from '../../../../../core/store/app.state';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-header-add-button',
@@ -64,6 +62,12 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   @Input()
   public parts: TableConfigPart[];
 
+  @Input()
+  public permissions: AllowedPermissions;
+
+  @Input()
+  public canCreateLinks: boolean;
+
   @Output()
   public addColumn = new EventEmitter();
 
@@ -72,9 +76,9 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
-  public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
+  public linkTypes$: Observable<LinkType[]>;
 
-  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<{}>) {}
+  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -86,15 +90,10 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   private bindCollections(cursor: TableBodyCursor) {
     this.collections$ = combineLatest([
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
-      this.store$.pipe(select(selectCollectionsByWritePermission)),
+      this.store$.pipe(select(selectReadableCollections)),
     ]).pipe(
-      map(([lastCollectionId, writableCollections]) => {
-        const writableCollectionIds = writableCollections.map(collection => collection.id);
-        if (!writableCollectionIds.includes(lastCollectionId)) {
-          return [];
-        }
-
-        const filteredCollections = writableCollections.filter(collection => collection.id !== lastCollectionId);
+      map(([lastCollectionId, linkedCollections]) => {
+        const filteredCollections = linkedCollections.filter(collection => collection.id !== lastCollectionId);
         return sortResourcesByFavoriteAndLastUsed(filteredCollections);
       })
     );
@@ -102,7 +101,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   private bindLinkTypes(cursor: TableBodyCursor) {
     this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByReadPermission)),
+      this.store$.pipe(select(selectReadableLinkTypes)),
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
@@ -112,25 +111,20 @@ export class TableHeaderAddButtonComponent implements OnChanges {
         return linkTypes
           .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
-          .map<[LinkType, Collection, Collection]>(linkType => {
-            return [linkType, collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
-          });
+          .map(linkType => ({
+            ...linkType,
+            collections: [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]],
+          }));
       })
     );
   }
 
   public onUseCollection(collection: Collection) {
-    this.store$
-      .pipe(
-        select(selectTableLastCollectionId(this.cursor.tableId)),
-        mergeMap(lastCollectionId =>
-          this.store$.pipe(select(selectCollectionsByIds([lastCollectionId, collection.id])))
-        ),
-        first()
-      )
-      .subscribe(collections => {
-        this.modalService.showCreateLink(collections, linkType => this.onUseLinkType(linkType));
-      });
+    this.store$.pipe(select(selectTableLastCollectionId(this.cursor.tableId)), first()).subscribe(lastCollectionId => {
+      this.modalService.showCreateLink([lastCollectionId, collection.id], null, linkType =>
+        this.onUseLinkType(linkType)
+      );
+    });
   }
 
   public onUseLinkType(linkType: LinkType) {

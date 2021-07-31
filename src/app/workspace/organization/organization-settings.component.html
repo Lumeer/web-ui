@@ -6,6 +6,7 @@
       [resourceType]="organizationType"
       [restrictedValues]="organizationCodes$ | async"
       (back)="goBack()"
+      [permissions]="permissions$ | async"
       (delete)="onDelete()"
       (colorIconChange)="onNewColorOrIcon($event)"
       (descriptionChange)="onNewDescription($event)"
@@ -16,24 +17,30 @@
         <i class="far fa-user" aria-hidden="true"></i>&nbsp;<span>{{ userCount$ | async }}</span>
       </div>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center"
+      <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
            title="Number of projects" i18n-title="@@organization.settings.projects.count">
         <i class="far fa-edit" aria-hidden="true"></i>&nbsp;<span>{{ projectsCount$ | async }}</span>
       </div>
     </resource-header>
 
-    <ul class="nav nav-tabs">
-      <li role="presentation" class="nav-item">
+    <ul class="nav nav-tabs" *ngIf="permissions$ | async as permissions">
+      <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.Manage">
         <a [routerLink]="'detail'"
            routerLinkActive="active"
            class="nav-link"
            i18n="@@organizations.tab.detail">Detail</a>
       </li>
-      <li role="presentation" class="nav-item">
+      <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.UserConfig">
         <a [routerLink]="'users'"
            routerLinkActive="active"
            class="nav-link"
            i18n="@@organizations.tab.users">Users</a>
+      </li>
+      <li role="presentation" class="nav-item" *ngIf="permissions?.roles?.UserConfig">
+        <a [routerLink]="'teams'"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@organizations.tab.teams">Teams</a>
       </li>
     </ul>
     <router-outlet></router-outlet>

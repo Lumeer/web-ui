@@ -64,6 +64,16 @@ import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe
 import {LinkDataInputComponent} from './link/link-data-input.component';
 import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.component';
 import {ActionDataInputComponent} from './action/action-data-input.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {ActionFiltersTooltipComponent} from './action/tooltip/action-filters-tooltip.component';
+import {FilterBuilderPipesModule} from '../builder/pipes/filter-builder-pipes.module';
+import {ActionFilterPreviewComponent} from './action/tooltip/preview/action-filter-preview.component';
+import {ProgressModule} from '../progress/progress.module';
+import {ViewDataInputComponent} from './view/view-data-input.component';
+import {FilterViewsPipe} from './view/pipes/filter-views.pipe';
+import {ViewsIdsPipe} from './view/pipes/views-ids.pipe';
+import {RouterModule} from '@angular/router';
+import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
 
 @NgModule({
   imports: [
@@ -78,9 +88,13 @@ import {ActionDataInputComponent} from './action/action-data-input.component';
     GravatarModule,
     TypeaheadModule,
     DropdownModule,
+    TooltipModule,
     QuillModule,
     TextEditorModalModule,
     ReactiveFormsModule,
+    FilterBuilderPipesModule,
+    ProgressModule,
+    RouterModule,
   ],
   declarations: [
     DataInputComponent,
@@ -116,6 +130,12 @@ import {ActionDataInputComponent} from './action/action-data-input.component';
     LinkDataInputComponent,
     LinkInputDropdownComponent,
     ActionDataInputComponent,
+    ActionFiltersTooltipComponent,
+    ActionFilterPreviewComponent,
+    FilterViewsPipe,
+    FilterValidViewsPipe,
+    ViewsIdsPipe,
+    ViewDataInputComponent,
   ],
   exports: [
     DataInputComponent,
@@ -129,7 +149,9 @@ import {ActionDataInputComponent} from './action/action-data-input.component';
     RichTextDataInputComponent,
     ConstraintAsTextPipe,
     ConstraintClassPipe,
+    FilterUsersPipe,
     ActionDataInputComponent,
+    ViewDataInputComponent,
   ],
 })
 export class DataInputModule {}

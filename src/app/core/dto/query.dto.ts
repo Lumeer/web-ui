@@ -25,6 +25,7 @@ export interface QueryDto {
 }
 
 export interface QueryStemDto {
+  id: string;
   collectionId: string;
   linkTypeIds?: string[];
   documentIds?: string[];

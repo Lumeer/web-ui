@@ -20,7 +20,6 @@
 import {Action} from '@ngrx/store';
 import {Organization} from './organization';
 import {Permission, PermissionType} from '../permissions/permissions';
-import {Workspace} from '../navigation/workspace';
 import {Project} from '../projects/project';
 import {NavigationExtras} from '@angular/router';
 import {Subject} from 'rxjs';
@@ -56,6 +55,8 @@ export enum OrganizationsActionType {
   CHANGE_PERMISSION = '[Organizations] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Organizations] Change Permission :: Success',
   CHANGE_PERMISSION_FAILURE = '[Organizations] Change Permission :: Failure',
+
+  CLEAR = '[Organizations] Clear',
 }
 
 export namespace OrganizationsAction {
@@ -193,8 +194,6 @@ export namespace OrganizationsAction {
         organizationId: string;
         type: PermissionType;
         permissions: Permission[];
-        currentPermissions: Permission[];
-        workspace?: Workspace;
       }
     ) {}
   }
@@ -211,6 +210,10 @@ export namespace OrganizationsAction {
     public constructor(
       public payload: {organizationId: string; type: PermissionType; permissions: Permission[]; error: any}
     ) {}
+  }
+
+  export class Clear implements Action {
+    public readonly type = OrganizationsActionType.CLEAR;
   }
 
   export type All =
@@ -234,5 +237,6 @@ export namespace OrganizationsAction {
     | DeleteFailure
     | ChangePermission
     | ChangePermissionSuccess
-    | ChangePermissionFailure;
+    | ChangePermissionFailure
+    | Clear;
 }

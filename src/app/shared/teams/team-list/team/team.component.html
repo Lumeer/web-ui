@@ -1,0 +1,66 @@
+<div class="pr-3">
+  <input-box
+    #nameInput
+    innerClass="bg-transparent font-weight-bold"
+    [canStayEmpty]="false"
+    [userData]="false"
+    [fontSizeRem]="1.2"
+    [title]="team.name"
+    [editable]="editable"
+    [maxLength]="100"
+    [initialValue]="team.name"
+    (newValue)="onNewName($event, nameInput)">
+  </input-box>
+
+  <input-box
+    innerClass="bg-transparent text-muted"
+    [canStayEmpty]="true"
+    [userData]="false"
+    [fontSizeRem]="1"
+    [paddingRem]="0.2"
+    [maxLength]="1000"
+    [editable]="editable"
+    placeholder="Enter '{{team.name}}' description"
+    i18n-placeholder="@@team.description.placeholder"
+    [title]="team.description"
+    [initialValue]="team.description"
+    (newValue)="onNewDescription($event)">
+  </input-box>
+
+</div>
+
+<div>
+  <team-users class="d-block py-2"
+              [class.cursor-pointer]="true"
+              [selectedUserIds]="team.users"
+              [users]="users"
+              [editable]="editable"
+              (save)="onUsersSave($event)">
+  </team-users>
+  <roles class="mt-2"
+         [class.cursor-pointer]="changeRoles"
+         [roles]="permissions | teamRoles:team"
+         [resourceType]="resourceType"
+         [transitiveRoles]="transitiveRoles"
+         [editable]="changeRoles"
+         (change)="onChangeRoles($event)">
+  </roles>
+</div>
+
+<div class="pt-2">
+  <i class="far fa-fw fa-trash-alt text-danger m-1 cursor-pointer"
+     *ngIf="deletable"
+     aria-hidden="true"
+     title="Remove team"
+     i18n-title="@@team.actions.remove"
+     (click)="onDelete()"></i>
+  <i class="far fa-fw fa-times text-danger m-1 cursor-pointer"
+     *ngIf="removable"
+     aria-hidden="true"
+     title="Remove team"
+     i18n-title="@@team.actions.remove"
+     (click)="onRemove()"></i>
+  <i class="fa fa-fw fa-none m-1" *ngIf="!deletable"></i>
+</div>
+
+

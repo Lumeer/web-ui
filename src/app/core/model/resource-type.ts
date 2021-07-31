@@ -23,10 +23,11 @@ export enum ResourceType {
   Collection = 'collection',
   View = 'view',
   Link = 'link',
+  LinkType = 'link_type',
   Document = 'document',
 }
 
-export const resourceTypesMap: {[id: string]: ResourceType} = {
+export const resourceTypesMap: Record<string, ResourceType> = {
   [ResourceType.Organization]: ResourceType.Organization,
   [ResourceType.Project]: ResourceType.Project,
   [ResourceType.Collection]: ResourceType.Collection,

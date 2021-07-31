@@ -20,8 +20,6 @@
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {SearchTab} from '../navigation/search-tab';
 
-export const DEFAULT_SEARCH_ID = 'default';
-
 export interface Search {
   id: string;
   config?: SearchConfig;
@@ -42,7 +40,11 @@ export interface SearchViewsConfig {
   size: SizeType;
 }
 
-export const defaultSizeType = SizeType.L;
+export const defaultSizeType = SizeType.S;
+
+export function checkSizeType(sizeType: SizeType): SizeType {
+  return sizeType === SizeType.XL ? SizeType.L : sizeType || defaultSizeType;
+}
 
 export function createDefaultSearchConfig(searchTab?: SearchTab): SearchConfig {
   return {

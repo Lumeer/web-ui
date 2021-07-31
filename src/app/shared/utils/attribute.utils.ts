@@ -28,6 +28,8 @@ import {
   SelectConstraintConfig,
   UserConstraint,
   UserConstraintConfig,
+  ViewConstraint,
+  ViewConstraintConfig,
 } from '@lumeer/data-filters';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
@@ -38,6 +40,10 @@ export function attributeHasAnyFunction(attribute: Attribute, rules?: Rule[]): b
 
 export function attributeHasFunction(attribute: Attribute): boolean {
   return attribute?.constraint?.allowEditFunction && attribute?.function?.js?.length > 0;
+}
+
+export function attributeHasEditableFunction(attribute: Attribute): boolean {
+  return attributeHasFunction(attribute) || attribute?.constraint?.allowEditFunction;
 }
 
 export function attributeHasRuleFunction(attribute: Attribute, rules?: Rule[]): boolean {
@@ -54,6 +60,7 @@ export function attributeRuleFunction(attribute: Attribute, rules?: Rule[]): Att
       timestamp: rule.configuration.blocklyResultTimestamp,
       dryRun: rule.configuration.blocklyDryRun,
       dryRunResult: rule.configuration.blocklyDryRunResult,
+      recursive: rule.configuration.blocklyRecursive,
     };
   }
   return null;
@@ -215,6 +222,18 @@ export function containsAttributeWithRule(attributes: Attribute[], rule: Rule): 
   });
 }
 
+export function attributesWithRule(attributes: Attribute[], rule: Rule): string[] {
+  return attributes
+    ?.filter(attribute => {
+      if (attribute.constraint?.type === ConstraintType.Action) {
+        const config = <ActionConstraintConfig>attribute.constraint.config;
+        return config?.rule === rule.id;
+      }
+      return false;
+    })
+    .map(attribute => attribute.name);
+}
+
 export function filterAttributesByFilters(attributes: Attribute[], filters: AttributeFilter[]): Attribute[] {
   const attributesMap = objectsByIdMap(attributes);
   return uniqueAttributes(
@@ -248,6 +267,10 @@ export function modifyAttributeForQueryFilter(attribute: Attribute): Attribute {
 
   const constraint = attribute.constraint;
   switch (constraint.type) {
+    case ConstraintType.View:
+      const viewConfig = <ViewConstraintConfig>{...constraint.config, multi: true};
+      const viewConstraint = new ViewConstraint(viewConfig);
+      return {...attribute, constraint: viewConstraint};
     case ConstraintType.Select:
       const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
       const selectConstraint = new SelectConstraint(selectConfig);

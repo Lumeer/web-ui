@@ -18,17 +18,21 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup} from '@angular/forms';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {KeyCode} from '../../key-code';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, take, tap} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
+import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {minLengthValidator} from '../../../core/validators/custom-validators';
+import {selectLinkTypesByCollectionIds} from '../../../core/store/common/permissions.selectors';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   templateUrl: './create-link-modal.component.html',
@@ -36,7 +40,10 @@ import {DialogType} from '../dialog-type';
 })
 export class CreateLinkModalComponent implements OnInit {
   @Input()
-  public collections: Collection[];
+  public collectionIds: string[];
+
+  @Input()
+  public workspace: Workspace;
 
   @Input()
   public callback: (linkType: LinkType) => void;
@@ -46,18 +53,50 @@ export class CreateLinkModalComponent implements OnInit {
   public form: FormGroup;
   public linkTypeFormGroup: FormGroup;
 
+  public collections$: Observable<Collection[]>;
   public formInvalid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);
 
+  private collections: Collection[];
+
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
+
+  public get linkNameControl(): AbstractControl {
+    return this.linkTypeFormGroup.get('linkName');
+  }
 
   public ngOnInit() {
     this.createForm();
-
     this.formInvalid$ = this.form.valueChanges.pipe(
       map(() => this.form.invalid),
       startWith(false)
     );
+    this.initData();
+  }
+
+  private initData() {
+    this.collections$ = this.store$.pipe(
+      select(selectCollectionsByIds(this.collectionIds)),
+      tap(collections => (this.collections = collections))
+    );
+
+    combineLatest([this.collections$, this.store$.pipe(select(selectLinkTypesByCollectionIds(this.collectionIds)))])
+      .pipe(take(1))
+      .subscribe(([collections, linkTypes]) => this.initLinkTypeName(collections, linkTypes));
+  }
+
+  private initLinkTypeName(collections: Collection[], existingLinkTypes: LinkType[]) {
+    const existingNames = new Set(existingLinkTypes.map(linkType => linkType.name));
+    const basicName = (collections || []).map(collection => collection.name).join(' ');
+
+    let currentName = basicName;
+    let index = 2;
+    while (existingNames.has(currentName)) {
+      currentName = `${basicName} ${index}`;
+      index++;
+    }
+
+    this.linkNameControl.setValue(currentName);
   }
 
   private createForm() {
@@ -69,28 +108,44 @@ export class CreateLinkModalComponent implements OnInit {
   }
 
   private createLinkTypeFormGroup() {
-    const validators = [Validators.required, Validators.minLength(3)];
+    const validators = [minLengthValidator(3)];
     return this.fb.group({
-      linkName: [(this.collections || []).map(coll => coll.name).join(' '), validators],
+      linkName: ['', validators, this.uniqueName()],
     });
   }
 
-  public get linkNameInput(): AbstractControl {
-    return this.linkTypeFormGroup.get('linkName');
+  public uniqueName(): AsyncValidatorFn {
+    return (control: AbstractControl) =>
+      this.store$.pipe(
+        select(selectLinkTypesByCollectionIds(this.collectionIds)),
+        map(linkTypes => new Set(linkTypes.map(linkType => linkType.name))),
+        map(linkTypeNames => {
+          const value = control.value.trim();
+          if (linkTypeNames.has(value)) {
+            return {notUnique: true};
+          } else {
+            return null;
+          }
+        }),
+        take(1)
+      );
   }
 
   public onSubmit() {
-    this.performingAction$.next(true);
-    this.store$.dispatch(this.createLinkTypeAction());
+    if (this.collections?.length === 2) {
+      this.performingAction$.next(true);
+      this.store$.dispatch(this.createLinkTypeAction());
+    }
   }
 
   private createLinkTypeAction(): LinkTypesAction.Create {
     const linkType: LinkType = {
-      name: this.linkNameInput.value,
+      name: this.linkNameControl.value.trim(),
       collectionIds: [this.collections[0].id, this.collections[1].id],
     };
     return new LinkTypesAction.Create({
       linkType,
+      workspace: this.workspace,
       onSuccess: createdLinkType => this.onSuccess(createdLinkType),
       onFailure: () => this.performingAction$.next(false),
     });

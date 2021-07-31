@@ -18,8 +18,10 @@
  */
 
 import {ElementRef} from '@angular/core';
+import PlotlyJS from 'plotly.js';
+import CSLocale from 'plotly.js/lib/locales/cs.js';
+import HULocale from 'plotly.js/lib/locales/hu.js';
 import {Config, d3, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
-import {environment} from '../../../../../environments/environment';
 import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
 import {DataChange, PlotlyChartData, PlotMaker} from './plot-maker/plot-maker';
 import {ChartData, ChartSettings} from '../data/convertor/chart-data';
@@ -31,6 +33,7 @@ import {BubblePlotMaker} from './plot-maker/bubble-plot-maker';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {COLOR_PRIMARY} from '../../../../core/constants';
+import {LanguageCode} from '../../../../shared/top-panel/user-panel/user-menu/language';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -46,6 +49,8 @@ export class ChartVisualizer {
   private plotMaker: PlotMaker;
 
   private writable: boolean;
+
+  private locale: string;
 
   private onValueChanged: (ValueChange) => void;
   private onDoubleClick: (ClickEvent) => void;
@@ -63,6 +68,23 @@ export class ChartVisualizer {
 
   public setOnAxisSettingsChange(onAxisSettingsChange: (AxisSettingsChange) => void) {
     this.onAxisSettingsChange = onAxisSettingsChange;
+  }
+
+  public setLocale(locale: string) {
+    this.locale = locale;
+    this.registerLanguage(locale);
+    this.config = this.createConfig();
+  }
+
+  private registerLanguage(locale: string) {
+    switch (locale) {
+      case LanguageCode.CZ:
+        (PlotlyJS as any).register(CSLocale);
+        break;
+      case LanguageCode.HU:
+        (PlotlyJS as any).register(HULocale);
+        break;
+    }
   }
 
   public createChart(data: ChartData, settings: ChartSettings) {
@@ -268,7 +290,7 @@ export class ChartVisualizer {
   }
 
   private createConfig(): Partial<Config> {
-    return {responsive: true, locale: environment.locale};
+    return {responsive: true, locale: this.locale};
   }
 
   public resize() {

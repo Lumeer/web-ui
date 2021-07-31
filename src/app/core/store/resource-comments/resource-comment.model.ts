@@ -24,6 +24,7 @@ export interface ResourceCommentModel {
   correlationId?: string;
   resourceType: ResourceType;
   resourceId: string;
+  parentId?: string;
   creationDate?: Date;
   updateDate?: Date;
   author?: string;

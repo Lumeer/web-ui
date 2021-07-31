@@ -48,6 +48,7 @@ export class ValidNotificationFilterPipe implements PipeTransform {
       case UserNotificationType.DueDateChanged:
       case UserNotificationType.StateUpdate:
       case UserNotificationType.TaskRemoved:
+      case UserNotificationType.TaskChanged:
       case UserNotificationType.TaskUpdated:
       case UserNotificationType.TaskCommented:
       case UserNotificationType.TaskMentioned:

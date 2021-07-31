@@ -18,15 +18,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserNotificationDto} from '../dto/user-notification.dto';
 import {map} from 'rxjs/operators';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class UserNotificationsService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private configurationService: ConfigurationService) {}
 
   public getNotifications(): Observable<UserNotificationDto[]> {
     return this.httpClient.get<UserNotificationDto[]>(this.notificationsApiPrefix());
@@ -49,6 +49,6 @@ export class UserNotificationsService {
   }
 
   private notificationsApiPrefix(): string {
-    return `${environment.apiUrl}/rest/notifications`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/notifications`;
   }
 }

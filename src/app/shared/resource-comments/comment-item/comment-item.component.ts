@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {User} from '../../../core/store/users/user';
 import {BehaviorSubject} from 'rxjs';
 
@@ -29,9 +28,12 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./comment-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentItemComponent {
+export class CommentItemComponent implements OnChanges {
   @Input()
-  public user: User;
+  public currentUser: User;
+
+  @Input()
+  public usersMap: Record<string, User>;
 
   @Input()
   public comment: ResourceCommentModel;
@@ -47,14 +49,22 @@ export class CommentItemComponent {
 
   public editing$ = new BehaviorSubject<boolean>(false);
 
-  public createdOnMsg = '';
-  public createdByMsg = '';
-  public updatedOnMsg = '';
+  public user: User;
 
-  constructor(private i18n: I18n) {
-    this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
-    this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
-    this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
+  public readonly createdOnMsg: string;
+  public readonly createdByMsg: string;
+  public readonly updatedOnMsg: string;
+
+  constructor() {
+    this.createdOnMsg = $localize`:@@document.detail.header.createdOn:Created on`;
+    this.createdByMsg = $localize`:@@document.detail.header.createdBy:Created by`;
+    this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.comment || changes.usersMap) {
+      this.user = this.usersMap?.[this.comment?.author];
+    }
   }
 
   public editComment(comment: ResourceCommentModel) {

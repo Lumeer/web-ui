@@ -1,32 +1,32 @@
-<div class="container-fluid d-block col-12 col-lg-10 col-xl-9">
+<div class="container-fluid d-block col-12 col-lg-10 col-xl-9" *ngIf="{queryParams: queryParams$ | async} as data">
   <ul class="nav nav-tabs">
     <li role="presentation" class="nav-item">
       <a [routerLink]="searchTab.All"
-         [queryParams]="{q: stringQuery}"
-         [class.active]="isLinkActive(searchTab.All)"
+         [queryParams]="data.queryParams"
+         routerLinkActive="active"
          class="nav-link"
          i18n="@@search.tab.all">All</a>
     </li>
     <li role="presentation" class="nav-item">
+      <a [routerLink]="searchTab.Tasks"
+         [queryParams]="data.queryParams"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@search.tab.tasks">Tasks</a>
+    </li>
+    <li role="presentation" class="nav-item">
       <a [routerLink]="searchTab.Views"
-         [queryParams]="{q: stringQuery}"
-         [class.active]="isLinkActive(searchTab.Views)"
+         [queryParams]="data.queryParams"
+         routerLinkActive="active"
          class="nav-link"
          i18n="@@search.tab.views">Views</a>
     </li>
     <li role="presentation" class="nav-item" data-tour="tables-tab">
       <a [routerLink]="searchTab.Collections"
-         [queryParams]="{q: stringQuery}"
-         [class.active]="isLinkActive(searchTab.Collections)"
+         [queryParams]="data.queryParams"
+         routerLinkActive="active"
          class="nav-link"
          i18n="@@search.tab.collections">Tables</a>
-    </li>
-    <li role="presentation" class="nav-item">
-      <a [routerLink]="searchTab.Records"
-         [queryParams]="{q: stringQuery}"
-         [class.active]="isLinkActive(searchTab.Records)"
-         class="nav-link"
-         i18n="@@search.tab.documents">Records</a>
     </li>
   </ul>
   <router-outlet></router-outlet>

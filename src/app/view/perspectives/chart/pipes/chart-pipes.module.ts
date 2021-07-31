@@ -21,7 +21,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ShowAxisSelectPipe} from './axis/show-axis-select.pipe';
 import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
-import {AxisRestrictedIdsPipe} from './axis/axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './axis/config-axis-by-type.pipe';
 import {SortSelectItemsPipe} from './sort/sort-select-items.pipe';
 import {ChartDraggable} from './chart-draggable';
@@ -34,7 +33,6 @@ import {ChartCleanAxisPipe} from './axis/chart-clean-axis';
   declarations: [
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
-    AxisRestrictedIdsPipe,
     ConfigAxisByTypePipe,
     SortSelectItemsPipe,
     ChartDraggable,
@@ -45,7 +43,6 @@ import {ChartCleanAxisPipe} from './axis/chart-clean-axis';
   exports: [
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
-    AxisRestrictedIdsPipe,
     ConfigAxisByTypePipe,
     SortSelectItemsPipe,
     ChartDraggable,

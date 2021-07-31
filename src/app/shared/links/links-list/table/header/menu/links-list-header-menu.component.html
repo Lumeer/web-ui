@@ -7,22 +7,28 @@
   <ng-template matMenuContent>
     <button
       mat-menu-item
-      [disabled]="!permissions?.manageWithView"
+      [disabled]="!permissions?.roles?.AttributeEdit"
       (click)="attributeType.emit()">
       <i class="fa fa-fw fa-shapes mr-1"
          aria-hidden="true">
       </i>&nbsp;
-      <span i18n="@@table.header.menu.changeType">Attribute settings...
-    </span>
+      <span i18n="@@table.header.menu.changeType">Attribute settings...</span>
     </button>
     <button
       mat-menu-item
-      [disabled]="!permissions?.manageWithView"
+      [disabled]="!permissions?.roles?.TechConfig"
       (click)="attributeFunction.emit()">
       <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
       <span *ngIf="attribute?.constraint?.type !== type.Action"
             i18n="@@table.header.menu.editFunction">Edit function...</span>
       <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editAutomation">Edit automation...</span>
+    </button>
+    <button
+      mat-menu-item
+      [disabled]="!permissions?.roles?.AttributeEdit"
+      (click)="attributeDescription.emit()">
+      <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>&nbsp;
+      <span i18n="@@table.header.menu.editDescription">Edit description...</span>
     </button>
   </ng-template>
 </mat-menu>

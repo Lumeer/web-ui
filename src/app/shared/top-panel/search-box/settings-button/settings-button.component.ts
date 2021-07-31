@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, ElementRef} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input} from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {AttributesSettings, ViewSettings} from '../../../../core/store/views/view';
+import {AttributesSettings, DataSettings, ViewSettings} from '../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {selectViewSettings} from '../../../../core/store/view-settings/view-settings.state';
@@ -32,6 +32,9 @@ import {ViewSettingsAction} from '../../../../core/store/view-settings/view-sett
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsButtonComponent implements OnInit {
+  @Input()
+  public showAttributes: boolean;
+
   public viewSettings$: Observable<ViewSettings>;
   private viewSettings: ViewSettings;
 
@@ -46,6 +49,11 @@ export class SettingsButtonComponent implements OnInit {
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, attributes: attributesSettings};
+    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
+  }
+
+  public onDataSettingsChanged(dataSettings: DataSettings) {
+    const changedSettings: ViewSettings = {...this.viewSettings, data: dataSettings};
     this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
   }
 }

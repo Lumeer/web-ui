@@ -22,6 +22,7 @@ import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.s
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Project} from './project';
 import {LoadingState} from '../../model/loading-state';
+import {permissionsChanged} from '../../../shared/utils/permission.utils';
 
 export function projectsReducer(
   state: ProjectsState = initialProjectsState,
@@ -53,6 +54,8 @@ export function projectsReducer(
       return {...state, templates: action.payload.templates, templatesState: LoadingState.Loaded};
     case ProjectsActionType.GET_TEMPLATES_FAILURE:
       return {...state, templatesState: LoadingState.Loaded};
+    case ProjectsActionType.CLEAR:
+      return initialProjectsState;
     default:
       return state;
   }
@@ -70,18 +73,19 @@ function addProjects(state: ProjectsState, action: ProjectsAction.GetSuccess): P
 
 function addOrUpdateProject(state: ProjectsState, project: Project): ProjectsState {
   const oldProject = state.entities[project.id];
-  if (!oldProject) {
-    return projectsAdapter.addOne(project, state);
-  }
-
-  if (isProjectNewer(project, oldProject)) {
+  if (!oldProject || isProjectNewer(project, oldProject)) {
     return projectsAdapter.upsertOne(project, state);
   }
   return state;
 }
 
 function isProjectNewer(project: Project, oldProject: Project): boolean {
-  return project.version && (!oldProject.version || project.version > oldProject.version);
+  return (
+    project.version &&
+    (!oldProject.version ||
+      project.version > oldProject.version ||
+      permissionsChanged(project.permissions, oldProject.permissions))
+  );
 }
 
 function onChangePermission(

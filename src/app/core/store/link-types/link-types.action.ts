@@ -97,6 +97,7 @@ export namespace LinkTypesAction {
     public constructor(
       public payload: {
         linkType: LinkType;
+        workspace?: Workspace;
         onSuccess?: (linkType: LinkType) => void;
         onFailure?: () => void;
       }
@@ -191,6 +192,7 @@ export namespace LinkTypesAction {
         linkTypeId: string;
         attributeId: string;
         attribute: Attribute;
+        workspace?: Workspace;
         onSuccess?: (attribute: Attribute) => void;
         onFailure?: (error: any) => void;
       }
@@ -213,7 +215,13 @@ export namespace LinkTypesAction {
     public readonly type = LinkTypesActionType.UPSERT_RULE;
 
     public constructor(
-      public payload: {linkTypeId: string; rule: Rule; onSuccess?: () => void; onFailure?: () => void}
+      public payload: {
+        linkTypeId: string;
+        rule: Rule;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+        workspace?: Workspace;
+      }
     ) {}
   }
 

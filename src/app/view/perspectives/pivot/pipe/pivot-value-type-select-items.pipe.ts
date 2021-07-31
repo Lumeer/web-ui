@@ -18,26 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {PivotValueType} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 
 @Pipe({
   name: 'pivotValueTypeSelectItems',
 })
 export class PivotValueTypeSelectItemsPipe implements PipeTransform {
-  constructor(private i18n: I18n) {}
+  constructor() {}
 
   public transform(types: PivotValueType[]): SelectItemModel[] {
     return (types || []).map(type => ({id: type, value: this.translateValueType(type)}));
   }
 
   private translateValueType(type: PivotValueType): string {
-    return this.i18n(
-      {
-        id: 'perspective.pivot.config.value.type',
-        value: '{type, select, default {Default} row {% of row} column {% of column} all {% of all values}}',
-      },
+    return parseSelectTranslation(
+      $localize`:@@perspective.pivot.config.value.type:{type, select, default {Default} row {% of row} column {% of column} all {% of all values}}`,
       {type}
     );
   }

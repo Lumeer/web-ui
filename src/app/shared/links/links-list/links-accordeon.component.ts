@@ -17,34 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {ViewSettings} from '../../../core/store/views/view';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {AttributesSettings} from '../../../core/store/views/view';
+import {Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {map, take} from 'rxjs/operators';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
-import {mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
-import {objectChanged} from '../../utils/common.utils';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'links-accordeon',
@@ -52,7 +38,7 @@ import {objectChanged} from '../../utils/common.utils';
   styleUrls: ['./links-accordeon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksAccordeonComponent implements OnInit, OnChanges {
+export class LinksAccordeonComponent implements OnInit {
   @Input()
   public collection: Collection;
 
@@ -60,67 +46,93 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public document: DocumentModel;
 
   @Input()
-  public preventEventBubble: boolean;
+  public linkTypes: LinkType[];
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
+  public permissions: ResourcesPermissions;
+
+  @Input()
+  public preventEventBubble: boolean;
 
   @Input()
   public allowSelectDocument = true;
 
   @Input()
-  public viewSettings: ViewSettings;
+  public collapsedLinkTypes: string[];
+
+  @Input()
+  public attributesSettings: AttributesSettings;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
-  public linkTypes$: Observable<LinkType[]>;
-  public collections$: Observable<Collection[]>;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public query$: Observable<Query>;
+  @Output()
+  public hideLink = new EventEmitter<string>();
 
-  public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
+  @Output()
+  public showLink = new EventEmitter<string>();
+
+  @Output()
+  public unlink = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public createDocumentWithLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
+
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
+
+  @Output()
+  public attributeFunction = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeDescription = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public modifyLinks = new EventEmitter<{collectionId: string; linkTypeId: string; documentId: string}>();
+
+  public collections$: Observable<Collection[]>;
+  public query$: Observable<Query>;
 
   public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (objectChanged(changes.collection)) {
-      this.renewSubscriptions();
+  public onSetLinks(event: MouseEvent, linkType: LinkType) {
+    preventEvent(event);
+
+    if (this.collection && this.document) {
+      this.modifyLinks.emit({collectionId: this.collection.id, linkTypeId: linkType.id, documentId: this.document.id});
     }
   }
 
-  private renewSubscriptions() {
-    this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
-      this.store$.pipe(select(selectCollectionsDictionary)),
-    ]).pipe(
-      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
-    );
-    this.linkTypes$.pipe(take(1)).subscribe(linkTypes => this.initOpenedGroups(linkTypes));
-  }
-
-  private initOpenedGroups(linkTypes: LinkType[]) {
-    const openedGroups = {...this.openedGroups$.value};
-    for (const linkType of linkTypes) {
-      if (!openedGroups[linkType.id]) {
-        openedGroups[linkType.id] = true;
-      }
+  public isOpenChanged(opened: boolean, id: string) {
+    if (opened) {
+      this.showLink.emit(id);
+    } else {
+      this.hideLink.emit(id);
     }
-    this.openedGroups$.next(openedGroups);
-  }
-
-  public isOpenChanged(state: boolean, id: string) {
-    this.openedGroups$.next({...this.openedGroups$.value, [id]: state});
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: linkInstance.id}));
+    this.unlink.emit(linkInstance);
   }
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {

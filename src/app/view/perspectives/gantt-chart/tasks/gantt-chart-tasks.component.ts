@@ -33,7 +33,7 @@ import {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
@@ -48,13 +48,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {
-  deepObjectsEquals,
-  isNotNullOrUndefined,
-  isNumeric,
-  objectsByIdMap,
-  toNumber,
-} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {
   canCreateTaskByStemConfig,
@@ -67,7 +61,6 @@ import {
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {
   getQueryStemFiltersForResource,
   queryStemAttributesResourcesOrder,
@@ -79,20 +72,22 @@ import {
   ConstraintType,
   DataValue,
   DateTimeConstraint,
+  DocumentsAndLinksData,
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {ViewSettings} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
-  documents: DocumentModel[];
+  data: DocumentsAndLinksData;
   linkTypes: LinkType[];
-  linkInstances: LinkInstance[];
   config: GanttChartConfig;
-  permissions: Record<string, AllowedPermissions>;
+  permissions: ResourcesPermissions;
   query: Query;
   constraintData: ConstraintData;
-  sortDefined: boolean;
+  settings: ViewSettings;
 }
 
 interface PatchData {
@@ -113,19 +108,16 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public collections: Collection[];
 
   @Input()
-  public documents: DocumentModel[];
+  public data: DocumentsAndLinksData;
 
   @Input()
   public linkTypes: LinkType[];
 
   @Input()
-  public linkInstances: LinkInstance[];
-
-  @Input()
   public config: GanttChartConfig;
 
   @Input()
-  public permissions: Record<string, AllowedPermissions>;
+  public permissions: ResourcesPermissions;
 
   @Input()
   public constraintData: ConstraintData;
@@ -143,7 +135,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public dataLoaded: boolean;
 
   @Input()
-  public sortDefined: boolean;
+  public settings: ViewSettings;
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
@@ -179,10 +171,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService,
-    private i18n: I18n
+    private configurationService: ConfigurationService
   ) {
-    this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
-    this.newTaskName = i18n({id: 'gantt.perspective.task.create.title', value: 'New task'});
+    this.converter = new GanttChartConverter(
+      this.selectItemWithConstraintFormatter,
+      configurationService.getConfiguration()
+    );
+    this.newTaskName = $localize`:@@gantt.perspective.task.create.title:New task`;
   }
 
   public ngOnInit() {
@@ -210,13 +205,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return this.converter.convert(
       config,
       data.collections,
-      data.documents,
       data.linkTypes,
-      data.linkInstances,
-      data.permissions || {},
-      data.constraintData,
+      data.data,
+      data.permissions,
       data.query,
-      data.sortDefined
+      data.settings,
+      data.constraintData
     );
   }
 
@@ -224,14 +218,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (this.shouldConvertData(changes)) {
       this.dataSubject.next({
         collections: this.collections,
-        documents: this.documents,
         linkTypes: this.linkTypes,
-        linkInstances: this.linkInstances,
+        data: this.data,
         permissions: this.permissions,
         config: this.config,
+        settings: this.settings,
         query: this.query,
         constraintData: this.constraintData,
-        sortDefined: this.sortDefined,
       });
     }
   }
@@ -240,13 +233,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     return (
       this.dataLoaded &&
       (changes.dataLoaded ||
-        changes.documents ||
-        changes.sortDefined ||
+        changes.data ||
+        changes.settings ||
         (changes.config && this.configChanged(changes.config)) ||
         changes.collections ||
         changes.permissions ||
         changes.linkTypes ||
-        changes.linkInstances ||
         changes.query ||
         changes.constraintData) &&
       !!this.config
@@ -335,7 +327,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const {linkInstanceId, documentId, otherDocumentIds} = createLinkDocumentsData(
       task,
       this.tasks,
-      this.linkInstances
+      this.data?.uniqueLinkInstances
     );
 
     if (linkInstanceId && documentId && (otherDocumentIds || []).length > 0) {
@@ -468,9 +460,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   private getDataResource(id: string, type: AttributesResourceType): DataResource {
     if (type === AttributesResourceType.Collection) {
-      return (this.documents || []).find(document => document.id === id);
+      return (this.data?.uniqueDocuments || []).find(document => document.id === id);
     } else if (type === AttributesResourceType.LinkType) {
-      return (this.linkInstances || []).find(linkInstance => linkInstance.id === id);
+      return (this.data?.uniqueLinkInstances || []).find(linkInstance => linkInstance.id === id);
     }
 
     return null;
@@ -493,8 +485,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onAddDependency(data: {fromId: string; toId: string}) {
-    const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
-    const documentTo = (this.documents || []).find(document => document.id === data.toId);
+    const documentFrom = (this.data?.uniqueDocuments || []).find(document => document.id === data.fromId);
+    const documentTo = (this.data?.uniqueDocuments || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
       return;
     }
@@ -504,8 +496,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onRemoveDependency(data: {fromId: string; toId: string}) {
-    const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
-    const documentTo = (this.documents || []).find(document => document.id === data.toId);
+    const documentFrom = (this.data?.uniqueDocuments || []).find(document => document.id === data.fromId);
+    const documentTo = (this.data?.uniqueDocuments || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
       return;
     }
@@ -525,7 +517,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public onTaskCreated(task: GanttTask) {
     const stemConfig = (this.config.stemsConfigs || []).find(config =>
-      canCreateTaskByStemConfig(config, this.permissions, objectsByIdMap(this.linkTypes))
+      canCreateTaskByStemConfig(config, this.permissions)
     );
     if (!stemConfig || !stemConfig.stem) {
       return;
@@ -712,10 +704,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public onTaskDetail(task: GanttTask) {
     const metadata = task.metadata as GanttTaskMetadata;
-    const resourceType = metadata.stemConfig.name?.resourceType || metadata.stemConfig.start?.resourceType;
-    const dataResource = this.getDataResource(metadata.nameDataId || metadata.startDataId, resourceType);
-    if (dataResource) {
-      this.openDataResourceModal(dataResource, resourceType);
+    if (metadata) {
+      const resourceType = metadata.stemConfig.name?.resourceType || metadata.stemConfig.start?.resourceType;
+      const dataResource = this.getDataResource(metadata.nameDataId || metadata.startDataId, resourceType);
+      if (dataResource) {
+        this.openDataResourceModal(dataResource, resourceType);
+      }
     }
   }
 

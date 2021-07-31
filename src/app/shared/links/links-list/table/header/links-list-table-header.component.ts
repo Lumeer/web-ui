@@ -47,13 +47,19 @@ export class LinksListTableHeaderComponent {
   public columns: LinkColumn[];
 
   @Input()
-  public permissions: AllowedPermissions;
+  public collectionPermissions: AllowedPermissions;
+
+  @Input()
+  public linkTypePermissions: AllowedPermissions;
 
   @Output()
   public resizeColumn = new EventEmitter<{index: number; width: number}>();
 
   @Output()
   public attributeFunction = new EventEmitter<LinkColumn>();
+
+  @Output()
+  public attributeDescription = new EventEmitter<LinkColumn>();
 
   @Output()
   public attributeType = new EventEmitter<LinkColumn>();
@@ -119,6 +125,13 @@ export class LinksListTableHeaderComponent {
     const column = this.columns[index];
     if (column) {
       this.attributeType.emit(column);
+    }
+  }
+
+  public onAttributeDescription(index: number) {
+    const column = this.columns[index];
+    if (column) {
+      this.attributeDescription.emit(column);
     }
   }
 }

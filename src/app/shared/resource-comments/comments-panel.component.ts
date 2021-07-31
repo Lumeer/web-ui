@@ -32,13 +32,12 @@ import {AppState} from '../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {User} from '../../core/store/users/user';
-import {selectCurrentUser} from '../../core/store/users/users.state';
+import {selectCurrentUser, selectUsersDictionary} from '../../core/store/users/users.state';
 import {ResourceCommentsAction} from '../../core/store/resource-comments/resource-comments.action';
 import {ResourceCommentModel} from '../../core/store/resource-comments/resource-comment.model';
 import {selectResourceCommentsByResource} from '../../core/store/resource-comments/resource-comments.state';
 import {generateId} from '../utils/resource.utils';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {map, take} from 'rxjs/operators';
 
@@ -74,17 +73,17 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
   public onCancelComment = new EventEmitter();
 
   public initialComment$: Observable<ResourceCommentModel>;
-
-  public user$: Observable<User>;
-
+  public currentUser$: Observable<User>;
   public comments$: Observable<ResourceCommentModel[]>;
+  public usersMap$: Observable<Record<string, User>>;
 
-  public constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
-    this.user$ = this.store$.pipe(select(selectCurrentUser));
+    this.usersMap$ = this.store$.pipe(select(selectUsersDictionary));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     if (this.startEditing) {
-      this.initialComment$ = this.user$.pipe(
+      this.initialComment$ = this.currentUser$.pipe(
         take(1),
         map(user => ({
           correlationId: generateId(),
@@ -131,11 +130,8 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
   }
 
   private createConfirmAction(action: Action): NotificationsAction.Confirm {
-    const title = this.i18n({id: 'document.detail.comments.commentRemove.title', value: 'Delete this comment?'});
-    const message = this.i18n({
-      id: 'document.detail.comments.commentRemove.message',
-      value: 'Do you really want to delete this comment?',
-    });
+    const title = $localize`:@@document.detail.comments.commentRemove.title:Delete this comment?`;
+    const message = $localize`:@@document.detail.comments.commentRemove.message:Do you really want to delete this comment?`;
 
     return new NotificationsAction.Confirm({title, message, type: 'danger', action});
   }

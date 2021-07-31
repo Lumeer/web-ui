@@ -1,5 +1,8 @@
-<a *ngIf="!value.config?.openInApp" [href]="completeLinkValue" target="_blank" class="overflow-hidden text-nowrap">{{titleValue || linkValue}}</a>
-<a *ngIf="value.config?.openInApp" class="overflow-hidden text-nowrap" (click)="onLinkClick($event)">{{titleValue || linkValue}}</a>
+<a *ngIf="!value.config?.openInApp" [href]="completeLinkValue" target="_blank" class="overflow-hidden text-nowrap"
+   [class.color-inherit]="commonConfiguration?.inheritColor">{{titleValue || linkValue}}</a>
+<a *ngIf="value.config?.openInApp" class="overflow-hidden text-nowrap"
+   [class.color-inherit]="commonConfiguration?.inheritColor"
+   (click)="onLinkClick($event)">{{titleValue || linkValue}}</a>
 
 <link-input-dropdown *ngIf="!readonly"
                      [linkValue]="linkValue"

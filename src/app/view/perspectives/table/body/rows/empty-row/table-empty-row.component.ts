@@ -24,7 +24,8 @@ import {map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {calculateColumnsWidth} from '../../../../../../core/store/tables/table.utils';
 import {selectTableParts} from '../../../../../../core/store/tables/tables.selector';
-import {selectCollectionsByReadPermission} from '../../../../../../core/store/common/permissions.selectors';
+import {selectReadableCollections} from '../../../../../../core/store/common/permissions.selectors';
+import {AppState} from '../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-empty-row',
@@ -43,7 +44,7 @@ export class TableEmptyRowComponent implements OnInit, OnChanges {
   public dataColumnsWidth$: Observable<number>;
   public linkInfoCells$: Observable<any[]>;
 
-  constructor(private element: ElementRef<HTMLElement>, private store$: Store<{}>) {}
+  constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindCollectionHasToLink();
@@ -51,7 +52,7 @@ export class TableEmptyRowComponent implements OnInit, OnChanges {
 
   private bindCollectionHasToLink() {
     this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+      select(selectReadableCollections),
       map(collections => collections.length > 1)
     );
   }

@@ -17,18 +17,59 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../../shared/utils/array.utils';
-import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
-import {Query} from './query';
-import {getBaseCollectionIdsFromQuery, isQuerySubset, queryWithoutFilters} from './query.util';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {
+  containsSameElements,
+  deepArrayEquals,
+  getArrayDifference,
+  isArraySubset,
+} from '../../../../shared/utils/array.utils';
+import {convertQueryModelToString, normalizeQueryModel, normalizeQueryStem} from './query.converter';
+import {Query, QueryStem} from './query';
+import {getBaseCollectionIdsFromQuery, queryWithoutFilters} from './query.util';
+import {DataQuery} from '../../../model/data-query';
 
-export function areQueriesEqual(first: Query, second: Query): boolean {
-  return deepObjectsEquals(normalizeQueryModel(first), normalizeQueryModel(second));
+export function addDataQueryUnique(queries: DataQuery[], newQuery: DataQuery): DataQuery[] {
+  if (!newQuery || queries.some(query => areDataQueriesEqual(query, newQuery))) {
+    return queries;
+  }
+  return [...queries, newQuery];
 }
 
-export function isQueryLoaded(query: Query, loadedQueries: Query[]): boolean {
-  return loadedQueries.some(loadedQuery => isQuerySubset(query, loadedQuery));
+export function removeDataQuery(queries: DataQuery[], queryToRemove: DataQuery): DataQuery[] {
+  if (!queryToRemove) {
+    return queries;
+  }
+  return queries.filter(query => !areDataQueriesEqual(query, queryToRemove));
+}
+
+export function areDataQueriesEqual(first: DataQuery, second: DataQuery): boolean {
+  return !!first?.includeSubItems === !!second?.includeSubItems && areQueriesEqual(first, second);
+}
+
+export function areQueriesEqual(first: Query, second: Query): boolean {
+  const firstNormalized = normalizeQueryModel(first);
+  const secondNormalized = normalizeQueryModel(second);
+
+  return (
+    firstNormalized.page === secondNormalized.page &&
+    firstNormalized.pageSize === secondNormalized.pageSize &&
+    containsSameElements(firstNormalized.fulltexts, secondNormalized.fulltexts) &&
+    firstNormalized.stems.length === secondNormalized.stems.length &&
+    firstNormalized.stems.every(stem => secondNormalized.stems.some(otherStem => areQueryStemsEqual(stem, otherStem)))
+  );
+}
+
+export function areQueryStemsEqual(first: QueryStem, second: QueryStem): boolean {
+  const firstNormalized = normalizeQueryStem(first);
+  const secondNormalized = normalizeQueryStem(second);
+
+  return (
+    firstNormalized.collectionId === secondNormalized.collectionId &&
+    containsSameElements(firstNormalized.filters, secondNormalized.filters) &&
+    containsSameElements(firstNormalized.linkFilters, secondNormalized.linkFilters) &&
+    containsSameElements(firstNormalized.documentIds, secondNormalized.documentIds) &&
+    containsSameElements(firstNormalized.linkTypeIds, secondNormalized.linkTypeIds)
+  );
 }
 
 export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: Query): boolean {
@@ -39,14 +80,18 @@ export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: 
 
 export function hasQueryNewLink(oldQuery: Query, newQuery: Query) {
   if (
-    ((oldQuery && oldQuery.stems) || []).length !== ((newQuery && newQuery.stems) || []).length ||
+    (oldQuery?.stems || []).length !== (newQuery?.stems || []).length ||
     !deepArrayEquals(getBaseCollectionIdsFromQuery(oldQuery), getBaseCollectionIdsFromQuery(newQuery))
   ) {
     return false;
   }
 
-  const newQueryLinkTypeIds = (newQuery.stems[0] && newQuery.stems[0].linkTypeIds) || [];
-  const oldQueryLinkTypeIds = (oldQuery.stems[0] && oldQuery.stems[0].linkTypeIds) || [];
+  const newQueryLinkTypeIds = newQuery?.stems?.[0]?.linkTypeIds || [];
+  const oldQueryLinkTypeIds = oldQuery?.stems?.[0]?.linkTypeIds || [];
+
+  if (newQueryLinkTypeIds.length === 1 && oldQueryLinkTypeIds.length === 0) {
+    return true;
+  }
 
   return (
     newQueryLinkTypeIds.length > oldQueryLinkTypeIds.length && isArraySubset(newQueryLinkTypeIds, oldQueryLinkTypeIds)

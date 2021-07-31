@@ -1,28 +1,31 @@
 <accordion [closeOthers]="true">
-  <ng-container *ngFor="let resourceData of attributesResourcesOrder; let first = first; trackBy:trackByResourceId">
+  <ng-container *ngFor="let resourceData of attributesResourcesData; let first = first; trackBy:trackByResourceId">
     <accordion-group panelClass="lmr-accordion"
+                     *ngIf="resourceData.resource?.attributes | createAttributesSettingsOrder: (settings | resourceAttributesSettings:resourceData.type:resourceData.resource.id:resourceData.composedWithId) as attributesSettings"
+                     [isDisabled]="attributesSettings.length === 0"
                      [isOpen]="first">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: resourceData.resource | resourceIconsColors} as data">
         <icons-presenter class="d-block mr-1"
                          [colors]="data.iconColors.colors"
                          [icons]="data.iconColors.icons">
         </icons-presenter>
-        <div class="font-weight-bold text-truncate" [title]="resourceData.resource.name">{{resourceData.resource.name}}</div>
-        <div class="small text-muted">{{resourceData.attributeSettings | countShowedAttributes}}/{{resourceData.resource.attributes.length}}</div>
+        <div class="font-weight-bold text-truncate mr-2" [title]="resourceData.resource.name">{{resourceData.resource.name}}</div>
+        <div class="small text-muted">{{attributesSettings | countShowedAttributes}}/{{resourceData.resource.attributes.length}}</div>
       </div>
 
       <div cdkDropList>
         <attribute-settings
-          *ngFor="let attributeSettings of resourceData.attributeSettings; let index = index; trackBy: trackByAttributeSettings"
+          *ngFor="let attributeSettings of attributesSettings; let index = index; trackBy: trackByAttributeSettings"
           cdkDrag
           cdkDragLockAxis="y"
           cdkDragBoundary=".cdk-drop-list"
           class="px-2 py-1"
           [settings]="attributeSettings"
+          [sortable]="resourceData.sortable"
           [attribute]="resourceData.resource.attributes | findAttribute:attributeSettings.attributeId"
           [isDefault]="attributeSettings.attributeId === resourceData.defaultAttributeId"
-          (settingsChanged)="onResourceSettingsChanged(resourceData.attributeSettings, index, resourceData.resource, resourceData.type, $event)"
-          (cdkDragDropped)="onResourceSettingsDropped(resourceData.attributeSettings, resourceData.resource, resourceData.type, $event)">
+          (settingsChanged)="onResourceSettingsChanged(attributesSettings, index, resourceData, resourceData.type, $event)"
+          (cdkDragDropped)="onResourceSettingsDropped(attributesSettings, resourceData, resourceData.type, $event)">
           <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
         </attribute-settings>
       </div>

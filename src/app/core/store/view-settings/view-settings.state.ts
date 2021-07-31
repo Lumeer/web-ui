@@ -40,6 +40,17 @@ export const selectViewSettingsChanged = createSelector(
     view && viewSettingsChanged(view.settings, settings, collectionsMap, linkTypesMap)
 );
 
+export const selectDataSettingsIncludeSubItems = createSelector(
+  selectViewSettings,
+  settings => settings?.data?.includeSubItems
+);
+
+export const selectViewDataQuery = createSelector(
+  selectDataSettingsIncludeSubItems,
+  selectViewQuery,
+  (includeSubItems, viewQuery) => viewQuery && {...viewQuery, includeSubItems}
+);
+
 export const selectSaveViewSettings = createSelector(
   selectViewSettings,
   selectCollectionsDictionary,

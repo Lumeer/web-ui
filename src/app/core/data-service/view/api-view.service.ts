@@ -17,22 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ViewService} from './view.service';
-import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
+import {PermissionsDto, ViewDto} from '../../dto';
 import {AppState} from '../../store/app.state';
 import {BaseService} from '../../rest/base.service';
 import {Workspace} from '../../store/navigation/workspace';
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
-import {environment} from '../../../../environments/environment';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiViewService extends BaseService implements ViewService {
-  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    private http: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -68,26 +72,8 @@ export class ApiViewService extends BaseService implements ViewService {
     return this.http.get<PermissionsDto>(`${this.apiPrefix(viewId)}/permissions`);
   }
 
-  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
-    return this.http.put<PermissionDto[]>(`${this.apiPrefix(viewId)}/permissions/users`, userPermissions);
-  }
-
-  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
-    return this.http.put<PermissionDto[]>(`${this.apiPrefix(viewId)}/permissions/groups`, userPermissions);
-  }
-
-  public removeUserPermission(viewId: string, user: string): Observable<HttpResponse<any>> {
-    return this.http.delete(`${this.apiPrefix(viewId)}/permissions/users/${user}`, {
-      observe: 'response',
-      responseType: 'text',
-    });
-  }
-
-  public removeGroupPermission(viewId: string, group: string): Observable<HttpResponse<any>> {
-    return this.http.delete(`${this.apiPrefix(viewId)}/permissions/groups/${group}`, {
-      observe: 'response',
-      responseType: 'text',
-    });
+  public updatePermissions(viewId: string, permissions: PermissionsDto): Observable<PermissionsDto> {
+    return this.http.put<PermissionsDto>(`${this.apiPrefix(viewId)}/permissions`, permissions);
   }
 
   public updateDefaultConfig(dto: DefaultViewConfigDto): Observable<DefaultViewConfigDto> {
@@ -102,7 +88,9 @@ export class ApiViewService extends BaseService implements ViewService {
     const organizationId = this.getOrCurrentOrganizationId(workspace || this.workspace);
     const projectId = this.getOrCurrentProjectId(workspace || this.workspace);
 
-    const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/views`;
+    const viewsPath = `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/projects/${projectId}/views`;
     return id ? viewsPath.concat('/', id) : viewsPath;
   }
 }

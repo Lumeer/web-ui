@@ -17,17 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {ViewSettings} from '../../../../../core/store/views/view';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
+import {select, Store} from '@ngrx/store';
+import {viewCursorToWorkflowTable, WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
+import {WorkflowTablesStateService} from '../tables/service/workflow-tables-state.service';
+import {combineLatest, Observable} from 'rxjs';
+import {selectViewCursor} from '../../../../../core/store/navigation/navigation.state';
+import {map} from 'rxjs/operators';
+import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
+import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
+import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
@@ -35,7 +49,7 @@ import {WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
   styleUrls: ['./workflow-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkflowSidebarComponent implements OnChanges {
+export class WorkflowSidebarComponent implements OnInit, OnChanges {
   @Input()
   public collection: Collection;
 
@@ -43,20 +57,23 @@ export class WorkflowSidebarComponent implements OnChanges {
   public document: DocumentModel;
 
   @Input()
-  public permissions: AllowedPermissions;
-
-  @Input()
   public query: Query;
-
-  @Input()
-  public viewSettings: ViewSettings;
 
   @Output()
   public close = new EventEmitter();
 
+  public currentStem$: Observable<QueryStem>;
+
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private stateService: WorkflowTablesStateService) {}
+
+  public ngOnInit() {
+    this.currentStem$ = combineLatest([
+      this.store$.pipe(select(selectViewCursor)),
+      this.stateService.tables$.asObservable(),
+    ]).pipe(map(([cursor, tables]) => queryStemWithoutFilters(viewCursorToWorkflowTable(cursor, tables)?.stem)));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document) {
@@ -73,5 +90,15 @@ export class WorkflowSidebarComponent implements OnChanges {
 
   public onCloseClick() {
     this.close.emit();
+  }
+
+  public onDocumentSelect(data: {collection: Collection; document: DocumentModel}) {
+    this.store$.dispatch(
+      new WorkflowsAction.SetOpenedDocument({
+        documentId: data.document.id,
+        collectionId: data.collection.id,
+        attributeId: getDefaultAttributeId(data.collection),
+      })
+    );
   }
 }

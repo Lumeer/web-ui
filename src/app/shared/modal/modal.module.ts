@@ -26,7 +26,6 @@ import {AttributeFunctionModalModule} from './attribute-function/attribute-funct
 import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
 import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
 import {CreateLinkModalModule} from './create-link/create-link-modal.module';
-import {ShareViewModalModule} from './share-view/share-view-modal.module';
 import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
 import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-event-detail-modal.module';
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
@@ -37,21 +36,26 @@ import {CreateProjectModalModule} from './create-project/create-project-modal.mo
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
-import {NotificationSettingsModalModule} from './notification-settings/notification-settings-modal.module';
+import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
+import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
+import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
+import {ViewModalModule} from './view-modal/view-modal.module';
+import {TextInputModalModule} from './text-input/text-input-modal.module';
+import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     ModalWrapperModule,
     CreateResourceModalModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
+    AttributeDescriptionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
-    ShareViewModalModule,
     TextEditorModalModule,
+    TextInputModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
@@ -61,18 +65,22 @@ import {NotificationSettingsModalModule} from './notification-settings/notificat
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
-    NotificationSettingsModalModule,
+    UserSettingsModalModule,
+    ModifyDocumentLinksModalModule,
+    ViewModalModule,
+    DataResourcesDetailModalModule,
   ],
   exports: [
     ModalWrapperModule,
     CreateResourceModalModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
+    AttributeDescriptionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
-    ShareViewModalModule,
     TextEditorModalModule,
+    TextInputModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
@@ -82,7 +90,10 @@ import {NotificationSettingsModalModule} from './notification-settings/notificat
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
-    NotificationSettingsModalModule,
+    UserSettingsModalModule,
+    ModifyDocumentLinksModalModule,
+    ViewModalModule,
+    DataResourcesDetailModalModule,
   ],
 })
 export class ModalModule {}

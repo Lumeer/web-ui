@@ -30,6 +30,7 @@ import {
   createLinkDataCursor,
   DataCursor,
 } from '../../../../../../../../shared/data-input/data-cursor';
+import {AppState} from '../../../../../../../../core/store/app.state';
 
 @Component({
   selector: 'files-collapsed-cell',
@@ -51,7 +52,7 @@ export class FilesCollapsedCellComponent implements OnInit, OnChanges {
 
   private cursors$ = new BehaviorSubject<DataCursor[]>([]);
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.fileAttachments$ = this.bindFileAttachments();

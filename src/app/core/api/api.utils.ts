@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {environment} from '../../../environments/environment';
+import {Configuration} from '../../../environments/configuration-type';
 
-export function isBackendUrl(url: string): boolean {
-  return url.startsWith(environment.apiUrl) || url.startsWith(environment.apiProdUrl);
+export function isBackendUrl(url: string, configuration: Configuration): boolean {
+  return url.startsWith(configuration.apiUrl) || url.startsWith(configuration.apiProdUrl);
 }

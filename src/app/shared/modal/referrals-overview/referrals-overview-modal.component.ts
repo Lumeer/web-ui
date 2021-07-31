@@ -23,13 +23,12 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {filter, first, map, take} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {UsersAction} from '../../../core/store/users/users.action';
-import {PaymentStats} from '../../../core/store/organizations/payment/payment';
 import {Observable} from 'rxjs';
 import {User} from '../../../core/store/users/user';
-import {environment} from '../../../../environments/environment';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({
   selector: 'referrals-overview',
@@ -40,12 +39,18 @@ import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 export class ReferralsOverviewModalComponent implements OnInit {
   public readonly dialogType = DialogType;
 
-  public readonly locale = environment.locale;
+  public readonly locale: string;
   public readonly languageCode = LanguageCode;
 
   public user: Observable<User>;
 
-  public constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  public constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
+    this.locale = configurationService.getConfiguration().locale;
+  }
 
   public ngOnInit(): void {
     this.store$

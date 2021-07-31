@@ -26,22 +26,25 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {User} from '../../core/store/users/user';
 import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
+import {selectCurrentUser, selectUsersForWorkspace} from '../../core/store/users/users.state';
 import {ResourceType} from '../../core/model/resource-type';
 import {Resource} from '../../core/model/resource';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {Permission, PermissionType} from '../../core/store/permissions/permissions';
+import {Permission, PermissionType, Role} from '../../core/store/permissions/permissions';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {Workspace} from '../../core/store/navigation/workspace';
-import {environment} from '../../../environments/environment';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimits} from '../../core/store/organizations/service-limits/service.limits';
+import {Team} from '../../core/store/teams/team';
+import {selectTeamsForWorkspace} from '../../core/store/teams/teams.state';
 
 @Component({
   selector: 'users',
@@ -49,18 +52,25 @@ import mixpanel from 'mixpanel-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersComponent implements OnInit, OnDestroy {
-  @Input() public resourceType: ResourceType;
+  @Input()
+  public resourceType: ResourceType;
 
   public users$: Observable<User[]>;
+  public teams$: Observable<Team[]>;
   public currentUser$: Observable<User>;
+  public serviceLimits$: Observable<ServiceLimits>;
   public organization$ = new BehaviorSubject<Organization>(null);
   public project$ = new BehaviorSubject<Project>(null);
   public resource$: Observable<Resource>;
 
-  private resourceId: string;
+  private currentResourceId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private angulartics2: Angulartics2) {}
+  constructor(
+    private store$: Store<AppState>,
+    private angulartics2: Angulartics2,
+    private configurationService: ConfigurationService
+  ) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -70,17 +80,12 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private sortUsers(users: User[]): User[] {
-    return users.sort((user1, user2) => user1.email.localeCompare(user2.email));
-  }
-
   public onNewUser(email: string) {
-    const user: User = {email, groupsMap: {}};
-    user.groupsMap[this.getOrganizationId()] = [];
+    const user: User = {email};
 
     this.store$.dispatch(new UsersAction.Create({organizationId: this.getOrganizationId(), user}));
 
-    if (environment.analytics && this.resourceType === ResourceType.Organization) {
+    if (this.configurationService.getConfiguration().analytics && this.resourceType === ResourceType.Organization) {
       this.angulartics2.eventTrack.next({
         action: 'User invite',
         properties: {
@@ -88,7 +93,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         },
       });
 
-      if (environment.mixpanelKey) {
+      if (this.configurationService.getConfiguration().mixpanelKey) {
         mixpanel.track('User Invite', {user: email});
       }
     }
@@ -103,49 +108,33 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private getOrganizationId(): string {
-    const organization = this.organization$.getValue();
-    return organization && organization.id;
+    return this.organization$.value?.id;
   }
 
-  public changeUsersPermissionsOnlyStore(data: {permissions: Permission[]}) {
-    const payload = {...data, type: PermissionType.Users};
+  public changeUserPermissions(data: {user: User; roles: Role[]}) {
+    const permissions: Permission[] = [{id: data.user.id, roles: data.roles}];
+    const payload = {permissions, type: PermissionType.Users};
     switch (this.resourceType) {
       case ResourceType.Organization: {
         this.store$.dispatch(
-          new OrganizationsAction.ChangePermissionSuccess({...payload, organizationId: this.resourceId})
+          new OrganizationsAction.ChangePermission({
+            ...payload,
+            organizationId: this.currentResourceId,
+          })
         );
         break;
       }
       case ResourceType.Project: {
-        this.store$.dispatch(new ProjectsAction.ChangePermissionSuccess({...payload, projectId: this.resourceId}));
+        this.store$.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.currentResourceId}));
         break;
       }
       case ResourceType.Collection: {
         this.store$.dispatch(
-          new CollectionsAction.ChangePermissionSuccess({...payload, collectionId: this.resourceId})
+          new CollectionsAction.ChangePermission({
+            ...payload,
+            collectionId: this.currentResourceId,
+          })
         );
-        break;
-      }
-    }
-  }
-
-  public changeUsersPermissions(data: {
-    permissions: Permission[];
-    currentPermissions: Permission[];
-    workspace?: Workspace;
-  }) {
-    const payload = {...data, type: PermissionType.Users};
-    switch (this.resourceType) {
-      case ResourceType.Organization: {
-        this.store$.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}));
-        break;
-      }
-      case ResourceType.Project: {
-        this.store$.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.resourceId}));
-        break;
-      }
-      case ResourceType.Collection: {
-        this.store$.dispatch(new CollectionsAction.ChangePermission({...payload, collectionId: this.resourceId}));
         break;
       }
     }
@@ -164,14 +153,20 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
 
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace), map(this.sortUsers));
+    this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));
+    this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByWorkspace));
 
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 
     this.resource$ = this.store$.pipe(
       select(this.getSelector()),
       filter(resource => !!resource),
-      tap(resource => (this.resourceId = resource.id))
+      tap(resource => (this.currentResourceId = resource.id))
     );
+  }
+
+  private sortUsers(users: User[]): User[] {
+    return users.sort((user1, user2) => (user1.name || user1.email).localeCompare(user2.name || user2.email));
   }
 
   private getSelector(): MemoizedSelector<AppState, Resource> {
@@ -183,5 +178,9 @@ export class UsersComponent implements OnInit, OnDestroy {
       case ResourceType.Collection:
         return selectCollectionByWorkspace;
     }
+  }
+
+  public onUserTeamsChange(data: {user: User; teams: string[]}) {
+    this.store$.dispatch(new UsersAction.SetTeams({...data, organizationId: this.currentResourceId}));
   }
 }

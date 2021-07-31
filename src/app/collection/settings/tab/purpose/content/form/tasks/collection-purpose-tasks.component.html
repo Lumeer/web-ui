@@ -1,17 +1,19 @@
-<div [formGroup]="form">
+<div [formGroup]="form" *ngIf="{collectionSelectItems: collection | attributesSelectItems} as data">
 
   <div class="form-group row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.assignee.label">
       Assignee
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
-      <select-item [items]="collection | attributesSelectItems"
+      <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select assignee attribute"
                    i18n-emptyValue="@@collections.tab.purpose.assignee.select"
                    [selectedId]="assigneeControl.value"
-                   (selected)="assigneeControl.patchValue($event)"
-                   (remove)="assigneeControl.patchValue(null)">
+                   (selected)="onSelectValue(assigneeControl, $event)"
+                   (remove)="onSelectValue(assigneeControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.assignee.help">
         Which attribute specifies who the assignee is? Works best with the <em>User</em> attribute type.
@@ -26,11 +28,13 @@
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <select-item [items]="collection | attributesSelectItems:constraintType.DateTime"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select due date attribute"
                    i18n-emptyValue="@@collections.tab.purpose.dueDate.select"
                    [selectedId]="dueDateControl.value"
-                   (selected)="dueDateControl.patchValue($event)"
-                   (remove)="dueDateControl.patchValue(null)">
+                   (selected)="onSelectValue(dueDateControl, $event)"
+                   (remove)="onSelectValue(dueDateControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.dueDate.help">
         Which attribute specifies the due date of a task? Works only with the <em>Date</em> attribute type.
@@ -43,14 +47,15 @@
       State
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
-      <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
-                   [items]="collection | attributesSelectItems"
+      <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select state attribute"
                    i18n-emptyValue="@@collections.tab.purpose.state.select"
                    [selectedId]="stateControl.value"
-                   (selected)="stateControl.patchValue($event); stateListControl.patchValue([]);"
-                   (remove)="stateControl.patchValue(null)">
+                   (selected)="onStateListSelected($event)"
+                   (remove)="onSelectValue(stateControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.state.help">
         Which attribute specifies the state of a task? Works best with the <em>Selection</em> attribute type.
@@ -65,10 +70,11 @@
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
       <data-input class="py-0 px-1 form-control multiline d-flex align-items-center cursor-pointer"
-                  [dataValue]="stateList$ | async | dataValue:stateConstraintData.constraint:stateConstraintData.constraintData"
+                  [dataValue]="stateList$ | async | stateListDataValue:stateConstraintData.constraint:stateConstraintData.constraintData"
                   [focus]="true"
                   [configuration]="dataInputConfiguration"
                   [readonly]="!(stateListEditing$ | async)"
+                  [editableInReadonly]="true"
                   [constraint]="stateConstraintData.constraint"
                   (click)="$event.preventDefault(); setStateListEditing(true)"
                   (valueChange)="onStateListChange($event)"
@@ -86,16 +92,82 @@
       Observer
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
-      <select-item [items]="collection | attributesSelectItems"
+      <select-item [items]="data.collectionSelectItems"
                    [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
                    emptyValue="Select observer attribute"
                    i18n-emptyValue="@@collections.tab.purpose.observer.select"
                    [selectedId]="observersControl.value"
-                   (selected)="observersControl.patchValue($event)"
-                   (remove)="observersControl.patchValue(null)">
+                   (selected)="onSelectValue(observersControl, $event)"
+                   (remove)="onSelectValue(observersControl, null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.observer.help">
-        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <em>User</em> attribute type.
+        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works
+        best with the <em>User</em> attribute type.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.priority.label">
+      Priority
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]="data.collectionSelectItems"
+                   [removable]="true"
+                   emptyValue="Select priority attribute"
+                   i18n-emptyValue="@@collections.tab.purpose.priority.select"
+                   [selectedId]="priorityControl.value"
+                   (selected)="onSelectValue(priorityControl, $event)"
+                   (remove)="onSelectValue(priorityControl, null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.priority.help">
+        Which attribute specifies the task priority?
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.tags.label">
+      Tags
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]="data.collectionSelectItems"
+                   [removable]="true"
+                   class="w-100"
+                   buttonClasses="w-100"
+                   emptyValue="Select tags attribute"
+                   i18n-emptyValue="@@collections.tab.purpose.tags.select"
+                   [selectedId]="tagsControl.value"
+                   (selected)="onSelectValue(tagsControl, $event)"
+                   (remove)="onSelectValue(tagsControl,null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.tags.help">
+        Tags, labels, hashtags... Simply anything you use to categorize the tasks.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">
+      Open in View
+    </label>
+
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]="viewsByCollection$ | async | viewsSelectItems:(collections$ | async)"
+                   class="w-100"
+                   buttonClasses="w-100"
+                   emptyValue="Select view"
+                   i18n-emptyValue="@@projects.tab.template.metadata.defaultView.empty"
+                   [removable]="true"
+                   [selectedId]="defaultViewControl.value"
+                   [fitParent]="true"
+                   (selected)="onSelectValue(defaultViewControl, $event)"
+                   (remove)="onSelectValue(defaultViewControl, null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.defaultView.help">
+        In what view do you want to open task notifications?
       </div>
     </div>
   </div>

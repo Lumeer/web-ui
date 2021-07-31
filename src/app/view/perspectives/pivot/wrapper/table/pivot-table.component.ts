@@ -19,11 +19,11 @@
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {PivotData} from '../../util/pivot-data';
-import {PivotTable} from '../../util/pivot-table';
+import {PivotTable, PivotTableCell} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
+import {ModalService} from '../../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'pivot-table',
@@ -47,15 +47,22 @@ export class PivotTableComponent implements OnChanges {
 
   public pivotTables: PivotTable[];
 
-  constructor(private i18n: I18n) {
-    const headerSummaryString = i18n({id: 'perspective.pivot.table.summary.header', value: 'Summary of'});
-    const summaryString = i18n({id: 'perspective.pivot.table.summary.total', value: 'Summary'});
+  constructor(private modalService: ModalService) {
+    const headerSummaryString = $localize`:@@perspective.pivot.table.summary.header:Summary of`;
+    const summaryString = $localize`:@@perspective.pivot.table.summary.total:Summary`;
     this.pivotTableConverter = new PivotTableConverter(headerSummaryString, summaryString);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.pivotData) {
       this.pivotTables = this.pivotTableConverter.transform(this.pivotData);
+    }
+  }
+
+  public onCellClick(cell: PivotTableCell) {
+    if (!cell.isHeader && cell.dataResources?.length > 0) {
+      const modalTitle = $localize`:@@perspective.pivot.cell.detail.title:Records by value: <b>${cell.value}</b>`;
+      this.modalService.showDataResourcesDetail(cell.dataResources, modalTitle);
     }
   }
 }

@@ -78,7 +78,7 @@ export class TableRowsComponent implements OnChanges {
     this.rows$ = combineLatest([
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
       this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query, false, true)),
+        select(selectDocumentsByCustomQuery(query, false)),
         map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
       ),
     ]).pipe(

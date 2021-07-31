@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges} from '@angular/core';
 import {Project} from '../../../../core/store/projects/project';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {environment} from '../../../../../environments/environment';
+import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({
   selector: 'copy-project-content',
@@ -28,13 +28,13 @@ import {environment} from '../../../../../environments/environment';
   styleUrls: ['./copy-project-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CopyProjectContentComponent {
+export class CopyProjectContentComponent implements OnChanges {
   @Input()
   public project: Project;
 
   public publicViewUrl: SafeUrl;
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  constructor(private domSanitizer: DomSanitizer, private configurationService: ConfigurationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.project && this.project) {
@@ -43,7 +43,9 @@ export class CopyProjectContentComponent {
   }
 
   private createPublicViewUrl(): SafeUrl {
-    const url = `${environment.publicViewCdn}?o=${this.project.organizationId}&p=${this.project.id}`;
+    const url = `${this.configurationService.getConfiguration().publicViewCdn}?o=${this.project.organizationId}&p=${
+      this.project.id
+    }`;
     return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

@@ -24,7 +24,10 @@ import {AppState} from '../app.state';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {FileAttachment} from './file-attachment.model';
 
-export interface FileAttachmentsState extends EntityState<FileAttachment> {}
+export interface FileAttachmentsState extends EntityState<FileAttachment> {
+  loadedCollections?: string[];
+  loadedLinkTypes?: string[];
+}
 
 export const fileAttachmentsAdapter: EntityAdapter<FileAttachment> = createEntityAdapter<FileAttachment>();
 
@@ -39,6 +42,16 @@ const selectFileAttachments = createSelector(
 export const selectFileAttachmentsDictionary = createSelector(
   selectFileAttachmentsState,
   fileAttachmentsAdapter.getSelectors().selectEntities
+);
+
+export const selectLoadedFileAttachmentsCollections = createSelector(
+  selectFileAttachmentsState,
+  state => state.loadedCollections || []
+);
+
+export const selectLoadedFileAttachmentsLinkTypes = createSelector(
+  selectFileAttachmentsState,
+  state => state.loadedLinkTypes || []
 );
 
 export const selectFileAttachmentsByIds = (fileIds: string[]) =>

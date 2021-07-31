@@ -1,24 +1,25 @@
 <div class="row">
   <div class="col text-right">
-    <strong>{{documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:documents.length}}</strong>
-    &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{documents.length}}
-    <a *ngIf="page - 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page - 1)"><i
+    <strong>{{dataResources.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:dataResources.length}}</strong>
+    &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
+    <a *ngIf="page - 1 | canActivatePage:pageSize:dataResources.length" (click)="selectPage(page - 1)"><i
       class="clickable fas fa-angle-double-left"></i></a>
-    <i *ngIf="!(page - 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-left"></i>
-    <a *ngIf="page + 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page + 1)"><i
+    <i *ngIf="!(page - 1 | canActivatePage:pageSize:dataResources.length)" class="fas fa-angle-double-left"></i>
+    <a *ngIf="page + 1 | canActivatePage:pageSize:dataResources.length" (click)="selectPage(page + 1)"><i
       class="clickable fas fa-angle-double-right"></i></a>
-    <i *ngIf="!(page + 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-right"></i>
+    <i *ngIf="!(page + 1 | canActivatePage:pageSize:dataResources.length)" class="fas fa-angle-double-right"></i>
   </div>
 </div>
-<div class="h-10em overflow-auto"
+<div class="overflow-auto"
+     [class.h-10em]="resizeable"
      [class.table-responsive]="resizeable" #table>
   <table class="table table-sm" id="preview-results-table">
     <thead>
     <tr #tableRow>
       <th class="sticky-header"
-          [style.background-color]="collection.color | lightenColor:0.5"
-          [style.font-weight]="attr.id === collection.defaultAttributeId || (!collection.defaultAttributeId && idx === 0) ? 'bold' : 'normal'"
-          *ngFor="let attr of collection.attributes; trackBy:trackByAttribute; let idx = index"
+          [style.background-color]="color"
+          [style.font-weight]="(attr.id | isDefaultAttribute:resource) ? 'bold' : 'normal'"
+          *ngFor="let attr of attributes; trackBy:trackByAttribute; let idx = index"
           scope="col"
           title="{{attr.name}}">
         {{attr.name}}
@@ -26,23 +27,23 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngIf="documents.length === 0">
-      <td [attr.colspan]="collection.attributes.length" class="text-center font-weight-bold">
+    <tr *ngIf="dataResources.length === 0">
+      <td [attr.colspan]="resource.attributes.length" class="text-center font-weight-bold">
         <h4 i18n="@@shared.preview.results.noResults">No records found.</h4>
       </td>
     </tr>
     <ng-container
-      *ngFor="let document of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
+      *ngFor="let dataResource of (dataResources | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDataResource">
       <tr class="clickable-row"
-          id="preview-result-row-{{document.id}}"
+          id="preview-result-row-{{dataResource.id}}"
           #tableRow
-          [class.active]="document.id === selectedDocumentId"
-          (click)="activate(document)">
-        <td *ngFor="let attr of collection.attributes">
+          [class.active]="dataResource.id === selectedId"
+          (click)="activate(dataResource)">
+        <td *ngFor="let attr of attributes">
           <data-input-preview [constraint]="attr.constraint"
                               [configuration]="configuration"
-                              [cursor]="document | dataCursor : attr.id"
-                              [dataValue]="document.data[attr.id] | dataValue:attr.constraint:constraintData">
+                              [cursor]="dataResource | dataCursor : attr.id"
+                              [dataValue]="dataResource?.data[attr.id] | dataValue:attr.constraint:constraintData">
           </data-input-preview>
         </td>
       </tr>

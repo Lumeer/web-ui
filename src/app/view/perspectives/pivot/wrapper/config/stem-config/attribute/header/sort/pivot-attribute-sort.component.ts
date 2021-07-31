@@ -27,7 +27,6 @@ import {
 } from '../../../../../../../../../core/store/pivots/pivot';
 import {PivotStemData} from '../../../../../../util/pivot-data';
 import {SelectItemModel} from '../../../../../../../../../shared/select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {cleanQueryAttribute} from '../../../../../../../../../core/model/query-attribute';
 
 @Component({
@@ -56,9 +55,9 @@ export class PivotAttributeSortComponent {
   public readonly subSortPlaceholder: string;
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
-  constructor(private i18n: I18n) {
-    this.summaryTitle = i18n({id: 'perspective.pivot.config.summary', value: 'Summary'});
-    this.subSortPlaceholder = i18n({id: 'perspective.pivot.config.subSort', value: 'Next sort by...'});
+  constructor() {
+    this.summaryTitle = $localize`:@@perspective.pivot.config.summary:Summary`;
+    this.subSortPlaceholder = $localize`:@@perspective.pivot.config.subSort:Next sort by...`;
   }
 
   public onSortSelected(sort: PivotAttribute | string) {

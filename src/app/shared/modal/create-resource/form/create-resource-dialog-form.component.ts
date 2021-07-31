@@ -30,7 +30,6 @@ import {OrganizationValidators} from '../../../../core/validators/organization.v
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {Subscription} from 'rxjs';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 
 @Component({
@@ -60,20 +59,13 @@ export class CreateResourceDialogFormComponent implements OnInit {
 
   public subscriptions = new Subscription();
 
-  public readonly iconChooserLabel: string;
   private readonly colors = Colors.palette;
 
   constructor(
     private fb: FormBuilder,
     private projectValidators: ProjectValidators,
-    private organizationValidators: OrganizationValidators,
-    private i18n: I18n
-  ) {
-    this.iconChooserLabel = i18n({
-      id: 'resource.new.dialog.icon.label.hint',
-      value: '(click the icon to change it)',
-    });
-  }
+    private organizationValidators: OrganizationValidators
+  ) {}
 
   public ngOnInit() {
     this.createForm();

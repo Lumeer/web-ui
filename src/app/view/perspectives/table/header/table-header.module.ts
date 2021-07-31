@@ -39,9 +39,18 @@ import {TableHierarchyColumnComponent} from './hierarchy-column/table-hierarchy-
 import {TableLinkInfoComponent} from './link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './link/table-header-link.component';
 import {TableHeaderComponent} from './table-header.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
-  imports: [CommonModule, DragDropModule, ResizableModule, SharedModule, TableSharedModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    DragDropModule,
+    ResizableModule,
+    SharedModule,
+    TableSharedModule,
+    MatMenuModule,
+    TooltipModule,
+  ],
   declarations: [
     TableAttributeSuggestionsComponent,
     TableCaptionComponent,

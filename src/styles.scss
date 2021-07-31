@@ -12,6 +12,7 @@
 @import 'styles/overrides/quill';
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
+$include: cz, gb, hu !default;
 @import '~flag-icon-css/sass/flag-icon';
 
 @import 'styles/overrides/full-calendar';
@@ -28,6 +29,7 @@ html {
 body {
   height: 100%;
   margin: 0;
+  -webkit-touch-callout: default;
 }
 
 a {
@@ -198,6 +200,10 @@ typeahead-container {
   text-decoration: underline !important;
 }
 
+.text-line-through {
+  text-decoration: line-through;
+}
+
 .min-h-100 {
   min-height: 100%;
 }
@@ -211,6 +217,10 @@ typeahead-container {
   td {
     padding: $table-cell-padding-md;
   }
+}
+
+.color-inherit {
+  color: inherit !important;
 }
 
 .text-gray-700 {
@@ -227,6 +237,14 @@ typeahead-container {
 
 .ml-n1 {
   margin-left: -0.25rem;
+}
+
+.pb-6 {
+  padding-bottom: 4rem;
+}
+
+.mb-6 {
+  margin-bottom: 4rem;
 }
 
 .break-all {
@@ -348,4 +366,61 @@ modal-container {
   .modal-dialog.modal-xxl-height {
     height: calc(100% - 3.5rem);
   }
+}
+
+.ml-2-5 {
+  margin-left: 0.75rem !important;
+}
+
+.mr-2-5 {
+  margin-right: 0.75rem !important;
+}
+
+.mt-2-5 {
+  margin-top: 0.75rem !important;
+}
+
+.mb-2-5 {
+  margin-bottom: 0.75rem !important;
+}
+
+.mx-2-5 {
+  margin-left: 0.75rem !important;
+  margin-right: 0.75rem !important;
+}
+
+.my-2-5 {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.m-2-5 {
+  margin: 0.75rem !important;
+}
+
+.font-capitalize {
+  text-transform: uppercase;
+}
+
+.bs-tooltip-bottom .tooltip-arrow.arrow:before {
+  border-bottom-color: $gray-500;
+}
+
+.bs-tooltip-left .tooltip-arrow.arrow:before {
+  border-left-color: $gray-500;
+}
+
+.bs-tooltip-right .tooltip-arrow.arrow:before {
+  border-right-color: $gray-500;
+}
+
+.bs-tooltip-top .tooltip-arrow.arrow:before {
+  border-top-color: $gray-500;
+}
+
+.tooltip-inner {
+  border: 1px solid $border-color;
+  background-color: $white;
+  color: $primary;
+  box-shadow: $shadow-default;
 }

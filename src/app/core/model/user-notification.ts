@@ -29,8 +29,10 @@ export enum UserNotificationType {
   PastDueDate = 'PAST_DUE_DATE',
   StateUpdate = 'STATE_UPDATE',
   TaskUpdated = 'TASK_UPDATED',
+  TaskChanged = 'TASK_CHANGED',
   TaskRemoved = 'TASK_REMOVED',
   TaskUnassigned = 'TASK_UNASSIGNED',
+  TaskReopened = 'TASK_REOPENED',
   BulkAction = 'BULK_ACTION',
   DueDateChanged = 'DUE_DATE_CHANGED',
   TaskCommented = 'TASK_COMMENTED',
@@ -47,8 +49,10 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.PastDueDate]: UserNotificationType.PastDueDate,
   [UserNotificationType.StateUpdate]: UserNotificationType.StateUpdate,
   [UserNotificationType.TaskUpdated]: UserNotificationType.TaskUpdated,
+  [UserNotificationType.TaskChanged]: UserNotificationType.TaskChanged,
   [UserNotificationType.TaskRemoved]: UserNotificationType.TaskRemoved,
   [UserNotificationType.TaskUnassigned]: UserNotificationType.TaskUnassigned,
+  [UserNotificationType.TaskReopened]: UserNotificationType.TaskReopened,
   [UserNotificationType.BulkAction]: UserNotificationType.BulkAction,
   [UserNotificationType.DueDateChanged]: UserNotificationType.DueDateChanged,
   [UserNotificationType.TaskCommented]: UserNotificationType.TaskCommented,
@@ -72,7 +76,11 @@ export const userNotificationGroupTypes: Record<UserNotificationGroupType, UserN
     UserNotificationType.CollectionShared,
     UserNotificationType.ViewShared,
   ],
-  [UserNotificationGroupType.TaskAssigned]: [UserNotificationType.TaskAssigned, UserNotificationType.TaskUnassigned],
+  [UserNotificationGroupType.TaskAssigned]: [
+    UserNotificationType.TaskAssigned,
+    UserNotificationType.TaskUnassigned,
+    UserNotificationType.TaskReopened,
+  ],
   [UserNotificationGroupType.DueDateChanged]: [
     UserNotificationType.DueDateSoon,
     UserNotificationType.PastDueDate,
@@ -165,6 +173,14 @@ export interface TaskAssignedUserNotification extends TaskUserNotification {
   type: UserNotificationType.TaskAssigned;
 }
 
+export interface TaskReopenedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskReopened;
+}
+
+export interface TaskChangedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskChanged;
+}
+
 export interface DueDateSoonUserNotification extends TaskUserNotification {
   type: UserNotificationType.DueDateSoon;
 }
@@ -203,6 +219,7 @@ export type UserNotification =
   | CollectionSharedUserNotification
   | ViewSharedUserNotification
   | TaskAssignedUserNotification
+  | TaskReopenedUserNotification
   | DueDateSoonUserNotification
   | PastDueDateUserNotification
   | DueDateChangedUserNotification
@@ -210,6 +227,7 @@ export type UserNotification =
   | TaskUpdatedUserNotification
   | TaskRemovedUserNotification
   | TaskUnassignedUserNotification
+  | TaskChangedUserNotification
   | CommentedUserNotification
   | MentionedUserNotification
   | BulkActionUserNotification;

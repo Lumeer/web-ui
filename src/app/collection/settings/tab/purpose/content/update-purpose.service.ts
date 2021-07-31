@@ -28,7 +28,7 @@ import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
 @Injectable()
 export class UpdatePurposeService extends UpdateValueService<CollectionPurpose, Collection> {
   constructor(private store$: Store<AppState>) {
-    super(3000);
+    super(2000);
   }
 
   public shouldUnsubscribePendingUpdate(previousValue: CollectionPurpose, currentValue: CollectionPurpose): boolean {

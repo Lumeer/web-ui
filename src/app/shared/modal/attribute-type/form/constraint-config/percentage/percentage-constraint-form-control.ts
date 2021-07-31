@@ -21,4 +21,6 @@ export enum PercentageConstraintFormControl {
   Decimals = 'decimals',
   MaxValue = 'maxValue',
   MinValue = 'minValue',
+  Style = 'style',
+  Color = 'color',
 }

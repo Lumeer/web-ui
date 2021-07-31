@@ -21,16 +21,14 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {FileApiPath, AttachmentsService} from './attachments.service';
-import {environment} from '../../../../environments/environment';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {catchError} from 'rxjs/operators';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class PublicAttachmentsService implements AttachmentsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private configurationService: ConfigurationService) {}
 
   public createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto> {
     return of({...file, id: generateId()});
@@ -77,6 +75,8 @@ export class PublicAttachmentsService implements AttachmentsService {
   }
 
   private filesUrl(workspace: Partial<FileApiPath>): string {
-    return `${environment.apiUrl}/rest/p/organizations/${workspace.organizationId}/projects/${workspace.projectId}/files`;
+    return `${this.configurationService.getConfiguration().apiUrl}/rest/p/organizations/${
+      workspace.organizationId
+    }/projects/${workspace.projectId}/files`;
   }
 }

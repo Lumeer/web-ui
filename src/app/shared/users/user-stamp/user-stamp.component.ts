@@ -33,5 +33,5 @@ export class UserStampComponent {
   public email: string;
 
   @Input()
-  public roles: string[];
+  public size = 48;
 }

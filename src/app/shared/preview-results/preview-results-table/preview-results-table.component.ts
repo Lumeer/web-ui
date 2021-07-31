@@ -31,10 +31,15 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesSettings} from '../../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../../settings/settings.util';
+import {objectsByIdMap} from '../../utils/common.utils';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {getAttributesResourceType} from '../../utils/resource.utils';
+import {shadeColor} from '../../utils/html-modifier';
 
 const PAGE_SIZE = 100;
 
@@ -46,25 +51,28 @@ const PAGE_SIZE = 100;
 })
 export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   @Input()
-  public documents: DocumentModel[];
+  public dataResources: DataResource[];
 
   @Input()
-  public collection: Collection;
+  public resource: AttributesResource;
 
   @Input()
   public constraintData: ConstraintData;
 
   @Input()
-  public selectedDocumentId: string;
+  public selectedId: string;
 
   @Input()
   public loaded: boolean;
 
   @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Input()
   public resizeable = true;
 
   @Output()
-  public selectDocument = new EventEmitter<DocumentModel>();
+  public selectDataResource = new EventEmitter<DataResource>();
 
   @ViewChild('table', {static: true, read: ElementRef})
   public tableElement: ElementRef;
@@ -80,23 +88,46 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   };
 
   public page = 0;
+  public attributes: Attribute[];
+  public color: string;
 
   public readonly pageSize = PAGE_SIZE;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.documents && this.selectedDocumentId) {
-      this.countPageForDocument(this.selectedDocumentId);
+    if (changes.resource || changes.attributesSettings) {
+      this.attributes = this.createAttributes();
+      this.color = this.createColor();
+    }
+    if (this.dataResources && this.selectedId) {
+      this.countPageForDataResource(this.selectedId);
       setTimeout(() => this.scrollToCurrentRow());
     }
   }
 
-  public activate(document: DocumentModel) {
-    this.selectDocument.emit(document);
-    this.countPageForDocument(document.id);
+  private createColor(): string {
+    if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
+      const color = (<Collection>this.resource)?.color;
+      return shadeColor(color, 0.5);
+    }
+    return null;
   }
 
-  private countPageForDocument(documentId: string) {
-    const index = this.documents.findIndex(doc => doc.id === documentId);
+  private createAttributes(): Attribute[] {
+    const settings = this.attributesSettings?.collections?.[this.resource?.id];
+    const attributesMap = objectsByIdMap(this.resource?.attributes);
+    return createAttributesSettingsOrder(this.resource?.attributes, settings)
+      .filter(setting => !setting.hidden)
+      .map(setting => attributesMap[setting.attributeId])
+      .filter(attribute => !!attribute);
+  }
+
+  public activate(dataResource: DataResource) {
+    this.selectDataResource.emit(dataResource);
+    this.countPageForDataResource(dataResource.id);
+  }
+
+  private countPageForDataResource(dataResourceId: string) {
+    const index = this.dataResources.findIndex(doc => doc.id === dataResourceId);
     if (index !== -1) {
       this.countPage(index);
     }
@@ -114,8 +145,8 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
     return attribute.correlationId || attribute.id;
   }
 
-  public trackByDocument(index: number, document: DocumentModel): string {
-    return document.correlationId || document.id;
+  public trackByDataResource(index: number, dataResource: DataResource): string {
+    return dataResource.correlationId || dataResource.id;
   }
 
   public ngAfterViewInit() {
@@ -123,8 +154,8 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   }
 
   private scrollToCurrentRow() {
-    if (this.selectedDocumentId && this.rowsElements && this.tableElement) {
-      const id = `preview-result-row-${this.selectedDocumentId}`;
+    if (this.selectedId && this.rowsElements && this.tableElement) {
+      const id = `preview-result-row-${this.selectedId}`;
       const index = this.rowsElements.toArray().findIndex(elem => elem.nativeElement.id === id);
       if (index > 0) {
         const rowElement = this.rowsElements.toArray()[index - 1]; // because of sticky header

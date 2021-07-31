@@ -18,11 +18,13 @@
  */
 
 import {Action} from '@ngrx/store';
-import {AllowedPermissions} from '../../model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../model/allowed-permissions';
 
 export enum UserPermissionsActionType {
   SET_ORGANIZATION_PERMISSIONS = '[User Permissions] Set Organization Permissions',
+  SET_ORGANIZATIONS_PERMISSIONS = '[User Permissions] Set Organizations Permissions',
   SET_PROJECT_PERMISSIONS = '[User Permissions] Set Project Permissions',
+  SET_PROJECTS_PERMISSIONS = '[User Permissions] Set Projects Permissions',
   SET_COLLECTIONS_PERMISSIONS = '[User Permissions] Set Collections Permissions',
   SET_LINK_TYPES_PERMISSIONS = '[User Permissions] Set LinkTypes Permissions',
   SET_VIEWS_PERMISSIONS = '[User Permissions] Set Views Permissions',
@@ -43,22 +45,34 @@ export namespace UserPermissionsAction {
     public constructor(public payload: {permissions: AllowedPermissions}) {}
   }
 
+  export class SetOrganizationsPermissions implements Action {
+    public readonly type = UserPermissionsActionType.SET_ORGANIZATIONS_PERMISSIONS;
+
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
+  }
+
+  export class SetProjectsPermissions implements Action {
+    public readonly type = UserPermissionsActionType.SET_PROJECTS_PERMISSIONS;
+
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
+  }
+
   export class SetCollectionsPermissions implements Action {
     public readonly type = UserPermissionsActionType.SET_COLLECTIONS_PERMISSIONS;
 
-    public constructor(public payload: {permissions: Record<string, AllowedPermissions>}) {}
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
   }
 
   export class SetLinkTypesPermissions implements Action {
     public readonly type = UserPermissionsActionType.SET_LINK_TYPES_PERMISSIONS;
 
-    public constructor(public payload: {permissions: Record<string, AllowedPermissions>}) {}
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
   }
 
   export class SetViewsPermissions implements Action {
     public readonly type = UserPermissionsActionType.SET_VIEWS_PERMISSIONS;
 
-    public constructor(public payload: {permissions: Record<string, AllowedPermissions>}) {}
+    public constructor(public payload: {permissions: AllowedPermissionsMap}) {}
   }
 
   export class Clear implements Action {
@@ -67,7 +81,9 @@ export namespace UserPermissionsAction {
 
   export type All =
     | SetOrganizationPermissions
+    | SetOrganizationsPermissions
     | SetProjectPermissions
+    | SetProjectsPermissions
     | SetCollectionsPermissions
     | SetLinkTypesPermissions
     | SetViewsPermissions

@@ -20,6 +20,7 @@
                       [style.min-width.px]="configuration?.common?.minWidth"
                       [readonly]="true"
                       [value]="dataValue"
+                      [configuration]="configuration?.color"
                       [commonConfiguration]="commonConfiguration"
                       class="d-block w-100">
     </color-data-input>
@@ -41,6 +42,14 @@
                      class="w-100">
     </user-data-input>
 
+    <view-data-input *ngSwitchCase="constraintType.View"
+                     [focus]="false"
+                     [readonly]="true"
+                     [commonConfiguration]="commonConfiguration"
+                     [value]="dataValue"
+                     class="w-100">
+    </view-data-input>
+
     <files-data-input *ngSwitchCase="constraintType.Files"
                       [focus]="false"
                       [readonly]="true"
@@ -60,6 +69,13 @@
                        [configuration]="configuration?.action"
                        [value]="dataValue">
     </action-data-input>
+
+    <percentage-data-input *ngSwitchCase="constraintType.Percentage"
+                           [readonly]="true"
+                           [style.width.px]="100"
+                           [commonConfiguration]="commonConfiguration"
+                           [value]="dataValue">
+    </percentage-data-input>
 
   </ng-container>
 </ng-template>

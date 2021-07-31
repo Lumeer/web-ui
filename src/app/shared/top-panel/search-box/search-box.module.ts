@@ -36,9 +36,13 @@ import {DirectivesModule} from '../../directives/directives.module';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {SettingsButtonComponent} from './settings-button/settings-button.component';
-import {AttributesSettingsModule} from '../../settings/attributes/attributes-settings.module';
-import {ShouldShowSettingsPipe} from './settings-button/should-show-settings.pipe';
+import {ShouldShowAttributesSettingsPipe} from './settings-button/should-show-attributes-settings.pipe';
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
+import {SettingsModule} from '../../settings/settings.module';
+import {ShouldShowSettingsPipe} from './settings-button/should-show-settings.pipe';
+import {SimpleQueryItemComponent} from './query-item/simple/simple-query-item.component';
+import {QueryStemQueryItemComponent} from './query-item/query-stem/query-stem-query-item.component';
+import {QueryStemInputQueryItemComponent} from './query-item/query-stem-input/query-stem-input-query-item.component';
 
 @NgModule({
   imports: [
@@ -49,7 +53,7 @@ import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.m
     PresenterModule,
     PipesModule,
     SearchBoxPipesModule,
-    AttributesSettingsModule,
+    SettingsModule,
     DataInputModule,
     DirectivesModule,
     DropdownModule,
@@ -64,7 +68,11 @@ import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.m
     SearchButtonComponent,
     SuggestionItemComponent,
     SettingsButtonComponent,
+    ShouldShowAttributesSettingsPipe,
     ShouldShowSettingsPipe,
+    SimpleQueryItemComponent,
+    QueryStemQueryItemComponent,
+    QueryStemInputQueryItemComponent,
   ],
   exports: [SearchBoxComponent, QueryItemComponent, SearchBoxPipesModule],
 })

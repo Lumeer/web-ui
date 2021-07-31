@@ -1,0 +1,14 @@
+@import 'src/styles/variables';
+
+.selected {
+  background-color: $light;
+}
+
+.suggestions {
+  min-width: 250px;
+}
+
+.input-group {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}

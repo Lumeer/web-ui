@@ -28,19 +28,24 @@ import {Workspace} from '../../store/navigation/workspace';
 import {PublicPermissionService} from '../common/public-permission.service';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {DEFAULT_USER} from '../../constants';
 import {setDefaultUserPermissions} from '../common/public-api-util';
-import {Role} from '../../model/role';
+import {RoleType} from '../../model/role-type';
 import {selectCollectionById} from '../../store/collections/collections.state';
 import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
 import {selectPublicProject} from '../../store/projects/projects.state';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
+import {ConfigurationService} from '../../../configuration/configuration.service';
+import {collectionRoleTypes} from '../../store/collections/collection';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(
+    protected httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
     super(store$);
   }
 
@@ -142,10 +147,12 @@ export class PublicCollectionService extends PublicPermissionService implements 
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/collections`;
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/p/organizations/${organizationId}/projects/${projectId}/collections`;
   }
 }
 
 function setCollectionPermissions(dto: CollectionDto, editable?: boolean): CollectionDto {
-  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? [Role.Read, Role.Write, Role.Manage] : [Role.Read]);
+  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? collectionRoleTypes : [RoleType.Read]);
 }

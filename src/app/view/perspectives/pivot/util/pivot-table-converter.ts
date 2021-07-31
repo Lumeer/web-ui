@@ -22,6 +22,7 @@ import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {
   deepObjectCopy,
+  isArray,
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
@@ -42,7 +43,7 @@ import {
   PercentageConstraint,
   UnknownConstraint,
 } from '@lumeer/data-filters';
-import {getCurrentLocaleLanguageTag} from '../../../../core/model/language-tag';
+import {DataResource} from '../../../../core/model/resource';
 
 interface HeaderGroupInfo {
   background: string;
@@ -71,6 +72,7 @@ export class PivotTableConverter {
 
   private data: PivotStemData;
   private values: any[][];
+  private dataResources: DataResource[][][];
   private constraintData: ConstraintData;
   private rowLevels: number;
   private rowsTransformationArray: number[];
@@ -105,6 +107,7 @@ export class PivotTableConverter {
     this.valueTypeInfo = getValuesTypeInfo(data.values, data.valueTypes, numberOfSums);
     this.data = preparePivotData(data, this.constraintData, this.valueTypeInfo);
     this.values = data.values || [];
+    this.dataResources = data.dataResources || [];
     this.rowLevels = (data.rowShowSums || []).length;
     this.columnLevels = (data.columnShowSums || []).length + (data.hasAdditionalColumnLevel ? 1 : 0);
     const hasValue = (data.valueTitles || []).length > 0;
@@ -144,7 +147,6 @@ export class PivotTableConverter {
     const rowGroups = this.fillCellsByRows(cells);
     const columnGroups = this.fillCellsByColumns(cells);
     this.fillCellsByGroupIntersection(cells, rowGroups, columnGroups);
-
     return {cells};
   }
 
@@ -199,9 +201,9 @@ export class PivotTableConverter {
       const summary = level === 0 ? this.summaryString : this.headerSummaryString;
       const columnIndex = Math.max(level - 1, 0);
       cells[currentIndex][columnIndex] = {
-        value: parentHeader && parentHeader.title,
-        constraint: parentHeader && parentHeader.constraint,
-        label: parentHeader && parentHeader.attributeName,
+        value: parentHeader?.title,
+        constraint: parentHeader?.constraint,
+        label: parentHeader?.attributeName,
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: 1,
@@ -244,10 +246,12 @@ export class PivotTableConverter {
         const columnIndexInCells = this.columnsTransformationArray[column];
         if (isNotNullOrUndefined(columnIndexInCells)) {
           const value = this.data.values[row][column];
-          const formattedValue = this.formatValueByValueType(value, this.getValueIndexForColumns([column]));
+          const dataResources = this.dataResources?.[row]?.[column] || [];
+          const formattedValue = this.aggregateOrFormatSingleValue(value, column);
           const stringValue = isNotNullOrUndefined(formattedValue) ? String(formattedValue) : '';
           cells[rowIndexInCells][columnIndexInCells] = {
             value: stringValue,
+            dataResources,
             rowSpan: 1,
             colSpan: 1,
             cssClass: PivotTableConverter.dataClass,
@@ -327,11 +331,11 @@ export class PivotTableConverter {
     for (let column = 0; column < this.columnsTransformationArray.length; column++) {
       const columnIndexInCells = this.columnsTransformationArray[column];
       if (isNotNullOrUndefined(columnIndexInCells)) {
-        const values = this.getGroupedValuesForRowsAndCols(rows, [column]);
-        const aggregatedValue = aggregateDataValues(this.aggregationByColumns([column]), values);
-        const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, rows, [column]);
+        const {values, dataResources} = this.getGroupedValuesForRowsAndCols(rows, [column]);
+        const formattedValue = this.aggregateAndFormatDataValues(values, rows, [column]);
         cells[rowIndexInCells][columnIndexInCells] = {
           value: String(formattedValue),
+          dataResources,
           colSpan: 1,
           rowSpan: 1,
           cssClass: PivotTableConverter.groupDataClass,
@@ -342,14 +346,24 @@ export class PivotTableConverter {
     }
   }
 
-  private getGroupedValuesForRowsAndCols(rows: number[], columns: number[]): any[] {
+  private getGroupedValuesForRowsAndCols(
+    rows: number[],
+    columns: number[]
+  ): {values: any[]; dataResources: DataResource[]} {
     const values = [];
+    const dataResources = [];
     for (const row of rows) {
       for (const column of columns) {
-        values.push(this.values[row][column]);
+        const rowColumnValue = this.values[row][column];
+        if (isArray(rowColumnValue)) {
+          values.push(...rowColumnValue);
+        } else {
+          values.push(rowColumnValue);
+        }
+        dataResources.push(...(this.dataResources?.[row]?.[column] || []));
       }
     }
-    return values;
+    return {values, dataResources};
   }
 
   private fillCellsByColumns(cells: PivotTableCell[][]): HeaderGroupInfo[] {
@@ -414,9 +428,9 @@ export class PivotTableConverter {
       const shouldAddValueHeaders = numberOfValues > 1;
 
       cells[rowIndex][currentIndex] = {
-        value: parentHeader && parentHeader.title,
-        constraint: parentHeader && parentHeader.constraint,
-        label: parentHeader && parentHeader.attributeName,
+        value: parentHeader?.title,
+        constraint: parentHeader?.constraint,
+        label: parentHeader?.attributeName,
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: this.columnLevels - rowIndex - (shouldAddValueHeaders ? 1 : 0),
@@ -464,11 +478,11 @@ export class PivotTableConverter {
     for (let row = 0; row < this.rowsTransformationArray.length; row++) {
       const rowIndexInCells = this.rowsTransformationArray[row];
       if (isNotNullOrUndefined(rowIndexInCells)) {
-        const values = this.getGroupedValuesForRowsAndCols([row], columns);
-        const aggregatedValue = aggregateDataValues(this.aggregationByColumns(columns), values);
-        const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, [row], columns);
+        const {values, dataResources} = this.getGroupedValuesForRowsAndCols([row], columns);
+        const formattedValue = this.aggregateAndFormatDataValues(values, [row], columns);
         cells[rowIndexInCells][columnIndexInCells] = {
           value: String(formattedValue),
+          dataResources,
           colSpan: 1,
           rowSpan: 1,
           cssClass: PivotTableConverter.groupDataClass,
@@ -477,6 +491,17 @@ export class PivotTableConverter {
         };
       }
     }
+  }
+
+  private aggregateAndFormatDataValues(values: any[], rows: number[], columns: number[]): any {
+    const aggregation = this.aggregationByColumns(columns);
+    if (aggregation === DataAggregationType.Join) {
+      const valueIndex = this.getValueIndexForColumns(columns);
+      const constraint = this.data.valuesConstraints?.[valueIndex] || this.valueTypeInfo[valueIndex]?.defaultConstraint;
+      return aggregateDataValues(aggregation, values, constraint, false, this.constraintData);
+    }
+    const aggregatedValue = aggregateDataValues(aggregation, values);
+    return this.formatGroupedValueByValueType(aggregatedValue, rows, columns);
   }
 
   private aggregationByColumns(columns: number[]): DataAggregationType {
@@ -492,10 +517,12 @@ export class PivotTableConverter {
         const rowIndexInCells = this.rowsTransformationArray[row];
         if (isNotNullOrUndefined(rowIndexInCells)) {
           const value = this.data.values[row][column];
-          const formattedValue = this.formatValueByValueType(value, this.getValueIndexForColumns([column]));
+          const dataResources = this.dataResources?.[row]?.[column] || [];
+          const formattedValue = this.aggregateOrFormatSingleValue(value, column);
           const stringValue = isNotNullOrUndefined(formattedValue) ? String(formattedValue) : '';
           cells[rowIndexInCells][columnIndexInCells] = {
             value: stringValue,
+            dataResources,
             rowSpan: 1,
             colSpan: 1,
             cssClass: PivotTableConverter.dataClass,
@@ -504,6 +531,16 @@ export class PivotTableConverter {
         }
       }
     }
+  }
+
+  private aggregateOrFormatSingleValue(value: any, column: number): any {
+    const aggregation = this.aggregationByColumns([column]);
+    const valueIndex = this.getValueIndexForColumns([column]);
+    if (aggregation === DataAggregationType.Join) {
+      const constraint = this.data.valuesConstraints?.[valueIndex] || this.valueTypeInfo[valueIndex]?.defaultConstraint;
+      return aggregateDataValues(aggregation, [value], constraint, false, this.constraintData);
+    }
+    return this.formatValueByValueType(value, valueIndex);
   }
 
   private fillCellsByGroupIntersection(
@@ -524,11 +561,11 @@ export class PivotTableConverter {
               rowGroupInfo.indexes,
               columnGroupsInfo[j].indexes
             );
-            const values = this.getGroupedValuesForRowsAndCols(rowsIndexes, columnsIndexes);
-            const aggregatedValue = aggregateDataValues(this.aggregationByColumns(columnsIndexes), values);
-            const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, rowsIndexes, columnsIndexes);
+            const {values, dataResources} = this.getGroupedValuesForRowsAndCols(rowsIndexes, columnsIndexes);
+            const formattedValue = this.aggregateAndFormatDataValues(values, rowsIndexes, columnsIndexes);
             cells[i][j] = {
               value: String(formattedValue),
+              dataResources,
               colSpan: 1,
               rowSpan: 1,
               cssClass: PivotTableConverter.groupDataClass,
@@ -599,6 +636,7 @@ export class PivotTableConverter {
           const isDataClass = this.rowsTransformationArray.includes(i) && this.columnsTransformationArray.includes(j);
           matrix[i][j] = {
             value: '',
+            dataResources: [],
             cssClass: isDataClass ? PivotTableConverter.dataClass : PivotTableConverter.groupDataClass,
             rowSpan: 1,
             colSpan: 1,
@@ -702,9 +740,7 @@ function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numVal
 function getValueTypeInfo(values: any[][], type: PivotValueType, rows: number[], columns: number[]): ValueTypeInfo {
   const containsDecimal = containsDecimalValue(values, rows, columns);
   const valueTypeInfo: ValueTypeInfo = {
-    defaultConstraint: containsDecimal
-      ? new NumberConstraint({decimals: 2, locale: getCurrentLocaleLanguageTag()})
-      : null,
+    defaultConstraint: containsDecimal ? new NumberConstraint({decimals: 2}) : null,
   };
 
   if (type === PivotValueType.AllPercentage) {
@@ -927,7 +963,7 @@ function sortPivotDataHeadersRecursive(
 function getConstraintForSort(sort: PivotSort, headers: PivotDataHeader[]): Constraint {
   if ((sort?.list?.values || []).length > 0) {
     // sort is done by values in columns
-    return new NumberConstraint({locale: getCurrentLocaleLanguageTag()});
+    return new NumberConstraint({});
   }
   return ((headers || [])[0] && (headers || [])[0].constraint) || new UnknownConstraint();
 }

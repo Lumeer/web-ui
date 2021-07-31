@@ -2,11 +2,12 @@
   <div class="mr-3">
     <i class="fas fa-ruler-triangle text-success"></i>
   </div>
-  <div>
+  <div *ngIf="{attrs: rule | attributeNames:attributes} as attrsData">
     <strong>{{rule.name}}</strong>
     <span class="mx-2" i18n="@@collection.config.tab.rules.ofType">of type</span>
+
     <em i18n="@@collection.config.tab.rules.type">{rule.type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow}}</em>
-    <span *ngIf="(rule.timing | hasCreate) || (rule.timing | hasUpdate) || (rule.timing | hasDelete)" class="ml-2" i18n="@@collection.config.tab.rules.on">on</span>
+    <span *ngIf="(rule.timing | hasCreate) || (rule.timing | hasUpdate) || (rule.timing | hasDelete) || (attrsData.attrs)" class="ml-2" i18n="@@collection.config.tab.rules.on">on</span>
 
     <span
       *ngIf="rule.timing | hasCreate"
@@ -28,12 +29,24 @@
       <i class="fas fa-check-circle text-success"></i>
       <span class="ml-1" i18n="@@collection.config.tab.rules.timing.delete">Delete</span>
     </span>
+
+    <span
+      *ngIf="attrsData.attrs"
+      class="ml-2"
+      tooltip="Used in action in listed column(s)"
+      i18n-tooltip="@@collection.config.tab.rules.usedInAction">
+      <i class="fas fa-columns text-primary"></i>
+      <span class="ml-1">{{attrsData.attrs}}</span>
+    </span>
   </div>
   <div class="flex-grow-1 text-right">
-    <a (click)="fireEdit(rule)">
+    <a *ngIf="canDuplicate" (click)="fireDuplicate(rule)" title="Duplicate automation" i18n-title="@@collection.config.tab.rules.btn.duplicate">
+      <i class="far fa-clone text-success cursor-pointer"></i>
+    </a>
+    <a class="ml-2-5" (click)="fireEdit(rule)" title="Edit automation" i18n-title="@@collection.config.tab.rules.btn.edit">
       <i class="fas fa-pencil text-success cursor-pointer"></i>
     </a>
-    <a class="ml-3" (click)="fireDelete(rule)">
+    <a class="ml-2-5" (click)="fireDelete(rule)" title="Delete automation" i18n-title="@@collection.config.tab.rules.btn.delete">
       <i class="far fa-trash-alt text-danger cursor-pointer"></i>
     </a>
   </div>

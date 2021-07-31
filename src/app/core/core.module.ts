@@ -24,23 +24,20 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {AlertModule} from 'ngx-bootstrap/alert';
-import {defineLocale} from 'ngx-bootstrap/chronos';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
-import {csLocale} from 'ngx-bootstrap/locale';
 import {ModalModule} from 'ngx-bootstrap/modal';
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
-import {environment} from '../../environments/environment';
 import {SharedModule} from '../shared/shared.module';
 import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
-import {HomeComponent} from './home.component';
+import {HomeComponent} from './components/home.component';
 import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
-import {RedirectComponent} from './redirect.component';
-import {GroupService, ImportService} from './rest';
+import {RedirectComponent} from './components/redirect.component';
+import {ImportService} from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
 import {UserNotificationsService} from './rest/user-notifications.service';
@@ -49,7 +46,6 @@ import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 import {SequenceService} from './rest/sequence.service';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
-import {LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
 import {TemplateService} from './rest/template.service';
 import {DataServiceModule} from './data-service/data-service.module';
 import {FullCalendarModule} from '@fullcalendar/angular';
@@ -58,6 +54,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
+import {DocumentRedirectComponent} from './components/document-redirect.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -66,10 +63,6 @@ FullCalendarModule.registerPlugins([
   listPlugin,
   resourceTimeGridPlugin,
 ]);
-
-if (environment.locale === LanguageCode.CZ) {
-  defineLocale('cs', csLocale);
-}
 
 @NgModule({
   imports: [
@@ -93,7 +86,7 @@ if (environment.locale === LanguageCode.CZ) {
     DataServiceModule,
     FullCalendarModule,
   ],
-  declarations: [HomeComponent, RedirectComponent],
+  declarations: [HomeComponent, RedirectComponent, DocumentRedirectComponent],
   providers: [
     {
       provide: ErrorHandler,
@@ -103,14 +96,13 @@ if (environment.locale === LanguageCode.CZ) {
     TemplateService,
     BaseService,
     ImportService,
-    GroupService,
     OrganizationValidators,
     ProjectValidators,
     PusherService,
     UserNotificationsService,
     SequenceService,
   ],
-  exports: [HomeComponent, NotificationsModule, RedirectComponent],
+  exports: [HomeComponent, NotificationsModule, RedirectComponent, DocumentRedirectComponent],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

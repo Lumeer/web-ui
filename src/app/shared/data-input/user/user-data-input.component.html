@@ -1,7 +1,7 @@
 <div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
      *ngIf="selectedUsers$ | async as selectedUsers"
      [title]="selectedUsers | usersNames | join"
-     [class.justify-content-center]="value.config?.onlyIcon && configuration?.allowCenterOnlyIcon"
+     [class.justify-content-center]="onlyIcon && configuration?.allowCenterOnlyIcon"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">
@@ -14,13 +14,13 @@
          [style.min-height.px]="avatarSize"
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
-    <span *ngIf="!value.config?.onlyIcon && selectedUsers?.length && (selectedUsers | usersAreValid:users:value.config)"
+    <span *ngIf="!onlyIcon && selectedUsers?.length && (selectedUsers | usersAreValid:users:value.config)"
           [ngClass]="inputClass"
           class="d-inline-block ml-2 text-nowrap user">
         {{selectedUsers | usersNames | join}}
       </span>
 
-    <ng-container *ngIf="!value.config?.onlyIcon && !(selectedUsers | usersAreValid:users:value.config)">
+    <ng-container *ngIf="!onlyIcon && !(selectedUsers | usersAreValid:users:value.config)">
 
       <ng-container
         *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
@@ -45,6 +45,7 @@
            [(ngModel)]="name"
            (blur)="onBlur()"
            (focus)="onFocused()"
+           inputmode="email"
            (ngModelChange)="onInputChange()"
            [class.ml-1]="selectedUsers.length > 0"
            [spellcheck]="false"

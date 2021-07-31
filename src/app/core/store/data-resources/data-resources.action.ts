@@ -18,12 +18,21 @@
  */
 
 import {Action} from '@ngrx/store';
+import {DataQuery} from '../../model/data-query';
 import {Query} from '../navigation/query/query';
-import {Workspace} from '../navigation/workspace';
+import {DataQueryPayload} from '../utils/data-query-payload';
 
 export enum DataResourcesActionType {
   GET = '[Data Resources] Get',
   GET_SUCCESS = '[Data Resources] Get :: Success',
+  GET_FAILURE = '[Data Resources] Get :: Failure',
+
+  GET_TASKS = '[Data Resources] Get Tasks',
+  GET_TASKS_SUCCESS = '[Data Resources] Get Tasks :: Success',
+  GET_TASKS_FAILURE = '[Data Resources] Get Tasks :: Failure',
+
+  SET_LOADING_QUERY = '[Data Resources] Set Loading Query',
+  SET_LOADING_TASKS_QUERY = '[Data Resources] Set Loading Tasks Query',
 
   CLEAR_QUERIES = '[Data Resources] Clear Queries',
   CLEAR = '[Data Resources] Clear',
@@ -33,13 +42,37 @@ export namespace DataResourcesAction {
   export class Get implements Action {
     public readonly type = DataResourcesActionType.GET;
 
-    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
+    public constructor(public payload: DataQueryPayload) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = DataResourcesActionType.GET_SUCCESS;
 
-    public constructor(public payload: {query: Query}) {}
+    public constructor(public payload: {query: DataQuery}) {}
+  }
+
+  export class GetFailure implements Action {
+    public readonly type = DataResourcesActionType.GET_FAILURE;
+
+    public constructor(public payload: {error: any; query: DataQuery}) {}
+  }
+
+  export class GetTasks implements Action {
+    public readonly type = DataResourcesActionType.GET_TASKS;
+
+    public constructor(public payload: DataQueryPayload) {}
+  }
+
+  export class GetTasksSuccess implements Action {
+    public readonly type = DataResourcesActionType.GET_TASKS_SUCCESS;
+
+    public constructor(public payload: {query: DataQuery}) {}
+  }
+
+  export class GetTasksFailure implements Action {
+    public readonly type = DataResourcesActionType.GET_TASKS_FAILURE;
+
+    public constructor(public payload: {error: any; query: DataQuery}) {}
   }
 
   export class ClearQueries implements Action {
@@ -48,9 +81,31 @@ export namespace DataResourcesAction {
     public constructor(public payload: {collectionId?: string}) {}
   }
 
+  export class SetLoadingQuery implements Action {
+    public readonly type = DataResourcesActionType.SET_LOADING_QUERY;
+
+    public constructor(public payload: {query: Query}) {}
+  }
+
+  export class SetLoadingTasksQuery implements Action {
+    public readonly type = DataResourcesActionType.SET_LOADING_TASKS_QUERY;
+
+    public constructor(public payload: {query: Query}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = DataResourcesActionType.CLEAR;
   }
 
-  export type All = Get | GetSuccess | ClearQueries | Clear;
+  export type All =
+    | Get
+    | GetSuccess
+    | GetFailure
+    | GetTasks
+    | GetTasksSuccess
+    | GetTasksFailure
+    | ClearQueries
+    | SetLoadingQuery
+    | SetLoadingTasksQuery
+    | Clear;
 }

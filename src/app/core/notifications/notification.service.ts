@@ -18,37 +18,36 @@
  */
 
 import {Injectable} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IndividualConfig, ToastrService} from 'ngx-toastr';
 import {NotificationButton} from './notification-button';
 import {NotificationComponent} from './notification/notification.component';
-import {environment} from '../../../environments/environment';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 @Injectable()
 export class NotificationService {
-  constructor(private notifications: ToastrService, private i18n: I18n) {}
+  constructor(private notifications: ToastrService, private configurationService: ConfigurationService) {}
 
   public success(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
-      this.notifications.success(message, this.i18n({id: 'notification.service.Success', value: 'Success'}), config);
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
+      this.notifications.success(message, $localize`:@@notification.service.Success:Success`, config);
     }
   }
 
   public info(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
-      this.notifications.info(message, this.i18n({id: 'notification.service.Info', value: 'Info'}), config);
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
+      this.notifications.info(message, $localize`:@@notification.service.Info:Info`, config);
     }
   }
 
   public warning(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
-      this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}), config);
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
+      this.notifications.warning(message, $localize`:@@notification.service.Warning:Warning`, config);
     }
   }
 
   public error(message: string, config?: Partial<IndividualConfig>) {
-    if (!environment.notificationsDisabled) {
-      this.notifications.error(message, this.i18n({id: 'notification.service.Error', value: 'Error'}), config);
+    if (!this.configurationService.getConfiguration().notificationsDisabled) {
+      this.notifications.error(message, $localize`:@@notification.service.Error:Error`, config);
     }
   }
 
@@ -75,10 +74,10 @@ export class NotificationService {
   }
 
   public confirmYesOrNo(message: string, title: string, type: string, onConfirm: () => void, onCancel?: () => void) {
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const yesButtonText = $localize`:@@button.yes:Yes`;
     const yesButton = {text: yesButtonText, action: () => onConfirm()};
 
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+    const noButtonText = $localize`:@@button.no:No`;
     const noButton = {text: noButtonText, action: () => onCancel?.()};
 
     this.confirm(message, title, [noButton, yesButton], type);

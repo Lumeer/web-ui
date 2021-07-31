@@ -56,7 +56,11 @@ import {ActionConstraintPermissionsFormComponent} from './form/constraint-config
 import {CollectionSettingsPathPipe} from './form/constraint-config/action/pipes/collection-settings-path.pipe';
 import {RouterModule} from '@angular/router';
 import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
-import {ModifyAttributeForQueryFilterPipe} from './form/constraint-config/action/pipes/modify-attribute-for-query-filter.pipe';
+import {ActionConstraintConfirmationFormComponent} from './form/constraint-config/action/confirmation/action-constraint-confirmation-form.component';
+import {InputModule} from '../../input/input.module';
+import {PercentageConstraintConfigStyleComponent} from './form/constraint-config/percentage/style/percentage-constraint-config-style.component';
+import {ProgressModule} from '../../progress/progress.module';
+import {ViewConstraintConfigFormComponent} from './form/constraint-config/view/view-constraint-config-form.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +88,9 @@ import {ModifyAttributeForQueryFilterPipe} from './form/constraint-config/action
     ActionConstraintPermissionsFormComponent,
     CollectionSettingsPathPipe,
     ActionConstraintConfigEmptyComponent,
-    ModifyAttributeForQueryFilterPipe,
+    ActionConstraintConfirmationFormComponent,
+    PercentageConstraintConfigStyleComponent,
+    ViewConstraintConfigFormComponent,
   ],
   imports: [
     CommonModule,
@@ -101,6 +107,8 @@ import {ModifyAttributeForQueryFilterPipe} from './form/constraint-config/action
     FilterPreviewModule,
     FilterBuilderModule,
     RouterModule,
+    InputModule,
+    ProgressModule,
   ],
   exports: [AttributeTypeModalComponent],
 })

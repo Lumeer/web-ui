@@ -22,7 +22,6 @@ import {Attribute} from '../../core/store/collections/collection';
 import {BehaviorSubject, combineLatest, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
@@ -42,6 +41,7 @@ import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 export interface DataRow {
   id: string;
@@ -59,11 +59,12 @@ export class DataRowService {
   private resourceType: AttributesResourceType;
   private resource: AttributesResource;
   private dataResource: DataResource;
+  private workspace: Workspace;
   private settingsOrder: ResourceAttributeSettings[];
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
+  constructor(private store$: Store<AppState>, private notificationService: NotificationService) {}
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -80,6 +81,10 @@ export class DataRowService {
     this.settingsOrder = settingsOrder;
     this.emitRows(this.createDataRows());
     this.refreshSubscription();
+  }
+
+  public setWorkspace(workspace: Workspace) {
+    this.workspace = workspace;
   }
 
   public setSettings(settingsOrder: ResourceAttributeSettings[]) {
@@ -193,16 +198,19 @@ export class DataRowService {
     delete data[row.attribute.id];
     let action;
     if (this.isCollectionResource) {
-      action = new DocumentsAction.UpdateData({document: {...(<DocumentModel>this.dataResource), data}});
+      action = new DocumentsAction.UpdateData({
+        document: {...(<DocumentModel>this.dataResource), data},
+        workspace: this.workspace,
+      });
     } else {
-      action = new LinkInstancesAction.UpdateData({linkInstance: {...(<LinkInstance>this.dataResource), data}});
+      action = new LinkInstancesAction.UpdateData({
+        linkInstance: {...(<LinkInstance>this.dataResource), data},
+        workspace: this.workspace,
+      });
     }
 
-    const message = this.i18n({
-      id: 'dataResource.detail.attribute.remove.confirm',
-      value: 'Are you sure you want to delete this row?',
-    });
-    const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
+    const message = $localize`:@@dataResource.detail.attribute.remove.confirm:Are you sure you want to delete this row?`;
+    const title = $localize`:@@resource.delete.dialog.title:Delete?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.store$.dispatch(action));
   }
 
@@ -253,9 +261,19 @@ export class DataRowService {
       data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value : '';
       const newDataResource = {...this.dataResource, data};
       if (this.isCollectionResource) {
-        this.store$.dispatch(new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}));
+        this.store$.dispatch(
+          new DocumentsAction.UpdateData({
+            document: <DocumentModel>newDataResource,
+            workspace: this.workspace,
+          })
+        );
       } else {
-        this.store$.dispatch(new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}));
+        this.store$.dispatch(
+          new LinkInstancesAction.UpdateData({
+            linkInstance: <LinkInstance>newDataResource,
+            workspace: this.workspace,
+          })
+        );
       }
     }
   }
@@ -287,7 +305,10 @@ export class DataRowService {
           new CollectionsAction.CreateAttributes({
             collectionId: (<DocumentModel>this.dataResource).collectionId,
             attributes: [newAttribute],
-            nextAction: new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}),
+            nextAction: new DocumentsAction.UpdateData({
+              document: <DocumentModel>newDataResource,
+              workspace: this.workspace,
+            }),
           })
         );
       } else {
@@ -295,7 +316,10 @@ export class DataRowService {
           new LinkTypesAction.CreateAttributes({
             linkTypeId: (<LinkInstance>this.dataResource).linkTypeId,
             attributes: [newAttribute],
-            nextAction: new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}),
+            nextAction: new LinkInstancesAction.UpdateData({
+              linkInstance: <LinkInstance>newDataResource,
+              workspace: this.workspace,
+            }),
           })
         );
       }
@@ -313,9 +337,13 @@ export class DataRowService {
     const patchData = {[row.attribute.id]: value};
     const dataResource = {...this.dataResource, data: patchData};
     if (this.isCollectionResource) {
-      this.store$.dispatch(new DocumentsAction.PatchData({document: <DocumentModel>dataResource}));
+      this.store$.dispatch(
+        new DocumentsAction.PatchData({document: <DocumentModel>dataResource, workspace: this.workspace})
+      );
     } else {
-      this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance: <LinkInstance>dataResource}));
+      this.store$.dispatch(
+        new LinkInstancesAction.PatchData({linkInstance: <LinkInstance>dataResource, workspace: this.workspace})
+      );
     }
   }
 

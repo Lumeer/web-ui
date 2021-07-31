@@ -25,15 +25,24 @@ import {InputBoxComponent} from './input-box/input-box.component';
 import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
 import {HiddenInputComponent} from './hidden-input/hidden-input.component';
 import {CopyTextBoxComponent} from './copy-text-box/copy-text-box.component';
+import {CustomCheckboxComponent} from './custom-checkbox/custom-checkbox.component';
+import {InputTagsComponent} from './tags/input-tags.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {DirectivesModule} from '../directives/directives.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule],
   declarations: [
     FilterBoxComponent,
     InputBoxComponent,
     InvitationTypeSelectComponent,
     HiddenInputComponent,
     CopyTextBoxComponent,
+    CustomCheckboxComponent,
+    InputTagsComponent,
+    FilterUsedSuggestionsPipe,
   ],
   exports: [
     FilterBoxComponent,
@@ -41,6 +50,8 @@ import {CopyTextBoxComponent} from './copy-text-box/copy-text-box.component';
     InvitationTypeSelectComponent,
     HiddenInputComponent,
     CopyTextBoxComponent,
+    CustomCheckboxComponent,
+    InputTagsComponent,
   ],
 })
 export class InputModule {}

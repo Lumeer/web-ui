@@ -18,6 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
+import {BehaviorSubject} from 'rxjs';
+import {ProjectsAction} from '../../../../core/store/projects/projects.action';
+import {SampleDataType} from '../../../../core/model/sample-data-type';
 
 @Component({
   selector: 'post-it-collection-add-button',
@@ -26,11 +31,28 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItCollectionAddButtonComponent {
+  @Input()
+  public showAddTaskTable: boolean;
+
   @Output()
   public clicked = new EventEmitter();
 
-  @Input()
-  public disabled: boolean;
+  constructor(private store$: Store<AppState>) {}
+
+  public creatingData$ = new BehaviorSubject(false);
+
+  public onCreate() {
+    this.creatingData$.next(true);
+
+    const errorMessage = $localize`:@@tasks.sample.data.failure:Could not add task table to project`;
+    this.store$.dispatch(
+      new ProjectsAction.CreateSampleData({
+        type: SampleDataType.Tasks,
+        errorMessage,
+        onFailure: () => this.creatingData$.next(false),
+      })
+    );
+  }
 
   public add() {
     this.clicked.emit();

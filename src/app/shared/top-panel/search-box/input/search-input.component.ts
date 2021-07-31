@@ -31,7 +31,6 @@ import {KeyCode} from '../../../key-code';
 import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'search-input',
@@ -46,6 +45,9 @@ export class SearchInputComponent {
 
   @Input()
   public readonly: boolean;
+
+  @Input()
+  public restrictedMode: boolean;
 
   @Output()
   public addQueryItem = new EventEmitter<QueryItem>();
@@ -62,13 +64,16 @@ export class SearchInputComponent {
   @ViewChild(SearchSuggestionsComponent, {static: true})
   public searchSuggestions: SearchSuggestionsComponent;
 
+  public readonly emptyPlaceholder: string;
   public readonly placeholder: string;
+  public readonly restrictedItemTypes = [QueryItemType.View, QueryItemType.Collection, QueryItemType.Link];
 
   public suggesting: boolean;
   public text = '';
 
-  constructor(private i18n: I18n, public hostElement: ElementRef) {
-    this.placeholder = i18n({id: 'search.input.placeholder', value: 'Type anything you search for...'});
+  constructor(public hostElement: ElementRef) {
+    this.emptyPlaceholder = $localize`:@@search.input.placeholder:Type anything you search for…`;
+    this.placeholder = $localize`:@@search.input.placeholder.short:Search or filter…`;
   }
 
   public onUseSuggestion(suggestion: QueryItem) {

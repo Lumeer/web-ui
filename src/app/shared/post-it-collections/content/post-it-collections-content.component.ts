@@ -41,15 +41,14 @@ import {safeGetRandomIcon} from '../../picker/icons';
 import * as Colors from '../../picker/colors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject} from 'rxjs';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
-import {environment} from '../../../../environments/environment';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -88,6 +87,9 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   @Input()
   public query: Query;
 
+  @Input()
+  public showAddTaskTable: boolean;
+
   @Output()
   public delete = new EventEmitter<Collection>();
 
@@ -104,17 +106,19 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public selectedCollections$ = new BehaviorSubject<string[]>([]);
   public correlationIdsOrder = [];
 
-  public readonly canImportCollection = !environment.publicView;
+  public readonly canImportCollection: boolean;
 
   private readonly colors = Colors.palette;
 
   constructor(
     private toggleService: CollectionFavoriteToggleService,
     private notificationService: NotificationService,
-    private i18n: I18n,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private configurationService: ConfigurationService
+  ) {
+    this.canImportCollection = !configurationService.getConfiguration().publicView;
+  }
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
@@ -222,12 +226,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
     const numUncreated = this.allCollections$.getValue().filter(coll => isNullOrUndefined(coll.id)).length;
 
     if (numUncreated % UNCREATED_THRESHOLD === 0) {
-      const message = this.i18n({
-        id: 'collections.postit.empty.info',
-        value:
-          'Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.',
-      });
-
+      const message = $localize`:@@collections.postit.empty.info:Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.`;
       this.notificationService.info(message);
     }
   }

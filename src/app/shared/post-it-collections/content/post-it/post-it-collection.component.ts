@@ -39,6 +39,9 @@ import {select, Store} from '@ngrx/store';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {QueryParam} from '../../../../core/store/navigation/query-param';
+import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collection',
@@ -75,12 +78,28 @@ export class PostItCollectionComponent implements OnChanges {
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public permissions$: Observable<AllowedPermissions>;
+  public canManageDetail$: Observable<boolean>;
+
+  public path: any[];
+  public queryParams: any;
 
   constructor(private router: Router, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
       this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collection?.id)));
+      this.canManageDetail$ = this.permissions$.pipe(
+        map(permissions => permissionsCanManageCollectionDetail(permissions))
+      );
+    }
+    if (changes.collection || changes.workspace) {
+      if (this.collection?.id) {
+        this.path = ['/w', this.workspace?.organizationCode, this.workspace?.projectCode, 'view', Perspective.Table];
+        this.queryParams = {[QueryParam.Query]: this.queryForCollectionDocuments()};
+      } else {
+        this.path = null;
+        this.queryParams = null;
+      }
     }
   }
 
@@ -104,10 +123,6 @@ export class PostItCollectionComponent implements OnChanges {
     this.favoriteToggle.emit();
   }
 
-  public workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
   public queryForCollectionDocuments(): string {
     const query: Query = {stems: [{collectionId: this.collection.id}]};
     return convertQueryModelToString(query);
@@ -121,13 +136,5 @@ export class PostItCollectionComponent implements OnChanges {
     // we know that uncreated collection is not in store
     this.collection.icon = data.icon;
     this.collection.color = data.color;
-  }
-
-  public openCollection() {
-    if (this.collection?.id) {
-      this.router.navigate([this.workspacePath(), 'view', Perspective.Table], {
-        queryParams: {q: this.queryForCollectionDocuments()},
-      });
-    }
   }
 }

@@ -29,17 +29,25 @@ import {map, switchMap} from 'rxjs/operators';
 import {selectDocumentsByCollectionId} from '../store/documents/documents.state';
 import {selectLinkInstancesByType} from '../store/link-instances/link-instances.state';
 import {DataResource} from '../model/resource';
+import {AppState} from '../store/app.state';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {localeLanguageTags} from '../model/language-tag';
 
 @Injectable()
 export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private translationService: TranslationService,
+    private configurationService: ConfigurationService
+  ) {}
 
   public init(): Promise<boolean> {
     const durationUnitsMap = this.translationService.createDurationUnitsMap();
     const abbreviations = this.translationService.createCurrencyAbbreviations();
     const ordinals = this.translationService.createCurrencyOrdinals();
+    const locale = localeLanguageTags[this.configurationService.getConfiguration().locale];
     const currencyData: CurrencyData = {abbreviations, ordinals};
-    this.store$.dispatch(new ConstraintDataAction.Init({data: {durationUnitsMap, currencyData}}));
+    this.store$.dispatch(new ConstraintDataAction.Init({data: {durationUnitsMap, currencyData, locale}}));
     return Promise.resolve(true);
   }
 

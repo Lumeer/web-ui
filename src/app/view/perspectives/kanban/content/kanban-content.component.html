@@ -1,14 +1,14 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
   <collapsible-sidebar *ngIf="canManageConfig"
-                       [collapsed]="!(sidebarOpened$ | async)"
-                       (toggle)="onSidebarToggle()">
+                       [collapsed]="!sidebarOpened"
+                       (toggle)="sidebarToggle.emit()">
     <kanban-config
       class="d-block m-3"
       [collections]="collections"
       [linkTypes]="linkTypes"
       [config]="config"
       [query]="query"
-      [visible]="sidebarOpened$ | async"
+      [visible]="sidebarOpened"
       (configChange)="onConfigChanged($event, true)"
       [constraintData]="constraintData">
     </kanban-config>
@@ -16,16 +16,15 @@
 
   <kanban-columns
     *ngIf="data$ | async as kanbanData"
-    class="flex-grow-1 h-100"
+    class="flex-grow-1 h-100 pb-4"
     [collections]="collections"
-    [documents]="documents"
+    [data]="data"
     [linkTypes]="linkTypes"
-    [linkInstances]="linkInstances"
     [config]="config"
     [kanbanData]="kanbanData"
     [permissions]="permissions"
-    [linkTypesPermissions]="linkTypesPermissions"
     [query]="query"
+    [currentUser]="currentUser"
     [canManageConfig]="canManageConfig"
     [constraintData]="constraintData"
     [workspace]="workspace"

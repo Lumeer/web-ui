@@ -21,7 +21,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {NgVarDirective} from './ng-var.directive';
-import {TrimValueAccessor} from './trim-value-accessor';
+import {TrimValueAccessorDirective} from './trim-value-accessor.directive';
 import {RenderedDirective} from './rendered.directive';
 import {NumberDirective} from './number.directive';
 import {PercentageDirective} from './percentage.directive';
@@ -33,7 +33,7 @@ import {ClickOutsideDirective} from './click-outside.directive';
   imports: [CommonModule],
   declarations: [
     NgVarDirective,
-    TrimValueAccessor,
+    TrimValueAccessorDirective,
     RenderedDirective,
     NumberDirective,
     PercentageDirective,
@@ -43,7 +43,7 @@ import {ClickOutsideDirective} from './click-outside.directive';
   ],
   exports: [
     NgVarDirective,
-    TrimValueAccessor,
+    TrimValueAccessorDirective,
     RenderedDirective,
     NumberDirective,
     PercentageDirective,

@@ -20,23 +20,42 @@
 export interface Language {
   code: LanguageCode;
   name: string;
-  englishName: string;
+  translatedName: string;
   icon: string;
 }
 
 export enum LanguageCode {
   CZ = 'cs',
   EN = 'en',
+  HU = 'hu',
 }
 
 export const languageCodeMap = {
   [LanguageCode.CZ]: LanguageCode.CZ,
   [LanguageCode.EN]: LanguageCode.EN,
+  [LanguageCode.HU]: LanguageCode.HU,
   [LanguageCode.CZ.toUpperCase()]: LanguageCode.CZ,
   [LanguageCode.EN.toUpperCase()]: LanguageCode.EN,
+  [LanguageCode.HU.toUpperCase()]: LanguageCode.HU,
 };
 
 export const availableLanguages: Language[] = [
-  {code: LanguageCode.CZ, name: 'Čeština', englishName: 'Czech', icon: 'flag-icon-cz'},
-  {code: LanguageCode.EN, name: 'English', englishName: 'English', icon: 'flag-icon-gb'},
+  {
+    code: LanguageCode.CZ,
+    name: 'Čeština',
+    translatedName: $localize`:@@language.czech:Czech`,
+    icon: 'flag-icon flag-icon-cz',
+  },
+  {
+    code: LanguageCode.EN,
+    name: 'English',
+    translatedName: $localize`:@@language.english:English`,
+    icon: 'flag-icon flag-icon-gb',
+  },
+  {
+    code: LanguageCode.HU,
+    name: 'Magyar',
+    translatedName: $localize`:@@language.hungary:Hungarian`,
+    icon: 'flag-icon flag-icon-hu',
+  },
 ];

@@ -16,6 +16,7 @@
                       [value]="dataValue"
                       [class.justify-content-center]="configuration?.boolean?.center"
                       [class.cursor-pointer]="!readonly"
+                      [editableInReadonly]="editableInReadonly"
                       (dblclick)="$event.stopPropagation()"
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValueWithAction($event)"
@@ -101,6 +102,7 @@
                     [readonly]="readonly"
                     [value]="dataValue"
                     [commonConfiguration]="configuration?.common"
+                    [configuration]="configuration?.color"
                     (valueChange)="onValueChange($event)"
                     (keydown)="onDataKeyDown($event)"
                     (save)="onSaveValueWithAction($event)"
@@ -133,8 +135,21 @@
                    (save)="onSaveValueWithAction($event)"
                    (cancel)="onCancel()"
                    (enterInvalid)="enterInvalid.emit()"
-                   class="w-100">
+                   class="d-block w-100">
   </user-data-input>
+
+  <view-data-input *ngSwitchCase="constraintType.View"
+                   [focus]="focus"
+                   [readonly]="readonly"
+                   [value]="dataValue"
+                   [commonConfiguration]="configuration?.common"
+                   (keydown)="onDataKeyDown($event)"
+                   (valueChange)="onValueChange($event)"
+                   (save)="onSaveValueWithAction($event)"
+                   (cancel)="onCancel()"
+                   (enterInvalid)="enterInvalid.emit()"
+                   class="d-block w-100">
+  </view-data-input>
 
   <link-data-input *ngSwitchCase="constraintType.Link" [focus]="focus"
                    [readonly]="readonly"
@@ -149,6 +164,7 @@
   <rich-text-data-input *ngSwitchCase="constraintType.Text"
                         [focus]="focus"
                         [readonly]="readonly"
+                        [editableInReadonly]="editableInReadonly"
                         [commonConfiguration]="configuration?.common"
                         [value]="dataValue"
                         (keydown)="onDataKeyDown($event)"
@@ -163,6 +179,8 @@
                      [config]="constraint?.config"
                      [value]="dataValue"
                      [configuration]="configuration?.action"
+                     [permissions]="permissions"
+                     [workspace]="workspace"
                      [cursor]="cursor"
                      (cancel)="onCancel()"
                      class="w-100">

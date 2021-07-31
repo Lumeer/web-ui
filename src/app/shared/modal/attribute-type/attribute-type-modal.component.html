@@ -1,6 +1,6 @@
 <modal-wrapper class="d-block" [dialogType]="'primary'"
                [performingAction]="performingAction$ | async"
-               [submitDisabled]="formInvalid$ | async"
+               [submitDisabled]="!data.attribute || (formInvalid$ | async)"
                [customHeader]="true"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()"

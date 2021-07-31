@@ -27,7 +27,6 @@ import {DocumentDetailHeaderComponent} from './detail/header/document-detail-hea
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {DefaultDataRowPipe} from './detail/header/default-data-row.pipe';
 import {PresenterModule} from '../presenter/presenter.module';
 import {DataResourceDataComponent} from './detail/data/data-resource-data.component';
 import {DataResourceDetailComponent} from './detail/data-resource-detail.component';
@@ -39,6 +38,17 @@ import {LinksModule} from '../links/links.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
+import {ResourceActivityComponent} from './detail/activity/resource-activity.component';
+import {AuditLogsComponent} from './detail/activity/audit-logs/audit-logs.component';
+import {AuditLogComponent} from './detail/activity/audit-logs/log/audit-log.component';
+import {AuditLogAutomationTitlePipe} from './detail/activity/audit-logs/pipes/audit-log-automation-title.pipe';
+import {AuditLogEntriesComponent} from './detail/activity/audit-logs/log/entries/audit-log-entries.component';
+import {AuditLogAutomationStringPipe} from './detail/activity/audit-logs/pipes/audit-log-automation-string.pipe';
+import {DetailSettingsButtonComponent} from './detail/header/settings-button/detail-settings-button.component';
+import {DetailSettingsDropdownComponent} from './detail/header/settings-button/dropdown/detail-settings-dropdown.component';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {AttributesSettingsModule} from '../settings/attributes/attributes-settings.module';
+import {ResourcePermissionsPipe} from './detail/pipes/resource-permissions.pipe';
 
 @NgModule({
   imports: [
@@ -56,6 +66,8 @@ import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.compon
     ResourceCommentsModule,
     TooltipModule,
     MatMenuModule,
+    DropdownModule,
+    AttributesSettingsModule,
   ],
   declarations: [
     DataResourceDetailComponent,
@@ -63,9 +75,17 @@ import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.compon
     DataResourceDataComponent,
     DataResourceDataRowComponent,
     DataResourceDataRowIconsComponent,
-    DefaultDataRowPipe,
     DetailTabsComponent,
     LinksToolbarComponent,
+    ResourceActivityComponent,
+    AuditLogsComponent,
+    AuditLogComponent,
+    AuditLogAutomationTitlePipe,
+    AuditLogAutomationStringPipe,
+    AuditLogEntriesComponent,
+    DetailSettingsButtonComponent,
+    DetailSettingsDropdownComponent,
+    ResourcePermissionsPipe,
   ],
   exports: [DataResourceDetailComponent],
 })

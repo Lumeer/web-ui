@@ -21,9 +21,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FilterBuilderModule} from './filter-builder/filter-builder.module';
 import {FilterPreviewModule} from './filter-preview/filter-preview.module';
+import {FilterBuilderPipesModule} from './pipes/filter-builder-pipes.module';
 
 @NgModule({
-  imports: [CommonModule, FilterBuilderModule, FilterPreviewModule],
-  exports: [FilterBuilderModule, FilterPreviewModule],
+  imports: [CommonModule, FilterBuilderModule, FilterPreviewModule, FilterBuilderPipesModule],
+  exports: [FilterBuilderModule, FilterPreviewModule, FilterBuilderPipesModule],
 })
 export class BuilderModule {}

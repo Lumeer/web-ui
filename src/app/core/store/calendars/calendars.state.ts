@@ -19,9 +19,10 @@
 
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {Calendar, DEFAULT_CALENDAR_ID} from './calendar';
+import {Calendar} from './calendar';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {selectWorkspace} from '../navigation/navigation.state';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 
 export interface CalendarsState extends EntityState<Calendar> {}
 
@@ -38,7 +39,7 @@ export const selectCalendarById = id => createSelector(selectCalendarsDictionary
 
 export const selectCalendarId = createSelector(
   selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_CALENDAR_ID
+  workspace => (workspace && workspace.viewCode) || DEFAULT_PERSPECTIVE_ID
 );
 
 export const selectCalendar = createSelector(selectCalendarsDictionary, selectCalendarId, (map, id) => map[id]);

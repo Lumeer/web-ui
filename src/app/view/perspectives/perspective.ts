@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const DEFAULT_PERSPECTIVE_ID = 'default';
+
 export enum Perspective {
   Search = 'search',
   Table = 'table',

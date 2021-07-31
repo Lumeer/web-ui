@@ -17,17 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {Collection} from '../../core/store/collections/collection';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
+import {getAttributesResourceType} from '../utils/resource.utils';
+import {Collection} from '../../core/store/collections/collection';
 
 @Pipe({
   name: 'isDefaultAttribute',
 })
 @Injectable()
 export class DefaultAttributePipe implements PipeTransform {
-  public transform(attributeId: string, collection: Collection): boolean {
-    return collection && getDefaultAttributeId(collection) === attributeId;
+  public transform(attributeId: string, resource: AttributesResource): boolean {
+    if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
+      return resource && getDefaultAttributeId(<Collection>resource) === attributeId;
+    }
+    return false;
   }
 }

@@ -22,7 +22,6 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
@@ -34,6 +33,8 @@ import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permi
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectLinkTypesPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
@@ -43,9 +44,10 @@ import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 export class CollectionLinkTypesComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public collection$: Observable<Collection>;
+  public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
   public searchString$ = new BehaviorSubject<string>('');
 
-  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(private notificationService: NotificationService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -56,6 +58,7 @@ export class CollectionLinkTypesComponent implements OnInit {
       filter(collection => !!collection),
       mergeMap(collection => this.selectLinkTypesForCollection(collection.id))
     );
+    this.linkTypesPermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
 
     this.collection$ = this.store$
       .select(selectCollectionByWorkspace)
@@ -92,17 +95,8 @@ export class CollectionLinkTypesComponent implements OnInit {
   }
 
   private confirmDeletionLinkType(linkType: LinkType) {
-    const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete link type?'});
-    const message = this.i18n(
-      {
-        id: 'collection.tab.linktypes.delete.message',
-        value: 'Do you really want to delete the link type "{{name}}" and all its usages?',
-      },
-      {
-        name: linkType.name,
-      }
-    );
-
+    const title = $localize`:@@collection.tab.linktypes.delete.title:Delete link type?`;
+    const message = $localize`:@@collection.tab.linktypes.delete.message:Do you really want to delete the link type "${linkType.name}:name:" and all its usages?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteLinkType(linkType));
   }
 
@@ -110,7 +104,7 @@ export class CollectionLinkTypesComponent implements OnInit {
     this.store$.dispatch(new LinkTypesAction.Delete({linkTypeId: linkType.id}));
   }
 
-  public trackByLinkType(linkType: LinkType, index: number): string {
+  public trackByLinkType(index: number, linkType: LinkType): string {
     return linkType.id;
   }
 

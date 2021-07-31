@@ -24,7 +24,10 @@ import * as moment from 'moment';
   name: 'formatDate',
 })
 export class FormatDatePipe implements PipeTransform {
-  public transform(value: Date, format?: string): string {
+  public transform(value: Date, format?: string, utc?: boolean): string {
+    if (utc) {
+      return value ? moment.utc(value).format(format) : '';
+    }
     return value ? moment(value).format(format) : '';
   }
 }

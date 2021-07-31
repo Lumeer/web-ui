@@ -21,10 +21,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
-import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../../../core/store/app.state';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Subscription} from 'rxjs';
@@ -32,6 +30,7 @@ import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organiza
 import {ServiceLimits} from '../../../../../core/store/organizations/service-limits/service.limits';
 import {ServiceLimitsAction} from '../../../../../core/store/organizations/service-limits/service-limits.action';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-state',
@@ -45,7 +44,7 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   public serviceLimits: ServiceLimits;
   private serviceLimitsSubscription: Subscription;
 
-  constructor(private i18n: I18n, private router: Router, private store: Store<AppState>) {}
+  constructor(private router: Router, private store: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -55,12 +54,12 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   private subscribeToStore() {
     this.organizationSubscription = this.store
       .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .pipe(filter(organization => isNotNullOrUndefined(organization)))
       .subscribe(organization => (this.organization = organization));
 
     this.serviceLimitsSubscription = this.store
       .select(selectServiceLimitsByWorkspace)
-      .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
+      .pipe(filter(serviceLimits => isNotNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
   }
 

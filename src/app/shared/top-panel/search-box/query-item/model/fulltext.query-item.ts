@@ -29,4 +29,8 @@ export class FulltextQueryItem implements QueryItem {
   public get value(): string {
     return this.text;
   }
+
+  public get stemId(): string {
+    return null;
+  }
 }

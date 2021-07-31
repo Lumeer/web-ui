@@ -18,6 +18,7 @@
  */
 
 import {Resource} from '../../model/resource';
+import {RoleType} from '../../model/role-type';
 
 export interface Project extends Resource {
   organizationId?: string;
@@ -36,3 +37,19 @@ export interface TemplateMetadata {
   showTopPanel?: boolean;
   organizationId?: string;
 }
+
+export const projectRoleTypes = [
+  RoleType.Read,
+  RoleType.ViewContribute,
+  RoleType.CollectionContribute,
+  RoleType.LinkContribute,
+  RoleType.DataDelete,
+  RoleType.DataRead,
+  RoleType.DataWrite,
+  RoleType.DataContribute,
+  RoleType.AttributeEdit,
+  RoleType.Manage,
+  RoleType.CommentContribute,
+  RoleType.TechConfig,
+  RoleType.UserConfig,
+];

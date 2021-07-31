@@ -1,6 +1,6 @@
-<div class="my-4">
+<div class="mt-4 mb-6">
   <table class="table table-borderless table-sm">
-    <thead [style.background-color]="(collection$ | async).color | lightenColor:.5">
+    <thead [style.background-color]="(collection$ | async)?.color | lightenColor:.5">
     <tr>
       <th i18n="@@collections.tab.linkTypes.name" class="pl-2">Link Type</th>
       <th [style.width.%]="30" class="text-right">
@@ -10,6 +10,7 @@
           </div>
           <input class="form-control mr-1" type="search"
                  placeholder="Search link type..."
+                 inputmode="search"
                  i18n-placeholder="@@collections.tab.linkTypes.search.placeholder"
                  title="Search for link types" i18n-title="@@collections.tab.linkTypes.search.title"
                  (input)="onSearchInputChanged($event.target.value)">
@@ -18,19 +19,21 @@
     </tr>
     </thead>
 
-    <ng-container *ngFor="let linkType of linkTypes$ | async | linkTypeFilter:(searchString$ | async); trackBy:trackByLinkType">
-      <tbody>
-        <tr link-type
-            [linkType]="linkType"
-            (delete)="onDeleteLinkType(linkType, $event)"
-            (newName)="onNewName(linkType, $event)"
-            class="border-top">
-        </tr>
-        <tr>
-          <td colspan="2">
-            <link-type-rules [linkType]="linkType" (linkTypeUpdate)="updateLinkType($event)"></link-type-rules>
-          </td>
-        </tr>
+    <ng-container *ngIf="{linkTypes: linkTypes$ | async, permissions: linkTypesPermissions$ | async} as data">
+      <tbody *ngFor="let linkType of data.linkTypes | linkTypeFilter:(searchString$ | async); trackBy:trackByLinkType">
+      <tr link-type
+          [linkType]="linkType"
+          [allLinkTypes]="data.linkTypes"
+          [permissions]="data.permissions && data.permissions[linkType.id]"
+          (delete)="onDeleteLinkType(linkType, $event)"
+          (newName)="onNewName(linkType, $event)"
+          class="border-top">
+      </tr>
+      <tr *ngIf="data.permissions && data.permissions[linkType.id]?.roles?.TechConfig">
+        <td colspan="2">
+          <link-type-rules [linkType]="linkType" (linkTypeUpdate)="updateLinkType($event)"></link-type-rules>
+        </td>
+      </tr>
       </tbody>
     </ng-container>
 

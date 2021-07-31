@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   CollectionSharedUserNotification,
   ProjectSharedUserNotification,
@@ -35,7 +35,7 @@ import {perspectiveIconsMap} from '../../../../../../../view/perspectives/perspe
   templateUrl: './notification-icon.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationIconComponent {
+export class NotificationIconComponent implements OnChanges {
   @Input()
   public notification: UserNotification;
 
@@ -63,12 +63,14 @@ export class NotificationIconComponent {
           this.viewSharedNotification = changes.notification.currentValue;
           break;
         case UserNotificationType.TaskAssigned:
+        case UserNotificationType.TaskReopened:
         case UserNotificationType.DueDateSoon:
         case UserNotificationType.PastDueDate:
         case UserNotificationType.DueDateChanged:
         case UserNotificationType.StateUpdate:
         case UserNotificationType.TaskUpdated:
         case UserNotificationType.TaskRemoved:
+        case UserNotificationType.TaskChanged:
         case UserNotificationType.TaskUnassigned:
         case UserNotificationType.TaskCommented:
         case UserNotificationType.TaskMentioned:

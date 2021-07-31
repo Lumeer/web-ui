@@ -18,17 +18,18 @@
  */
 
 import {
-  Component,
+  AfterViewInit,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
   Input,
   OnChanges,
+  OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
-  ElementRef,
-  AfterViewInit,
-  HostListener,
-  EventEmitter,
-  Output,
 } from '@angular/core';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -43,25 +44,34 @@ import {
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
-import {map, mergeMap} from 'rxjs/operators';
+import {Action, select, Store} from '@ngrx/store';
+import {
+  selectLinkInstanceById,
+  selectLinkInstancesByTypeAndDocuments,
+} from '../../../../core/store/link-instances/link-instances.state';
+import {map, switchMap} from 'rxjs/operators';
 import {
   getOtherLinkedDocumentId,
   getOtherLinkedDocumentIds,
   LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
-import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
-import {ModalService} from '../../../modal/modal.service';
+import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {ViewSettings} from '../../../../core/store/views/view';
-import {createAttributesSettingsOrder} from '../../../settings/settings.util';
-import {objectChanged} from '../../../utils/common.utils';
+import {AttributesSettings} from '../../../../core/store/views/view';
+import {
+  composeViewSettingsLinkTypeCollectionId,
+  createAndModifyAttributesSettings,
+  createAttributesSettingsOrder,
+  setAttributeToAttributeSettings,
+} from '../../../settings/settings.util';
+import {objectChanged, objectsByIdMap} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {User} from '../../../../core/store/users/user';
+import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 
 const columnWidth = 100;
 
@@ -71,33 +81,42 @@ const columnWidth = 100;
   styleUrls: ['./links-list-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableComponent implements OnChanges, AfterViewInit {
+export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()
   public linkType: LinkType;
-
-  @Input()
-  public document: DocumentModel;
 
   @Input()
   public collection: Collection;
 
   @Input()
+  public document: DocumentModel;
+
+  @Input()
+  public linkInstance: LinkInstance;
+
+  @Input()
   public query: Query;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public collectionPermissions: AllowedPermissions;
+
+  @Input()
+  public linkTypePermissions: AllowedPermissions;
 
   @Input()
   public preventEventBubble: boolean;
 
   @Input()
-  public ignoreSettingsOnReadPermission: boolean;
+  public allowSelect: boolean;
 
   @Input()
-  public allowSelectDocument: boolean;
+  public allowCreate: boolean;
 
   @Input()
-  public viewSettings: ViewSettings;
+  public allowUnlink: boolean;
+
+  @Input()
+  public attributesSettings: AttributesSettings;
 
   @Input()
   public visible: boolean;
@@ -111,15 +130,46 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   @Output()
   public unLink = new EventEmitter<LinkInstance>();
 
+  @Output()
+  public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkData = new EventEmitter<LinkInstance>();
+
+  @Output()
+  public createDocumentWithLink = new EventEmitter<{document: DocumentModel; linkInstance: LinkInstance}>();
+
+  @Output()
+  public updateLink = new EventEmitter<{linkInstance: LinkInstance; nextAction?: Action}>();
+
+  @Output()
+  public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
+
+  @Output()
+  public attributesSettingsChanged = new EventEmitter<AttributesSettings>();
+
+  @Output()
+  public attributeFunction = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeDescription = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
+  @Output()
+  public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
+
   public columns$ = new BehaviorSubject<LinkColumn[]>([]);
 
   public rows$: Observable<LinkRow[]>;
   public constraintData$: Observable<ConstraintData>;
+  public currentUser$: Observable<User>;
 
   private stickyColumnWidth: number;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -129,13 +179,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       changes.collection ||
       changes.query ||
       changes.permissions ||
-      changes.viewSettings ||
+      changes.attributesSettings ||
       changes.ignoreSettingsOnReadPermission
     ) {
       this.mergeColumns();
     }
 
-    if (objectChanged(changes.linkType) || objectChanged(changes.document)) {
+    if (objectChanged(changes.linkType) || objectChanged(changes.document) || objectChanged(changes.linkInstance)) {
       this.rows$ = this.selectLinkRows$();
     }
 
@@ -153,45 +203,47 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   private createLinkTypeColumns(): LinkColumn[] {
-    const settings =
-      this.ignoreSettingsOnReadPermission && this.permissions?.read
-        ? []
-        : this.viewSettings?.attributes?.linkTypes?.[this.linkType?.id];
+    const settings = this.attributesSettings?.linkTypes?.[this.linkType?.id];
     return createAttributesSettingsOrder(this.linkType?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.linkType?.attributes, setting.attributeId);
-        const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.permissions, this.query);
+        const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.linkTypePermissions, this.query);
+        const width = setting.width || columnWidth;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
-        ) || {attribute, width: columnWidth, linkTypeId: this.linkType.id, editable};
-        columns.push({...column, attribute, editable});
+        ) || {attribute, width, linkTypeId: this.linkType.id, editable};
+        columns.push({...column, attribute, editable, width});
         return columns;
       }, []);
   }
 
   private createCollectionColumns(): LinkColumn[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
-    const settings =
-      this.ignoreSettingsOnReadPermission && this.permissions?.read
-        ? []
-        : this.viewSettings?.attributes?.collections?.[this.collection?.id];
+    const composedId = composeViewSettingsLinkTypeCollectionId(this.collection?.id, this.linkType?.id);
+    const settings = this.attributesSettings?.linkTypesCollections?.[composedId];
     return createAttributesSettingsOrder(this.collection?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
-        const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
+        const editable = isCollectionAttributeEditable(
+          attribute.id,
+          this.collection,
+          this.collectionPermissions,
+          this.query
+        );
+        const width = setting.width || columnWidth;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
         ) || {
           attribute,
-          width: columnWidth,
+          width,
           collectionId: this.collection.id,
           color: this.collection.color,
           bold: attribute.id === defaultAttributeId,
           editable,
         };
-        columns.push({...column, attribute, editable});
+        columns.push({...column, attribute, editable, width});
         return columns;
       }, []);
   }
@@ -200,7 +252,18 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
     if (this.linkType && this.document) {
       return this.store$.pipe(
         select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])),
-        mergeMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
+        switchMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
+      );
+    } else if (this.linkInstance && this.document) {
+      return this.store$.pipe(
+        select(selectLinkInstanceById(this.linkInstance.id)),
+        switchMap(linkInstance => {
+          const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
+          return this.store$.pipe(
+            select(selectDocumentById(otherDocumentId)),
+            map(document => [{linkInstance: linkInstance, document}])
+          );
+        })
       );
     }
 
@@ -212,9 +275,10 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
     return this.store$.pipe(
       select(selectDocumentsByIds(documentsIds)),
       map(documents => {
+        const documentsMap = objectsByIdMap(documents);
         return linkInstances.reduce((rows, linkInstance) => {
           const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
-          const document = documents.find(doc => doc.id === otherDocumentId);
+          const document = documentsMap[otherDocumentId];
           if (document) {
             rows.push({linkInstance, document, correlationId: linkInstance.correlationId});
           }
@@ -225,18 +289,53 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   public onResizeColumn(data: {index: number; width: number}) {
-    const columns = [...this.columns$.value];
-    columns[data.index] = {...columns[data.index], width: data.width};
-    this.columns$.next(columns);
-    this.computeStickyColumnWidth();
+    const column = this.columns$.value[data.index];
+    if (column.collectionId) {
+      const attributesSettings = createAndModifyAttributesSettings(
+        this.attributesSettings,
+        this.collection,
+        AttributesResourceType.Collection,
+        array => {
+          return setAttributeToAttributeSettings(column.attribute.id, array, {width: data.width});
+        },
+        this.linkType.id
+      );
+      this.attributesSettingsChanged.emit(attributesSettings);
+    } else if (column.linkTypeId) {
+      const attributesSettings = createAndModifyAttributesSettings(
+        this.attributesSettings,
+        this.linkType,
+        AttributesResourceType.LinkType,
+        array => {
+          return setAttributeToAttributeSettings(column.attribute.id, array, {width: data.width});
+        }
+      );
+      this.attributesSettingsChanged.emit(attributesSettings);
+    }
   }
 
   public onAttributeType(column: LinkColumn) {
-    this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
+    this.attributeType.emit({
+      collectionId: column.collectionId,
+      linkTypeId: column.linkTypeId,
+      attributeId: column.attribute.id,
+    });
   }
 
   public onAttributeFunction(column: LinkColumn) {
-    this.modalService.showAttributeFunction(column.attribute.id, column.collectionId, column.linkTypeId);
+    this.attributeFunction.emit({
+      collectionId: column.collectionId,
+      linkTypeId: column.linkTypeId,
+      attributeId: column.attribute.id,
+    });
+  }
+
+  public onAttributeDescription(column: LinkColumn) {
+    this.attributeDescription.emit({
+      collectionId: column.collectionId,
+      linkTypeId: column.linkTypeId,
+      attributeId: column.attribute.id,
+    });
   }
 
   public onColumnFocus(index: number) {
@@ -298,17 +397,12 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       correlationId: generateCorrelationId(),
       data: documentData,
     };
-    this.store$.dispatch(
-      new DocumentsAction.CreateWithLink({
-        document,
-        otherDocumentId: this.document.id,
-        linkInstance: {
-          correlationId,
-          data: linkData,
-          documentIds: [this.document.id, ''], // other will be set after document is created
-          linkTypeId: this.linkType.id,
-        },
-      })
-    );
+    const linkInstance: LinkInstance = {
+      correlationId,
+      data: linkData,
+      documentIds: [this.document.id, ''], // other will be set after document is created
+      linkTypeId: this.linkType.id,
+    };
+    this.createDocumentWithLink.emit({document, linkInstance});
   }
 }

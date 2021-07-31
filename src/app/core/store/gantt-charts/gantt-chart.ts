@@ -21,7 +21,6 @@ import {QueryStem} from '../navigation/query/query';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryAttribute} from '../../model/query-attribute';
 
-export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
 export const GANTT_COLUMN_WIDTH = 40;
 export const GANTT_PADDING = 20;
