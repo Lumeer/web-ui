@@ -129,7 +129,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     return this.dateControl.valueChanges
       .pipe(
         map(time => offsetTime(time, true, this.asUtc)),
-        filter(value => value !== this.value)
+        filter(value => value?.getTime() !== this.value?.getTime())
       )
       .subscribe(value => {
         this.selectedValue = value;

@@ -43,7 +43,6 @@
                    id="startsOnDate"
                    [format]="dateFormat"
                    [value]="startsOnControl.value"
-                   [max]="endsOnControl.value"
                    [asUtc]="true"
                    (valueChange)="startsOnControl.setValue($event)">
   </date-time-input>
@@ -73,7 +72,6 @@
                      [format]="dateFormat"
                      [value]="endsOnControl.value"
                      [asUtc]="true"
-                     [min]="startsOnControl.value"
                      (valueChange)="onEndDateChange($event)">
     </date-time-input>
 
