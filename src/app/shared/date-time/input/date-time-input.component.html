@@ -2,6 +2,7 @@
        [id]="id"
        [readonly]="readonly"
        [value]="value | formatDate : format:asUtc"
+       [placeholder]="placeholder"
        (focus)="onFocus()"
        (click)="$event.stopPropagation()"
        (blur)="onBlur()"

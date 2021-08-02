@@ -26,7 +26,7 @@ import {SelectItemModel} from '../../../../../select/select-item/select-item.mod
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
 import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../date-time/date-time-options';
-import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../../../../core/model/language';
 import {DateTimeConstraintConfig, DateTimeDataValue} from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../../../configuration/configuration.service';
 import {select, Store} from '@ngrx/store';

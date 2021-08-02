@@ -61,6 +61,9 @@ export class DateTimeInputComponent implements OnChanges {
   public value: Date;
 
   @Input()
+  public placeholder: string;
+
+  @Input()
   public asUtc: boolean;
 
   @Output()

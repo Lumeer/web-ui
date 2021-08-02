@@ -1,38 +1,32 @@
-<div [formGroup]="form">
-  <div class="form-group text-muted small" i18n="@@collection.config.tab.rules.autoLink.info">
+<div [formGroup]="form" class="config-form">
+  <div class="form-group text-muted small form-message" i18n="@@collection.config.tab.rules.autoLink.info">
     Automatically link records from two tables based on matching column values.
   </div>
-  <div class="form-group d-flex flex-wrap align-items-center justify-content-start">
-    <div class="text-nowrap" i18n="@@collection.config.tab.rules.autoLink.linkType">
-      Link record via
-    </div>
+
+  <label i18n="@@collection.config.tab.rules.autoLink.linkType">Link record via</label>
+  <select-item
+    class="link-select"
+    emptyValue="Select a link type"
+    i18n-emptyValue="@@collection.config.tab.rules.autoLink.selectLinkType"
+    placeholderIcon="fas fa-link"
+    [items]="linkTypes | linkTypesSelectItems"
+    [selectedId]="linkTypeId"
+    (selected)="onSelectLinkType($event)">
+  </select-item>
+  <label i18n="@@collection.config.tab.rules.autoLink.where">Where</label>
+  <div class="d-flex align-items-center flex-wrap">
     <select-item
-      class="ml-3"
-      emptyValue="Select a link type"
-      i18n-emptyValue="@@collection.config.tab.rules.autoLink.selectLinkType"
-      placeholderIcon="fas fa-link"
-      [items]="linkTypes | linkTypesSelectItems"
-      [selectedId]="linkTypeId"
-      (selected)="onSelectLinkType($event)">
-    </select-item>
-  </div>
-  <div class="form-group d-flex align-items-center justify-content-start text-nowrap mt-2">
-    <div class="text-nowrap" i18n="@@collection.config.tab.rules.autoLink.where">
-      Where
-    </div>
-    <select-item
-      class="ml-3"
+      class="mr-3"
       (selected)="onSelectAttribute1($event)"
       [emptyValue]="attribute1Empty"
       [placeholderIcon]="collection.icon"
       [items]="collection | attributesSelectItems"
       [selectedId]="attribute1Id">
     </select-item>
-    <div class="text-nowrap ml-3" i18n="@@collection.config.tab.rules.autoLink.equals">
+    <div class="text-nowrap mr-3 py-2" i18n="@@collection.config.tab.rules.autoLink.equals">
       equals
     </div>
     <select-item
-      class="ml-3"
       (selected)="onSelectAttribute2($event)"
       [emptyValue]="linkedCollection ? attribute2Empty : attribute2NoCollection"
       [placeholderIcon]="linkedCollection ? linkedCollection.icon : 'fas fa-question'"
@@ -41,3 +35,4 @@
     </select-item>
   </div>
 </div>
+

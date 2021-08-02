@@ -27,7 +27,7 @@ import {filter, take} from 'rxjs/operators';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {Observable} from 'rxjs';
 import {User} from '../../../core/store/users/user';
-import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../core/model/language';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Component({

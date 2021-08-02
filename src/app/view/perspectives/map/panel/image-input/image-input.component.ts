@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {LanguageCode} from '../../../../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../../../core/model/language';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 
 @Component({

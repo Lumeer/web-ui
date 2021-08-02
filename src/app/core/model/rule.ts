@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from './language';
 
 export enum RuleType {
   AutoLink = 'AUTO_LINK',

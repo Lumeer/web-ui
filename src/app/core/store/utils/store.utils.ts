@@ -31,7 +31,7 @@ import {
   ruleTypeMap,
 } from '../../model/rule';
 import {CronRuleConfigurationDto, RuleDto} from '../../dto/rule.dto';
-import {languageCodeMap} from '../../../shared/top-panel/user-panel/user-menu/language';
+import {languageCodeMap} from '../../model/language';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];

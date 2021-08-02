@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {availableLanguages, LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
+import {availableLanguages, LanguageCode} from '../core/model/language';
 import {Configuration} from '../../environments/configuration-type';
 import {configuration} from '../../environments/configuration';
 import {ConfigurationVariables} from '../../environments/configuration-variables';
@@ -59,7 +59,7 @@ export class ConfigurationService {
     const authClientId = env['AUTH_CLIENT_ID'] || 'Hjee0La2DjlYjIH5ClCx3Xnfaj02n2On';
     const authDomain = env['AUTH_DOMAIN'] || 'lumeer.eu.auth0.com';
     const buildNumber = env['BUILD_NUMBER'];
-    const locale: string = env['I18N_LOCALE'] || parseLanguageFromLocation();
+    const locale = env['I18N_LOCALE'] || parseLanguageFromLocation();
     const i18nFormat = env['I18N_FORMAT'] || 'xlf';
     const i18nPath = env['I18N_PATH'] || `messages.${locale}.${i18nFormat}`;
     const mapboxKey: string = env['MAPBOX_KEY'];

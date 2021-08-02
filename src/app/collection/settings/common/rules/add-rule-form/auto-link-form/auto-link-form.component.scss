@@ -1,0 +1,18 @@
+.config-form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-gap: 1rem;
+
+  .form-message {
+    grid-column: 1 / 3;
+  }
+
+  label {
+    margin-bottom: 0;
+  }
+
+  .link-select {
+    max-width: min(100%, 450px);
+  }
+}

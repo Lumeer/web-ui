@@ -46,6 +46,7 @@
         Minimum value
       </label>
       <date-time-input [format]="formatControl.value"
+                       [placeholder]="formatControl.value"
                        id="dateTimeMinValue"
                        [value]="minValueControl.value"
                        (valueChange)="minValueControl.setValue($event)">
@@ -58,6 +59,7 @@
         Maximum value
       </label>
       <date-time-input [format]="formatControl.value"
+                       [placeholder]="formatControl.value"
                        id="dateTimeMaxValue"
                        [value]="maxValueControl.value"
                        (valueChange)="maxValueControl.setValue($event)">

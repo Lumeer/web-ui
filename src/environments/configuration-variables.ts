@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {LanguageCode} from '../app/core/model/language';
+
 export interface ConfigurationVariables {
   apiUrl: string;
   apiProdUrl: string;
@@ -26,7 +28,7 @@ export interface ConfigurationVariables {
   buildNumber: string;
   i18nFormat: string;
   i18nPath: string;
-  locale: string;
+  locale: LanguageCode;
   mapboxKey: string;
   mapQuestKey: string;
   mapTilerKey: string;

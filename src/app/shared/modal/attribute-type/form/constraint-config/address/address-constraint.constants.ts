@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../../../../core/model/language';
 import {Address, AddressField} from '@lumeer/data-filters';
 import {Configuration} from '../../../../../../../environments/configuration-type';
 

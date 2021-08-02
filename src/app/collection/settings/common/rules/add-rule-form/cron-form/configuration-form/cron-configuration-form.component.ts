@@ -24,7 +24,7 @@ import {SelectItemModel} from '../../../../../../../shared/select/select-item/se
 import {bitClear, bitSet, isDateValid, objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {generateId} from '../../../../../../../shared/utils/resource.utils';
 import {ConfigurationService} from '../../../../../../../configuration/configuration.service';
-import {LanguageCode} from '../../../../../../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../../../../../core/model/language';
 import * as moment from 'moment';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
@@ -36,6 +36,8 @@ import {selectAllCollections} from '../../../../../../../core/store/collections/
 import {selectViewsByReadSorted} from '../../../../../../../core/store/common/permissions.selectors';
 import {map} from 'rxjs/operators';
 import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
+import {createRange} from '../../../../../../../shared/utils/array.utils';
+import {defaultDateFormat} from '../../../../../../../shared/utils/date.utils';
 
 interface DayOfWeek {
   bit: number;
@@ -62,6 +64,7 @@ export class CronConfigurationFormComponent implements OnInit, OnChanges {
   public linkType: LinkType;
 
   public readonly unitsItems: SelectItemModel[];
+  public readonly hoursItems: SelectItemModel[];
   public readonly dayOfWeeks: DayOfWeek[];
   public readonly dateFormat: string;
 
@@ -87,11 +90,20 @@ export class CronConfigurationFormComponent implements OnInit, OnChanges {
       }))
       .sort((a, b) => a.order - b.order);
 
-    this.dateFormat = 'DD.MM.YYYY';
+    this.hoursItems = createRange(0, 24).map(hour => ({
+      id: hour.toString(),
+      value: moment(hour.toString(), 'HH').format('LT'),
+    }));
+
+    this.dateFormat = defaultDateFormat(this.configurationService.getConfiguration().locale);
   }
 
   public get unitControl(): AbstractControl {
     return this.configForm.get('unit');
+  }
+
+  public get hourControl(): AbstractControl {
+    return this.configForm.get('hour');
   }
 
   public get intervalControl(): AbstractControl {

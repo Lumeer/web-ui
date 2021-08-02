@@ -4,7 +4,7 @@
 
 <div [formGroup]="configForm" class="config-form">
 
-  <label i18n="@@collection.config.tab.rules.cron.timer.every">Repeat every</label>
+  <label class="main" i18n="@@collection.config.tab.rules.cron.timer.every">Repeat every</label>
   <div class="d-flex align-items-center flex-nowrap">
     <input class="form-control mr-2 interval-input" type="number"
            min="1" [max]="unitControl.value | maxIntervalByUnit" id="interval" formControlName="interval"
@@ -16,7 +16,7 @@
   </div>
 
   <ng-container *ngIf="unitControl.value | showDaysOfWeek">
-    <label i18n="@@collection.config.tab.rules.cron.timer.repeat">Repeat on</label>
+    <label class="main" i18n="@@collection.config.tab.rules.cron.timer.repeat">Repeat on</label>
     <div class="d-flex align-items-center flex-wrap">
       <custom-checkbox *ngFor="let dayOfWeek of dayOfWeeks; let last = last"
                        [class.mr-3]="!last"
@@ -30,7 +30,7 @@
   </ng-container>
 
   <ng-container *ngIf="unitControl.value | showOccurence">
-    <label i18n="@@collection.config.tab.rules.cron.timer.run">Run on</label>
+    <label class="main" i18n="@@collection.config.tab.rules.cron.timer.run">Run on</label>
     <div class="d-flex align-items-center flex-nowrap">
       <input class="form-control hour-input mr-2" type="number"
              min="1" max="31" id="occurence" formControlName="occurence" integer minValue="1" maxValue="31"/>
@@ -38,25 +38,34 @@
     </div>
   </ng-container>
 
-  <label i18n="@@collection.config.tab.rules.cron.timer.start">Start on</label>
-  <date-time-input class="date-input"
-                   id="startsOnDate"
-                   [format]="dateFormat"
-                   [value]="startsOnControl.value"
-                   [asUtc]="true"
-                   (valueChange)="startsOnControl.setValue($event)">
-  </date-time-input>
+  <label class="main" i18n="@@collection.config.tab.rules.cron.timer.start">Start on</label>
+  <div>
+    <date-time-input class="medium-input d-inline-block"
+                     id="startsOnDate"
+                     [format]="dateFormat"
+                     [placeholder]="dateFormat"
+                     [value]="startsOnControl.value"
+                     [asUtc]="true"
+                     (valueChange)="startsOnControl.setValue($event)">
+    </date-time-input>
+    <div *ngIf="configForm?.errors?.startsOnRequired" class="small mt-1 text-danger"
+         i18n="@@collection.config.tab.rules.cron.timer.start.required">Starting date is required.
+    </div>
+  </div>
 
-  <label i18n="@@collection.config.tab.rules.cron.timer.execute">Execute at</label>
+  <label class="main" i18n="@@collection.config.tab.rules.cron.timer.execute">Execute at</label>
   <div class="d-flex align-items-center flex-nowrap">
-    <input class="form-control hour-input mr-2" type="number"
-           min="0" max="23" id="hour" formControlName="hour" integer minValue="0" maxValue="23"/>
+    <select-item class="mr-2 medium-input" [items]="hoursItems"
+                 [selectedId]="hourControl.value || '0'"
+                 [removable]="false">
+    </select-item>
     <span class="text-warning">
-      <i class="fal fa-exclamation-triangle" i18n-tooltip="@@collection.config.tab.rules.cron.timer.delay" tooltip="The execution can be delayed up to several minutes depending on the server load."></i>
+      <i class="fal fa-exclamation-triangle" i18n-tooltip="@@collection.config.tab.rules.cron.timer.delay"
+         tooltip="The execution can be delayed up to several minutes depending on the server load."></i>
     </span>
   </div>
 
-  <label class="align-self-start" i18n="@@collection.config.tab.rules.cron.timer.ends">Ends</label>
+  <label class="align-self-start main" i18n="@@collection.config.tab.rules.cron.timer.ends">Ends</label>
   <div class="ends-on-form">
 
     <input type="radio" name="never" id="never" value="never"
@@ -69,13 +78,18 @@
            (change)="onEndsOnChecked($event.target.checked)"
            [checked]="endsOnControl.value | isDateValid">
     <label for="date" i18n="@@collection.config.tab.rules.cron.timer.on">On</label>
-    <date-time-input class="date-input"
-                     id="endsOnDate"
-                     [format]="dateFormat"
-                     [value]="endsOnControl.value"
-                     [asUtc]="true"
-                     (valueChange)="onEndDateChange($event)">
-    </date-time-input>
+    <div>
+      <date-time-input class="medium-input d-inline-block"
+                       id="endsOnDate"
+                       [placeholder]="dateFormat"
+                       [format]="dateFormat"
+                       [value]="endsOnControl.value"
+                       [asUtc]="true"
+                       (valueChange)="onEndDateChange($event)">
+      </date-time-input>
+      <div *ngIf="configForm?.errors?.endsOnInvalid" class="small mt-1 text-danger"
+           i18n="@@collection.config.tab.rules.cron.timer.ends.invalid">Starts on must be before than ends on.</div>
+    </div>
 
     <input type="radio" name="num" id="num" value="num"
            (change)="onExecutionsChecked($event.target.checked)"
@@ -90,8 +104,8 @@
 
   </div>
 
-  <label class="align-self-start py-2" i18n="@@collection.config.tab.rules.cron.timer.view">View</label>
-  <div>
+  <label class="align-self-start py-2 main" i18n="@@collection.config.tab.rules.cron.timer.view">View</label>
+  <div class="view-input">
     <select-item [items]="viewsByCollection$ | async | viewsSelectItems:(collections$ | async)"
                  class="w-100"
                  buttonClasses="w-100"
@@ -103,7 +117,9 @@
                  (selected)="onSelectView($event)"
                  (remove)="onRemoveView()">
     </select-item>
-    <div class="text-muted small mt-1" i18n="@@collection.config.tab.rules.cron.timer.records">Read records from this view and pass them to the automation. No records are passed when empty.</div>
+    <div class="text-muted small mt-1" i18n="@@collection.config.tab.rules.cron.timer.records">Read records from this
+      view and pass them to the automation. No records are passed when empty.
+    </div>
   </div>
 
 </div>

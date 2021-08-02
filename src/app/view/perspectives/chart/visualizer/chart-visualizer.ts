@@ -33,7 +33,7 @@ import {BubblePlotMaker} from './plot-maker/bubble-plot-maker';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {LanguageCode} from '../../../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../../core/model/language';
 
 export class ChartVisualizer {
   private currentType: ChartType;

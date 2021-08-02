@@ -45,7 +45,7 @@ import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {objectChanged, objectValues} from '../../../../../shared/utils/common.utils';
+import {isDateValid, objectChanged, objectValues} from '../../../../../shared/utils/common.utils';
 import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import * as moment from 'moment';
@@ -184,7 +184,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
       return {
         startsOn: moment.utc().startOf('day').toDate(),
         endsOn: undefined,
-        hour: 0,
+        hour: '0',
         interval: 1,
         daysOfWeek: 0,
         occurence: 1,
@@ -301,6 +301,24 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
         if (!(config.get('attribute1').value && config.get('attribute2').value && config.get('linkType').value)) {
           return {required: ['attribute1', 'attribute2', 'linkType']};
         }
+      } else if (form.get('type').value === RuleType.Cron) {
+        const config = form.get('configCron');
+        const unit = config.get('unit').value;
+        if (unit !== ChronoUnit.Months && !config.get('daysOfWeek').value) {
+          config.setErrors({daysOfWeekRequired: true});
+          return null;
+        }
+        const startsOn = <Date>config.get('startsOn').value;
+        if (!isDateValid(startsOn)) {
+          config.setErrors({startsOnRequired: true});
+          return null;
+        }
+        const endsOn = <Date>config.get('endsOn').value;
+        if (isDateValid(endsOn) && endsOn.getTime() <= startsOn.getTime()) {
+          config.setErrors({endsOnInvalid: true});
+          return null;
+        }
+        config.setErrors(null);
       }
       return null;
     };

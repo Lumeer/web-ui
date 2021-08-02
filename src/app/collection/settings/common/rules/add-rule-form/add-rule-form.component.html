@@ -1,101 +1,100 @@
-<div class="d-flex w-100 justify-content-start">
-  <div class="d-flex align-items-center mr-3">
-    <i
-      [class.fa-plus-circle]="!originalRuleName"
-      [class.fa-pencil]="originalRuleName"
-      class="fas text-success">
-    </i>
-  </div>
-  <div class="flex-grow-1">
-    <form [formGroup]="form" class="">
-      <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
-        <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.automation.name.new">New automation
-          name</label>
-        <input type="text" class="form-control ml-3 w-50" autocomplete="off" id="name" formControlName="name"
-               aria-errormessage="ruleNameError">
-        <small
-          *ngIf="nameControl.invalid && nameControl.errors?.usedRuleName"
-          id="ruleNameError"
-          class="text-danger ml-2"
-          i18n="@@collection.config.tab.rules.automation.name.exists">
-          Automation name already used.
-        </small>
-      </div>
-
-      <div *ngIf="collection" class="form-group d-flex align-items-center justify-content-start flex-wrap">
-        <div class="text-nowrap" i18n="@@collection.config.tab.rules.automation.type">
-          Fire automation
-        </div>
-        <select-item class="d-inline-block ml-3"
-                     [items]="typeItems"
-                     [fitParent]="false"
-                     [selectedId]="typeControl.value"
-                     (selected)="typeControl.setValue($event)"
-                     [removable]="false">
-        </select-item>
-      </div>
-
-      <div *ngIf="typeControl.value !== ruleType.Cron" class="form-group d-flex align-items-center justify-content-start flex-wrap mt-2">
-        <div class="text-nowrap" i18n="@@collection.config.tab.rules.onRecord">
-          On record
-        </div>
-        <div class="custom-control custom-checkbox ml-3">
-          <input class="custom-control-input" type="checkbox" formControlName="timingCreate" id="timingCreate">
-          <label class="custom-control-label" for="timingCreate" i18n="@@collection.config.tab.rules.timing.create">Create</label>
-        </div>
-        <div class="custom-control custom-checkbox ml-3">
-          <input class="custom-control-input" type="checkbox" formControlName="timingUpdate" id="timingUpdate">
-          <label class="custom-control-label" for="timingUpdate" i18n="@@collection.config.tab.rules.timing.update">Update</label>
-        </div>
-        <div class="custom-control custom-checkbox ml-3">
-          <input class="custom-control-input" type="checkbox" formControlName="timingDelete" id="timingDelete">
-          <label class="custom-control-label" for="timingDelete" i18n="@@collection.config.tab.rules.timing.delete">Delete</label>
-        </div>
-      </div>
-
-      <div class="form-group" [ngSwitch]="typeControl.value">
-        <auto-link-form
-          *ngSwitchCase="ruleType.AutoLink"
-          [form]="configAutoLink"
-          [collection]="collection"
-          [linkTypes]="collection.id | collectionLinkTypes | async">
-        </auto-link-form>
-        <blockly-form
-          *ngSwitchCase="ruleType.Blockly"
-          [form]="configBlockly"
-          [collection]="collection"
-          [linkType]="linkType">
-        </blockly-form>
-        <cron-form
-          *ngSwitchCase="ruleType.Cron"
-          [form]="configCron"
-          [collection]="collection"
-          [linkType]="linkType">
-        </cron-form>
-      </div>
-
-      <div class="d-flex justify-content-end align-items-center flex-wrap">
-        <button type="button"
-                (click)="fireCancelNewRule()"
-                class="btn btn-sm btn-outline-secondary">
-          <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
-        </button>
-        <button type="button"
-                [disabled]="this.form.invalid"
-                (click)="submitRule()"
-                class="btn btn-sm btn-primary ml-2">
-          <ng-container *ngIf="originalRuleName">
-            <i class="fas fa-pencil"></i>&nbsp;
-            <span class="font-weight-bold" i18n="@@collection.config.tab.rules.rule.update">Save Changes</span>
-          </ng-container>
-          <ng-container *ngIf="!originalRuleName">
-            <i class="fas fa-plus"></i>&nbsp;
-            <span class="font-weight-bold" i18n="@@collection.config.tab.rules.automation.add">Add Automation</span>
-          </ng-container>
-        </button>
-      </div>
-
-    </form>
-  </div>
+<div class="d-flex align-items-center">
+  <i [class.fa-plus-circle]="!originalRuleName"
+     [class.fa-pencil]="originalRuleName"
+     class="fas text-success">
+  </i>
 </div>
+<form [formGroup]="form" class="overflow-hidden">
+  <div class="form-group d-flex align-items-baseline justify-content-start flex-wrap">
+    <label for="name" class="mb-0" i18n="@@collection.config.tab.rules.automation.name.new">New automation
+      name</label>
+    <input type="text" class="form-control ml-3 w-50" autocomplete="off" id="name" formControlName="name"
+           aria-errormessage="ruleNameError">
+    <small
+      *ngIf="nameControl.invalid && nameControl.errors?.usedRuleName"
+      id="ruleNameError"
+      class="text-danger ml-2"
+      i18n="@@collection.config.tab.rules.automation.name.exists">
+      Automation name already used.
+    </small>
+  </div>
+
+  <div *ngIf="collection" class="form-group d-flex align-items-center justify-content-start flex-wrap">
+    <div class="text-nowrap" i18n="@@collection.config.tab.rules.automation.type">
+      Fire automation
+    </div>
+    <select-item class="d-inline-block ml-3"
+                 [items]="typeItems"
+                 [fitParent]="false"
+                 [selectedId]="typeControl.value"
+                 (selected)="typeControl.setValue($event)"
+                 [removable]="false">
+    </select-item>
+  </div>
+
+  <div *ngIf="typeControl.value !== ruleType.Cron"
+       class="form-group d-flex align-items-center justify-content-start flex-wrap mt-2">
+    <div class="text-nowrap" i18n="@@collection.config.tab.rules.onRecord">
+      On record
+    </div>
+    <div class="custom-control custom-checkbox ml-3">
+      <input class="custom-control-input" type="checkbox" formControlName="timingCreate" id="timingCreate">
+      <label class="custom-control-label" for="timingCreate"
+             i18n="@@collection.config.tab.rules.timing.create">Create</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-3">
+      <input class="custom-control-input" type="checkbox" formControlName="timingUpdate" id="timingUpdate">
+      <label class="custom-control-label" for="timingUpdate"
+             i18n="@@collection.config.tab.rules.timing.update">Update</label>
+    </div>
+    <div class="custom-control custom-checkbox ml-3">
+      <input class="custom-control-input" type="checkbox" formControlName="timingDelete" id="timingDelete">
+      <label class="custom-control-label" for="timingDelete"
+             i18n="@@collection.config.tab.rules.timing.delete">Delete</label>
+    </div>
+  </div>
+
+  <div class="form-group" [ngSwitch]="typeControl.value">
+    <auto-link-form
+      *ngSwitchCase="ruleType.AutoLink"
+      [form]="configAutoLink"
+      [collection]="collection"
+      [linkTypes]="collection.id | collectionLinkTypes | async">
+    </auto-link-form>
+    <blockly-form
+      *ngSwitchCase="ruleType.Blockly"
+      [form]="configBlockly"
+      [collection]="collection"
+      [linkType]="linkType">
+    </blockly-form>
+    <cron-form
+      *ngSwitchCase="ruleType.Cron"
+      [form]="configCron"
+      [collection]="collection"
+      [linkType]="linkType">
+    </cron-form>
+  </div>
+
+  <div class="d-flex justify-content-end align-items-center flex-wrap">
+    <button type="button"
+            (click)="fireCancelNewRule()"
+            class="btn btn-sm btn-outline-secondary">
+      <span class="font-weight-bold" i18n="@@button.cancel">Cancel</span>
+    </button>
+    <button type="button"
+            [disabled]="this.form.invalid"
+            (click)="submitRule()"
+            class="btn btn-sm btn-primary ml-2">
+      <ng-container *ngIf="originalRuleName">
+        <i class="fas fa-pencil"></i>&nbsp;
+        <span class="font-weight-bold" i18n="@@collection.config.tab.rules.rule.update">Save Changes</span>
+      </ng-container>
+      <ng-container *ngIf="!originalRuleName">
+        <i class="fas fa-plus"></i>&nbsp;
+        <span class="font-weight-bold" i18n="@@collection.config.tab.rules.automation.add">Add Automation</span>
+      </ng-container>
+    </button>
+  </div>
+
+</form>
 
