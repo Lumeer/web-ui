@@ -111,11 +111,9 @@ export class LinkTypeRulesComponent implements OnInit {
   }
 
   private getEmptyRule(): Rule {
-    const count = (this.linkType.rules?.length || 0) + 1;
-    const rulePrefix = $localize`:@@collection.config.tab.rules.newRule.prefix:Automation`;
-
     return {
-      name: rulePrefix + ' ' + count,
+      id: generateId(),
+      name: this.createName(),
       timing: RuleTiming.All,
       type: RuleType.Blockly,
       configuration: {
@@ -128,6 +126,21 @@ export class LinkTypeRulesComponent implements OnInit {
         blocklyRecursive: false,
       },
     };
+  }
+
+  private createName(): string {
+    const prefix = $localize`:@@collection.config.tab.rules.newRule.prefix:Automation`;
+    const ruleNames = (this.linkType?.rules || []).map(rule => rule.name);
+    if (!ruleNames.includes(prefix)) {
+      return prefix;
+    }
+
+    let count = 2;
+    while (ruleNames.includes(`${prefix} ${count}`)) {
+      count++;
+    }
+
+    return `${prefix} ${count}`;
   }
 
   public deleteRule(linkType: LinkType, rule: Rule) {

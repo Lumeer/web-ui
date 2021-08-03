@@ -38,6 +38,7 @@ import {selectPublicProject} from '../../store/projects/projects.state';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {collectionRoleTypes} from '../../store/collections/collection';
+import {RuleDto} from '../../dto/rule.dto';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {
@@ -61,6 +62,29 @@ export class PublicCollectionService extends PublicPermissionService implements 
     return this.store$.pipe(
       select(selectCollectionById(dto.id)),
       map(collection => ({...convertCollectionModelToDto(collection), ...dto, version: (collection.version || 0) + 1})),
+      take(1),
+      mergeMap(collection =>
+        this.isProjectWritable$().pipe(map(editable => setCollectionPermissions(collection, editable)))
+      )
+    );
+  }
+
+  public upsertRule(
+    collectionId: string,
+    ruleId: string,
+    ruleDto: RuleDto,
+    workspace?: Workspace
+  ): Observable<CollectionDto> {
+    return this.store$.pipe(
+      select(selectCollectionById(collectionId)),
+      map(collection => {
+        const oldCollection = convertCollectionModelToDto(collection);
+
+        const rules = {...oldCollection.rules};
+        rules[ruleId] = ruleDto;
+
+        return {...oldCollection, rules, version: (collection.version || 0) + 1};
+      }),
       take(1),
       mergeMap(collection =>
         this.isProjectWritable$().pipe(map(editable => setCollectionPermissions(collection, editable)))

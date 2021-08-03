@@ -111,11 +111,11 @@ export interface ZapierRuleConfiguration {
 }
 
 export enum ChronoUnit {
-  Hours = 'HOURS',
-  Days = 'DAYS',
-  Weeks = 'WEEKS',
-  Months = 'MONTHS',
-  Years = 'YEARS',
+  Hours = 'Hours',
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Months = 'Months',
+  Years = 'Years',
 }
 
 export const chronoUnitMap = {

@@ -93,14 +93,20 @@ export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
   }
 
   return model.reduce((result, rule) => {
-    result[rule.id || generateCorrelationId()] = {
+    result[rule.id || generateCorrelationId()] = convertRuleToDto(rule);
+    return result;
+  }, {});
+}
+
+export function convertRuleToDto(rule: Rule): RuleDto {
+  return (
+    rule && {
       name: rule.name,
       type: rule.type,
       timing: rule.timing,
       configuration: convertRulesConfigurationToDto(rule),
-    };
-    return result;
-  }, {});
+    }
+  );
 }
 
 export function convertRulesConfigurationToDto(rule: Rule): Record<string, any> {

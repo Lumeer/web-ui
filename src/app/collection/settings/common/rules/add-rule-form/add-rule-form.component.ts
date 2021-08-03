@@ -49,6 +49,7 @@ import {isDateValid, objectChanged, objectValues} from '../../../../../shared/ut
 import {parseSelectTranslation} from '../../../../../shared/utils/translation.utils';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import * as moment from 'moment';
+import {minLengthValidator} from '../../../../../core/validators/custom-validators';
 
 @Component({
   selector: 'add-rule-form',
@@ -105,7 +106,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnInit() {
     this.form = this.fb.group({
       id: this.rule.id,
-      name: [this.rule.name, [Validators.required, this.usedNameValidator()]],
+      name: [this.rule.name, [Validators.required, this.usedNameValidator(), minLengthValidator(1)]],
       timingCreate: ruleTimingHasCreate(this.rule.timing),
       timingUpdate: ruleTimingHasUpdate(this.rule.timing),
       timingDelete: [
@@ -259,7 +260,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     return {
       id: this.form.get('id').value,
       type: this.typeControl.value,
-      name: this.nameControl.value,
+      name: this.nameControl.value.trim(),
       timing: this.createRuleTiming(),
       configuration: this.getRuleConfiguration(this.typeControl.value),
     } as Rule;
@@ -289,37 +290,37 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
       if (this.originalRuleName && this.originalRuleName === control.value) {
         return null;
       }
-      const used = this.ruleNames.indexOf(control.value) >= 0;
+      const used = this.ruleNames.indexOf(control.value.trim()) >= 0;
       return used ? {usedRuleName: {value: control.value}} : null;
     };
   }
 
   public formValidator(): ValidatorFn {
     return (form: FormGroup): ValidationErrors | null => {
+      const configCron = form.get('configCron');
       if (form.get('type').value === RuleType.AutoLink) {
         const config = form.get('configAutoLink');
         if (!(config.get('attribute1').value && config.get('attribute2').value && config.get('linkType').value)) {
           return {required: ['attribute1', 'attribute2', 'linkType']};
         }
       } else if (form.get('type').value === RuleType.Cron) {
-        const config = form.get('configCron');
-        const unit = config.get('unit').value;
-        if (unit !== ChronoUnit.Months && !config.get('daysOfWeek').value) {
-          config.setErrors({daysOfWeekRequired: true});
+        const unit = configCron.get('unit').value;
+        if (unit !== ChronoUnit.Months && !configCron.get('daysOfWeek').value) {
+          configCron.setErrors({daysOfWeekRequired: true});
           return null;
         }
-        const startsOn = <Date>config.get('startsOn').value;
+        const startsOn = <Date>configCron.get('startsOn').value;
         if (!isDateValid(startsOn)) {
-          config.setErrors({startsOnRequired: true});
+          configCron.setErrors({startsOnRequired: true});
           return null;
         }
-        const endsOn = <Date>config.get('endsOn').value;
+        const endsOn = <Date>configCron.get('endsOn').value;
         if (isDateValid(endsOn) && endsOn.getTime() <= startsOn.getTime()) {
-          config.setErrors({endsOnInvalid: true});
+          configCron.setErrors({endsOnInvalid: true});
           return null;
         }
-        config.setErrors(null);
       }
+      configCron.setErrors(null);
       return null;
     };
   }

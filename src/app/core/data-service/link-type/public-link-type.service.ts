@@ -28,9 +28,11 @@ import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectLinkTypeById} from '../../store/link-types/link-types.state';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {convertLinkTypeModelToDto} from '../../store/link-types/link-type.converter';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {RuleDto} from '../../dto/rule.dto';
+import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
 
 @Injectable()
 export class PublicLinkTypeService extends BaseService implements LinkTypeService {
@@ -53,7 +55,27 @@ export class PublicLinkTypeService extends BaseService implements LinkTypeServic
   public updateLinkType(id: string, dto: LinkTypeDto): Observable<LinkTypeDto> {
     return this.store$.pipe(
       select(selectLinkTypeById(id)),
-      map(linkType => ({...convertLinkTypeModelToDto(linkType), ...dto}))
+      map(linkType => ({...convertLinkTypeModelToDto(linkType), ...dto, version: (linkType.version || 0) + 1}))
+    );
+  }
+
+  public upsertRule(
+    linkTypeId: string,
+    ruleId: string,
+    ruleDto: RuleDto,
+    workspace?: Workspace
+  ): Observable<LinkTypeDto> {
+    return this.store$.pipe(
+      select(selectLinkTypeById(linkTypeId)),
+      map(linkType => {
+        const oldLinkType = convertCollectionModelToDto(linkType);
+
+        const rules = {...oldLinkType.rules};
+        rules[ruleId] = ruleDto;
+
+        return {...oldLinkType, rules, version: (linkType.version || 0) + 1};
+      }),
+      take(1)
     );
   }
 

@@ -27,7 +27,7 @@ import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
+import {convertRuleToDto, createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypeAttributeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from './link-types.state';
@@ -144,18 +144,8 @@ export class LinkTypesEffects {
         const {linkTypeId, rule, onSuccess, onFailure} = action.payload;
         const oldLinkType = linkTypesMap[linkTypeId];
 
-        const index = oldLinkType.rules?.findIndex(r => r.id === rule.id);
-
-        const rules = [...(oldLinkType.rules || [])];
-        if (index >= 0) {
-          rules.splice(index, 1, rule);
-        } else {
-          rules.push(rule);
-        }
-
-        const linkTypeDto = convertLinkTypeModelToDto({...oldLinkType, rules});
-
-        return this.linkTypeService.updateLinkType(linkTypeId, linkTypeDto, action.payload.workspace).pipe(
+        const ruleDto = convertRuleToDto(rule);
+        return this.linkTypeService.upsertRule(linkTypeId, rule.id, ruleDto, action.payload.workspace).pipe(
           map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto, oldLinkType?.correlationId)),
           mergeMap(linkType => [
             new LinkTypesAction.UpsertRuleSuccess({linkType}),

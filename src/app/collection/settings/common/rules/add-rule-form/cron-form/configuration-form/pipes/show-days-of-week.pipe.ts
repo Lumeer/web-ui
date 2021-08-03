@@ -26,7 +26,6 @@ import {ChronoUnit} from '../../../../../../../../core/model/rule';
 export class ShowDaysOfWeekPipe implements PipeTransform {
   public transform(unit: ChronoUnit): boolean {
     switch (unit) {
-      case ChronoUnit.Days:
       case ChronoUnit.Weeks:
         return true;
       default:
