@@ -154,6 +154,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   public loading$ = new BehaviorSubject(true);
 
+  public changedWarning$ = new BehaviorSubject(false);
+
   private workspace: any;
   private initializing = false;
   private destroying = false;
@@ -284,11 +286,22 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const vars = dom.getElementsByTagName('variable');
       for (let i = 0; i < vars.length; i++) {
         const varType = vars.item(i).attributes.getNamedItem('type').value;
+        const resourceId = varType.split('_')[0];
         if (varType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
-          this.blocklyUtils.ensureVariableTypeBlock(varType);
+          if (!this.collections.find(c => c.id === resourceId)) {
+            vars.item(i).remove();
+            this.changedWarning$.next(true);
+          } else {
+            this.blocklyUtils.ensureVariableTypeBlock(varType);
+          }
         }
         if (varType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) {
-          this.blocklyUtils.ensureLinkInstanceVariableTypeBlock(varType);
+          if (!this.linkTypes.find(lt => lt.id === resourceId)) {
+            vars.item(i).remove();
+            this.changedWarning$.next(true);
+          } else {
+            this.blocklyUtils.ensureLinkInstanceVariableTypeBlock(varType);
+          }
         }
       }
       for (let i = 0; i < this.linkTypes.length; i++) {
@@ -300,6 +313,15 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       for (let j = 0; j < blocks.length; j++) {
         const blockType = blocks.item(j).attributes.getNamedItem('type').value;
 
+        if (blockType.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX)) {
+          const varType = blockType.split('_')[2];
+
+          if (!this.collections.find(c => c.id === varType) && !this.linkTypes.find(lt => lt.id === varType)) {
+            blocks.item(j).remove();
+            this.changedWarning$.next(true);
+          }
+        }
+
         if (
           blockType.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
           blockType.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
@@ -308,6 +330,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
           if (!this.linkTypes.find(lt => lt.id === linkType)) {
             blocks.item(j).remove();
+            this.changedWarning$.next(true);
           }
         }
       }

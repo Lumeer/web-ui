@@ -1,5 +1,11 @@
 <div class="d-flex w-100 justify-content-center" *ngIf="loading$ | async">
   <span class="font-weight-bold" i18n="@@message.loading">Loading...</span>
 </div>
+<div class="d-flex align-items-center alert alert-danger" role="alert" *ngIf="changedWarning$ | async">
+  <div>
+    <i class="fas fa-exclamation-triangle fa-2x"></i>
+  </div>
+  <div class="ml-3" i18n="@@blockly.editor.changed.warning">The automation has been changed because some of the tables or link types were either deleted or you do not have access rights to them. Please fix the automation before saving it. Saving the automation right away will change (and most probably brake) it.</div>
+</div>
 <div id="blocklyDiv{{blocklyId}}" class="blocklyDiv"></div>
 <div class="blocklyWidgetDiv"></div>
