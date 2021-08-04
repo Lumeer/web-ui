@@ -26,7 +26,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, first, map, tap} from 'rxjs/operators';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {RouterAction} from '../../../../core/store/router/router.action';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
@@ -45,6 +45,7 @@ export class CollectionRulesComponent implements OnInit {
   public rulesCountLimit$: Observable<number>;
 
   public addingRules: Rule[] = [];
+  private ruleNames: string[] = [];
 
   private readonly runRuleTitle: string;
   private readonly runRuleMessage: string;
@@ -57,8 +58,11 @@ export class CollectionRulesComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.collection$ = this.store$.select(selectCollectionByWorkspace);
-    this.ruleNames$ = this.collection$.pipe(map(collection => collection?.rules.map(r => r.name) || []));
+    this.collection$ = this.store$.pipe(select(selectCollectionByWorkspace));
+    this.ruleNames$ = this.collection$.pipe(
+      map(collection => collection?.rules.map(r => r.name) || []),
+      tap(ruleNames => (this.ruleNames = ruleNames))
+    );
     this.rulesCountLimit$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
       filter(limits => !!limits),
@@ -77,7 +81,7 @@ export class CollectionRulesComponent implements OnInit {
   private getEmptyRule(): AutoLinkRule {
     return {
       id: generateId(),
-      name: 'New Automation Name',
+      name: this.createName(),
       type: RuleType.AutoLink,
       timing: RuleTiming.All,
       configuration: {
@@ -90,6 +94,20 @@ export class CollectionRulesComponent implements OnInit {
     };
   }
 
+  private createName(): string {
+    const prefix = $localize`:@@collection.config.tab.rules.newRule.prefix:Automation`;
+    if (!this.ruleNames.includes(prefix)) {
+      return prefix;
+    }
+
+    let count = 2;
+    while (this.ruleNames.includes(`${prefix} ${count}`)) {
+      count++;
+    }
+
+    return `${prefix} ${count}`;
+  }
+
   public onCancelNewRule(index: number): void {
     this.addingRules.splice(index, 1);
   }
@@ -100,7 +118,7 @@ export class CollectionRulesComponent implements OnInit {
         collectionId: collection.id,
         rule,
         onSuccess: () => {
-          if (rule.type === RuleType.AutoLink) {
+          if (rule.type === RuleType.AutoLink || rule.type === RuleType.Cron) {
             this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule.id));
           }
         },

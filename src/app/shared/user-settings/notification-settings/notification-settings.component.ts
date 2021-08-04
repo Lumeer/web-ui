@@ -23,7 +23,7 @@ import {UserNotificationGroupType, userNotificationGroupTypes} from '../../../co
 import {NotificationChannel} from '../../../core/model/notification-channel';
 import {NotificationFrequency} from '../../../core/model/notification-frequency';
 import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
-import {availableLanguages, LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {availableLanguages, LanguageCode} from '../../../core/model/language';
 
 @Component({
   selector: 'notification-settings',

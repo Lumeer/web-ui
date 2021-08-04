@@ -89,7 +89,7 @@
     "mixpanel-browser": "^2.41.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
-    "ngx-bootstrap": "^6.2.0",
+    "ngx-bootstrap": "^7.0.0",
     "ngx-color-picker": "^11.0.0",
     "ngx-device-detector": "^2.0.6",
     "ngx-gravatar": "^10.0.0",

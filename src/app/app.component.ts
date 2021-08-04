@@ -45,7 +45,7 @@ import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {parseQueryParams} from './core/store/navigation/query/query.util';
 import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
 import {ConfigurationService} from './configuration/configuration.service';
-import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from './core/model/language';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {csLocale, huLocale} from 'ngx-bootstrap/locale';
 

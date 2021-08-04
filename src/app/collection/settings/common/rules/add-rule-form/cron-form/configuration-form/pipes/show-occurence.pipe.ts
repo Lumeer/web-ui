@@ -17,36 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Language {
-  code: LanguageCode;
-  name: string;
-  translatedName: string;
-  icon: string;
-}
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChronoUnit} from '../../../../../../../../core/model/rule';
 
-export enum LanguageCode {
-  CZ = 'cs',
-  EN = 'en',
-  HU = 'hu',
+@Pipe({
+  name: 'showOccurence',
+})
+export class ShowOccurencePipe implements PipeTransform {
+  public transform(unit: ChronoUnit): boolean {
+    switch (unit) {
+      case ChronoUnit.Months:
+        return true;
+      default:
+        return false;
+    }
+  }
 }
-
-export const availableLanguages: Language[] = [
-  {
-    code: LanguageCode.CZ,
-    name: 'Čeština',
-    translatedName: $localize`:@@language.czech:Czech`,
-    icon: 'flag-icon flag-icon-cz',
-  },
-  {
-    code: LanguageCode.EN,
-    name: 'English',
-    translatedName: $localize`:@@language.english:English`,
-    icon: 'flag-icon flag-icon-gb',
-  },
-  {
-    code: LanguageCode.HU,
-    name: 'Magyar',
-    translatedName: $localize`:@@language.hungary:Hungarian`,
-    icon: 'flag-icon flag-icon-hu',
-  },
-];

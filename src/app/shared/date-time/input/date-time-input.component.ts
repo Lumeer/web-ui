@@ -32,7 +32,8 @@ import {parseDateTimeByConstraint} from '../../utils/date.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
-import {DateTimeConstraint, resetUnusedDatePart} from '@lumeer/data-filters';
+import {DateTimeConstraint, resetUnusedMomentPart} from '@lumeer/data-filters';
+import * as moment from 'moment';
 
 @Component({
   selector: 'date-time-input',
@@ -59,16 +60,23 @@ export class DateTimeInputComponent implements OnChanges {
   @Input()
   public value: Date;
 
+  @Input()
+  public placeholder: string;
+
+  @Input()
+  public asUtc: boolean;
+
   @Output()
   public valueChange = new EventEmitter<Date>();
 
-  @ViewChild('dateTimeInput', {static: true})
+  @ViewChild('dateTimeInput')
   public dateTimeInput: ElementRef<HTMLInputElement>;
 
   @ViewChild(DateTimePickerComponent)
   public dateTimePicker: DateTimePickerComponent;
 
   private shouldSaveOnBlur = false;
+  private valueSnapshot: Date;
 
   public options: DateTimeOptions;
 
@@ -79,6 +87,7 @@ export class DateTimeInputComponent implements OnChanges {
   }
 
   public onFocus() {
+    this.valueSnapshot = this.value;
     this.dateTimePicker.open();
   }
 
@@ -87,7 +96,7 @@ export class DateTimeInputComponent implements OnChanges {
   }
 
   public close() {
-    this.dateTimePicker && this.dateTimePicker.close();
+    this.dateTimePicker?.close();
   }
 
   public onBlur() {
@@ -100,11 +109,16 @@ export class DateTimeInputComponent implements OnChanges {
     }
 
     this.shouldSaveOnBlur = false;
-    this.close();
   }
 
   public onSave(date: Date) {
-    this.valueChange.emit(resetUnusedDatePart(date, this.format));
+    const momentDate = this.asUtc ? moment.utc(date) : moment(date);
+    this.valueChange.emit(resetUnusedMomentPart(momentDate, this.format).toDate());
+  }
+
+  public onCancel() {
+    this.valueChange.emit(this.valueSnapshot);
+    this.valueSnapshot = null;
   }
 
   public onInput() {

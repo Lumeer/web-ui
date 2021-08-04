@@ -287,7 +287,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       for (let i = 0; i < vars.length; i++) {
         const varType = vars.item(i).attributes.getNamedItem('type').value;
         const resourceId = varType.split('_')[0];
-        if (varType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+        if (
+          varType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+          varType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+        ) {
           if (!this.collections.find(c => c.id === resourceId)) {
             vars.item(i).remove();
             this.changedWarning$.next(true);
@@ -361,7 +364,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.variables.forEach(variable => {
       if (this.workspace.getVariable(variable.name) == null) {
         if (variable.collectionId) {
-          this.workspace.createVariable(variable.name, variable.collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX, null);
+          this.workspace.createVariable(
+            variable.name,
+            variable.collectionId +
+              (variable.list ? BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX : BlocklyUtils.DOCUMENT_VAR_SUFFIX),
+            null
+          );
         } else if (variable.linkTypeId) {
           this.workspace.createVariable(variable.name, variable.linkTypeId + BlocklyUtils.LINK_VAR_SUFFIX, null);
         }
@@ -487,7 +495,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 {
                   type: 'input_value',
                   name: 'VALUE',
-                  check: ['', 'Number', 'String', 'Boolean', 'Colour', 'Array'], // only regular variables - no fields or objects
+                  check: ['', 'Number', 'String', 'Boolean', 'Colour', '[]'], // only regular variables - no fields or objects
                 },
               ],
               colour: COLOR_DARK,

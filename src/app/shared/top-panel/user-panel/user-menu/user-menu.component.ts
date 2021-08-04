@@ -44,7 +44,7 @@ import {Perspective} from '../../../../view/perspectives/perspective';
 import {SearchTab} from '../../../../core/store/navigation/search-tab';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
 import {UserSettingsModalComponent} from '../../../modal/user-settings/user-settings-modal.component';
-import {availableLanguages, Language, LanguageCode} from './language';
+import {availableLanguages, Language, LanguageCode} from '../../../../core/model/language';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 
 @Component({

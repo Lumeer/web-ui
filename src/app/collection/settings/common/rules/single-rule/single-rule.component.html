@@ -5,7 +5,8 @@
   <div *ngIf="{attrs: rule | attributeNames:attributes} as attrsData">
     <strong>{{rule.name}}</strong>
     <span class="mx-2" i18n="@@collection.config.tab.rules.ofType">of type</span>
-    <em i18n="@@collection.config.tab.rules.type">{rule.type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}</em>
+
+    <em i18n="@@collection.config.tab.rules.type">{rule.type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow}}</em>
     <span *ngIf="(rule.timing | hasCreate) || (rule.timing | hasUpdate) || (rule.timing | hasDelete) || (attrsData.attrs)" class="ml-2" i18n="@@collection.config.tab.rules.on">on</span>
 
     <span

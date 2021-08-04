@@ -35,7 +35,7 @@ import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.c
 import {KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../../core/model/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';

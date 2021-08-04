@@ -40,6 +40,7 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
 import {DateTimeOptions, detectDatePickerViewMode, hasTimeOption} from '../date-time-options';
+import {isDateValid} from '../../utils/common.utils';
 
 @Component({
   selector: 'date-time-picker',
@@ -110,6 +111,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
         containerClass: 'box-shadow-none theme-default',
         customTodayClass: 'date-time-today',
         minMode: detectDatePickerViewMode(this.options),
+        useUtc: this.asUtc,
       };
       this.hasTimeOptions = hasTimeOption(this.options);
     }
@@ -128,7 +130,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     return this.dateControl.valueChanges
       .pipe(
         map(time => offsetTime(time, true, this.asUtc)),
-        filter(value => value !== this.value)
+        filter(value => isDateValid(value) && (!isDateValid(this.value) || value.getTime() !== this.value.getTime()))
       )
       .subscribe(value => {
         this.selectedValue = value;

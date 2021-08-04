@@ -58,7 +58,7 @@ import {
   DataObjectAttribute,
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
-import {fillWithNulls} from '../../../../shared/utils/array.utils';
+import {areArraysSame, fillWithNulls} from '../../../../shared/utils/array.utils';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {
   Constraint,
@@ -159,9 +159,15 @@ export class GanttChartConverter {
   }
 
   private compareTasks(t1: GanttTask, t2: GanttTask): number {
-    const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
-    const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
-    return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
+    const t1Swimlanes = t1.swimlanes?.map(s => s.value) || [];
+    const t2Swimlanes = t2.swimlanes?.map(s => s.value) || [];
+
+    if (areArraysSame(t1Swimlanes, t2Swimlanes)) {
+      const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
+      const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
+      return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
+    }
+    return 0;
   }
 
   private createGanttOptions(config: GanttChartConfig, permissions: ResourcesPermissions): GanttOptions {

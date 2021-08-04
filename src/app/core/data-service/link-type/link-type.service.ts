@@ -20,6 +20,7 @@
 import {Observable} from 'rxjs';
 import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
+import {RuleDto} from '../../dto/rule.dto';
 
 export abstract class LinkTypeService {
   public abstract createLinkType(linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto>;
@@ -27,6 +28,13 @@ export abstract class LinkTypeService {
   public abstract getLinkType(id: string): Observable<LinkTypeDto>;
 
   public abstract updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto>;
+
+  public abstract upsertRule(
+    collectionId: string,
+    ruleId: string,
+    ruleDto: RuleDto,
+    workspace?: Workspace
+  ): Observable<LinkTypeDto>;
 
   public abstract deleteLinkType(id: string): Observable<string>;
 

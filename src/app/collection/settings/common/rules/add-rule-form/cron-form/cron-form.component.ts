@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
-import {Observable} from 'rxjs';
+import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {CronRuleConfiguration} from '../../../../../../core/model/rule';
 import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {FormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
+import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
+import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
+import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
-import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
-import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
-import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
 import {
   selectContributeAndWritableCollections,
   selectContributeAndWritableLinkTypes,
@@ -37,13 +37,13 @@ import {
 import {View} from '../../../../../../core/store/views/view';
 
 @Component({
-  selector: 'blockly-form',
-  templateUrl: './blockly-form.component.html',
+  selector: 'cron-form',
+  templateUrl: './cron-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BlocklyFormComponent implements OnInit {
+export class CronFormComponent implements OnInit {
   @Input()
-  public config: BlocklyRuleConfiguration;
+  public config: CronRuleConfiguration;
 
   @Input()
   public collection: Collection;
@@ -86,10 +86,6 @@ export class BlocklyFormComponent implements OnInit {
     return this.form.get('blocklyResultTimestamp').value;
   }
 
-  public get blocklyRecursive(): string {
-    return this.form.get('blocklyRecursive').value;
-  }
-
   public display(type: BlocklyDebugDisplay) {
     if (type !== BlocklyDebugDisplay.DisplayNone && this.displayDebug === type) {
       this.display(BlocklyDebugDisplay.DisplayNone);
@@ -103,16 +99,10 @@ export class BlocklyFormComponent implements OnInit {
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
     if (this.collection) {
-      this.variables = [
-        {name: 'oldRecord', collectionId: this.collection.id},
-        {name: 'newRecord', collectionId: this.collection.id},
-      ];
+      this.variables = [{name: 'records', collectionId: this.collection.id, list: true}];
     }
     if (this.linkType) {
-      this.variables = [
-        {name: 'oldLink', linkTypeId: this.linkType.id},
-        {name: 'newLink', linkTypeId: this.linkType.id},
-      ];
+      throw Error('Unsupported Cron rule type');
     }
   }
 
