@@ -178,6 +178,14 @@ export class BlocklyUtils {
     return linkBlockType.split('-', 2)[0];
   }
 
+  public getCollectionType(varType: string): string {
+    return varType.split('_')[0];
+  }
+
+  public getVariableType(varType: string): string {
+    return varType.split('_')[2];
+  }
+
   public ensureTypeChecks(workspace): void {
     // first fix variables and links
     workspace.getAllBlocks(false).forEach(block => {
@@ -266,6 +274,12 @@ export class BlocklyUtils {
           }
         }
       }
+
+      // create document output check
+      if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
+        const collectionId = block.inputList[0]?.fieldRow[1]?.value_;
+        block.outputConnection.check_ = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+      }
     });
 
     // second fix getters and setters
@@ -349,12 +363,6 @@ export class BlocklyUtils {
             block.getField('VAR').setTypes_([newType], newType);
           }
         }
-      }
-
-      // create document output check
-      if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
-        const collectionId = block.inputList[0]?.fieldRow[1]?.value_;
-        block.outputConnection.check_ = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
       }
     });
   }

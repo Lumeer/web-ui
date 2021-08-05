@@ -20,6 +20,7 @@
 import {BlocklyComponent} from './blockly-component';
 import {COLOR_GREEN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {isNullOrUndefined} from '../../../utils/common.utils';
 
 declare var Blockly: any;
 
@@ -94,6 +95,14 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
         block.outputConnection.check_ = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
 
         this.blocklyUtils.checkVariablesType(changeEvent, workspace);
+
+        if (
+          !isNullOrUndefined(block.parentBlock_) &&
+          (block.parentBlock_.type === BlocklyUtils.SET_ATTRIBUTE ||
+            block.parentBlock_.type === BlocklyUtils.GET_ATTRIBUTE)
+        ) {
+          this.blocklyUtils.setterAndGetterOutputType(block.parentBlock_, block, true);
+        }
       }
     }
   }

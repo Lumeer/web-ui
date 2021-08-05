@@ -286,7 +286,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const vars = dom.getElementsByTagName('variable');
       for (let i = 0; i < vars.length; i++) {
         const varType = vars.item(i).attributes.getNamedItem('type').value;
-        const resourceId = varType.split('_')[0];
+        const resourceId = this.blocklyUtils.getCollectionType(varType);
         if (
           varType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
           varType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
@@ -317,7 +317,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         const blockType = blocks.item(j).attributes.getNamedItem('type').value;
 
         if (blockType.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX)) {
-          const varType = blockType.split('_')[2];
+          const varType = this.blocklyUtils.getVariableType(blockType);
 
           if (!this.collections.find(c => c.id === varType) && !this.linkTypes.find(lt => lt.id === varType)) {
             blocks.item(j).remove();
@@ -329,7 +329,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           blockType.endsWith(BlocklyUtils.LINK_TYPE_BLOCK_SUFFIX) ||
           blockType.endsWith(BlocklyUtils.LINK_INSTANCE_BLOCK_SUFFIX)
         ) {
-          const linkType = blockType.split('-')[0];
+          const linkType = this.blocklyUtils.getLinkInstanceType(blockType);
 
           if (!this.linkTypes.find(lt => lt.id === linkType)) {
             blocks.item(j).remove();
