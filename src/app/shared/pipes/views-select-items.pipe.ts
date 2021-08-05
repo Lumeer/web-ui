@@ -28,13 +28,14 @@ import {objectsByIdMap} from '../utils/common.utils';
   name: 'viewsSelectItems',
 })
 export class ViewsSelectItemsPipe implements PipeTransform {
-  public transform(views: View[], collections: Collection[]): SelectItemModel[] {
-    return views?.map(view => this.viewSelectItem(view, objectsByIdMap(collections))) || [];
+  public transform(views: View[], collections: Collection[], byId = false): SelectItemModel[] {
+    const collectionsMap = objectsByIdMap(collections);
+    return views?.map(view => this.viewSelectItem(view, collectionsMap, byId)) || [];
   }
 
-  private viewSelectItem(view: View, collectionsMap: Record<string, Collection>): SelectItemModel {
+  private viewSelectItem(view: View, collectionsMap: Record<string, Collection>, byId: boolean): SelectItemModel {
     return {
-      id: view.code,
+      id: byId ? view.id : view.code,
       value: view.name,
       icons: [getViewIcon(view)],
       iconColors: [getViewColor(view, collectionsMap)],

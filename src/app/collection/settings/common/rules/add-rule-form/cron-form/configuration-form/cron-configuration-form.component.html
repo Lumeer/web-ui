@@ -108,7 +108,7 @@
 
   <label class="align-self-start py-2 main" i18n="@@collection.config.tab.rules.cron.timer.view">View</label>
   <div class="view-input">
-    <select-item [items]="viewsByCollection$ | async | viewsSelectItems:(collections$ | async)"
+    <select-item [items]="viewsByCollection$ | async | viewsSelectItems:(collections$ | async):true"
                  class="w-100"
                  buttonClasses="w-100"
                  emptyValue="Select view"
