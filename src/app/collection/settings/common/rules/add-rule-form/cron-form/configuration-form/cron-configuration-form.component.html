@@ -57,7 +57,8 @@
   <div class="d-flex align-items-center flex-nowrap">
     <select-item class="mr-2 medium-input" [items]="hoursItems"
                  [selectedId]="hourControl.value || '0'"
-                 [removable]="false">
+                 [removable]="false"
+                 (selected)="hourControl.setValue($event)">
     </select-item>
     <span class="text-warning">
       <i class="fal fa-exclamation-triangle" i18n-tooltip="@@collection.config.tab.rules.cron.timer.delay"
@@ -88,7 +89,8 @@
                        (valueChange)="onEndDateChange($event)">
       </date-time-input>
       <div *ngIf="configForm?.errors?.endsOnInvalid" class="small mt-1 text-danger"
-           i18n="@@collection.config.tab.rules.cron.timer.ends.invalid">Starts on must be before than ends on.</div>
+           i18n="@@collection.config.tab.rules.cron.timer.ends.invalid">Starts on must be before than ends on.
+      </div>
     </div>
 
     <input type="radio" name="num" id="num" value="num"

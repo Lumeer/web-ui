@@ -305,7 +305,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
         }
       } else if (form.get('type').value === RuleType.Cron) {
         const unit = configCron.get('unit').value;
-        if (unit !== ChronoUnit.Months && !configCron.get('daysOfWeek').value) {
+        if (unit === ChronoUnit.Weeks && !configCron.get('daysOfWeek').value) {
           configCron.setErrors({daysOfWeekRequired: true});
           return null;
         }
