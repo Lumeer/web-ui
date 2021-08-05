@@ -75,7 +75,7 @@ function convertCronRuleConfigurationDtoToModel(dto: CronRuleConfigurationDto): 
     ...dto, // get blockly config
     startsOn: dto.startsOn && new Date(dto.startsOn),
     endsOn: dto.endsOn && new Date(dto.endsOn),
-    hour: dto.hour,
+    hour: dto.hour?.toString(),
     interval: dto.interval,
     daysOfWeek: dto.daysOfWeek, // days of week - stored as binary number starting with Monday as the least significant bit
     occurence: dto.occurence,
@@ -123,7 +123,7 @@ function convertCronRuleConfigurationModelToDto(model: CronRuleConfiguration): C
     ...model, // to convert blockly part
     startsOn: model.startsOn?.toISOString(),
     endsOn: model.endsOn?.toISOString(),
-    hour: model.hour,
+    hour: +model.hour,
     interval: model.interval,
     daysOfWeek: model.daysOfWeek,
     occurence: model.occurence,
