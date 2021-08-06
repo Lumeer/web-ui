@@ -47,13 +47,9 @@ export class CollectionRulesComponent implements OnInit {
   public addingRules: Rule[] = [];
   private ruleNames: string[] = [];
 
-  private readonly runRuleTitle: string;
-  private readonly runRuleMessage: string;
   private readonly copyOf: string;
 
   constructor(private store$: Store<AppState>) {
-    this.runRuleTitle = $localize`:@@collection.config.tab.rules.run.title:Run the Automation`;
-    this.runRuleMessage = $localize`:@@collection.config.tab.rules.run.message:Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.`;
     this.copyOf = $localize`:@@collection.config.tab.rules.prefix.copyOf:Copy of`;
   }
 
@@ -119,7 +115,7 @@ export class CollectionRulesComponent implements OnInit {
         rule,
         onSuccess: () => {
           if (rule.type === RuleType.AutoLink || rule.type === RuleType.Cron) {
-            this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule.id));
+            this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule));
           }
         },
       })
@@ -133,11 +129,19 @@ export class CollectionRulesComponent implements OnInit {
     }
   }
 
-  private getRunRuleConfirmation(collectionId: string, ruleId: string): Action {
+  private getRunRuleConfirmation(collectionId: string, rule: Rule): Action {
+    const title = $localize`:@@collection.config.tab.rules.run.title:Run the Automation`;
+    let message = '';
+    if (rule.type === RuleType.AutoLink) {
+      message = $localize`:@@collection.config.tab.rules.run.message:Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.`;
+    } else if (rule.type === RuleType.Cron) {
+      message = $localize`:@@collection.config.tab.rules.run.cron.message:Do you want to run the automation for selected view? Please note that this might take significant time to complete.`;
+    }
+
     return new NotificationsAction.Confirm({
-      title: this.runRuleTitle,
-      message: this.runRuleMessage,
-      action: new CollectionsAction.RunRule({collectionId, ruleId}),
+      title,
+      message,
+      action: new CollectionsAction.RunRule({collectionId, ruleId: rule.id}),
       type: 'warning',
       yesFirst: false,
     });
