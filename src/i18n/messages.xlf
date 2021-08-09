@@ -278,35 +278,35 @@
         <source>New automation name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">12,13</context>
+          <context context-type="linenumber">9,10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.automation.name.exists" datatype="html">
         <source> Automation name already used. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="linenumber">18,19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.automation.type" datatype="html">
         <source> Fire automation </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">27,28</context>
+          <context context-type="linenumber">24,25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.onRecord" datatype="html">
         <source> On record </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">40,41</context>
+          <context context-type="linenumber">38,39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.timing.create" datatype="html">
         <source>Create</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
@@ -328,7 +328,7 @@
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
@@ -339,7 +339,7 @@
         <source>Cancel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
@@ -450,21 +450,21 @@
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.automation.add" datatype="html">
         <source>Add Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.type" datatype="html">
         <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context>
-          <context context-type="linenumber">321</context>
+          <context context-type="linenumber">340</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context>
@@ -479,49 +479,49 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
-        <source> Link record via </source>
+        <source>Link record via</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">7,8</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.autoLink.selectLinkType" datatype="html">
         <source>Select a link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.autoLink.where" datatype="html">
-        <source> Where </source>
+        <source>Where</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.autoLink.equals" datatype="html">
         <source> equals </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context>
-          <context context-type="linenumber">32,33</context>
+          <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.autoLink.selectFrom" datatype="html">
         <source>Select from <x id="collection" equiv-text="this.collection.name"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.autoLink.linkTypeFirst" datatype="html">
         <source>Select link type first</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.blockly.info" datatype="html">
@@ -615,74 +615,95 @@
           <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="collection.config.tab.rules.cron.timer.start" datatype="html">
-        <source>Start on</source>
+      <trans-unit id="collection.config.tab.rules.cron.timer.monthly" datatype="html">
+        <source>If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.cron.timer.start" datatype="html">
+        <source>Starts</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.cron.timer.start.required" datatype="html">
+        <source>Please enter start date. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">56,57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.execute" datatype="html">
         <source>Execute at</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.delay" datatype="html">
         <source>The execution can be delayed up to several minutes depending on the server load.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.ends" datatype="html">
         <source>Ends</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.never" datatype="html">
         <source>Never</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.on" datatype="html">
         <source>On</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.cron.timer.ends.invalid" datatype="html">
+        <source>The start date must be before the end date. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">96,97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.after" datatype="html">
         <source>After</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.executions" datatype="html">
         <source>executions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.view" datatype="html">
         <source>View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
         <source>Select view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
@@ -694,17 +715,17 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.cron.timer.records" datatype="html">
-        <source>Read records from this view and pass them to the automation. No records are passed when empty.</source>
+        <source>Read records from this view and pass them to the automation. No records are passed when empty. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">126,128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="840951359074313455" datatype="html">
         <source>Days</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <note priority="1" from="description">cron.unit.days.title</note>
       </trans-unit>
@@ -712,7 +733,7 @@
         <source>Weeks</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <note priority="1" from="description">cron.unit.weeks.title</note>
       </trans-unit>
@@ -720,7 +741,7 @@
         <source>Months</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <note priority="1" from="description">cron.unit.months.title</note>
       </trans-unit>
@@ -728,7 +749,7 @@
         <source>M|T|W|T|F|S|S</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.add" datatype="html">
@@ -1045,47 +1066,51 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.newRule.prefix" datatype="html">
         <source>Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.remove.title" datatype="html">
         <source>Delete this automation?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.remove.message" datatype="html">
         <source>Do you really want to delete this automation?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.remove.message.used" datatype="html">
         <source>This automation is being used in an action button.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">169</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.tab.linktypes.name.placeholder" datatype="html">
@@ -1316,14 +1341,21 @@
         <source>Run the Automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.run.message" datatype="html">
         <source>Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.run.cron.message" datatype="html">
+        <source>Do you want to run the automation now? Please note that this might take significant time to complete.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="notification.document.notVisible" datatype="html">
@@ -1370,6 +1402,27 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/guards/page-not-found.guard.ts</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="language.czech" datatype="html">
+        <source>Czech</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/language.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="language.english" datatype="html">
+        <source>English</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/language.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="language.hungary" datatype="html">
+        <source>Hungarian</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/model/language.ts</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="notification.service.Success" datatype="html">
@@ -2072,81 +2125,81 @@
         <source>Could not save automation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">270</context>
+          <context context-type="linenumber">260</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.update.purpose.fail" datatype="html">
         <source>Could not update table purpose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">285</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.fail" datatype="html">
         <source>Could not delete table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="linenumber">338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.add.favorite.fail" datatype="html">
         <source>Could not add the table to favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">373</context>
+          <context context-type="linenumber">363</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.remove.favorite.fail" datatype="html">
         <source>Could not remove the table from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">398</context>
+          <context context-type="linenumber">388</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.attribute.default.set.fail" datatype="html">
         <source>Could not set the displayed attribute id</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">449</context>
+          <context context-type="linenumber">439</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.create.attributes.fail" datatype="html">
         <source>Could not create attributes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">501</context>
+          <context context-type="linenumber">491</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.attribute.fail" datatype="html">
         <source>Could not change the attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">547</context>
+          <context context-type="linenumber">537</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.remove.attribute.fail" datatype="html">
         <source>Could not delete the attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">587</context>
+          <context context-type="linenumber">577</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.change.permission.fail" datatype="html">
         <source>Could not change the table permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">633</context>
+          <context context-type="linenumber">623</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.runRule.fail" datatype="html">
         <source>Could not run the selected automation for the whole table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
-          <context context-type="linenumber">658</context>
+          <context context-type="linenumber">648</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tasks.get.fail" datatype="html">
@@ -2304,7 +2357,7 @@
         <source>Could not delete the link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">204</context>
         </context-group>
       </trans-unit>
       <trans-unit id="lumeer.advice" datatype="html">
@@ -2941,7 +2994,7 @@
         <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="limit" equiv-text="limit"/> documents can be created within a single sequence of automations and functions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
@@ -4317,18 +4370,18 @@
           <context context-type="linenumber">49,50</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
-        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="constraint.address.part" datatype="html">
         <source> <x id="ICU" equiv-text="{default, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
           <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ec6b3de0fbd484cdd94f7a85c3be74c49860b9bb" datatype="html">
+        <source>{VAR_SELECT, select, houseNumber {House number} street {Street} postalCode {Postal code} city {City} county {County} state {State} country {Country} continent {Continent}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.coordinates.description" datatype="html">
@@ -4398,14 +4451,14 @@
         <source> Maximum value </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">58,59</context>
+          <context context-type="linenumber">59,60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="form.errors.minMaxInvalid" datatype="html">
         <source> Minimum must be less or equal than maximum. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">71,72</context>
+          <context context-type="linenumber">73,74</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
@@ -4424,14 +4477,14 @@
         <source> Format can not be empty. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">77,78</context>
+          <context context-type="linenumber">79,80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="form.date.errors.customInvalid" datatype="html">
         <source> I am sorry, but this format is not supported. Please enter valid format. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">83,84</context>
+          <context context-type="linenumber">85,86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.dateTime.format.custom" datatype="html">
@@ -4441,6 +4494,13 @@
           <context context-type="linenumber">151</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
+        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="constraint.duration.unit.description" datatype="html">
         <source> <x id="ICU" equiv-text="{control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }"/> </source>
         <context-group purpose="location">
@@ -4448,18 +4508,11 @@
           <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
+      <trans-unit id="constraint.duration.unit.conversion" datatype="html">
+        <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0b13e36359f967740c65c0cbe8d13d7e8b43ccf0" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">35,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
@@ -4467,13 +4520,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
           <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="constraint.duration.unit.conversion" datatype="html">
-        <source> <x id="ICU" equiv-text="{control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }"/> </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context>
-          <context context-type="linenumber">35,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.duration.description" datatype="html">
@@ -5240,18 +5286,18 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
-        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="modal.links.modify.selected" datatype="html">
         <source> <x id="ICU" equiv-text="{selected.count, plural, =0 {No records selected} one {1 record selected} few {{{selected.count}} records selected} other {{{selected.count}} records selected} }"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
           <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ecd3e73f09ab73b810c15d932a891aeebb6a27bf" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {No records selected} one {1 record selected} few {<x id="INTERPOLATION"/> records selected} other {<x id="INTERPOLATION"/> records selected}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="modal.links.modify.filter.title" datatype="html">
@@ -6932,27 +6978,6 @@
           <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="language.czech" datatype="html">
-        <source>Czech</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="language.english" datatype="html">
-        <source>English</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="language.hungary" datatype="html">
-        <source>Hungarian</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="dialog.feedback.title" datatype="html">
         <source>Send Feedback</source>
         <context-group purpose="location">
@@ -7729,19 +7754,19 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
+        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source> <x id="ICU" equiv-text="{yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}"/>
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">2,3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">

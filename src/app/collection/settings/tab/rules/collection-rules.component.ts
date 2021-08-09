@@ -135,7 +135,7 @@ export class CollectionRulesComponent implements OnInit {
     if (rule.type === RuleType.AutoLink) {
       message = $localize`:@@collection.config.tab.rules.run.message:Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.`;
     } else if (rule.type === RuleType.Cron) {
-      message = $localize`:@@collection.config.tab.rules.run.cron.message:Do you want to run the automation for selected view? Please note that this might take significant time to complete.`;
+      message = $localize`:@@collection.config.tab.rules.run.cron.message:Do you want to run the automation now? Please note that this might take significant time to complete.`;
     }
 
     return new NotificationsAction.Confirm({

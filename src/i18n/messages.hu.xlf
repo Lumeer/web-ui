@@ -255,7 +255,7 @@
 				<target>Új rekordot hoz létre. Rendeld hozzá egy változóhoz a tulajdonságai megváltoztatásához. A végtelen hurkok elkerülése érdekében csak
 					<x id="limit" equiv-text="{{limit}}"/>
 					dokumentumokat lehet létrehozni az automatizálások és funkciók egyetlen sorozatában.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="blockly.tooltip.currentDateBlock">
 				<source>Gets current date as object for further function calls.</source>
 				<target>Az aktuális dátumot objektumként kapod meg a további függvényhívásokhoz.</target>
@@ -457,7 +457,7 @@
 			<trans-unit datatype="html" id="button.cancel">
 				<source>Cancel</source>
 				<target>Mégse</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">82</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="button.close">
 				<source>Close</source>
 				<target>Bezár</target>
@@ -839,11 +839,11 @@
 			<trans-unit datatype="html" id="collection.add.favorite.fail">
 				<source>Could not add the table to favorites</source>
 				<target>Nem lehet hozzáadni a táblázatot a kedvencekhez</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">373</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">363</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.attribute.default.set.fail">
 				<source>Could not set the displayed attribute id</source>
 				<target>Nem lehet beállítani a megjelenített tulajdonság azonosítót</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">449</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">439</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.button.configure">
 				<source>Configure</source>
 				<target>Konfigurál</target>
@@ -855,11 +855,11 @@
 			<trans-unit datatype="html" id="collection.change.attribute.fail">
 				<source>Could not change the attribute</source>
 				<target>Nem lehet módosítani a tulajdonságot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">547</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">537</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.change.permission.fail">
 				<source>Could not change the table permissions</source>
 				<target>Nem lehet módosítani a tábla engedélyeit</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">633</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">623</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.attributes">
 				<source> Attributes </source>
 				<target>Tulajdonságok</target>
@@ -893,49 +893,49 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.equals">
 				<source> equals </source>
 				<target>Egyenlőek</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.info">
 				<source> Automatically link records from two tables based on matching column values. </source>
 				<target>Két tábla rekordjait automatikusan összekapcsolhatja az egyező oszlopértékek alapján.</target>
 			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.linkType">
-				<source> Link record via </source>
+				<source>Link record via</source>
 				<target>Rekord összekapcsolása ... keresztül</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.linkTypeFirst">
 				<source>Select link type first</source>
 				<target>Először válaszd ki a hivatkozás típusát</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">50</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.selectFrom">
 				<source>Select from <x id="collection" equiv-text="this.collection.name"/></source>
 				<target>Kiválaszt a
 					<x id="collection" equiv-text="{{collection}}"/>
 					-ből</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.selectLinkType">
 				<source>Select a link type</source>
 				<target>Hivatkozástípus kiválasztása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.autoLink.where">
-				<source> Where </source>
+				<source>Where</source>
 				<target>Ahol</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.automation.add">
 				<source>Add Automation</source>
 				<target>Automatizálás hozzáadása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.automation.name.exists">
 				<source> Automation name already used. </source>
 				<target>Már használt automatizálási név.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.automation.name.new">
 				<source>New automation name</source>
 				<target>Új automatizálási név</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.automation.type">
 				<source> Fire automation </source>
 				<target>Tűzautomatizálás</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.blockly.dryRun">
 				<source> Dry Run </source>
 				<target>Száraz futás</target>
@@ -971,61 +971,46 @@
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.monthly" datatype="html">
+        <source>If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month).</source><target state="new">If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.start" datatype="html">
-        <source>Start on</source><target state="new">Start on</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.execute" datatype="html">
+        <source>Starts</source><target state="new">Start on</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.start.required" datatype="html">
+        <source>Please enter start date. </source><target state="new">Starting date is required. </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.execute" datatype="html">
         <source>Execute at</source><target state="new">Execute at</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.delay" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.delay" datatype="html">
         <source>The execution can be delayed up to several minutes depending on the server load.</source><target state="new">The execution can be delayed up to several minutes depending on the server load.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.ends" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.ends" datatype="html">
         <source>Ends</source><target state="new">Ends</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.never" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.never" datatype="html">
         <source>Never</source><target state="new">Never</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.on" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.on" datatype="html">
         <source>On</source><target state="new">On</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.after" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.ends.invalid" datatype="html">
+        <source>The start date must be before the end date. </source><target state="new">Starts on must be before than ends on. </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.after" datatype="html">
         <source>After</source><target state="new">After</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">83</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.executions" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.executions" datatype="html">
         <source>executions</source><target state="new">executions</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.view" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.view" datatype="html">
         <source>View</source><target state="new">View</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">113</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.blockly.editAutomation.message">
 				<source>Edit Automation Code:</source>
 				<target>Automatizálási kód szerkesztése:</target>
@@ -1057,7 +1042,7 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.newRule.prefix">
 				<source>Automation</source>
 				<target>Szabály</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">132</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.ofType">
 				<source>of type</source>
 				<target>típus</target>
@@ -1072,27 +1057,33 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.onRecord">
 				<source> On record </source>
 				<target>A nyilvántartásban</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.remove.message">
 				<source>Do you really want to delete this automation?</source>
 				<target>Biztosan törlöd ezt a szabályt?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">153</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">166</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">174</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.remove.message.used">
 				<source>This automation is being used in an action button.</source>
 				<target>Ez a szabály műveletgombban használatos.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">156</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">155</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">169</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">177</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.remove.title">
 				<source>Delete this automation?</source>
 				<target>Törlöd ezt a szabályt?</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">152</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">151</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">165</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">173</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.rule.update">
 				<source>Save Changes</source>
 				<target>Változtatások mentése</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.run.message">
 				<source>Do you want to run the automation for all the rows in the table now? Please note that this might take significant time to complete.</source>
 				<target>Futtatja most a szabályt a tábla összes sorára? Kérjük vedd figyelembe, hogy ez jelentős időt vehet igénybe.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="notification.document.notVisible" datatype="html">
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.run.cron.message" datatype="html">
+        <source>Do you want to run the automation now? Please note that this might take significant time to complete.</source><target state="new">Do you want to run the automation for selected view? Please note that this might take significant time to complete.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+      </trans-unit><trans-unit id="notification.document.notVisible" datatype="html">
         <source>I am sorry, this record could not be found.</source>
 		<target>Sajnálom, de ez a rekord nem található.</target>
 
@@ -1101,7 +1092,7 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.run.title">
 				<source>Run the Automation</source>
 				<target>A szabály futtatása</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">54</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.serviceLimit">
 				<source> You can have only a single automation in the Free Plan. </source>
 				<target>Csak egyetlen szabályod lehet az Ingyenes Csomagban.</target>
@@ -1109,11 +1100,11 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.timing.create">
 				<source>Create</source>
 				<target>Létrehoz</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">44</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.timing.delete">
 				<source>Delete</source>
 				<target>Töröl</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.timing.update">
 				<source>Update</source>
 				<target>Frissít</target>
@@ -1121,7 +1112,7 @@
 			<trans-unit datatype="html" id="collection.config.tab.rules.type">
 				<source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} CRON {Timer} WORKFLOW {Workflow}}</source>
 				<target>{VAR_SELECT, select, AUTO_LINK {Automatizált Link} BLOCKLY {Blockly} ZAPIER {Zapier} }</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context><context context-type="linenumber">321</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.ts</context><context context-type="linenumber">340</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.config.tab.rules.upgradePlan">
 				<source>Upgrade to Business Plan!</source>
 				<target>Frissítsen üzleti tervre!</target>
@@ -1141,7 +1132,7 @@
 			<trans-unit datatype="html" id="collection.create.attributes.fail">
 				<source>Could not create attributes</source>
 				<target>Nem lehet tulajdonságokat létrehozni</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">501</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">491</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.create.fail">
 				<source>Could not create table</source>
 				<target>Nem lehet létrehozni a táblázatot</target>
@@ -1161,7 +1152,7 @@
 			<trans-unit datatype="html" id="collection.delete.fail">
 				<source>Could not delete table</source>
 				<target>A tábla nem törölhető</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">348</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">338</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.document.count">
 				<source>Record Count</source>
 				<target>Rekordok száma</target>
@@ -1216,15 +1207,15 @@
 			<trans-unit datatype="html" id="collection.remove.attribute.fail">
 				<source>Could not delete the attribute</source>
 				<target>Nem lehetett törölni a tulajdonságot</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">587</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">577</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.remove.favorite.fail">
 				<source>Could not remove the table from favorites</source>
 				<target>Nem lehet eltávolítani a táblázatot a kedvencekből</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">398</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">388</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.runRule.fail">
 				<source>Could not run the selected automation for the whole table</source>
 				<target>Nem futtatható a kijelölt szabály a teljes táblázatban</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">658</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">648</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.settings.records.count">
 				<source>Number of records</source>
 				<target>Rekordok száma</target>
@@ -1279,7 +1270,7 @@
         <source>Copy of</source><target>Másolata a</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/link-type-rules/link-type-rules.component.ts</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collection.tab.linktypes.delete.title">
 				<source>Delete link type?</source>
 				<target>Törlöd a hivatkozás típusát?</target>
@@ -1299,7 +1290,7 @@
 			<trans-unit datatype="html" id="collection.update.purpose.fail">
 				<source>Could not update table purpose</source>
 				<target>A táblázat célját nem lehet frissíteni</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">295</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">285</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="collections.empty.subtitle.norights">
 				<source>I am sorry but you do not have permissions to add tables. </source>
 				<target>Sajnálom, de nincs engedélyed ahhoz, hogy táblázatokat adj hozzá.</target>
@@ -1595,7 +1586,7 @@
 			<trans-unit datatype="html" id="constraint.dateTime.maxValue.label">
 				<source> Maximum value </source>
 				<target>Maximális érték</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="constraint.dateTime.minValue.label">
 				<source> Minimum value </source>
 				<target>Minimális érték</target>
@@ -2251,11 +2242,11 @@
 			<trans-unit datatype="html" id="form.date.errors.customEmpty">
 				<source> Format can not be empty. </source>
 				<target>A formátum nem lehet üres.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="form.date.errors.customInvalid">
 				<source> I am sorry, but this format is not supported. Please enter valid format. </source>
 				<target>Sajnálom, de ez a formátum nem támogatott. Adj meg érvényes formátumot.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">83</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="form.errors.emptyFields">
 				<source> Please select at least one address field.
 </source>
@@ -2264,7 +2255,7 @@
 			<trans-unit datatype="html" id="form.errors.minMaxInvalid">
 				<source> Minimum must be less or equal than maximum. </source>
 				<target>A minimumnak a maximumnál kisebbnek vagy egyenlőnek kell lennie.</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">133</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">133</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">71</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="function.create.serviceLimits">
 				<source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
 				<target>Az Ingyenes Csomagban táblázat/hivatkozástípusonként csak egy függvény lehet. Szeretne most frissíteni az Üzleti verzióra?</target>
@@ -2514,14 +2505,14 @@
 			<trans-unit datatype="html" id="language.czech">
 				<source>Czech</source>
 				<target>cseh</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context><context context-type="linenumber">46</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/model/language.ts</context><context context-type="linenumber">46</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="language.english">
 				<source>English</source>
 				<target>angol</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="language.hungary" datatype="html">
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/model/language.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="language.hungary" datatype="html">
         <source>Hungarian</source><target>Magyar</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/language.ts</context><context context-type="linenumber">58</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/model/language.ts</context><context context-type="linenumber">58</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="link.detail.unlink">
 				<source>Unlink</source>
 				<target>Leválaszt</target>
@@ -2576,7 +2567,7 @@
 			<trans-unit datatype="html" id="link.type.delete.fail">
 				<source>Could not delete the link type</source>
 				<target>Nem lehetett törölni a hivatkozástípusát</target>
-			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">214</context></context-group></trans-unit>
+			<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">204</context></context-group></trans-unit>
 			<trans-unit datatype="html" id="link.type.update.fail">
 				<source>Could not update the link type</source>
 				<target>Nem lehet frissíteni a hivatkozás típusát</target>
@@ -3849,40 +3840,25 @@
 				<trans-unit datatype="html" id="projects.tab.template.metadata.defaultView.empty">
 					<source>Select view</source>
 					<target>Nézet kiválasztása</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">98</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">161</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.records" datatype="html">
-        <source>Read records from this view and pass them to the automation. No records are passed when empty.</source><target state="new">Read records from this view and pass them to the automation. No records are passed when empty.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context>
-          <context context-type="linenumber">106</context>
-        </context-group>
-      </trans-unit><trans-unit id="840951359074313455" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">118</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">161</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.cron.timer.records" datatype="html">
+        <source>Read records from this view and pass them to the automation. No records are passed when empty. </source><target state="new">Read records from this view and pass them to the automation. No records are passed when empty.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit><trans-unit id="840951359074313455" datatype="html">
         <source>Days</source><target state="new">Days</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
+        
         <note priority="1" from="description">cron.unit.days.title</note>
-      </trans-unit><trans-unit id="8365450656480095075" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="8365450656480095075" datatype="html">
         <source>Weeks</source><target state="new">Weeks</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
+        
         <note priority="1" from="description">cron.unit.weeks.title</note>
-      </trans-unit><trans-unit id="4845030128243887325" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="4845030128243887325" datatype="html">
         <source>Months</source><target state="new">Months</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
+        
         <note priority="1" from="description">cron.unit.months.title</note>
-      </trans-unit><trans-unit id="cron.daysOfWeek.units" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="cron.daysOfWeek.units" datatype="html">
         <source>M|T|W|T|F|S|S</source><target state="new">M|T|W|T|F|S|S</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
-          <context context-type="linenumber">79</context>
-        </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.defaultView.help" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.defaultView.help" datatype="html">
         <source> In what view do you want to open task notifications? </source>
 		<target> Milyen nézetben szeretné megnyitni a feladat értesítéseit? </target>
         <context-group purpose="location">
@@ -4296,7 +4272,7 @@
 				<trans-unit datatype="html" id="resource.rule.update.fail">
 					<source>Could not save automation</source>
 					<target>Nem tudja menteni a szabályt</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">270</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">175</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">260</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context><context context-type="linenumber">165</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="resource.settings.back">
 					<source>Back to App</source>
 					<target>Vissza az alkalmazáshoz</target>

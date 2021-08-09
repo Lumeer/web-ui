@@ -35,10 +35,14 @@
       <input class="form-control hour-input mr-2" type="number"
              min="1" max="31" id="occurence" formControlName="occurence" integer minValue="1" maxValue="31"/>
       <span i18n="@@collection.config.tab.rules.cron.timer.dayInMonth">day in month</span>
+      <span class="text-secondary ml-1">
+        <i class="fal fa-question-circle" i18n-tooltip="@@collection.config.tab.rules.cron.timer.monthly"
+           tooltip="If a month has lower count of days, the automation is executed on the last day of month (i.e. enter 31 to always execute at the end of month)."></i>
+      </span>
     </div>
   </ng-container>
 
-  <label class="main" i18n="@@collection.config.tab.rules.cron.timer.start">Start on</label>
+  <label class="main" i18n="@@collection.config.tab.rules.cron.timer.start">Starts</label>
   <div>
     <date-time-input class="medium-input d-inline-block"
                      id="startsOnDate"
@@ -49,7 +53,7 @@
                      (valueChange)="startsOnControl.setValue($event)">
     </date-time-input>
     <div *ngIf="configForm?.errors?.startsOnRequired" class="small mt-1 text-danger"
-         i18n="@@collection.config.tab.rules.cron.timer.start.required">Starting date is required.
+         i18n="@@collection.config.tab.rules.cron.timer.start.required">Please enter start date.
     </div>
   </div>
 
@@ -89,7 +93,7 @@
                        (valueChange)="onEndDateChange($event)">
       </date-time-input>
       <div *ngIf="configForm?.errors?.endsOnInvalid" class="small mt-1 text-danger"
-           i18n="@@collection.config.tab.rules.cron.timer.ends.invalid">Starts on must be before than ends on.
+           i18n="@@collection.config.tab.rules.cron.timer.ends.invalid">The start date must be before the end date.
       </div>
     </div>
 
