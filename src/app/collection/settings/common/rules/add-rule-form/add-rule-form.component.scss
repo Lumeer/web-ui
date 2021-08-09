@@ -3,3 +3,9 @@
 input.ng-invalid {
   border-color: $danger;
 }
+
+:host {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-gap: 1rem;
+}

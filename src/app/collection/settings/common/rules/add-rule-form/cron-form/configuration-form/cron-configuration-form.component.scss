@@ -1,0 +1,48 @@
+@media (max-width: 575.98px) {
+  .config-form {
+    grid-template-columns: 1fr !important;
+
+    label.main {
+      margin-top: 0.5rem;
+      padding: 0 !important;
+    }
+  }
+}
+
+.config-form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  grid-gap: 1rem;
+
+  label {
+    margin-bottom: 0;
+  }
+}
+
+.hour-input {
+  width: 70px;
+}
+
+.interval-input {
+  width: 90px;
+}
+
+.type-input {
+  min-width: 150px;
+}
+
+.medium-input {
+  width: min(100%, 150px);
+}
+
+.ends-on-form {
+  display: grid;
+  grid-template-columns: min-content auto 1fr;
+  align-items: center;
+  grid-gap: 0.5rem;
+}
+
+.view-input {
+  max-width: min(100%, 450px);
+}

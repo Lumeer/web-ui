@@ -29,7 +29,7 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {ConfigurationService} from '../../configuration/configuration.service';
-import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from '../../core/model/language';
 
 const termsOfServiceLinks = {
   cs: 'https://www.lumeer.io/cs/vseobecne-obchodni-podminky/',

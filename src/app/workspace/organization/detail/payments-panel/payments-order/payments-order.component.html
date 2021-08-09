@@ -3,12 +3,8 @@
   <p i18n="@@organizations.tab.detail.order.activeUntil">Subscription is active until {{serviceLimits.validUntil | date : 'mediumDate'}}. <strong>Extend it today!</strong></p>
 </ng-container>
 <h5 *ngIf="trial">
-  <span *ngIf="discountAmount <= 0" class="badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.order.get">
-    Get Lumeer for Business now!
-  </span>
-  <span *ngIf="discountAmount > 0" i18n="@@organizations.tab.detail.order.get">
-    Get Lumeer for Business now!
-  </span>
+  <span i18n="@@organizations.tab.detail.order.get"
+        [ngClass]="discountAmount <= 0 ? 'badge-pill badge-danger p-2' : ''">Get Lumeer for Business now!</span>
 </h5>
 <div style="cursor: default;" *ngIf="discountAmount > 0" class="btn btn-lg btn-danger">
   {{discountDescription}} <span class="badge badge-success">-{{discountAmount}}%</span>

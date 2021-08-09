@@ -245,3 +245,15 @@ export function objectChanged(change: SimpleChange): boolean {
 export function getLastUrlPart(url: string): string {
   return (url || '').split('?')[0]?.split('/')?.pop();
 }
+
+export function bitTest(num: number, bit: number): boolean {
+  return (num & (1 << bit)) > 0;
+}
+
+export function bitSet(num: number, bit: number) {
+  return num | (1 << bit);
+}
+
+export function bitClear(num: number, bit: number) {
+  return num & ~(1 << bit);
+}

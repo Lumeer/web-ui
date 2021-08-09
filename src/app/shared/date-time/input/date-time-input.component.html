@@ -1,7 +1,8 @@
 <input #dateTimeInput
        [id]="id"
        [readonly]="readonly"
-       [value]="value | formatDate : format"
+       [value]="value | formatDate : format:asUtc"
+       [placeholder]="placeholder"
        (focus)="onFocus()"
        (click)="$event.stopPropagation()"
        (blur)="onBlur()"
@@ -11,6 +12,7 @@
        [clickOutsideEnabled]="!readonly"
        autocomplete="off"
        class="form-control"
+       inputmode="numeric"
        data-test="date-time-input"
        type="text">
 
@@ -20,5 +22,8 @@
                   [options]="options"
                   [origin]="dateTimeInput"
                   [value]="value"
-                  (save)="onSave($event)">
+                  [asUtc]="asUtc"
+                  (valueChange)="onSave($event)"
+                  (save)="onSave($event)"
+                  (cancel)="onCancel()">
 </date-time-picker>

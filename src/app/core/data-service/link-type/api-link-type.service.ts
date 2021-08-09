@@ -28,6 +28,7 @@ import {AppState} from '../../store/app.state';
 import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {RuleDto} from '../../dto/rule.dto';
 
 @Injectable()
 export class ApiLinkTypeService extends BaseService implements LinkTypeService {
@@ -51,6 +52,17 @@ export class ApiLinkTypeService extends BaseService implements LinkTypeService {
 
   public updateLinkType(id: string, linkType: LinkTypeDto, workspace?: Workspace): Observable<LinkTypeDto> {
     return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id, workspace), linkType, {
+      headers: {...this.workspaceHeaders(workspace)},
+    });
+  }
+
+  public upsertRule(
+    linkTypeId: string,
+    ruleId: string,
+    ruleDto: RuleDto,
+    workspace?: Workspace
+  ): Observable<LinkTypeDto> {
+    return this.httpClient.put<LinkTypeDto>(`${this.restApiPrefix(linkTypeId, workspace)}/rule/${ruleId}`, ruleDto, {
       headers: {...this.workspaceHeaders(workspace)},
     });
   }

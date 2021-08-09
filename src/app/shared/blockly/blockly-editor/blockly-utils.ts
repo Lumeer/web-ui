@@ -178,6 +178,14 @@ export class BlocklyUtils {
     return linkBlockType.split('-', 2)[0];
   }
 
+  public getCollectionType(varType: string): string {
+    return varType.split('_')[0];
+  }
+
+  public getVariableType(varType: string): string {
+    return varType.split('_')[2];
+  }
+
   public ensureTypeChecks(workspace): void {
     // first fix variables and links
     workspace.getAllBlocks(false).forEach(block => {
@@ -266,6 +274,12 @@ export class BlocklyUtils {
           }
         }
       }
+
+      // create document output check
+      if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
+        const collectionId = block.inputList[0]?.fieldRow[1]?.value_;
+        block.outputConnection.check_ = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+      }
     });
 
     // second fix getters and setters
@@ -349,12 +363,6 @@ export class BlocklyUtils {
             block.getField('VAR').setTypes_([newType], newType);
           }
         }
-      }
-
-      // create document output check
-      if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
-        const collectionId = block.inputList[0]?.fieldRow[1]?.value_;
-        block.outputConnection.check_ = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
       }
     });
   }
@@ -676,7 +684,10 @@ export class BlocklyUtils {
     const xmlList = [];
 
     workspace.getAllVariables().forEach(variable => {
-      if (variable.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+      if (
+        variable.type.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+        variable.type.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)
+      ) {
         this.ensureVariableTypeBlock(variable.type);
         const blockText =
           '<xml>' +
@@ -767,7 +778,14 @@ export class BlocklyUtils {
 
   public ensureVariableTypeBlock(type: string): void {
     if (!Blockly.Blocks[BlocklyUtils.VARIABLES_GET_PREFIX + type]) {
-      const collection = this.getCollection(type.replace(BlocklyUtils.DOCUMENT_VAR_SUFFIX, ''));
+      const collection = this.getCollection(
+        type.replace(
+          type.indexOf(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX) >= 0
+            ? BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX
+            : BlocklyUtils.DOCUMENT_VAR_SUFFIX,
+          ''
+        )
+      );
 
       const this_ = this;
       Blockly.Blocks[BlocklyUtils.VARIABLES_GET_PREFIX + type] = {

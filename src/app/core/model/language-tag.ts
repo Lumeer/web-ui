@@ -18,7 +18,7 @@
  */
 
 import {LanguageTag} from '@lumeer/data-filters';
-import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
+import {LanguageCode} from './language';
 
 export const localeLanguageTags: Record<string, LanguageTag> = {
   [LanguageCode.EN]: LanguageTag.USA,

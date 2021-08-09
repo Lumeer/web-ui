@@ -55,7 +55,7 @@ import {
 import mixpanel from 'mixpanel-browser';
 import {CollectionService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
-import {createCallbackActions} from '../utils/store.utils';
+import {convertRuleToDto, createCallbackActions} from '../utils/store.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as AuditLogActions from '../audit-logs/audit-logs.actions';
 
@@ -239,18 +239,8 @@ export class CollectionsEffects {
         const {collectionId, rule, onSuccess, onFailure} = action.payload;
         const oldCollection = collections[collectionId];
 
-        const index = oldCollection.rules?.findIndex(r => r.id === rule.id);
-
-        const rules = [...(oldCollection.rules || [])];
-        if (index >= 0) {
-          rules.splice(index, 1, rule);
-        } else {
-          rules.push(rule);
-        }
-
-        const collectionDto = convertCollectionModelToDto({...oldCollection, rules});
-
-        return this.collectionService.updateCollection(collectionDto, action.payload.workspace).pipe(
+        const ruleDto = convertRuleToDto(rule);
+        return this.collectionService.upsertRule(collectionId, rule.id, ruleDto, action.payload.workspace).pipe(
           map((dto: CollectionDto) => convertCollectionDtoToModel(dto, oldCollection?.correlationId)),
           mergeMap(collection => [
             new CollectionsAction.UpsertRuleSuccess({collection}),

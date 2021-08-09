@@ -18,11 +18,20 @@
  */
 
 import {Action} from '@ngrx/store';
-import {from, Observable} from 'rxjs';
+import {from} from 'rxjs';
 import {CommonAction} from '../common/common.action';
-import {RuleDto} from '../../dto/rule.dto';
-import {Rule, ruleTimingMap, ruleTypeMap} from '../../model/rule';
 import {generateCorrelationId} from '../../../shared/utils/resource.utils';
+import {
+  chronoUnitMap,
+  CronRuleConfiguration,
+  Rule,
+  RuleConfiguration,
+  ruleTimingMap,
+  RuleType,
+  ruleTypeMap,
+} from '../../model/rule';
+import {CronRuleConfigurationDto, RuleDto} from '../../dto/rule.dto';
+import {languageCodeMap} from '../../model/language';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
@@ -45,10 +54,37 @@ export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
           name: dto[id].name,
           type: ruleTypeMap[dto[id].type],
           timing: ruleTimingMap[dto[id].timing],
-          configuration: dto[id].configuration,
+          configuration: convertRulesConfigurationFromDto(dto[id]),
         } as Rule)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function convertRulesConfigurationFromDto(dto: RuleDto): RuleConfiguration {
+  const type = ruleTypeMap[dto?.type];
+  switch (type) {
+    case RuleType.Cron:
+      return convertCronRuleConfigurationDtoToModel(dto.configuration as CronRuleConfigurationDto);
+    default:
+      return dto.configuration as RuleConfiguration;
+  }
+}
+
+function convertCronRuleConfigurationDtoToModel(dto: CronRuleConfigurationDto): CronRuleConfiguration {
+  return {
+    ...dto, // get blockly config
+    startsOn: dto.startsOn && new Date(dto.startsOn),
+    endsOn: dto.endsOn && new Date(dto.endsOn),
+    hour: dto.hour?.toString(),
+    interval: dto.interval,
+    daysOfWeek: dto.daysOfWeek, // days of week - stored as binary number starting with Monday as the least significant bit
+    occurence: dto.occurence,
+    lastRun: dto.lastRun,
+    executionsLeft: dto.executionsLeft,
+    unit: chronoUnitMap[dto.unit],
+    viewId: dto.viewId,
+    language: languageCodeMap[dto.language],
+  };
 }
 
 export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
@@ -57,12 +93,44 @@ export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
   }
 
   return model.reduce((result, rule) => {
-    result[rule.id || generateCorrelationId()] = {
+    result[rule.id || generateCorrelationId()] = convertRuleToDto(rule);
+    return result;
+  }, {});
+}
+
+export function convertRuleToDto(rule: Rule): RuleDto {
+  return (
+    rule && {
       name: rule.name,
       type: rule.type,
       timing: rule.timing,
-      configuration: rule.configuration,
-    };
-    return result;
-  }, {});
+      configuration: convertRulesConfigurationToDto(rule),
+    }
+  );
+}
+
+export function convertRulesConfigurationToDto(rule: Rule): Record<string, any> {
+  switch (rule.type) {
+    case RuleType.Cron:
+      return convertCronRuleConfigurationModelToDto(rule.configuration);
+    default:
+      return rule.configuration;
+  }
+}
+
+function convertCronRuleConfigurationModelToDto(model: CronRuleConfiguration): CronRuleConfigurationDto {
+  return {
+    ...model, // to convert blockly part
+    startsOn: model.startsOn?.toISOString(),
+    endsOn: model.endsOn?.toISOString(),
+    hour: +model.hour,
+    interval: model.interval,
+    daysOfWeek: model.daysOfWeek,
+    occurence: model.occurence,
+    lastRun: model.lastRun,
+    executionsLeft: model.executionsLeft,
+    unit: model.unit,
+    viewId: model.viewId,
+    language: model.language,
+  };
 }

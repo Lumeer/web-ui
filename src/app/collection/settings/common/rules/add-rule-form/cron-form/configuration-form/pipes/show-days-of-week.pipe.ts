@@ -17,33 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LanguageCode} from '../app/core/model/language';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ChronoUnit} from '../../../../../../../../core/model/rule';
 
-export interface ConfigurationVariables {
-  apiUrl: string;
-  apiProdUrl: string;
-  pageUrl: string;
-  authClientId: string;
-  authDomain: string;
-  buildNumber: string;
-  i18nFormat: string;
-  i18nPath: string;
-  locale: LanguageCode;
-  mapboxKey: string;
-  mapQuestKey: string;
-  mapTilerKey: string;
-  maxFileUploadSize: number;
-  presignedUrlTimeout: number;
-  sentryDsn: string;
-  sessionTimeout: number;
-  pusherCluster: string;
-  pusherKey: string;
-  blocklyCdn: string;
-  publicViewCdn: string;
-  publicScriptCdn: string;
-  logzioKey: string;
-  logzioRegion: string;
-  smartlookKey: string;
-  mixpanelKey: string;
-  contactUrl: string;
+@Pipe({
+  name: 'showDaysOfWeek',
+})
+export class ShowDaysOfWeekPipe implements PipeTransform {
+  public transform(unit: ChronoUnit): boolean {
+    switch (unit) {
+      case ChronoUnit.Weeks:
+        return true;
+      default:
+        return false;
+    }
+  }
 }

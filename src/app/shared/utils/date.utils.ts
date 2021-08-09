@@ -29,6 +29,16 @@ import {
   DurationUnit,
   sortedDurationUnits,
 } from '@lumeer/data-filters';
+import {LanguageCode} from '../../core/model/language';
+
+export function defaultDateFormat(locale: LanguageCode): string {
+  switch (locale) {
+    case LanguageCode.CZ:
+      return 'DD.MM.YYYY';
+    default:
+      return 'MM/DD/YYYY';
+  }
+}
 
 const durationUnitToMomentUnitMap: Record<DurationUnit, DurationInputArg2> = {
   [DurationUnit.Weeks]: 'weeks',
