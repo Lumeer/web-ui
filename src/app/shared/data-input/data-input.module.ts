@@ -53,7 +53,7 @@ import {FilterDataSuggestionsPipe} from './pipes/filter-data-suggestions.pipe';
 import {FilterUsersPipe} from './user/pipes/filter-users.pipe';
 import {SelectOptionIsValidPipe} from './select/pipes/select-option-is-valid.pipe';
 import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe';
-import {UsersEmailsPipe} from './user/pipes/users-emails.pipe';
+import {SelectedValuesPipe} from './user/pipes/users-emails.pipe';
 import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 import {UsersNamesPipe} from './user/pipes/users-names.pipe';
 import {DataInputPreviewComponent} from './data-input-preview/data-input-preview.component';
@@ -74,6 +74,7 @@ import {FilterViewsPipe} from './view/pipes/filter-views.pipe';
 import {ViewsIdsPipe} from './view/pipes/views-ids.pipe';
 import {RouterModule} from '@angular/router';
 import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
+import {UsersAndTeamsNamesPipe} from './user/pipes/users-and-teams-names.pipe';
 
 @NgModule({
   imports: [
@@ -119,10 +120,11 @@ import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
     FilterUsersPipe,
     SelectOptionIsValidPipe,
     SelectOptionsValuesPipe,
-    UsersEmailsPipe,
+    SelectedValuesPipe,
     UsersAreValidPipe,
     UserIsValidPipe,
     UsersNamesPipe,
+    UsersAndTeamsNamesPipe,
     DataInputPreviewComponent,
     ConstraintAsTextPipe,
     ConstraintClassPipe,

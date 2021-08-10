@@ -22,6 +22,7 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../app.state';
 import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
 import {selectAllViews} from '../views/views.state';
+import {selectTeamsForWorkspace} from '../teams/teams.state';
 
 export type ConstraintDataState = Partial<ConstraintData>;
 
@@ -34,10 +35,12 @@ export const selectConstraintData = createSelector(
   selectAllUsers,
   selectAllViews,
   selectCurrentUserForWorkspace,
-  (state, users, views, currentUser) => ({
+  selectTeamsForWorkspace,
+  (state, users, views, currentUser, teams) => ({
     ...state,
     users,
     views,
     currentUser,
+    teams,
   })
 );

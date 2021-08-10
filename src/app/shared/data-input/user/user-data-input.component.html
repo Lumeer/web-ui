@@ -1,32 +1,35 @@
 <div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
-     *ngIf="selectedUsers$ | async as selectedUsers"
-     [title]="selectedUsers | usersNames | join"
+     *ngIf="{selectedUsers: selectedUsers$ | async, selectedTeams: selectedTeams$ | async} as data"
+     [title]="data.selectedUsers | usersAndTeamsNames:data.selectedTeams"
      [class.justify-content-center]="onlyIcon && configuration?.allowCenterOnlyIcon"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">
 
+    <div *ngFor="let team of selectedTeams$ | async; trackBy: trackByTeam"
+         class="badge badge-lg badge-pill badge-info mr-2">{{team.name}}</div>
+
     <img ngxGravatar
-         *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first"
+         *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first"
          [email]="user.email"
          [size]="avatarSize"
          [style.min-width.px]="avatarSize"
          [style.min-height.px]="avatarSize"
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
-    <span *ngIf="!onlyIcon && selectedUsers?.length && (selectedUsers | usersAreValid:users:value.config)"
+    <span *ngIf="!onlyIcon && data.selectedUsers?.length && (data.selectedUsers | usersAreValid:users:value.config)"
           [ngClass]="inputClass"
           class="d-inline-block ml-2 text-nowrap user">
-        {{selectedUsers | usersNames | join}}
+        {{data.selectedUsers | usersNames | join}}
       </span>
 
-    <ng-container *ngIf="!onlyIcon && !(selectedUsers | usersAreValid:users:value.config)">
+    <ng-container *ngIf="!onlyIcon && !(data.selectedUsers | usersAreValid:users:value.config)">
 
       <ng-container
-        *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
+        *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first; let last = last">
 
         <span data-test="user-data-input"
-              [class.invalid-value]="!commonConfiguration.skipValidation && !(user | userIsValid:users:value.config:selectedUsers.length)"
+              [class.invalid-value]="!commonConfiguration.skipValidation && !(user | userIsValid:users:value.config:data.selectedUsers.length)"
               [class.ml-2]="first"
               class="d-inline-block user">
           {{user.name || user.email}}
@@ -47,19 +50,19 @@
            (focus)="onFocused()"
            inputmode="email"
            (ngModelChange)="onInputChange()"
-           [class.ml-1]="selectedUsers.length > 0"
+           [class.ml-1]="data.selectedUsers.length > 0 || data.selectedTeams.length > 0"
            [spellcheck]="false"
            [ngClass]="inputClass"
            class="border-0 w-100 h-100 bg-transparent"
            type="text">
 
-    <options-dropdown [options]="users | filterUsers:name"
+    <options-dropdown [options]="users | filterUsers:name:teams"
                       [showBackdrop]="false"
                       [closeOnClickOutside]="false"
                       [origin]="textInput"
                       [highlightedText]="name"
                       [multiSelect]="multi"
-                      [selectedValues]="multi ? (selectedUsers | usersEmails) : []"
+                      [selectedValues]="multi ? (data.selectedUsers | selectedValues:data.selectedTeams) : []"
                       [firstItemActive]="!multi && !value?.config?.externalUsers && name?.length > 0"
                       (selectOption)="onSelectOption($event)">
     </options-dropdown>

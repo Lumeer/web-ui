@@ -41,7 +41,14 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {BehaviorSubject} from 'rxjs';
-import {ConstraintType, UserDataValue} from '@lumeer/data-filters';
+import {
+  ConstraintType,
+  UserDataValue,
+  userDataValueCreateTeamValue,
+  userDataValueIsTeamValue,
+  userDataValueParseTeamValue,
+} from '@lumeer/data-filters';
+import {Team} from '../../../core/store/teams/team';
 
 @Component({
   selector: 'user-data-input',
@@ -91,7 +98,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   public name: string = '';
   public users: User[];
+  public teams: Team[];
   public selectedUsers$ = new BehaviorSubject<User[]>([]);
+  public selectedTeams$ = new BehaviorSubject<Team[]>([]);
   public multi: boolean;
   public onlyIcon: boolean;
 
@@ -110,7 +119,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     }
     if (changes.value && this.value) {
       this.selectedUsers$.next(this.value.users || []);
+      this.selectedTeams$.next(this.value.teams || []);
       this.users = this.bindUsers();
+      this.teams = this.value.constraintData?.teams || [];
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
     }
@@ -206,8 +217,12 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         this.cancel.emit();
         return;
       case KeyCode.Backspace:
-        if (!this.name && this.multi && this.selectedUsers$.value.length > 0) {
-          this.selectedUsers$.next(this.selectedUsers$.value.slice(0, this.selectedUsers$.value.length - 1));
+        if (!this.name && this.multi) {
+          if (this.selectedUsers$.value.length > 0) {
+            this.removeLastUser();
+          } else if (this.selectedTeams$.value.length > 0) {
+            this.removeLastTeam();
+          }
         }
         return;
     }
@@ -215,7 +230,37 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     this.dropdown.onKeyDown(event);
   }
 
+  private removeLastUser() {
+    this.selectedUsers$.next(this.selectedUsers$.value.slice(0, this.selectedUsers$.value.length - 1));
+  }
+
+  private removeLastTeam() {
+    this.selectedTeams$.next(this.selectedTeams$.value.slice(0, this.selectedTeams$.value.length - 1));
+  }
+
   private toggleOption(option: DropdownOption) {
+    if (userDataValueIsTeamValue(option.value)) {
+      this.toggleTeam(option);
+    } else {
+      this.toggleUser(option);
+    }
+    this.resetSearchInput();
+  }
+
+  private toggleTeam(option: DropdownOption) {
+    const teamId = userDataValueParseTeamValue(option.value);
+    if (this.selectedTeams$.value.some(team => team.id === teamId)) {
+      this.selectedTeams$.next(this.selectedTeams$.value.filter(o => o.id !== teamId));
+    } else {
+      const selectedTeam = (this.teams || []).find(t => t.id === teamId);
+      if (selectedTeam) {
+        this.selectedTeams$.next([...this.selectedTeams$.value, selectedTeam]);
+        setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
+      }
+    }
+  }
+
+  private toggleUser(option: DropdownOption) {
     if (this.selectedUsers$.value.some(o => o.email === option.value)) {
       this.selectedUsers$.next(this.selectedUsers$.value.filter(o => o.email !== option.value));
     } else {
@@ -225,32 +270,20 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
-    this.resetSearchInput();
   }
 
   private saveValue(action: DataInputSaveAction, activeOption?: DropdownOption) {
-    const inputIsEmail = isEmailValid(this.name.trim());
-    if (this.multi) {
-      const selectedUser = activeOption && this.users.find(option => option.email === activeOption.value);
-      if (selectedUser || !this.value.config.externalUsers || !inputIsEmail) {
-        const options = [...this.selectedUsers$.value, selectedUser].filter(option => !!option);
-        const emails = uniqueValues(options.map(option => option.email));
-        const dataValue = this.value.copy(emails);
-        this.save.emit({action, dataValue});
-        return;
-      }
+    if (this.trySaveValueMulti(action, activeOption)) {
+      return;
     }
 
+    const inputIsEmail = isEmailValid(this.name.trim());
     if (activeOption || !this.name) {
       this.saveValueByOption(action, activeOption);
-    } else if (
-      this.name &&
-      (this.commonConfiguration.skipValidation || this.value.config?.externalUsers) &&
-      inputIsEmail
-    ) {
+    } else if ((this.commonConfiguration.skipValidation || this.value.config?.externalUsers) && inputIsEmail) {
       if (this.multi) {
-        const emails = uniqueValues([...this.selectedUsers$.value.map(option => option.email), this.name.trim()]);
-        this.save.emit({action, dataValue: this.value.copy(emails)});
+        const newUsers = [...this.selectedUsers$.value, {email: this.name.trim()}];
+        this.saveTeamsAndUsers(this.selectedTeams$.value, newUsers, action);
       } else {
         this.save.emit({action, dataValue: this.value.parseInput(this.name)});
       }
@@ -264,9 +297,35 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     this.resetSearchInput();
   }
 
+  private trySaveValueMulti(action: DataInputSaveAction, activeOption?: DropdownOption): boolean {
+    if (this.multi) {
+      if (activeOption && userDataValueIsTeamValue(activeOption.value)) {
+        const teamId = userDataValueParseTeamValue(activeOption.value);
+        const selectedTeam = this.teams.find(team => team.id === teamId);
+        this.saveTeamsAndUsers([...this.selectedTeams$.value, selectedTeam], this.selectedUsers$.value, action);
+        return true;
+      }
+
+      const inputIsEmail = isEmailValid(this.name.trim());
+      const selectedUser = activeOption && this.users.find(option => option.email === activeOption.value);
+      if (selectedUser || !this.value.config.externalUsers || !inputIsEmail) {
+        this.saveTeamsAndUsers(this.selectedTeams$.value, [...this.selectedUsers$.value, selectedUser], action);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private saveTeamsAndUsers(teams: Team[], users: User[], action: DataInputSaveAction) {
+    const teamsIds = (teams || []).filter(team => !!team).map(team => userDataValueCreateTeamValue(team.id));
+    const userEmails = (users || []).filter(user => !!user).map(user => user.email);
+    const values = [...teamsIds, ...userEmails];
+    const dataValue = this.value.copy(uniqueValues(values));
+    this.save.emit({action, dataValue});
+  }
+
   private saveValueByOption(action: DataInputSaveAction, option: DropdownOption) {
-    const user = option && (this.users || []).find(u => (u.email || u.name) === option.value);
-    const dataValue = this.value.copy(user ? user.email || user.name : '');
+    const dataValue = this.value.copy(option.value);
     this.save.emit({action, dataValue});
   }
 
@@ -334,6 +393,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public trackByUser(index: number, user: User): string {
-    return user.email || user.name;
+    return user.email || user.id || user.name;
+  }
+
+  public trackByTeam(index: number, team: Team): string {
+    return team.id;
   }
 }

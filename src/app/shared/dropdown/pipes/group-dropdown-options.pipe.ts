@@ -18,18 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {User} from '../../../../core/store/users/user';
-import {Team} from '../../../../core/store/teams/team';
-import {userDataValueCreateTeamValue} from '@lumeer/data-filters';
+import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
-  name: 'selectedValues',
+  name: 'groupDropdownOptions',
 })
-export class SelectedValuesPipe implements PipeTransform {
-  public transform(users: User[], teams: Team[]): any[] {
-    return [
-      ...(users || []).map(user => user.email || user.name),
-      ...(teams || []).map(team => userDataValueCreateTeamValue(team.id)),
-    ];
+export class GroupDropdownOptionsPipe implements PipeTransform {
+  public transform(options: DropdownOption[]): {group: string; options: DropdownOption[]}[] {
+    return (options || []).reduce((groups, option) => {
+      const groupName = option.group || '';
+      let group = groups.find(group => group.group === groupName);
+      if (!group) {
+        group = {group: groupName, options: []};
+        groups.push(group);
+      }
+      group.options.push(option);
+
+      return groups;
+    }, []);
   }
 }

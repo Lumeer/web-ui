@@ -20,16 +20,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {Team} from '../../../../core/store/teams/team';
-import {userDataValueCreateTeamValue} from '@lumeer/data-filters';
 
 @Pipe({
-  name: 'selectedValues',
+  name: 'usersAndTeamsNames',
 })
-export class SelectedValuesPipe implements PipeTransform {
-  public transform(users: User[], teams: Team[]): any[] {
-    return [
-      ...(users || []).map(user => user.email || user.name),
-      ...(teams || []).map(team => userDataValueCreateTeamValue(team.id)),
-    ];
+export class UsersAndTeamsNamesPipe implements PipeTransform {
+  public transform(users: User[], teams: Team[]): string {
+    return [...(teams || []).map(team => team.name), ...(users || []).map(user => user.name || user.email)].join(', ');
   }
 }

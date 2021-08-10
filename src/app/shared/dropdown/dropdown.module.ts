@@ -27,6 +27,7 @@ import {GravatarModule} from 'ngx-gravatar';
 import {FilterDropdownOptionsPipe} from './pipes/filter-dropdown-options.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropdown-position.pipe';
+import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],
@@ -36,6 +37,7 @@ import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropd
     OptionsDropdownComponent,
     FilterDropdownOptionsPipe,
     ReverseArrayByDropdownPositionPipe,
+    GroupDropdownOptionsPipe,
   ],
   exports: [
     DropdownComponent,
