@@ -23,7 +23,7 @@ import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../../utils/common.utils';
 import {removeAccentFromString, userDataValueCreateTeamValue} from '@lumeer/data-filters';
 import {Team} from '../../../../core/store/teams/team';
-import {COLOR_INFO, COLOR_LIGHT} from '../../../../core/constants';
+import {COLOR_INFO} from '../../../../core/constants';
 
 @Pipe({
   name: 'filterUsers',
@@ -39,8 +39,8 @@ export class FilterUsersPipe implements PipeTransform {
         value: userDataValueCreateTeamValue(team.id),
         displayValue: team.name,
         group: teamsGroup,
-        background: COLOR_INFO,
-        color: COLOR_LIGHT,
+        border: COLOR_INFO,
+        color: COLOR_INFO,
       }));
 
     const usersGroup = $localize`:@@user.constraint.type.users:Users`;

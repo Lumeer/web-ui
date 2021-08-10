@@ -32,7 +32,9 @@
 
         <div class="option d-inline-block"
              [style.background]="option.background"
+             [style.border-color]="option.border"
              [class.option-background]="!!option.background"
+             [class.option-border]="!!option.border"
              [style.color]="option.color || (option.background && (option.background | contrastColor))">
 
           <img ngxGravatar

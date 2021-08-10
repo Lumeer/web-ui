@@ -43,6 +43,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
 import {BehaviorSubject} from 'rxjs';
 import {
   ConstraintType,
+  UserConstraintType,
   UserDataValue,
   userDataValueCreateTeamValue,
   userDataValueIsTeamValue,
@@ -121,7 +122,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.selectedUsers$.next(this.value.users || []);
       this.selectedTeams$.next(this.value.teams || []);
       this.users = this.bindUsers();
-      this.teams = this.value.constraintData?.teams || [];
+      this.teams = this.bindTeams();
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
     }
@@ -153,7 +154,13 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private bindUsers(): User[] {
-    const users = [...(this.value?.constraintData?.users || [])];
+    const type = this.value?.config?.type;
+
+    let users: User[] = [];
+    if (type !== UserConstraintType.Teams) {
+      users = [...(this.value?.constraintData?.users || [])];
+    }
+
     const usersEmails = new Set(users.map(user => user.email));
     (this.value?.users || []).forEach(user => {
       if (!usersEmails.has(user.email)) {
@@ -170,6 +177,14 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       }
     });
     return users;
+  }
+
+  private bindTeams(): Team[] {
+    const type = this.value?.config?.type;
+    if ([UserConstraintType.Teams, UserConstraintType.UsersAndTeams].includes(type)) {
+      return this.value?.constraintData?.teams || [];
+    }
+    return this.value?.teams || [];
   }
 
   public ngAfterViewChecked() {

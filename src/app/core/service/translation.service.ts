@@ -152,7 +152,7 @@ export class TranslationService {
 
   private translateUserConstraintConditionValue(type: UserConstraintConditionValue): string {
     return parseSelectTranslation(
-      $localize`:@@query.filter.condition.value.constraint.user:{type, select, currentUser {Current User}}`,
+      $localize`:@@query.filter.condition.value.constraint.usersAndTeams:{type, select, currentUser {Current User} currentTeams {Current Teams}}`,
       {type}
     );
   }

@@ -18,10 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {UserConstraintFormControl} from './user-constraint-form-control';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {UserConstraintConfig} from '@lumeer/data-filters';
+import {UserConstraintConfig, UserConstraintType} from '@lumeer/data-filters';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {parseSelectTranslation} from '../../../../../utils/translation.utils';
+import {objectValues} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'user-constraint-config-form',
@@ -36,6 +39,21 @@ export class UserConstraintConfigFormComponent implements OnChanges {
   public form: FormGroup;
 
   public readonly formControlName = UserConstraintFormControl;
+  public readonly typeItems: SelectItemModel[];
+
+  constructor() {
+    this.typeItems = this.createTypeItems();
+  }
+
+  private createTypeItems(): SelectItemModel[] {
+    return objectValues(UserConstraintType).map(type => ({
+      id: type,
+      value: parseSelectTranslation(
+        $localize`:@@constraint.usersAndTeams.type:{type, select, users {Users} teams {Teams} usersAndTeams {Users and Teams}}`,
+        {type}
+      ),
+    }));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -53,5 +71,17 @@ export class UserConstraintConfigFormComponent implements OnChanges {
     this.form.addControl(UserConstraintFormControl.ExternalUsers, new FormControl(this.config?.externalUsers));
     this.form.addControl(UserConstraintFormControl.Multi, new FormControl(this.config?.multi));
     this.form.addControl(UserConstraintFormControl.OnlyIcon, new FormControl(!this.config?.onlyIcon));
+    this.form.addControl(
+      UserConstraintFormControl.Type,
+      new FormControl(this.config?.type || UserConstraintType.Users)
+    );
+  }
+
+  public get typeControl(): AbstractControl {
+    return this.form.get(UserConstraintFormControl.Type);
+  }
+
+  public onTypeSelect(type: string) {
+    this.typeControl.setValue(type);
   }
 }
