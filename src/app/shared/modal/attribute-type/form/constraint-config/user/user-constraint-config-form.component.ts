@@ -49,7 +49,7 @@ export class UserConstraintConfigFormComponent implements OnChanges {
     return objectValues(UserConstraintType).map(type => ({
       id: type,
       value: parseSelectTranslation(
-        $localize`:@@constraint.usersAndTeams.type:{type, select, users {Users} teams {Teams} usersAndTeams {Users and Teams}}`,
+        $localize`:@@constraint.usersAndTeams.type:{type, select, users {Only Users} teams {Only Teams} usersAndTeams {Users and Teams}}`,
         {type}
       ),
     }));

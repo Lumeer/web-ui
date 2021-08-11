@@ -10,7 +10,7 @@
         <input type="checkbox" [formControlName]="formControlName.Multi" [id]="formControlName.Multi" #multi>
         <span class="slider round" (click)="$event.stopPropagation()"></span>
       </label>
-      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.usersAndTeams.multi.label" (click)="multi.click()">Allow select multiple users or teams</span>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.usersAndTeams.multi.label" (click)="multi.click()">Allow to select multiple users or teams</span>
     </div>
 
     <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
@@ -36,7 +36,7 @@
 
   <div class="form-group mt-3">
     <label [for]="formControlName.Type"
-           i18n="@@constraint.usersAndTeams.type.label">Selection type</label>
+           i18n="@@constraint.usersAndTeams.type.label">Allowed values</label>
     <select-item class="w-100 d-block"
                  [items]="typeItems"
                  [removable]="false"

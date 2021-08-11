@@ -4,7 +4,7 @@
      (mousedown)="onMouseDown($event)">
 
   <div *ngFor="let team of selectedTeams; trackBy: trackByTeam"
-       class="badge badge-lg badge-pill badge-outline-info mr-2 mb-1">{{team.name}}</div>
+       class="badge badge-lg badge-pill badge-outline-info mr-2 mb-1 team-tag">{{team.name}}</div>
 
   <div #textInputParent>
     <button class="btn btn-sm btn-link text-nowrap py-0 mb-1" *ngIf="editable && !(suggesting$ | async)"

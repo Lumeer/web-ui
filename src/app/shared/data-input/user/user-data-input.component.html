@@ -7,7 +7,7 @@
   <ng-container *ngIf="multi || readonly">
 
     <div *ngFor="let team of selectedTeams$ | async; trackBy: trackByTeam"
-         class="badge badge-lg badge-pill badge-outline-info mr-2">{{team.name}}</div>
+         class="badge badge-lg badge-pill badge-outline-info mr-2 team-tag">{{team.name}}</div>
 
     <img ngxGravatar
          *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first"
