@@ -12,7 +12,7 @@
                             [constraintData]="data.constraintData"
                             [permissions]="dataResourceData.permissions"
                             [workspace]="data.workspace"
-                            [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser"
+                            [dataPermissions]="dataResource | dataResourcePermissions:resource:dataResourceData.permissions:data.currentUser:data.constraintData"
                             (switchToTable)="onSwitchToTable()"
                             (remove)="onRemove()"
                             (versionClick)="selectTab(detailTabType.Activity)"
@@ -22,7 +22,7 @@
     <detail-tabs *ngIf="dataResource?.id"
                  [showLinks]="resourceType === collectionResourceType"
                  [showTables]="resourceType === linkTypeResourceType"
-                 [showActivity]="dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser"
+                 [showActivity]="dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser:data.constraintData"
                  [showComments]="dataResourceData.permissions?.rolesWithView?.CommentContribute"
                  [activeTab]="data.selectedTab"
                  [commentsCount]="data.commentsCount"
@@ -140,7 +140,7 @@
     </ng-container>
 
     <ng-container
-      *ngIf="data.selectedTab === detailTabType.Activity && (dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser)">
+      *ngIf="data.selectedTab === detailTabType.Activity && (dataResource | dataResourceIsWritable:resource:dataResourceData.permissions:data.currentUser:data.constraintData)">
       <resource-activity *ngIf="resource && dataResource?.id"
                          [resourceType]="resourceType | attributeResourceTypeToResourceType"
                          [resourceId]="dataResource.id"

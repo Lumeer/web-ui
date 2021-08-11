@@ -197,7 +197,8 @@ export const selectDocumentsByReadPermission = createSelector(
   selectAllCollections,
   selectCollectionsPermissions,
   selectCurrentUserForWorkspace,
-  (documents, collections, permissionsMap, currentUser) => {
+  selectConstraintData,
+  (documents, collections, permissionsMap, currentUser, constraintData) => {
     const documentsByCollection = groupDocumentsByCollection(documents);
     return collections.reduce((allDocuments, collection) => {
       const permissions = permissionsMap[collection.id];
@@ -206,7 +207,9 @@ export const selectDocumentsByReadPermission = createSelector(
         allDocuments.push(...collectionDocuments);
       } else {
         allDocuments.push(
-          ...collectionDocuments.filter(document => userCanReadDocument(document, collection, permissions, currentUser))
+          ...collectionDocuments.filter(document =>
+            userCanReadDocument(document, collection, permissions, currentUser, constraintData)
+          )
         );
       }
 

@@ -63,6 +63,7 @@ interface Data {
   permissions: ResourcesPermissions;
   query: Query;
   user: User;
+  constraintData: ConstraintData;
 }
 
 @Component({
@@ -132,7 +133,8 @@ export class MapContentComponent implements OnInit, OnChanges {
       data.data,
       data.permissions,
       data.query,
-      data.user
+      data.user,
+      data.constraintData
     );
   }
 
@@ -144,6 +146,7 @@ export class MapContentComponent implements OnInit, OnChanges {
         changes.permissions ||
         changes.query ||
         changes.user ||
+        changes.constraintData ||
         this.mapConfigChanged(changes.map)) &&
       this.map?.config
     ) {
@@ -155,6 +158,7 @@ export class MapContentComponent implements OnInit, OnChanges {
         config: this.map.config,
         query: this.query,
         user: this.user,
+        constraintData: this.constraintData,
       });
     }
   }

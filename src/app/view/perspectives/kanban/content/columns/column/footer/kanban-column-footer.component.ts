@@ -79,7 +79,11 @@ export class KanbanColumnFooterComponent implements OnChanges {
   }
 
   public onButtonClick() {
-    this.dropdown.open();
+    if (this.resources.length === 1) {
+      this.selectResource.emit(this.resources[0]);
+    } else {
+      this.dropdown.open();
+    }
   }
 
   public onOptionSelect(option: DropdownOption) {

@@ -417,7 +417,8 @@ export class ChartDataConverter {
       const value = dataObject.data?.[(xAxis || yAxis)?.attributeId];
       const xSort = sortAxis && dataObject.data?.[sortAxis.attributeId];
       const values = isArray(value) ? value : [value];
-      const draggable = canDragAxis && userCanEditDataResource(dataObject, resource, permissions, this.user);
+      const draggable =
+        canDragAxis && userCanEditDataResource(dataObject, resource, permissions, this.user, this.constraintData);
       for (let i = 0; i < values.length; i++) {
         const formattedValue = this.formatChartAxisValue(values[i], definedAxis);
         if (isNullOrUndefined(formattedValue) || actualValues.has(formattedValue)) {
@@ -636,7 +637,7 @@ export class ChartDataConverter {
         if (yDataResources.length === 1 && isValueAggregation(aggregation)) {
           id =
             canDragAxis &&
-            userCanEditDataResource(yDataResources[0], resource, permissions, this.user) &&
+            userCanEditDataResource(yDataResources[0], resource, permissions, this.user, this.constraintData) &&
             yDataResources[0].id;
         }
 

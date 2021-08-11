@@ -1,5 +1,5 @@
 <ng-container
-  *ngIf="dataResource | dataResourcePermissions:resource:allowedPermissions:(currentUser$ | async) as dataPermissions">
+  *ngIf="dataResource | dataResourcePermissions:resource:allowedPermissions:(currentUser$ | async):constraintData as dataPermissions">
   <hidden-input (newInput)="onNewHiddenInput($event)"
                 class="position-fixed">
   </hidden-input>

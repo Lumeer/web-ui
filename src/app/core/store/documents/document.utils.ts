@@ -41,11 +41,17 @@ import {
   DateTimeConstraint,
   DocumentsAndLinksData,
   UnknownConstraint,
+  UserConstraint,
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
 import {User} from '../users/user';
 
-export function isDocumentOwnerByPurpose(document: DocumentModel, collection: Collection, user: User): boolean {
+export function isDocumentOwnerByPurpose(
+  document: DocumentModel,
+  collection: Collection,
+  user: User,
+  constraintData: ConstraintData
+): boolean {
   if (!document || !collection || !user) {
     return false;
   }
@@ -54,13 +60,33 @@ export function isDocumentOwnerByPurpose(document: DocumentModel, collection: Co
     const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
     if (assigneeAttribute) {
       const assigneeData = document?.data?.[assigneeAttribute.id];
-      const assignees = (isArray(assigneeData) ? assigneeData : [assigneeData]).filter(value =>
-        isNotNullOrUndefined(value)
-      );
-      return assignees.includes(user.email);
+      if (assigneeAttribute.constraint?.type === ConstraintType.User) {
+        return checkAssigneeUserConstraint(
+          assigneeData,
+          assigneeAttribute.constraint as UserConstraint,
+          user,
+          constraintData
+        );
+      }
+      return checkAssigneeOtherConstraint(assigneeData, user);
     }
   }
   return false;
+}
+
+function checkAssigneeOtherConstraint(value: any, user: User): boolean {
+  const assignees = (isArray(value) ? value : [value]).filter(value => isNotNullOrUndefined(value));
+  return assignees.includes(user.email);
+}
+
+function checkAssigneeUserConstraint(
+  value: any,
+  constraint: UserConstraint,
+  user: User,
+  constraintData: ConstraintData
+): boolean {
+  const dataValue = constraint.createDataValue(value, constraintData);
+  return dataValue.allUsersIds.includes(user.id);
 }
 
 export function getDocumentsAndLinksByStemData(

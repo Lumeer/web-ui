@@ -309,7 +309,15 @@ export class GanttChartConverter {
       const end = stemConfig.end && endDataResource && endDataResource.data[stemConfig.end.attributeId];
       if (isTaskValid(start, end, endConstraint)) {
         const id = helperDataId(item);
-        if (userCanEditDataResource(nameDataResource, nameResource, namePermission, this.constraintData?.currentUser)) {
+        if (
+          userCanEditDataResource(
+            nameDataResource,
+            nameResource,
+            namePermission,
+            this.constraintData?.currentUser,
+            this.constraintData
+          )
+        ) {
           validTaskIds.push(id);
         }
         const dataResource = nameDataResource || startDataResource;
@@ -408,13 +416,15 @@ export class GanttChartConverter {
         startDataResource,
         startResource,
         startPermission,
-        this.constraintData?.currentUser
+        this.constraintData?.currentUser,
+        this.constraintData
       );
       const userCanEditEnd = userCanEditDataResource(
         endDataResource,
         endResource,
         endPermission,
-        this.constraintData?.currentUser
+        this.constraintData?.currentUser,
+        this.constraintData
       );
 
       const names = isArray(name) ? name : [name];
@@ -450,7 +460,8 @@ export class GanttChartConverter {
               progressDataResources[0],
               progressResource,
               progressPermission,
-              this.constraintData?.currentUser
+              this.constraintData?.currentUser,
+              this.constraintData
             ),
           editable: userCanEditStart && userCanEditEnd,
           textColor: contrastColor(barColor),

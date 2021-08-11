@@ -22,6 +22,7 @@ import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {User} from '../../../core/store/users/user';
 import {userCanDeleteDataResource} from '../../utils/permission.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataResourceIsDeletable',
@@ -31,8 +32,9 @@ export class DataResourceIsDeletablePipe implements PipeTransform {
     dataResource: DataResource,
     resource: AttributesResource,
     permissions: AllowedPermissions,
-    user: User
+    user: User,
+    constraintData: ConstraintData
   ): boolean {
-    return userCanDeleteDataResource(dataResource, resource, permissions, user);
+    return userCanDeleteDataResource(dataResource, resource, permissions, user, constraintData);
   }
 }

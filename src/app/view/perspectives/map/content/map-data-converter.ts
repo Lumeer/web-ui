@@ -28,7 +28,7 @@ import {
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {mapMarkerDataId} from './map-content.utils';
-import {DocumentsAndLinksData} from '@lumeer/data-filters';
+import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 import {User} from '../../../../core/store/users/user';
 
@@ -39,6 +39,7 @@ enum DataObjectInfoKeyType {
 
 export class MapDataConverter {
   private config: MapConfig;
+  private constraintData: ConstraintData;
   private user: User;
 
   private dataObjectAggregator = new DataObjectAggregator<any>();
@@ -50,10 +51,12 @@ export class MapDataConverter {
     data: DocumentsAndLinksData,
     permissions: ResourcesPermissions,
     query: Query,
-    user: User
+    user: User,
+    constraintData: ConstraintData
   ): MapMarkerData[] {
     this.config = config;
     this.user = user;
+    this.constraintData = constraintData;
 
     const mapData = (query?.stems || []).reduce((allData, stem, index) => {
       const stemData = data.dataByStems?.[index];
@@ -63,7 +66,8 @@ export class MapDataConverter {
         linkTypes,
         stemData?.linkInstances || [],
         stem,
-        permissions
+        permissions,
+        constraintData
       );
       allData.push(...this.convertByStem(index));
       return allData;
@@ -118,7 +122,9 @@ export class MapDataConverter {
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const color = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources) || resourceColor;
-      const editable = attributeEditable && userCanEditDataResource(dataResource, resource, permissions, this.user);
+      const editable =
+        attributeEditable &&
+        userCanEditDataResource(dataResource, resource, permissions, this.user, this.constraintData);
 
       data.push({
         resource,

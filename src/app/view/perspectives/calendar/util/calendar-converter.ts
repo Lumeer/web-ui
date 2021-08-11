@@ -191,13 +191,20 @@ export class CalendarConverter {
               startDataResource,
               startResource,
               startPermission,
-              this.constraintData?.currentUser
+              this.constraintData?.currentUser,
+              this.constraintData
             ),
           durationEditable:
             interval.end &&
             stemConfig.end &&
             endEditable &&
-            userCanEditDataResource(endDataResource, endResource, endPermission, this.constraintData?.currentUser),
+            userCanEditDataResource(
+              endDataResource,
+              endResource,
+              endPermission,
+              this.constraintData?.currentUser,
+              this.constraintData
+            ),
           extendedProps,
         };
 

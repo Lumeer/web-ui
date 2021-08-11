@@ -1,4 +1,4 @@
-<ng-container *ngIf="{rows: dataRowService.rows$ | async, resource: resource$ | async, writable: dataResource | dataResourceIsWritable:resource:permissions:user} as data">
+<ng-container *ngIf="{rows: dataRowService.rows$ | async, resource: resource$ | async, writable: dataResource | dataResourceIsWritable:resource:permissions:user:constraintData} as data">
 
   <hidden-input (newInput)="onNewHiddenInput($event)"
                 class="position-fixed">

@@ -38,6 +38,7 @@ import {DataResourcePermissions} from '../../core/model/data-resource-permission
 import {Team} from '../../core/store/teams/team';
 import {objectsByIdMap} from './common.utils';
 import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
+import {ConstraintData} from '@lumeer/data-filters';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -342,13 +343,14 @@ export function dataResourcePermissions(
   dataResource: DataResource,
   resource: AttributesResource,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): DataResourcePermissions {
   return {
     create: permissions?.rolesWithView?.DataContribute,
-    read: userCanReadDataResource(dataResource, resource, permissions, user),
-    edit: userCanEditDataResource(dataResource, resource, permissions, user),
-    delete: userCanDeleteDataResource(dataResource, resource, permissions, user),
+    read: userCanReadDataResource(dataResource, resource, permissions, user, constraintData),
+    edit: userCanEditDataResource(dataResource, resource, permissions, user, constraintData),
+    delete: userCanDeleteDataResource(dataResource, resource, permissions, user, constraintData),
   };
 }
 
@@ -356,11 +358,12 @@ export function userCanReadDataResource(
   dataResource: DataResource,
   resource: AttributesResource,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): boolean {
   const resourceType = getAttributesResourceType(resource);
   if (resourceType === AttributesResourceType.Collection) {
-    return userCanReadDocument(dataResource as DocumentModel, resource, permissions, user);
+    return userCanReadDocument(dataResource as DocumentModel, resource, permissions, user, constraintData);
   } else if (resourceType === AttributesResourceType.LinkType) {
     return userCanReadLinkInstance(dataResource as LinkInstance, resource as LinkType, permissions, user);
   }
@@ -371,11 +374,12 @@ export function userCanEditDataResource(
   dataResource: DataResource,
   resource: AttributesResource,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): boolean {
   const resourceType = getAttributesResourceType(resource);
   if (resourceType === AttributesResourceType.Collection) {
-    return userCanEditDocument(dataResource as DocumentModel, resource, permissions, user);
+    return userCanEditDocument(dataResource as DocumentModel, resource, permissions, user, constraintData);
   } else if (resourceType === AttributesResourceType.LinkType) {
     return userCanEditLinkInstance(dataResource as LinkInstance, resource as LinkType, permissions, user);
   }
@@ -386,11 +390,12 @@ export function userCanDeleteDataResource(
   dataResource: DataResource,
   resource: AttributesResource,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): boolean {
   const resourceType = getAttributesResourceType(resource);
   if (resourceType === AttributesResourceType.Collection) {
-    return userCanDeleteDocument(dataResource as DocumentModel, resource, permissions, user);
+    return userCanDeleteDocument(dataResource as DocumentModel, resource, permissions, user, constraintData);
   } else if (resourceType === AttributesResourceType.LinkType) {
     return userCanDeleteLinkInstance(dataResource as LinkInstance, resource as LinkType, permissions, user);
   }
@@ -401,12 +406,13 @@ export function userCanReadDocument(
   document: DocumentModel,
   collection: Collection,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): boolean {
   return (
     permissions?.rolesWithView?.DataRead ||
     (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
-    isDocumentOwnerByPurpose(document, collection, user)
+    isDocumentOwnerByPurpose(document, collection, user, constraintData)
   );
 }
 
@@ -414,12 +420,13 @@ export function userCanEditDocument(
   document: DocumentModel,
   collection: Collection,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): boolean {
   return (
     permissions?.rolesWithView?.DataWrite ||
     (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
-    isDocumentOwnerByPurpose(document, collection, user)
+    isDocumentOwnerByPurpose(document, collection, user, constraintData)
   );
 }
 
@@ -427,12 +434,13 @@ export function userCanDeleteDocument(
   document: DocumentModel,
   collection: Collection,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): boolean {
   return (
     permissions?.rolesWithView?.DataDelete ||
     (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
-    isDocumentOwnerByPurpose(document, collection, user)
+    isDocumentOwnerByPurpose(document, collection, user, constraintData)
   );
 }
 
