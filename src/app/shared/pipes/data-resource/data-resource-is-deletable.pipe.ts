@@ -21,8 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {User} from '../../../core/store/users/user';
-import {userCanDeleteDataResource} from '../../utils/permission.utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, userCanDeleteDataResource} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataResourceIsDeletable',

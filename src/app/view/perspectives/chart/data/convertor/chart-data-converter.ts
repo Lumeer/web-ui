@@ -63,8 +63,8 @@ import {
   NumberConstraint,
   PercentageConstraint,
   UnknownConstraint,
+  userCanEditDataResource,
 } from '@lumeer/data-filters';
-import {userCanEditDataResource} from '../../../../../shared/utils/permission.utils';
 import {User} from '../../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {

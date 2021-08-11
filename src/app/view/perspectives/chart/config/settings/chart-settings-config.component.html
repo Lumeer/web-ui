@@ -1,6 +1,6 @@
 <custom-checkbox class="mt-2 d-block"
                  [checked]="config.lockAxes"
-                 [id]="lockAxesId"
+                 [checkboxId]="lockAxesId"
                  (checkedChange)="onLockAxesChange($event)"
                  i18n-checkboxTitle="@@perspective.chart.config.lockAxes"
                  checkboxTitle="Lock axes">
@@ -8,7 +8,7 @@
 
 <custom-checkbox class="mt-2 d-block"
                  [checked]="config.rangeSlider"
-                 [id]="rangeSliderId"
+                 [checkboxId]="rangeSliderId"
                  (checkedChange)="onRangeSliderChange($event)"
                  i18n-checkboxTitle="@@perspective.chart.config.rangeSlider"
                  checkboxTitle="Show range slider">

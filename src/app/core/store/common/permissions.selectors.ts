@@ -23,6 +23,8 @@ import {
   DocumentsAndLinksStemData,
   filterDocumentsAndLinksByQuery,
   filterDocumentsAndLinksDataByQuery,
+  userCanReadDocument,
+  userCanReadLinkInstance,
 } from '@lumeer/data-filters';
 import {containsSameElements, uniqueValues} from '../../../shared/utils/array.utils';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
@@ -74,7 +76,6 @@ import {
 } from '../user-permissions/user-permissions.state';
 import {CollectionPurposeType} from '../collections/collection';
 import {selectCurrentUserForWorkspace} from '../users/users.state';
-import {userCanReadDocument, userCanReadLinkInstance} from '../../../shared/utils/permission.utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>

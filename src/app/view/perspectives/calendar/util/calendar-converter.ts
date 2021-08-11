@@ -38,8 +38,13 @@ import {
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import * as moment from 'moment';
-import {Constraint, ConstraintData, ConstraintType, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
+import {
+  Constraint,
+  ConstraintData,
+  ConstraintType,
+  DocumentsAndLinksData,
+  userCanEditDataResource,
+} from '@lumeer/data-filters';
 
 enum DataObjectInfoKeyType {
   Name = 'name',

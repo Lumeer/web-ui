@@ -28,8 +28,7 @@ import {
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {mapMarkerDataId} from './map-content.utils';
-import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
-import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
+import {ConstraintData, DocumentsAndLinksData, userCanEditDataResource} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 
 enum DataObjectInfoKeyType {

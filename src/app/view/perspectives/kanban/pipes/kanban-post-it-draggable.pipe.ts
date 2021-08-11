@@ -20,8 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {KanbanCard} from '../util/kanban-data';
 import {User} from '../../../../core/store/users/user';
-import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
-import {ConstraintData} from '@lumeer/data-filters';
+import {ConstraintData, userCanEditDataResource} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'kanbanPostItDraggable',

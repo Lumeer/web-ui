@@ -68,13 +68,13 @@ import {
   PercentageConstraintConfig,
   SelectConstraint,
   UnknownConstraint,
+  userCanEditDataResource,
   UserConstraint,
 } from '@lumeer/data-filters';
 import {Configuration} from '../../../../../environments/configuration-type';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
-import {userCanEditDataResource} from '../../../../shared/utils/permission.utils';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;

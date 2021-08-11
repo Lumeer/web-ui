@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, CollectionPurposeType} from '../collections/collection';
+import {Collection} from '../collections/collection';
 import {Query, QueryStem} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
@@ -41,53 +41,8 @@ import {
   DateTimeConstraint,
   DocumentsAndLinksData,
   UnknownConstraint,
-  UserConstraint,
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
-import {User} from '../users/user';
-
-export function isDocumentOwnerByPurpose(
-  document: DocumentModel,
-  collection: Collection,
-  user: User,
-  constraintData: ConstraintData
-): boolean {
-  if (!document || !collection || !user) {
-    return false;
-  }
-  if (collection.purpose?.type === CollectionPurposeType.Tasks) {
-    const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
-    const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
-    if (assigneeAttribute) {
-      const assigneeData = document?.data?.[assigneeAttribute.id];
-      if (assigneeAttribute.constraint?.type === ConstraintType.User) {
-        return checkAssigneeUserConstraint(
-          assigneeData,
-          assigneeAttribute.constraint as UserConstraint,
-          user,
-          constraintData
-        );
-      }
-      return checkAssigneeOtherConstraint(assigneeData, user);
-    }
-  }
-  return false;
-}
-
-function checkAssigneeOtherConstraint(value: any, user: User): boolean {
-  const assignees = (isArray(value) ? value : [value]).filter(value => isNotNullOrUndefined(value));
-  return assignees.includes(user.email);
-}
-
-function checkAssigneeUserConstraint(
-  value: any,
-  constraint: UserConstraint,
-  user: User,
-  constraintData: ConstraintData
-): boolean {
-  const dataValue = constraint.createDataValue(value, constraintData);
-  return dataValue.allUsersIds.includes(user.id);
-}
 
 export function getDocumentsAndLinksByStemData(
   data: DocumentsAndLinksData,
