@@ -90,7 +90,7 @@ export class TableHeaderComponent implements OnInit, OnChanges {
     );
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.table && this.table && hasTableIdChanged(changes.table)) {
       this.cursor = this.createHeaderRootCursor();
       this.cursor$.next(this.cursor);

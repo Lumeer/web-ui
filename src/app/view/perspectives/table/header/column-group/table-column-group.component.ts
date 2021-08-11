@@ -135,7 +135,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     this.resizedColumnIndex = columnIndex;
   }
 
-  public onResizeEnd(cursor: TableHeaderCursor, event: ResizeEvent): void {
+  public onResizeEnd(cursor: TableHeaderCursor, event: ResizeEvent) {
     this.resizedColumnIndex = null;
 
     const delta = Number(event.edges.right);

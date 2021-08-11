@@ -40,7 +40,7 @@ export class NotificationTextComponent implements OnChanges {
 
   public readonly notificationType = UserNotificationType;
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.notification && changes.notification.currentValue) {
       switch (changes.notification.currentValue.type) {
         case UserNotificationType.TaskAssigned:

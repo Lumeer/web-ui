@@ -94,7 +94,7 @@ export class CronFormComponent implements OnInit {
     }
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));

@@ -131,7 +131,7 @@ export interface CronRuleConfiguration extends BlocklyRuleConfiguration {
   interval: number;
   daysOfWeek: number; // stored as binary number starting with Monday as the least significant bit
   hour: string;
-  occurence?: number;
+  occurrence?: number;
   startsOn?: Date;
   endsOn?: Date;
   executionsLeft?: number;

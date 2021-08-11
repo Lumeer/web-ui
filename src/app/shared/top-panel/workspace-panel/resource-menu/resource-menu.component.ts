@@ -104,7 +104,7 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
     return this.type === ResourceType.Organization;
   }
 
-  public newResource(): void {
+  public newResource() {
     if (this.type === ResourceType.Organization) {
       this.onNewResource.emit(this.type);
     } else if (this.checkProjectServiceLimits()) {
@@ -125,12 +125,12 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
     return hasLimits;
   }
 
-  public selectResource(resource: Resource): void {
+  public selectResource(resource: Resource) {
     this.onResourceSelect.emit(resource);
     this.close();
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.resource) || changes.resourceType) {
       if (this.isOrganizationType) {
         this.serviceLimits = null;

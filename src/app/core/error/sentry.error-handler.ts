@@ -37,7 +37,7 @@ export class SentryErrorHandler implements ErrorHandler {
     }
   }
 
-  public handleError(error: any): void {
+  public handleError(error: any) {
     if (/Loading chunk [\d]+ failed/.test(error?.message)) {
       window.location.reload();
       return;

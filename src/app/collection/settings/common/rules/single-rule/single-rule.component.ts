@@ -50,7 +50,7 @@ export class SingleRuleComponent {
 
   constructor(private store$: Store<AppState>) {}
 
-  public fireEdit(rule: Rule): void {
+  public fireEdit(rule: Rule) {
     if (rule.type === RuleType.Zapier) {
       this.showZapierWarning();
     } else {
@@ -58,7 +58,7 @@ export class SingleRuleComponent {
     }
   }
 
-  public fireDelete(rule: Rule): void {
+  public fireDelete(rule: Rule) {
     if (rule.type === RuleType.Zapier) {
       this.showZapierWarning();
     } else {
@@ -66,7 +66,7 @@ export class SingleRuleComponent {
     }
   }
 
-  public fireDuplicate(rule: Rule): void {
+  public fireDuplicate(rule: Rule) {
     if (rule.type === RuleType.Zapier) {
       this.showZapierWarning();
     } else {
@@ -74,7 +74,7 @@ export class SingleRuleComponent {
     }
   }
 
-  public showZapierWarning(): void {
+  public showZapierWarning() {
     const title = $localize`:@@collection.config.tab.rules.zapier.warning.title:Zapier Automation`;
     const message = $localize`:@@collection.config.tab.rules.zapier.warning.text:This automation is created by a Zap in Zapier. Please configure this automation directly in Zapier (www.zapier.com).`;
 

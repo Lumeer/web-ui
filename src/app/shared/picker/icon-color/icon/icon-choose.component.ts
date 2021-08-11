@@ -46,7 +46,7 @@ export class IconChooseComponent {
 
   constructor(private iconIdPipe: IconIdPipe) {}
 
-  public scrollToSelection(): void {
+  public scrollToSelection() {
     setTimeout(() => {
       const elem =
         this.icon && (document as any).getElementById(this.iconIdPipe.transform(this.icon, this.iconPickerId));

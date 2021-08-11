@@ -83,7 +83,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.tableIdLabel = $localize`:@@collection.settings.tableId:Table ID:`;
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
 
@@ -107,20 +107,20 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new CollectionsAction.Update({collection}));
   }
 
-  public onDelete(): void {
+  public onDelete() {
     const message = $localize`:@@collection.delete.dialog.message:Do you really want to delete this table?`;
     const title = $localize`:@@collection.delete.dialog.title:Delete?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeCollection());
   }
 
-  public removeCollection(): void {
+  public removeCollection() {
     const collection = this.collection$.getValue();
     if (collection) {
       this.store$.dispatch(new CollectionsAction.Delete({collectionId: collection.id}));
     }
   }
 
-  public onBack(): void {
+  public onBack() {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
         previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),

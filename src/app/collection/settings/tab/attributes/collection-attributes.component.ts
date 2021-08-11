@@ -50,7 +50,7 @@ export class CollectionAttributesComponent implements OnInit {
     private store$: Store<AppState>
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.collection$ = this.store$.pipe(
       select(selectCollectionByWorkspace),
       tap(collection => (this.collection = collection))

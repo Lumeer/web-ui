@@ -171,7 +171,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     private translationService: TranslationService
   ) {}
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit() {
     const lumeerVar = this.blocklyUtils?.getLumeerVariable() || null;
     this.blocklyUtils = new BlocklyUtils(this.masterType, this.collections, this.linkTypes, this.views, this.variables);
     if (isNotNullOrUndefined(lumeerVar)) {
@@ -243,7 +243,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
   }
 
-  public blocklyOnLoad(): void {
+  public blocklyOnLoad() {
     if (!(window as any).Blockly) {
       setTimeout(() => this.blocklyOnLoad(), 500);
     } else {
@@ -262,7 +262,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   @HostListener('window:resize')
-  public onResize(): void {
+  public onResize() {
     Blockly.svgResize(this.workspace);
     this.workspace.getAllBlocks().forEach(b => b.render());
   }
@@ -383,7 +383,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }, 500); // let the DOM to be parsed in their timeout
   }
 
-  private registerCustomBlocks(): void {
+  private registerCustomBlocks() {
     const collection =
       this.masterType !== MasterBlockType.Link ? this.blocklyUtils.getCollection(this.variables[0].collectionId) : null;
     const linkType =
@@ -597,7 +597,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private onWorkspaceBlockCreate(changeEvent, workspace): void {
+  private onWorkspaceBlockCreate(changeEvent, workspace) {
     const mainBlock = workspace.getBlockById(changeEvent.blockId);
 
     // make sure the default blocks do not offer documents etc in variable dropdowns
@@ -698,7 +698,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private onWorkspaceChange(changeEvent): void {
+  private onWorkspaceChange(changeEvent) {
     const workspace = this.workspace;
 
     // keep for easy debugging
@@ -950,12 +950,12 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.generateJs();
   }
 
-  private generateXml(): void {
+  private generateXml() {
     const xml = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace));
     this.onXmlUpdate.emit(xml);
   }
 
-  private generateJs(): void {
+  private generateJs() {
     let js = Blockly.JavaScript.workspaceToCode(this.workspace);
 
     if (this.blocklyUtils.emptyJs(js)) {
@@ -973,7 +973,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     this.onJsUpdate.emit(js);
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     // resiliency to quick dialog close
     this.destroying = true;
     if (this.workspace) {

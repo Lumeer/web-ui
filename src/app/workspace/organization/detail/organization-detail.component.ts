@@ -46,7 +46,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new ContactsAction.SetContact({organizationId: this.organization.id, contact}));
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.subscribeToStore();
     this.requestData();
   }
@@ -65,7 +65,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.contactSubscription) {
       this.contactSubscription.unsubscribe();
     }

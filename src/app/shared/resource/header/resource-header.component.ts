@@ -182,7 +182,7 @@ export class ResourceHeaderComponent implements OnInit {
     this.colorIconChange.emit(data);
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.deleteTitle = parseSelectTranslation(
       $localize`:@@resource.settings.deleteResource.title:Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}`,
       {resourceType: this.resourceType}

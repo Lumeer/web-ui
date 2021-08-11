@@ -56,7 +56,7 @@ export class TableHeaderCollectionComponent implements OnChanges {
 
   public constructor(private store$: Store<AppState>) {}
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
       this.collection$ = this.store$.select(selectCollectionById(this.part.collectionId));
       this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.part.collectionId)));

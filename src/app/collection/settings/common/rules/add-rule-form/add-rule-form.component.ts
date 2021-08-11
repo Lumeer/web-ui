@@ -50,6 +50,7 @@ import {parseSelectTranslation} from '../../../../../shared/utils/translation.ut
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
 import * as moment from 'moment';
 import {minLengthValidator} from '../../../../../core/validators/custom-validators';
+import {offsetRuleConfig, RuleOffsetType} from '../../../../../shared/utils/rule.utils';
 
 @Component({
   selector: 'add-rule-form',
@@ -143,7 +144,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private getBlocklyGroup() {
+  private getBlocklyGroup(): Record<string, any> {
     if (this.rule.type === RuleType.Blockly || this.rule.type === RuleType.Cron) {
       return {
         blocklyXml: this.rule.configuration.blocklyXml,
@@ -167,18 +168,21 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private getCronGroup() {
-    if (this.rule.type === RuleType.Cron) {
+  private getCronGroup(): Record<string, any> {
+    const offsetRule = offsetRuleConfig(this.rule, RuleOffsetType.Up);
+    if (offsetRule.type === RuleType.Cron) {
       return {
-        startsOn: this.rule.configuration.startsOn,
-        endsOn: this.rule.configuration.endsOn,
-        hour: this.rule.configuration.hour,
-        interval: this.rule.configuration.interval,
-        daysOfWeek: this.rule.configuration.daysOfWeek,
-        occurence: this.rule.configuration.occurence,
-        unit: this.rule.configuration.unit || ChronoUnit.Weeks,
-        viewId: this.rule.configuration.viewId,
-        executionsLeft: this.rule.configuration.executionsLeft,
+        startsOn: offsetRule.configuration.startsOn,
+        endsOn: offsetRule.configuration.endsOn,
+        interval: offsetRule.configuration.interval,
+
+        hour: offsetRule.configuration.hour,
+        daysOfWeek: offsetRule.configuration.daysOfWeek,
+        occurrence: offsetRule.configuration.occurrence,
+
+        unit: offsetRule.configuration.unit || ChronoUnit.Weeks,
+        viewId: offsetRule.configuration.viewId,
+        executionsLeft: offsetRule.configuration.executionsLeft,
         language: this.configuration.getConfiguration().locale,
       };
     } else {
@@ -188,7 +192,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
         hour: '0',
         interval: 1,
         daysOfWeek: 0,
-        occurence: 1,
+        occurrence: 1,
         unit: ChronoUnit.Weeks,
         viewId: undefined,
         executionsLeft: undefined,
@@ -197,7 +201,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.formSubscription) {
       this.formSubscription.unsubscribe();
     }
@@ -281,7 +285,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public fireCancelNewRule(): void {
+  public fireCancelNewRule() {
     this.onCancelNewRule.emit(this.ruleIndex);
   }
 
@@ -325,8 +329,10 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  public submitRule(): void {
-    this.onSaveRule.emit(this.getRuleFromForm());
+  public submitRule() {
+    const rule = this.getRuleFromForm();
+    const offsetRule = offsetRuleConfig(rule, RuleOffsetType.Down);
+    this.onSaveRule.emit(offsetRule);
   }
 
   private createTypeItems(): SelectItemModel[] {

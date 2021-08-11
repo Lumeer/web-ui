@@ -38,7 +38,7 @@ export class DeleteDocumentBlocklyComponent extends BlocklyComponent {
     return [MasterBlockType.Function];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.DELETE_DOCUMENT] = {

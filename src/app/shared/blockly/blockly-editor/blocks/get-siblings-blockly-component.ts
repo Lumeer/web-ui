@@ -36,7 +36,7 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
     return [MasterBlockType.Function];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.GET_SIBLINGS] = {

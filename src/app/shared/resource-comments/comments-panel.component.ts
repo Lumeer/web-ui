@@ -79,7 +79,7 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
 
   public constructor(private store$: Store<AppState>) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.usersMap$ = this.store$.pipe(select(selectUsersDictionary));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     if (this.startEditing) {
@@ -98,7 +98,7 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.resourceType || changes.resourceId) {
       this.store$.dispatch(
         new ResourceCommentsAction.Get({resourceType: this.resourceType, resourceId: this.resourceId})

@@ -36,7 +36,7 @@ export class ParseDateBlocklyComponent extends BlocklyComponent {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.PARSE_DATE] = {

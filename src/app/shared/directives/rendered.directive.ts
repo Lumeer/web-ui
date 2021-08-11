@@ -28,7 +28,7 @@ export class RenderedDirective implements AfterViewInit {
 
   public constructor(private _el: ElementRef) {}
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit() {
     this.rendered.emit(this._el);
   }
 }

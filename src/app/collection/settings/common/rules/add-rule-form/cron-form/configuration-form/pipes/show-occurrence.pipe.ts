@@ -21,9 +21,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ChronoUnit} from '../../../../../../../../core/model/rule';
 
 @Pipe({
-  name: 'showOccurence',
+  name: 'showOccurrence',
 })
-export class ShowOccurencePipe implements PipeTransform {
+export class ShowOccurrencePipe implements PipeTransform {
   public transform(unit: ChronoUnit): boolean {
     switch (unit) {
       case ChronoUnit.Months:

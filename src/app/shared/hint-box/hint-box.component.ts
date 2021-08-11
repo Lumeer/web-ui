@@ -52,7 +52,7 @@ export class HintBoxComponent implements OnInit {
 
   constructor(private store$: Store<AppState>) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.visible$ = this.store$.pipe(
       select(selectCurrentUser),
       map(user => !user.hints?.[this.hintKey])

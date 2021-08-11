@@ -173,7 +173,7 @@ export class UserMenuComponent implements OnInit {
     this.authService.logout();
   }
 
-  public onStartTour(): void {
+  public onStartTour() {
     this.recallWizard();
 
     combineLatest([this.store$.pipe(select(selectAllCollections)), this.store$.pipe(select(selectAllViews))])
@@ -184,7 +184,7 @@ export class UserMenuComponent implements OnInit {
       .subscribe(([collections, views]) => this.startTour(true, collections.length, views.length));
   }
 
-  private startTour(manual: boolean, collectionsCount: number, viewsCount: number): void {
+  private startTour(manual: boolean, collectionsCount: number, viewsCount: number) {
     if (!this.starting && !this.dismissing) {
       this.starting = true;
 
@@ -237,7 +237,7 @@ export class UserMenuComponent implements OnInit {
     }, 500);
   }
 
-  public dismissWizard(): void {
+  public dismissWizard() {
     if (!this.starting && !this.dismissing) {
       this.dismissing = true;
       this.store$.dispatch(
@@ -250,7 +250,7 @@ export class UserMenuComponent implements OnInit {
     }
   }
 
-  public recallWizard(): void {
+  public recallWizard() {
     if (!this.dismissing) {
       this.store$.dispatch(
         new PatchCurrentUser({
@@ -264,7 +264,7 @@ export class UserMenuComponent implements OnInit {
     return '(' + stepNo + '/' + totalSteps + ') ';
   }
 
-  private defineSteps(collectionsCount: number, viewsCount: number): void {
+  private defineSteps(collectionsCount: number, viewsCount: number) {
     const totalSteps = viewsCount > 0 ? 8 : collectionsCount > 0 ? 8 : 7;
     let stepNo = 1;
 
@@ -400,7 +400,7 @@ export class UserMenuComponent implements OnInit {
   }
 
   @HostListener('document:click', ['$event'])
-  public onClick(event: MouseEvent): void {
+  public onClick(event: MouseEvent) {
     const element = event.target as HTMLElement;
     if (
       !this.starting &&

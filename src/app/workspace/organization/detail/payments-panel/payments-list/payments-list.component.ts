@@ -70,7 +70,7 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
     this.store.dispatch(new PaymentsAction.GetPayments({organizationId: this.organization.id}));
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.organizationSubscription) {
       this.organizationSubscription.unsubscribe();
     }

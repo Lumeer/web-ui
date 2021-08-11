@@ -45,7 +45,7 @@ export class ResourceStatusLineComponent implements OnChanges {
 
   constructor(private store$: Store<AppState>) {}
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (this.organization) {
       this.projectsCount$ = this.store$
         .pipe(select(selectProjectsForWorkspace))

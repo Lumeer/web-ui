@@ -40,7 +40,7 @@ export class HintComponent implements OnInit {
 
   constructor(private store$: Store<AppState>) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.hintsEnabled$ = this.store$.pipe(
       select(selectCurrentUser),
       map(user => user.hints.applicationHints)

@@ -41,7 +41,7 @@ export class SentryHttpInterceptor implements HttpInterceptor {
     );
   }
 
-  private processError(error: any): void {
+  private processError(error: any) {
     if (error instanceof Error || error instanceof ErrorEvent) {
       Sentry.captureException(error);
     } else if (error instanceof HttpErrorResponse) {

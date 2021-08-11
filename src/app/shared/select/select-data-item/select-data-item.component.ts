@@ -95,7 +95,7 @@ export class SelectDataItemComponent implements OnInit, OnChanges {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.items && this.items) {
       this.dropdownOptions = createDropdownOptions(this.items);
     }

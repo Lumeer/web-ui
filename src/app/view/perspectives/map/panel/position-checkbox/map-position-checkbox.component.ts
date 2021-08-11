@@ -53,7 +53,7 @@ export class MapPositionCheckboxComponent implements OnInit, OnChanges, OnDestro
     this.form = this.fb.group({[this.formControlName]: false});
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.subscriptions.add(this.subscribeToValueChanges());
   }
 

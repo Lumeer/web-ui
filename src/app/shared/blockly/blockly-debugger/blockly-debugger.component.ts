@@ -66,7 +66,7 @@ export class BlocklyDebuggerComponent implements OnInit {
 
   public readonly displayTypes = BlocklyDebugDisplay;
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.onWindowResize();
   }
 

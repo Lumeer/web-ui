@@ -113,7 +113,7 @@ export class CollectionLinkTypesComponent implements OnInit {
     this.store$.dispatch(new LinkTypesAction.Update({linkType: newLinkType}));
   }
 
-  public updateLinkType(linkType: LinkType): void {
+  public updateLinkType(linkType: LinkType) {
     this.store$.dispatch(new LinkTypesAction.Update({linkType}));
   }
 }

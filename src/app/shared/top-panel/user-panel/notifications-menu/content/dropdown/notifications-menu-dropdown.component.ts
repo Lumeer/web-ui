@@ -72,7 +72,7 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
 
   public readonly dropdownPositions = [DropdownPosition.BottomEnd];
 
-  public toggleUnreadFilter(event: MouseEvent): void {
+  public toggleUnreadFilter(event: MouseEvent) {
     event.stopPropagation();
     this.toggleUnread.emit();
   }
@@ -81,7 +81,7 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
     this.deleteNotification.next(notification);
   }
 
-  public setNotificationReadEvent($event: {notification: UserNotification; read: boolean}): void {
+  public setNotificationReadEvent($event: {notification: UserNotification; read: boolean}) {
     this.readNotification.next($event);
   }
 

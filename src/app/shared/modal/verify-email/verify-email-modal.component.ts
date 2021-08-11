@@ -58,11 +58,11 @@ export class VerifyEmailModalComponent implements OnInit, OnDestroy {
       .subscribe(user => this.hideDialog());
   }
 
-  private hideDialog(): void {
+  private hideDialog() {
     this.bsModalRef.hide();
   }
 
-  public reloadUser(): void {
+  public reloadUser() {
     this.performingAction$.next(true);
     this.store$.dispatch(
       new UsersAction.GetCurrentUser({
@@ -72,7 +72,7 @@ export class VerifyEmailModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  public sendEmail(): void {
+  public sendEmail() {
     this.emailSent$.next(1);
     this.store$.dispatch(
       new UsersAction.ResendVerificationEmail({

@@ -35,7 +35,7 @@ export class GetDocumentCreatedDateBlocklyComponent extends GetDocumentPropertyA
     this.tooltip = $localize`:@@blockly.tooltip.getDocumentCreatedDateBlock:Gets the creation date of the given record.`;
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.GET_DOCUMENT_CREATED_DATE] = {

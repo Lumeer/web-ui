@@ -180,10 +180,10 @@ export class CronConfigurationFormComponent implements OnInit, OnChanges {
     if (checked) {
       const startDate = this.startsOnControl.value;
       if (isDateValid(startDate)) {
-        const startMoment = moment.utc(startDate).add(1, 'year');
+        const startMoment = moment(startDate).add(1, 'year');
         this.onEndDateChange(startMoment.toDate());
       } else {
-        const endMoment = moment.utc().startOf('day').add(1, 'year');
+        const endMoment = moment().startOf('day').add(1, 'year');
         this.onEndDateChange(endMoment.toDate());
       }
     }

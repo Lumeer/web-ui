@@ -29,11 +29,11 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="unitControl.value | showOccurence">
+  <ng-container *ngIf="unitControl.value | showOccurrence">
     <label class="main" i18n="@@collection.config.tab.rules.cron.timer.run">Run on</label>
     <div class="d-flex align-items-center flex-nowrap">
       <input class="form-control hour-input mr-2" type="number"
-             min="1" max="31" id="occurence" formControlName="occurence" integer minValue="1" maxValue="31"/>
+             min="1" max="31" id="occurrence" formControlName="occurrence" integer minValue="1" maxValue="31"/>
       <span i18n="@@collection.config.tab.rules.cron.timer.dayInMonth">day in month</span>
       <span class="text-secondary ml-1">
         <i class="fal fa-question-circle" i18n-tooltip="@@collection.config.tab.rules.cron.timer.monthly"
@@ -49,7 +49,6 @@
                      [format]="dateFormat"
                      [placeholder]="dateFormat"
                      [value]="startsOnControl.value"
-                     [asUtc]="true"
                      (valueChange)="startsOnControl.setValue($event)">
     </date-time-input>
     <div *ngIf="configForm?.errors?.startsOnRequired" class="small mt-1 text-danger"
@@ -89,7 +88,6 @@
                        [placeholder]="dateFormat"
                        [format]="dateFormat"
                        [value]="endsOnControl.value"
-                       [asUtc]="true"
                        (valueChange)="onEndDateChange($event)">
       </date-time-input>
       <div *ngIf="configForm?.errors?.endsOnInvalid" class="small mt-1 text-danger"

@@ -39,7 +39,7 @@ export class GetChildDocumentsBlocklyComponent extends BlocklyComponent {
     return [MasterBlockType.Function];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.GET_CHILD_DOCUMENTS] = {

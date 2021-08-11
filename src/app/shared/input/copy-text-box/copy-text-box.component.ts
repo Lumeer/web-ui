@@ -42,7 +42,7 @@ export class CopyTextBoxComponent implements OnInit {
 
   constructor(private clipboardService: ClipboardService) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.copiedText = $localize`:@@copyTextBox.clipboard.copied:Copied!`;
   }
 

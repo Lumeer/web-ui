@@ -56,7 +56,7 @@ export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
     this.form = this.fb.group({[this.formControlName]: null}, {updateOn: 'blur'});
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.subscriptions.add(this.subscribeToValueChanges());
     this.helpLink =
       this.configurationService.getConfiguration().locale === LanguageCode.CZ

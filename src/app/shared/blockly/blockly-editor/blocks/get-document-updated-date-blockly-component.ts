@@ -35,7 +35,7 @@ export class GetDocumentUpdatedDateBlocklyComponent extends GetDocumentPropertyA
     this.tooltip = $localize`:@@blockly.tooltip.getDocumentUpdatedDateBlock:Gets the last update date of the given record.`;
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.GET_DOCUMENT_UPDATED_DATE] = {

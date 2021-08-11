@@ -122,7 +122,7 @@ export class PusherService implements OnDestroy {
     this.dismissButton = {text: okBtn, bold: true};
   }
 
-  public init(): void {
+  public init() {
     if (this.configurationService.getConfiguration().auth) {
       this.subscribeToUser();
     }
@@ -144,7 +144,7 @@ export class PusherService implements OnDestroy {
       });
   }
 
-  private subscribePusher(user: User): void {
+  private subscribePusher(user: User) {
     Pusher.logToConsole = !this.configurationService.getConfiguration().pusherLogDisabled;
     this.pusher = new Pusher(this.configurationService.getConfiguration().pusherKey, {
       cluster: this.configurationService.getConfiguration().pusherCluster,
@@ -1032,7 +1032,7 @@ export class PusherService implements OnDestroy {
       });
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.channel) {
       this.channel.unbind_all();
       this.pusher.unsubscribe();

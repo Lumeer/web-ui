@@ -50,7 +50,7 @@ export class FormatCurrencyBlocklyComponent extends BlocklyComponent {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.FORMAT_CURRENCY] = {

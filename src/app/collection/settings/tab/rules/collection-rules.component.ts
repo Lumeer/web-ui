@@ -53,7 +53,7 @@ export class CollectionRulesComponent implements OnInit {
     this.copyOf = $localize`:@@collection.config.tab.rules.prefix.copyOf:Copy of`;
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.collection$ = this.store$.pipe(select(selectCollectionByWorkspace));
     this.ruleNames$ = this.collection$.pipe(
       map(collection => collection?.rules.map(r => r.name) || []),
@@ -66,11 +66,11 @@ export class CollectionRulesComponent implements OnInit {
     );
   }
 
-  public onNewRule(): void {
+  public onNewRule() {
     this.addingRules.push(this.getEmptyRule());
   }
 
-  public onDuplicateRule(rule: Rule): void {
+  public onDuplicateRule(rule: Rule) {
     this.addingRules.push({...rule, name: this.copyOf + ' ' + rule.name, id: generateId()});
   }
 
@@ -104,7 +104,7 @@ export class CollectionRulesComponent implements OnInit {
     return `${prefix} ${count}`;
   }
 
-  public onCancelNewRule(index: number): void {
+  public onCancelNewRule(index: number) {
     this.addingRules.splice(index, 1);
   }
 

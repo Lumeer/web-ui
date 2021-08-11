@@ -38,7 +38,7 @@ export class BlockCommentBlocklyComponent extends BlocklyComponent {
     return [MasterBlockType.Function];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.BLOCK_COMMENT] = {

@@ -17,83 +17,67 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResource, AttributesResourceType, Resource} from '../../core/model/resource';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {Attribute} from '../../core/store/collections/collection';
-import {isNotNullOrUndefined, objectsByIdMap} from './common.utils';
+import {CronRuleConfiguration, Rule, RuleType} from '../../core/model/rule';
+import {createRange} from './array.utils';
+import {bitSet, bitTest} from './common.utils';
 
-export function generateCorrelationId(): string {
-  return Date.now() + ':' + Math.random();
+export enum RuleOffsetType {
+  Up = 'up',
+  Down = 'down',
 }
 
-export function generateId(): string {
-  // the trailing 'a' makes sure we never end up with a pure numeric string that could be parsed on backed as a number
-  // because it does not fit into any basic Java type
-  return Date.now().toString() + Math.floor(0x100000000000 + Math.random() * 0xefffffffff).toString(16) + 'a';
-}
+export function offsetRuleConfig(rule: Rule, offsetType: RuleOffsetType): Rule {
+  if (rule?.type === RuleType.Cron) {
+    const configuration = rule.configuration || ({} as CronRuleConfiguration);
+    const offsetHours = (new Date().getTimezoneOffset() / 60) * (offsetType === RuleOffsetType.Up ? -1 : 1);
+    let hourWithOffset = +configuration.hour + offsetHours;
+    let dayOffset = 0;
+    if (hourWithOffset < 0) {
+      dayOffset = -1;
+      hourWithOffset += 24;
+    } else if (hourWithOffset > 23) {
+      dayOffset = 1;
+      hourWithOffset %= 24;
+    }
 
-export function getAttributesResourceType(attributesResource: AttributesResource): AttributesResourceType {
-  if (<LinkType>attributesResource && (<LinkType>attributesResource).collectionIds) {
-    return AttributesResourceType.LinkType;
+    const daysOfWeek = offsetCronDaysOfWeek(configuration.daysOfWeek, dayOffset);
+    const occurrence = offsetCronDaysOfMonth(configuration.occurrence, dayOffset);
+
+    return {...rule, configuration: {...configuration, hour: hourWithOffset?.toString(), daysOfWeek, occurrence}};
   }
-  return AttributesResourceType.Collection;
+
+  return rule;
 }
 
-export function attributesResourcesAreSame(a1: AttributesResource, a2: AttributesResource): boolean {
-  return a1 && a2 && a1.id === a2.id && getAttributesResourceType(a1) === getAttributesResourceType(a2);
-}
+function offsetCronDaysOfWeek(daysOfWeek: number, offset: number): number {
+  if (!daysOfWeek || !offset) {
+    return daysOfWeek;
+  }
 
-export function attributesResourcesAttributesMap(
-  resources: AttributesResource[]
-): Record<string, Record<string, Attribute>> {
-  return (resources || []).reduce(
-    (map, resource) => ({...map, [resource.id]: objectsByIdMap(resource.attributes)}),
-    {}
-  );
-}
-
-export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources: T[]): T[] {
-  return [...(resources || [])].sort((a, b) => {
-    if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-      if (isNotNullOrUndefined(a.priority) || isNotNullOrUndefined(b.priority)) {
-        const aOrder = a.priority ?? Number.MIN_SAFE_INTEGER;
-        const bOrder = b.priority ?? Number.MIN_SAFE_INTEGER;
-        const diff = bOrder - aOrder;
-        if (diff !== 0) {
-          return diff;
-        }
+  const days = createRange(0, 7)
+    .filter(day => bitTest(daysOfWeek, day))
+    .map(day => {
+      if (day + offset > 6) {
+        return (day + offset) % 7;
+      } else if (day + offset < 0) {
+        return day + offset + 7;
       }
+      return day + offset;
+    });
 
-      if (a.lastTimeUsed && b.lastTimeUsed) {
-        return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
-      } else if (a.lastTimeUsed && !b.lastTimeUsed) {
-        return -1;
-      } else if (b.lastTimeUsed && !a.lastTimeUsed) {
-        return 1;
-      }
-      return b.id.localeCompare(a.id);
-    }
-    return a.favorite ? -1 : 1;
-  });
+  return days.reduce((newDaysOfWeek, day) => bitSet(newDaysOfWeek, day), 0);
 }
 
-export function sortResourcesByOrder<T extends Resource>(resources: T[]): T[] {
-  return [...(resources || [])].sort((a, b) => {
-    const aOrder = a.priority ?? Number.MIN_SAFE_INTEGER;
-    const bOrder = b.priority ?? Number.MIN_SAFE_INTEGER;
-    return bOrder - aOrder;
-  });
-}
+function offsetCronDaysOfMonth(dayOfMonth: number, offset: number): number {
+  if (!dayOfMonth || !offset) {
+    return dayOfMonth;
+  }
 
-export function sortResourcesLastUsed<T extends Resource>(resources: T[]): T[] {
-  return [...(resources || [])].sort((a, b) => {
-    if (a.lastTimeUsed && b.lastTimeUsed) {
-      return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
-    } else if (a.lastTimeUsed && !b.lastTimeUsed) {
-      return -1;
-    } else if (b.lastTimeUsed && !a.lastTimeUsed) {
-      return 1;
-    }
-    return b.id.localeCompare(a.id);
-  });
+  if (dayOfMonth + offset > 31) {
+    return (dayOfMonth + offset) % 31;
+  } else if (dayOfMonth + offset < 1) {
+    return dayOfMonth + offset + 31;
+  }
+
+  return dayOfMonth + offset;
 }

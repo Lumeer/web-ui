@@ -156,7 +156,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.nameChanged$.next(this.view && name && this.view.name !== name);
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {
       if (this.view && this.view.name) {
         this.name = this.view.name;

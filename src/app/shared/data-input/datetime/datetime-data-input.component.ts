@@ -216,7 +216,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
     this.cancel.emit();
   }
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit() {
     document.body.style.setProperty('--first-day-of-week', this.firstDayOfWeek());
   }
 

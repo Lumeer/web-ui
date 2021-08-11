@@ -52,7 +52,7 @@ export class ReferralsOverviewModalComponent implements OnInit {
     this.locale = configurationService.getConfiguration().locale;
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.store$
       .pipe(
         select(selectCurrentUser),

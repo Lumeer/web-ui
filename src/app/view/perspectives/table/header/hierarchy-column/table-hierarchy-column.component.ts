@@ -39,7 +39,7 @@ export class TableHierarchyColumnComponent implements OnChanges {
 
   public constructor(private store$: Store<AppState>) {}
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
       this.bindHierarchyMaxLevel(this.cursor);
     }

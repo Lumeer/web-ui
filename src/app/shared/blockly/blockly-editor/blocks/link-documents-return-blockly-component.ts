@@ -34,7 +34,7 @@ export class LinkDocumentsReturnBlocklyComponent extends LinkDocumentsNoReturnBl
     return [MasterBlockType.Function];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.LINK_DOCUMENTS_RETURN] = {

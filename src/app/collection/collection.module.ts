@@ -59,7 +59,7 @@ import {CronConfigurationFormComponent} from './settings/common/rules/add-rule-f
 import {IsDayOfWeekSelectedPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/is-day-of-week-selected.pipe';
 import {MaxIntervalByUnitPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/max-interval-by-unit.pipe';
 import {ShowDaysOfWeekPipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-days-of-week.pipe';
-import {ShowOccurencePipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-occurence.pipe';
+import {ShowOccurrencePipe} from './settings/common/rules/add-rule-form/cron-form/configuration-form/pipes/show-occurrence.pipe';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule, TooltipModule, TeamsModule],
@@ -96,7 +96,7 @@ import {ShowOccurencePipe} from './settings/common/rules/add-rule-form/cron-form
     IsDayOfWeekSelectedPipe,
     MaxIntervalByUnitPipe,
     ShowDaysOfWeekPipe,
-    ShowOccurencePipe,
+    ShowOccurrencePipe,
   ],
   providers: [CollectionSettingsGuard, CollectionTabGuard],
 })

@@ -47,7 +47,7 @@ export interface ResizeObserver {
  * broadcast active observations algorithm.
  */
 export interface ResizeObserverCallback {
-  (entries: ResizeObserverEntry[], observer: ResizeObserver): void;
+  (entries: ResizeObserverEntry[], observer: ResizeObserver);
 }
 
 export interface ResizeObserverEntry {
