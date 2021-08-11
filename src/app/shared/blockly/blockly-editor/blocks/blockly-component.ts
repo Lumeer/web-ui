@@ -24,7 +24,7 @@ export abstract class BlocklyComponent {
 
   public abstract getVisibility(): MasterBlockType[];
 
-  public abstract registerBlock(workspace: any): void;
+  public abstract registerBlock(workspace: any);
 
   public getDocumentVariablesXml(workspace: any): string {
     return null;

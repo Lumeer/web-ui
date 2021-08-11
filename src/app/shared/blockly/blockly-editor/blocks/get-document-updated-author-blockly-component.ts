@@ -35,7 +35,7 @@ export class GetDocumentUpdatedAuthorBlocklyComponent extends GetDocumentPropert
     this.tooltip = $localize`:@@blockly.tooltip.getDocumentUpdatedAuthorBlock:Gets the user who updated the record last time.`;
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.GET_DOCUMENT_UPDATED_AUTHOR] = {

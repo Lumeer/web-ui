@@ -50,7 +50,7 @@ export class PerspectiveService {
     }
   }
 
-  public switchPerspective(perspective: Perspective, cursor?: ViewCursor, queryToSet?: string): void {
+  public switchPerspective(perspective: Perspective, cursor?: ViewCursor, queryToSet?: string) {
     if (cursor) {
       const cursorString = convertViewCursorToString(cursor);
 

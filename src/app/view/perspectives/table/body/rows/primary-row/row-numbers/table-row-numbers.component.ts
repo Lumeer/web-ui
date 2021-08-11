@@ -96,7 +96,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
     );
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
       this.cursor$.next(this.cursor);
     }

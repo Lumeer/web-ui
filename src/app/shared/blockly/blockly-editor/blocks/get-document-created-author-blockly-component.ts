@@ -35,7 +35,7 @@ export class GetDocumentCreatedAuthorBlocklyComponent extends GetDocumentPropert
     this.tooltip = $localize`:@@blockly.tooltip.getDocumentCreatedAuthorBlock:Gets the author of the given record.`;
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.GET_DOCUMENT_CREATED_AUTHOR] = {

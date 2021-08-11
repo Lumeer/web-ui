@@ -38,13 +38,13 @@ export class SequenceItemComponent {
 
   constructor(private notificationService: NotificationService) {}
 
-  public remove(): void {
+  public remove() {
     const message = $localize`:@@sequence.item.delete.message:Do you want to permanently remove this sequence?`;
     const title = $localize`:@@sequence.item.delete.title:Remove sequence?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeSequence.emit(this.sequence));
   }
 
-  private update(seq: number): void {
+  private update(seq: number) {
     this.updateSequence.emit({...this.sequence, seq});
   }
 

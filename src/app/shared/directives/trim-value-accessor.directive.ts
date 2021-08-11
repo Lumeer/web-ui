@@ -62,7 +62,7 @@ export class TrimValueAccessorDirective extends DefaultValueAccessor {
   }
 
   @HostListener('blur', ['$event.type', '$event.target.value'])
-  public onBlur(event: string, value: string): void {
+  public onBlur(event: string, value: string) {
     if (value.replace(this.regex, '') !== this.value) {
       this.updateValue(event, value);
     }
@@ -71,7 +71,7 @@ export class TrimValueAccessorDirective extends DefaultValueAccessor {
   }
 
   @HostListener('input', ['$event.type', '$event.target.value'])
-  public onInput(event: string, value: string): void {
+  public onInput(event: string, value: string) {
     this.updateValue(event, value);
   }
 
@@ -86,7 +86,7 @@ export class TrimValueAccessorDirective extends DefaultValueAccessor {
     this._sourceElementRef = elementRef;
   }
 
-  public writeValue(value: any): void {
+  public writeValue(value: any) {
     if (!this._value) {
       this._value = value;
     }
@@ -98,7 +98,7 @@ export class TrimValueAccessorDirective extends DefaultValueAccessor {
     }
   }
 
-  private updateValue(event: string, value: string): void {
+  private updateValue(event: string, value: string) {
     this.value = this.trim !== '' && event !== this.trim ? value : value.replace(this.regex, '');
     this.onChange(this.value);
   }

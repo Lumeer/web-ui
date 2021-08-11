@@ -91,7 +91,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
       .subscribe(payment => (this.lastPayment = payment));
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.organizationSubscription) {
       this.organizationSubscription.unsubscribe();
     }
@@ -194,7 +194,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit() {
     const script = this.document.createElement('script');
     script.type = 'text/javascript';
     script.src = this.configurationService.getConfiguration().paymentGw;

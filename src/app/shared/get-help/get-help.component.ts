@@ -32,7 +32,7 @@ export class GetHelpComponent implements OnInit {
 
   constructor(private configurationService: ConfigurationService) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     if (this.configurationService.getConfiguration().locale === LanguageCode.CZ) {
       this.link = 'https://www.lumeer.io/cs/pomoc';
     } else {

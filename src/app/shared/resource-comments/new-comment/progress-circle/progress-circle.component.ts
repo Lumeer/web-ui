@@ -49,7 +49,7 @@ export class ProgressCircleComponent implements OnInit, OnChanges {
   public normalizedRadius: number;
   public circumference: number;
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.normalizedRadius = this.radius - this.stroke * 2;
     this.circumference = this.normalizedRadius * 2 * Math.PI;
     this.strokeDashOffset = this.getDashOffset();
@@ -59,7 +59,7 @@ export class ProgressCircleComponent implements OnInit, OnChanges {
     return this.circumference - (this.progress / 100) * this.circumference;
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.progress) {
       this.strokeDashOffset = this.getDashOffset();
     }

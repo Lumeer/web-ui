@@ -86,7 +86,7 @@ export class SelectItemComponent implements OnChanges, OnDestroy {
 
   public dropdownOptions: DropdownOption[] = [];
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.items && this.items) {
       this.dropdownOptions = createDropdownOptions(this.items);
     }

@@ -45,7 +45,7 @@ export class AutoLinkFormComponent implements OnInit {
   public attribute2Empty: string = '';
   public attribute2NoCollection: string;
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.attribute1Empty = $localize`:@@collection.config.tab.rules.autoLink.selectFrom:Select from ${this.collection.name}:collection:`;
     this.attribute2NoCollection = $localize`:@@collection.config.tab.rules.autoLink.linkTypeFirst:Select link type first`;
 

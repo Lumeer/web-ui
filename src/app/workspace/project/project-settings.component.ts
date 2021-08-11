@@ -126,7 +126,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
     this.updateProject(collection);
   }
 
-  public goBack(): void {
+  public goBack() {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
         previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),

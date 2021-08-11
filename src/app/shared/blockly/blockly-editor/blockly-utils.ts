@@ -186,7 +186,7 @@ export class BlocklyUtils {
     return varType.split('_')[2];
   }
 
-  public ensureTypeChecks(workspace): void {
+  public ensureTypeChecks(workspace) {
     // first fix variables and links
     workspace.getAllBlocks(false).forEach(block => {
       const children = block.getChildren(false);
@@ -367,7 +367,7 @@ export class BlocklyUtils {
     });
   }
 
-  public preventDeletionOfInitialVariables(block: any): void {
+  public preventDeletionOfInitialVariables(block: any) {
     if (block.type.startsWith(BlocklyUtils.VARIABLES_GET_PREFIX)) {
       if (this.variables.map(v => v.name).indexOf(block.getField('VAR').getVariable().name) >= 0) {
         block.setEditable(false);
@@ -628,7 +628,7 @@ export class BlocklyUtils {
     });
   }
 
-  public resetOptions(block: any, field: string): void {
+  public resetOptions(block: any, field: string) {
     const options = block.getField(field).getOptions();
     const originalLength = options.length;
     block.getField(field).setValue('?');
@@ -636,7 +636,7 @@ export class BlocklyUtils {
     options.splice(0, originalLength);
   }
 
-  public ensureEmptyTypes(block): void {
+  public ensureEmptyTypes(block) {
     for (let i = 0, input; (input = block.inputList[i]); i++) {
       for (let j = 0, field; (field = input.fieldRow[j]); j++) {
         if (field instanceof Blockly.FieldVariable && field.variableTypes === null) {
@@ -646,7 +646,7 @@ export class BlocklyUtils {
     }
   }
 
-  public tryDisconnect(block, connection): void {
+  public tryDisconnect(block, connection) {
     try {
       connection.disconnect();
     } catch (e) {
@@ -658,7 +658,7 @@ export class BlocklyUtils {
     }
   }
 
-  public updateVariableType(workspace, variable, newType): void {
+  public updateVariableType(workspace, variable, newType) {
     const variableMap = workspace.getVariableMap();
     const type = variable.type;
 
@@ -776,7 +776,7 @@ export class BlocklyUtils {
     return currentLinkType;
   }
 
-  public ensureVariableTypeBlock(type: string): void {
+  public ensureVariableTypeBlock(type: string) {
     if (!Blockly.Blocks[BlocklyUtils.VARIABLES_GET_PREFIX + type]) {
       const collection = this.getCollection(
         type.replace(
@@ -821,7 +821,7 @@ export class BlocklyUtils {
     }
   }
 
-  public ensureLinkInstanceVariableTypeBlock(type: string): void {
+  public ensureLinkInstanceVariableTypeBlock(type: string) {
     if (!Blockly.Blocks[BlocklyUtils.VARIABLES_GET_PREFIX + type]) {
       const linkType = this.getLinkType(type.replace(BlocklyUtils.LINK_VAR_SUFFIX, ''));
       const c1 = this.getCollection(linkType.collectionIds[0]);

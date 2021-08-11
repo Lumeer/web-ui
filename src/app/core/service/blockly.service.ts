@@ -21,7 +21,7 @@ import {Injectable, Renderer2} from '@angular/core';
 import {ConfigurationService} from '../../configuration/configuration.service';
 
 export interface BlocklyLoadFn {
-  (): void;
+  ();
 }
 
 @Injectable({
@@ -32,7 +32,7 @@ export class BlocklyService {
 
   constructor(private configurationService: ConfigurationService) {}
 
-  public loadBlockly(renderer2: Renderer2, document: Document, onLoad?: BlocklyLoadFn): void {
+  public loadBlockly(renderer2: Renderer2, document: Document, onLoad?: BlocklyLoadFn) {
     const e = document.getElementById(this.blocklyId);
 
     if (!e) {

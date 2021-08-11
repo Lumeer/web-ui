@@ -40,13 +40,13 @@ export class Buffer {
     this.stageChanges();
   }
 
-  public stageChanges(): void {
+  public stageChanges() {
     this.buffering = true;
     window.clearTimeout(this.timerId);
     this.timerId = window.setTimeout(this.onFinish, this.bufferingTime);
   }
 
-  public flush(): void {
+  public flush() {
     if (this.buffering) {
       window.clearTimeout(this.timerId);
       this.onFinish();

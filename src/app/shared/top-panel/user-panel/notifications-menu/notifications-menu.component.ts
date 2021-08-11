@@ -89,7 +89,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     private validNotificationFilter: ValidNotificationFilterPipe
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.subscribeToNotifications();
     this.subscribeToResources();
     this.subscribeData();

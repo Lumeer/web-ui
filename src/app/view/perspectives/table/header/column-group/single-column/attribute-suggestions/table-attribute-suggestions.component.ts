@@ -122,7 +122,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   public constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.linkedAttributes$ = this.bindLinkedAttributes();
     this.allAttributes$ = this.bindAllAttributes();
     this.table$ = this.bindTable();

@@ -41,7 +41,7 @@ export class NavigateByIdBlocklyComponent extends BlocklyComponent {
     return [MasterBlockType.Function];
   }
 
-  public registerBlock(workspace: any): void {
+  public registerBlock(workspace: any) {
     const this_ = this;
 
     Blockly.Blocks[BlocklyUtils.NAVIGATE_TO_VIEW_BY_ID] = {

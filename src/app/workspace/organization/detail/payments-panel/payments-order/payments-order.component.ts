@@ -107,7 +107,7 @@ export class PaymentsOrderComponent implements OnInit, OnDestroy {
     this.startDateText = new DatePipe('en-US').transform(d, 'yyyy-MM-dd'); // `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.serviceLimitsSubscription) {
       this.serviceLimitsSubscription.unsubscribe();
     }

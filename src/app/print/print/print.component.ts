@@ -46,7 +46,7 @@ export class PrintComponent implements OnInit {
     private printService: PrintService
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.value$ = this.activatedRoute.paramMap.pipe(
       tap(paramMap => this.fetchDocument(paramMap)),
       mergeMap(paramMap => {

@@ -181,7 +181,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     this.modalSubscription.unsubscribe();
   }
 

@@ -38,7 +38,7 @@ export class MapAttributeSelectComponent implements OnChanges {
 
   public selectAttributes: MapAttributeModel[];
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.attributes) {
       this.selectAttributes = [...(this.attributes || []), null];
     }

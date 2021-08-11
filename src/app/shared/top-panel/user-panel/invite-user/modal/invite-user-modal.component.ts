@@ -58,7 +58,7 @@ export class InviteUserModalComponent implements OnInit {
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.existingUsers$ = this.store$.pipe(
       select(selectAllUsers),
       map(users => users.map(u => u.email))

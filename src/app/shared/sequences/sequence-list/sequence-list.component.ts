@@ -35,11 +35,11 @@ export class SequenceListComponent {
 
   constructor(private store$: Store<AppState>) {}
 
-  public updateSequence(sequence: Sequence): void {
+  public updateSequence(sequence: Sequence) {
     this.store$.dispatch(new SequencesAction.Update({sequence}));
   }
 
-  public removeSequence(sequence: Sequence): void {
+  public removeSequence(sequence: Sequence) {
     this.store$.dispatch(new SequencesAction.Delete({sequence}));
   }
 }

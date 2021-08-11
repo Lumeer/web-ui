@@ -89,7 +89,7 @@ export class AuthService {
     });
   }
 
-  public login(redirectPath: string): void {
+  public login(redirectPath: string) {
     if (this.loggingIn) {
       return;
     }
@@ -157,7 +157,7 @@ export class AuthService {
       });
   }
 
-  private setSession(authResult: Auth0DecodedHash): void {
+  private setSession(authResult: Auth0DecodedHash) {
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     // Set the time that the access token will expire at
@@ -170,7 +170,7 @@ export class AuthService {
     }
   }
 
-  public logout(): void {
+  public logout() {
     if (!this.configurationService.getConfiguration().auth) {
       console.warn('Cannot log out. Authentication is disabled.');
       return;
