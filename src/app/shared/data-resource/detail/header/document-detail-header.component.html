@@ -38,6 +38,10 @@
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
+      <i class="fa fa-external-link mr-2 text-primary clickable"
+         aria-hidden="true"
+         [tooltip]="copyTooltip"
+         (click)="onCopyRecordUrl()"></i>
       <detail-settings-button *ngIf="permissions?.rolesWithView?.PerspectiveConfig"
                               [style.line-height.px]="0"
                               class="mr-2"
@@ -91,3 +95,5 @@
     </div>
   </div>
 </div>
+
+<ng-template #copyTooltip>{{copyUrlTooltip$ | async}}</ng-template>

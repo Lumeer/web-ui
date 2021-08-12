@@ -29,7 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {selectUserById} from '../../../../core/store/users/users.state';
@@ -48,6 +48,7 @@ import {User} from '../../../../core/store/users/user';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings} from '../../../../core/store/views/view';
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
+import {ClipboardService} from '../../../../core/service/clipboard.service';
 
 @Component({
   selector: 'document-detail-header',
@@ -103,6 +104,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   public createdBy$: Observable<User>;
   public updatedBy$: Observable<User>;
+  public copyUrlTooltip$ = new BehaviorSubject<string>('');
 
   public defaultAttribute: Attribute;
   public defaultValue: any;
@@ -111,15 +113,24 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public readonly createdByMsg;
   public readonly updatedOnMsg;
   public readonly updatedByMsg;
+  public readonly copyUrlMsg;
 
-  constructor(private store$: Store<AppState>, private toggleService: DocumentFavoriteToggleService) {
+  private copyUrlTimer: number;
+
+  constructor(
+    private store$: Store<AppState>,
+    private toggleService: DocumentFavoriteToggleService,
+    private clipboardService: ClipboardService
+  ) {
     this.createdOnMsg = $localize`:@@document.detail.header.createdOn:Created on`;
     this.createdByMsg = $localize`:@@document.detail.header.createdBy:Created by`;
     this.updatedOnMsg = $localize`:@@document.detail.header.updatedOn:Updated on`;
     this.updatedByMsg = $localize`:@@document.detail.header.updatedBy:Updated by`;
+    this.copyUrlMsg = $localize`:@@document.detail.header.action.copyUrl:Copy link to this record`;
   }
 
   public ngOnInit() {
+    this.copyUrlTooltip$.next(this.copyUrlMsg);
     this.toggleService.setWorkspace(this.workspace);
   }
 
@@ -194,5 +205,30 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   public onRemove() {
     this.remove.emit();
+  }
+
+  public onCopyRecordUrl() {
+    if (this.copyUrlTimer) {
+      window.clearTimeout(this.copyUrlTimer);
+    }
+    this.copyUrl();
+  }
+
+  private copyUrl() {
+    const currentUrl = window.location.href;
+
+    const match = currentUrl.match('(.+/w/[^/]+/[^/]+/).*');
+    if (match && match[1]) {
+      const url = `${match[1]}document/${this.document.collectionId}/${this.document.id}`;
+      this.clipboardService.copy(url);
+
+      const copiedMessage = $localize`:@@copyTextBox.clipboard.copied:Copied!`;
+      this.copyUrlTooltip$.next(copiedMessage);
+
+      this.copyUrlTimer = window.setTimeout(() => {
+        this.copyUrlTooltip$.next(this.copyUrlMsg);
+        this.copyUrlTimer = null;
+      }, 3000);
+    }
   }
 }
