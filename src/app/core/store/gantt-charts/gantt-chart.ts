@@ -30,6 +30,10 @@ export interface GanttChart {
   config?: GanttChartConfig;
 }
 
+export interface GanttChartPosition {
+  value: any;
+}
+
 export interface GanttChartConfig {
   mode: GanttChartMode;
   stemsConfigs: GanttChartStemConfig[];
@@ -37,21 +41,19 @@ export interface GanttChartConfig {
   columnWidth?: number;
   padding?: number;
   barHeight?: number;
-  showDates?: boolean;
   swimlaneWidths?: number[];
   positionSaved?: boolean;
   position?: GanttChartPosition;
   version?: GanttChartConfigVersion;
 }
 
-export interface GanttChartPosition {
-  value: any;
-}
-
 export enum GanttChartConfigVersion {
   V1 = '1',
   V2 = '2',
+  V3 = '3',
 }
+
+export const ganttChartConfigLatestVersion = GanttChartConfigVersion.V3;
 
 export interface GanttChartStemConfig {
   stem?: QueryStem;
@@ -62,6 +64,7 @@ export interface GanttChartStemConfig {
   progress?: GanttChartProgressBarModel;
   color?: GanttChartBarModel;
   categories?: GanttChartBarModel[];
+  attributes?: GanttChartBarModel[];
 }
 
 export interface GanttChartBarModel extends QueryAttribute {}

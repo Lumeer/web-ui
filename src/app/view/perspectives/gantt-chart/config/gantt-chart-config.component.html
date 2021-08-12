@@ -10,7 +10,8 @@
                          [linkTypes]="linkTypes"
                          [selectItems]="stem | queryStemAttributesSelectItems:collections:linkTypes"
                          (configChange)="onStemConfigChange($event, stem, index)"
-                         (categoryRemove)="onCategoryRemoved($event, index)">
+                         (categoryRemove)="onCategoryRemoved($event, index)"
+                         (attributeRemove)="onAttributeRemoved($event, index)">
 </gantt-chart-stem-config>
 
 

@@ -26,7 +26,7 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
 export class GanttChartBarEmptyValuePipe implements PipeTransform {
   public transform(emptyProperty: string): string {
     return parseSelectTranslation(
-      $localize`:@@ganttChart.empty.placeholder:Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color}}`,
+      $localize`:@@ganttChart.empty.placeholder2:Select {emptyProperty, select, name {name} start {starting date} end {ending date} progress {progress} category {category} subCategory {sub-category} color {color} attribute {Column}}`,
       {emptyProperty}
     );
   }

@@ -453,13 +453,14 @@ export const selectDocumentsByQueryAndIdsSortedByCreation = (ids: string[]) =>
       )
   );
 
-export const selectDocumentsAndLinksByCollectionAndQuery = (collectionId: string, query: Query) =>
+export const selectDocumentsByCollectionAndQuery = (collectionId: string, query: Query) =>
   createSelector(
     selectDocumentsByCollectionId(collectionId),
     selectCollectionById(collectionId),
     selectCollectionsPermissions,
     selectConstraintData,
-    (documents, collection, permissions, constraintData) => {
+    selectViewSettings,
+    (documents, collection, permissions, constraintData, viewSettings) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         [collection],
@@ -470,7 +471,14 @@ export const selectDocumentsAndLinksByCollectionAndQuery = (collectionId: string
         {},
         constraintData
       );
-      return sortDocumentsByCreationDate(data.documents);
+      const collectionsMap = {[collectionId]: collection};
+      return sortDataResourcesByViewSettings(
+        data.documents,
+        collectionsMap,
+        AttributesResourceType.Collection,
+        viewSettings?.attributes,
+        constraintData
+      );
     }
   );
 

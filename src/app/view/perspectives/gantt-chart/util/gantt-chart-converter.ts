@@ -58,7 +58,7 @@ import {
   DataObjectAttribute,
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
-import {areArraysSame, fillWithNulls} from '../../../../shared/utils/array.utils';
+import {areArraysSame, fillWithNulls, uniqueValues} from '../../../../shared/utils/array.utils';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {
   Constraint,
@@ -75,6 +75,7 @@ import {Configuration} from '../../../../../environments/configuration-type';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {viewAttributeSettingsSortDefined} from '../../../../shared/settings/settings.util';
 import {sortDataResourcesObjectsByViewSettings} from '../../../../shared/utils/data-resource.utils';
+import {queryResourcesAreSame} from '../../../../core/model/query-attribute';
 
 export interface GanttTaskMetadata {
   dataResource: DataResource;
@@ -194,7 +195,7 @@ export class GanttChartConverter {
   }
 
   private convertSwimlaneInfo(config: GanttChartConfig): GanttSwimlaneInfo[] {
-    const categories = (config.stemsConfigs || []).reduce<GanttChartBarModel[][]>((arr, stemConfig) => {
+    const categoriesArrays = (config.stemsConfigs || []).reduce<GanttChartBarModel[][]>((arr, stemConfig) => {
       (stemConfig.categories || []).forEach((category, index) => {
         if (arr[index]) {
           arr[index].push(category);
@@ -204,37 +205,43 @@ export class GanttChartConverter {
       });
       return arr;
     }, []);
-    const categoriesLength = categories.length;
+    const categoriesLength = categoriesArrays.length;
 
-    if (config.showDates) {
-      categories.push(
-        (config.stemsConfigs || []).filter(stemConfig => !!stemConfig.start).map(stemConfig => stemConfig.start)
-      );
-      categories.push(
-        (config.stemsConfigs || []).filter(stemConfig => !!stemConfig.end).map(stemConfig => stemConfig.end)
-      );
-    }
+    (config.stemsConfigs || []).forEach(stemConfig => {
+      (stemConfig.attributes || []).forEach((attribute, attributeIndex) => {
+        const index = attributeIndex + categoriesLength;
+        if (categoriesArrays[index]) {
+          categoriesArrays[index].push(attribute);
+        } else {
+          categoriesArrays[index] = [attribute];
+        }
+      });
+    }, []);
 
-    return categories.map((cat, index) =>
-      this.convertGanttBarToSwimlaneInfo(
-        cat.length === 1 && cat[0],
-        config.swimlaneWidths && config.swimlaneWidths[index],
-        index >= categoriesLength
-      )
+    return categoriesArrays.map((categories, index) =>
+      this.convertGanttBarToSwimlaneInfo(categories, config.swimlaneWidths?.[index], index >= categoriesLength)
     );
   }
 
   private convertGanttBarToSwimlaneInfo(
-    model: GanttChartBarModel,
+    models: GanttChartBarModel[],
     width: number,
     isStatic: boolean
   ): GanttSwimlaneInfo {
     let title = '';
     let background = null;
-    if (model) {
-      const resource = this.dataObjectAggregator.getResource(model);
-      background = shadeColor((<Collection>resource).color, 0.5);
-      title = findAttribute(resource?.attributes, model.attributeId)?.name;
+    if (models?.length) {
+      const backgrounds = [];
+      const titles = [];
+      models.forEach(model => {
+        const resource = this.dataObjectAggregator.getResource(model);
+        if (resource) {
+          backgrounds.push(shadeColor((<Collection>resource).color, 0.5));
+          titles.push(findAttribute(resource?.attributes, model.attributeId)?.name);
+        }
+      });
+      background = uniqueValues(backgrounds).length === 1 ? backgrounds[0] : null;
+      title = uniqueValues(titles).length === 1 ? titles[0] : null;
     }
     return {
       background,
@@ -248,7 +255,7 @@ export class GanttChartConverter {
   private convertByStem(index: number): GanttTask[] {
     const stemConfig = this.config?.stemsConfigs?.[index];
     if (this.requiredPropertiesAreSet(stemConfig)) {
-      return this.convertByAggregation(stemConfig, this.config.showDates);
+      return this.convertByAggregation(stemConfig);
     }
     return [];
   }
@@ -260,7 +267,7 @@ export class GanttChartConverter {
     );
   }
 
-  private convertByAggregation(stemConfig: GanttChartStemConfig, showDatesAsSwimlanes: boolean): GanttTask[] {
+  private convertByAggregation(stemConfig: GanttChartStemConfig): GanttTask[] {
     const groupingAttributes = (stemConfig.categories || []).filter(category => !!category);
     const objectAttributes: DataObjectAttribute[] = [
       stemConfig.name && {...stemConfig.name, key: DataObjectInfoKeyType.Name},
@@ -282,13 +289,12 @@ export class GanttChartConverter {
       objectsConverter: (value, attribute) => this.formatSwimlaneValue(value, attribute),
     });
 
-    return this.createGanttTasksForStem(stemConfig, dataObjectsInfo, showDatesAsSwimlanes);
+    return this.createGanttTasksForStem(stemConfig, dataObjectsInfo);
   }
 
   private createGanttTasksForStem(
     stemConfig: GanttChartStemConfig,
-    dataObjectsInfo: DataObjectInfo<GanttSwimlane>[],
-    showDatesAsSwimlanes: boolean
+    dataObjectsInfo: DataObjectInfo<GanttSwimlane>[]
   ): GanttTask[] {
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
     const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
@@ -298,6 +304,20 @@ export class GanttChartConverter {
     const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
     const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
     const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
+
+    const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
+
+    const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
+    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
+
+    const progressEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.progress);
+    const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
+
+    const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
+    const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
+    const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
+
+    const attributesConstraints = (stemConfig.attributes || []).map(model => this.findColumnConstraint(model));
 
     const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = dataObjectsInfo.reduce((map, item) => {
@@ -333,18 +353,6 @@ export class GanttChartConverter {
       return map;
     }, {});
 
-    const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
-
-    const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
-    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
-
-    const progressEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.progress);
-    const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
-
-    const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
-    const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
-    const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
-
     const dataModel = stemConfig.start || stemConfig.name;
     const canEditDependencies = dataModel && dataModel.resourceType === AttributesResourceType.Collection;
 
@@ -377,19 +385,19 @@ export class GanttChartConverter {
       const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
       const taskColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
 
-      const datesSwimlanes: {value: any; title: string}[] = [];
-      if (showDatesAsSwimlanes) {
-        const startString = (startConstraint || new UnknownConstraint())
-          .createDataValue(start, this.constraintData)
-          .format();
-        const endString = (endConstraint || new UnknownConstraint()).createDataValue(end, this.constraintData).format();
-        datesSwimlanes.push(
-          ...[
-            {value: startString, title: startString},
-            {value: endString, title: endString},
-          ]
-        );
-      }
+      const attributesSwimlanes: GanttSwimlane[] = (stemConfig.attributes || []).map((model, index) => {
+        let dataResource = null;
+        if (queryResourcesAreSame(model, stemConfig.name)) {
+          dataResource = nameDataResource;
+        } else if (queryResourcesAreSame(model, stemConfig.start)) {
+          dataResource = startDataResource;
+        } else if (queryResourcesAreSame(model, stemConfig.end)) {
+          dataResource = endDataResource;
+        }
+
+        const value = dataResource?.data?.[model.attributeId];
+        return this.formatSwimlaneValueByConstraint(value, attributesConstraints[index]);
+      });
 
       let minProgress,
         maxProgress = null;
@@ -465,7 +473,7 @@ export class GanttChartConverter {
             ),
           editable: userCanEditStart && userCanEditEnd,
           textColor: contrastColor(barColor),
-          swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
+          swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...attributesSwimlanes],
           minProgress,
           maxProgress,
 
@@ -475,6 +483,13 @@ export class GanttChartConverter {
 
       return arr;
     }, []);
+  }
+
+  private findColumnConstraint(model: GanttChartBarModel): Constraint {
+    const constraint = this.dataObjectAggregator.findAttributeConstraint(model);
+    const overrideConstraint =
+      model?.constraint && this.formatter.checkValidConstraintOverride(constraint, model.constraint);
+    return overrideConstraint || constraint || new UnknownConstraint();
   }
 
   private requiredPropertiesAreSet(stemConfig: GanttChartStemConfig): boolean {
@@ -487,22 +502,26 @@ export class GanttChartConverter {
       barModel?.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 
     const resultConstraint = overrideConstraint || constraint || new UnknownConstraint();
-    const formattedValue = resultConstraint.createDataValue(value, this.constraintData).format();
+    return this.formatSwimlaneValueByConstraint(value, resultConstraint);
+  }
+
+  private formatSwimlaneValueByConstraint(value: any, constraint: Constraint): GanttSwimlane | null {
+    const formattedValue = constraint.createDataValue(value, this.constraintData).format();
     if (formattedValue) {
-      if (resultConstraint.type === ConstraintType.Color) {
+      if (constraint.type === ConstraintType.Color) {
         return {background: formattedValue, value: formattedValue, title: ''};
-      } else if (resultConstraint.type === ConstraintType.Boolean) {
+      } else if (constraint.type === ConstraintType.Boolean) {
         return {title: '', value: value, type: GanttSwimlaneType.Checkbox};
       }
 
-      const textBackground = this.swimlaneBackground(value, resultConstraint);
+      const textBackground = this.swimlaneBackground(value, constraint);
       const textColor = textBackground && contrastColor(textBackground);
       return {
         value,
-        title: this.swimlaneTitle(formattedValue, resultConstraint),
+        title: this.swimlaneTitle(formattedValue, constraint),
         textBackground,
         textColor,
-        avatarUrl: this.swimlaneAvatarUrl(value, resultConstraint),
+        avatarUrl: this.swimlaneAvatarUrl(value, constraint),
       };
     }
     return {value: '', title: ''};

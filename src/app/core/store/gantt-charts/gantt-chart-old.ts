@@ -17,8 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {GanttChartBarModel, GanttChartConfigVersion, GanttChartMode} from './gantt-chart';
+import {GanttChartBarModel, GanttChartConfig, GanttChartConfigVersion, GanttChartMode} from './gantt-chart';
 import {QueryStem} from '../navigation/query/query';
+
+/*
+ Version 1
+ */
+
+export interface GanttChartConfigV2 extends GanttChartConfig {
+  showDates?: boolean;
+}
 
 /*
  Version 1
