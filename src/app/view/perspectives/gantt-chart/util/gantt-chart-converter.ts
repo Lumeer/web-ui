@@ -160,8 +160,8 @@ export class GanttChartConverter {
   }
 
   private compareTasks(t1: GanttTask, t2: GanttTask): number {
-    const t1Swimlanes = t1.swimlanes?.map(s => s.value) || [];
-    const t2Swimlanes = t2.swimlanes?.map(s => s.value) || [];
+    const t1Swimlanes = t1.swimlanes?.map(s => s?.value) || [];
+    const t2Swimlanes = t2.swimlanes?.map(s => s?.value) || [];
 
     if (areArraysSame(t1Swimlanes, t2Swimlanes)) {
       const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
@@ -241,7 +241,7 @@ export class GanttChartConverter {
         }
       });
       background = uniqueValues(backgrounds).length === 1 ? backgrounds[0] : null;
-      title = uniqueValues(titles).length === 1 ? titles[0] : null;
+      title = uniqueValues(titles).join(', ');
     }
     return {
       background,
