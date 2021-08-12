@@ -376,7 +376,8 @@ export class WorkflowTablesDataService {
                 linkPermissions,
                 collectionPermissions,
                 linkType,
-                collection
+                collection,
+                constraintData
               );
 
               const newRowDataAggregated = {
@@ -422,7 +423,8 @@ export class WorkflowTablesDataService {
             linkPermissions,
             collectionPermissions,
             linkType,
-            collection
+            collection,
+            constraintData
           );
 
           const tableSettings = stemTableSettings?.find(tab => !tab.value);
@@ -741,7 +743,8 @@ export class WorkflowTablesDataService {
     linkPermissions: AllowedPermissions,
     collectionPermissions: AllowedPermissions,
     linkType: LinkType,
-    collection: Collection
+    collection: Collection,
+    constraintData: ConstraintData
   ): {rows: TableRow[]; newRow: TableRow} {
     const rowsMap = currentRows.reduce(
       (result, row) => ({
@@ -767,13 +770,15 @@ export class WorkflowTablesDataService {
           object.document,
           collection,
           collectionPermissions,
-          this.currentUser
+          this.currentUser,
+          constraintData
         );
         const linkInstancePermissions = dataResourcePermissions(
           object.linkInstance,
           linkType,
           linkPermissions,
-          this.currentUser
+          this.currentUser,
+          constraintData
         );
         const row: TableRow = {
           id,

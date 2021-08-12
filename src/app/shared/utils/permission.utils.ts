@@ -25,19 +25,21 @@ import {AllowedPermissions, ResourcesPermissions} from '../../core/model/allowed
 import {View} from '../../core/store/views/view';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResource, AttributesResourceType, DataResource, Resource} from '../../core/model/resource';
+import {AttributesResource, DataResource, Resource} from '../../core/model/resource';
 import {RoleType} from '../../core/model/role-type';
 import {Permission, Permissions, Role} from '../../core/store/permissions/permissions';
 import {arrayIntersection, flattenMatrix, uniqueValues} from './array.utils';
 import {PermissionsType} from '../../core/model/permissions-type';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {isDocumentOwnerByPurpose} from '../../core/store/documents/document.utils';
-import {LinkInstance} from '../../core/store/link-instances/link.instance';
-import {getAttributesResourceType} from './resource.utils';
 import {DataResourcePermissions} from '../../core/model/data-resource-permissions';
 import {Team} from '../../core/store/teams/team';
 import {objectsByIdMap} from './common.utils';
 import {rolesAreSame} from '../../core/store/permissions/permissions.helper';
+import {
+  ConstraintData,
+  userCanDeleteDataResource,
+  userCanEditDataResource,
+  userCanReadDataResource,
+} from '@lumeer/data-filters';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -342,142 +344,15 @@ export function dataResourcePermissions(
   dataResource: DataResource,
   resource: AttributesResource,
   permissions: AllowedPermissions,
-  user: User
+  user: User,
+  constraintData: ConstraintData
 ): DataResourcePermissions {
   return {
     create: permissions?.rolesWithView?.DataContribute,
-    read: userCanReadDataResource(dataResource, resource, permissions, user),
-    edit: userCanEditDataResource(dataResource, resource, permissions, user),
-    delete: userCanDeleteDataResource(dataResource, resource, permissions, user),
+    read: userCanReadDataResource(dataResource, resource, permissions, user, constraintData),
+    edit: userCanEditDataResource(dataResource, resource, permissions, user, constraintData),
+    delete: userCanDeleteDataResource(dataResource, resource, permissions, user, constraintData),
   };
-}
-
-export function userCanReadDataResource(
-  dataResource: DataResource,
-  resource: AttributesResource,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  const resourceType = getAttributesResourceType(resource);
-  if (resourceType === AttributesResourceType.Collection) {
-    return userCanReadDocument(dataResource as DocumentModel, resource, permissions, user);
-  } else if (resourceType === AttributesResourceType.LinkType) {
-    return userCanReadLinkInstance(dataResource as LinkInstance, resource as LinkType, permissions, user);
-  }
-  return false;
-}
-
-export function userCanEditDataResource(
-  dataResource: DataResource,
-  resource: AttributesResource,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  const resourceType = getAttributesResourceType(resource);
-  if (resourceType === AttributesResourceType.Collection) {
-    return userCanEditDocument(dataResource as DocumentModel, resource, permissions, user);
-  } else if (resourceType === AttributesResourceType.LinkType) {
-    return userCanEditLinkInstance(dataResource as LinkInstance, resource as LinkType, permissions, user);
-  }
-  return false;
-}
-
-export function userCanDeleteDataResource(
-  dataResource: DataResource,
-  resource: AttributesResource,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  const resourceType = getAttributesResourceType(resource);
-  if (resourceType === AttributesResourceType.Collection) {
-    return userCanDeleteDocument(dataResource as DocumentModel, resource, permissions, user);
-  } else if (resourceType === AttributesResourceType.LinkType) {
-    return userCanDeleteLinkInstance(dataResource as LinkInstance, resource as LinkType, permissions, user);
-  }
-  return false;
-}
-
-export function userCanReadDocument(
-  document: DocumentModel,
-  collection: Collection,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  return (
-    permissions?.rolesWithView?.DataRead ||
-    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
-    isDocumentOwnerByPurpose(document, collection, user)
-  );
-}
-
-export function userCanEditDocument(
-  document: DocumentModel,
-  collection: Collection,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  return (
-    permissions?.rolesWithView?.DataWrite ||
-    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
-    isDocumentOwnerByPurpose(document, collection, user)
-  );
-}
-
-export function userCanDeleteDocument(
-  document: DocumentModel,
-  collection: Collection,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  return (
-    permissions?.rolesWithView?.DataDelete ||
-    (permissions?.rolesWithView?.DataContribute && isDocumentOwner(document, collection, user)) ||
-    isDocumentOwnerByPurpose(document, collection, user)
-  );
-}
-
-function isDocumentOwner(document: DocumentModel, collection: Collection, user: User): boolean {
-  return user && document?.createdBy == user.id;
-}
-
-export function userCanReadLinkInstance(
-  linkInstance: LinkInstance,
-  linkType: LinkType,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  return (
-    permissions?.rolesWithView?.DataRead ||
-    (permissions?.rolesWithView?.DataContribute && isLinkOwner(linkInstance, linkType, user))
-  );
-}
-
-export function userCanEditLinkInstance(
-  linkInstance: LinkInstance,
-  linkType: LinkType,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  return (
-    permissions?.rolesWithView?.DataWrite ||
-    (permissions?.rolesWithView?.DataContribute && isLinkOwner(linkInstance, linkType, user))
-  );
-}
-
-export function userCanDeleteLinkInstance(
-  linkInstance: LinkInstance,
-  linkType: LinkType,
-  permissions: AllowedPermissions,
-  user: User
-): boolean {
-  return (
-    permissions?.rolesWithView?.DataDelete ||
-    (permissions?.rolesWithView?.DataContribute && isLinkOwner(linkInstance, linkType, user))
-  );
-}
-
-function isLinkOwner(linkInstance: LinkInstance, linkType: LinkType, user: User): boolean {
-  return user && linkInstance?.createdBy == user.id;
 }
 
 export function computeResourcesPermissions(

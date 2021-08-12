@@ -57,40 +57,73 @@ export class GanttChartStemConfigComponent implements OnChanges {
   @Output()
   public categoryRemove = new EventEmitter<number>();
 
+  @Output()
+  public attributeRemove = new EventEmitter<number>();
+
   public readonly properties = ['name', 'start', 'end', 'progress', 'color'];
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly progressAggregations = [DataAggregationType.Avg, DataAggregationType.Sum];
 
   public categories: GanttChartBarModel[];
+  public attributes: GanttChartBarModel[];
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.categories = [...(this.config.categories || []), null];
+    if (changes.config) {
+      this.categories = [...(this.config.categories || []), null];
+      this.attributes = [...(this.config.attributes || []), null];
+    }
   }
 
   public onBarCategorySelect(itemId: SelectItemWithConstraintId, index: number) {
+    this.onBarArraySelect(itemId, index, 'categories');
+  }
+
+  public onBarAttributeSelect(itemId: SelectItemWithConstraintId, index: number) {
+    this.onBarArraySelect(itemId, index, 'attributes');
+  }
+
+  public onBarArraySelect(itemId: SelectItemWithConstraintId, index: number, key: 'categories' | 'attributes') {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
     const resource = attributesResourcesOrder[itemId.resourceIndex];
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
       const bar: GanttChartBarModel = {...itemId, resourceType, resourceId: resource.id};
       const newConfig = deepObjectCopy(this.config);
-      newConfig.categories[index] = bar;
+      if (!newConfig[key]) {
+        newConfig[key] = [];
+      }
+      newConfig[key][index] = bar;
       this.configChange.emit(newConfig);
     }
   }
 
   public onBarCategoryConstraintSelect(constraint: Constraint, index: number) {
-    const bar = this.config.categories[index];
+    this.onBarArrayConstraintSelect(constraint, index, 'categories');
+  }
+
+  public onBarAttributeConstraintSelect(constraint: Constraint, index: number) {
+    this.onBarArrayConstraintSelect(constraint, index, 'attributes');
+  }
+
+  public onBarArrayConstraintSelect(constraint: Constraint, index: number, key: 'categories' | 'attributes') {
+    const bar = this.config?.[key]?.[index];
     if (bar) {
       const newBar = {...bar, constraint};
       const newConfig: GanttChartStemConfig = deepObjectCopy(this.config);
-      newConfig.categories[index] = newBar;
+      if (!newConfig[key]) {
+        newConfig[key] = [];
+      }
+      newConfig[key][index] = newBar;
       this.configChange.emit(newConfig);
     }
   }
 
   public onBarCategoryRemoved(index: number) {
     this.categoryRemove.emit(index);
+  }
+
+  public onBarAttributeRemoved(index: number) {
+    this.attributeRemove.emit(index);
   }
 
   public onBarPropertySelect(type: string, bar: GanttChartBarModel) {

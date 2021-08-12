@@ -23,6 +23,8 @@ import {
   DocumentsAndLinksStemData,
   filterDocumentsAndLinksByQuery,
   filterDocumentsAndLinksDataByQuery,
+  userCanReadDocument,
+  userCanReadLinkInstance,
 } from '@lumeer/data-filters';
 import {containsSameElements, uniqueValues} from '../../../shared/utils/array.utils';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
@@ -74,7 +76,6 @@ import {
 } from '../user-permissions/user-permissions.state';
 import {CollectionPurposeType} from '../collections/collection';
 import {selectCurrentUserForWorkspace} from '../users/users.state';
-import {userCanReadDocument, userCanReadLinkInstance} from '../../../shared/utils/permission.utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
@@ -197,7 +198,8 @@ export const selectDocumentsByReadPermission = createSelector(
   selectAllCollections,
   selectCollectionsPermissions,
   selectCurrentUserForWorkspace,
-  (documents, collections, permissionsMap, currentUser) => {
+  selectConstraintData,
+  (documents, collections, permissionsMap, currentUser, constraintData) => {
     const documentsByCollection = groupDocumentsByCollection(documents);
     return collections.reduce((allDocuments, collection) => {
       const permissions = permissionsMap[collection.id];
@@ -206,7 +208,9 @@ export const selectDocumentsByReadPermission = createSelector(
         allDocuments.push(...collectionDocuments);
       } else {
         allDocuments.push(
-          ...collectionDocuments.filter(document => userCanReadDocument(document, collection, permissions, currentUser))
+          ...collectionDocuments.filter(document =>
+            userCanReadDocument(document, collection, permissions, currentUser, constraintData)
+          )
         );
       }
 
@@ -449,13 +453,14 @@ export const selectDocumentsByQueryAndIdsSortedByCreation = (ids: string[]) =>
       )
   );
 
-export const selectDocumentsAndLinksByCollectionAndQuery = (collectionId: string, query: Query) =>
+export const selectDocumentsByCollectionAndQuery = (collectionId: string, query: Query) =>
   createSelector(
     selectDocumentsByCollectionId(collectionId),
     selectCollectionById(collectionId),
     selectCollectionsPermissions,
     selectConstraintData,
-    (documents, collection, permissions, constraintData) => {
+    selectViewSettings,
+    (documents, collection, permissions, constraintData, viewSettings) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         [collection],
@@ -466,7 +471,14 @@ export const selectDocumentsAndLinksByCollectionAndQuery = (collectionId: string
         {},
         constraintData
       );
-      return sortDocumentsByCreationDate(data.documents);
+      const collectionsMap = {[collectionId]: collection};
+      return sortDataResourcesByViewSettings(
+        data.documents,
+        collectionsMap,
+        AttributesResourceType.Collection,
+        viewSettings?.attributes,
+        constraintData
+      );
     }
   );
 

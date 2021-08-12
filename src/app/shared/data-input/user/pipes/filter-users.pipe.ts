@@ -21,21 +21,42 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {sortObjectsByScore} from '../../../utils/common.utils';
-import {removeAccentFromString} from '@lumeer/data-filters';
+import {removeAccentFromString, userDataValueCreateTeamValue} from '@lumeer/data-filters';
+import {Team} from '../../../../core/store/teams/team';
+import {COLOR_INFO} from '../../../../core/constants';
 
 @Pipe({
   name: 'filterUsers',
 })
 export class FilterUsersPipe implements PipeTransform {
-  public transform(users: User[], text: string): DropdownOption[] {
-    const filteredUsersOptions = (users || [])
-      .filter(user => removeAccentFromString(user.name || user.email).includes(removeAccentFromString(text)))
+  public transform(users: User[], text: string, teams?: Team[]): DropdownOption[] {
+    const textWithoutAccent = removeAccentFromString(text);
+    const teamsGroup = $localize`:@@user.constraint.type.teams:Teams`;
+
+    const filteredTeams: DropdownOption[] = (teams || [])
+      .filter(team => removeAccentFromString(team.name).includes(textWithoutAccent))
+      .map(team => ({
+        value: userDataValueCreateTeamValue(team.id),
+        displayValue: team.name,
+        group: teamsGroup,
+        border: COLOR_INFO,
+        color: COLOR_INFO,
+      }));
+
+    const usersGroup = $localize`:@@user.constraint.type.users:Users`;
+
+    const filteredUsersOptions: DropdownOption[] = (users || [])
+      .filter(user => removeAccentFromString(user.name || user.email).includes(textWithoutAccent))
       .map(user => ({
         gravatar: user.email,
         value: user.email || user.name,
         displayValue: user.name || user.email,
+        group: filteredTeams.length > 0 ? usersGroup : undefined,
       }));
 
-    return sortObjectsByScore<DropdownOption>(filteredUsersOptions, text, ['displayValue', 'value']);
+    return [
+      ...sortObjectsByScore<DropdownOption>(filteredTeams, text, ['displayValue', 'value']),
+      ...sortObjectsByScore<DropdownOption>(filteredUsersOptions, text, ['displayValue', 'value']),
+    ];
   }
 }

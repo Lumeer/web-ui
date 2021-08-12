@@ -50,7 +50,6 @@ import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
-import {RoleType} from '../../../model/role-type';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {

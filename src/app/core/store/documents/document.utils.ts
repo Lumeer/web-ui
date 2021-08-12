@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, CollectionPurposeType} from '../collections/collection';
+import {Collection} from '../collections/collection';
 import {Query, QueryStem} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
@@ -43,25 +43,6 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
-import {User} from '../users/user';
-
-export function isDocumentOwnerByPurpose(document: DocumentModel, collection: Collection, user: User): boolean {
-  if (!document || !collection || !user) {
-    return false;
-  }
-  if (collection.purpose?.type === CollectionPurposeType.Tasks) {
-    const assigneeAttributeId = collection.purpose?.metaData?.assigneeAttributeId;
-    const assigneeAttribute = findAttribute(collection.attributes, assigneeAttributeId);
-    if (assigneeAttribute) {
-      const assigneeData = document?.data?.[assigneeAttribute.id];
-      const assignees = (isArray(assigneeData) ? assigneeData : [assigneeData]).filter(value =>
-        isNotNullOrUndefined(value)
-      );
-      return assignees.includes(user.email);
-    }
-  }
-  return false;
-}
 
 export function getDocumentsAndLinksByStemData(
   data: DocumentsAndLinksData,

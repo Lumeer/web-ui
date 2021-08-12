@@ -9,48 +9,59 @@
           (positionChange)="onPositionChange($event)">
   <div *ngIf="options?.length > 0"
        class="card overflow-auto" [class.w-100]="fitParent">
-    <a *ngFor="let option of options | reverseArrayByDropdownPosition:(dropdownPosition$ | async); let index = index"
-       [class.active]="(activeValue$ | async) === option.value"
-       [class.cursor-default]="!editable"
-       (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
-       (click)="editable && onOptionSelect($event, option)"
-       class="dropdown-item text-truncate"
-       [class.dropdown-item-multi]="multiSelect"
-       data-test="select-item-option"
-       tabindex>
 
-      <i *ngIf="multiSelect" class="fa-fw far mr-2"
-         [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : 'fa-none'">
-      </i>
+    <ng-container
+      *ngFor="let group of options | reverseArrayByDropdownPosition:(dropdownPosition$ | async) | groupDropdownOptions">
 
-      <div class="option d-inline-block"
-           [style.background]="option.background"
-           [class.option-background]="!!option.background"
-           [style.color]="option.background && (option.background | contrastColor)">
+      <span *ngIf="group.group" class="text-muted py-2 px-4 small"
+            (click)="$event.preventDefault(); $event.stopPropagation()">{{group.group}}</span>
 
-        <img ngxGravatar
-             *ngIf="option.gravatar"
-             [email]="option.gravatar"
-             [size]="avatarSize"
-             [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
+      <a *ngFor="let option of group.options;"
+         [class.active]="(activeValue$ | async) === option.value"
+         [class.cursor-default]="!editable"
+         (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
+         (click)="editable && onOptionSelect($event, option)"
+         class="dropdown-item text-truncate"
+         [class.dropdown-item-multi]="multiSelect"
+         data-test="select-item-option"
+         tabindex>
 
-        <img *ngIf="option.imageUrl"
-             [src]="option.imageUrl"
-             [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
-
-        <icons-presenter *ngIf="option.icons && option.iconColors"
-                         [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
-                         [colors]="option.iconColors"
-                         [icons]="option.icons">
-        </icons-presenter>
-
-        <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
-           class="fa-fw {{option.icons[0]}}"
-           [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined">
+        <i *ngIf="multiSelect" class="fa-fw far mr-2"
+           [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : 'fa-none'">
         </i>
-        <span class="text-nowrap" [innerHTML]="(option.displayValue || option.value) | highlightText:highlightedText">
+
+        <div class="option d-inline-block"
+             [style.background]="option.background"
+             [style.border-color]="option.border"
+             [class.option-background]="!!option.background"
+             [class.option-border]="!!option.border"
+             [style.color]="option.color || (option.background && (option.background | contrastColor))">
+
+          <img ngxGravatar
+               *ngIf="option.gravatar"
+               [email]="option.gravatar"
+               [size]="avatarSize"
+               [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
+
+          <img *ngIf="option.imageUrl"
+               [src]="option.imageUrl"
+               [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
+
+          <icons-presenter *ngIf="option.icons && option.iconColors"
+                           [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
+                           [colors]="option.iconColors"
+                           [icons]="option.icons">
+          </icons-presenter>
+
+          <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
+             class="fa-fw {{option.icons[0]}}"
+             [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined">
+          </i>
+          <span class="text-nowrap" [innerHTML]="(option.displayValue || option.value) | highlightText:highlightedText">
         </span>
-      </div>
-    </a>
+        </div>
+      </a>
+
+    </ng-container>
   </div>
 </dropdown>

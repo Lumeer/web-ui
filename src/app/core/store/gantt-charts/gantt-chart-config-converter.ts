@@ -23,6 +23,7 @@ import {
   GANTT_PADDING,
   GanttChartBarModel,
   GanttChartConfig,
+  ganttChartConfigLatestVersion,
   GanttChartConfigVersion,
   GanttChartStemConfig,
 } from './gantt-chart';
@@ -31,6 +32,7 @@ import {
   GanttChartCollectionConfigV0,
   GanttChartConfigV0,
   GanttChartConfigV1,
+  GanttChartConfigV2,
   GanttChartStemConfigV1,
 } from './gantt-chart-old';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
@@ -48,8 +50,11 @@ function convertGanttChartDtoConfigToModelWithVersion(config: any): GanttChartCo
   let version = parseVersion(config);
   let convertedConfig = config;
 
-  while (version !== GanttChartConfigVersion.V2) {
+  while (version !== ganttChartConfigLatestVersion) {
     switch (version) {
+      case GanttChartConfigVersion.V2:
+        convertedConfig = convertGanttChartDtoToModelV2(convertedConfig);
+        break;
       case GanttChartConfigVersion.V1:
         convertedConfig = convertGanttChartDtoToModelV1(convertedConfig);
         break;
@@ -80,7 +85,17 @@ function addDefaults(config: GanttChartConfig): GanttChartConfig {
   return {...config, stemsConfigs};
 }
 
-function convertGanttChartDtoToModelV1(config: GanttChartConfigV1): GanttChartConfig {
+function convertGanttChartDtoToModelV2(config: GanttChartConfigV2): GanttChartConfig {
+  if (config.showDates) {
+    const stemsConfigs = (config.stemsConfigs || []).map(stemConfig => {
+      return {...stemConfig, attributes: [stemConfig.start, stemConfig.end].filter(model => !!model)};
+    });
+    return {...config, stemsConfigs, version: GanttChartConfigVersion.V3};
+  }
+  return {...config, version: GanttChartConfigVersion.V3};
+}
+
+function convertGanttChartDtoToModelV1(config: GanttChartConfigV1): GanttChartConfigV2 {
   const stemsConfigs: GanttChartStemConfig[] = (config.stemsConfigs || []).map(stemConfig => {
     const newConfig: GanttChartStemConfig = {};
     Object.entries(stemConfig.barsProperties || {}).forEach(([key, bar]) => {

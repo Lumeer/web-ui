@@ -25,6 +25,7 @@ import {dataResourcePermissions} from '../../utils/permission.utils';
 import {DataResourcePermissions} from '../../../core/model/data-resource-permissions';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Collection} from '../../../core/store/collections/collection';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataResourcePermissions',
@@ -34,8 +35,9 @@ export class DataResourcePermissionsPipe implements PipeTransform {
     dataResource: DataResource,
     resource: Collection | LinkType,
     permissions: AllowedPermissions,
-    user: User
+    user: User,
+    constraintData: ConstraintData
   ): DataResourcePermissions {
-    return dataResourcePermissions(dataResource, resource, permissions, user);
+    return dataResourcePermissions(dataResource, resource, permissions, user, constraintData);
   }
 }

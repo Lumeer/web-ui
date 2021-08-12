@@ -31,7 +31,7 @@
 
 </ng-container>
 
-<select-item-with-constraint class="d-block w-100 mt-2"
+<select-item-with-constraint class="d-block w-100 mt-3"
                              *ngFor="let category of categories; let index = index"
                              [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
                              [selectedId]="category | ganttChartSelectedItemWithConstraint"
@@ -43,4 +43,18 @@
                              (select)="onBarCategorySelect($event, index)"
                              (selectConstraint)="onBarCategoryConstraintSelect($event, index)"
                              (remove)="onBarCategoryRemoved(index)">
+</select-item-with-constraint>
+
+<select-item-with-constraint class="d-block w-100 mt-3"
+                             *ngFor="let attribute of attributes; let index = index"
+                             [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
+                             [selectedId]="attribute | ganttChartSelectedItemWithConstraint"
+                             [placeholderText]="'attribute' | ganttChartBarPlaceholder"
+                             [selectedConstraint]="attribute?.constraint"
+                             [emptyValue]="'attribute' | ganttChartBarEmptyValue"
+                             [buttonClasses]="buttonClasses"
+                             [removable]="true"
+                             (select)="onBarAttributeSelect($event, index)"
+                             (selectConstraint)="onBarAttributeConstraintSelect($event, index)"
+                             (remove)="onBarAttributeRemoved(index)">
 </select-item-with-constraint>

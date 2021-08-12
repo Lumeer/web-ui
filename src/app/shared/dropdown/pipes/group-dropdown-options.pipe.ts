@@ -18,16 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
+import {DropdownOption} from '../options/dropdown-option';
 
 @Pipe({
-  name: 'ganttChartBarPlaceholder',
+  name: 'groupDropdownOptions',
 })
-export class GanttChartBarPlaceholderPipe implements PipeTransform {
-  public transform(barProperty: string): string {
-    return parseSelectTranslation(
-      $localize`:@@ganttChart.bar.placeholder2:{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}`,
-      {barProperty}
-    );
+export class GroupDropdownOptionsPipe implements PipeTransform {
+  public transform(options: DropdownOption[]): {group: string; options: DropdownOption[]}[] {
+    return (options || []).reduce((groups, option) => {
+      const groupName = option.group || '';
+      let group = groups.find(group => group.group === groupName);
+      if (!group) {
+        group = {group: groupName, options: []};
+        groups.push(group);
+      }
+      group.options.push(option);
+
+      return groups;
+    }, []);
   }
 }

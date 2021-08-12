@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {User} from '../../../core/store/users/user';
-import {userCanDeleteDataResource, userCanReadDataResource} from '../../utils/permission.utils';
+import {ConstraintData, userCanReadDataResource} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataResourceIsReadable',
@@ -31,8 +31,9 @@ export class DataResourceIsReadablePipe implements PipeTransform {
     dataResource: DataResource,
     resource: AttributesResource,
     permissions: AllowedPermissions,
-    user: User
+    user: User,
+    constraintData: ConstraintData
   ): boolean {
-    return userCanReadDataResource(dataResource, resource, permissions, user);
+    return userCanReadDataResource(dataResource, resource, permissions, user, constraintData);
   }
 }

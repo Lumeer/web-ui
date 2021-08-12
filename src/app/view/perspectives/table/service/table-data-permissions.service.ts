@@ -35,6 +35,7 @@ import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.
 import {dataResourcePermissions} from '../../../../shared/utils/permission.utils';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 
 @Injectable()
 export class TableDataPermissionsService {
@@ -65,10 +66,11 @@ export class TableDataPermissionsService {
       this.store$.pipe(select(selectCollectionById(collectionId))),
       this.store$.pipe(select(selectCollectionPermissions(collectionId))),
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
+      this.store$.pipe(select(selectConstraintData)),
     ]).pipe(
       take(1),
-      map(([document, collection, permissions, user]) =>
-        dataResourcePermissions(document, collection, permissions, user)
+      map(([document, collection, permissions, user, constraintData]) =>
+        dataResourcePermissions(document, collection, permissions, user, constraintData)
       )
     );
   }
@@ -79,10 +81,11 @@ export class TableDataPermissionsService {
       this.store$.pipe(select(selectLinkTypeById(linkType))),
       this.store$.pipe(select(selectLinkTypePermissions(linkType))),
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
+      this.store$.pipe(select(selectConstraintData)),
     ]).pipe(
       take(1),
-      map(([linkInstance, linkType, permissions, user]) =>
-        dataResourcePermissions(linkInstance, linkType, permissions, user)
+      map(([linkInstance, linkType, permissions, user, constraintData]) =>
+        dataResourcePermissions(linkInstance, linkType, permissions, user, constraintData)
       )
     );
   }

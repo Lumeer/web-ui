@@ -29,7 +29,7 @@ import {AppState} from '../../../core/store/app.state';
 import {filter, map, mergeMap, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {CollectionAttributeFilter, Query} from '../../../core/store/navigation/query/query';
-import {selectDocumentsAndLinksByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
+import {selectDocumentsByCollectionAndQuery} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
@@ -102,9 +102,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
     return combineLatest([this.query$, this.linkType$]).pipe(
       switchMap(([query, linkType]) =>
         this.store$.pipe(
-          select(
-            selectDocumentsAndLinksByCollectionAndQuery(getOtherLinkedCollectionId(linkType, this.collectionId), query)
-          )
+          select(selectDocumentsByCollectionAndQuery(getOtherLinkedCollectionId(linkType, this.collectionId), query))
         )
       ),
       switchMap(documentsByQuery =>

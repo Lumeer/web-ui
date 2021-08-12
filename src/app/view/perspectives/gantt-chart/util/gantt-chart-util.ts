@@ -22,7 +22,7 @@ import {
   GANTT_PADDING,
   GanttChartBarModel,
   GanttChartConfig,
-  GanttChartConfigVersion,
+  ganttChartConfigLatestVersion,
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
@@ -103,7 +103,15 @@ function ganttStemConfigChanged(config1: GanttChartStemConfig, config2: GanttCha
 }
 
 function ganttStemConfigProperties(config: GanttChartStemConfig): GanttChartBarModel[] {
-  return [config.start, config.end, config.name, config.color, config.progress, ...(config.categories || [])];
+  return [
+    config.start,
+    config.end,
+    config.name,
+    config.color,
+    config.progress,
+    ...(config.categories || []),
+    ...(config.attributes || []),
+  ];
 }
 
 function ganttStemConfigDefinedProperties(config: GanttChartStemConfig): GanttChartBarModel[] {
@@ -162,6 +170,9 @@ function checkOrTransformGanttStemConfig(
     categories: (stemConfig.categories || [])
       .map(category => checkOrTransformQueryAttribute(category, attributesResourcesOrder))
       .filter(val => !!val),
+    attributes: (stemConfig.attributes || [])
+      .map(category => checkOrTransformQueryAttribute(category, attributesResourcesOrder))
+      .filter(val => !!val),
   };
 }
 
@@ -174,7 +185,7 @@ function createDefaultGanttChartConfig(
   const stemsConfigs = stems.map(stem => createDefaultGanttChartStemConfig(stem, collections, linkTypes));
   return {
     mode: GanttChartMode.Month,
-    version: GanttChartConfigVersion.V2,
+    version: ganttChartConfigLatestVersion,
     stemsConfigs: stemsConfigs,
     lockResize: true,
     columnWidth: GANTT_COLUMN_WIDTH,

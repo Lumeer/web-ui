@@ -21,8 +21,11 @@ export interface DropdownOption {
   gravatar?: string;
   imageUrl?: string;
   value: any;
+  color?: string;
   background?: string;
+  border?: string;
   displayValue?: string;
   icons?: string[];
   iconColors?: string[];
+  group?: string;
 }

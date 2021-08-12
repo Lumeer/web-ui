@@ -35,7 +35,7 @@ import {Collection} from '../../core/store/collections/collection';
 import {
   selectCollectionsByQueryWithoutLinks,
   selectReadableCollections,
-  selectDocumentsAndLinksByCollectionAndQuery,
+  selectDocumentsByCollectionAndQuery,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {
@@ -100,7 +100,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
     if (this.selectedCollection && this.query) {
       const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
       documents$ = this.store$.pipe(
-        select(selectDocumentsAndLinksByCollectionAndQuery(this.selectedCollection.id, collectionQuery))
+        select(selectDocumentsByCollectionAndQuery(this.selectedCollection.id, collectionQuery))
       );
       loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)), distinctUntilChanged());
     } else {

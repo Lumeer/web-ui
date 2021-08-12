@@ -18,16 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
+import {User} from '../../../../core/store/users/user';
+import {Team} from '../../../../core/store/teams/team';
 
 @Pipe({
-  name: 'ganttChartBarPlaceholder',
+  name: 'usersAndTeamsNames',
 })
-export class GanttChartBarPlaceholderPipe implements PipeTransform {
-  public transform(barProperty: string): string {
-    return parseSelectTranslation(
-      $localize`:@@ganttChart.bar.placeholder2:{barProperty, select, name {Name} start {Start} end {End} progress {Progress} category {Category} subCategory {Sub-category} color {Color} attribute {Column}}`,
-      {barProperty}
-    );
+export class UsersAndTeamsNamesPipe implements PipeTransform {
+  public transform(users: User[], teams: Team[]): string {
+    return [...(teams || []).map(team => team.name), ...(users || []).map(user => user.name || user.email)].join(', ');
   }
 }

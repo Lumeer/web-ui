@@ -22,6 +22,7 @@ import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {User} from '../../../core/store/users/user';
 import {dataResourcePermissions} from '../../utils/permission.utils';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Pipe({
   name: 'dataResourceIsWritable',
@@ -31,9 +32,10 @@ export class DataResourceIsWritablePipe implements PipeTransform {
     dataResource: DataResource,
     resource: AttributesResource,
     permissions: AllowedPermissions,
-    user: User
+    user: User,
+    constraintData: ConstraintData
   ): boolean {
-    const dataPermissions = dataResourcePermissions(dataResource, resource, permissions, user);
+    const dataPermissions = dataResourcePermissions(dataResource, resource, permissions, user, constraintData);
     return dataResource?.id ? dataPermissions?.edit : dataPermissions?.create;
   }
 }

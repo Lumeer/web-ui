@@ -196,6 +196,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           multi: this.configForm.get(UserConstraintFormControl.Multi).value,
           externalUsers: this.configForm.get(UserConstraintFormControl.ExternalUsers).value,
           onlyIcon: !this.configForm.get(UserConstraintFormControl.OnlyIcon).value,
+          type: this.configForm.get(UserConstraintFormControl.Type).value,
         };
       case ConstraintType.Link:
         return {

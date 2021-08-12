@@ -35,15 +35,10 @@ export class GanttChartConfigSettingsComponent {
   public configChange = new EventEmitter<GanttChartConfig>();
 
   public readonly savePositionId = generateId();
-  public readonly showDatesId = generateId();
   public readonly lockResizeId = generateId();
 
   public onSavePositionChange(checked: boolean) {
     this.onBooleanPropertyChange('positionSaved', checked);
-  }
-
-  public onShowDatesChange(checked: boolean) {
-    this.onBooleanPropertyChange('showDates', checked);
   }
 
   public onLockResizeChange(checked: boolean) {
