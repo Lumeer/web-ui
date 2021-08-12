@@ -1003,8 +1003,8 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
       {id: null, x: 'Lmr', xTitle: 'Lmr', y: 680, title: '680', color: 'rgba(18,52,86,1)', size: null, xSort: 90},
-      {id: null, x: 'Dance', xTitle: 'Dance', y: 428, title: '428', color: 'rgba(18,52,86,1)', size: null, xSort: 7},
       {id: null, x: 'Glass', xTitle: 'Glass', y: 1420, title: '1420', color: 'rgba(18,52,86,1)', size: null, xSort: 44},
+      {id: null, x: 'Dance', xTitle: 'Dance', y: 428, title: '428', color: 'rgba(18,52,86,1)', size: null, xSort: 7},
       {id: null, x: 'Sport', xTitle: 'Sport', y: 1808, title: '1808', color: 'rgba(18,52,86,1)', size: null, xSort: 3},
     ]);
   });
