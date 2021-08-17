@@ -47,4 +47,12 @@ export class FileApiService {
       reportProgress: true,
     });
   }
+
+  public postFileWithProgress(url: string, contentType: string, file: Blob): Observable<HttpEvent<any>> {
+    return this.http.post(url, file, {
+      headers: new HttpHeaders({'Content-Type': contentType}),
+      observe: 'events',
+      reportProgress: true,
+    });
+  }
 }

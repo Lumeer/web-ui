@@ -47,6 +47,10 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
+import {FileAttachment} from '../../core/store/file-attachments/file-attachment.model';
+import {ProjectService} from '../../core/data-service';
+import {FileApiService} from '../../core/service/file-api.service';
+import {HttpEvent, HttpEventType} from '@angular/common/http';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -57,6 +61,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public projectCodes$: Observable<string[]>;
   public project$ = new BehaviorSubject<Project>(null);
   public permissions$: Observable<AllowedPermissions>;
+  public uploadProgress$ = new BehaviorSubject<number>(null);
 
   public readonly projectType = ResourceType.Project;
 
@@ -74,7 +79,9 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private projectService: ProjectService,
+    private fileApiService: FileApiService
   ) {}
 
   public ngOnInit() {
@@ -268,5 +275,37 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
           })
         )
       );
+  }
+
+  public uploadRawProjectContent(file: File) {
+    combineLatest([
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+      this.store$.pipe(select(selectProjectByWorkspace)),
+    ])
+      .pipe(first())
+      .subscribe(([organization, project]) => {
+        const url = this.projectService.getUploadRawContentUrl(organization.id, project.id);
+
+        if (!!url) {
+          this.fileApiService.postFileWithProgress(url, file.type, file).subscribe(
+            (event: HttpEvent<any>) => {
+              switch (event.type) {
+                case HttpEventType.Response:
+                  this.uploadProgress$.next(null);
+                  const successMessage = $localize`:@@project.settings.upload.success:The new project content was successfully added.`;
+                  this.notificationService.success(successMessage);
+                  return;
+                case HttpEventType.UploadProgress:
+                  this.uploadProgress$.next(Math.round((event.loaded / event.total) * 100));
+                  return;
+              }
+            },
+            () => {
+              const errorMessage = $localize`:@@project.settings.upload.error:I was not possible to upload and process this project file.`;
+              this.notificationService.error(errorMessage);
+            }
+          );
+        }
+      });
   }
 }
