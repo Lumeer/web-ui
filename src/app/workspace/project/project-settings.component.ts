@@ -22,7 +22,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, first, map, take, takeUntil} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -47,7 +47,6 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
-import {FileAttachment} from '../../core/store/file-attachments/file-attachment.model';
 import {ProjectService} from '../../core/data-service';
 import {FileApiService} from '../../core/service/file-api.service';
 import {HttpEvent, HttpEventType} from '@angular/common/http';
