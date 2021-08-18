@@ -32,7 +32,7 @@
       </div>
 
       <project-upload
-        *ngIf="data.permissions?.roles?.Manage"
+        *ngIf="data.permissions?.roles?.Manage && data.permissions?.roles?.CollectionContribute && data.permissions?.roles?.LinkContribute && data.permissions?.roles?.ViewContribute"
         [uploadProgress]="uploadProgress$ | async"
         (add)="uploadRawProjectContent($event)">
       </project-upload>
