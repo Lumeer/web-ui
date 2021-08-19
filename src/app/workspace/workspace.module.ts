@@ -49,6 +49,7 @@ import {TeamsModule} from '../shared/teams/teams.module';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 import {OrganizationTabGuard} from './organization/organization-tab.guard';
 import {ProjectTabGuard} from './project/project-tab.guard';
+import {ProjectUploadComponent} from './project/project-upload/project-upload.component';
 
 @NgModule({
   imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule],
@@ -72,6 +73,7 @@ import {ProjectTabGuard} from './project/project-tab.guard';
     ProjectTemplateScriptComponent,
     OrganizationTeamsComponent,
     ProjectTeamsComponent,
+    ProjectUploadComponent,
   ],
   exports: [],
   providers: [

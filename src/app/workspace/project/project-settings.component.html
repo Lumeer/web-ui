@@ -31,6 +31,12 @@
         <i class="far fa-download" aria-hidden="true"></i>&nbsp;
       </div>
 
+      <project-upload
+        *ngIf="data.permissions?.roles?.Manage && data.permissions?.roles?.CollectionContribute && data.permissions?.roles?.LinkContribute && data.permissions?.roles?.ViewContribute"
+        [uploadProgress]="uploadProgress$ | async"
+        (add)="uploadRawProjectContent($event)">
+      </project-upload>
+
       <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-danger mr-3"
            *ngIf="data.permissions?.roles?.Manage"
            (click)="onSampleDataEraseClick()"

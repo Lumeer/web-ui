@@ -101,6 +101,10 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     });
   }
 
+  public getUploadRawContentUrl(organizationId: string, projectId: string): string {
+    return `${this.apiPrefix(organizationId, projectId)}/raw`;
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }

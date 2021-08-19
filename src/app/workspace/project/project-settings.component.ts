@@ -21,8 +21,8 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take, takeUntil, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {filter, first, map, take, takeUntil} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -43,10 +43,13 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {ModalService} from '../../shared/modal/modal.service';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextInputModalComponent} from '../../shared/modal/text-input/text-input-modal.component';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {getLastUrlPart} from '../../shared/utils/common.utils';
+import {ProjectService} from '../../core/data-service';
+import {FileApiService} from '../../core/service/file-api.service';
+import {HttpEvent, HttpEventType} from '@angular/common/http';
+import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -57,6 +60,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   public projectCodes$: Observable<string[]>;
   public project$ = new BehaviorSubject<Project>(null);
   public permissions$: Observable<AllowedPermissions>;
+  public uploadProgress$ = new BehaviorSubject<number>(null);
 
   public readonly projectType = ResourceType.Project;
 
@@ -74,7 +78,9 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
     private store$: Store<AppState>,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private projectService: ProjectService,
+    private fileApiService: FileApiService
   ) {}
 
   public ngOnInit() {
@@ -254,19 +260,41 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDownloadRawContent() {
-    combineLatest([
-      this.store$.pipe(select(selectOrganizationByWorkspace)),
-      this.store$.pipe(select(selectProjectByWorkspace)),
-    ])
-      .pipe(first())
-      .subscribe(([org, proj]) =>
-        this.store$.dispatch(
-          new ProjectsAction.DownloadRawContent({
-            organizationId: org.id,
-            projectId: proj.id,
-            projectName: (proj.code?.toLocaleLowerCase() || 'project') + '.json',
-          })
-        )
+    this.store$.pipe(select(selectWorkspaceModels), first()).subscribe(models => {
+      this.store$.dispatch(
+        new ProjectsAction.DownloadRawContent({
+          organizationId: models.organization.id,
+          projectId: models.project.id,
+          projectName: (models.project.code?.toLocaleLowerCase() || 'project') + '.json',
+        })
       );
+    });
+  }
+
+  public uploadRawProjectContent(file: File) {
+    this.store$.pipe(select(selectWorkspaceModels), first()).subscribe(models => {
+      const url = this.projectService.getUploadRawContentUrl(models.organization.id, models.project.id);
+
+      if (!!url) {
+        this.fileApiService.postFileWithProgress(url, file.type, file).subscribe(
+          (event: HttpEvent<any>) => {
+            switch (event.type) {
+              case HttpEventType.Response:
+                this.uploadProgress$.next(null);
+                const successMessage = $localize`:@@project.settings.upload.success:The new project content was successfully added.`;
+                this.notificationService.success(successMessage);
+                return;
+              case HttpEventType.UploadProgress:
+                this.uploadProgress$.next(Math.round((event.loaded / event.total) * 100));
+                return;
+            }
+          },
+          () => {
+            const errorMessage = $localize`:@@project.settings.upload.error:I was not possible to upload and process this project file.`;
+            this.notificationService.error(errorMessage);
+          }
+        );
+      }
+    });
   }
 }

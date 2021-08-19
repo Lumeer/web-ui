@@ -1,0 +1,12 @@
+<div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success mr-3"
+     title="Upload project content" i18n-title="@@project.settings.collections.uploadContent">
+  <input type="file"
+         class="d-none"
+         id="uploadProjectFile01"
+         accept="application/json"
+         [attr.disabled]="!!uploadProgress || null"
+         (change)="onFileChange($event)">
+  <label for="uploadProjectFile01" class="m-0">
+    <i class="far" [ngClass]="!uploadProgress ? ['fa-upload'] : ['fa-spinner fa-spin']" aria-hidden="true"></i>&nbsp;
+  </label>
+</div>

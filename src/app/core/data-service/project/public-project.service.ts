@@ -115,6 +115,10 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return of();
   }
 
+  public getUploadRawContentUrl(organizationId: string, projectId: string): string {
+    return '';
+  }
+
   private apiPrefix(organizationId: string, projectId?: string): string {
     return `${this.baseApiPrefix(organizationId)}${projectId ? `/${projectId}` : ''}`;
   }
