@@ -340,7 +340,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private saveValueByOption(action: DataInputSaveAction, option: DropdownOption) {
-    const dataValue = this.value.copy(option.value);
+    const dataValue = this.value.copy(option?.value || '');
     this.save.emit({action, dataValue});
   }
 
