@@ -12,10 +12,7 @@
       <post-it-collection-add-button (clicked)="onNewCollection()">
       </post-it-collection-add-button>
 
-      <post-it-collection-import-button class="ml-2"
-                                        (error)="onError($event)"
-                                        (import)="onImport($event)">
-      </post-it-collection-import-button>
+      <table-import-button class="ml-2"></table-import-button>
     </div>
   </ng-container>
 </empty-state>

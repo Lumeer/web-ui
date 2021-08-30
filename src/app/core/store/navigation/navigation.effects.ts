@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {filter, map, withLatestFrom} from 'rxjs/operators';
+import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.service';
 import {AppState} from '../app.state';
@@ -56,7 +56,7 @@ export class NavigationEffects {
       ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
       withLatestFrom(this.store$.pipe(select(selectViewQuery))),
       map(([action, query]) => {
-        const stems = query.stems || [];
+        const stems = [...(query.stems || [])];
         stems.push({collectionId: action.payload.collectionId});
 
         return newQueryAction({...query, stems});

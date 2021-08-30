@@ -142,7 +142,7 @@ export namespace CollectionsAction {
       public payload: {
         format: string;
         importedCollection: ImportedCollection;
-        callback?: (collection: Collection) => void;
+        onSuccess?: (collection: Collection) => void;
       }
     ) {}
   }

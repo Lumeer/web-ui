@@ -34,7 +34,6 @@ import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {Router} from '@angular/router';
 import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
-import {CollectionImportData} from './content/import-button/post-it-collection-import-button.component';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 import {selectViewQuery} from '../../core/store/views/views.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
@@ -109,19 +108,5 @@ export class PostItCollectionsComponent implements OnInit {
     if (queryIsNotEmpty(this.query)) {
       this.store$.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
     }
-  }
-
-  public onImport(data: {importData: CollectionImportData; emptyCollection: Collection}) {
-    const {importData, emptyCollection} = data;
-    const newCollection = {...emptyCollection, name: importData.name};
-    const importedCollection = {collection: newCollection, data: importData.result};
-
-    this.store$.dispatch(
-      new CollectionsAction.Import({
-        format: importData.format,
-        importedCollection,
-        callback: collection => this.onCreateCollection(collection),
-      })
-    );
   }
 }

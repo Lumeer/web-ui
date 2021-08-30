@@ -25,7 +25,6 @@ import {RouterModule} from '@angular/router';
 import {PipesModule} from '../pipes/pipes.module';
 import {PostItCollectionsComponent} from './post-it-collections.component';
 import {PostItCollectionNameComponent} from './content/collection-name/post-it-collection-name.component';
-import {PostItCollectionImportButtonComponent} from './content/import-button/post-it-collection-import-button.component';
 import {PostItCollectionAddButtonComponent} from './content/add-button/post-it-collection-add-button.component';
 import {PostItCollectionComponent} from './content/post-it/post-it-collection.component';
 import {PickerModule} from '../picker/picker.module';
@@ -53,7 +52,6 @@ import {ButtonModule} from '../button/button.module';
     PostItCollectionComponent,
     PostItCollectionNameComponent,
     PostItCollectionAddButtonComponent,
-    PostItCollectionImportButtonComponent,
     EmptyCollectionsComponent,
     PostItCollectionsContentComponent,
   ],

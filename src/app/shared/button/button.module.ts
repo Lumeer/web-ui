@@ -20,10 +20,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SeeMoreButtonComponent} from './see-more/see-more-button.component';
+import {TableImportButtonComponent} from './import/table-import-button.component';
 
 @NgModule({
-  declarations: [SeeMoreButtonComponent],
+  declarations: [SeeMoreButtonComponent, TableImportButtonComponent],
   imports: [CommonModule],
-  exports: [SeeMoreButtonComponent],
+  exports: [SeeMoreButtonComponent, TableImportButtonComponent],
 })
 export class ButtonModule {}

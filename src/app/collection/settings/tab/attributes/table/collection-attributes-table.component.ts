@@ -25,6 +25,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX} from '../../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'collection-attributes-table',
@@ -57,7 +58,7 @@ export class CollectionAttributesTableComponent {
   @ViewChildren('attributeNameInput')
   public attributesInputs: QueryList<InputBoxComponent>;
 
-  public readonly inputRegex = /\./g;
+  public readonly inputRegex = FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX;
   public readonly constraintType = ConstraintType;
 
   public searchString: string;

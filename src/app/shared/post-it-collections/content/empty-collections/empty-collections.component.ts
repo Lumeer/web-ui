@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import {Query} from '../../../../core/store/navigation/query/query';
-import {CollectionImportData} from '../import-button/post-it-collection-import-button.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -39,12 +38,6 @@ export class EmptyCollectionsComponent implements OnInit {
   @Output()
   public newCollection = new EventEmitter();
 
-  @Output()
-  public error = new EventEmitter<string>();
-
-  @Output()
-  public import = new EventEmitter<CollectionImportData>();
-
   public projectPermissions$: Observable<AllowedPermissions>;
 
   constructor(private store$: Store<AppState>) {}
@@ -55,13 +48,5 @@ export class EmptyCollectionsComponent implements OnInit {
 
   public onNewCollection() {
     this.newCollection.emit();
-  }
-
-  public onError(message: string) {
-    this.error.emit(message);
-  }
-
-  public onImport(importInfo: CollectionImportData) {
-    this.import.emit(importInfo);
   }
 }
