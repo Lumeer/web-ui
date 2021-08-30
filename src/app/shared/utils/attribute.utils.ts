@@ -33,6 +33,7 @@ import {
 } from '@lumeer/data-filters';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
+export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;
 
 export function attributeHasAnyFunction(attribute: Attribute, rules?: Rule[]): boolean {
   return attributeHasFunction(attribute) || attributeHasRuleFunction(attribute, rules);
