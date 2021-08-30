@@ -23,6 +23,19 @@ import {Query} from '../navigation/query/query';
 import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
 import {AttributeFilter, ConditionType, Constraint, ConstraintType} from '@lumeer/data-filters';
+import {safeGetRandomIcon} from '../../../shared/picker/icons';
+import * as Colors from '../../../shared/picker/colors';
+
+export function createEmptyCollection(): Collection {
+  const colors = Colors.palette;
+  return {
+    name: '',
+    color: colors[Math.round(Math.random() * colors.length)],
+    icon: safeGetRandomIcon(),
+    description: '',
+    attributes: [],
+  };
+}
 
 export function isCollectionAttributeEditable(
   attributeId: string,

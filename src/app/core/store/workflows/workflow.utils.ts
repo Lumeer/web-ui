@@ -101,17 +101,26 @@ function checkOrTransformWorkflowStemsConfig(
   return (query?.stems || []).reduce<WorkflowStemConfig[]>((newConfigs, stem) => {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
-    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
-    if (stemConfig?.[0]?.collection) {
-      newConfigs.push(checkOrTransformWorkflowStemConfig(stemConfig[0], stem, collections, linkTypes));
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1)?.[0];
+    if (stemConfig?.collection) {
+      const newStemConfig = checkOrTransformWorkflowStemConfig(stemConfig, stem, collections, linkTypes);
+      if (newStemConfig?.collection) {
+        newConfigs.push(newStemConfig);
+      } else {
+        newConfigs.push(createNewStemConfig(stem));
+      }
     } else {
-      newConfigs.push({
-        stem: queryStemWithoutFilters(stem),
-        collection: {resourceId: stem.collectionId, resourceIndex: 0, resourceType: AttributesResourceType.Collection},
-      });
+      newConfigs.push(createNewStemConfig(stem));
     }
     return newConfigs;
   }, []);
+}
+
+function createNewStemConfig(stem: QueryStem): WorkflowStemConfig {
+  return {
+    stem: queryStemWithoutFilters(stem),
+    collection: {resourceId: stem.collectionId, resourceIndex: 0, resourceType: AttributesResourceType.Collection},
+  };
 }
 
 function checkOrTransformWorkflowStemConfig(

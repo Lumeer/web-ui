@@ -36,9 +36,6 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
 import {QueryParam} from '../../../core/store/navigation/query-param';
-import {CollectionImportData} from './import-button/post-it-collection-import-button.component';
-import {safeGetRandomIcon} from '../../picker/icons';
-import * as Colors from '../../picker/colors';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {BehaviorSubject} from 'rxjs';
@@ -49,6 +46,7 @@ import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {createEmptyCollection} from '../../../core/store/collections/collection.util';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -99,16 +97,11 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   @Output()
   public create = new EventEmitter<Collection>();
 
-  @Output()
-  public import = new EventEmitter<{importData: CollectionImportData; emptyCollection: Collection}>();
-
   public allCollections$ = new BehaviorSubject<Collection[]>([]);
   public selectedCollections$ = new BehaviorSubject<string[]>([]);
   public correlationIdsOrder = [];
 
   public readonly canImportCollection: boolean;
-
-  private readonly colors = Colors.palette;
 
   constructor(
     private toggleService: CollectionFavoriteToggleService,
@@ -197,29 +190,11 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   }
 
   public createNewCollection() {
-    const newCollection = {...this.emptyCollection(), correlationId: generateCorrelationId()};
+    const newCollection = {...createEmptyCollection(), correlationId: generateCorrelationId()};
     this.correlationIdsOrder.unshift(newCollection.correlationId);
     this.allCollections$.next([newCollection, ...this.allCollections$.getValue()]);
 
     this.checkNumberOfUncreatedCollections();
-  }
-
-  public notifyOfError(error: string) {
-    this.notificationService.error(error);
-  }
-
-  public onImportCollection(importData: CollectionImportData) {
-    this.import.emit({importData, emptyCollection: this.emptyCollection()});
-  }
-
-  private emptyCollection(): Collection {
-    return {
-      name: '',
-      color: this.colors[Math.round(Math.random() * this.colors.length)],
-      icon: safeGetRandomIcon(),
-      description: '',
-      attributes: [],
-    };
   }
 
   private checkNumberOfUncreatedCollections() {

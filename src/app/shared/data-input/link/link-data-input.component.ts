@@ -70,6 +70,8 @@ export class LinkDataInputComponent implements OnChanges {
   public linkValue: string;
   public completeLinkValue: SafeUrl;
   public titleValue: string;
+  public rawLinkValue: string;
+  public rawTitleValue: string;
 
   constructor(
     public element: ElementRef,
@@ -82,6 +84,8 @@ export class LinkDataInputComponent implements OnChanges {
       this.linkValue = this.value.linkValue;
       this.completeLinkValue = this.domSanitizer.bypassSecurityTrustUrl(completeLinkValue(this.linkValue));
       this.titleValue = this.value.titleValue;
+      this.rawLinkValue = this.value.rawLinkValue;
+      this.rawTitleValue = this.value.rawTitleValue;
     }
   }
 

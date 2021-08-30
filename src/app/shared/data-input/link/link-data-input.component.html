@@ -5,8 +5,8 @@
    (click)="onLinkClick($event)">{{titleValue || linkValue}}</a>
 
 <link-input-dropdown *ngIf="!readonly"
-                     [linkValue]="linkValue"
-                     [titleValue]="titleValue"
+                     [linkValue]="rawLinkValue"
+                     [titleValue]="rawTitleValue"
                      [origin]="element"
                      (cancel)="onCancel()"
                      (save)="onSave($event)">

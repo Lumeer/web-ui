@@ -649,7 +649,7 @@ export class TablesEffects {
             const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
             return this.store$.pipe(
               select(selectCollectionPermissions(collectionId)),
-              map(permissions => permissions?.roles?.DataContribute),
+              map(permissions => permissions?.rolesWithView?.DataContribute),
               distinctUntilChanged(),
               mergeMap(canCreateDocuments => {
                 const {cursor} = action.payload;

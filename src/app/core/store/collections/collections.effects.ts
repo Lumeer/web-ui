@@ -170,9 +170,9 @@ export class CollectionsEffects {
           mergeMap(collection => {
             const actions: Action[] = [new CollectionsAction.ImportSuccess({collection: collection})];
 
-            const {callback} = action.payload;
-            if (callback) {
-              actions.push(new CommonAction.ExecuteCallback({callback: () => callback(collection)}));
+            const {onSuccess} = action.payload;
+            if (onSuccess) {
+              actions.push(...createCallbackActions(onSuccess, collection));
             }
 
             return actions;
