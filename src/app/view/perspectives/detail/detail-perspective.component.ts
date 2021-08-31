@@ -28,7 +28,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
-import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
+import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
@@ -75,6 +75,7 @@ export class DetailPerspectiveComponent implements OnInit {
 
   private query: Query;
   private collection: Collection;
+  private createdDocuments: string[] = [];
 
   public constructor(private store$: Store<AppState>, private perspectiveService: PerspectiveService) {}
 
@@ -166,15 +167,23 @@ export class DetailPerspectiveComponent implements OnInit {
         }
       }),
       filter(loaded => loaded),
-      mergeMap(() =>
-        this.store$.pipe(
-          select(selectDocumentsByCustomQuery(collectionQuery)),
-          map(
-            documents => (cursor?.documentId && documents.find(doc => doc.id === cursor.documentId)) || documents?.[0]
-          ),
-          map(document => ({collection, document}))
-        )
-      )
+      mergeMap(() => this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)))),
+      switchMap(documents => {
+        if (cursor?.documentId) {
+          const documentByCursor = documents.find(doc => doc.id === cursor.documentId);
+          if (documentByCursor) {
+            return of(documentByCursor);
+          }
+          if (this.createdDocuments.includes(cursor.documentId)) {
+            return this.store$.pipe(
+              select(selectDocumentById(cursor.documentId)),
+              map(document => document || documents[0])
+            );
+          }
+        }
+        return of(documents[0]);
+      }),
+      map(document => ({collection, document}))
     );
   }
 
@@ -203,6 +212,11 @@ export class DetailPerspectiveComponent implements OnInit {
         take(1)
       )
       .subscribe(document => this.emit(collection, document));
+  }
+
+  public onCreatedDocument(document: DocumentModel) {
+    this.createdDocuments.push(document.id);
+    this.selectDocument(document);
   }
 
   public selectDocument(document: DocumentModel) {
@@ -259,7 +273,7 @@ export class DetailPerspectiveComponent implements OnInit {
               document,
               onSuccess: () => this.creatingDocument$.next(false),
               onFailure: () => this.creatingDocument$.next(false),
-              afterSuccess: createdDocument => this.selectDocument(createdDocument),
+              afterSuccess: createdDocument => this.onCreatedDocument(createdDocument),
             })
           );
         });

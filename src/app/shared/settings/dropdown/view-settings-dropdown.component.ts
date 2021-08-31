@@ -90,7 +90,8 @@ export class ViewSettingsDropdownComponent implements OnInit {
       map(([query, collections, linkTypes]) => {
         return (query?.stems || []).reduce<AttributesResourceData[]>((order, stem) => {
           const stemOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes).filter(
-            resource => !order.some(o => o.resource.id === resource.id)
+            resource =>
+              !order.some(o => o.resource.id === resource.id && o.type === getAttributesResourceType(resource))
           );
 
           for (const resource of stemOrder) {

@@ -26,7 +26,6 @@ import {Query, QueryStem} from '../navigation/query/query';
 import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
-  getBaseCollectionIdsFromQuery,
   queryContainsOnlyFulltexts,
   queryIsEmpty,
   queryStemsAreSame,
@@ -38,11 +37,7 @@ export function modifyDetailPerspectiveQuery(query: Query, collections: Collecti
     const stems: QueryStem[] = (collections || []).map(collection => ({collectionId: collection.id}));
     return {stems, fulltexts: query?.fulltexts};
   }
-  const collectionIdsInQuery = getBaseCollectionIdsFromQuery(query);
-  const stems: QueryStem[] = (collections || [])
-    .filter(collection => collectionIdsInQuery.includes(collection.id))
-    .map(collection => ({collectionId: collection.id}));
-  return {stems, fulltexts: query?.fulltexts};
+  return query;
 }
 
 export function createFlatResourcesSettingsQuery(collections: Collection[], linkTypes: LinkType[] = []): Query {
