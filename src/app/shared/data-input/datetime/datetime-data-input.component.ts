@@ -197,15 +197,19 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
       return;
     }
 
+    this.onSaveDataValue(this.value.copy(date));
+  }
+
+  private onSaveDataValue(dataValue: DateTimeDataValue) {
     this.pendingUpdate = null;
-    this.value = this.value.copy(date);
+    this.value = dataValue;
     this.save.emit({action: DataInputSaveAction.Button, dataValue: this.value});
   }
 
   public onSaveOnClose(inputValue: string, selectedDate: Date) {
-    const inputDate = inputValue && this.value.parseInput(inputValue).toDate();
-    if (!inputValue || isDateValid(inputDate)) {
-      this.onSave(inputDate);
+    const inputDataValue = inputValue && this.value.parseInput(inputValue);
+    if (!inputValue || isDateValid(inputDataValue?.toDate())) {
+      this.onSaveDataValue(inputDataValue);
     } else {
       this.onSave(selectedDate);
     }

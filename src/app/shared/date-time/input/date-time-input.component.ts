@@ -34,6 +34,7 @@ import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {DateTimeConstraint, resetUnusedMomentPart} from '@lumeer/data-filters';
 import * as moment from 'moment';
+import {isDateValid} from '../../utils/common.utils';
 
 @Component({
   selector: 'date-time-input',
@@ -112,8 +113,8 @@ export class DateTimeInputComponent implements OnChanges {
   }
 
   public onSave(date: Date) {
-    const momentDate = this.asUtc ? moment.utc(date) : moment(date);
-    this.valueChange.emit(resetUnusedMomentPart(momentDate, this.format).toDate());
+    const momentDate = isDateValid(date) ? (this.asUtc ? moment.utc(date) : moment(date)) : null;
+    this.valueChange.emit(resetUnusedMomentPart(momentDate, this.format)?.toDate());
   }
 
   public onCancel() {
