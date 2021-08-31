@@ -20,7 +20,7 @@
            [class.pt-3]="!(options | hasDateOption)">
         <div *ngIf="options | hasTimeOption"
              class="d-flex flex-column flex-grow-1 align-items-center justify-content-center mb-3">
-          <timepicker [formControlName]="'date'"
+          <timepicker formControlName="time"
                       [min]="min"
                       [max]="max"
                       [showMeridian]="options?.meridian"

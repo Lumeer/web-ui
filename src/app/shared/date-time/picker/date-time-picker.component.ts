@@ -33,9 +33,8 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
-import {BsDatepickerInlineConfig} from 'ngx-bootstrap/datepicker';
+import {BsDatepickerInlineConfig, BsDatepickerInlineDirective} from 'ngx-bootstrap/datepicker';
 import {Subscription} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
@@ -82,6 +81,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
+  @ViewChild(BsDatepickerInlineDirective)
+  public datePicker: BsDatepickerInlineDirective;
+
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
     DropdownPosition.TopStart,
@@ -93,6 +95,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   public form = new FormGroup({
     date: new FormControl(),
+    time: new FormControl(),
   });
 
   public datePickerConfig: Partial<BsDatepickerInlineConfig>;
@@ -100,12 +103,8 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
   private hasTimeOptions: boolean;
-  private selectedValue: Date;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if ((changes.value || changes.asUtc) && this.value) {
-      this.dateControl.setValue(offsetTime(this.value, false, this.asUtc));
-    }
     if ((changes.options || changes.asUtc) && this.options) {
       this.datePickerConfig = {
         containerClass: 'box-shadow-none theme-default',
@@ -115,6 +114,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
       };
       this.hasTimeOptions = hasTimeOption(this.options);
     }
+    if ((changes.value || changes.asUtc || changes.options) && this.value) {
+      this.setCurrentDateAndTime(this.setupDate());
+    }
     if (changes.asUtc) {
       this.timeZone = this.asUtc
         ? 'UTC'
@@ -122,20 +124,34 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  public ngOnInit() {
-    this.subscriptions.add(this.subscribeToDateChange());
+  private setupDate(): Date {
+    const date = offsetTime(this.value, false, this.asUtc);
+    if (!this.hasTimeOptions) {
+      date.setHours(0, 0, 0, 0);
+    }
+    return date;
   }
 
-  private subscribeToDateChange(): Subscription {
-    return this.dateControl.valueChanges
-      .pipe(
-        map(time => offsetTime(time, true, this.asUtc)),
-        filter(value => isDateValid(value) && (!isDateValid(this.value) || value.getTime() !== this.value.getTime()))
-      )
-      .subscribe(value => {
-        this.selectedValue = value;
-        this.valueChange.emit(value);
-      });
+  public ngOnInit() {
+    this.subscriptions.add(this.subscribeToTimeChange());
+  }
+
+  private subscribeToTimeChange(): Subscription {
+    return this.timeControl.valueChanges.subscribe(() => this.emitDateChange());
+  }
+
+  public onDateChange(date: Date) {
+    this.dateControl.setValue(date);
+    this.timeControl.setValue(this.getCurrentDate(), {emitEvent: false});
+
+    this.emitDateChange();
+  }
+
+  private emitDateChange() {
+    const saveDate = this.getSaveDate();
+    if (this.value?.getTime() !== saveDate?.getTime()) {
+      this.valueChange.emit(this.getSaveDate());
+    }
   }
 
   public ngOnDestroy() {
@@ -176,15 +192,29 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  public onDateChange(date: Date) {
-    const parsedDate = date;
-    if (date && (!this.hasTimeOptions || !this.dateControl.value)) {
-      parsedDate.setHours(0, 0, 0, 0);
-    }
+  private setCurrentDateAndTime(date: Date) {
+    this.dateControl.setValue(new Date(date));
+    this.timeControl.setValue(new Date(date));
+  }
+
+  private getCurrentDate(): Date {
     const currentDate = <Date>this.dateControl.value;
-    if (parsedDate?.getTime() !== currentDate?.getTime()) {
-      this.dateControl.setValue(parsedDate);
+    const currentTime = <Date>this.timeControl.value;
+    if (isDateValid(currentDate) && isDateValid(currentTime)) {
+      const date = new Date(currentDate);
+      date.setHours(
+        currentTime.getHours(),
+        currentTime.getMinutes(),
+        currentTime.getSeconds(),
+        currentTime.getMilliseconds()
+      );
+      return date;
     }
+    return currentDate;
+  }
+
+  private getSaveDate(): Date {
+    return this.getCurrentDate();
   }
 
   public onCancel(event?: MouseEvent) {
@@ -198,11 +228,15 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public onSave(event: MouseEvent) {
     event.stopPropagation();
     this.close();
-    this.save.emit(offsetTime(this.dateControl.value, true, this.asUtc));
+    this.save.emit(this.getSaveDate());
   }
 
   public get dateControl(): AbstractControl {
     return this.form.get('date');
+  }
+
+  public get timeControl(): AbstractControl {
+    return this.form.get('time');
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -213,8 +247,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onCloseByClickOutside() {
-    this.saveOnClose.emit(this.selectedValue);
-    this.selectedValue = null;
+    this.saveOnClose.emit(this.getSaveDate());
   }
 }
 

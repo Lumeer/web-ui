@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {map, startWith, withLatestFrom} from 'rxjs/operators';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
@@ -39,7 +39,7 @@ import {AppState} from '../../../../../../core/store/app.state';
   styleUrls: ['./datetime-constraint-config-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges {
+export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public config: DateTimeConstraintConfig;
 
@@ -67,6 +67,8 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   public readonly formControlName = DatetimeConstraintFormControl;
 
   public exampleValue$: Observable<DateTimeDataValue>;
+
+  private formatSubscription = new Subscription();
 
   constructor(private configurationService: ConfigurationService, private store$: Store<AppState>) {
     this.formatItems = this.createFormatItems();
@@ -124,7 +126,8 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
     this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(selectFormat));
     this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(format));
 
-    this.form.addControl(DatetimeConstraintFormControl.Utc, new FormControl(this.config?.asUtc));
+    const asUtc = this.config ? this.config.asUtc : isFormatInUtc(format);
+    this.form.addControl(DatetimeConstraintFormControl.Utc, new FormControl(asUtc));
 
     this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
     this.form.addControl(DatetimeConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue));
@@ -132,10 +135,29 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
       minMaxValidator(DatetimeConstraintFormControl.MinValue, DatetimeConstraintFormControl.MaxValue),
       customFormatValidator(),
     ]);
+
+    this.subscribeFormatChange();
+  }
+
+  private subscribeFormatChange() {
+    this.formatSubscription.unsubscribe();
+    this.formatSubscription = new Subscription();
+    this.formatSubscription.add(
+      this.formatControl.valueChanges.subscribe(() => {
+        const format = this.formatControl.value;
+        if (format && !this.asUtcControl.touched) {
+          this.asUtcControl.setValue(isFormatInUtc(format));
+        }
+      })
+    );
   }
 
   public get formatControl(): AbstractControl {
     return this.form.get(DatetimeConstraintFormControl.Format);
+  }
+
+  public get asUtcControl(): AbstractControl {
+    return this.form.get(DatetimeConstraintFormControl.Utc);
   }
 
   public get minValueControl(): AbstractControl {
@@ -151,9 +173,17 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
     const customItem = {id: '', value: $localize`:@@constraint.dateTime.format.custom:Custom`};
     return [...formatItems, customItem];
   }
+
+  public ngOnDestroy() {
+    this.formatSubscription.unsubscribe();
+  }
 }
 
-export function customFormatValidator(): ValidatorFn {
+function isFormatInUtc(format: string): boolean {
+  return !hasTimeOption(createDateTimeOptions(format));
+}
+
+function customFormatValidator(): ValidatorFn {
   return (form: FormGroup): ValidationErrors | null => {
     const format = form.get(DatetimeConstraintFormControl.Format).value;
     const customFormat = form.get(DatetimeConstraintFormControl.CustomFormat).value;
