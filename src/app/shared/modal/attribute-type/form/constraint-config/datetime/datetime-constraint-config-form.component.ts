@@ -32,6 +32,7 @@ import {ConfigurationService} from '../../../../../../configuration/configuratio
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../../../../core/store/app.state';
+import {isNullOrUndefined} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -126,7 +127,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges,
     this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(selectFormat));
     this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(format));
 
-    const asUtc = this.config ? this.config.asUtc : isFormatInUtc(format);
+    const asUtc = this.config ? this.config.asUtc || false : isFormatInUtc(format);
     this.form.addControl(DatetimeConstraintFormControl.Utc, new FormControl(asUtc));
 
     this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
@@ -145,7 +146,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges,
     this.formatSubscription.add(
       this.formatControl.valueChanges.subscribe(() => {
         const format = this.formatControl.value;
-        if (format && !this.asUtcControl.touched) {
+        if (format && !this.asUtcControl.touched && isNullOrUndefined(this.config?.asUtc)) {
           this.asUtcControl.setValue(isFormatInUtc(format));
         }
       })
