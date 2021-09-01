@@ -27,6 +27,7 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  AfterViewInit,
 } from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
@@ -42,7 +43,7 @@ import {ConstraintDataService} from '../../../core/service/constraint-data.servi
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConstraintDataService],
 })
-export class FilterBuilderComponent implements OnChanges {
+export class FilterBuilderComponent implements OnChanges, AfterViewInit {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -76,6 +77,7 @@ export class FilterBuilderComponent implements OnChanges {
   public readonly dropdownPositions = [DropdownPosition.BottomStart];
 
   public constraintData$: Observable<ConstraintData>;
+  public visible$: Observable<boolean>;
 
   constructor(private constraintDataService: ConstraintDataService) {}
 
@@ -87,6 +89,10 @@ export class FilterBuilderComponent implements OnChanges {
         this.linkTypeId
       );
     }
+  }
+
+  public ngAfterViewInit() {
+    this.visible$ = this.dropdown.isOpen$();
   }
 
   public toggle() {
