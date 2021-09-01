@@ -17,16 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {ConstraintConditionValueItem, ConditionItem} from '../model/condition-item';
 import {BehaviorSubject} from 'rxjs';
@@ -34,7 +25,6 @@ import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {KeyCode} from '../../../key-code';
 import {TranslationService} from '../../../../core/service/translation.service';
-import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {objectValues} from '../../../utils/common.utils';
 import {
   ConditionType,
@@ -69,14 +59,14 @@ export class FilterBuilderContentComponent implements OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public visible: boolean;
+
   @Output()
   public valueChange = new EventEmitter<{condition: ConditionType; values: ConditionValue[]}>();
 
   @Output()
   public finishEditing = new EventEmitter();
-
-  @ViewChild(HiddenInputComponent)
-  public hiddenInputComponent: HiddenInputComponent;
 
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {common: {skipValidation: true, delaySaveAction: true}};
@@ -89,6 +79,8 @@ export class FilterBuilderContentComponent implements OnChanges {
   public dataValues: DataValue[];
   public conditionItems: ConditionItem[];
   public conditionValueItems: ConstraintConditionValueItem[];
+
+  private keyDownListener: (event: KeyboardEvent) => void;
 
   constructor(private translationService: TranslationService) {}
 
@@ -105,6 +97,19 @@ export class FilterBuilderContentComponent implements OnChanges {
     }
     if (changes.attribute || changes.selectedCondition) {
       this.initFocusedItem();
+    }
+    if (changes.visible) {
+      this.checkKeydownListener();
+    }
+  }
+
+  private checkKeydownListener() {
+    if (this.visible && !this.keyDownListener) {
+      this.keyDownListener = event => this.onKeyDown(event);
+      document.addEventListener('keydown', this.keyDownListener);
+    } else if (!this.visible && this.keyDownListener) {
+      document.removeEventListener('keydown', this.keyDownListener);
+      this.keyDownListener = null;
     }
   }
 
@@ -154,10 +159,10 @@ export class FilterBuilderContentComponent implements OnChanges {
 
   private focusCell(row: number, column: number) {
     this.focused$.next({row, column});
-    this.hiddenInputComponent?.focus();
   }
 
   private selectCondition(item: ConditionItem) {
+    this.selectedCondition = item.value;
     this.valueChange.emit({condition: item.value, values: this.selectedValues});
   }
 
@@ -173,7 +178,6 @@ export class FilterBuilderContentComponent implements OnChanges {
 
   private endFocus() {
     this.focused$.next(null);
-    this.hiddenInputComponent?.blur();
   }
 
   public onConditionValueSelect(item: ConstraintConditionValueItem, column: number, row: number) {
@@ -216,7 +220,7 @@ export class FilterBuilderContentComponent implements OnChanges {
     this.endEditing();
   }
 
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     if (!this.focused$.value) {
       return;
     }
@@ -380,7 +384,6 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public focus() {
-    this.hiddenInputComponent?.focus();
     this.initFocusedItem();
   }
 

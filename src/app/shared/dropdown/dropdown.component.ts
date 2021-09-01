@@ -38,7 +38,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {deepObjectsEquals, preventEvent} from '../utils/common.utils';
 
 @Component({
@@ -94,6 +94,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
+  private opened$ = new BehaviorSubject(false);
 
   private currentPosition: DropdownPosition;
   private positionSubscription: Subscription;
@@ -126,6 +127,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     if (this.overlayRef) {
       return;
     }
+
+    this.opened$.next(true);
 
     const overlayConfig = this.createOverlayConfig(offsetX);
 
@@ -206,6 +209,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   public close() {
+    this.opened$.next(false);
     this.onClose.emit();
     if (this.overlayRef) {
       this.overlayRef.detach();
@@ -216,7 +220,11 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   public isOpen(): boolean {
-    return !!this.overlayRef;
+    return this.opened$.value;
+  }
+
+  public isOpen$(): Observable<boolean> {
+    return this.opened$.asObservable();
   }
 
   public updatePosition() {
