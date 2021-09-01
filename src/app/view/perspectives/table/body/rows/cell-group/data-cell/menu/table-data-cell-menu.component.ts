@@ -217,12 +217,12 @@ export class TableDataCellMenuComponent implements OnChanges {
   }
 
   public onRemoveRow() {
-    if (!this.document) {
+    if (this.cursor.partIndex === 0 && !this.document) {
       return;
     }
 
     const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
-    if (this.document.id) {
+    if (this.document?.id) {
       this.store$.dispatch(
         new DocumentsAction.DeleteConfirm({
           collectionId: this.document.collectionId,
