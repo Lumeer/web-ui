@@ -196,7 +196,7 @@ export class DocumentsEffects {
             };
             const linkInstanceDto = convertLinkInstanceModelToDto(linkInstance);
             return this.linkInstanceService.createLinkInstance(linkInstanceDto, action.payload.workspace).pipe(
-              map(dto => convertLinkInstanceDtoToModel(dto)),
+              map(dto => convertLinkInstanceDtoToModel(dto, linkInstance.correlationId)),
               mergeMap(newLink => [
                 ...createCallbackActions(onSuccess, {documentId: newDocument.id, linkInstanceId: newLink.id}),
                 new DocumentsAction.CreateSuccess({document: newDocument}),
