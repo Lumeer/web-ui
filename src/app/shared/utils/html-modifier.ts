@@ -146,3 +146,7 @@ export function initForceTouch(element: HTMLElement, callback: (event: MouseEven
     {only: 'touch', preventSelect: false}
   );
 }
+
+export function isElementActive(element: Element): boolean {
+  return element && document.activeElement === element;
+}

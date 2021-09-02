@@ -32,7 +32,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DataDropdownOption} from './data-dropdown-option';
 import {deepObjectsEquals} from '../../utils/common.utils';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
@@ -126,8 +126,8 @@ export class DataOptionsDropdownComponent implements AfterViewInit, OnChanges {
     }
 
     this.listKeyManager.onKeydown(event);
-
-    if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
+    const code = keyboardEventCode(event);
+    if (code === KeyCode.Enter || code === KeyCode.NumpadEnter) {
       this.selectOption.emit(this.listKeyManager.activeItem);
       this.close();
     }

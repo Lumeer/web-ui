@@ -37,8 +37,8 @@ import {GeocodingAction} from '../../../core/store/geocoding/geocoding.action';
 import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.state';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
-import {KeyCode} from '../../key-code';
-import {checkDataInputElementValue, setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {checkDataInputElementValue, isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -118,6 +118,10 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.setFocus = true;
+      this.preventSave = false;
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
     if (changes.value && this.value) {
       this.value$.next(this.value.format());
@@ -200,7 +204,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -234,9 +238,10 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   }
 
   private preventSaveAndBlur() {
-    if (this.addressInput) {
+    if (isElementActive(this.addressInput?.nativeElement)) {
       this.preventSave = true;
       this.addressInput.nativeElement.blur();
+      this.removeKeyDownListener();
     }
   }
 

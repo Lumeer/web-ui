@@ -37,7 +37,7 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../../utils/common.utils';
 import {distinctUntilChanged, filter} from 'rxjs/operators';
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
-import {isKeyPrintable, KeyCode} from '../../../../../key-code';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
@@ -331,7 +331,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
         event.preventDefault();
         this.suggestions?.moveSelection(Direction.Down);

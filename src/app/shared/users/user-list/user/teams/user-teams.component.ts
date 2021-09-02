@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {OptionsDropdownComponent} from '../../../../dropdown/options/options-dropdown.component';
-import {KeyCode} from '../../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {DropdownOption} from '../../../../dropdown/options/dropdown-option';
 import {areArraysSame, uniqueValues} from '../../../../utils/array.utils';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
@@ -90,7 +90,7 @@ export class UserTeamsComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -98,7 +98,7 @@ export class UserTeamsComponent implements OnChanges {
 
         event.preventDefault();
 
-        if (event.code !== KeyCode.Tab && selectedOption) {
+        if (keyboardEventCode(event) !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
         } else {

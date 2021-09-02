@@ -37,7 +37,7 @@ import {BsDatepickerInlineConfig, BsDatepickerInlineDirective} from 'ngx-bootstr
 import {Subscription} from 'rxjs';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DateTimeOptions, detectDatePickerViewMode, hasTimeOption} from '../date-time-options';
 import {isDateValid} from '../../utils/common.utils';
 
@@ -186,7 +186,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
         KeyCode.ArrowLeft,
         KeyCode.ArrowRight,
         KeyCode.ArrowUp,
-      ] as string[]).includes(event.code)
+      ] as string[]).includes(keyboardEventCode(event))
     ) {
       event.stopPropagation();
     }
@@ -241,7 +241,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape) {
+    if (keyboardEventCode(event) === KeyCode.Escape) {
       this.onCancel();
     }
   }

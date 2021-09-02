@@ -29,8 +29,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
@@ -95,7 +95,11 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.setFocus = true;
+      this.preventSave = false;
       this.text = this.value.editValue();
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
     if (changes.value && this.value) {
       this.text = this.value.editValue();
@@ -170,7 +174,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -210,9 +214,10 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private preventSaveAndBlur() {
-    if (this.textInput) {
+    if (isElementActive(this.textInput?.nativeElement)) {
       this.preventSave = true;
       this.textInput.nativeElement.blur();
+      this.removeKeyDownListener();
     }
   }
 

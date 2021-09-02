@@ -28,7 +28,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../../../../../../shared/key-code';
+import {keyboardEventCode, KeyCode} from '../../../../../../../shared/key-code';
 import {
   filterOutInvalidAttributeNameCharacters,
   FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
@@ -119,7 +119,7 @@ export class TableColumnInputComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:

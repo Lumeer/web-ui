@@ -41,7 +41,7 @@ import {
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
-import {isKeyPrintable, KeyCode} from '../../../key-code';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -298,7 +298,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
         event.preventDefault();
         this.suggestions?.moveSelection(Direction.Down);

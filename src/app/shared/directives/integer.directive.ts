@@ -20,7 +20,7 @@
 import {Directive, ElementRef, HostListener, Inject, Input, Optional, Renderer2} from '@angular/core';
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {isNotNullOrUndefined} from '../utils/common.utils';
-import {KeyCode} from '../key-code';
+import {keyboardEventCode, KeyCode} from '../key-code';
 
 const allowedCodes = [
   KeyCode.Digit0,
@@ -68,7 +68,7 @@ export class IntegerDirective extends DefaultValueAccessor {
 
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (!allowedCodes.includes(event.code as KeyCode) && !event.composed) {
+    if (!allowedCodes.includes(keyboardEventCode(event)) && !event.composed) {
       event.preventDefault();
       event.stopPropagation();
     }

@@ -31,7 +31,7 @@ import {
 import {QueryStemInputQueryItem} from '../model/query-stem-input.query-item';
 import {QueryItem} from '../model/query-item';
 import {SearchSuggestionsComponent} from '../../input/suggestions/search-suggestions.component';
-import {KeyCode} from '../../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {QueryItemType} from '../model/query-item-type';
 
 @Component({
@@ -98,7 +98,7 @@ export class QueryStemInputQueryItemComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Escape:
         this.onEscapeKeyDown();
         return;
@@ -115,7 +115,7 @@ export class QueryStemInputQueryItemComponent implements OnChanges {
 
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
-    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
+    const direction = keyboardEventCode(event) === KeyCode.ArrowUp ? -1 : 1;
     this.searchSuggestions?.moveSelection(direction);
   }
 

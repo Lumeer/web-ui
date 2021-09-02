@@ -34,7 +34,7 @@ import {
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {isNotNullOrUndefined, preventEvent, unescapeHtml} from '../../utils/common.utils';
@@ -217,7 +217,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:

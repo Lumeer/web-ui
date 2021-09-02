@@ -30,8 +30,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {uniqueValues} from '../../utils/array.utils';
@@ -117,6 +117,10 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
       this.addListeners();
       this.resetSearchInput();
       this.setFocus = true;
+      this.preventSave = false;
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
     if (changes.value && this.value) {
       this.selectedViews$.next(this.value.views || []);
@@ -165,7 +169,7 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -173,7 +177,7 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
 
         event.preventDefault();
 
-        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+        if (this.multi && keyboardEventCode(event) !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
           this.dropdown.resetActiveOption();
@@ -281,9 +285,10 @@ export class ViewDataInputComponent implements OnInit, OnChanges, AfterViewCheck
   }
 
   private preventSaveAndBlur() {
-    if (this.textInput) {
+    if (isElementActive(this.textInput?.nativeElement)) {
       this.preventSave = true;
       this.textInput.nativeElement.blur();
+      this.removeListeners();
     }
   }
 

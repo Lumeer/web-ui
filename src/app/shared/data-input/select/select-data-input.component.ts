@@ -29,8 +29,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {uniqueValues} from '../../utils/array.utils';
@@ -103,6 +103,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.addListeners();
       this.resetSearchInput();
       this.setFocus = true;
+      this.preventSave = false;
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
     if (changes.value && this.value) {
       this.selectedOptions$.next(this.value.options || []);
@@ -174,7 +178,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -182,7 +186,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+        if (this.multi && keyboardEventCode(event) !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
         } else {
@@ -294,9 +298,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private preventSaveAndBlur() {
-    if (this.textInput) {
+    if (isElementActive(this.textInput?.nativeElement)) {
       this.preventSave = true;
       this.textInput.nativeElement.blur();
+      this.removeListeners();
     }
   }
 

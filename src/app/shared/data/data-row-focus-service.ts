@@ -18,7 +18,7 @@
  */
 
 import {isNotNullOrUndefined, isNullOrUndefined, preventEvent} from '../utils/common.utils';
-import {KeyCode} from '../key-code';
+import {keyboardEventCode, KeyCode} from '../key-code';
 import {DataRowComponent, DataRowHiddenComponent} from './data-row-component';
 
 interface DataRowPosition {
@@ -44,7 +44,7 @@ export class DataRowFocusService {
   ) {}
 
   public onKeyDown(event: KeyboardEvent, lockPosition: PositionLock = {column: false, row: false}) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
       case KeyCode.ArrowUp:
         if (!lockPosition.row) {
@@ -157,8 +157,9 @@ export class DataRowFocusService {
     }
     event.preventDefault();
     event.stopPropagation();
-    const x = event.code === KeyCode.ArrowRight ? 1 : event.code === KeyCode.ArrowLeft ? -1 : 0;
-    const y = event.code === KeyCode.ArrowUp ? -1 : event.code === KeyCode.ArrowDown ? 1 : 0;
+    const code = keyboardEventCode(event);
+    const x = code === KeyCode.ArrowRight ? 1 : code === KeyCode.ArrowLeft ? -1 : 0;
+    const y = code === KeyCode.ArrowUp ? -1 : code === KeyCode.ArrowDown ? 1 : 0;
     this.moveFocus(x, y);
   }
 

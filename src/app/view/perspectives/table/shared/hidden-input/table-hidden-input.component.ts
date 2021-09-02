@@ -26,7 +26,7 @@ import {getTableRowCursor, TableBodyCursor} from '../../../../../core/store/tabl
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 import {selectTableCursor} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
-import {KeyCode} from '../../../../../shared/key-code';
+import {keyboardEventCode, KeyCode} from '../../../../../shared/key-code';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
@@ -98,7 +98,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       return;
     }
 
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.KeyQ:
         if (event.altKey) {
           this.store$.pipe(select(selectTableCursor), take(1)).subscribe(cursor => {
@@ -186,7 +186,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
         if (event.altKey && event.shiftKey && editable && this.canManageConfig) {
           event.stopPropagation();
-          switch (event.code) {
+          switch (keyboardEventCode(event)) {
             case KeyCode.ArrowRight:
               this.store$.dispatch(new TablesAction.IndentRow({cursor}));
               return;

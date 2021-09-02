@@ -66,7 +66,7 @@ import {
 } from '../../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
-import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
@@ -812,7 +812,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public onKeyDownInEditMode(event: KeyboardEvent) {
     event.stopPropagation();
 
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
         event.preventDefault();
         return this.suggestions && this.suggestions.moveSelection(Direction.Down);
@@ -845,7 +845,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
     if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {
       event.stopPropagation();
-      switch (event.code) {
+      switch (keyboardEventCode(event)) {
         case KeyCode.ArrowRight:
           this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
           return;

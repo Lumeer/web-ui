@@ -24,7 +24,7 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {LanguageCode} from '../../../core/model/language';
 import {tap} from 'rxjs/operators';
@@ -95,7 +95,7 @@ export class UserSettingsModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

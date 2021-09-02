@@ -23,7 +23,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {KeyCode} from '../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {User} from '../../../../core/store/users/user';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
@@ -129,7 +129,7 @@ export class ShareViewModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

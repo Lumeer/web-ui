@@ -29,8 +29,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {HtmlModifier, isElementActive} from '../../utils/html-modifier';
 import {User} from '../../../core/store/users/user';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
@@ -117,6 +117,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.addListeners();
       this.resetSearchInput();
       this.setFocus = true;
+      this.preventSave = false;
     }
     if (changes.value && this.value) {
       this.selectedUsers$.next(this.value.users || []);
@@ -125,6 +126,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.teams = this.bindTeams();
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
     if (changes.value || changes.configuration) {
       this.onlyIcon = this.configuration?.onlyIcon || this.value?.config?.onlyIcon;
@@ -203,7 +207,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -211,7 +215,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+        if (this.multi && keyboardEventCode(event) !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
         } else {
@@ -371,9 +375,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private preventSaveAndBlur() {
-    if (this.textInput) {
+    if (isElementActive(this.textInput?.nativeElement)) {
       this.preventSave = true;
       this.textInput.nativeElement.blur();
+      this.removeListeners();
     }
   }
 

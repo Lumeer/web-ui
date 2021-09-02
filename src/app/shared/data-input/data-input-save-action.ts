@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KeyCode} from '../key-code';
+import {keyboardEventCode, KeyCode} from '../key-code';
 
 export enum DataInputSaveAction {
   Enter = 'enter',
@@ -29,9 +29,10 @@ export enum DataInputSaveAction {
 }
 
 export function keyboardEventInputSaveAction(event: KeyboardEvent): DataInputSaveAction {
-  if (event.code === KeyCode.Tab) {
+  const code = keyboardEventCode(event);
+  if (code === KeyCode.Tab) {
     return DataInputSaveAction.Tab;
-  } else if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
+  } else if (code === KeyCode.Enter || code === KeyCode.NumpadEnter) {
     return DataInputSaveAction.Enter;
   }
   return null;

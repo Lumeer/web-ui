@@ -39,7 +39,7 @@ import {groupLinkInstancesByLinkTypes} from '../../../core/store/link-instances/
 import {enterLeftAnimation, enterRightAnimation} from '../../animations';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
 
 @Component({
@@ -166,7 +166,10 @@ export class DataResourcesDetailModalComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     // when another dialog is presented in top of this dialog, we don't want to listen on escape events
-    if (event.code === KeyCode.Escape && this.initialModalsCount >= this.bsModalService.getModalsCount()) {
+    if (
+      keyboardEventCode(event) === KeyCode.Escape &&
+      this.initialModalsCount >= this.bsModalService.getModalsCount()
+    ) {
       this.hideDialog();
     }
   }

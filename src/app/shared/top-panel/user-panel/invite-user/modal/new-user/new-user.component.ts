@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {KeyCode} from '../../../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../../../key-code';
 
 @Component({
   selector: 'new-user',
@@ -83,11 +83,11 @@ export class NewUserComponent {
     return $localize`:@@inviteUser.dialog.input.add.placeholder:Enter an email and press Enter`;
   }
 
-  public onKeyPress($event: KeyboardEvent) {
-    if (!this.isDuplicate && $event.code === KeyCode.Enter) {
+  public onKeyPress(event: KeyboardEvent) {
+    if (!this.isDuplicate && keyboardEventCode(event) === KeyCode.Enter) {
       this.addUser();
-      $event.stopImmediatePropagation();
-      $event.preventDefault();
+      event.stopImmediatePropagation();
+      event.preventDefault();
     }
   }
 }

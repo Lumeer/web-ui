@@ -18,7 +18,7 @@
  */
 import {Component, HostListener, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {Subject} from 'rxjs';
 import {DialogType} from '../dialog-type';
 
@@ -56,7 +56,7 @@ export class TextInputModalComponent {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape) {
+    if (keyboardEventCode(event) === KeyCode.Escape) {
       this.hideDialog();
     }
   }

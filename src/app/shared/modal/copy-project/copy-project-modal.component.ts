@@ -21,7 +21,7 @@ import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener, OnDestr
 import {Organization} from '../../../core/store/organizations/organization';
 import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -121,7 +121,7 @@ export class CopyProjectModalComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.onClose();
     }
   }

@@ -79,6 +79,10 @@ export enum KeyCode {
   Tab = 'Tab',
 }
 
+export function keyboardEventCode(event: KeyboardEvent): KeyCode {
+  return <KeyCode>(event.code || event.key);
+}
+
 export function isKeyPrintable(event: KeyboardEvent): boolean {
   return (
     event &&
@@ -86,6 +90,8 @@ export function isKeyPrintable(event: KeyboardEvent): boolean {
     !event.altKey &&
     !event.ctrlKey &&
     !event.metaKey &&
-    (event.key.length === 1 || (event.key.length > 1 && /[^a-zA-Z0-9]/.test(event.key)) || event.code === KeyCode.Space)
+    (event.key.length === 1 ||
+      (event.key.length > 1 && /[^a-zA-Z0-9]/.test(event.key)) ||
+      keyboardEventCode(event) === KeyCode.Space)
   );
 }
