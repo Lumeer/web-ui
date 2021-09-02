@@ -27,7 +27,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
@@ -122,7 +122,7 @@ export class SearchInputComponent {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Backspace:
         this.onBackspaceKeyDown();
         return;
@@ -142,7 +142,7 @@ export class SearchInputComponent {
 
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
-    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
+    const direction = keyboardEventCode(event) === KeyCode.ArrowUp ? -1 : 1;
     this.searchSuggestions?.moveSelection(direction);
   }
 

@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {isMacOS} from '../../utils/system.utils';
-import {isKeyPrintable, KeyCode} from '../../key-code';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../key-code';
 import {User} from '../../../core/store/users/user';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
 import {generateId} from '../../utils/resource.utils';
@@ -195,11 +195,12 @@ export class NewCommentComponent implements OnInit, AfterViewChecked {
       }
     }
 
-    if (this.commentText && event.code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
+    const code = keyboardEventCode(event);
+    if (this.commentText && code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
       this.sendComment();
     }
 
-    if (event.code === KeyCode.Escape) {
+    if (code === KeyCode.Escape) {
       this.cancelEditComment();
     }
   }

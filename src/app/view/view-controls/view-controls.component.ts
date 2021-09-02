@@ -55,7 +55,7 @@ import {Perspective} from '../perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
 import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dropdown.component';
 import {ModalService} from '../../shared/modal/modal.service';
-import {KeyCode} from '../../shared/key-code';
+import {keyboardEventCode, KeyCode} from '../../shared/key-code';
 import {SearchesAction} from '../../core/store/searches/searches.action';
 import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
@@ -283,7 +283,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     canClone: boolean,
     viewNameInput: HTMLInputElement
   ) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Escape:
         this.onNameInput(this.view?.name);
         viewNameInput.blur();

@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
-import {KeyCode} from '../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
@@ -138,7 +138,7 @@ export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
   }
 
   public onLinkKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Escape:
         this.close();
         this.onCancel();
@@ -158,7 +158,7 @@ export class LinkInputDropdownComponent implements OnInit, AfterViewInit {
   }
 
   public onTitleKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Escape:
         this.close();
         this.onCancel();

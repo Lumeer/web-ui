@@ -23,7 +23,7 @@ import {ConstraintConditionValueItem, ConditionItem} from '../model/condition-it
 import {BehaviorSubject} from 'rxjs';
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {KeyCode} from '../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {TranslationService} from '../../../../core/service/translation.service';
 import {objectValues} from '../../../utils/common.utils';
 import {
@@ -202,6 +202,14 @@ export class FilterBuilderContentComponent implements OnChanges {
     }
   }
 
+  public onDataInputClick(event: MouseEvent, index: number) {
+    if (!this.isEditing()) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    this.startEditing(index);
+  }
+
   public onInputSave(dataValue: DataValue, column: number) {
     const value: ConditionValue = {type: null, value: dataValue.serialize()};
 
@@ -365,7 +373,7 @@ export class FilterBuilderContentComponent implements OnChanges {
     event.stopPropagation();
     event.preventDefault();
 
-    if (event.shiftKey && event.code === KeyCode.Tab) {
+    if (event.shiftKey && keyboardEventCode(event) === KeyCode.Tab) {
       if (column > 0) {
         setTimeout(() => this.editing$.next(column - 1));
       } else {

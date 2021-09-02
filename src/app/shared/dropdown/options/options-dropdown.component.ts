@@ -30,7 +30,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
@@ -196,7 +196,7 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowUp:
         this.moveSelectionUp();
         break;

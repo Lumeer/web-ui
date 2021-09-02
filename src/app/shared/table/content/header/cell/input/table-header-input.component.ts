@@ -34,7 +34,7 @@ import {
   filterOutInvalidAttributeNameCharacters,
   FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
 } from '../../../../../utils/attribute.utils';
-import {KeyCode} from '../../../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../../../key-code';
 import {preventEvent} from '../../../../../utils/common.utils';
 import {TableColumn} from '../../../../model/table-column';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
@@ -142,7 +142,7 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:

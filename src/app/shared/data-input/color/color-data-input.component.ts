@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
@@ -99,7 +99,9 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
         this.onSave(this.pendingUpdate);
       }
     }
-
+    if (changes.readonly && this.readonly) {
+      this.blur();
+    }
     if (changes.focus && !this.focus) {
       this.closeColorPicker();
     }
@@ -159,7 +161,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -224,6 +226,11 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
 
   public onInput(value: string) {
     this.onValueChange(value);
+  }
+
+  private blur() {
+    this.colorInput?.nativeElement?.blur();
+    this.onBlur();
   }
 
   public onBlur() {

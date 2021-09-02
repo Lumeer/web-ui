@@ -39,7 +39,7 @@ import {
   selectProjectsLoadedForOrganization,
 } from '../../../core/store/projects/projects.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {NavigationExtras} from '@angular/router';
 
 @Component({
@@ -187,7 +187,11 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue() && !this.preventClose$.getValue()) {
+    if (
+      keyboardEventCode(event) === KeyCode.Escape &&
+      !this.performingAction$.getValue() &&
+      !this.preventClose$.getValue()
+    ) {
       this.onClose();
     }
   }

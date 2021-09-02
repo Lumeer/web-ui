@@ -32,7 +32,7 @@ import {User} from '../../../../../../core/store/users/user';
 import {DropdownOption} from '../../../../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../../../dropdown/options/options-dropdown.component';
 import {isEmailValid} from '../../../../../utils/email.utils';
-import {KeyCode} from '../../../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../../../key-code';
 
 @Component({
   selector: 'share-view-input',
@@ -112,7 +112,7 @@ export class ShareViewInputComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent, canAddUser: boolean) {
-    if (event.code === KeyCode.Enter) {
+    if (keyboardEventCode(event) === KeyCode.Enter) {
       const activeOption = this.dropdown?.getActiveOption();
       if (activeOption) {
         this.onSelectOption(activeOption);

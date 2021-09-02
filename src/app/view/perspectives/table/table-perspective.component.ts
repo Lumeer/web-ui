@@ -60,7 +60,7 @@ import {
   selectViewQuery,
 } from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
-import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
 import {TableBodyComponent} from './body/table-body.component';
@@ -467,7 +467,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
     const editableEvent = event[EDITABLE_EVENT];
 
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowLeft:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
       case KeyCode.ArrowUp:

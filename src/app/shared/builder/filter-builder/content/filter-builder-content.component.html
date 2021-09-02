@@ -28,7 +28,7 @@
                 (cancel)="onInputCancel(column)"
                 (save)="onInputSave($event, column)"
                 (keydown)="onDataInputKeyDown($event, column)"
-                (click)="$event.preventDefault(); startEditing(column)">
+                (mousedown)="onDataInputClick($event, column)">
     </data-input>
     <div *ngFor="let item of conditionValueItems; let first = first; let row = index"
          class="px-2 py-1 dropdown-item cursor-pointer"

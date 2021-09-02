@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../../core/model/language';
@@ -99,6 +99,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
         this.onSave(this.pendingUpdate);
       }
     }
+    if (changes.readonly && this.readonly) {
+      this.blur();
+    }
     if (changes.focus && !this.focus) {
       this.dateTimePicker?.close();
     }
@@ -149,7 +152,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -203,12 +206,12 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
   private onSaveDataValue(dataValue: DateTimeDataValue) {
     this.pendingUpdate = null;
     this.value = dataValue;
-    this.save.emit({action: DataInputSaveAction.Button, dataValue: this.value});
+    this.save.emit({action: DataInputSaveAction.Button, dataValue});
   }
 
   public onSaveOnClose(inputValue: string, selectedDate: Date) {
-    const inputDataValue = inputValue && this.value.parseInput(inputValue);
-    if (!inputValue || isDateValid(inputDataValue?.toDate())) {
+    const inputDataValue = this.value.parseInput(inputValue || '');
+    if (!inputValue || isDateValid(inputDataValue.toDate())) {
       this.onSaveDataValue(inputDataValue);
     } else {
       this.onSave(selectedDate);
@@ -239,6 +242,11 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
     const dataValue = this.value.copy(date);
     this.dateTimeInput.nativeElement.value = dataValue.format();
     this.valueChange.emit(dataValue);
+  }
+
+  private blur() {
+    this.dateTimeInput?.nativeElement?.blur();
+    this.onBlur();
   }
 
   public onBlur() {

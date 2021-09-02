@@ -41,7 +41,7 @@ import {DialogType} from '../dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {AttributesResourceType} from '../../../core/model/resource';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 
@@ -151,7 +151,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public onKeyDown(event: KeyboardEvent) {
     // when another dialog is presented in top of this dialog, we don't want to listen on escape events
     if (
-      event.code === KeyCode.Escape &&
+      keyboardEventCode(event) === KeyCode.Escape &&
       !this.performingAction$.getValue() &&
       this.initialModalsCount >= this.bsModalService.getModalsCount()
     ) {

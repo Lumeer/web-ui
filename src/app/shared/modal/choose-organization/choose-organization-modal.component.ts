@@ -25,7 +25,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {NavigationExtras} from '@angular/router';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {CreateProjectService} from '../../../core/service/create-project.service';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {take} from 'rxjs/operators';
@@ -121,7 +121,7 @@ export class ChooseOrganizationModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.onClose();
     }
   }

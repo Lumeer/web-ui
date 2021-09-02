@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
-import {KeyCode} from '../../../../../../shared/key-code';
+import {keyboardEventCode, KeyCode} from '../../../../../../shared/key-code';
 import {preventEvent} from '../../../../../../shared/utils/common.utils';
 import {TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
 
@@ -35,7 +35,7 @@ export class WorkflowTablesKeyboardService {
     if (!this.shouldHandleKeyDown()) {
       return;
     }
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
       case KeyCode.ArrowUp:
       case KeyCode.ArrowLeft:
@@ -118,7 +118,7 @@ export class WorkflowTablesKeyboardService {
     if (
       this.isEditing() ||
       !this.isSelected() ||
-      (event.shiftKey && event.code !== KeyCode.Tab) ||
+      (event.shiftKey && keyboardEventCode(event) !== KeyCode.Tab) ||
       event.altKey ||
       event.ctrlKey
     ) {
@@ -134,7 +134,7 @@ export class WorkflowTablesKeyboardService {
     const table = this.tables[tableIndex];
     const arrowLeftIndex = firstNonHiddenColumnIndex(table, 0, columnIndex - 1, true);
     const arrowRightIndex = firstNonHiddenColumnIndex(table, columnIndex + 1, table.columns.length);
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowUp:
         this.onArrowUp(cell.type, tableIndex, columnIndex, rowIndex);
         break;

@@ -29,8 +29,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -77,6 +77,10 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.setFocus = true;
+      this.preventSave = false;
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
   }
 
@@ -125,7 +129,7 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -159,9 +163,10 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
   }
 
   private preventSaveAndBlur() {
-    if (this.coordinatesInput) {
+    if (isElementActive(this.coordinatesInput?.nativeElement)) {
       this.preventSave = true;
       this.coordinatesInput.nativeElement.blur();
+      this.removeKeyDownListener();
     }
   }
 

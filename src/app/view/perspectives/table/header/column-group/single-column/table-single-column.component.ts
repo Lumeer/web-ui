@@ -46,7 +46,7 @@ import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../shared/direction';
-import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
+import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../shared/key-code';
 import {
   extractAttributeLastName,
   filterAttributesByDepth,
@@ -426,7 +426,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   public onKeyDown(event: KeyboardEvent) {
     event.stopPropagation();
 
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
         return this.suggestions?.moveSelection(Direction.Down);
       case KeyCode.ArrowUp:

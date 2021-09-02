@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
@@ -212,7 +212,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   public onKeyDown(event: KeyboardEvent) {
     // when another dialog is presented in top of this dialog, we don't want to listen on escape events
     if (
-      event.code === KeyCode.Escape &&
+      keyboardEventCode(event) === KeyCode.Escape &&
       !this.performingAction$.getValue() &&
       this.initialModalsCount >= this.bsModalService.getModalsCount()
     ) {

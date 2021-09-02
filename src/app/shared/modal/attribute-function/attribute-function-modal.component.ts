@@ -35,7 +35,7 @@ import {
 import {selectAllLinkTypes, selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {DialogType} from '../dialog-type';
 import {FormControl, FormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../core/model/resource';
@@ -241,7 +241,7 @@ export class AttributeFunctionModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

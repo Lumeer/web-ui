@@ -25,7 +25,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import mixpanel from 'mixpanel-browser';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import {KeyCode} from '../../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../../key-code';
 import {DialogType} from '../../../../modal/dialog-type';
 import {UserService} from '../../../../../core/data-service';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
@@ -114,7 +114,7 @@ export class UserFeedbackModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

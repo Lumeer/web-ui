@@ -39,7 +39,7 @@ import {FileAttachment, FileAttachmentType} from '../../../core/store/file-attac
 import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
 import {selectFileAttachmentsByDataCursor} from '../../../core/store/file-attachments/file-attachments.state';
 import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {preventEvent} from '../../utils/common.utils';
 import {FilesDataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../core/store/app.state';
@@ -259,7 +259,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Escape:
         this.cancel.emit();
         return;

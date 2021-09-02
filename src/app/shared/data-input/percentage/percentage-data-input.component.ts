@@ -30,8 +30,8 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {KeyCode} from '../../key-code';
-import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
+import {keyboardEventCode, KeyCode} from '../../key-code';
+import {isElementActive, setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
@@ -88,6 +88,10 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.setFocus = true;
+      this.preventSave = false;
+    }
+    if (changes.readonly && this.readonly) {
+      this.preventSaveAndBlur();
     }
     if (changes.value) {
       this.valid = !this.value || this.value.isValid();
@@ -126,7 +130,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
+    switch (keyboardEventCode(event)) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
@@ -162,9 +166,10 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
   }
 
   private preventSaveAndBlur() {
-    if (this.percentageInput) {
+    if (isElementActive(this.percentageInput?.nativeElement)) {
       this.preventSave = true;
       this.percentageInput.nativeElement.blur();
+      this.removeKeyDownListener();
     }
   }
 

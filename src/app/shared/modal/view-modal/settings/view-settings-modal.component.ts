@@ -25,7 +25,7 @@ import {View} from '../../../../core/store/views/view';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
-import {KeyCode} from '../../../key-code';
+import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {integerValidator, notEmptyValidator} from '../../../../core/validators/custom-validators';
@@ -139,7 +139,7 @@ export class ViewSettingsModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

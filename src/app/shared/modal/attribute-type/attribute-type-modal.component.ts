@@ -31,7 +31,7 @@ import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {AppState} from '../../../core/store/app.state';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionPermissions,
@@ -149,7 +149,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

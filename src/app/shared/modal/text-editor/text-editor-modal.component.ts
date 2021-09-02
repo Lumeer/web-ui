@@ -30,7 +30,7 @@ import {
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Subject} from 'rxjs';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {isMacOS} from '../../utils/system.utils';
 import {defaultTextEditorOptions} from './text-editor.utils';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
@@ -172,15 +172,16 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
 
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (this.valid && event.code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
+    const code = keyboardEventCode(event);
+    if (this.valid && code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
       this.submitDialog();
     }
 
-    if (event.code !== KeyCode.Escape) {
+    if (code !== KeyCode.Escape) {
       event.stopPropagation();
     }
 
-    if (event.code === KeyCode.Escape) {
+    if (code === KeyCode.Escape) {
       this.cancelDialog();
     }
   }

@@ -29,7 +29,7 @@ import {findAttribute} from '../../../core/store/collections/collection.util';
 import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {AttributeDescriptionContentComponent} from './content/attribute-description-content.component';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -120,7 +120,7 @@ export class AttributeDescriptionModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }

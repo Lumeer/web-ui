@@ -26,7 +26,7 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {KeyCode} from '../../key-code';
+import {keyboardEventCode, KeyCode} from '../../key-code';
 import {map, startWith, take, tap} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
@@ -162,7 +162,7 @@ export class CreateLinkModalComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    if (keyboardEventCode(event) === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
   }
