@@ -310,8 +310,11 @@ export class FilterBuilderContentComponent implements OnChanges {
       if (nextColumn <= this.numInputs) {
         const rowIndex =
           this.getSelectedRow(nextColumn) || Math.min(focused.row - 1, this.conditionValueItems.length - 1);
-        this.selectConditionValue(this.conditionValueItems[rowIndex], nextColumn - 1);
-        this.focusCell(rowIndex + 1, nextColumn);
+        const conditionValueItem = this.conditionValueItems[rowIndex];
+        if (conditionValueItem) {
+          this.selectConditionValue(conditionValueItem, nextColumn - 1);
+          this.focusCell(rowIndex + 1, nextColumn);
+        }
       }
     }
   }
@@ -339,8 +342,11 @@ export class FilterBuilderContentComponent implements OnChanges {
           this.focusCell(rowIndex, nextColumn);
         } else {
           const rowIndex = this.getSelectedRow(nextColumn) || focused.row - 1;
-          this.selectConditionValue(this.conditionValueItems[rowIndex], nextColumn - 1);
-          this.focusCell(rowIndex + 1, nextColumn);
+          const conditionValueItem = this.conditionValueItems[rowIndex];
+          if (conditionValueItem) {
+            this.selectConditionValue(conditionValueItem, nextColumn - 1);
+            this.focusCell(rowIndex + 1, nextColumn);
+          }
         }
       }
     }
