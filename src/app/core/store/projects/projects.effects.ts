@@ -314,7 +314,7 @@ export class ProjectsEffects {
       withLatestFrom(this.store$.pipe(select(selectNavigation))),
       mergeMap(([[action, codes], navigation]) => {
         const {organizationId, projectCode} = action.payload;
-        const codesByOrg = (codes && codes[organizationId]) || [];
+        const codesByOrg = codes?.[organizationId] || [];
         const actions: Action[] = [];
         let newCodes = [...codesByOrg];
         if (projectCode) {

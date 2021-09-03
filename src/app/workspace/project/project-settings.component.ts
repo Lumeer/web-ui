@@ -291,6 +291,7 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
           },
           () => {
             const errorMessage = $localize`:@@project.settings.upload.error:I was not possible to upload and process this project file.`;
+            this.uploadProgress$.next(null);
             this.notificationService.error(errorMessage);
           }
         );
