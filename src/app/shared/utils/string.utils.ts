@@ -65,7 +65,8 @@ export function createUniqueCode(prefix: string, usedCodes: string[] = [], lengt
   let code = prefix.substring(0, length);
   let i = 1;
   while (usedCodes?.includes(code)) {
-    code = prefix.substring(0, length - 1) + i++;
+    const suffixLength = String(i).length;
+    code = prefix.substring(0, length - suffixLength) + i++;
   }
 
   return code;

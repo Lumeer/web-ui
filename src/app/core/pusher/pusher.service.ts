@@ -302,7 +302,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Project:remove', data => {
       this.getProject(data.id, oldProject => {
-        const projectCode = oldProject && oldProject.code;
+        const projectCode = oldProject?.code;
         this.store$.dispatch(
           new ProjectsAction.DeleteSuccess({projectId: data.id, organizationId: data.organizationId, projectCode})
         );

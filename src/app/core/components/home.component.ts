@@ -115,9 +115,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         } else if (organizations.length === 0) {
           this.selectService.createNewOrganization({replaceUrl: true});
         } else {
-          this.selectService.createNewProject(organizations.slice(0, 1), null, {replaceUrl: true});
+          this.createNewProject(organizations);
         }
       });
+  }
+
+  private createNewProject(organizations: Organization[]) {
+    const modalRef = this.selectService.createNewProject(organizations.slice(0, 1), null, {replaceUrl: true});
+    modalRef.content.onClose$.subscribe(() => this.redirectToWorkspace());
   }
 
   private navigateToWorkspaceProject(workspace: DefaultWorkspace, organizations: Organization[], projects: Project[]) {
