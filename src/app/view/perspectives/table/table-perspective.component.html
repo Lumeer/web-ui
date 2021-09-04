@@ -1,6 +1,6 @@
 <div *ngIf="query | perspectiveDisplayable:1:1; else notDisplayable"
      (clickOutside)="onClickOutside($event)"
-     class="flex-grow-1 d-flex flex-column m-0 h-100">
+     class="flex-grow-1 d-flex flex-column m-0 h-100 content">
   <ng-container *ngIf="{canManageConfig: canManageConfig$ | async, tableId: tableId$ | async} as data">
     <table-hidden-input [canManageConfig]="data.canManageConfig"
                         [tableId]="data.tableId"

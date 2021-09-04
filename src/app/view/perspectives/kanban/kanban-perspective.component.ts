@@ -37,6 +37,7 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
 @Component({
   templateUrl: './kanban-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['kanban-perspective.component.scss'],
 })
 export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
