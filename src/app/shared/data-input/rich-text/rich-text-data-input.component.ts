@@ -193,7 +193,6 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onEditorCreated(editor: any) {
-    editor.root.addEventListener('blur', () => this.onBlur());
     editor.setSelection(Number.MAX_SAFE_INTEGER);
 
     const isMultiLine = editor.root.childElementCount > 1;
