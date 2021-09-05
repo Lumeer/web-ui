@@ -51,9 +51,6 @@ export class TableHeaderCellComponent {
   public editingValue: any;
 
   @Input()
-  public offsetHorizontal: boolean;
-
-  @Input()
   public focused: boolean;
 
   @Output()

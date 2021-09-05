@@ -61,9 +61,6 @@ export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
   public edited: boolean;
 
   @Input()
-  public offsetHorizontal: boolean;
-
-  @Input()
   public value: any;
 
   @Output()
