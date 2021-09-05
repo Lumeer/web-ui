@@ -1,9 +1,15 @@
 @import 'src/styles/variables';
 
 :host {
-  border: 0.5px $gray-200 dotted;
+  border-left: 1px $gray-200 dotted;
+  border-top: 1px $gray-200 dotted;
+  border-bottom: 1px $gray-200 dotted;
   padding: 0 0.2rem !important;
   position: relative;
+}
+
+:host.last {
+  border-right: 1px $gray-200 dotted;
 }
 
 .header-content {

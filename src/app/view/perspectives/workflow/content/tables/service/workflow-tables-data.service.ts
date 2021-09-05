@@ -30,7 +30,7 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
-import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query, QueryStem} from '../../../../../../core/store/navigation/query/query';
@@ -1477,20 +1477,12 @@ export class WorkflowTablesDataService {
   }
 
   private checkInitialSelection(tables: WorkflowTable[]) {
-    this.store$
-      .pipe(
-        select(selectViewCursor),
-        take(1),
-        filter(cursor => !!cursor)
-      )
-      .subscribe(cursor => {
-        if (!this.stateService.isSelected() && !this.stateService.isEditing()) {
-          const cell = viewCursorToWorkflowCell(cursor, tables);
-          if (cell) {
-            this.stateService.setSelectedCellWithDelay(cell);
-          }
-        }
-      });
+    this.store$.pipe(select(selectViewCursor), take(1)).subscribe(cursor => {
+      const cell = viewCursorToWorkflowCell(cursor, tables);
+      if (cell) {
+        this.stateService.performInitialSelection(cell);
+      }
+    });
   }
 
   private resetLockedRows(tableIds?: string[]) {

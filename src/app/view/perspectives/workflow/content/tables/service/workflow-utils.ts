@@ -26,7 +26,14 @@ import {queryAttributePermissions} from '../../../../../../core/model/query-attr
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
-import {TABLE_ROW_HEIGHT, TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
+import {
+  TABLE_BOTTOM_TOOLBAR_HEIGHT,
+  TABLE_ROW_BORDER,
+  TABLE_ROW_HEIGHT,
+  TableCell,
+  TableCellType,
+  TableModel,
+} from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
@@ -51,10 +58,10 @@ export interface PendingRowUpdate {
 export function computeTableHeight(rows: TableRow[], newRow: TableRow, maxRows?: number): number {
   const trimmedRows = rows.slice(0, maxRows || rows.length);
   // header + border
-  let additionalHeight = TABLE_ROW_HEIGHT + 1;
+  let additionalHeight = TABLE_ROW_HEIGHT + TABLE_ROW_BORDER;
   if (newRow?.height) {
     // + border
-    additionalHeight += newRow.height + 1;
+    additionalHeight += TABLE_BOTTOM_TOOLBAR_HEIGHT;
   }
   if (trimmedRows.length === 0) {
     additionalHeight += TABLE_ROW_HEIGHT;

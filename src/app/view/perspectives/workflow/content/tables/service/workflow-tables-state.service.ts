@@ -63,6 +63,8 @@ export class WorkflowTablesStateService {
   private currentConstraintData: ConstraintData;
   private currentCanManageConfig: boolean;
 
+  private initiallySelected: boolean;
+
   public updateData(
     collections: Collection[],
     linkTypes: LinkType[],
@@ -145,6 +147,14 @@ export class WorkflowTablesStateService {
     return this.currentData;
   }
 
+  public performInitialSelection(cell: TableCell) {
+    if (this.initiallySelected || this.isSelected() || this.isEditing()) {
+      return;
+    }
+    this.initiallySelected = true;
+    this.setSelectedCellWithDelay(cell);
+  }
+
   public columns(tableId: string): TableColumn[] {
     return [...(this.findTable(tableId)?.columns || [])];
   }
@@ -216,7 +226,7 @@ export class WorkflowTablesStateService {
     }
   }
 
-  public setSelectedCellWithDelay(cell: TableCell) {
+  private setSelectedCellWithDelay(cell: TableCell) {
     setTimeout(() => this.setSelectedCell(cell));
   }
 
@@ -225,6 +235,7 @@ export class WorkflowTablesStateService {
     if (canSelectCell(cell, column)) {
       this.selectedCell$.next(cell);
       this.editedCell$.next(null);
+      this.initiallySelected = true;
     }
   }
 

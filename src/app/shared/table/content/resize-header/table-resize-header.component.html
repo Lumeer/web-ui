@@ -2,7 +2,7 @@
      [style.height.px]="tableRowHeight">
   <ng-container *ngFor="let group of columnGroups; trackBy:trackByColumn; let index = index">
     <div *ngIf="group.column"
-         [style.left]="'calc(' + (columnGroups | columnHandleLeft:index) + 'px - 0.4rem + 1px)'"
+         [style.left]="'calc(' + (columnGroups | columnHandleLeft:index) + 'px - 0.3rem + 1px)'"
          cdkDragLockAxis="x" cdkDrag
          [style.height.px]="tableRowHeight"
          (cdkDragMoved)="onResizeMoved($event, index)"

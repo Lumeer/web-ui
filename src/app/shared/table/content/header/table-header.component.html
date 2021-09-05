@@ -1,28 +1,31 @@
 <tr cdkDropList class="row-boundary" *ngIf="{index: draggedIndex$ | async} as dragData ">
-  <ng-container *ngFor="let group of columnGroups; trackBy:trackByColumn; let index = index">
+  <ng-container *ngFor="let group of columnGroups; let last = last; trackBy:trackByColumn; let index = index">
     <th *ngIf="{editing: editedCell | tableCellEdited:group.column:cellType} as columnData"
-      class="sticky-header table-cell text-nowrap"
-      cdkDrag
-      [cdkDragDisabled]="!group.column"
-      [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
-      [class.editing]="columnData.editing"
-      [class.affected]="editedCell | tableCellAffected:group.column:cellType:null"
-      [class.dragging]="dragData.index === index"
-      [class.creating]="group.column?.creating"
-      [style.background]="group.color"
-      (cdkDragDropped)="onColumnDrop($event)"
-      (cdkDragStarted)="onColumnDragStarted()"
-      (cdkDragMoved)="onColumnDragMoved($event, index)"
-      (cdkDragEnded)="onColumnDragEnded()"
-      (mousedown)="onMouseDown($event)"
-      [style.width.px]="group.width"
-      [style.height.px]="tableRowHeight"
-      [title]="group.column?.attribute | attributeTitle:group.column?.name:!columnData.editing"
-      scope="col"
-      (click)="onHeaderClick(group.column)"
-      (dblclick)="onHeaderDoubleClick(group.column)">
+        class="sticky-header table-cell text-nowrap"
+        cdkDrag
+        [cdkDragDisabled]="!group.column"
+        [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
+        [class.editing]="columnData.editing"
+        [class.affected]="editedCell | tableCellAffected:group.column:cellType:null"
+        [class.dragging]="dragData.index === index"
+        [class.creating]="group.column?.creating"
+        [style.background]="group.color"
+        (cdkDragDropped)="onColumnDrop($event)"
+        (cdkDragStarted)="onColumnDragStarted()"
+        (cdkDragMoved)="onColumnDragMoved($event, index)"
+        (cdkDragEnded)="onColumnDragEnded()"
+        (mousedown)="onMouseDown($event)"
+        [style.width.px]="group.width"
+        [style.height.px]="tableRowHeight"
+        [title]="group.column?.attribute | attributeTitle:group.column?.name:!columnData.editing"
+        scope="col"
+        (click)="onHeaderClick(group.column)"
+        (dblclick)="onHeaderDoubleClick(group.column)">
       <table-header-cell *ngIf="index !== dragData.index"
                          class="inner-cell"
+                         [class.last]="last"
+                         [style.width.px]="group.width"
+                         [style.height.px]="tableRowHeight"
                          [editing]="columnData.editing"
                          [editingValue]="editedCell?.inputValue"
                          [column]="group.column"
@@ -37,7 +40,10 @@
                          (filterChange)="onFilterChange(group.column, $event)"
                          (hiddenMenuSelected)="hiddenMenuSelected.emit($event)">
       </table-header-cell>
-      <div class="bg-gray h-100 w-100" *ngIf="index === dragData.index">&nbsp;</div>
+      <div class="bg-gray h-100 w-100" *ngIf="index === dragData.index"
+           [style.width.px]="group.width"
+           [style.height.px]="tableRowHeight">&nbsp;
+      </div>
     </th>
   </ng-container>
 </tr>

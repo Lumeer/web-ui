@@ -2,7 +2,6 @@
        [value]="value"
        [title]="column.attribute | attributeTitle : column.name : true"
        [class.text-default-attribute]="default"
-       [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
        class="w-100 p-0"
        readonly>
 
@@ -12,7 +11,6 @@
          [value]="value"
          [title]="column.attribute | attributeTitle : column.name"
          [class.text-default-attribute]="default"
-         [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
          (blur)="onBlur()"
          (input)="onInput($event)"
          (keydown)="onKeyDown($event)"
