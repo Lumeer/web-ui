@@ -32,7 +32,7 @@ import {ConditionType, ConditionValue} from '@lumeer/data-filters';
   templateUrl: './table-header-cell.component.html',
   styleUrls: ['./table-header-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-block h-100'},
+  host: {class: 'd-block'},
 })
 export class TableHeaderCellComponent {
   @Input()

@@ -3,13 +3,9 @@
 :host {
   position: absolute;
   top: 0.5px;
-  left: 0;
+  left: 1px;
   z-index: 4;
   visibility: hidden;
-}
-
-.header-wrapper {
-  display: table-row;
 }
 
 .header-cell {

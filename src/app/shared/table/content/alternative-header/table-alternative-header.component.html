@@ -1,16 +1,18 @@
-<div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable [id]="scrollId">
+<div class="d-flex flex-nowrap invisible-scroll-y" cdkScrollable [id]="scrollId">
   <ng-container *ngFor="let group of columnGroups; let last = last; let first = first; trackBy:trackByColumn">
     <div class="header-cell table-cell"
          [style.background]="group.color"
-         [style.margin-left.px]="first ? 1 : 0"
          [style.height.px]="tableRowHeight"
-         [style.width.px]="first && !last ? group.width - 1 : group.width"
+         [style.width.px]="group.width"
          [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
          [class.editing]="editedCell | tableCellEdited:group.column:cellType"
          [class.affected]="editedCell | tableCellAffected:group.column:cellType:null"
          [class.creating]="group.column?.creating"
-         [style.min-width.px]="first && !last ? group.width - 1 : group.width">
+         [style.min-width.px]="group.width">
       <table-header-cell [editing]="false"
+                         [style.height.px]="tableRowHeight"
+                         [style.width.px]="group.width"
+                         [class.last]="last"
                          [column]="group.column"
                          [offsetHorizontal]="true"
                          [hiddenColumns]="group.hiddenColumns">

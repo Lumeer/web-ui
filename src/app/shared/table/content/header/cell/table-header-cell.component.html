@@ -26,7 +26,7 @@
 
     <ng-container *ngIf="{iconName: (column.attribute?.constraint | constraintTypeIcon)} as typeData">
       <div class="d-flex flex-row align-items-center justify-content-center icons"
-           [style.margin-bottom.px]="offsetHorizontal ? 2 : 0">
+           [style.margin-bottom.px]="offsetHorizontal ? 1 : 0">
         <div *ngIf="column?.attribute?.description && !editing" class="ml-1"
              [tooltip]="column?.attribute | attributeTitle" adaptivePosition="false" placement="bottom">
           <i class="far fa-question-circle ml-1"></i>
