@@ -17,7 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType, TableModel} from '../model/table-model';
+import {
+  SelectedTableCell,
+  TABLE_BOTTOM_TOOLBAR_HEIGHT,
+  TABLE_ROW_HEIGHT,
+  TableCellType,
+  TableModel,
+} from '../model/table-model';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {groupTableColumns} from '../model/table-utils';
 
@@ -47,7 +53,7 @@ export class TableScrollService {
       scrollLeft = columnLeft + (width > selectedGroup.width ? selectedGroup.width - width : 0);
     }
 
-    const height = viewPort.getViewportSize() - TABLE_ROW_HEIGHT;
+    const height = viewPort.getViewportSize() - TABLE_ROW_HEIGHT - TABLE_BOTTOM_TOOLBAR_HEIGHT;
     const top = viewPort.measureScrollOffset('top');
     const bottom = top + height;
 
@@ -61,8 +67,8 @@ export class TableScrollService {
 
       if (rowTop < top) {
         scrollTop = rowTop;
-      } else if (selectedRow && bottom < rowTop + selectedRow.height) {
-        scrollTop = rowTop + (height > selectedRow.height ? selectedRow.height - height : 0);
+      } else if (selectedRow && bottom <= rowTop + selectedRow.height) {
+        scrollTop = rowTop - (height > selectedRow.height ? height - selectedRow.height : 0);
       }
     }
 

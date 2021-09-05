@@ -13,6 +13,13 @@
   border: 0.5px $gray-200 dotted;
 }
 
-::ng-deep div.cdk-virtual-scroll-content-wrapper {
-  padding-bottom: 0.6rem;
+.more-content {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.95), white);
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+
+  .new-row {
+    background: rgba(255, 255, 255, 0.75);
+  }
 }

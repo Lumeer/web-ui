@@ -39,7 +39,14 @@ import {filter, throttleTime} from 'rxjs/operators';
 import {TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
-import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
+import {
+  EditedTableCell,
+  SelectedTableCell,
+  TABLE_BOTTOM_TOOLBAR_HEIGHT,
+  TableCell,
+  TableCellType,
+  TableModel,
+} from './model/table-model';
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn} from './model/table-column';
@@ -159,7 +166,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
   public scrollOffsetLeft: number;
-  public toolbarHeight: number;
+  public toolbarHeight = TABLE_BOTTOM_TOOLBAR_HEIGHT;
+  public rows: TableRow[];
 
   private scrollOffsetTop: number;
   private subscriptions = new Subscription();
@@ -183,7 +191,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
       this.detailColumnId = this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
-      this.toolbarHeight = this.tableModel.newRow ? this.tableModel.newRow.height + 1 : 0;
+      this.rows = [...(this.tableModel?.rows || []), null];
     }
   }
 
@@ -241,7 +249,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public trackByRow(index: number, row: TableRow): string {
-    return row.id;
+    return row?.id || String(index);
   }
 
   public onBodyRowNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
