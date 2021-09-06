@@ -56,6 +56,7 @@ import {
   createMapClustersLayer,
   createMapMarker,
   createMapMarkersBounds,
+  createMapPopupMarker,
 } from './map-globe-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
 import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
@@ -84,6 +85,9 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   @Input()
   public markers: MapMarkerProperties[];
 
+  @Input()
+  public createRecords: boolean;
+
   @Output()
   public markerMove = new EventEmitter<MarkerMoveEvent>();
 
@@ -93,12 +97,16 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   @Output()
   public detail = new EventEmitter<MapMarkerProperties>();
 
+  @Output()
+  public newMarker = new EventEmitter<MapCoordinates>();
+
   public readonly mapElementId = generateId();
 
   private mapboxMap: Map;
 
   private allMarkers: Record<string, Marker>;
   private drawnMarkers: Marker[] = [];
+  private contextMenuMarker: Marker;
 
   private mapLoaded$ = new BehaviorSubject(false);
   private markers$ = new BehaviorSubject<MapMarkerProperties[]>([]);
@@ -210,9 +218,39 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private registerMapEventListeners() {
     this.mapboxMap.on('load', () => this.onMapLoad());
     this.mapboxMap.on('moveend', (event: MapboxEvent) => this.onMapMoveEnd(event));
+    this.mapboxMap.on('contextmenu', event => this.openContextMenu(event.lngLat));
+    this.mapboxMap.on('click', event => this.hideContextMenu());
     this.mapboxMap.on('click', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterClick(event));
     this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, () => this.onMapClusterMouseEnter());
     this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, () => this.onMapClusterMouseLeave());
+  }
+
+  private openContextMenu(coordinates: MapCoordinates) {
+    this.hideContextMenu();
+
+    if (this.createRecords) {
+      this.contextMenuMarker = createMapPopupMarker(coordinates);
+      this.contextMenuMarker.addTo(this.mapboxMap);
+      this.contextMenuMarker.togglePopup();
+
+      const popupElement = this.contextMenuMarker.getPopup().getElement();
+      const clickableElements = popupElement?.getElementsByClassName('dropdown-item');
+      if (clickableElements?.length) {
+        clickableElements.item(0).addEventListener('click', () => this.onNewMarker(coordinates));
+      }
+    }
+  }
+
+  private onNewMarker(coordinates: MapCoordinates) {
+    this.hideContextMenu();
+    this.newMarker.next(coordinates);
+  }
+
+  private hideContextMenu() {
+    if (this.contextMenuMarker) {
+      this.contextMenuMarker.remove();
+    }
+    this.contextMenuMarker = null;
   }
 
   private onMapLoad() {
