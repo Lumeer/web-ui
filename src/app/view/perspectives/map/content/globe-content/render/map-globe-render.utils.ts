@@ -19,7 +19,7 @@
 
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {AnyLayer, GeoJSONSourceRaw, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
-import {MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import {MapCoordinates, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
 import {Configuration} from '../../../../../../../environments/configuration-type';
@@ -107,6 +107,27 @@ export function createMapClusterCountsLayer(id: string, source: string): AnyLaye
       'text-size': 12,
     },
   };
+}
+
+export function createMapPopupMarker(coordinates: MapCoordinates): Marker {
+  const popup = createMapPopup(coordinates);
+
+  const element = document.createElement('div');
+  return new Marker({element, draggable: false}).setLngLat(coordinates).setPopup(popup);
+}
+
+export function createMapPopup(coordinates: MapCoordinates): Popup {
+  const title = $localize`:@@map.popup.title.create:Create Record`;
+  const html = `<div class="card"><div class="dropdown-item cursor-pointer user-select-none">${title}</div></div>`;
+
+  return new Popup({
+    anchor: 'top',
+    className: 'context-menu-popup',
+    closeButton: false,
+    closeOnClick: false,
+  })
+    .setLngLat(coordinates)
+    .setHTML(html);
 }
 
 export function createMapMarker(properties: MapMarkerProperties, onDoubleClick: () => void): Marker {

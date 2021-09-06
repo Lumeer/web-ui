@@ -99,17 +99,7 @@ export function areMapMarkerListsEqual(
 
   const nextMarkersMap = createMapMarkersMap(nextMarkers);
 
-  return !previousMarkers.some(marker => {
-    const nextMarker = nextMarkersMap[marker.id];
-    if (isMapMarkerChanged(marker, nextMarker)) {
-      return !(
-        nextMarker &&
-        coordinatesAreSame(marker.coordinates, nextMarker.coordinates) &&
-        marker.displayValue === nextMarker.displayValue
-      );
-    }
-    return false;
-  });
+  return !previousMarkers.some(marker => isMapMarkerChanged(marker, nextMarkersMap[marker.id]));
 }
 
 function coordinatesAreSame(first: MapCoordinates, second: MapCoordinates): boolean {
@@ -144,6 +134,10 @@ function isMapMarkerChanged(previousMarker: MapMarkerProperties, nextMarker: Map
   }
 
   if (Boolean(previousMarker) !== Boolean(nextMarker)) {
+    return true;
+  }
+
+  if (!coordinatesAreSame(previousMarker?.coordinates, nextMarker?.coordinates)) {
     return true;
   }
 

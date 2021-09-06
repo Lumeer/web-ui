@@ -1,22 +1,19 @@
 <ng-container *ngIf="{loading: loading$ | async, markers: markers$ | async} as data">
-  <ng-container *ngIf="data.markers?.length > 0; else empty">
+  <ng-container *ngIf="data.markers?.length > 0 || !data.loading; else loading">
     <map-globe-render *ngIf="map"
                       [position]="map.config?.position"
+                      [createRecords]="map.config | canCreateRecordsInMap"
                       [markers]="data.markers"
                       (mapMove)="mapMove.emit($event)"
                       (markerMove)="onMarkerMove($event)"
+                      (newMarker)="onNewMarker($event)"
                       (detail)="detail.emit($event)"
                       class="w-100">
     </map-globe-render>
   </ng-container>
 
-  <ng-template #empty>
-    <map-loading *ngIf="data.loading; else placeholder"
-                 class="w-100">
+  <ng-template #loading>
+    <map-loading class="w-100">
     </map-loading>
-
-    <ng-template #placeholder>
-      <empty-map class="w-100"></empty-map>
-    </ng-template>
   </ng-template>
 </ng-container>
