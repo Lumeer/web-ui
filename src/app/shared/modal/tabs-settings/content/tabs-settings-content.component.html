@@ -1,0 +1,26 @@
+<div class="d-flex flex-wrap align-items-center">
+
+  <dashboard-tab *ngFor="let tab of tabs$ | async; let index = index; let last = last; let first = first; trackBy: trackByTab"
+                 class="cursor-pointer mt-1"
+                 [class.mr-2]="last"
+                 [class.ml-1]="!first"
+                 [tab]="tab"
+                 [selected]="(selectedTabId$ | async) === tab.id"
+                 (remove)="removeTab(index)"
+                 (toggleHidden)="toggleHiddenTab(index)"
+                 (click)="selectTab(tab)">
+  </dashboard-tab>
+
+  <button class="btn btn-sm btn-outline-primary mt-1 badge-pill" (click)="addTab()">
+    <i class="far fa-plus mr-2"></i>
+    <span i18n="@@search.tabs.settings.dialog.tab.add">Add tab</span>
+  </button>
+
+</div>
+
+<hr>
+
+<dashboard-tab-settings *ngIf="selectedTab$ | async as selectedTab"
+                        [tab]="selectedTab"
+                        (tabChange)="onSelectedTabChange($event)">
+</dashboard-tab-settings>

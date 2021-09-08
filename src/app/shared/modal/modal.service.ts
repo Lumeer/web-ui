@@ -57,6 +57,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
 import {userHasRoleInOrganization} from '../utils/permission.utils';
 import {RoleType} from '../../core/model/role-type';
+import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -156,7 +157,7 @@ export class ModalService {
     const config = {
       initialState: {dataResources, title},
       keyboard: true,
-      class: 'modal-lg modal-xxl-height',
+      class: 'modal-lg modal-h-100',
     };
     return this.show(DataResourcesDetailModalComponent, config);
   }
@@ -164,6 +165,11 @@ export class ModalService {
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
+  }
+
+  public showTabsSettings(): BsModalRef {
+    const initialState = {};
+    return this.showStaticDialog(initialState, TabsSettingsModalComponent, 'modal-lg');
   }
 
   public showViewSettings(view: View) {
@@ -287,7 +293,7 @@ export class ModalService {
       organizations,
       navigationExtras: extras,
     };
-    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-xxl-height');
+    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-h-100');
   }
 
   public showCopyProjectDialog(

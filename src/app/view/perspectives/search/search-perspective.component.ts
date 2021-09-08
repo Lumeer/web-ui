@@ -42,6 +42,7 @@ import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
 import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
 import {QueryParam} from '../../../core/store/navigation/query-param';
+import {ModalService} from '../../../shared/modal/modal.service';
 
 @Component({
   templateUrl: './search-perspective.component.html',
@@ -57,7 +58,8 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private initialSearchTab: SearchTab;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private router: Router) {}
+  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {
+  }
 
   public ngOnInit() {
     this.initialSearchTab = parseSearchTabFromUrl(this.router.url);
@@ -106,7 +108,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
         )
       )
-      .subscribe(({searchId, config, view}: {searchId?: string; config?: SearchConfig; view?: View}) => {
+      .subscribe(({searchId, config, view}: { searchId?: string; config?: SearchConfig; view?: View }) => {
         if (searchId) {
           this.store$.dispatch(
             new SearchesAction.SetConfig({
@@ -123,7 +125,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToView(
     previousView: View,
     view: View
-  ): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
+  ): Observable<{ searchId?: string; config?: SearchConfig; view?: View }> {
     const searchId = view.code;
     return this.store$.pipe(
       select(selectSearchById(searchId)),
@@ -138,7 +140,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeToDefault(): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
+  private subscribeToDefault(): Observable<{ searchId?: string; config?: SearchConfig; view?: View }> {
     const searchId = DEFAULT_PERSPECTIVE_ID;
     return this.store$.pipe(
       select(selectDefaultViewConfig(Perspective.Search, searchId)),
@@ -204,7 +206,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private selectCurrentTabWithSearch$(): Observable<{searchTab: SearchTab; search: Search}> {
+  private selectCurrentTabWithSearch$(): Observable<{ searchTab: SearchTab; search: Search }> {
     return this.store$.pipe(
       select(selectSearchTab),
       distinctUntilChanged(),
@@ -233,5 +235,9 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   private resetDefaultConfigSnapshot() {
     this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({}));
+  }
+
+  public onSettingsClick() {
+    this.modalService.showTabsSettings();
   }
 }

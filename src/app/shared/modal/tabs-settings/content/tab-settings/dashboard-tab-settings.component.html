@@ -1,0 +1,22 @@
+<div class="row">
+  <label class="col-12" for="title" i18n="@@search.tabs.settings.dialog.title">Title</label>
+  <div class="col-12 col-lg-6">
+    <input class="form-control"
+           #titleInput
+           [(ngModel)]="title"
+           [disabled]="isDefault"
+           [maxLength]="50"
+           (blur)="onNameBlur()"
+           (keydown.enter)="titleInput.blur()"
+           id="title"
+           type="text">
+  </div>
+  <div class="col-12 col-lg-6" *ngIf="isDefault">
+    <toggle-checkbox class="d-block py-2"
+                     [checked]="!tab.hidden"
+                     i18n-label="@@search.tabs.settings.dialog.settings.show"
+                     label="Show tab"
+                     (checkedChange)="onShowChange($event)">
+    </toggle-checkbox>
+  </div>
+</div>

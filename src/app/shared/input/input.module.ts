@@ -31,6 +31,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
+import { ToggleCheckboxComponent } from './toggle-checkbox/toggle-checkbox.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule],
@@ -43,6 +44,7 @@ import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
     CustomCheckboxComponent,
     InputTagsComponent,
     FilterUsedSuggestionsPipe,
+    ToggleCheckboxComponent,
   ],
   exports: [
     FilterBoxComponent,
@@ -52,6 +54,7 @@ import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
     CopyTextBoxComponent,
     CustomCheckboxComponent,
     InputTagsComponent,
+    ToggleCheckboxComponent,
   ],
 })
 export class InputModule {}
