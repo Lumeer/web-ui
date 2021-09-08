@@ -1,7 +1,9 @@
-<div class="d-flex flex-wrap align-items-center">
+<div class="d-flex flex-wrap align-items-center tabs-list" cdkDropList cdkDropListOrientation="horizontal"
+     (cdkDropListDropped)="tagDropped($event)">
 
   <dashboard-tab *ngFor="let tab of tabs$ | async; let index = index; let last = last; let first = first; trackBy: trackByTab"
-                 class="cursor-pointer mt-1"
+                 class="cursor-pointer tab mt-1"
+                 cdkDrag
                  [class.mr-2]="last"
                  [class.ml-1]="!first"
                  [tab]="tab"

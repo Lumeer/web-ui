@@ -22,10 +22,12 @@ import {DashboardTab, defaultDashboardTabs, TabType} from '../../../../core/mode
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {generateId} from '../../../utils/resource.utils';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'tabs-settings-content',
   templateUrl: './tabs-settings-content.component.html',
+  styleUrls: ['./tabs-settings-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsSettingsContentComponent implements OnInit, OnChanges {
@@ -87,11 +89,11 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
 
   private setTabs(tabs: DashboardTab[], selectId?: string) {
     this.tabs$.next(tabs);
+    const selectedTabId = this.selectedTabId$.value;
     if (selectId) {
       this.selectedTabId$.next(selectId);
-    } else {
-      const selectedTabId = this.selectedTabId$.value;
-      const selectedTab = selectedTabId && tabs.find(tab => tab.id === selectedTabId);
+    } else if (selectedTabId) {
+      const selectedTab = tabs.find(tab => tab.id === selectedTabId);
       if (!selectedTab) {
         this.selectedTabId$.next(tabs[0].id);
       }
@@ -115,5 +117,11 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   private createNewTab(): DashboardTab {
     const title = $localize`:@@search.tabs.settings.dialog.tab.newName:Custom Tab`;
     return {id: generateId(), type: TabType.Custom, title};
+  }
+
+  public tagDropped(event: CdkDragDrop<DashboardTab, any>) {
+    const tabs = [...this.tabs$.value];
+    moveItemInArray(tabs, event.previousIndex, event.currentIndex);
+    this.setTabs(tabs);
   }
 }

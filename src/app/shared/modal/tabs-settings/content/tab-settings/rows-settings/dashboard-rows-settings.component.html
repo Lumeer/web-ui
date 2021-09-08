@@ -1,0 +1,13 @@
+<dashboard-row-settings *ngFor="let row of rows; let index = index"
+                        [row]="row"
+                        (rowChange)="onRowChange($event, index)"
+                        (delete)="onRowDelete(index)">
+</dashboard-row-settings>
+<button #buttonElement class="btn btn-block btn-outline-success" (click)="onNewRow()">
+  <i class="far fa-plus mr-2"></i>
+  <span i18n="@@search.tabs.settings.dialog.settings.row.add">Add Row</span>
+</button>
+
+<dashboard-row-layout [origin]="buttonElement"
+                      (layoutSelected)="addNewRow($event)">
+</dashboard-row-layout>

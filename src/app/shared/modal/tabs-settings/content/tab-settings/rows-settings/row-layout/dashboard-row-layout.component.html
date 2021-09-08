@@ -1,0 +1,19 @@
+<dropdown [closeOnClickOutside]="true"
+          [closeOnClickOrigin]="true"
+          [showBackdrop]="false"
+          [fitParent]="false"
+          [origin]="origin"
+          [pushOnScreen]="true"
+          [positions]="dropdownPositions">
+  <div class="card overflow-hidden" [style.width.px]="260">
+
+    <a class="dropdown-item py-2" *ngFor="let layout of layouts" (click)="onChooseLayout(layout)">
+      <i class="fa-fw far mr-2" [ngClass]="false ? 'fa-check' : 'fa-none'"></i>
+      <div class="layout" [style.grid-template-columns]="layout | numbersTemplateColumns">
+        <div *ngFor="let item of layout" class="layout-item"></div>
+      </div>
+    </a>
+
+  </div>
+
+</dropdown>

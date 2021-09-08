@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
-import {DashboardTab, isDashboardTabDefault} from '../../../../../core/model/dashboard-tab';
+import {DashboardRow, DashboardTab, isDashboardTabDefault} from '../../../../../core/model/dashboard-tab';
 
 @Component({
   selector: 'dashboard-tab-settings',
@@ -37,9 +37,6 @@ export class DashboardTabSettingsComponent implements OnChanges {
   public title: string;
   public isDefault: boolean;
 
-  constructor() {
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tab) {
       this.title = this.tab?.title || '';
@@ -57,4 +54,8 @@ export class DashboardTabSettingsComponent implements OnChanges {
     this.tabChange.emit(tab);
   }
 
+  public onRowsChange(rows: DashboardRow[]) {
+    const tab = {...this.tab, rows};
+    this.tabChange.emit(tab);
+  }
 }

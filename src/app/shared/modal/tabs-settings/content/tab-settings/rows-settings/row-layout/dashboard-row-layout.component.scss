@@ -1,0 +1,17 @@
+@import '~src/styles/variables';
+
+.dropdown-item {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+}
+
+.layout {
+  display: grid;
+  grid-gap: 10px;
+
+  .layout-item {
+    height: 1.3rem;
+    border-radius: 0.5rem;
+    border: 1px solid $gray-500;
+  }
+}

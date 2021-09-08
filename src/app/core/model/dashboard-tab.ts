@@ -22,6 +22,56 @@ export interface DashboardTab {
   title?: string;
   type?: TabType;
   hidden?: boolean;
+  rows?: DashboardRow[];
+}
+
+export interface DashboardRow {
+  cells: DashboardCell[];
+}
+
+export type DashboardLayoutType = number[];
+
+export const dashboardRowLayouts: DashboardLayoutType[] = [
+  [1], [1, 1], [1, 2], [2, 1], [1, 1, 1], [1, 2, 1]
+]
+
+export interface DashboardCell {
+  span: number;
+  type?: DashboardCellType;
+  config?: DashboardCellConfig;
+  actions?: DashboardAction[];
+}
+
+export type DashboardCellConfig = DashboardViewCellConfig | DashboardImageCellConfig;
+
+export enum DashboardCellType {
+  View = 'view',
+  Image = 'image',
+}
+
+export interface DashboardViewCellConfig {
+  viewId: string;
+}
+
+export interface DashboardImageCellConfig {
+  url: string;
+}
+
+export interface DashboardAction {
+  type: DashboardActionType;
+  config: DashboardActionConfig;
+}
+
+export enum DashboardActionType {
+  ViewButton = 'viewButton',
+}
+
+export type DashboardActionConfig = DashboardViewButtonConfig;
+
+export interface DashboardViewButtonConfig {
+  icon: string;
+  color: string;
+  viewId: string;
 }
 
 export enum TabType {
