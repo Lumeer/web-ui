@@ -47,6 +47,7 @@ import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/wo
 import {WorkflowConfig} from '../workflows/workflow';
 import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
 import {DetailConfig} from '../details/detail';
+import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -220,4 +221,13 @@ export function defaultViewIcon(view: View): string {
 
 export function cleanClonedView(view: View): View {
   return {...view, code: undefined, folders: undefined, favorite: undefined, priority: undefined};
+}
+
+export function createViewSelectItems(views: View[]): SelectItemModel[] {
+  return (views || []).map(view => ({
+    id: view.id,
+    value: view.name,
+    icons: [view.icon],
+    iconColors: [view.color],
+  }));
 }

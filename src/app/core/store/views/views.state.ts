@@ -139,8 +139,12 @@ export const selectPerspectiveConfig = createSelector(
 
 export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);
 
-export const selectViewsWithComputedData = createSelector(selectAllViews, selectCollectionsDictionary,
-  (views, collectionsMap) => views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)})))
+export const selectViewsWithComputedData = createSelector(
+  selectAllViews,
+  selectCollectionsDictionary,
+  (views, collectionsMap) =>
+    views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)}))
+);
 
 export const selectViewConfigChanged = createSelector(
   selectPerspective,

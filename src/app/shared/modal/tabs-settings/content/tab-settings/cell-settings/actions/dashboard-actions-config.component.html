@@ -1,1 +1,14 @@
-<p>dashboard-actions-config works!</p>
+<label class="mb-2 w-100" i18n="@@search.tabs.settings.dialog.cell.actions.title">Actions</label>
+
+<dashboard-action-config *ngFor="let action of actions; let index = index"
+                         class="mb-1 d-block"
+                         [action]="action"
+                         [views]="views"
+                         (actionChange)="onActionChange($event, index)"
+                         (remove)="onActionRemove(index)">
+</dashboard-action-config>
+
+<button class="btn btn-outline-primary mt-1 align-self-center" (click)="onAdd()">
+  <i class="far fa-plus mr-2"></i>
+  <span i18n="@@search.tabs.settings.dialog.cell.actions.button">Add Action</span>
+</button>

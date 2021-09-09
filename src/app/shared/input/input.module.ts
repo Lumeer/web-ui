@@ -31,7 +31,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {DirectivesModule} from '../directives/directives.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {FilterUsedSuggestionsPipe} from './tags/filter-used-suggestions.pipe';
-import { ToggleCheckboxComponent } from './toggle-checkbox/toggle-checkbox.component';
+import {ToggleCheckboxComponent} from './toggle-checkbox/toggle-checkbox.component';
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule],

@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {DialogType} from '../dialog-type';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -28,26 +28,17 @@ import {DashboardTab} from '../../../core/model/dashboard-tab';
 @Component({
   selector: 'tabs-settings-modal',
   templateUrl: './tabs-settings-modal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabsSettingsModalComponent implements OnInit {
-
+export class TabsSettingsModalComponent {
   public readonly dialogType = DialogType;
 
   public performingAction$ = new BehaviorSubject(false);
   public tabs$: Observable<DashboardTab[]>;
 
-  constructor(
-    private store$: Store<AppState>,
-    private bsModalRef: BsModalRef,
-  ) {}
+  constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
 
-  public ngOnInit() {
-  }
-
-  public onSubmit() {
-
-  }
+  public onSubmit() {}
 
   public hideDialog() {
     this.bsModalRef.hide();

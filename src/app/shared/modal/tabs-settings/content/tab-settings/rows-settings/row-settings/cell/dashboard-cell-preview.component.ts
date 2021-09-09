@@ -18,7 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {DashboardCell, DashboardCellType, DashboardImageCellConfig, DashboardViewCellConfig} from '../../../../../../../../core/model/dashboard-tab';
+import {
+  DashboardCell,
+  DashboardCellType,
+  DashboardImageCellConfig,
+  DashboardViewCellConfig,
+} from '../../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../../core/store/views/view';
 
 @Component({
@@ -28,7 +33,6 @@ import {View} from '../../../../../../../../core/store/views/view';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardCellPreviewComponent implements OnChanges {
-
   @Input()
   public cell: DashboardCell;
 
@@ -58,5 +62,4 @@ export class DashboardCellPreviewComponent implements OnChanges {
         break;
     }
   }
-
 }

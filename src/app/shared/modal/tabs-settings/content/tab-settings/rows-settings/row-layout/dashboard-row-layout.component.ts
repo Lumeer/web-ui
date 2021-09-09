@@ -26,10 +26,9 @@ import {DashboardLayoutType, DashboardRow, dashboardRowLayouts} from '../../../.
   selector: 'dashboard-row-layout',
   templateUrl: './dashboard-row-layout.component.html',
   styleUrls: ['./dashboard-row-layout.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardRowLayoutComponent {
-
   @Input()
   public row: DashboardRow;
 

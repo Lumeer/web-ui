@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Pipe, PipeTransform} from '@angular/core';
 import {DashboardLayoutType} from '../../../../core/model/dashboard-tab';
 
 @Pipe({
-  name: 'layoutTemplateColumns'
+  name: 'layoutTemplateColumns',
 })
 export class LayoutTemplateColumnsPipe implements PipeTransform {
-
   public transform(layout: DashboardLayoutType): string {
-    return (layout || []).filter(num => !!num).map(num => `${num}fr`).join(' ');
+    return (layout || [])
+      .filter(num => !!num)
+      .map(num => `${num}fr`)
+      .join(' ');
   }
-
 }

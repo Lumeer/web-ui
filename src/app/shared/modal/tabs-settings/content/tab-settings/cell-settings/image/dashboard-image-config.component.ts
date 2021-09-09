@@ -23,10 +23,9 @@ import {DashboardImageCellConfig} from '../../../../../../../core/model/dashboar
 @Component({
   selector: 'dashboard-image-config',
   templateUrl: './dashboard-image-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardImageConfigComponent implements OnChanges {
-
   @Input()
   public config: DashboardImageCellConfig;
 

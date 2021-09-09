@@ -25,3 +25,10 @@
                           (configChange)="onConfigChanged($event)">
   </dashboard-image-config>
 </ng-container>
+
+<dashboard-actions-config *ngIf="cell?.type"
+                          class="mt-4"
+                          [actions]="cell.actions"
+                          [views]="views"
+                          (actionsChange)="onActionsChange($event)">
+</dashboard-actions-config>

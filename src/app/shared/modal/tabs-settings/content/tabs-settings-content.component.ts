@@ -28,10 +28,9 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
   selector: 'tabs-settings-content',
   templateUrl: './tabs-settings-content.component.html',
   styleUrls: ['./tabs-settings-content.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsSettingsContentComponent implements OnInit, OnChanges {
-
   @Input()
   public savedTabs: DashboardTab[];
 
@@ -40,13 +39,12 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
 
   public selectedTab$: Observable<DashboardTab>;
 
-  constructor() {
-  }
+  constructor() {}
 
   public ngOnInit() {
     this.selectedTab$ = combineLatest([this.tabs$, this.selectedTabId$]).pipe(
       map(([tabs, selectedId]) => tabs?.find(tab => tab.id === selectedId))
-    )
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {

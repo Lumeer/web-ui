@@ -22,16 +22,14 @@ import {DashboardCell, DashboardRow} from '../../../../core/model/dashboard-tab'
 import {filterValidDashboardCells} from '../../../utils/dashboard.utils';
 
 @Pipe({
-  name: 'findCellByCoordinates'
+  name: 'findCellByCoordinates',
 })
 export class FindCellByCoordinatesPipe implements PipeTransform {
-
-  public transform(rows: DashboardRow[], coordinates: { row: number, column: number }): DashboardCell {
+  public transform(rows: DashboardRow[], coordinates: {row: number; column: number}): DashboardCell {
     if (!coordinates || !rows) {
       return null;
     }
 
     return filterValidDashboardCells(rows[coordinates.row]?.cells)[coordinates.column];
   }
-
 }

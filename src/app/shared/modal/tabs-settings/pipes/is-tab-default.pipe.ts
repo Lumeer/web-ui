@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DashboardTab, isDashboardTabDefault} from '../../../../core/model/dashboard-tab';
 
 @Pipe({
-  name: 'isTabDefault'
+  name: 'isTabDefault',
 })
 export class IsTabDefaultPipe implements PipeTransform {
-
   public transform(tab: DashboardTab): boolean {
     return isDashboardTabDefault(tab);
   }
-
 }

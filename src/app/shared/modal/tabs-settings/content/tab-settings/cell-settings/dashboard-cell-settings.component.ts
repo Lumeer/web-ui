@@ -18,7 +18,12 @@
  */
 
 import {Component, EventEmitter, ChangeDetectionStrategy, Input, Output} from '@angular/core';
-import {DashboardCell, DashboardCellConfig, DashboardCellType} from '../../../../../../core/model/dashboard-tab';
+import {
+  DashboardAction,
+  DashboardCell,
+  DashboardCellConfig,
+  DashboardCellType,
+} from '../../../../../../core/model/dashboard-tab';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../utils/common.utils';
 import {parseSelectTranslation} from '../../../../../utils/translation.utils';
@@ -27,10 +32,9 @@ import {View} from '../../../../../../core/store/views/view';
 @Component({
   selector: 'dashboard-cell-settings',
   templateUrl: './dashboard-cell-settings.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardCellSettingsComponent {
-
   @Input()
   public cell: DashboardCell;
 
@@ -46,8 +50,11 @@ export class DashboardCellSettingsComponent {
   constructor() {
     this.typeItems = objectValues(DashboardCellType).map(type => ({
       id: type,
-      value: parseSelectTranslation($localize`:@@search.tabs.settings.dialog.cell.type:{type, select, view {View} image {Image}}`, {type})
-    }))
+      value: parseSelectTranslation(
+        $localize`:@@search.tabs.settings.dialog.cell.type:{type, select, view {View} image {Image}}`,
+        {type}
+      ),
+    }));
   }
 
   public onTypeSelected(type: DashboardCellType) {
@@ -59,6 +66,11 @@ export class DashboardCellSettingsComponent {
 
   public onConfigChanged(config: DashboardCellConfig) {
     const newCell = {...this.cell, config};
+    this.cellChange.emit(newCell);
+  }
+
+  public onActionsChange(actions: DashboardAction[]) {
+    const newCell = {...this.cell, actions};
     this.cellChange.emit(newCell);
   }
 }

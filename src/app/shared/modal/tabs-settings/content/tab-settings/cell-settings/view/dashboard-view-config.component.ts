@@ -21,14 +21,14 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChang
 import {DashboardViewCellConfig} from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
+import {createViewSelectItems} from '../../../../../../../core/store/views/view.utils';
 
 @Component({
   selector: 'dashboard-view-config',
   templateUrl: './dashboard-view-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardViewConfigComponent implements OnChanges {
-
   @Input()
   public config: DashboardViewCellConfig;
 
@@ -42,17 +42,8 @@ export class DashboardViewConfigComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.views) {
-      this.viewSelectItems = this.createSelectItems();
+      this.viewSelectItems = createViewSelectItems(this.views);
     }
-  }
-
-  private createSelectItems(): SelectItemModel[] {
-    return (this.views || []).map(view => ({
-      id: view.id,
-      value: view.name,
-      icons: [view.icon],
-      iconColors: [view.color],
-    }))
   }
 
   public onViewSelected(viewId: string) {

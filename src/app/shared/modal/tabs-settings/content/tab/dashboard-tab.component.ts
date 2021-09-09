@@ -24,10 +24,9 @@ import {DashboardTab, isDashboardTabDefault} from '../../../../../core/model/das
   selector: 'dashboard-tab',
   templateUrl: './dashboard-tab.component.html',
   styleUrls: ['./dashboard-tab.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTabComponent implements OnChanges {
-
   @Input()
   public tab: DashboardTab;
 
@@ -54,5 +53,4 @@ export class DashboardTabComponent implements OnChanges {
       this.isDefault = isDashboardTabDefault(this.tab);
     }
   }
-
 }

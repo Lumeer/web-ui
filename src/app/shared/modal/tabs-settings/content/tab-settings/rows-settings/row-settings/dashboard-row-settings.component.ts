@@ -26,10 +26,9 @@ import {View} from '../../../../../../../core/store/views/view';
   selector: 'dashboard-row-settings',
   templateUrl: './dashboard-row-settings.component.html',
   styleUrls: ['./dashboard-row-settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardRowSettingsComponent implements OnChanges {
-
   @Input()
   public row: DashboardRow;
 
@@ -52,7 +51,10 @@ export class DashboardRowSettingsComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.row) {
-      this.templateColumns = filterValidDashboardCells(this.row?.cells).map(cell => `${cell.span}fr`).join(' ') + ' min-content min-content';
+      this.templateColumns =
+        filterValidDashboardCells(this.row?.cells)
+          .map(cell => `${cell.span}fr`)
+          .join(' ') + ' min-content min-content';
     }
   }
 

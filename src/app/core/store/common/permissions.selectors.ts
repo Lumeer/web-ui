@@ -549,8 +549,12 @@ export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views)
   sortResourcesByFavoriteAndLastUsed<View>(views)
 );
 
-export const selectViewsByReadWithComputedData = createSelector(selectViewsByRead, selectCollectionsDictionary,
-  (views, collectionsMap) => views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)})))
+export const selectViewsByReadWithComputedData = createSelector(
+  selectViewsByRead,
+  selectCollectionsDictionary,
+  (views, collectionsMap) =>
+    views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)}))
+);
 
 export const selectViewsByQuery = createSelector(selectViewsByRead, selectViewQuery, (views, query): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))

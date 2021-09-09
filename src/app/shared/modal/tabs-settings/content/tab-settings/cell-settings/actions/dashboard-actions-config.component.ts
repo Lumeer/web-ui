@@ -17,22 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {DashboardAction} from '../../../../../../../core/model/dashboard-tab';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {DashboardAction, DashboardActionType} from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
+import {COLOR_SUCCESS} from '../../../../../../../core/constants';
 
 @Component({
   selector: 'dashboard-actions-config',
   templateUrl: './dashboard-actions-config.component.html',
-  styleUrls: ['./dashboard-actions-config.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-column'},
 })
 export class DashboardActionsConfigComponent {
-
   @Input()
   public actions: DashboardAction[];
 
   @Input()
   public views: View[];
 
+  @Output()
+  public actionsChange = new EventEmitter<DashboardAction[]>();
+
+  public onAdd() {
+    const newActions = [...(this.actions || [])];
+    const defaultIcon = 'far fa-external-link';
+    newActions.push({type: DashboardActionType.ViewButton, config: {color: COLOR_SUCCESS, icon: defaultIcon}});
+    this.actionsChange.next(newActions);
+  }
+
+  public onActionChange(action: DashboardAction, index: number) {
+    const newActions = [...(this.actions || [])];
+    newActions[index] = action;
+    this.actionsChange.next(newActions);
+  }
+
+  public onActionRemove(index: number) {
+    const newActions = [...(this.actions || [])];
+    newActions.splice(index, 1);
+    this.actionsChange.next(newActions);
+  }
 }

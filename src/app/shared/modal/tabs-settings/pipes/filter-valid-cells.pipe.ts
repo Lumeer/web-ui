@@ -22,12 +22,10 @@ import {DashboardCell} from '../../../../core/model/dashboard-tab';
 import {filterValidDashboardCells} from '../../../utils/dashboard.utils';
 
 @Pipe({
-  name: 'filterValidCells'
+  name: 'filterValidCells',
 })
 export class FilterValidCellsPipe implements PipeTransform {
-
   public transform(cells: DashboardCell[]): DashboardCell[] {
     return filterValidDashboardCells(cells);
   }
-
 }

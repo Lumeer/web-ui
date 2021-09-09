@@ -24,21 +24,20 @@ import {View} from '../../../../../../core/store/views/view';
 @Component({
   selector: 'dashboard-rows-settings',
   templateUrl: './dashboard-rows-settings.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardRowsSettingsComponent {
-
   @Input()
   public rows: DashboardRow[];
 
   @Input()
-  public selectedCoordinates: {row: number, column: number};
+  public selectedCoordinates: {row: number; column: number};
 
   @Input()
   public views: View[];
 
   @Output()
-  public rowChange = new EventEmitter<{row: DashboardRow, index: number}>();
+  public rowChange = new EventEmitter<{row: DashboardRow; index: number}>();
 
   @Output()
   public rowDelete = new EventEmitter();
@@ -47,6 +46,5 @@ export class DashboardRowsSettingsComponent {
   public rowAdd = new EventEmitter<DashboardLayoutType>();
 
   @Output()
-  public cellSelect = new EventEmitter<{row: number, column: number}>();
-
+  public cellSelect = new EventEmitter<{row: number; column: number}>();
 }

@@ -22,13 +22,11 @@ import {DashboardLayoutType, DashboardRow} from '../../../../core/model/dashboar
 import {deepArrayEquals} from '../../../utils/array.utils';
 
 @Pipe({
-  name: 'isLayoutSelectedInRow'
+  name: 'isLayoutSelectedInRow',
 })
 export class IsLayoutSelectedInRowPipe implements PipeTransform {
-
   public transform(layout: DashboardLayoutType, row: DashboardRow): boolean {
     const selected = row?.cells?.map(row => row.span).filter(span => !!span) || [];
     return deepArrayEquals(layout, selected);
   }
-
 }

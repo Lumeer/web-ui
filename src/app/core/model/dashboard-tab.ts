@@ -31,9 +31,7 @@ export interface DashboardRow {
 
 export type DashboardLayoutType = number[];
 
-export const dashboardRowLayouts: DashboardLayoutType[] = [
-  [1], [1, 1], [1, 2], [2, 1], [1, 1, 1], [1, 2, 1]
-]
+export const dashboardRowLayouts: DashboardLayoutType[] = [[1], [1, 1], [1, 2], [2, 1], [1, 1, 1], [1, 2, 1]];
 
 export interface DashboardCell {
   span: number;
@@ -71,7 +69,7 @@ export type DashboardActionConfig = DashboardViewButtonConfig;
 export interface DashboardViewButtonConfig {
   icon: string;
   color: string;
-  viewId: string;
+  viewId?: string;
 }
 
 export enum TabType {
@@ -87,7 +85,7 @@ export const defaultDashboardTabs = [
   {id: TabType.Tasks, title: $localize`:@@search.tab.tasks:Tasks`, type: TabType.Tasks},
   {id: TabType.Views, title: $localize`:@@search.tab.views:Views`, type: TabType.Views},
   {id: TabType.Tables, title: $localize`:@@search.tab.collections:Tables`, type: TabType.Tables},
-]
+];
 
 export function isDashboardTabDefault(tab: DashboardTab): boolean {
   return tab && defaultDashboardTabs.some(t => t.id === tab.id);

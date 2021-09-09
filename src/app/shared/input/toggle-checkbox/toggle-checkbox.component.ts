@@ -23,10 +23,9 @@ import {generateId} from '../../utils/resource.utils';
 @Component({
   selector: 'toggle-checkbox',
   templateUrl: './toggle-checkbox.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleCheckboxComponent {
-
   @Input()
   public checked: boolean;
 
@@ -36,6 +35,5 @@ export class ToggleCheckboxComponent {
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 
-  public id = generateId()
-
+  public id = generateId();
 }

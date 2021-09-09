@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TabsSettingsModalComponent} from './tabs-settings-modal.component';
@@ -36,17 +35,38 @@ import {DashboardRowLayoutComponent} from './content/tab-settings/rows-settings/
 import {DropdownModule} from '../../dropdown/dropdown.module';
 import {LayoutTemplateColumnsPipe} from './pipes/layout-template-columns.pipe';
 import {IsLayoutSelectedInRowPipe} from './pipes/is-layout-selected-in-row.pipe';
-import { FilterValidCellsPipe } from './pipes/filter-valid-cells.pipe';
-import { FindCellByCoordinatesPipe } from './pipes/find-cell-by-coordinates.pipe';
+import {FilterValidCellsPipe} from './pipes/filter-valid-cells.pipe';
+import {FindCellByCoordinatesPipe} from './pipes/find-cell-by-coordinates.pipe';
 import {SelectModule} from '../../select/select.module';
-import { DashboardViewConfigComponent } from './content/tab-settings/cell-settings/view/dashboard-view-config.component';
-import { DashboardImageConfigComponent } from './content/tab-settings/cell-settings/image/dashboard-image-config.component';
-import { DashboardActionsConfigComponent } from './content/tab-settings/cell-settings/actions/dashboard-actions-config.component';
-import { DashboardCellPreviewComponent } from './content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component';
+import {DashboardViewConfigComponent} from './content/tab-settings/cell-settings/view/dashboard-view-config.component';
+import {DashboardImageConfigComponent} from './content/tab-settings/cell-settings/image/dashboard-image-config.component';
+import {DashboardActionsConfigComponent} from './content/tab-settings/cell-settings/actions/dashboard-actions-config.component';
+import {DashboardCellPreviewComponent} from './content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component';
 import {PipesModule} from '../../pipes/pipes.module';
+import {DashboardActionConfigComponent} from './content/tab-settings/cell-settings/actions/action/dashboard-action-config.component';
+import {PickerModule} from '../../picker/picker.module';
 
 @NgModule({
-  declarations: [TabsSettingsModalComponent, TabsSettingsContentComponent, IsLayoutSelectedInRowPipe, IsTabDefaultPipe, DashboardTabComponent, DashboardTabSettingsComponent, DashboardRowsSettingsComponent, DashboardCellSettingsComponent, DashboardRowSettingsComponent, DashboardRowLayoutComponent, LayoutTemplateColumnsPipe, FilterValidCellsPipe, FindCellByCoordinatesPipe, DashboardViewConfigComponent, DashboardImageConfigComponent, DashboardActionsConfigComponent, DashboardCellPreviewComponent],
+  declarations: [
+    TabsSettingsModalComponent,
+    TabsSettingsContentComponent,
+    IsLayoutSelectedInRowPipe,
+    IsTabDefaultPipe,
+    DashboardTabComponent,
+    DashboardTabSettingsComponent,
+    DashboardRowsSettingsComponent,
+    DashboardCellSettingsComponent,
+    DashboardRowSettingsComponent,
+    DashboardRowLayoutComponent,
+    LayoutTemplateColumnsPipe,
+    FilterValidCellsPipe,
+    FindCellByCoordinatesPipe,
+    DashboardViewConfigComponent,
+    DashboardImageConfigComponent,
+    DashboardActionsConfigComponent,
+    DashboardCellPreviewComponent,
+    DashboardActionConfigComponent,
+  ],
   imports: [
     CommonModule,
     ModalWrapperModule,
@@ -55,8 +75,8 @@ import {PipesModule} from '../../pipes/pipes.module';
     DragDropModule,
     DropdownModule,
     SelectModule,
-    PipesModule
-  ]
+    PipesModule,
+    PickerModule,
+  ],
 })
-export class TabsSettingsModalModule {
-}
+export class TabsSettingsModalModule {}
