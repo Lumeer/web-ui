@@ -1,0 +1,10 @@
+<label for="url" i18n="@@search.tabs.settings.dialog.config.image.title">Image address</label>
+<input class="form-control w-100"
+       #urlInput
+       [(ngModel)]="url"
+       placeholder="https://..."
+       (blur)="onBlur()"
+       (keydown.enter)="urlInput.blur()"
+       (keydown.escape)="revertUrl(); urlInput.blur()"
+       id="url"
+       type="text">

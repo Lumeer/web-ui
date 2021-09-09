@@ -2,7 +2,11 @@
 
 .dropdown-item {
   display: grid;
-  grid-template-columns: min-content 1fr;
+  grid-template-columns: 1fr;
+
+  &.selectable {
+    grid-template-columns: min-content 1fr;
+  }
 }
 
 .layout {

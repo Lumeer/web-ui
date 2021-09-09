@@ -17,36 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {DashboardLayoutType, DashboardRow} from '../../../../../../core/model/dashboard-tab';
-import {View} from '../../../../../../core/store/views/view';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {DashboardAction} from '../../../../../../../core/model/dashboard-tab';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
-  selector: 'dashboard-rows-settings',
-  templateUrl: './dashboard-rows-settings.component.html',
+  selector: 'dashboard-actions-config',
+  templateUrl: './dashboard-actions-config.component.html',
+  styleUrls: ['./dashboard-actions-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardRowsSettingsComponent {
+export class DashboardActionsConfigComponent {
 
   @Input()
-  public rows: DashboardRow[];
-
-  @Input()
-  public selectedCoordinates: {row: number, column: number};
+  public actions: DashboardAction[];
 
   @Input()
   public views: View[];
-
-  @Output()
-  public rowChange = new EventEmitter<{row: DashboardRow, index: number}>();
-
-  @Output()
-  public rowDelete = new EventEmitter();
-
-  @Output()
-  public rowAdd = new EventEmitter<DashboardLayoutType>();
-
-  @Output()
-  public cellSelect = new EventEmitter<{row: number, column: number}>();
 
 }

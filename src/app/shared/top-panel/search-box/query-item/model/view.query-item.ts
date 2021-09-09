@@ -18,7 +18,6 @@
  */
 
 import {View} from '../../../../../core/store/views/view';
-import {perspectiveIconsMap} from '../../../../../view/perspectives/perspective';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {COLOR_PRIMARY, COLOR_QUERY_FULLTEXT} from '../../../../../core/constants';

@@ -8,20 +8,36 @@
            [maxLength]="50"
            (blur)="onNameBlur()"
            (keydown.enter)="titleInput.blur()"
+           (keydown.escape)="revertName() ;titleInput.blur()"
            id="title"
            type="text">
   </div>
   <div class="col-12 col-lg-6" *ngIf="isDefault">
     <toggle-checkbox class="d-block py-2"
                      [checked]="!tab.hidden"
-                     i18n-label="@@search.tabs.settings.dialog.settings.show"
+                     i18n-label="@@search.tabs.settings.dialog.tab.show"
                      label="Show tab"
                      (checkedChange)="onShowChange($event)">
     </toggle-checkbox>
   </div>
 </div>
 
-<dashboard-rows-settings class="mt-3 d-block"
-                        [rows]="tab.rows"
-                        (rowsChange)="onRowsChange($event)">
-</dashboard-rows-settings>
+<div class="row" *ngIf="{views: views$ | async} as data">
+
+  <dashboard-rows-settings class="col-12 col-lg-6 d-block mt-4 rows-settings"
+                           [rows]="tab.rows"
+                           [selectedCoordinates]="selectedCoordinates$ | async"
+                           [views]="data.views"
+                           (rowChange)="onRowChange($event)"
+                           (rowAdd)="onRowAdd($event)"
+                           (rowDelete)="onRowDelete($event)"
+                           (cellSelect)="selectCell($event.row, $event.column)">
+  </dashboard-rows-settings>
+
+  <dashboard-cell-settings class="col-12 col-lg-6 d-block mt-4 cell-settings"
+                           [cell]="tab.rows | findCellByCoordinates:(selectedCoordinates$ | async)"
+                           [views]="data.views"
+                           (cellChange)="onCellChange($event)">
+  </dashboard-cell-settings>
+
+</div>

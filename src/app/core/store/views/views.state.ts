@@ -34,7 +34,7 @@ import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
-import {isViewConfigChanged} from './view.utils';
+import {getViewColor, getViewIcon, isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
@@ -42,7 +42,6 @@ import {selectViewsPermissions} from '../user-permissions/user-permissions.state
 import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
-import {RoleType} from '../../model/role-type';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -139,6 +138,9 @@ export const selectPerspectiveConfig = createSelector(
 );
 
 export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);
+
+export const selectViewsWithComputedData = createSelector(selectAllViews, selectCollectionsDictionary,
+  (views, collectionsMap) => views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)})))
 
 export const selectViewConfigChanged = createSelector(
   selectPerspective,

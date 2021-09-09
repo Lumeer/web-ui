@@ -17,36 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {DashboardLayoutType, DashboardRow} from '../../../../../../core/model/dashboard-tab';
-import {View} from '../../../../../../core/store/views/view';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {DashboardImageCellConfig} from '../../../../../../../core/model/dashboard-tab';
 
 @Component({
-  selector: 'dashboard-rows-settings',
-  templateUrl: './dashboard-rows-settings.component.html',
+  selector: 'dashboard-image-config',
+  templateUrl: './dashboard-image-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardRowsSettingsComponent {
+export class DashboardImageConfigComponent implements OnChanges {
 
   @Input()
-  public rows: DashboardRow[];
-
-  @Input()
-  public selectedCoordinates: {row: number, column: number};
-
-  @Input()
-  public views: View[];
+  public config: DashboardImageCellConfig;
 
   @Output()
-  public rowChange = new EventEmitter<{row: DashboardRow, index: number}>();
+  public configChange = new EventEmitter<DashboardImageCellConfig>();
 
-  @Output()
-  public rowDelete = new EventEmitter();
+  public url: string;
 
-  @Output()
-  public rowAdd = new EventEmitter<DashboardLayoutType>();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.config) {
+      this.url = this.config?.url || '';
+    }
+  }
 
-  @Output()
-  public cellSelect = new EventEmitter<{row: number, column: number}>();
+  public onBlur() {
+    const url = this.url?.trim();
+    const newConfig = {...this.config, url};
+    this.configChange.next(newConfig);
+  }
 
+  public revertUrl() {
+    this.url = this.config?.url || '';
+  }
 }

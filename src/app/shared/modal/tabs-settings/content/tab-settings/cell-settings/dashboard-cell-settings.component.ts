@@ -17,20 +17,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, EventEmitter, ChangeDetectionStrategy, Input, Output} from '@angular/core';
+import {DashboardCell, DashboardCellConfig, DashboardCellType} from '../../../../../../core/model/dashboard-tab';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {objectValues} from '../../../../../utils/common.utils';
+import {parseSelectTranslation} from '../../../../../utils/translation.utils';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'dashboard-cell-settings',
   templateUrl: './dashboard-cell-settings.component.html',
-  styleUrls: ['./dashboard-cell-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardCellSettingsComponent implements OnInit {
+export class DashboardCellSettingsComponent {
+
+  @Input()
+  public cell: DashboardCell;
+
+  @Input()
+  public views: View[];
+
+  @Output()
+  public cellChange = new EventEmitter<DashboardCell>();
+
+  public readonly type = DashboardCellType;
+  public readonly typeItems: SelectItemModel[];
 
   constructor() {
+    this.typeItems = objectValues(DashboardCellType).map(type => ({
+      id: type,
+      value: parseSelectTranslation($localize`:@@search.tabs.settings.dialog.cell.type:{type, select, view {View} image {Image}}`, {type})
+    }))
   }
 
-  ngOnInit(): void {
+  public onTypeSelected(type: DashboardCellType) {
+    if (this.cell.type !== type) {
+      const newCell = {...this.cell, type, config: {}};
+      this.cellChange.emit(newCell);
+    }
   }
 
+  public onConfigChanged(config: DashboardCellConfig) {
+    const newCell = {...this.cell, config};
+    this.cellChange.emit(newCell);
+  }
 }

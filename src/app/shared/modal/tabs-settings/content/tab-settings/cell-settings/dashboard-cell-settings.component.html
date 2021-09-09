@@ -1,1 +1,27 @@
-<p>dashboard-cell-settings works!</p>
+<h6 class="font-weight-bold mb-3" i18n="@@search.tabs.settings.dialog.cell.title">Item configuration</h6>
+
+<div *ngIf="!cell"
+     class="text-center"
+     i18n="@@search.tabs.settings.dialog.cell.empty">Select item from dashboard preview to setup configuration
+</div>
+<select-item *ngIf="cell"
+             class="mb-4 d-block"
+             [selectedId]="cell?.type"
+             [items]="typeItems"
+             [removable]="false"
+             i18n-emptyValue="@@search.tabs.settings.dialog.cell.type.placeholder"
+             emptyValue="Select Item type"
+             (selected)="onTypeSelected($event)">
+</select-item>
+
+<ng-container [ngSwitch]="cell?.type">
+  <dashboard-view-config *ngSwitchCase="type.View"
+                         [config]="cell.config"
+                         [views]="views"
+                         (configChange)="onConfigChanged($event)">
+  </dashboard-view-config>
+  <dashboard-image-config *ngSwitchCase="type.Image"
+                          [config]="cell.config"
+                          (configChange)="onConfigChanged($event)">
+  </dashboard-image-config>
+</ng-container>

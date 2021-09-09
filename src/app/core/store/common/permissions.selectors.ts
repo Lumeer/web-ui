@@ -76,6 +76,7 @@ import {
 } from '../user-permissions/user-permissions.state';
 import {CollectionPurposeType} from '../collections/collection';
 import {selectCurrentUserForWorkspace} from '../users/users.state';
+import {getViewColor, getViewIcon} from '../views/view.utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
@@ -547,6 +548,9 @@ export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermi
 export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(views)
 );
+
+export const selectViewsByReadWithComputedData = createSelector(selectViewsByRead, selectCollectionsDictionary,
+  (views, collectionsMap) => views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)})))
 
 export const selectViewsByQuery = createSelector(selectViewsByRead, selectViewQuery, (views, query): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))

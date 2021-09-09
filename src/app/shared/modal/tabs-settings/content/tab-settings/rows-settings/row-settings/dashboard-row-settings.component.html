@@ -1,12 +1,21 @@
 <div class="dashboard-row mb-2" [style.grid-template-columns]="templateColumns">
-  <div *ngFor="let cell of row.cells"
-       class="dashboard-cell p-2 d-flex align-items-center flex-nowrap overflow-hidden">
-    <i class="fas fa-table text-warning mr-2"></i>
-    <span class="text-truncate">Some view title</span>
-  </div>
-  <i class="far fa-columns text-success clickable"></i>
+  <dashboard-cell-preview *ngFor="let cell of row.cells | filterValidCells; let index = index"
+                          (click)="cellSelect.emit(index)"
+                          [cell]="cell"
+                          [views]="views"
+                          [class.selected]="selectedColumn === index"
+                          class="dashboard-cell cursor-pointer">
+  </dashboard-cell-preview>
+  <i class="far fa-columns text-primary clickable" #columnsIcon (click)="layout.toggle()"></i>
   <i class="fal fa-trash-alt text-danger clickable"
-     i18n-title="@@search.tabs.settings.dialog.settings.row.delete"
+     i18n-title="@@search.tabs.settings.dialog.row.delete"
      title="Delete Row"
      (click)="delete.emit()"></i>
 </div>
+
+<dashboard-row-layout #layout
+                      [origin]="columnsIcon"
+                      [showSelection]="true"
+                      [row]="row"
+                      (layoutSelected)="onLayoutSelected($event)">
+</dashboard-row-layout>

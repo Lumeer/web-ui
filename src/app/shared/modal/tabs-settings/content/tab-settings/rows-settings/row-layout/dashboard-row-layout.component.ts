@@ -36,6 +36,9 @@ export class DashboardRowLayoutComponent {
   @Input()
   public origin: ElementRef | HTMLElement;
 
+  @Input()
+  public showSelection: boolean;
+
   @Output()
   public layoutSelected = new EventEmitter<DashboardLayoutType>();
 

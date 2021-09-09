@@ -50,11 +50,11 @@ export enum DashboardCellType {
 }
 
 export interface DashboardViewCellConfig {
-  viewId: string;
+  viewId?: string;
 }
 
 export interface DashboardImageCellConfig {
-  url: string;
+  url?: string;
 }
 
 export interface DashboardAction {

@@ -18,7 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
-import {DashboardRow} from '../../../../../../../core/model/dashboard-tab';
+import {DashboardLayoutType, DashboardRow} from '../../../../../../../core/model/dashboard-tab';
+import {filterValidDashboardCells} from '../../../../../../utils/dashboard.utils';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'dashboard-row-settings',
@@ -31,18 +33,46 @@ export class DashboardRowSettingsComponent implements OnChanges {
   @Input()
   public row: DashboardRow;
 
+  @Input()
+  public views: View[];
+
   @Output()
   public rowChange = new EventEmitter<DashboardRow>();
 
+  @Input()
+  public selectedColumn: number;
+
   @Output()
   public delete = new EventEmitter();
+
+  @Output()
+  public cellSelect = new EventEmitter<number>();
 
   public templateColumns: string;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.row) {
-      this.templateColumns = this.row.cells.map(cell => `${cell.span}fr`).join(' ') + ' min-content min-content';
+      this.templateColumns = filterValidDashboardCells(this.row?.cells).map(cell => `${cell.span}fr`).join(' ') + ' min-content min-content';
     }
   }
 
+  public onLayoutSelected(layoutType: DashboardLayoutType) {
+    const cells = [...(this.row.cells || [])];
+    for (let i = 0; i < layoutType.length; i++) {
+      if (cells[i]) {
+        cells[i] = {...cells[i], span: layoutType[i]};
+      } else {
+        cells.push({span: layoutType[i]});
+      }
+    }
+
+    if (cells.length > layoutType.length) {
+      for (let i = layoutType.length; i < cells.length; i++) {
+        cells[i] = {...cells[i], span: null};
+      }
+    }
+
+    const newRow = {...this.row, cells};
+    this.rowChange.next(newRow);
+  }
 }

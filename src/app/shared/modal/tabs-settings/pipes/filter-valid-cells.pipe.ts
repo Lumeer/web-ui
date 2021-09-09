@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Pipe, PipeTransform} from '@angular/core';
+import {DashboardCell} from '../../../../core/model/dashboard-tab';
+import {filterValidDashboardCells} from '../../../utils/dashboard.utils';
 
 @Pipe({
-  name: 'numbersTemplateColumns'
+  name: 'filterValidCells'
 })
-export class NumbersTemplateColumnsPipe implements PipeTransform {
+export class FilterValidCellsPipe implements PipeTransform {
 
-  public transform(nums: number[]): string {
-    return (nums || []).filter(num => !!num).map(num => `${num}fr`).join(' ');
+  public transform(cells: DashboardCell[]): DashboardCell[] {
+    return filterValidDashboardCells(cells);
   }
 
 }
