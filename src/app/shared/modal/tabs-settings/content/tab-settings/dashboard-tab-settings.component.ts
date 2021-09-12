@@ -40,6 +40,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {View} from '../../../../../core/store/views/view';
 import {selectViewsByReadWithComputedData} from '../../../../../core/store/common/permissions.selectors';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'dashboard-tab-settings',
@@ -145,6 +146,16 @@ export class DashboardTabSettingsComponent implements OnInit, OnChanges {
       cells[cellIndex] = cell;
       const newRow = {...row, cells};
       this.onRowChange({row: newRow, index: rowIndex});
+    }
+  }
+
+  public onRowMove(event: {from: number; to: number}) {
+    const rows = [...(this.tab?.rows || [])];
+    moveItemInArray(rows, event.from, event.to);
+    this.onRowsChange(rows);
+
+    if (this.selectedCoordinates$.value?.row === event.from) {
+      this.selectCell(event.to, this.selectedCoordinates$.value.column);
     }
   }
 }

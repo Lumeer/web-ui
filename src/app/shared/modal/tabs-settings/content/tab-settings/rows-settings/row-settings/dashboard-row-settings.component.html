@@ -1,4 +1,6 @@
+
 <div class="dashboard-row mb-2" [style.grid-template-columns]="templateColumns">
+  <ng-content></ng-content>
   <dashboard-cell-preview *ngFor="let cell of row.cells | filterValidCells; let index = index"
                           (click)="cellSelect.emit(index)"
                           [cell]="cell"

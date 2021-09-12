@@ -18,12 +18,14 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {DashboardLayoutType, DashboardRow} from '../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'dashboard-rows-settings',
   templateUrl: './dashboard-rows-settings.component.html',
+  styleUrls: ['./dashboard-rows-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardRowsSettingsComponent {
@@ -43,8 +45,19 @@ export class DashboardRowsSettingsComponent {
   public rowDelete = new EventEmitter();
 
   @Output()
+  public rowMove = new EventEmitter<{from: number; to: number}>();
+
+  @Output()
   public rowAdd = new EventEmitter<DashboardLayoutType>();
 
   @Output()
   public cellSelect = new EventEmitter<{row: number; column: number}>();
+
+  public rowDropped(event: CdkDragDrop<DashboardRow, any>) {
+    this.rowMove.emit({from: event.previousIndex, to: event.currentIndex});
+  }
+
+  public trackByIndex(index: number, obj: any): string {
+    return String(index);
+  }
 }

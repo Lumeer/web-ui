@@ -51,11 +51,15 @@ export class DashboardRowSettingsComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.row) {
-      this.templateColumns =
-        filterValidDashboardCells(this.row?.cells)
-          .map(cell => `${cell.span}fr`)
-          .join(' ') + ' min-content min-content';
+      this.computeTemplateColumns();
     }
+  }
+
+  private computeTemplateColumns() {
+    const fractions = filterValidDashboardCells(this.row?.cells)
+      .map(cell => `${cell.span}fr`)
+      .join(' ');
+    this.templateColumns = `min-content ${fractions} min-content min-content`;
   }
 
   public onLayoutSelected(layoutType: DashboardLayoutType) {

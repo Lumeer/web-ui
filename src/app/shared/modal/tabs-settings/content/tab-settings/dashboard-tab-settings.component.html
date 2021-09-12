@@ -22,15 +22,16 @@
   </div>
 </div>
 
-<div class="row" *ngIf="{views: views$ | async} as data">
+<div class="row" *ngIf="!isDefault && {views: views$ | async} as data">
 
-  <dashboard-rows-settings class="col-12 col-lg-6 d-block mt-4 rows-settings"
+  <dashboard-rows-settings class="col-12 col-lg-6 d-block mt-4 px-0 rows-settings"
                            [rows]="tab.rows"
                            [selectedCoordinates]="selectedCoordinates$ | async"
                            [views]="data.views"
                            (rowChange)="onRowChange($event)"
                            (rowAdd)="onRowAdd($event)"
                            (rowDelete)="onRowDelete($event)"
+                           (rowMove)="onRowMove($event)"
                            (cellSelect)="selectCell($event.row, $event.column)">
   </dashboard-rows-settings>
 

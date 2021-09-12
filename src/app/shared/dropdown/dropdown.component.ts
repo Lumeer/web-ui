@@ -145,6 +145,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
       }
     }
 
+    this.syncSizes();
     setTimeout(() => this.syncSizes());
   }
 
@@ -266,7 +267,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     const clientRect = this.getOriginBoundingClientRect();
-    this.overlayRef.updateSize({width: clientRect.width});
+    if (clientRect.width !== this.overlayRef.overlayElement.offsetWidth) {
+      this.overlayRef.updateSize({width: clientRect.width});
+    }
   }
 
   private getOriginBoundingClientRect(): DOMRect | ClientRect {

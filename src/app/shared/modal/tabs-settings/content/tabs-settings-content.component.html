@@ -1,22 +1,26 @@
-<div class="d-flex flex-wrap align-items-center tabs-list" cdkDropList cdkDropListOrientation="horizontal"
-     (cdkDropListDropped)="tagDropped($event)">
+<div class="tabs-content">
 
-  <dashboard-tab *ngFor="let tab of tabs$ | async; let index = index; let last = last; let first = first; trackBy: trackByTab"
-                 class="cursor-pointer tab mt-1"
-                 cdkDrag
-                 [class.mr-2]="last"
-                 [class.ml-1]="!first"
-                 [tab]="tab"
-                 [selected]="(selectedTabId$ | async) === tab.id"
-                 (remove)="removeTab(index)"
-                 (toggleHidden)="toggleHiddenTab(index)"
-                 (click)="selectTab(tab)">
-  </dashboard-tab>
+  <div class="d-flex flex-wrap align-items-center tabs-list" cdkDropList cdkDropListOrientation="horizontal"
+       (cdkDropListDropped)="tagDropped($event)">
 
-  <button class="btn btn-sm btn-outline-primary mt-1 badge-pill" (click)="addTab()">
-    <i class="far fa-plus mr-2"></i>
-    <span i18n="@@search.tabs.settings.dialog.tab.add">Add tab</span>
-  </button>
+    <dashboard-tab *ngFor="let tab of tabs$ | async; let index = index; let last = last; trackBy: trackByTab"
+                   class="cursor-pointer tab mt-1"
+                   cdkDrag
+                   [class.mr-2]="last"
+                   [class.mr-1]="!last"
+                   [tab]="tab"
+                   [selected]="(selectedTabId$ | async) === tab.id"
+                   (remove)="removeTab(index)"
+                   (toggleHidden)="toggleHiddenTab(index)"
+                   (click)="selectTab(tab)">
+      <i class="fa-fw fa fa-grip-horizontal cursor-move mr-2 text-black-50" cdkDragHandle></i>
+    </dashboard-tab>
+
+  </div>
+
+  <div class="px-2 text-primary clickable d-flex align-items-center" (click)="addTab()">
+    <i class="far fa-plus-circle"></i>
+  </div>
 
 </div>
 

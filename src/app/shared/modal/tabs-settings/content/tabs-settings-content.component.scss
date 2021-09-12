@@ -1,3 +1,9 @@
+.tabs-content {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-gap: 0.5rem;
+}
+
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 10rem;
