@@ -1,14 +1,14 @@
 <modal-wrapper class="d-block"
                [dialogType]="dialogType.Primary"
                [performingAction]="performingAction$ | async"
-               [submitDisabled]="false"
+               [submitDisabled]="!(content?.tabsAreValid$ | async)"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 
   <span class="title" i18n="@@search.tabs.settings.dialog.title">Setup custom dashboard</span>
 
   <div class="body p-3">
-    <tabs-settings-content>
+    <tabs-settings-content [savedTabs]="tabs$ | async">
     </tabs-settings-content>
   </div>
 

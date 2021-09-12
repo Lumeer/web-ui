@@ -25,6 +25,7 @@ import {SearchTasksComponent} from './tasks/search-tasks.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
 import {SearchViewsFoldersComponent} from './views/folders/search-views-folders.component';
+import {SearchCustomComponent} from './custom/search-custom.component';
 
 const searchRoutes: Routes = [
   {
@@ -50,8 +51,8 @@ const searchRoutes: Routes = [
         component: SearchViewsFoldersComponent,
       },
       {
-        path: 'records',
-        redirectTo: 'tasks',
+        path: ':tabId',
+        component: SearchCustomComponent,
       },
     ],
   },

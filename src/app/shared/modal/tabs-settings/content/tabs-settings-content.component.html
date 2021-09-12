@@ -9,7 +9,7 @@
                    [class.mr-2]="last"
                    [class.mr-1]="!last"
                    [tab]="tab"
-                   [selected]="(selectedTabId$ | async) === tab.id"
+                   [selected]="tab | isTabSelected:(selectedTabId$ | async)"
                    (remove)="removeTab(index)"
                    (toggleHidden)="toggleHiddenTab(index)"
                    (click)="selectTab(tab)">
@@ -22,6 +22,10 @@
     <i class="far fa-plus-circle"></i>
   </div>
 
+</div>
+
+<div class="alert alert-danger mt-3" *ngIf="!(tabsAreValid$ | async)" i18n="@@search.tabs.settings.dialog.error.empty">
+  Dashboard must contain at least one visible tab.
 </div>
 
 <hr>

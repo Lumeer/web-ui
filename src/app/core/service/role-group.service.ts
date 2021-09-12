@@ -25,8 +25,6 @@ import {RoleType} from '../model/role-type';
 
 @Injectable()
 export class RoleGroupService {
-  constructor() {}
-
   public createResourceGroups(type: ResourceType): RoleGroup[] {
     switch (type) {
       case ResourceType.Organization:

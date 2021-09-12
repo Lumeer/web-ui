@@ -45,6 +45,7 @@ import {DashboardCellPreviewComponent} from './content/tab-settings/rows-setting
 import {PipesModule} from '../../pipes/pipes.module';
 import {DashboardActionConfigComponent} from './content/tab-settings/cell-settings/actions/action/dashboard-action-config.component';
 import {PickerModule} from '../../picker/picker.module';
+import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {PickerModule} from '../../picker/picker.module';
     DashboardActionsConfigComponent,
     DashboardCellPreviewComponent,
     DashboardActionConfigComponent,
+    IsTabSelectedPipe,
   ],
   imports: [
     CommonModule,

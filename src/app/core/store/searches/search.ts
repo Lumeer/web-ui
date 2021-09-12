@@ -19,6 +19,7 @@
 
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {SearchTab} from '../navigation/search-tab';
+import {DashboardTab} from '../../model/dashboard-tab';
 
 export interface Search {
   id: string;
@@ -28,7 +29,13 @@ export interface Search {
 export interface SearchConfig {
   documents?: SearchDocumentsConfig;
   views?: SearchViewsConfig;
-  searchTab?: SearchTab;
+  searchTab?: string;
+  dashboard?: Dashboard;
+}
+
+export interface Dashboard {
+  viewId?: string;
+  tabs?: DashboardTab[];
 }
 
 export interface SearchDocumentsConfig {
@@ -46,7 +53,7 @@ export function checkSizeType(sizeType: SizeType): SizeType {
   return sizeType === SizeType.XL ? SizeType.L : sizeType || defaultSizeType;
 }
 
-export function createDefaultSearchConfig(searchTab?: SearchTab): SearchConfig {
+export function createDefaultSearchConfig(searchTab?: string): SearchConfig {
   return {
     searchTab: searchTab || SearchTab.All,
     documents: {size: defaultSizeType},

@@ -25,12 +25,13 @@ import {AppState} from '../../../core/store/app.state';
 import {selectDefaultViewConfig, selectDefaultViewConfigsLoaded} from '../../../core/store/views/views.state';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
-import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
+import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DefaultViewConfig} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
+import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 
 @Injectable()
 export class SearchPerspectiveRedirectGuard implements CanActivate {
@@ -42,15 +43,13 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     const {organizationCode, projectCode, viewCode} = this.getParams(next);
-    const searchTab = parseSearchTabFromUrl(state.url);
-    if (searchTab) {
-      return of(true);
-    }
 
     return this.workspaceService
       .selectOrGetWorkspace(organizationCode, projectCode)
       .pipe(
-        mergeMap(({organization, project}) => this.resolveSearchTab(organization, project, viewCode, next.queryParams))
+        mergeMap(({organization, project}) =>
+          this.resolveSearchTab(organization, project, viewCode, next.queryParams, state.url)
+        )
       );
   }
 
@@ -58,7 +57,8 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     organization: Organization,
     project: Project,
     viewCode: string,
-    queryParams: Params
+    queryParams: Params,
+    currentUrl: string
   ): Observable<any> {
     return this.selectDefaultViewConfig$(organization, project).pipe(
       take(1),
@@ -68,9 +68,24 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
           viewPath.push({vc: viewCode});
         }
         viewPath.push(Perspective.Search);
-        viewPath.push(defaultConfig?.config?.search?.searchTab || SearchTab.All);
-        this.router.navigate(viewPath, {queryParams});
-        return false;
+
+        let searchTab;
+        const tabs = addDefaultDashboardTabsIfNotPresent(defaultConfig?.config?.search?.dashboard?.tabs);
+        const desiredSearchTab = parseSearchTabFromUrl(currentUrl);
+        const selectedTab = desiredSearchTab && tabs.find(tab => tab.id === desiredSearchTab);
+        if (selectedTab) {
+          searchTab = selectedTab.id;
+        } else {
+          searchTab = defaultConfig?.config?.search?.searchTab || tabs[0].id;
+        }
+
+        viewPath.push(searchTab);
+
+        if (currentUrl === viewPath.join('/')) {
+          return true;
+        }
+
+        return this.router.createUrlTree(viewPath, {queryParams});
       })
     );
   }

@@ -23,6 +23,7 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {generateId} from '../../../utils/resource.utils';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {addDefaultDashboardTabsIfNotPresent} from '../../../utils/dashboard.utils';
 
 @Component({
   selector: 'tabs-settings-content',
@@ -38,34 +39,23 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   public selectedTabId$ = new BehaviorSubject<string>(null);
 
   public selectedTab$: Observable<DashboardTab>;
-
-  constructor() {}
+  public tabsAreValid$: Observable<boolean>;
 
   public ngOnInit() {
     this.selectedTab$ = combineLatest([this.tabs$, this.selectedTabId$]).pipe(
-      map(([tabs, selectedId]) => tabs?.find(tab => tab.id === selectedId))
+      map(([tabs, selectedId]) => tabs?.find(tab => isTabSelected(tab, selectedId)))
     );
+    this.tabsAreValid$ = this.tabs$.pipe(map(tabs => tabs.some(tab => tab.type === TabType.Custom || !tab.hidden)));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.savedTabs) {
-      this.setTabs(this.addDefaultTabsIfNotPresent(this.savedTabs));
+      this.setTabs(addDefaultDashboardTabsIfNotPresent(this.savedTabs));
     }
-  }
-
-  private addDefaultTabsIfNotPresent(savedTabs: DashboardTab[]): DashboardTab[] {
-    const tabs = [...(savedTabs || [])];
-    for (let i = defaultDashboardTabs.length - 1; i >= 0; i--) {
-      const defaultTab = defaultDashboardTabs[i];
-      if (!tabs.some(tab => tab.id === defaultTab.id)) {
-        tabs.splice(0, 0, defaultTab);
-      }
-    }
-    return tabs;
   }
 
   public trackByTab(index: number, tab: DashboardTab): string {
-    return tab.id;
+    return tab.id || tab.correlationId;
   }
 
   public removeTab(index: number) {
@@ -82,7 +72,7 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   }
 
   public selectTab(tab: DashboardTab) {
-    this.selectedTabId$.next(tab.id);
+    this.selectedTabId$.next(tabSelectValue(tab));
   }
 
   private setTabs(tabs: DashboardTab[], selectId?: string) {
@@ -90,16 +80,16 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
     const selectedTabId = this.selectedTabId$.value;
     if (selectId) {
       this.selectedTabId$.next(selectId);
-    } else if (selectedTabId) {
-      const selectedTab = tabs.find(tab => tab.id === selectedTabId);
+    } else {
+      const selectedTab = tabs.find(tab => isTabSelected(tab, selectedTabId));
       if (!selectedTab) {
-        this.selectedTabId$.next(tabs[0].id);
+        this.selectTab(tabs[0]);
       }
     }
   }
 
   public onSelectedTabChange(tab: DashboardTab) {
-    const index = this.tabs$.value.findIndex(t => t.id === tab.id);
+    const index = this.tabs$.value.findIndex(t => tabSelectValue(t) === tabSelectValue(tab));
     const tabs = [...this.tabs$.value];
     tabs[index] = tab;
     this.setTabs(tabs);
@@ -109,12 +99,12 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
     const tabs = [...this.tabs$.value];
     const newTab = this.createNewTab();
     tabs.push(newTab);
-    this.setTabs(tabs, newTab.id);
+    this.setTabs(tabs, newTab.correlationId);
   }
 
   private createNewTab(): DashboardTab {
     const title = $localize`:@@search.tabs.settings.dialog.tab.newName:Custom Tab`;
-    return {id: generateId(), type: TabType.Custom, title};
+    return {correlationId: generateId(), type: TabType.Custom, title};
   }
 
   public tagDropped(event: CdkDragDrop<DashboardTab, any>) {
@@ -122,4 +112,12 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
     moveItemInArray(tabs, event.previousIndex, event.currentIndex);
     this.setTabs(tabs);
   }
+}
+
+export function tabSelectValue(tab: DashboardTab): string {
+  return tab?.id ? tab.id : tab?.correlationId ? tab.correlationId : null;
+}
+
+export function isTabSelected(tab: DashboardTab, selectedValue: string): boolean {
+  return selectedValue && tabSelectValue(tab) === selectedValue;
 }

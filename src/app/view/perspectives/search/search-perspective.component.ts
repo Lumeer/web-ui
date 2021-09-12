@@ -33,7 +33,7 @@ import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take,
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
-import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
+import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
 import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
@@ -43,6 +43,8 @@ import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query
 import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {ModalService} from '../../../shared/modal/modal.service';
+import {DashboardTab} from '../../../core/model/dashboard-tab';
+import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 
 @Component({
   templateUrl: './search-perspective.component.html',
@@ -51,11 +53,10 @@ import {ModalService} from '../../../shared/modal/modal.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
-  public readonly searchTab = SearchTab;
-
   public queryParams$: Observable<Record<string, string>>;
+  public tabs$: Observable<DashboardTab[]>;
 
-  private initialSearchTab: SearchTab;
+  private initialSearchTab: string;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {}
@@ -94,6 +95,12 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
         return null;
       })
+    );
+
+    this.tabs$ = this.store$.pipe(
+      select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)),
+      map(defaultView => addDefaultDashboardTabsIfNotPresent(defaultView?.config?.search?.dashboard?.tabs)),
+      map(tabs => tabs.filter(tab => !tab.hidden))
     );
   }
 
@@ -205,7 +212,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private selectCurrentTabWithSearch$(): Observable<{searchTab: SearchTab; search: Search}> {
+  private selectCurrentTabWithSearch$(): Observable<{searchTab: string; search: Search}> {
     return this.store$.pipe(
       select(selectSearchTab),
       distinctUntilChanged(),
@@ -238,5 +245,9 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   public onSettingsClick() {
     this.modalService.showTabsSettings();
+  }
+
+  public trackByTab(index: number, tab: DashboardTab): string {
+    return tab.id;
   }
 }

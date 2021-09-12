@@ -17,28 +17,71 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewChild, OnInit} from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
+import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
+import {selectDefaultViewConfig} from '../../../core/store/views/views.state';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/perspective';
+import {map} from 'rxjs/operators';
+import {ViewsAction} from '../../../core/store/views/views.action';
+import {createDashboardTabId} from '../../utils/dashboard.utils';
 
 @Component({
   selector: 'tabs-settings-modal',
   templateUrl: './tabs-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabsSettingsModalComponent {
+export class TabsSettingsModalComponent implements OnInit {
+  @ViewChild(TabsSettingsContentComponent)
+  public content: TabsSettingsContentComponent;
+
   public readonly dialogType = DialogType;
+  private readonly searchId = DEFAULT_PERSPECTIVE_ID;
 
   public performingAction$ = new BehaviorSubject(false);
   public tabs$: Observable<DashboardTab[]>;
 
   constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
 
-  public onSubmit() {}
+  public ngOnInit() {
+    this.tabs$ = this.store$.pipe(
+      select(selectDefaultViewConfig(Perspective.Search, this.searchId)),
+      map(defaultView => defaultView?.config?.search?.dashboard?.tabs)
+    );
+  }
+
+  public onSubmit() {
+    this.performingAction$.next(true);
+
+    this.store$.dispatch(
+      new ViewsAction.SetDashboard({
+        dashboard: {tabs: this.assignTabsIds(this.content.tabs$.value)},
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
+
+  private assignTabsIds(tabs: DashboardTab[]): DashboardTab[] {
+    const tabIds = new Set<string>();
+    const assignedTabs: DashboardTab[] = [];
+    for (const tab of tabs) {
+      if (tab.id) {
+        tabIds.add(tab.id);
+        assignedTabs.push(tab);
+      } else {
+        const newId = createDashboardTabId(tab.title, tabIds);
+        tabIds.add(newId);
+        assignedTabs.push({...tab, id: newId, correlationId: undefined});
+      }
+    }
+    return assignedTabs;
+  }
 
   public hideDialog() {
     this.bsModalRef.hide();

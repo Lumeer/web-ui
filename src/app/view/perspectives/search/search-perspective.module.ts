@@ -40,6 +40,7 @@ import {ViewsFolderComponent} from './views/folders/content/folders/folder/views
 import {ViewFoldersByPathPipe} from './views/folders/content/pipes/view-folders-by-path.pipe';
 import {ViewsFoldersBreadcrumbComponent} from './views/folders/content/breadcrumb/views-folders-breadcrumb.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {SearchCustomComponent} from './custom/search-custom.component';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     ViewsFolderComponent,
     ViewFoldersByPathPipe,
     ViewsFoldersBreadcrumbComponent,
+    SearchCustomComponent,
   ],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],

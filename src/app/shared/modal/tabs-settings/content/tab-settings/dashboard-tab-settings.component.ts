@@ -35,12 +35,17 @@ import {
   isDashboardTabDefault,
 } from '../../../../../core/model/dashboard-tab';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {filterValidDashboardCells, findRealDashboardCellIndexByValidIndex} from '../../../../utils/dashboard.utils';
+import {
+  filterValidDashboardCells,
+  findRealDashboardCellIndexByValidIndex,
+  isViewDisplayableInDashboard,
+} from '../../../../utils/dashboard.utils';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {View} from '../../../../../core/store/views/view';
 import {selectViewsByReadWithComputedData} from '../../../../../core/store/common/permissions.selectors';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'dashboard-tab-settings',
@@ -66,7 +71,10 @@ export class DashboardTabSettingsComponent implements OnInit, OnChanges {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.views$ = this.store$.pipe(select(selectViewsByReadWithComputedData));
+    this.views$ = this.store$.pipe(
+      select(selectViewsByReadWithComputedData),
+      map(views => views.filter(view => isViewDisplayableInDashboard(view)))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {

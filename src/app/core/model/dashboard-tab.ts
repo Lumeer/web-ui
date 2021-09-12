@@ -19,6 +19,7 @@
 
 export interface DashboardTab {
   id?: string;
+  correlationId?: string;
   title?: string;
   type?: TabType;
   hidden?: boolean;

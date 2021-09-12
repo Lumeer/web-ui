@@ -18,22 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {PivotValueType} from '../../../../core/store/pivots/pivot';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
+import {DashboardTab} from '../../../../core/model/dashboard-tab';
+import {isTabSelected} from '../content/tabs-settings-content.component';
 
 @Pipe({
-  name: 'pivotValueTypeSelectItems',
+  name: 'isTabSelected',
 })
-export class PivotValueTypeSelectItemsPipe implements PipeTransform {
-  public transform(types: PivotValueType[]): SelectItemModel[] {
-    return (types || []).map(type => ({id: type, value: this.translateValueType(type)}));
-  }
-
-  private translateValueType(type: PivotValueType): string {
-    return parseSelectTranslation(
-      $localize`:@@perspective.pivot.config.value.type:{type, select, default {Default} row {% of row} column {% of column} all {% of all values}}`,
-      {type}
-    );
+export class IsTabSelectedPipe implements PipeTransform {
+  public transform(tab: DashboardTab, selectedValue: string): boolean {
+    return isTabSelected(tab, selectedValue);
   }
 }
