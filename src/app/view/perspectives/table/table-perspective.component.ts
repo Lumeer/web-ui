@@ -73,7 +73,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import CreateTable = TablesAction.CreateTable;
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
-import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
+import {selectCanManageCurrentViewConfig} from '../../../core/store/common/permissions.selectors';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
@@ -134,7 +134,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(this.subscribeToScrolling());
     this.subscriptions.add(this.subscribeToConfigChange());
 
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageCurrentViewConfig));
     this.tableId$ = this.store$.pipe(select(selectTableId));
   }
 

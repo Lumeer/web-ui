@@ -34,7 +34,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -43,7 +43,7 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent
-  extends DataPerspectiveComponent<GanttChartConfig>
+  extends DataPerspectiveDirective<GanttChartConfig>
   implements OnInit, OnDestroy {
   constructor(protected store$: Store<AppState>) {
     super(store$);

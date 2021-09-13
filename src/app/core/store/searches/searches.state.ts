@@ -48,4 +48,4 @@ export const selectSearch = createSelector(
   (searchesMap, searchId) => searchesMap[searchId]
 );
 
-export const selectSearchConfig = createSelector(selectSearch, search => search && search.config);
+export const selectSearchConfig = createSelector(selectSearch, search => search?.config);

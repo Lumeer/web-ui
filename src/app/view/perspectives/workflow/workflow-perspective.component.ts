@@ -33,7 +33,7 @@ import {selectWorkflowById, selectWorkflowSelectedDocumentId} from '../../../cor
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 
@@ -44,7 +44,7 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
   host: {class: 'd-block h-100'},
 })
 export class WorkflowPerspectiveComponent
-  extends DataPerspectiveComponent<WorkflowConfig>
+  extends DataPerspectiveDirective<WorkflowConfig>
   implements OnInit, OnDestroy {
   public selectedDocument$: Observable<DocumentModel>;
   public selectedCollection$: Observable<Collection>;

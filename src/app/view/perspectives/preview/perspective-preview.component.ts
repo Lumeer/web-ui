@@ -17,11 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {View} from '../../../core/store/views/view';
+import {Perspective} from '../perspective';
 
 @Component({
-  templateUrl: './search-custom.component.html',
-  styleUrls: ['./search-custom.component.scss'],
+  selector: 'perspective-preview',
+  templateUrl: './perspective-preview.component.html',
+  styleUrls: ['./perspective-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchCustomComponent {}
+export class PerspectivePreviewComponent {
+  @Input()
+  public view: View;
+
+  public readonly perspective = Perspective;
+}

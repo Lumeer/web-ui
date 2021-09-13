@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {map} from 'rxjs/operators';
 import {ViewConfig} from '../../../core/store/views/view';
@@ -35,16 +34,16 @@ import {checkOrTransformCalendarConfig} from './util/calendar-util';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 
 @Component({
-  selector: 'calendar',
+  selector: 'calendar-perspective',
   templateUrl: './calendar-perspective.component.html',
   styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarPerspectiveComponent
-  extends DataPerspectiveComponent<CalendarConfig>
+  extends DataPerspectiveDirective<CalendarConfig>
   implements OnInit, OnDestroy {
   constructor(protected store$: Store<AppState>) {
     super(store$);
@@ -72,10 +71,6 @@ export class CalendarPerspectiveComponent
       select(selectCalendarById(perspectiveId)),
       map(entity => entity?.config)
     );
-  }
-
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
   }
 
   public onConfigChanged(config: CalendarConfig) {

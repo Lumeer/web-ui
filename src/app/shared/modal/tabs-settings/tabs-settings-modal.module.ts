@@ -23,7 +23,7 @@ import {TabsSettingsModalComponent} from './tabs-settings-modal.component';
 import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {IsTabDefaultPipe} from './pipes/is-tab-default.pipe';
-import {DashboardTabComponent} from './content/tab/dashboard-tab.component';
+import {DashboardTabBadgeComponent} from './content/tab/dashboard-tab-badge.component';
 import {DashboardTabSettingsComponent} from './content/tab-settings/dashboard-tab-settings.component';
 import {FormsModule} from '@angular/forms';
 import {InputModule} from '../../input/input.module';
@@ -53,7 +53,7 @@ import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
     TabsSettingsContentComponent,
     IsLayoutSelectedInRowPipe,
     IsTabDefaultPipe,
-    DashboardTabComponent,
+    DashboardTabBadgeComponent,
     DashboardTabSettingsComponent,
     DashboardRowsSettingsComponent,
     DashboardCellSettingsComponent,

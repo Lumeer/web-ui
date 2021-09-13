@@ -47,6 +47,7 @@ import {DashboardTab} from '../../../core/model/dashboard-tab';
 import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 
 @Component({
+  selector: 'search-perspective',
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
   host: {class: 'search-perspective'},

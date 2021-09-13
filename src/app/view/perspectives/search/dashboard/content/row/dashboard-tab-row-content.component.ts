@@ -17,40 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {DashboardTab, isDashboardTabDefault} from '../../../../../core/model/dashboard-tab';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {DashboardRow} from '../../../../../../core/model/dashboard-tab';
+import {View} from '../../../../../../core/store/views/view';
+import {filterValidDashboardCells} from '../../../../../../shared/utils/dashboard.utils';
 
 @Component({
-  selector: 'dashboard-tab',
-  templateUrl: './dashboard-tab.component.html',
-  styleUrls: ['./dashboard-tab.component.scss'],
+  selector: 'dashboard-tab-row-content',
+  templateUrl: './dashboard-tab-row-content.component.html',
+  styleUrls: ['./dashboard-tab-row-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardTabComponent implements OnChanges {
+export class DashboardTabRowContentComponent implements OnChanges {
   @Input()
-  public tab: DashboardTab;
+  public dashboardRow: DashboardRow;
 
   @Input()
-  public selected: boolean;
+  public views: View[];
 
-  @Output()
-  public toggleHidden = new EventEmitter();
-
-  @Output()
-  public remove = new EventEmitter();
-
-  public isDefault: boolean;
-  public readonly hideTitle: string;
-  public readonly showTitle: string;
-
-  constructor() {
-    this.hideTitle = $localize`:@@search.tabs.settings.dialog.tab.hide:Hide tab`;
-    this.showTitle = $localize`:@@search.tabs.settings.dialog.tab.show:Show tab`;
-  }
+  public templateColumns: string;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.tab) {
-      this.isDefault = isDashboardTabDefault(this.tab);
+    if (changes.dashboardRow) {
+      this.computeTemplateColumns();
     }
+  }
+
+  private computeTemplateColumns() {
+    const validCells = filterValidDashboardCells(this.dashboardRow?.cells);
+    this.templateColumns = validCells.map(cell => `${cell.span}fr`).join(' ');
   }
 }

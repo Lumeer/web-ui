@@ -70,5 +70,6 @@ import {PivotCellClickablePipe} from './pipe/pivot-cell-clickable.pipe';
     PivotCellClickablePipe,
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule, DataInputModule],
+  exports: [PivotPerspectiveComponent],
 })
 export class PivotPerspectiveModule {}

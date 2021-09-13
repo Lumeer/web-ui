@@ -1,0 +1,6 @@
+<ng-container *ngIf="{views: views$ | async} as data">
+  <dashboard-tab-row-content *ngFor="let row of dashboardTab?.rows"
+                             [dashboardRow]="row"
+                             [views]="data.views">
+  </dashboard-tab-row-content>
+</ng-container>

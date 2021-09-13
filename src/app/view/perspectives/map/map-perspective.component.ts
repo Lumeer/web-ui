@@ -42,7 +42,7 @@ import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.uti
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
 
@@ -52,7 +52,7 @@ import {selectMap} from '../../../core/store/maps/maps.state';
   styleUrls: ['./map-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig> implements OnInit, OnDestroy {
+export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig> implements OnInit, OnDestroy {
   @Input()
   public query: Query;
 

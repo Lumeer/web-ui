@@ -57,7 +57,10 @@ import {
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectCanChangeViewQuery, selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCanChangeViewQuery,
+  selectCanManageCurrentViewConfig,
+} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {SearchBoxData, SearchBoxService} from './util/search-box.service';
 
@@ -107,7 +110,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.perspective$ = this.store$.pipe(select(selectPerspective));
     this.canChangeQuery$ = this.store$.pipe(select(selectCanChangeViewQuery));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageCurrentViewConfig));
     this.searchBoxData$ = this.searchBoxService.data$;
   }
 

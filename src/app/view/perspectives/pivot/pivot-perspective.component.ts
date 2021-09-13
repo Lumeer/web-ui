@@ -28,11 +28,8 @@ import {PivotConfig} from '../../../core/store/pivots/pivot';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformPivotConfig} from './util/pivot-util';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {Observable} from 'rxjs';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {ViewConfig} from '../../../core/store/views/view';
 
 @Component({
@@ -41,7 +38,7 @@ import {ViewConfig} from '../../../core/store/views/view';
   styleUrls: ['./pivot-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PivotPerspectiveComponent extends DataPerspectiveComponent<PivotConfig> implements OnInit, OnDestroy {
+export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotConfig> implements OnInit, OnDestroy {
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }
@@ -68,10 +65,6 @@ export class PivotPerspectiveComponent extends DataPerspectiveComponent<PivotCon
 
   public onConfigChange(config: PivotConfig) {
     this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.perspectiveId$.value, config}));
-  }
-
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
   }
 
   public getConfig(viewConfig: ViewConfig): PivotConfig {

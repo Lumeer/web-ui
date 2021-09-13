@@ -1,0 +1,8 @@
+<div class="dashboard-row" [style.grid-template-columns]="templateColumns">
+  <dashboard-tab-cell-content *ngFor="let cell of dashboardRow?.cells"
+                              class="cell"
+                              [dashboardCell]="cell"
+                              [views]="views">
+  </dashboard-tab-cell-content>
+
+</div>

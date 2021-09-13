@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../core/model/allowed-permissions';
@@ -30,29 +30,32 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectCurrentView, selectSidebarOpened} from '../../core/store/views/views.state';
-import {take, withLatestFrom} from 'rxjs/operators';
+import {switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {View, ViewSettings} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {
   selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDataByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
+  selectCollectionsByCustomQuery,
+  selectDataByCustomQuery,
+  selectDocumentsAndLinksByCustomQuerySorted,
+  selectLinkTypesInCustomQuery,
 } from '../../core/store/common/permissions.selectors';
 import {selectResourcesPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
 import {selectViewDataQuery, selectViewSettings} from '../../core/store/view-settings/view-settings.state';
-import {selectCurrentQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
+import {selectQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
 import {User} from '../../core/store/users/user';
-import {selectCurrentUser, selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 
-@Injectable()
-export abstract class DataPerspectiveComponent<T>
+@Directive()
+export abstract class DataPerspectiveDirective<T>
   extends ViewConfigPerspectiveComponent<T>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public view: View;
+
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public canManageConfig$: Observable<boolean>;
@@ -63,23 +66,37 @@ export abstract class DataPerspectiveComponent<T>
   public dataLoaded$: Observable<boolean>;
   public viewSettings$: Observable<ViewSettings>;
   public currentUser$: Observable<User>;
+  public currentView$: Observable<View>;
+  public query$: Observable<Query>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
-  public query$ = new BehaviorSubject<Query>(null);
+  public overrideQuery$ = new BehaviorSubject<Query>(null);
+  public overrideView$ = new BehaviorSubject<View>(null);
 
   protected constructor(protected store$: Store<AppState>) {
     super(store$);
   }
 
-  protected subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+  protected subscribeDocumentsAndLinks$(
+    query: Query
+  ): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
+    return this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(query)));
   }
 
-  protected subscribeData$(): Observable<DocumentsAndLinksData> {
-    return this.store$.pipe(select(selectDataByQuery));
+  protected subscribeData$(query: Query): Observable<DocumentsAndLinksData> {
+    return this.store$.pipe(select(selectDataByCustomQuery(query)));
+  }
+
+  protected selectCurrentView$(): Observable<View> {
+    return this.currentView$;
+  }
+
+  protected selectViewQuery$(): Observable<Query> {
+    return this.query$;
   }
 
   public ngOnInit() {
+    this.initSubscriptions();
     super.ngOnInit();
 
     this.subscribeToQuery();
@@ -87,12 +104,35 @@ export abstract class DataPerspectiveComponent<T>
     this.setupSidebar();
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.view) {
+      this.overrideView$.next(this.view);
+      this.overrideQuery$.next(this.view?.query);
+    }
+  }
+
+  private initSubscriptions() {
+    this.currentView$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
+
+    this.query$ = this.overrideQuery$.pipe(
+      switchMap(query => {
+        if (query) {
+          return of(query);
+        }
+        return this.store$.pipe(select(selectViewDataQuery));
+      })
+    );
+  }
+
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectViewDataQuery)).subscribe(query => {
-      this.query$.next(query);
-      this.fetchData(query);
-    });
-    this.subscriptions.add(subscription);
+    this.subscriptions.add(this.query$.subscribe(query => this.fetchData(query)));
   }
 
   private fetchData(query: Query) {
@@ -100,14 +140,22 @@ export abstract class DataPerspectiveComponent<T>
   }
 
   private subscribeData() {
-    this.documentsAndLinks$ = this.subscribeDocumentsAndLinks$();
-    this.data$ = this.subscribeData$();
+    this.documentsAndLinks$ = this.query$.pipe(switchMap(query => this.subscribeDocumentsAndLinks$(query)));
+    this.data$ = this.query$.pipe(switchMap(query => this.subscribeData$(query)));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
-    this.dataLoaded$ = this.store$.pipe(select(selectCurrentQueryDataResourcesLoaded));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.dataLoaded$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectQueryDataResourcesLoaded(query))))
+    );
+    this.collections$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query))))
+    );
+    this.linkTypes$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectLinkTypesInCustomQuery(query))))
+    );
     this.permissions$ = this.store$.pipe(select(selectResourcesPermissions));
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.canManageConfig$ = this.currentView$.pipe(
+      switchMap(view => (this.view ? of(false) : this.store$.pipe(select(selectCanManageViewConfig(view)))))
+    );
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
   }

@@ -1,0 +1,41 @@
+<ng-container [ngSwitch]="view?.perspective">
+
+  <table-perspective *ngSwitchCase="perspective.Table"
+                     [tableId]="view.id"
+                     [config]="view.config?.table"
+                     [query]="view.query">
+  </table-perspective>
+
+  <pivot-perspective *ngSwitchCase="perspective.Pivot"
+                     [view]="view">
+  </pivot-perspective>
+
+  <gantt-chart-perspective *ngSwitchCase="perspective.GanttChart"
+                           [view]="view">
+  </gantt-chart-perspective>
+
+  <chart-perspective *ngSwitchCase="perspective.Chart"
+                     [view]="view">
+  </chart-perspective>
+
+  <calendar-perspective *ngSwitchCase="perspective.Calendar"
+                        [view]="view">
+  </calendar-perspective>
+
+  <kanban-perspective *ngSwitchCase="perspective.Kanban"
+                      [view]="view">
+  </kanban-perspective>
+
+  <workflow-perspective *ngSwitchCase="perspective.Workflow"
+                        [view]="view">
+  </workflow-perspective>
+
+  <map-perspective *ngSwitchCase="perspective.Map"
+                   [view]="view">
+  </map-perspective>
+
+  <detail-perspective *ngSwitchCase="perspective.Detail">
+  </detail-perspective>
+
+
+</ng-container>

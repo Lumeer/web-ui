@@ -27,7 +27,10 @@ import {AppState} from '../../core/store/app.state';
 import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
 import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {DefaultViewConfig, View, ViewConfig} from '../../core/store/views/view';
-import {selectCollectionsByQuery, selectLinkTypesInQuery} from '../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByCustomQuery,
+  selectLinkTypesInCustomQuery,
+} from '../../core/store/common/permissions.selectors';
 import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 
@@ -49,6 +52,10 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
 
   protected selectViewQuery$(): Observable<Query> {
     return this.store$.pipe(select(selectViewQuery));
+  }
+
+  protected selectCurrentView$(): Observable<View> {
+    return this.store$.pipe(select(selectCurrentView));
   }
 
   protected getDefaultConfig(): T {
@@ -79,9 +86,8 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
   }
 
   private initPerspective() {
-    const subscription = this.store$
+    const subscription = this.selectCurrentView$()
       .pipe(
-        select(selectCurrentView),
         startWith(null as View),
         pairwise(),
         switchMap(([previousView, view]) =>
@@ -117,14 +123,19 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
   }
 
   private checkPerspectiveConfig(config: T): Observable<T> {
-    return combineLatest([
-      this.selectViewQuery$(),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => this.checkOrTransformConfig(config, query, collections, linkTypes))
-    );
+    return this.selectViewQuery$()
+      .pipe(
+        switchMap(query =>
+          combineLatest([
+            this.store$.pipe(select(selectCollectionsByCustomQuery(query))),
+            this.store$.pipe(select(selectLinkTypesInCustomQuery(query))),
+          ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
+        )
+      )
+      .pipe(
+        take(1),
+        map(({query, collections, linkTypes}) => this.checkOrTransformConfig(config, query, collections, linkTypes))
+      );
   }
 
   private subscribeToDefault(): Observable<{perspectiveId?: string; config?: T}> {

@@ -1,0 +1,9 @@
+<img *ngIf="dashboardCell?.type === cellType.Image" class="image" [src]="url" alt=""/>
+<ng-container *ngIf="dashboardCell?.type === cellType.View">
+
+  <perspective-preview *ngIf="view"
+                       class="preview"
+                       [view]="view">
+  </perspective-preview>
+
+</ng-container>

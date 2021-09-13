@@ -3,18 +3,18 @@
   <div class="d-flex flex-wrap align-items-center tabs-list" cdkDropList cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="tagDropped($event)">
 
-    <dashboard-tab *ngFor="let tab of tabs$ | async; let index = index; let last = last; trackBy: trackByTab"
-                   class="cursor-pointer tab mt-1"
-                   cdkDrag
-                   [class.mr-2]="last"
-                   [class.mr-1]="!last"
-                   [tab]="tab"
-                   [selected]="tab | isTabSelected:(selectedTabId$ | async)"
-                   (remove)="removeTab(index)"
-                   (toggleHidden)="toggleHiddenTab(index)"
-                   (click)="selectTab(tab)">
+    <dashboard-tab-badge *ngFor="let tab of tabs$ | async; let index = index; let last = last; trackBy: trackByTab"
+                         class="cursor-pointer tab mt-1"
+                         cdkDrag
+                         [class.mr-2]="last"
+                         [class.mr-1]="!last"
+                         [tab]="tab"
+                         [selected]="tab | isTabSelected:(selectedTabId$ | async)"
+                         (remove)="removeTab(index)"
+                         (toggleHidden)="toggleHiddenTab(index)"
+                         (click)="selectTab(tab)">
       <i class="fa-fw fa fa-grip-horizontal cursor-move mr-2 text-black-50" cdkDragHandle></i>
-    </dashboard-tab>
+    </dashboard-tab-badge>
 
   </div>
 

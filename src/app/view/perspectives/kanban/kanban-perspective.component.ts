@@ -32,14 +32,15 @@ import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 
 @Component({
+  selector: 'kanban-perspective',
   templateUrl: './kanban-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['kanban-perspective.component.scss'],
 })
-export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
+export class KanbanPerspectiveComponent extends DataPerspectiveDirective<KanbanConfig> implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
 
   constructor(protected store$: Store<AppState>) {

@@ -40,7 +40,11 @@ import {ViewsFolderComponent} from './views/folders/content/folders/folder/views
 import {ViewFoldersByPathPipe} from './views/folders/content/pipes/view-folders-by-path.pipe';
 import {ViewsFoldersBreadcrumbComponent} from './views/folders/content/breadcrumb/views-folders-breadcrumb.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {SearchCustomComponent} from './custom/search-custom.component';
+import {DashboardTabComponent} from './dashboard/dashboard-tab.component';
+import {DashboardTabContentComponent} from './dashboard/content/dashboard-tab-content.component';
+import {DashboardTabRowContentComponent} from './dashboard/content/row/dashboard-tab-row-content.component';
+import {DashboardTabCellContentComponent} from './dashboard/content/row/cell/dashboard-tab-cell-content.component';
+import {PerspectivePreviewModule} from '../preview/perspective-preview.module';
 
 @NgModule({
   imports: [
@@ -52,6 +56,7 @@ import {SearchCustomComponent} from './custom/search-custom.component';
     SearchTasksModule,
     CreateDocumentModalModule,
     DragDropModule,
+    PerspectivePreviewModule,
   ],
   declarations: [
     SearchAllComponent,
@@ -68,7 +73,10 @@ import {SearchCustomComponent} from './custom/search-custom.component';
     ViewsFolderComponent,
     ViewFoldersByPathPipe,
     ViewsFoldersBreadcrumbComponent,
-    SearchCustomComponent,
+    DashboardTabComponent,
+    DashboardTabContentComponent,
+    DashboardTabRowContentComponent,
+    DashboardTabCellContentComponent,
   ],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],
