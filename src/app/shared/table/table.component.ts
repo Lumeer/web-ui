@@ -205,7 +205,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   private checkScrollPositionForSelectedCell() {
     const {top, left} = this.tableScrollService.computeScrollOffsets(this.tableModel, this.selectedCell);
-    this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
+    // TODO this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
   }
 
   private subscribeVerticalScrolling(): Subscription {

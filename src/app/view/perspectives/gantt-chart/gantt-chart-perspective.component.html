@@ -3,7 +3,7 @@
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
   canManageConfig: canManageConfig$ | async, linkTypes: linkTypes$ | async, query: query$ | async} as data">
 
-    <collapsible-sidebar *ngIf="data.canManageConfig && data.config"
+    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && data.canManageConfig && data.config"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <gantt-chart-config
@@ -18,8 +18,7 @@
     </collapsible-sidebar>
 
     <gantt-chart-tasks *ngIf="data.config"
-                       class="flex-grow-1 mx-4"
-                       [style.width.px]="1"
+                       [class.mx-4]="perspectiveConfiguration?.additionalSpace"
                        [canManageConfig]="data.canManageConfig"
                        [collections]="data.collections"
                        [ganttChartId]="perspectiveId$ | async"
@@ -31,6 +30,7 @@
                        [constraintData]="constraintData$ | async"
                        [query]="data.query"
                        [settings]="viewSettings$ | async"
+                       [perspectiveConfiguration]="perspectiveConfiguration"
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"

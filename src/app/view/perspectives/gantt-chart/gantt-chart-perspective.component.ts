@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
@@ -35,6 +35,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {defaultGanttPerspectiveConfiguration, GanttPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -45,6 +46,9 @@ import {DataPerspectiveDirective} from '../data-perspective.directive';
 export class GanttChartPerspectiveComponent
   extends DataPerspectiveDirective<GanttChartConfig>
   implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: GanttPerspectiveConfiguration = defaultGanttPerspectiveConfiguration;
+
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }

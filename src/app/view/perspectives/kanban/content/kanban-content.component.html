@@ -1,5 +1,5 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
-  <collapsible-sidebar *ngIf="canManageConfig"
+  <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && canManageConfig"
                        [collapsed]="!sidebarOpened"
                        (toggle)="sidebarToggle.emit()">
     <kanban-config
@@ -16,7 +16,8 @@
 
   <kanban-columns
     *ngIf="data$ | async as kanbanData"
-    class="flex-grow-1 h-100 pb-4"
+    class="flex-grow-1 h-100"
+    [class.pb-4]="perspectiveConfiguration?.additionalSpace"
     [collections]="collections"
     [data]="data"
     [linkTypes]="linkTypes"
@@ -26,8 +27,10 @@
     [query]="query"
     [currentUser]="currentUser"
     [canManageConfig]="canManageConfig"
+    [viewSettings]="settings"
     [constraintData]="constraintData"
     [workspace]="workspace"
+    [perspectiveConfiguration]="perspectiveConfiguration"
     (patchDocumentData)="patchDocumentData($event)"
     (patchLinkInstanceData)="patchLinkInstanceData($event)"
     (updateLinkDocuments)="updateLinkDocuments($event)"

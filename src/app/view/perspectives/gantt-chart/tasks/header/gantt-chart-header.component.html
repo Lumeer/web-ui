@@ -1,10 +1,10 @@
-<div class="d-flex mt-3">
-  <button class="btn btn-primary"
+<div class="d-flex mt-3 overflow-auto">
+  <button class="btn btn-primary text-nowrap"
           (click)="onScrollToTodayClick()"
           i18n="@@perspective.gantt.header.scroll.today">Scroll to Today
   </button>
   <div class="btn-group ml-auto">
-    <button class="btn btn-primary" *ngFor="let mode of ganttChartModes"
+    <button class="btn btn-primary text-nowrap" *ngFor="let mode of ganttChartModes"
             [class.active]="mode === currentMode"
             (click)="onModeSelect(mode)">
       {{mode | ganttChartModeText}}

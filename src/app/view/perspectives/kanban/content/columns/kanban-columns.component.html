@@ -1,12 +1,14 @@
-<div class="wrapper h-100" *ngIf="{viewSettings: viewSettings$ | async} as data">
+<div class="wrapper h-100">
   <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start mr-4"
+       [class.mr-4]="perspectiveConfiguration?.additionalSpace"
        cdkDropList cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="dropColumn($event)">
     <kanban-column *ngFor="let column of kanbanData.columns; trackBy: trackByColumn; let first = first"
                    cdkDrag #kanbanColumn
                    [cdkDragDisabled]="!canManageConfig"
                    [cdkDragStartDelay]="dragDelay"
-                   class="column ml-3"
+                   [class.ml-3]="perspectiveConfiguration?.additionalSpace || !first"
+                   class="column"
                    [column]="column"
                    [postItLayout]="config?.cardLayout"
                    [kanbanData]="kanbanData"
@@ -15,7 +17,7 @@
                    [canManageConfig]="canManageConfig"
                    [query]="query"
                    [constraintData]="constraintData"
-                   [viewSettings]="data.viewSettings"
+                   [viewSettings]="viewSettings"
                    (createDataResource)="onCreateDataResource($event, column)"
                    (updateDataResource)="onUpdateDataResource($event)"
                    (removeColumn)="onRemoveColumn(column)"
@@ -33,7 +35,7 @@
                    [currentUser]="currentUser"
                    [query]="query"
                    [constraintData]="constraintData"
-                   [viewSettings]="data.viewSettings"
+                   [viewSettings]="viewSettings"
                    (createDataResource)="onCreateDataResource($event, kanbanData.otherColumn)"
                    (updateDataResource)="onUpdateDataResource($event)"
                    (toggleFavorite)="onToggleFavorite($event)"

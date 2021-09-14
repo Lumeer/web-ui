@@ -57,7 +57,7 @@ export class DashboardRowsSettingsComponent {
     this.rowMove.emit({from: event.previousIndex, to: event.currentIndex});
   }
 
-  public trackByIndex(index: number, obj: any): string {
-    return String(index);
+  public trackByRow(index: number, row: DashboardRow): string {
+    return row.id || String(index);
   }
 }

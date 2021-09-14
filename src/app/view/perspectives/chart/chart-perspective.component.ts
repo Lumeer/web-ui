@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -36,6 +36,7 @@ import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Query} from '../../../core/store/navigation/query/query';
+import {ChartPerspectiveConfiguration, defaultChartPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'chart-perspective',
@@ -44,6 +45,9 @@ import {Query} from '../../../core/store/navigation/query/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent extends DataPerspectiveDirective<ChartConfig> implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: ChartPerspectiveConfiguration = defaultChartPerspectiveConfiguration;
+
   @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 

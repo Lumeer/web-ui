@@ -27,6 +27,7 @@ export interface DashboardTab {
 }
 
 export interface DashboardRow {
+  id: string;
   cells: DashboardCell[];
 }
 
@@ -35,6 +36,7 @@ export type DashboardLayoutType = number[];
 export const dashboardRowLayouts: DashboardLayoutType[] = [[1], [1, 1], [1, 2], [2, 1], [1, 1, 1], [1, 2, 1]];
 
 export interface DashboardCell {
+  id: string;
   span: number;
   type?: DashboardCellType;
   config?: DashboardCellConfig;

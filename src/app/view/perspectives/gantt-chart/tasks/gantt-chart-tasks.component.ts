@@ -78,6 +78,7 @@ import {
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {ViewSettings} from '../../../../core/store/views/view';
+import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
 
 interface Data {
   collections: Collection[];
@@ -100,6 +101,7 @@ type PatchDataMap = Record<string, Record<string, any>>;
 
 @Component({
   selector: 'gantt-chart-tasks',
+  styleUrls: ['./gantt-chart-tasks.component.scss'],
   templateUrl: './gantt-chart-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -136,6 +138,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   @Input()
   public settings: ViewSettings;
+
+  @Input()
+  public perspectiveConfiguration: GanttPerspectiveConfiguration;
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();

@@ -25,6 +25,7 @@ import {
   DashboardViewCellConfig,
 } from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
+import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
 
 @Component({
   selector: 'dashboard-tab-cell-content',
@@ -40,6 +41,15 @@ export class DashboardTabCellContentComponent implements OnChanges {
   public views: View[];
 
   public readonly cellType = DashboardCellType;
+  public readonly configuration: PerspectiveConfiguration = {
+    pivot: {},
+    kanban: {},
+    chart: {},
+    map: {},
+    calendar: {},
+    gantt: {},
+    workflow: {},
+  };
 
   public url: string;
   public view: View;

@@ -56,6 +56,8 @@ export abstract class DataPerspectiveDirective<T>
   @Input()
   public view: View;
 
+  private isEmbedded: boolean;
+
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public canManageConfig$: Observable<boolean>;
@@ -109,6 +111,7 @@ export abstract class DataPerspectiveDirective<T>
       this.overrideView$.next(this.view);
       this.overrideQuery$.next(this.view?.query);
     }
+    this.isEmbedded = !!this.view;
   }
 
   private initSubscriptions() {
@@ -154,10 +157,12 @@ export abstract class DataPerspectiveDirective<T>
     );
     this.permissions$ = this.store$.pipe(select(selectResourcesPermissions));
     this.canManageConfig$ = this.currentView$.pipe(
-      switchMap(view => (this.view ? of(false) : this.store$.pipe(select(selectCanManageViewConfig(view)))))
+      switchMap(view => this.store$.pipe(select(selectCanManageViewConfig(view))))
     );
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.viewSettings$ = this.currentView$.pipe(
+      switchMap(view => (this.isEmbedded ? of(view?.settings) : this.store$.pipe(select(selectViewSettings))))
+    );
   }
 
   public isDefaultPerspective(id: string): boolean {
@@ -171,8 +176,8 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
+    this.currentView$
+      .pipe(withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
       .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
   }
 

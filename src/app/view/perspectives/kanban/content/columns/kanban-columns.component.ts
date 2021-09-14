@@ -35,7 +35,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -62,9 +62,6 @@ import {
   createPossibleLinkingDocumentsByChains,
 } from '../../../../../shared/utils/data/data-aggregator-util';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
-import {ViewSettings} from '../../../../../core/store/views/view';
-import {Observable} from 'rxjs';
-import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
 import {
   ConditionType,
   Constraint,
@@ -75,6 +72,8 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
+import {ViewSettings} from '../../../../../core/store/views/view';
+import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
   selector: 'kanban-columns',
@@ -120,6 +119,12 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public viewSettings: ViewSettings;
+
+  @Input()
+  public perspectiveConfiguration: KanbanPerspectiveConfiguration;
+
   @Output()
   public columnsMoved = new EventEmitter<{previousIndex: number; currentIndex: number}>();
 
@@ -138,8 +143,6 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   @Output()
   public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
 
-  public viewSettings$: Observable<ViewSettings>;
-
   public readonly dragDelay = DRAG_DELAY;
 
   private unknownConstraint: Constraint = new UnknownConstraint();
@@ -151,7 +154,6 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.toggleService.setWorkspace(this.workspace);
   }
 

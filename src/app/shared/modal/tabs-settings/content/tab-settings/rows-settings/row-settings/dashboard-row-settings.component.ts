@@ -18,9 +18,10 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
-import {DashboardLayoutType, DashboardRow} from '../../../../../../../core/model/dashboard-tab';
+import {DashboardCell, DashboardLayoutType, DashboardRow} from '../../../../../../../core/model/dashboard-tab';
 import {filterValidDashboardCells} from '../../../../../../utils/dashboard.utils';
 import {View} from '../../../../../../../core/store/views/view';
+import {generateCorrelationId} from '../../../../../../utils/resource.utils';
 
 @Component({
   selector: 'dashboard-row-settings',
@@ -68,7 +69,7 @@ export class DashboardRowSettingsComponent implements OnChanges {
       if (cells[i]) {
         cells[i] = {...cells[i], span: layoutType[i]};
       } else {
-        cells.push({span: layoutType[i]});
+        cells.push({id: `${generateCorrelationId()}${i}`, span: layoutType[i]});
       }
     }
 
@@ -80,5 +81,9 @@ export class DashboardRowSettingsComponent implements OnChanges {
 
     const newRow = {...this.row, cells};
     this.rowChange.next(newRow);
+  }
+
+  public trackByCell(index: number, cell: DashboardCell): string {
+    return cell.id || String(index);
   }
 }

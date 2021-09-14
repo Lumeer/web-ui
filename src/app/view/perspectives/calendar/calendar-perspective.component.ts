@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -35,6 +35,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {CalendarPerspectiveConfiguration, defaultCalendarPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'calendar-perspective',
@@ -45,6 +46,9 @@ import {DataPerspectiveDirective} from '../data-perspective.directive';
 export class CalendarPerspectiveComponent
   extends DataPerspectiveDirective<CalendarConfig>
   implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: CalendarPerspectiveConfiguration = defaultCalendarPerspectiveConfiguration;
+
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }

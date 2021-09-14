@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, OnDestroy, Input} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
@@ -31,6 +31,7 @@ import {checkOrTransformPivotConfig} from './util/pivot-util';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {Observable} from 'rxjs';
 import {ViewConfig} from '../../../core/store/views/view';
+import {defaultPivotPerspectiveConfiguration, PivotPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'pivot-perspective',
@@ -39,6 +40,9 @@ import {ViewConfig} from '../../../core/store/views/view';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotConfig> implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: PivotPerspectiveConfiguration = defaultPivotPerspectiveConfiguration;
+
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }

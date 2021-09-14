@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {DashboardRow} from '../../../../../../core/model/dashboard-tab';
+import {DashboardCell, DashboardRow} from '../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../core/store/views/view';
 import {filterValidDashboardCells} from '../../../../../../shared/utils/dashboard.utils';
 
@@ -46,5 +46,9 @@ export class DashboardTabRowContentComponent implements OnChanges {
   private computeTemplateColumns() {
     const validCells = filterValidDashboardCells(this.dashboardRow?.cells);
     this.templateColumns = validCells.map(cell => `${cell.span}fr`).join(' ');
+  }
+
+  public trackByCell(index: number, cell: DashboardCell): string {
+    return cell.id || String(index);
   }
 }

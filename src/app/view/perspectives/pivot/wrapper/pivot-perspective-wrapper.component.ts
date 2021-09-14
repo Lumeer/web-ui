@@ -41,6 +41,7 @@ import {SelectItemWithConstraintFormatter} from '../../../../shared/select/selec
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
+import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
 
 interface Data {
   collections: Collection[];
@@ -74,7 +75,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public config: PivotConfig;
+  public pivotConfig: PivotConfig;
 
   @Input()
   public canManageConfig: boolean;
@@ -84,6 +85,9 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public perspectiveConfiguration: PivotPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<PivotConfig>();
@@ -136,10 +140,10 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   private checkConfig(changes: SimpleChanges) {
     if (changes.config || changes.query || changes.collections || changes.linkTypes) {
-      const previousConfig = {...this.config};
-      this.config = checkOrTransformPivotConfig(this.config, this.query, this.collections, this.linkTypes);
-      if (!deepObjectsEquals(previousConfig, this.config)) {
-        this.configChange.emit(this.config);
+      const previousConfig = {...this.pivotConfig};
+      this.pivotConfig = checkOrTransformPivotConfig(this.pivotConfig, this.query, this.collections, this.linkTypes);
+      if (!deepObjectsEquals(previousConfig, this.pivotConfig)) {
+        this.configChange.emit(this.pivotConfig);
       }
     }
   }
@@ -154,7 +158,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
       changes.constraintData
     ) {
       this.dataSubject.next({
-        config: this.config,
+        config: this.pivotConfig,
         collections: this.collections,
         linkTypes: this.linkTypes,
         data: this.data,

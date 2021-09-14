@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
-import {DashboardTab} from '../../../../../core/model/dashboard-tab';
+import {DashboardRow, DashboardTab} from '../../../../../core/model/dashboard-tab';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {View} from '../../../../../core/store/views/view';
@@ -41,5 +41,9 @@ export class DashboardTabContentComponent implements OnInit {
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(select(selectViewsByRead));
+  }
+
+  public trackByRow(index: number, row: DashboardRow): string {
+    return row.id || String(index);
   }
 }

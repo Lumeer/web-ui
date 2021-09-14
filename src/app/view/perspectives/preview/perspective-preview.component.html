@@ -7,23 +7,28 @@
   </table-perspective>
 
   <pivot-perspective *ngSwitchCase="perspective.Pivot"
-                     [view]="view">
+                     [view]="view"
+                     [perspectiveConfiguration]="perspectiveConfiguration?.pivot">
   </pivot-perspective>
 
   <gantt-chart-perspective *ngSwitchCase="perspective.GanttChart"
-                           [view]="view">
+                           [view]="view"
+                           [perspectiveConfiguration]="perspectiveConfiguration?.gantt">
   </gantt-chart-perspective>
 
   <chart-perspective *ngSwitchCase="perspective.Chart"
-                     [view]="view">
+                     [view]="view"
+                     [perspectiveConfiguration]="perspectiveConfiguration?.chart">
   </chart-perspective>
 
   <calendar-perspective *ngSwitchCase="perspective.Calendar"
-                        [view]="view">
+                        [view]="view"
+                        [perspectiveConfiguration]="perspectiveConfiguration?.calendar">
   </calendar-perspective>
 
   <kanban-perspective *ngSwitchCase="perspective.Kanban"
-                      [view]="view">
+                      [view]="view"
+                      [perspectiveConfiguration]="perspectiveConfiguration?.kanban">
   </kanban-perspective>
 
   <workflow-perspective *ngSwitchCase="perspective.Workflow"
@@ -31,7 +36,8 @@
   </workflow-perspective>
 
   <map-perspective *ngSwitchCase="perspective.Map"
-                   [view]="view">
+                   [view]="view"
+                   [perspectiveConfiguration]="perspectiveConfiguration?.map">
   </map-perspective>
 
   <detail-perspective *ngSwitchCase="perspective.Detail">

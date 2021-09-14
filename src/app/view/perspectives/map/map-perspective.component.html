@@ -1,7 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else invalidQuery">
   <ng-container
     *ngIf="{collections: collections$ | async, map: perspectiveId$ | async | mapModelFromConfig:(config$ | async), linkTypes: linkTypes$ | async, query: query$ | async} as data">
-    <collapsible-sidebar *ngIf="data.map && (canManageConfig$ | async)"
+    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && data.map && (canManageConfig$ | async)"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <map-panel [collections]="data.collections"

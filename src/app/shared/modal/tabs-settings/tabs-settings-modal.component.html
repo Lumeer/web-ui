@@ -1,7 +1,7 @@
 <modal-wrapper class="d-block"
                [dialogType]="dialogType.Primary"
                [performingAction]="performingAction$ | async"
-               [submitDisabled]="!(content?.tabsAreValid$ | async)"
+               [submitDisabled]="content && !(content?.tabsAreValid$ | async)"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 

@@ -51,6 +51,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
+import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
 
 interface Data {
   collections: Collection[];
@@ -105,6 +106,9 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public currentUser: User;
+
+  @Input()
+  public perspectiveConfiguration: KanbanPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();

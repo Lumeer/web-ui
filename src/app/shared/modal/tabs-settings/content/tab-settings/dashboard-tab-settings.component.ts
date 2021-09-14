@@ -46,6 +46,7 @@ import {View} from '../../../../../core/store/views/view';
 import {selectViewsByReadWithComputedData} from '../../../../../core/store/common/permissions.selectors';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {map} from 'rxjs/operators';
+import {generateCorrelationId} from '../../../../utils/resource.utils';
 
 @Component({
   selector: 'dashboard-tab-settings',
@@ -121,8 +122,8 @@ export class DashboardTabSettingsComponent implements OnInit, OnChanges {
 
   public onRowAdd(layout: DashboardLayoutType) {
     const newRows = [...(this.tab.rows || [])];
-    const cells = layout.map(span => ({span}));
-    newRows.push({cells});
+    const cells = layout.map((span, index) => ({id: `${generateCorrelationId()}${index}`, span}));
+    newRows.push({id: generateCorrelationId(), cells});
     this.onRowsChange(newRows);
   }
 

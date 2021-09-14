@@ -45,6 +45,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
+import {defaultMapPerspectiveConfiguration, MapPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'map-perspective',
@@ -54,7 +55,7 @@ import {selectMap} from '../../../core/store/maps/maps.state';
 })
 export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig> implements OnInit, OnDestroy {
   @Input()
-  public query: Query;
+  public perspectiveConfiguration: MapPerspectiveConfiguration = defaultMapPerspectiveConfiguration;
 
   @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;

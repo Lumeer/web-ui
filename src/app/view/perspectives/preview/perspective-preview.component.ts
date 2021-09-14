@@ -20,16 +20,19 @@
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {View} from '../../../core/store/views/view';
 import {Perspective} from '../perspective';
+import {PerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'perspective-preview',
   templateUrl: './perspective-preview.component.html',
-  styleUrls: ['./perspective-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerspectivePreviewComponent {
   @Input()
   public view: View;
+
+  @Input()
+  public perspectiveConfiguration: PerspectiveConfiguration;
 
   public readonly perspective = Perspective;
 }
