@@ -60,6 +60,7 @@ import {flattenValues, uniqueValues} from '../../../../shared/utils/array.utils'
 interface PivotMergeData {
   configs: PivotStemConfig[];
   stems: QueryStem[];
+  stemsIndexes: number[];
   type: PivotConfigType;
 }
 
@@ -187,8 +188,9 @@ export class PivotDataConverter {
       if (mergeTables && mergeDataIndex >= 0) {
         mergeData[mergeDataIndex].configs.push(stemConfig);
         mergeData[mergeDataIndex].stems.push(stems[index]);
+        mergeData[mergeDataIndex].stemsIndexes.push(index);
       } else {
-        mergeData.push({configs: [stemConfig], stems: [stems[index]], type: configType});
+        mergeData.push({configs: [stemConfig], stems: [stems[index]], stemsIndexes: [index], type: configType});
       }
 
       return mergeData;
@@ -198,15 +200,15 @@ export class PivotDataConverter {
   private mergePivotData(mergeData: PivotMergeData[]): PivotStemData[] {
     return mergeData.reduce((stemData, data) => {
       if (data.type === PivotConfigType.Values) {
-        stemData.push(this.convertValueAttributes(data.configs, data.stems));
+        stemData.push(this.convertValueAttributes(data.configs, data.stems, data.stemsIndexes));
       } else {
-        stemData.push(this.transformStems(data.configs, data.stems));
+        stemData.push(this.transformStems(data.configs, data.stems, data.stemsIndexes));
       }
       return stemData;
     }, []);
   }
 
-  private transformStems(configs: PivotStemConfig[], queryStems: QueryStem[]): PivotStemData {
+  private transformStems(configs: PivotStemConfig[], queryStems: QueryStem[], stemsIndexes: number[]): PivotStemData {
     const pivotColors: PivotColors = {rows: [], columns: [], values: []};
     const mergedValueAttributes: PivotValueAttribute[] = [];
     let mergedAggregatedData: AggregatedMapData = null;
@@ -215,7 +217,9 @@ export class PivotDataConverter {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
       const queryStem = queryStems[i];
-      const stemData = this.data?.dataByStems?.[i];
+      const stemIndex = stemsIndexes[i];
+      const stemData = this.data?.dataByStems?.[stemIndex];
+
       this.config = config;
       this.dataAggregator.updateData(
         this.collections,
@@ -325,16 +329,23 @@ export class PivotDataConverter {
     return {resourceIndex: pivotAttribute.resourceIndex, attributeId: pivotAttribute.attributeId};
   }
 
-  private convertValueAttributes(configs: PivotStemConfig[], stems: QueryStem[]): PivotStemData {
+  private convertValueAttributes(
+    configs: PivotStemConfig[],
+    stems: QueryStem[],
+    stemsIndexes: number[]
+  ): PivotStemData {
     const data = configs.reduce(
       (allData, config, index) => {
-        const stemData = this.data?.dataByStems?.[index];
+        const stem = stems[index];
+        const stemIndex = stemsIndexes[index];
+
+        const stemData = this.data?.dataByStems?.[stemIndex];
         this.dataAggregator.updateData(
           this.collections,
           stemData?.documents || [],
           this.linkTypes,
           stemData?.linkInstances || [],
-          stems[index],
+          stem,
           this.constraintData
         );
 

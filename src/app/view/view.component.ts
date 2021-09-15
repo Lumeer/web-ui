@@ -27,7 +27,7 @@ import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
-import {createViewSaveConfig} from '../core/store/views/view.utils';
+import {cleanClonedView, createViewSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
 import {
   selectCurrentView,
@@ -202,7 +202,7 @@ export class ViewComponent implements OnInit {
       message,
       title,
       [
-        {text: cloneButtonText, action: () => this.createView({...view, code: null}, view.id), bold: false},
+        {text: cloneButtonText, action: () => this.createView(cleanClonedView(view), view.id), bold: false},
         {text: renameButtonText, action: () => this.updateView(view), bold: false},
       ],
       'info'

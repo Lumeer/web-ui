@@ -33,6 +33,7 @@ import {
   createEmptyTableRow,
   findTableRow,
   isValidHierarchicalRowOrder,
+  mergeHiddenColumnsArray,
   moveTableColumn,
   replaceTableColumns,
   sortTableRowsByHierarchy,
@@ -145,7 +146,7 @@ function updateColumns(
     return state;
   }
 
-  const columns = transformation(part.columns);
+  const columns = mergeHiddenColumnsArray(transformation(part.columns));
   const parts: TableConfigPart[] = copyAndSpliceArray(table.config.parts, cursor.partIndex, 1, {...part, columns});
   const config = {...table.config, parts};
 

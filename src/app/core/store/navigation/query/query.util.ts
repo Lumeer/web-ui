@@ -431,6 +431,13 @@ export function queryStemWithoutFiltersAndId(stem: QueryStem): QueryStem {
   return stem && {...queryStemWithoutFilters(stem), id: undefined};
 }
 
+export function queryStemsAreSameById(s1: QueryStem, s2: QueryStem): boolean {
+  if (s1?.id && s2?.id) {
+    return s1.id === s2.id;
+  }
+  return queryStemsAreSame(s1, s2);
+}
+
 export function queryStemsAreSame(s1: QueryStem, s2: QueryStem): boolean {
   return deepObjectsEquals(
     normalizeQueryStem(queryStemWithoutFiltersAndId(s1)),

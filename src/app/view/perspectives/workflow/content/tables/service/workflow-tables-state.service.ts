@@ -22,6 +22,7 @@ import {BehaviorSubject} from 'rxjs';
 import {
   EditedTableCell,
   SelectedTableCell,
+  TABLE_COLUMN_WIDTH,
   TableCell,
   TableCellType,
   TableModel,
@@ -363,8 +364,8 @@ export class WorkflowTablesStateService {
 
         if (columnIndex !== -1) {
           const columns = [...newTable.columns];
-          columns.splice(columnIndex, 1);
-          newTables[i] = {...newTable, columns};
+          const deletedColumn = columns.splice(columnIndex, 1)[0];
+          newTables[i] = {...newTable, columns, width: newTable.width - deletedColumn.width};
         }
       }
     }
@@ -392,8 +393,8 @@ export class WorkflowTablesStateService {
       const newTable = newTables[i];
       if (tablesAreSame(table, newTable)) {
         const columns = [...newTable.columns];
-        columns.splice(position, 0, {...column, tableId: newTable.id});
-        newTables[i] = {...newTable, columns};
+        columns.splice(position, 0, {...column, tableId: newTable.id, width: TABLE_COLUMN_WIDTH});
+        newTables[i] = {...newTable, columns, width: newTable.width + TABLE_COLUMN_WIDTH};
       }
     }
 

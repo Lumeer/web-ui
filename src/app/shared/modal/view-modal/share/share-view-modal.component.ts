@@ -34,7 +34,11 @@ import mixpanel from 'mixpanel-browser';
 import {Angulartics2} from 'angulartics2';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {selectCurrentUser, selectUsersForWorkspace} from '../../../../core/store/users/users.state';
+import {
+  selectCurrentUser,
+  selectCurrentUserForWorkspace,
+  selectUsersForWorkspace,
+} from '../../../../core/store/users/users.state';
 import {ShareViewDialogBodyComponent} from './body/share-view-dialog-body.component';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
 import {selectViewById} from '../../../../core/store/views/views.state';
@@ -74,7 +78,7 @@ export class ShareViewModalComponent implements OnInit {
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.users$ = this.store$.pipe(select(selectUsersForWorkspace));
     this.view$ = this.store$.pipe(select(selectViewById(this.view.id)));
     this.teams$ = this.store$.pipe(select(selectTeamsForWorkspace));

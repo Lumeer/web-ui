@@ -22,7 +22,7 @@ import {Query, QueryStem} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
-  queryStemsAreSame,
+  queryStemsAreSameById,
 } from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
@@ -48,7 +48,7 @@ export function getDocumentsAndLinksByStemData(
   data: DocumentsAndLinksData,
   stem: QueryStem
 ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
-  const stemsData = (data?.dataByStems || []).filter(dataByStem => queryStemsAreSame(dataByStem.stem, stem));
+  const stemsData = (data?.dataByStems || []).filter(dataByStem => queryStemsAreSameById(dataByStem.stem, stem));
   return stemsData.reduce(
     (documentsAndLinks, stemData) => {
       documentsAndLinks.documents.push(...stemData.documents);
