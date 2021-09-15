@@ -45,6 +45,7 @@ import {DashboardTabContentComponent} from './dashboard/content/dashboard-tab-co
 import {DashboardTabRowContentComponent} from './dashboard/content/row/dashboard-tab-row-content.component';
 import {DashboardTabCellContentComponent} from './dashboard/content/row/cell/dashboard-tab-cell-content.component';
 import {PerspectivePreviewModule} from '../preview/perspective-preview.module';
+import {DashboardTabActionComponent} from './dashboard/content/row/cell/action/dashboard-tab-action.component';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import {PerspectivePreviewModule} from '../preview/perspective-preview.module';
     DashboardTabContentComponent,
     DashboardTabRowContentComponent,
     DashboardTabCellContentComponent,
+    DashboardTabActionComponent,
   ],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],

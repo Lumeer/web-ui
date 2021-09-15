@@ -1,0 +1,3 @@
+<a *ngIf="view" [title]="view.name" [routerLink]="['../../', {vc: view.code}]">
+  <i class="fa-fw" [ngClass]="view.icon" [style.color]="view.color"></i>
+</a>
