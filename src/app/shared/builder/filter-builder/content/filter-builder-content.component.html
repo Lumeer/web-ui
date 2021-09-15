@@ -3,7 +3,8 @@
 
     <div class="text-muted px-2" i18n="@@filter.builder.condition">Choose Condition</div>
     <div *ngFor="let item of conditionItems; let first = first; let row = index"
-         class="px-2 py-1 dropdown-item cursor-pointer"
+         class="px-2 py-1 dropdown-item"
+         [class.cursor-pointer]="editable"
          [class.mt-2]="first"
          [class.focused]="data.focused?.column === 0 && data.focused?.row === row"
          [class.active]="item.value === selectedCondition"
@@ -14,15 +15,16 @@
 
   <div class="d-flex flex-column ml-3" *ngFor="let column of ngForIndexes">
     <div class="text-muted px-2" i18n="@@filter.builder.value">Choose Value</div>
-    <data-input class="h-100 data-input mt-2 cursor-pointer"
-                *ngIf="attribute | dataInputEditInfo:dataValues[column]:true: ((editing$ | async) === column) as dataInputInfo"
+    <data-input class="h-100 data-input mt-2"
+                *ngIf="attribute | dataInputEditInfo:dataValues[column]:editable: ((editing$ | async) === column) as dataInputInfo"
                 [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
                 [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
                 [class.editing]="!attribute.constraint?.isDirectlyEditable && dataInputInfo.editing"
+                [class.cursor-pointer]="editable"
                 [constraint]="attribute.constraint"
                 [dataValue]="dataValues[column]"
                 [configuration]="configuration"
-                [editableInReadonly]="true"
+                [editableInReadonly]="editable"
                 [focus]="true"
                 [readonly]="dataInputInfo.readonly"
                 (cancel)="onInputCancel(column)"
@@ -31,7 +33,8 @@
                 (mousedown)="onDataInputClick($event, column)">
     </data-input>
     <div *ngFor="let item of conditionValueItems; let first = first; let row = index"
-         class="px-2 py-1 dropdown-item cursor-pointer"
+         class="px-2 py-1 dropdown-item"
+         [class.cursor-pointer]="editable"
          [class.mt-2]="first"
          [class.active]="selectedValues?.length && item.value === selectedValues[column]?.type"
          [class.focused]="data.focused?.column - 1 === column && data.focused?.row - 1 === row"

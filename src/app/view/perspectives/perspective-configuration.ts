@@ -51,30 +51,37 @@ export const defaultKanbanPerspectiveConfiguration: KanbanPerspectiveConfigurati
 
 export interface ChartPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {}
 
-export const defaultChartPerspectiveConfiguration: KanbanPerspectiveConfiguration = {
+export const defaultChartPerspectiveConfiguration: ChartPerspectiveConfiguration = {
   ...defaultPerspectiveWithSidebarConfiguration,
 };
 
 export interface GanttPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {}
 
-export const defaultGanttPerspectiveConfiguration: KanbanPerspectiveConfiguration = {
+export const defaultGanttPerspectiveConfiguration: GanttPerspectiveConfiguration = {
   ...defaultPerspectiveWithSidebarConfiguration,
 };
 
 export interface CalendarPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {}
 
-export const defaultCalendarPerspectiveConfiguration: KanbanPerspectiveConfiguration = {
+export const defaultCalendarPerspectiveConfiguration: CalendarPerspectiveConfiguration = {
   ...defaultPerspectiveWithSidebarConfiguration,
 };
 
 export interface MapPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {}
 
-export const defaultMapPerspectiveConfiguration: KanbanPerspectiveConfiguration = {
+export const defaultMapPerspectiveConfiguration: MapPerspectiveConfiguration = {
   ...defaultPerspectiveWithSidebarConfiguration,
 };
 
-export interface WorkflowPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {}
+export interface WorkflowPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {
+  scrollToSelection?: boolean;
+  editableFilters?: boolean;
+  showHiddenColumns?: boolean;
+}
 
-export const defaultWorkflowPerspectiveConfiguration: KanbanPerspectiveConfiguration = {
+export const defaultWorkflowPerspectiveConfiguration: WorkflowPerspectiveConfiguration = {
   ...defaultPerspectiveWithSidebarConfiguration,
+  scrollToSelection: true,
+  editableFilters: true,
+  showHiddenColumns: true,
 };

@@ -72,7 +72,6 @@ export abstract class DataPerspectiveDirective<T>
   public query$: Observable<Query>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
-  public overrideQuery$ = new BehaviorSubject<Query>(null);
   public overrideView$ = new BehaviorSubject<View>(null);
 
   protected constructor(protected store$: Store<AppState>) {
@@ -109,7 +108,6 @@ export abstract class DataPerspectiveDirective<T>
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.view) {
       this.overrideView$.next(this.view);
-      this.overrideQuery$.next(this.view?.query);
     }
     this.isEmbedded = !!this.view;
   }
@@ -124,10 +122,10 @@ export abstract class DataPerspectiveDirective<T>
       })
     );
 
-    this.query$ = this.overrideQuery$.pipe(
-      switchMap(query => {
-        if (query) {
-          return of(query);
+    this.query$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
         }
         return this.store$.pipe(select(selectViewDataQuery));
       })

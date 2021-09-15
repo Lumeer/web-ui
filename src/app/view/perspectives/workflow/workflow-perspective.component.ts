@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -36,6 +36,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {defaultWorkflowPerspectiveConfiguration, WorkflowPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'workflow-perspective',
@@ -46,6 +47,9 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 export class WorkflowPerspectiveComponent
   extends DataPerspectiveDirective<WorkflowConfig>
   implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: WorkflowPerspectiveConfiguration = defaultWorkflowPerspectiveConfiguration;
+
   public selectedDocument$: Observable<DocumentModel>;
   public selectedCollection$: Observable<Collection>;
   public panelWidth$: Observable<number>;

@@ -107,7 +107,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     const perspectiveId = view.code;
     return this.subscribeConfig$(perspectiveId).pipe(
       take(1),
-      mergeMap(entityConfig => {
+      switchMap(entityConfig => {
         const perspectiveConfig = this.getConfig(view.config);
         if (
           preferViewConfigUpdate(this.getConfig(previousView?.config), this.getConfig(view?.config), !!entityConfig)
@@ -123,19 +123,16 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
   }
 
   private checkPerspectiveConfig(config: T): Observable<T> {
-    return this.selectViewQuery$()
-      .pipe(
-        switchMap(query =>
-          combineLatest([
-            this.store$.pipe(select(selectCollectionsByCustomQuery(query))),
-            this.store$.pipe(select(selectLinkTypesInCustomQuery(query))),
-          ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
-        )
-      )
-      .pipe(
-        take(1),
-        map(({query, collections, linkTypes}) => this.checkOrTransformConfig(config, query, collections, linkTypes))
-      );
+    return this.selectViewQuery$().pipe(
+      switchMap(query =>
+        combineLatest([
+          this.store$.pipe(select(selectCollectionsByCustomQuery(query))),
+          this.store$.pipe(select(selectLinkTypesInCustomQuery(query))),
+        ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
+      ),
+      take(1),
+      map(({query, collections, linkTypes}) => this.checkOrTransformConfig(config, query, collections, linkTypes))
+    );
   }
 
   private subscribeToDefault(): Observable<{perspectiveId?: string; config?: T}> {

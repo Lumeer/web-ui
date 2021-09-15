@@ -83,6 +83,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public syncScrollIds: string[];
 
+  @Input()
+  public scrollToSelection: boolean;
+
   @Output()
   public columnResize = new EventEmitter<{column: TableColumn; width: number}>();
 
@@ -184,7 +187,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedCell && this.selectedCell) {
+    if ((changes.selectedCell || changes.scrollToSelection) && this.selectedCell && this.scrollToSelection) {
       this.checkScrollPositionForSelectedCell();
     }
     if (changes.tableModel) {
@@ -205,7 +208,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   private checkScrollPositionForSelectedCell() {
     const {top, left} = this.tableScrollService.computeScrollOffsets(this.tableModel, this.selectedCell);
-    // TODO this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
+    this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
   }
 
   private subscribeVerticalScrolling(): Subscription {

@@ -425,9 +425,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
 
   private activateMapTilesLanguageAutoDetection() {
     const mapbox = this.mapboxMap as any;
-    if (mapbox) {
-      mapbox.autodetectLanguage(this.configurationService.getConfiguration().locale);
-    }
+    mapbox?.autodetectLanguage?.(this.configurationService.getConfiguration().locale);
   }
 
   private translateMap(): Record<string, string> {

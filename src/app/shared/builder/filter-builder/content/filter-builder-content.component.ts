@@ -62,6 +62,9 @@ export class FilterBuilderContentComponent implements OnChanges {
   @Input()
   public visible: boolean;
 
+  @Input()
+  public editable = true;
+
   @Output()
   public valueChange = new EventEmitter<{condition: ConditionType; values: ConditionValue[]}>();
 
@@ -152,9 +155,11 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public onConditionSelect(item: ConditionItem, row: number) {
-    this.selectCondition(item);
-    this.focusCell(row, 0);
-    this.endEditing();
+    if (this.editable) {
+      this.selectCondition(item);
+      this.focusCell(row, 0);
+      this.endEditing();
+    }
   }
 
   private focusCell(row: number, column: number) {
@@ -181,9 +186,11 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public onConditionValueSelect(item: ConstraintConditionValueItem, column: number, row: number) {
-    this.selectConditionValue(item, column);
-    this.focusCell(row + 1, column + 1);
-    this.endEditing();
+    if (this.editable) {
+      this.selectConditionValue(item, column);
+      this.focusCell(row + 1, column + 1);
+      this.endEditing();
+    }
   }
 
   private selectConditionValue(item: ConstraintConditionValueItem, index: number) {
@@ -197,7 +204,7 @@ export class FilterBuilderContentComponent implements OnChanges {
 
   public startEditing(index: number) {
     this.endFocus();
-    if (this.editing$.value !== index) {
+    if (this.editable && this.editing$.value !== index) {
       setTimeout(() => this.editing$.next(index));
     }
   }

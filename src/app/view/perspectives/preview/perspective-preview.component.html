@@ -32,7 +32,8 @@
   </kanban-perspective>
 
   <workflow-perspective *ngSwitchCase="perspective.Workflow"
-                        [view]="view">
+                        [view]="view"
+                        [perspectiveConfiguration]="perspectiveConfiguration?.workflow">
   </workflow-perspective>
 
   <map-perspective *ngSwitchCase="perspective.Map"

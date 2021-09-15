@@ -47,6 +47,7 @@ import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -63,6 +64,7 @@ export class WorkflowTablesStateService {
   private currentPermissions: ResourcesPermissions;
   private currentConstraintData: ConstraintData;
   private currentCanManageConfig: boolean;
+  private currentPerspectiveConfiguration: WorkflowPerspectiveConfiguration;
 
   private initiallySelected: boolean;
 
@@ -75,7 +77,8 @@ export class WorkflowTablesStateService {
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
-    canManageConfig: boolean
+    canManageConfig: boolean,
+    perspectiveConfiguration: WorkflowPerspectiveConfiguration
   ) {
     this.currentCollectionsMap = objectsByIdMap(collections);
     this.currentLinkTypesMap = objectsByIdMap(linkTypes);
@@ -86,6 +89,7 @@ export class WorkflowTablesStateService {
     this.currentViewSettings = viewSettings;
     this.currentConstraintData = constraintData;
     this.currentCanManageConfig = canManageConfig;
+    this.currentPerspectiveConfiguration = perspectiveConfiguration;
   }
 
   public setTables(tables: WorkflowTable[]) {
@@ -146,6 +150,10 @@ export class WorkflowTablesStateService {
 
   public get data(): DocumentsAndLinksData {
     return this.currentData;
+  }
+
+  public get perspectiveConfiguration(): WorkflowPerspectiveConfiguration {
+    return this.currentPerspectiveConfiguration;
   }
 
   public performInitialSelection(cell: TableCell) {

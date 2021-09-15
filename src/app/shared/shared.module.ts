@@ -30,7 +30,6 @@ import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DataResourceModule} from './data-resource/data-resource.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
-import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
@@ -104,14 +103,13 @@ import {HintBoxModule} from './hint-box/hint-box.module';
     ProgressModule,
     HintBoxModule,
   ],
-  declarations: [PerspectiveDirective, ResourceHeaderComponent, TourComponent],
+  declarations: [ResourceHeaderComponent, TourComponent],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     PostItCollectionsModule,
     SliderModule,
-    PerspectiveDirective,
     UsersModule,
     SearchBoxModule,
     InfiniteScrollModule,

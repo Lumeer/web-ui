@@ -20,7 +20,7 @@
 
       <div class="mb-3" (click)="onClickInsideTables($event)"
            *ngIf="{tables: data.tables | filterStemTables:stemConfig} as stemData">
-        <ng-container *ngFor="let table of stemData.tables; trackBy: trackByTable; let first = first">
+        <ng-container *ngFor="let table of stemData.tables; trackBy: trackByTable; let first = first; let last = last">
           <workflow-table-title *ngIf="table.title"
                                 class="d-block mb-2"
                                 [collections]="collections"
@@ -41,6 +41,7 @@
             [selectedCell]="data.selectedCell"
             [selectedDocumentId]="selectedDocumentId"
             [editedCell]="data.editedCell"
+            [scrollToSelection]="perspectiveConfiguration?.scrollToSelection"
             (columnMove)="onColumnMove(table, $event)"
             (columnResize)="onColumnResize(table, $event)"
             (columnRename)="onColumnRename($event)"
@@ -59,9 +60,10 @@
             (rowLinkedDocumentSelect)="onRowLinkedDocumentSelect($event)">
           </lmr-table>
 
-          <div resizer class="resizer d-flex align-items-center justify-content-center mb-5"
+          <div resizer class="resizer d-flex align-items-center justify-content-center"
                *ngIf="table.rows.length || table.newRow; else emptyTable"
                [reference]="table.id"
+               [class.mb-5]="perspectiveConfiguration?.additionalSpace || !last"
                [style.width]="'min(100%, ' + table.width + 'px)'"
                (onResize)="onTableResize(table, $event)"
                i18n-title="@@perspective.workflow.table.resize"

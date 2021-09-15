@@ -45,6 +45,7 @@ import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -337,7 +338,8 @@ export class WorkflowTablesService {
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
-    canManageConfig: boolean
+    canManageConfig: boolean,
+    perspectiveConfiguration: WorkflowPerspectiveConfiguration
   ) {
     this.dataService.createAndSyncTables(
       collections,
@@ -348,7 +350,9 @@ export class WorkflowTablesService {
       query,
       viewSettings,
       constraintData,
-      canManageConfig
+      canManageConfig,
+      false,
+      perspectiveConfiguration
     );
   }
 

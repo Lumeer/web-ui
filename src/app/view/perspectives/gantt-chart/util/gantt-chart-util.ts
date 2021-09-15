@@ -144,8 +144,8 @@ function checkOrTransformGanttStemsConfig(
   return (query?.stems || []).map(stem => {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
-    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
-    return checkOrTransformGanttStemConfig(stemConfig[0], stem, collections, linkTypes);
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1)[0];
+    return checkOrTransformGanttStemConfig(stemConfig, stem, collections, linkTypes);
   });
 }
 

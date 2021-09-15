@@ -55,7 +55,7 @@ import {
   isLinkTypeAttributeEditable,
 } from '../../../../../../core/store/collections/collection.util';
 import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
-import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
+import {HeaderMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
@@ -143,6 +143,7 @@ import {RoleType} from '../../../../../../core/model/role-type';
 import {User} from '../../../../../../core/store/users/user';
 import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -175,6 +176,14 @@ export class WorkflowTablesDataService {
         const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
         this.store$.dispatch(new WorkflowsAction.SetSelectedCell({cell, column}));
       });
+  }
+
+  public get editableFilters(): boolean {
+    return this.stateService.perspectiveConfiguration?.editableFilters;
+  }
+
+  public get showHiddenColumns(): boolean {
+    return this.stateService.perspectiveConfiguration?.showHiddenColumns;
   }
 
   private formatWorkflowValue(
@@ -213,7 +222,8 @@ export class WorkflowTablesDataService {
         viewSettings,
         this.stateService.constraintData,
         this.stateService.canManageConfig,
-        viewSettingsSortChanged(this.stateService.viewSettings, viewSettings)
+        viewSettingsSortChanged(this.stateService.viewSettings, viewSettings),
+        this.stateService.perspectiveConfiguration
       );
     }
   }
@@ -228,7 +238,8 @@ export class WorkflowTablesDataService {
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
     canManageConfig: boolean,
-    resetLockedRows?: boolean
+    resetLockedRows?: boolean,
+    perspectiveConfiguration?: WorkflowPerspectiveConfiguration
   ) {
     resetLockedRows && this.resetLockedRows();
 
@@ -242,7 +253,8 @@ export class WorkflowTablesDataService {
       query,
       viewSettings,
       constraintData,
-      canManageConfig
+      canManageConfig,
+      perspectiveConfiguration
     );
 
     const {tables, actions} = this.createTablesAndSyncActions(
@@ -606,6 +618,7 @@ export class WorkflowTablesDataService {
         id: currentColumn?.id || generateId(),
         attribute,
         editable,
+        editableFilters: this.editableFilters,
         width: columnSettings?.width || TABLE_COLUMN_WIDTH,
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
@@ -623,9 +636,10 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      if (!setting.hidden || permissions?.roles?.Read) {
-        columns.push(column);
+      if (!column.hidden || (this.showHiddenColumns && permissions?.roles?.Read)) {
+        columns.push(this.checkColumnMenuItems(column));
       }
+
       return columns;
     }, []);
 
@@ -665,6 +679,7 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         editable: true,
+        editableFilters: this.editableFilters,
         filters: [],
         width: TABLE_COLUMN_WIDTH,
         permissions,
@@ -676,6 +691,16 @@ export class WorkflowTablesDataService {
     }
 
     return {columns: attributeColumns, actions: syncActions};
+  }
+
+  private checkColumnMenuItems(column: TableColumn): TableColumn {
+    if (!this.showHiddenColumns) {
+      const hideMenuItem = column.menuItems.find(item => item.id === HeaderMenuId.Hide);
+      if (hideMenuItem) {
+        hideMenuItem.disabled = true;
+      }
+    }
+    return column;
   }
 
   private createColumnFilters(
@@ -722,6 +747,7 @@ export class WorkflowTablesDataService {
         name: generateAttributeName(columnNames),
         linkTypeId: linkType.id,
         editable: true,
+        editableFilters: this.editableFilters,
         permissions,
         width: TABLE_COLUMN_WIDTH,
         color: columnBackgroundColor(null),

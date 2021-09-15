@@ -118,11 +118,11 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
   }
 
   private refreshMode(mode: string) {
-    this.ganttChart.changeViewMode(mode as any);
+    this.ganttChart?.changeViewMode(mode as any);
   }
 
   public scrollToToday() {
-    this.ganttChart && this.ganttChart.scrollToToday();
+    this.ganttChart?.scrollToToday();
   }
 
   public ngAfterViewInit() {

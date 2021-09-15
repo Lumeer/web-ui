@@ -63,6 +63,7 @@ import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
+import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
   selector: 'workflow-tables',
@@ -104,6 +105,9 @@ export class WorkflowTablesComponent implements OnChanges {
   @Input()
   public dataLoaded: boolean;
 
+  @Input()
+  public perspectiveConfiguration: WorkflowPerspectiveConfiguration;
+
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
 
@@ -138,7 +142,8 @@ export class WorkflowTablesComponent implements OnChanges {
       changes.linkTypes ||
       changes.config ||
       changes.constraintData ||
-      changes.canManageConfig
+      changes.canManageConfig ||
+      changes.perspectiveConfiguration
     ) {
       this.tablesService.onUpdateData(
         this.collections,
@@ -149,7 +154,8 @@ export class WorkflowTablesComponent implements OnChanges {
         this.query,
         this.viewSettings,
         this.constraintData,
-        this.canManageConfig
+        this.canManageConfig,
+        this.perspectiveConfiguration
       );
     }
   }

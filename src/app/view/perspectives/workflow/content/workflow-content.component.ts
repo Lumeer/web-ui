@@ -31,6 +31,7 @@ import {WorkflowTablesStateService} from './tables/service/workflow-tables-state
 import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.service';
 import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
+import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'workflow-content',
@@ -83,6 +84,9 @@ export class WorkflowContentComponent {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public perspectiveConfiguration: WorkflowPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
