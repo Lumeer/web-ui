@@ -217,3 +217,7 @@ export function getViewIcon(view: View): string {
 export function defaultViewIcon(view: View): string {
   return perspectiveIconsMap[view?.perspective] || '';
 }
+
+export function cleanClonedView(view: View): View {
+  return {...view, code: undefined, folders: undefined, favorite: undefined, priority: undefined};
+}

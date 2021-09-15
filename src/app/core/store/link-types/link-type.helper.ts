@@ -22,7 +22,10 @@ import {LinkType} from './link.type';
 
 export class LinkTypeHelper {
   public static getOtherCollectionId(linkType: LinkType, collectionId: string): string {
-    return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
+    if (!linkType || !linkType?.collectionIds) {
+      return null;
+    }
+    return linkType.collectionIds?.[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
   }
 
   public static composeDefaultName(collections: [Collection, Collection]): string {

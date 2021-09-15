@@ -378,7 +378,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   private fitMarkersBounds(markers: MapMarkerProperties[]) {
-    if (!this.position || !this.position.center) {
+    if (markers.length > 0 && (!this.position || !this.position.center)) {
       const bounds = createMapMarkersBounds(markers);
       this.mapboxMap.fitBounds(bounds, {padding: 100});
       this.mapboxMap.once('idle', () => this.redrawMarkers());
