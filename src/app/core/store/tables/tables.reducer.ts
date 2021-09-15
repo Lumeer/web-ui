@@ -124,7 +124,7 @@ function moveColumn(state: TablesState, action: TablesAction.MoveColumn): Tables
   return updateColumns({...state, cursor: null}, action.payload.cursor, columns => {
     const fromPath = action.payload.cursor.columnPath;
     const toPath = fromPath.slice(0, fromPath.length - 1).concat(action.payload.toIndex);
-    return mergeHiddenColumnsArray(moveTableColumn(columns, fromPath, toPath));
+    return moveTableColumn(columns, fromPath, toPath);
   });
 }
 
@@ -146,7 +146,7 @@ function updateColumns(
     return state;
   }
 
-  const columns = transformation(part.columns);
+  const columns = mergeHiddenColumnsArray(transformation(part.columns));
   const parts: TableConfigPart[] = copyAndSpliceArray(table.config.parts, cursor.partIndex, 1, {...part, columns});
   const config = {...table.config, parts};
 

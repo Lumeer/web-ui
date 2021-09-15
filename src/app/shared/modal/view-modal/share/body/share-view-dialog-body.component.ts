@@ -41,9 +41,11 @@ import {uniqueValues} from '../../../../utils/array.utils';
 import {
   rolesChanged,
   teamCanReadWorkspace,
+  teamHasRoleInOrganization,
   userCanReadAllInWorkspace,
   userCanReadWorkspace,
   userHasAnyRoleInResource,
+  userHasRoleInOrganization,
   userHasRoleInProject,
 } from '../../../../utils/permission.utils';
 import {Team} from '../../../../../core/store/teams/team';
@@ -51,7 +53,6 @@ import {RoleType} from '../../../../../core/model/role-type';
 import {deepObjectsEquals} from '../../../../utils/common.utils';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
-import {UsersAction} from '../../../../../core/store/users/users.action';
 
 export enum ViewTab {
   Users = 'users',
@@ -123,26 +124,41 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.users || changes.teams || changes.organization || changes.project || changes.currentUser) {
-      const canInviteUsers = userHasRoleInProject(
-        this.organization,
-        this.project,
-        this.currentUser,
-        RoleType.UserConfig
-      );
-
-      if (canInviteUsers) {
-        this.usersWithReadPermission = this.users;
-        this.teamsWithReadPermission = this.teams;
-      } else {
-        this.usersWithReadPermission =
-          this.users?.filter(user => userCanReadWorkspace(this.organization, this.project, user)) || [];
-        this.teamsWithReadPermission =
-          this.teams?.filter(team => teamCanReadWorkspace(this.organization, this.project, team)) || [];
-      }
-
-      this.initUsers(this.currentUser, this.organization, this.project);
-      this.initTeams();
+      this.initUsersAndTeams();
     }
+  }
+
+  private initUsersAndTeams() {
+    const canInviteUsersInOrganization = userHasRoleInOrganization(
+      this.organization,
+      this.currentUser,
+      RoleType.UserConfig
+    );
+
+    const canInviteUsersInProject = userHasRoleInProject(
+      this.organization,
+      this.project,
+      this.currentUser,
+      RoleType.UserConfig
+    );
+
+    if (canInviteUsersInOrganization && canInviteUsersInProject) {
+      this.usersWithReadPermission = this.users;
+      this.teamsWithReadPermission = this.teams;
+    } else if (canInviteUsersInProject) {
+      this.usersWithReadPermission =
+        this.users?.filter(user => userHasRoleInOrganization(this.organization, user, RoleType.Read)) || [];
+      this.teamsWithReadPermission =
+        this.teams?.filter(team => teamHasRoleInOrganization(this.organization, team, RoleType.Read)) || [];
+    } else {
+      this.usersWithReadPermission =
+        this.users?.filter(user => userCanReadWorkspace(this.organization, this.project, user)) || [];
+      this.teamsWithReadPermission =
+        this.teams?.filter(team => teamCanReadWorkspace(this.organization, this.project, team)) || [];
+    }
+
+    this.initUsers(this.currentUser, this.organization, this.project);
+    this.initTeams();
   }
 
   public copyToClipboard() {
