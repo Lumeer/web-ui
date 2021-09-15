@@ -33,6 +33,7 @@ import {
   createEmptyTableRow,
   findTableRow,
   isValidHierarchicalRowOrder,
+  mergeHiddenColumnsArray,
   moveTableColumn,
   replaceTableColumns,
   sortTableRowsByHierarchy,
@@ -123,7 +124,7 @@ function moveColumn(state: TablesState, action: TablesAction.MoveColumn): Tables
   return updateColumns({...state, cursor: null}, action.payload.cursor, columns => {
     const fromPath = action.payload.cursor.columnPath;
     const toPath = fromPath.slice(0, fromPath.length - 1).concat(action.payload.toIndex);
-    return moveTableColumn(columns, fromPath, toPath);
+    return mergeHiddenColumnsArray(moveTableColumn(columns, fromPath, toPath));
   });
 }
 

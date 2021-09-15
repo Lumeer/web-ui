@@ -168,7 +168,7 @@ export function createTableColumnsFromAttributes(
   const attributes = filterDirectAttributeChildren(allAttributes, parentAttribute);
   attributes.sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
 
-  if (columnsConfig && columnsConfig.length) {
+  if (columnsConfig?.length) {
     return createColumnsFromConfig(columnsConfig, allAttributes, attributes);
   }
 
@@ -227,11 +227,11 @@ function createColumnsFromConfig(
   const remainingAttributeIds = attributeIds.filter(id => !usedAttributeIds.includes(id));
 
   if (remainingAttributeIds.length === 0) {
-    return columns;
+    return mergeHiddenColumnsArray(columns);
   }
 
   return [
-    ...columns,
+    ...mergeHiddenColumnsArray(columns),
     ...remainingAttributeIds.map(attributeId => ({
       type: TableColumnType.COMPOUND,
       attributeIds: [attributeId],
@@ -239,6 +239,23 @@ function createColumnsFromConfig(
       width: DEFAULT_COLUMN_WIDTH,
     })),
   ];
+}
+
+export function mergeHiddenColumnsArray(columns: TableConfigColumn[]): TableConfigColumn[] {
+  const mergedColumns = [];
+  for (let i = 0; i < columns.length; i++) {
+    const previousColumn = mergedColumns.pop();
+    if (previousColumn?.type === TableColumnType.HIDDEN && columns[i].type === TableColumnType.HIDDEN) {
+      const newColumn = mergeHiddenColumns(previousColumn, columns[i]);
+      mergedColumns.push(newColumn);
+    } else {
+      if (previousColumn) {
+        mergedColumns.push(previousColumn);
+      }
+      mergedColumns.push(columns[i]);
+    }
+  }
+  return mergedColumns;
 }
 
 export function getAttributeIdFromColumn(column: TableConfigColumn) {
