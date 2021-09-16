@@ -1,5 +1,5 @@
 <ng-container
-  *ngIf="{permissions : permissions$ | async, taskAttributes: collections | collectionTaskAttributes} as data ">
+  *ngIf="{permissions : permissions$ | async, taskAttributes: collections | collectionTaskAttributes, truncateContent: truncateContent$ | async} as data ">
   <search-tasks-toolbar [size]="currentSize"
                         [documentsCount]="documents?.length"
                         [collections]="collections | filterWritableTasksCollections:data.permissions"
@@ -12,9 +12,9 @@
 
       <search-task-wrapper
         class="detail px-1 py-2 position-relative"
-        *ngFor="let document of (truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let last = last"
-        [class.border-bottom]="truncateContent || !last"
-        [class.light]="truncateContent && last"
+        *ngFor="let document of (data.truncateContent ? (documents | slice:0:maxDocuments) :documents); trackBy:trackByDocument; let index = index; let last = last"
+        [class.border-bottom]="data.truncateContent || !last"
+        [class.light]="data.truncateContent && last"
         [size]="currentSize"
         [document]="document"
         [currentUser]="currentUser"
@@ -44,14 +44,14 @@
           </ng-container>
         </div>
 
-        <div *ngIf="truncateContent && index >= maxDocuments - 2" class="document-background"
+        <div *ngIf="data.truncateContent && index >= maxDocuments - 2" class="document-background"
              [class.last]="index === maxDocuments - 1"
              [class.second-last]="index === maxDocuments - 2"></div>
 
       </search-task-wrapper>
 
 
-      <div class="d-flex flex-nowrap align-items-center p-1" *ngIf="truncateContent">
+      <div class="d-flex flex-nowrap align-items-center p-1" *ngIf="data.truncateContent">
         <i *ngIf="currentSize !== sizeType.L" class="fa fa-fw fa-none" aria-hidden="true"></i>
         <i class="fa fa-fw fa-none align-self-center mr-2"
            [class.ml-2]="currentSize === sizeType.L"

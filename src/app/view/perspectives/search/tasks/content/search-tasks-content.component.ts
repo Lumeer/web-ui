@@ -45,7 +45,7 @@ import {Project} from '../../../../../core/store/projects/project';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../core/store/app.state';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
@@ -54,6 +54,7 @@ import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {selectTasksCollections} from '../../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../../core/store/views/view';
 import {User} from '../../../../../core/store/users/user';
+import {selectHasVisibleSearchTab} from '../../../../../core/store/views/views.state';
 
 @Component({
   selector: 'search-tasks-content',
@@ -105,11 +106,14 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly sizeType = SizeType;
   public currentSize: SizeType;
-  public truncateContent: boolean;
   public collectionsMap: Record<string, Collection>;
   public allTasksCollections$: Observable<Collection[]>;
-
   public permissions$: Observable<AllowedPermissionsMap>;
+  public truncateContent$ = new BehaviorSubject(false);
+
+  private hasTasksTab: boolean;
+  private userToggledShowAll: boolean;
+  private subscription = new Subscription();
 
   constructor(
     private router: Router,
@@ -122,6 +126,10 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
     this.toggleService.setWorkspace(this.workspace);
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.allTasksCollections$ = this.store$.pipe(select(selectTasksCollections));
+
+    this.subscription = this.store$
+      .pipe(select(selectHasVisibleSearchTab(SearchTab.Tasks)))
+      .subscribe(hasTab => (this.hasTasksTab = hasTab));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -132,7 +140,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
       this.collectionsMap = objectsByIdMap(this.collections);
     }
     if (changes.documents || changes.maxDocuments) {
-      this.truncateContent = this.maxDocuments > 0 && this.maxDocuments < this.documents?.length;
+      this.truncateContent$.next(
+        !this.userToggledShowAll && this.maxDocuments > 0 && this.maxDocuments < this.documents?.length
+      );
     }
   }
 
@@ -153,11 +163,11 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   }
 
   private isDocumentExplicitlyExpanded(document: DocumentModel): boolean {
-    return ((this.config && this.config.expandedIds) || []).includes(document.id);
+    return (this.config?.expandedIds || []).includes(document.id);
   }
 
   public toggleDocument(document: DocumentModel) {
-    const expandedIds = (this.config && this.config.expandedIds) || [];
+    const expandedIds = this.config?.expandedIds || [];
     const newExpandedIds = this.isDocumentExplicitlyExpanded(document)
       ? expandedIds.filter(id => id !== document.id)
       : [...expandedIds, document.id];
@@ -165,9 +175,14 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   }
 
   public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Tasks], {
-      queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
-    });
+    if (this.hasTasksTab) {
+      this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Tasks], {
+        queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
+      });
+    } else {
+      this.userToggledShowAll = true;
+      this.truncateContent$.next(false);
+    }
   }
 
   private workspacePath(): string {

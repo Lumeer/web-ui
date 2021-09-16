@@ -34,7 +34,7 @@ import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {DataSettings, PerspectiveConfig, View, ViewConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
-import {deepObjectsEquals, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {
   createSaveAttributesSettings,
@@ -48,6 +48,8 @@ import {WorkflowConfig} from '../workflows/workflow';
 import {createDetailSaveConfig, isDetailConfigChanged} from '../details/detail.utils';
 import {DetailConfig} from '../details/detail';
 import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
+import {DashboardTab} from '../../model/dashboard-tab';
+import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -230,4 +232,14 @@ export function createViewSelectItems(views: View[]): SelectItemModel[] {
     icons: [view.icon],
     iconColors: [view.color],
   }));
+}
+
+export function createSearchPerspectiveTabs(view?: View, defaultTabs: DashboardTab[] = []): DashboardTab[] {
+  if (view?.perspective === Perspective.Search) {
+    const tabs = view?.config?.search?.dashboard?.tabs;
+    if (isNotNullOrUndefined(tabs)) {
+      return addDefaultDashboardTabsIfNotPresent(tabs);
+    }
+  }
+  return addDefaultDashboardTabsIfNotPresent(defaultTabs);
 }

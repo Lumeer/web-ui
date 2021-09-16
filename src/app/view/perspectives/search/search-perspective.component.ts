@@ -23,12 +23,18 @@ import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {
+  NavigationState,
   selectNavigation,
   selectPerspectiveSettings,
   selectSearchTab,
 } from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectDefaultViewConfig,
+  selectSearchPerspectiveVisibleTabs,
+  selectViewQuery,
+} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
@@ -44,7 +50,6 @@ import {convertPerspectiveSettingsToString} from '../../../core/store/navigation
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {ModalService} from '../../../shared/modal/modal.service';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
-import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 
 @Component({
   selector: 'search-perspective',
@@ -98,11 +103,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.tabs$ = this.store$.pipe(
-      select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)),
-      map(defaultView => addDefaultDashboardTabsIfNotPresent(defaultView?.config?.search?.dashboard?.tabs)),
-      map(tabs => tabs.filter(tab => !tab.hidden))
-    );
+    this.tabs$ = this.store$.pipe(select(selectSearchPerspectiveVisibleTabs));
   }
 
   private subscribeToConfig() {
@@ -166,25 +167,49 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkSearchTabRedirect(config: SearchConfig, view: View) {
     this.store$
-      .pipe(select(selectSearchTab), take(1), withLatestFrom(this.store$.pipe(select(selectNavigation))))
-      .subscribe(([searchTab, navigation]) => {
-        if (
-          navigation.workspace &&
-          !isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace) &&
-          config?.searchTab &&
-          searchTab &&
-          config.searchTab !== searchTab &&
-          !this.initialSearchTab
-        ) {
+      .pipe(
+        select(selectSearchTab),
+        take(1),
+        withLatestFrom(
+          this.store$.pipe(select(selectNavigation)),
+          this.store$.pipe(select(selectSearchPerspectiveVisibleTabs))
+        )
+      )
+      .subscribe(([searchTab, navigation, tabs]) => {
+        if (this.shouldRedirectToTab(config, navigation, searchTab, tabs)) {
           const path: any[] = ['w', navigation.workspace.organizationCode, navigation.workspace.projectCode, 'view'];
           if (view) {
             path.push({vc: view.code});
           }
-          path.push(...[Perspective.Search, config.searchTab]);
+          path.push(Perspective.Search);
+          if (tabs.some(tab => tab.id === config.searchTab)) {
+            path.push(config.searchTab);
+          } else if (tabs.length) {
+            path.push(tabs[0].id);
+          }
           this.router.navigate(path, {queryParamsHandling: 'preserve'});
         }
         this.initialSearchTab = null;
       });
+  }
+
+  private shouldRedirectToTab(
+    config: SearchConfig,
+    navigation: NavigationState,
+    currentTab: string,
+    tabs: DashboardTab[]
+  ): boolean {
+    if (!navigation.workspace || isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace)) {
+      return false;
+    }
+
+    // tab is hidden or no longer exist
+    if (!tabs.some(tab => tab.id === currentTab)) {
+      return true;
+    }
+
+    // tab changed in config (i.e. in other browser window)
+    return currentTab && config?.searchTab && currentTab !== config.searchTab && !this.initialSearchTab;
   }
 
   private subscribeToSearchTab() {

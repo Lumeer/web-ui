@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {SearchViewsComponent} from '../search-views.component';
@@ -30,6 +30,9 @@ import {AppState} from '../../../../../core/store/app.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchViewsPreviewComponent extends SearchViewsComponent implements OnInit, OnDestroy {
+  @Input()
+  public maxViews: number;
+
   constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {
     super(notificationService, store$);
   }

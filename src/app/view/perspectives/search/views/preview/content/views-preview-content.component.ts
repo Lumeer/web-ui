@@ -40,6 +40,10 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Perspective} from '../../../../perspective';
 import {SearchTab} from '../../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../../core/store/navigation/query/query.converter';
+import {AppState} from '../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectHasVisibleSearchTab} from '../../../../../../core/store/views/views.state';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 @Component({
   selector: 'views-preview-content',
@@ -67,17 +71,29 @@ export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestro
   @Input()
   public permissions: AllowedPermissionsMap;
 
+  @Input()
+  public maxViews: number;
+
   @Output()
   public configChange = new EventEmitter<SearchViewsConfig>();
 
-  public readonly maxViews: number;
-
+  public truncateContent$ = new BehaviorSubject(false);
   public currentSize: SizeType;
-  public truncateContent: boolean;
 
-  constructor(private router: Router, private toggleService: ViewFavoriteToggleService) {}
+  private hasViewsTab: boolean;
+  private userToggledShowAll: boolean;
+  private subscription = new Subscription();
+
+  constructor(
+    private router: Router,
+    private toggleService: ViewFavoriteToggleService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit() {
+    this.subscription = this.store$
+      .pipe(select(selectHasVisibleSearchTab(SearchTab.Views)))
+      .subscribe(hasTab => (this.hasViewsTab = hasTab));
     this.toggleService.setWorkspace(this.workspace);
   }
 
@@ -86,7 +102,7 @@ export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestro
       this.currentSize = checkSizeType(this.config?.size);
     }
     if (changes.views || changes.maxViews) {
-      this.truncateContent = this.maxViews > 0 && this.maxViews < this.views?.length;
+      this.truncateContent$.next(!this.userToggledShowAll && this.maxViews > 0 && this.maxViews < this.views?.length);
     }
   }
 
@@ -100,9 +116,14 @@ export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Views], {
-      queryParams: {q: convertQueryModelToString(this.query)},
-    });
+    if (this.hasViewsTab) {
+      this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Views], {
+        queryParams: {q: convertQueryModelToString(this.query)},
+      });
+    } else {
+      this.userToggledShowAll = true;
+      this.truncateContent$.next(false);
+    }
   }
 
   private workspacePath(): string {
@@ -115,5 +136,6 @@ export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnDestroy() {
     this.toggleService.onDestroy();
+    this.subscription.unsubscribe();
   }
 }

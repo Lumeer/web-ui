@@ -19,7 +19,7 @@
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
-import {Perspective} from '../../../view/perspectives/perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {selectCalendarConfig} from '../calendars/calendars.state';
 import {selectChartConfig} from '../charts/charts.state';
@@ -34,7 +34,7 @@ import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
-import {getViewColor, getViewIcon, isViewConfigChanged} from './view.utils';
+import {createSearchPerspectiveTabs, getViewColor, getViewIcon, isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
@@ -42,6 +42,7 @@ import {selectViewsPermissions} from '../user-permissions/user-permissions.state
 import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
+import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -212,6 +213,26 @@ export const selectDefaultViewConfig = (perspective: Perspective, key: string) =
     const configsByPerspective = state.defaultConfigs[perspective] || {};
     return key && configsByPerspective[key];
   });
+
+export const selectDefaultSearchPerspectiveTabs = createSelector(selectViewsState, viewsState => {
+  const searchConfigs = viewsState.defaultConfigs[Perspective.Search] || {};
+  const defaultConfig = searchConfigs?.[DEFAULT_PERSPECTIVE_ID];
+  return addDefaultDashboardTabsIfNotPresent(defaultConfig?.config?.search?.dashboard?.tabs);
+});
+
+export const selectDefaultSearchPerspectiveVisibleTabs = createSelector(
+  selectDefaultSearchPerspectiveTabs,
+  tabs => !tabs.filter(tab => tab.hidden)
+);
+
+export const selectSearchPerspectiveVisibleTabs = createSelector(
+  selectDefaultSearchPerspectiveTabs,
+  selectCurrentView,
+  (defaultTabs, currentView) => createSearchPerspectiveTabs(currentView, defaultTabs).filter(tab => !tab.hidden)
+);
+
+export const selectHasVisibleSearchTab = (tabId: string) =>
+  createSelector(selectSearchPerspectiveVisibleTabs, tabs => tabs.some(tab => tab.id === tabId));
 
 export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[]) =>
   createSelector(selectViewsState, state => {

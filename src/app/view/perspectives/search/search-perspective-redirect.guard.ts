@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Params, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectDefaultViewConfig, selectDefaultViewConfigsLoaded} from '../../../core/store/views/views.state';
@@ -69,19 +69,22 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
         }
         viewPath.push(Perspective.Search);
 
-        let searchTab;
-        const tabs = addDefaultDashboardTabsIfNotPresent(defaultConfig?.config?.search?.dashboard?.tabs);
+        const tabs = addDefaultDashboardTabsIfNotPresent(defaultConfig?.config?.search?.dashboard?.tabs).filter(
+          tab => !tab.hidden
+        );
         const desiredSearchTab = parseSearchTabFromUrl(currentUrl);
-        const selectedTab = desiredSearchTab && tabs.find(tab => tab.id === desiredSearchTab);
-        if (selectedTab) {
-          searchTab = selectedTab.id;
-        } else {
-          searchTab = defaultConfig?.config?.search?.searchTab || tabs[0].id;
+        let selectedTab = desiredSearchTab && tabs.find(tab => tab.id === desiredSearchTab);
+        if (!selectedTab) {
+          const configSearchTab = defaultConfig?.config?.search?.searchTab;
+          selectedTab = (configSearchTab && tabs.find(tab => tab.id === configSearchTab)) || tabs[0];
         }
 
-        viewPath.push(searchTab);
+        if (selectedTab) {
+          viewPath.push(selectedTab.id);
+        }
 
-        if (currentUrl === viewPath.join('/')) {
+        const currentUrlWithoutQuery = currentUrl.split('?')[0];
+        if (currentUrlWithoutQuery === viewPath.join('/')) {
           return true;
         }
 
