@@ -68,8 +68,10 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
 
   public ngAfterViewInit() {
     const tableElement = getTableElement(this.cursor.tableId);
-    const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');
-    this.linkInfoWidth = parseFloat((linkInfoColumnWidth || '0px').slice(0, -2));
+    if (tableElement) {
+      const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');
+      this.linkInfoWidth = parseFloat((linkInfoColumnWidth || '0px').slice(0, -2));
+    }
   }
 
   public onAddLinkColumn() {

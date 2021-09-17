@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -32,7 +32,7 @@ import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/stor
 import {selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
-  selectCollectionsByQueryWithoutLinks,
+  selectCollectionsByCustomQueryWithoutLinks,
   selectDocumentsByCustomQuery,
   selectReadableCollections,
 } from '../../../core/store/common/permissions.selectors';
@@ -50,13 +50,13 @@ import {
   selectCollectionsPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
 import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
-import {ViewSettings} from '../../../core/store/views/view';
+import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
-import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
-import {PerspectiveService} from '../../../core/service/perspective.service';
+import {createFlatResourcesSettingsQuery, modifyDetailPerspectiveQuery} from '../../../core/store/details/detail.utils';
 import {DataQuery} from '../../../core/model/data-query';
-import {Perspective} from '../perspective';
+import {defaultDetailPerspectiveConfiguration, DetailPerspectiveConfiguration} from '../perspective-configuration';
+import {selectCurrentView} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'detail-perspective',
@@ -64,34 +64,83 @@ import {Perspective} from '../perspective';
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailPerspectiveComponent implements OnInit {
+export class DetailPerspectiveComponent implements OnInit, OnChanges {
+  @Input()
+  public view: View;
+
+  @Input()
+  public perspectiveConfiguration: DetailPerspectiveConfiguration = defaultDetailPerspectiveConfiguration;
+
   public query$: Observable<Query>;
+  public currentView$: Observable<View>;
   public viewSettings$: Observable<ViewSettings>;
   public permissions$: Observable<AllowedPermissionsMap>;
   public settingsQuery$: Observable<Query>;
   public selected$: Observable<{collection?: Collection; document?: DocumentModel}>;
+  public viewCursor$: Observable<ViewCursor>;
 
   public creatingDocument$ = new BehaviorSubject(false);
+  public overrideView$ = new BehaviorSubject<View>(null);
+  public overrideCursor$ = new BehaviorSubject<ViewCursor>(null);
 
   private query: Query;
   private collection: Collection;
   private createdDocuments: string[] = [];
+  private isEmbedded: boolean;
 
-  public constructor(private store$: Store<AppState>, private perspectiveService: PerspectiveService) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.initSubscriptions();
+    this.subscribeData();
+    this.initSelection();
+  }
+
+  private initSubscriptions() {
+    this.currentView$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
+
+    this.query$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewDataQuery));
+      }),
+      tap(query => this.onQueryChanged(query))
+    );
+  }
+
+  private subscribeData() {
+    this.viewSettings$ = this.currentView$.pipe(
+      switchMap(view => (this.isEmbedded ? of(view?.settings) : this.store$.pipe(select(selectViewSettings))))
+    );
+    this.viewCursor$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return this.overrideCursor$.asObservable();
+        }
+        return this.store$.pipe(select(selectViewCursor));
+      })
+    );
     this.settingsQuery$ = this.store$.pipe(
       select(selectReadableCollections),
       map(collections => createFlatResourcesSettingsQuery(collections))
     );
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+  }
 
-    this.query$ = this.store$.pipe(
-      select(selectViewDataQuery),
-      tap(query => this.onQueryChanged(query))
-    );
-    this.initSelection();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.view) {
+      this.overrideView$.next(this.view);
+    }
+    this.isEmbedded = !!this.view;
   }
 
   private onQueryChanged(query: DataQuery) {
@@ -103,27 +152,30 @@ export class DetailPerspectiveComponent implements OnInit {
   }
 
   private initSelection() {
-    this.selected$ = combineLatest([
-      this.store$.pipe(select(selectViewCursor)),
-      this.perspectiveService.selectQuery$(Perspective.Detail),
-    ]).pipe(
-      switchMap(([cursor, query]) =>
-        this.selectCollectionByCursor$(cursor, query).pipe(
+    this.selected$ = combineLatest([this.viewCursor$, this.selectQueryAndCollections$()]).pipe(
+      switchMap(([cursor, {query, collections}]) => {
+        return this.selectCollectionByCursor$(cursor, query).pipe(
           switchMap(({collection}) => {
             if (collection) {
               return this.selectByCollection$(collection, query, cursor);
             }
-            return this.store$.pipe(
-              select(selectCollectionsByQueryWithoutLinks),
-              switchMap(collections => {
-                if (collections[0]) {
-                  return this.selectByCollection$(collections[0], query, cursor);
-                }
-                return of({collection: null, document: null});
-              })
-            );
+            if (collections[0]) {
+              return this.selectByCollection$(collections[0], query, cursor);
+            }
+            return of({collection: null, document: null});
           }),
           tap(selection => this.emitCursor(selection.collection, selection.document, cursor))
+        );
+      })
+    );
+  }
+
+  private selectQueryAndCollections$(): Observable<{query: Query; collections: Collection[]}> {
+    return this.query$.pipe(
+      switchMap(query =>
+        this.store$.pipe(
+          select(selectCollectionsByCustomQueryWithoutLinks(query)),
+          map(collections => ({query: modifyDetailPerspectiveQuery(query, collections), collections}))
         )
       )
     );
@@ -188,9 +240,8 @@ export class DetailPerspectiveComponent implements OnInit {
   }
 
   public selectCollection(collection: Collection) {
-    this.store$
+    this.query$
       .pipe(
-        select(selectViewDataQuery),
         switchMap(query => {
           const collectionQuery = filterStemsForCollection(collection.id, query);
           return this.store$.pipe(
@@ -242,7 +293,9 @@ export class DetailPerspectiveComponent implements OnInit {
 
     this.collection = selectedCollection;
 
-    if (query) {
+    if (this.isEmbedded) {
+      this.overrideCursor$.next(cursor);
+    } else if (query) {
       this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query, cursor}));
     } else {
       this.store$.dispatch(new NavigationAction.SetViewCursor({cursor}));
@@ -259,7 +312,7 @@ export class DetailPerspectiveComponent implements OnInit {
   public addDocument() {
     const collection = this.collection;
     if (collection) {
-      combineLatest([this.store$.pipe(select(selectViewDataQuery)), this.store$.pipe(select(selectConstraintData))])
+      combineLatest([this.query$, this.store$.pipe(select(selectConstraintData))])
         .pipe(take(1))
         .subscribe(([query, constraintData]) => {
           const queryFilters = getQueryFiltersForCollection(query, collection.id);

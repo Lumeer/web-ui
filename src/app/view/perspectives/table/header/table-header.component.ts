@@ -29,8 +29,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, skip, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
@@ -41,7 +41,6 @@ import {
   selectProjectPermissions,
 } from '../../../../core/store/user-permissions/user-permissions.state';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Table} from '@fullcalendar/daygrid';
 import {selectTableLastCollectionId} from '../../../../core/store/tables/tables.selector';
 
 @Component({

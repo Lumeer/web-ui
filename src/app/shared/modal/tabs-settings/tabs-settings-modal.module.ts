@@ -80,5 +80,6 @@ import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
     PipesModule,
     PickerModule,
   ],
+  exports: [FilterValidCellsPipe],
 })
 export class TabsSettingsModalModule {}

@@ -41,6 +41,7 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
 import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 import {selectQueryDataResourcesLoaded} from '../../../../../core/store/data-resources/data-resources.state';
+import {TablePerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
   selector: 'table-rows',
@@ -57,6 +58,9 @@ export class TableRowsComponent implements OnChanges {
 
   @Input()
   public canManageConfig: boolean;
+
+  @Input()
+  public perspectiveConfiguration: TablePerspectiveConfiguration;
 
   @ViewChild(CdkVirtualScrollViewport)
   public virtualScrollViewport: CdkVirtualScrollViewport;

@@ -25,6 +25,9 @@ export interface PerspectiveConfiguration {
   calendar?: CalendarPerspectiveConfiguration;
   map?: MapPerspectiveConfiguration;
   workflow?: WorkflowPerspectiveConfiguration;
+  detail?: DetailPerspectiveConfiguration;
+  search?: SearchPerspectiveConfiguration;
+  table?: TablePerspectiveConfiguration;
 }
 
 interface PerspectiveWithSidebarConfiguration {
@@ -84,4 +87,30 @@ export const defaultWorkflowPerspectiveConfiguration: WorkflowPerspectiveConfigu
   scrollToSelection: true,
   editableFilters: true,
   showHiddenColumns: true,
+};
+
+export interface DetailPerspectiveConfiguration {
+  additionalSpace?: boolean;
+  selectDocuments?: boolean;
+}
+
+export const defaultDetailPerspectiveConfiguration: DetailPerspectiveConfiguration = {
+  additionalSpace: true,
+  selectDocuments: true,
+};
+
+export interface SearchPerspectiveConfiguration {
+  showTabs?: boolean;
+}
+
+export const defaultSearchPerspectiveConfiguration: SearchPerspectiveConfiguration = {
+  showTabs: true,
+};
+
+export interface TablePerspectiveConfiguration {
+  additionalSpace?: boolean;
+}
+
+export const defaultTablePerspectiveConfiguration: TablePerspectiveConfiguration = {
+  additionalSpace: true,
 };

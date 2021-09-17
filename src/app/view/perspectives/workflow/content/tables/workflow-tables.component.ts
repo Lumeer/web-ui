@@ -211,7 +211,7 @@ export class WorkflowTablesComponent implements OnChanges {
     }
 
     const isInsideSidebar = clickedInsideElement(event, WORKFLOW_SIDEBAR_SELECTOR);
-    if (isInsideApp && !isInsideTables && !isInsideSidebar) {
+    if (isInsideApp && !isInsideTables && !isInsideSidebar && this.perspectiveConfiguration?.showSidebar) {
       this.tablesService.resetSidebar();
     }
   }

@@ -1,5 +1,5 @@
 <div class="dashboard-row" [style.grid-template-columns]="templateColumns">
-  <dashboard-tab-cell-content *ngFor="let cell of dashboardRow?.cells; trackBy: trackByCell"
+  <dashboard-tab-cell-content *ngFor="let cell of dashboardRow?.cells | filterValidCells; trackBy: trackByCell"
                               class="cell"
                               [dashboardCell]="cell"
                               [views]="views">

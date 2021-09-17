@@ -169,6 +169,16 @@ export const selectCollectionsByQueryWithoutLinks = createSelector(
     filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query), constraintData)
 );
 
+export const selectCollectionsByCustomQueryWithoutLinks = (query: Query) =>
+  createSelector(
+    selectReadableCollections,
+    selectAllDocuments,
+    selectAllLinkTypes,
+    selectConstraintData,
+    (collections, documents, linkTypes, constraintData) =>
+      filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query), constraintData)
+  );
+
 export const selectCollectionsInQuery = createSelector(
   selectCollectionsDictionary,
   selectViewQuery,

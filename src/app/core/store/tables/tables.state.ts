@@ -58,3 +58,5 @@ export const selectTable = createSelector(
   selectTableId,
   (tablesMap, tableId) => tableId && tablesMap[tableId]
 );
+
+export const selectTableById = (id: string) => createSelector(selectTablesDictionary, tablesMap => id && tablesMap[id]);

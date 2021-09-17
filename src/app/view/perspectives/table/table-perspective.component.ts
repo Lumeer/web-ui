@@ -32,7 +32,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {
   debounceTime,
   filter,
@@ -66,7 +66,7 @@ import {Perspective} from '../perspective';
 import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableRowNumberService} from './service/table-row-number.service';
-import {selectTable, selectTableId} from '../../../core/store/tables/tables.state';
+import {selectTableId} from '../../../core/store/tables/tables.state';
 import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -79,6 +79,7 @@ import {DataResourcesAction} from '../../../core/store/data-resources/data-resou
 import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
 import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
 import {DataQuery} from '../../../core/model/data-query';
+import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} from '../perspective-configuration';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -98,6 +99,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public tableId: string;
+
+  @Input()
+  public perspectiveConfiguration: TablePerspectiveConfiguration = defaultTablePerspectiveConfiguration;
 
   @HostBinding('id')
   public elementId: string;
@@ -129,13 +133,13 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.prepareTableId();
     this.initTable();
 
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageCurrentViewConfig));
+    this.tableId$ = this.tableId ? of(this.tableId) : this.store$.pipe(select(selectTableId));
+
     this.subscriptions.add(this.subscribeToTable());
     this.subscriptions.add(this.subscribeToSelectedCursor());
     this.subscriptions.add(this.subscribeToScrolling());
     this.subscriptions.add(this.subscribeToConfigChange());
-
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageCurrentViewConfig));
-    this.tableId$ = this.store$.pipe(select(selectTableId));
   }
 
   private prepareTableId() {
@@ -211,7 +215,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initTable() {
-    if (this.query) {
+    if (this.embedded) {
       this.initEmbeddedTable();
     } else {
       this.initTableByQuery();
@@ -231,9 +235,15 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToTable(): Subscription {
-    return this.store$
-      .select(selectTable)
-      .pipe(filter(table => !!table))
+    return this.tableId$
+      .pipe(
+        switchMap(tableId =>
+          this.store$.pipe(
+            select(selectTableById(tableId)),
+            filter(table => !!table)
+          )
+        )
+      )
       .subscribe(table => {
         this.table$.next(table);
         this.switchPartsIfFirstEmpty(table);
@@ -258,9 +268,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToConfigChange(): Subscription {
-    return this.store$
+    return this.table$
       .pipe(
-        select(selectTable),
         filter(table => !!table?.config && table.id === DEFAULT_TABLE_ID),
         switchMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
         debounceTime(1000),

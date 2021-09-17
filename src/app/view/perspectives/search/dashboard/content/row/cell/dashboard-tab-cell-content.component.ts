@@ -49,6 +49,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
     calendar: {},
     gantt: {},
     workflow: {},
+    detail: {},
   };
 
   public url: string;

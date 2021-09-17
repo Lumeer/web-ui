@@ -36,6 +36,7 @@ import {
   selectCollectionsByQueryWithoutLinks,
   selectReadableCollections,
   selectDocumentsByCollectionAndQuery,
+  selectCollectionsByCustomQueryWithoutLinks,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {
@@ -84,7 +85,6 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQueryWithoutLinks));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
@@ -128,6 +128,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
         documents,
       }))
     );
+    this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQueryWithoutLinks(this.query)));
   }
 
   public setActiveCollection(collection: Collection) {

@@ -1,6 +1,7 @@
 <ng-container [ngSwitch]="view?.perspective">
 
   <table-perspective *ngSwitchCase="perspective.Table"
+                     class="h-100"
                      [tableId]="view.id"
                      [config]="view.config?.table"
                      [query]="view.query">
@@ -41,7 +42,9 @@
                    [perspectiveConfiguration]="perspectiveConfiguration?.map">
   </map-perspective>
 
-  <detail-perspective *ngSwitchCase="perspective.Detail">
+  <detail-perspective *ngSwitchCase="perspective.Detail"
+                      [view]="view"
+                      [perspectiveConfiguration]="perspectiveConfiguration?.detail">
   </detail-perspective>
 
 

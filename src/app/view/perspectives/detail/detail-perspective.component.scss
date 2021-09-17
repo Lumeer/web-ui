@@ -1,5 +1,11 @@
 @import '../../../../styles/variables';
 
+:host {
+  overflow: auto;
+  height: 100%;
+  display: block;
+}
+
 .card {
   box-shadow: 0 10px 15px 0 $light;
 }
