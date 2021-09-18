@@ -9,7 +9,12 @@
         <div class="color-secondary font-capitalize font-weight-bold ml-2" i18n="@@search.all.myTasks">
           My Current Tasks
         </div>
-        <search-tasks [maxLines]="2" [compactEmptyPages]="true"></search-tasks>
+        <search-tasks [maxLines]="7"
+                      [compactEmptyPages]="true"
+                      [view]="view"
+                      [perspectiveConfiguration]="perspectiveConfiguration"
+                      scrollContainer=".search-perspective">
+        </search-tasks>
       </ng-container>
 
       <div *ngIf="!data.hasAnyView || data.hasView">
@@ -17,7 +22,11 @@
         <div class="color-secondary font-capitalize font-weight-bold ml-2 float-left" i18n="@@search.all.views" data-tour="search-views-label">
           Views
         </div>
-        <search-views-preview *ngIf="data.hasView" [maxViews]="7"></search-views-preview>
+        <search-views-preview *ngIf="data.hasView"
+                              [maxViews]="7"
+                              [perspectiveConfiguration]="perspectiveConfiguration"
+                              [view]="view">
+        </search-views-preview>
         <div *ngIf="!data.hasAnyView" class="my-5" data-tour="search-views">
           <h3 i18n="@@search.views.empty.title.task" class="text-center">Your first task is to create a view!</h3>
           <div class="text-center mb-3">
@@ -39,6 +48,7 @@
           Tables
         </div>
         <post-it-collections [maxShown]="5"
+                             [view]="view"
                              [showAddTaskTable]="!data.showTaskTab && !data.hasTaskCollection">
         </post-it-collections>
       </ng-container>

@@ -81,6 +81,7 @@ import {selectCurrentUserForWorkspace} from '../users/users.state';
 import {getViewColor, getViewIcon} from '../views/view.utils';
 import {LinkType} from '../link-types/link.type';
 import {ResourcesPermissions} from '../../model/allowed-permissions';
+import {DataQuery} from '../../model/data-query';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
@@ -158,6 +159,23 @@ export const selectTasksCollectionsByQuery = createSelector(
       constraintData
     )
 );
+
+export const selectTasksCollectionsByCustomQuery = (query: Query) =>
+  createSelector(
+    selectTasksCollections,
+    selectAllDocuments,
+    selectAllLinkTypes,
+    selectCollectionsPermissions,
+    selectConstraintData,
+    (collections, documents, linkTypes, permissions, constraintData) =>
+      filterCollectionsByQuery(
+        collections,
+        documents,
+        linkTypes,
+        checkTasksCollectionsQuery(collections, query, permissions),
+        constraintData
+      )
+  );
 
 export const selectCollectionsByQueryWithoutLinks = createSelector(
   selectReadableCollections,
@@ -496,30 +514,53 @@ export const selectTasksDocumentsByQuery = createSelector(
   selectViewDataQuery,
   selectResourcesPermissions,
   selectConstraintData,
-  (documents, collections, linkTypes, linkInstances, query, permissions, constraintData): DocumentModel[] => {
-    let tasksDocuments = documents;
-    let tasksQuery: Query = query;
-
-    if (queryIsEmpty(query)) {
-      tasksDocuments = filterTaskDocuments(documents, collections, constraintData);
-      tasksQuery = tasksCollectionsQuery(collections, permissions.collections);
-    }
-
-    const filteredTasks = filterDocumentsAndLinksByQuery(
-      tasksDocuments,
-      collections,
-      linkTypes,
-      linkInstances,
-      tasksQuery,
-      permissions.collections,
-      permissions.linkTypes,
-      constraintData,
-      query?.includeSubItems
-    ).documents;
-
-    return sortDocumentsTasks(filteredTasks, collections);
-  }
+  (documents, collections, linkTypes, linkInstances, query, permissions, constraintData): DocumentModel[] =>
+    filterTasksDocuments(documents, collections, linkTypes, linkInstances, query, permissions, constraintData)
 );
+
+export const selectTasksDocumentsByCustomQuery = (query: DataQuery) =>
+  createSelector(
+    selectAllDocuments,
+    selectTasksCollectionsByQuery,
+    selectAllLinkTypes,
+    selectAllLinkInstances,
+    selectResourcesPermissions,
+    selectConstraintData,
+    (documents, collections, linkTypes, linkInstances, permissions, constraintData): DocumentModel[] =>
+      filterTasksDocuments(documents, collections, linkTypes, linkInstances, query, permissions, constraintData)
+  );
+
+export function filterTasksDocuments(
+  documents: DocumentModel[],
+  collections: Collection[],
+  linkTypes: LinkType[],
+  linkInstances: LinkInstance[],
+  query: DataQuery,
+  permissions: ResourcesPermissions,
+  constraintData: ConstraintData
+): DocumentModel[] {
+  let tasksDocuments = documents;
+  let tasksQuery: Query = query;
+
+  if (queryIsEmpty(query)) {
+    tasksDocuments = filterTaskDocuments(documents, collections, constraintData);
+    tasksQuery = tasksCollectionsQuery(collections, permissions.collections);
+  }
+
+  const filteredTasks = filterDocumentsAndLinksByQuery(
+    tasksDocuments,
+    collections,
+    linkTypes,
+    linkInstances,
+    tasksQuery,
+    permissions.collections,
+    permissions.linkTypes,
+    constraintData,
+    query?.includeSubItems
+  ).documents;
+
+  return sortDocumentsTasks(filteredTasks, collections);
+}
 
 export const selectDocumentsByQuery = createSelector(
   selectDocumentsAndLinksByQuery,
@@ -664,3 +705,8 @@ export const selectViewsByReadWithComputedData = createSelector(
 export const selectViewsByQuery = createSelector(selectViewsByRead, selectViewQuery, (views, query): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
 );
+
+export const selectViewsByCustomQuery = (query: Query) =>
+  createSelector(selectViewsByRead, (views): View[] =>
+    sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
+  );

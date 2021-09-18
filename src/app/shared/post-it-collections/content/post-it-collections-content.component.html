@@ -14,7 +14,7 @@
     <div class="grid mt-3" *ngIf="{truncateContent: truncateContent$ | async} as data">
 
       <post-it-collection class="layout-item d-block" @fadeIn
-                          *ngFor="let collection of (data.truncateContent ? (collections | slice:0:maxCollections) : collections); trackBy:trackByCollection; let idx = index"
+                          *ngFor="let collection of (data.truncateContent ? (allCollections | slice:0:maxCollections) : allCollections); trackBy:trackByCollection"
                           [class.selected]="selectedCollections$ | async | includes:(collection.correlationId || collection.id)"
                           [collection]="collection"
                           [workspace]="workspace"

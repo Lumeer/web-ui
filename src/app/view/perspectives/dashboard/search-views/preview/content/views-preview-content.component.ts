@@ -44,6 +44,7 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectHasVisibleSearchTab} from '../../../../../../core/store/views/views.state';
 import {BehaviorSubject, Subscription} from 'rxjs';
+import {SearchPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Component({
   selector: 'views-preview-content',
@@ -73,6 +74,9 @@ export class ViewsPreviewContentComponent implements OnInit, OnChanges, OnDestro
 
   @Input()
   public maxViews: number;
+
+  @Input()
+  public perspectiveConfiguration: SearchPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<SearchViewsConfig>();

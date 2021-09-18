@@ -100,11 +100,11 @@ export const defaultDetailPerspectiveConfiguration: DetailPerspectiveConfigurati
 };
 
 export interface SearchPerspectiveConfiguration {
-  showTabs?: boolean;
+  additionalSpace?: boolean;
 }
 
 export const defaultSearchPerspectiveConfiguration: SearchPerspectiveConfiguration = {
-  showTabs: true,
+  additionalSpace: true,
 };
 
 export interface TablePerspectiveConfiguration {

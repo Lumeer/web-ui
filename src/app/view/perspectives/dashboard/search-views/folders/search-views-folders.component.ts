@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../core/store/app.state';
-import {SearchViewsComponent} from '../search-views.component';
+import {SearchViewsDirective} from '../search-views.directive';
 import {Observable} from 'rxjs';
 import {selectViewFolderPath} from '../../../../../core/store/navigation/navigation.state';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
@@ -33,7 +33,7 @@ import {ViewsAction} from '../../../../../core/store/views/views.action';
   templateUrl: './search-views-folders.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchViewsFoldersComponent extends SearchViewsComponent implements OnInit, OnDestroy {
+export class SearchViewsFoldersComponent extends SearchViewsDirective implements OnInit, OnDestroy {
   public foldersPath$: Observable<string[]>;
 
   constructor(protected notificationService: NotificationService, protected store$: Store<AppState>) {

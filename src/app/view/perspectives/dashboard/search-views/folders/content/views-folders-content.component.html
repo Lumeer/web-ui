@@ -1,5 +1,6 @@
 <div *ngIf="views?.length; else noViews"
-     class="pt-2 pb-5 position-relative">
+     [class.pt-2]="perspectiveConfiguration?.additionalSpace"
+     [class.pb-5]="perspectiveConfiguration?.additionalSpace" class="position-relative">
   <div class="d-flex mb-4">
     <views-folders-breadcrumb class="d-block flex-grow-1"
                               [viewFolders]="viewFolders"

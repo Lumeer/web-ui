@@ -17,22 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
-  selectTasksCollectionsByQuery,
-  selectTasksDocumentsByQuery,
+  selectTasksCollectionsByCustomQuery,
+  selectTasksDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
+import {selectSearchConfigById} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
@@ -41,10 +41,11 @@ import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
 import {selectAllViews, selectViewQuery} from '../../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
-import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
+import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {View} from '../../../../core/store/views/view';
 import {User} from '../../../../core/store/users/user';
+import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 const PAGE_SIZE = 50;
 
@@ -53,7 +54,7 @@ const PAGE_SIZE = 50;
   templateUrl: './search-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchTasksComponent implements OnInit, OnDestroy {
+export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public view: View;
 
@@ -61,29 +62,64 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
   public maxLines: number = -1;
 
   @Input()
+  public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
+
+  @Input()
   public compactEmptyPages: boolean;
+
+  @Input()
+  public scrollContainer: string;
 
   public constraintData$: Observable<ConstraintData>;
   public documentsConfig$: Observable<SearchDocumentsConfig>;
   public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
   public loaded$: Observable<boolean>;
+  public searchId$: Observable<string>;
   public query$: Observable<Query>;
   public views$: Observable<View[]>;
   public workspace$: Observable<Workspace>;
   public currentUser$: Observable<User>;
 
+  private isEmbedded: boolean;
   private searchId: string;
   private config: SearchConfig;
   private subscriptions = new Subscription();
   private page$ = new BehaviorSubject<number>(0);
+  private overrideView$ = new BehaviorSubject<View>(null);
 
   constructor(private store$: Store<AppState>) {}
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.view) {
+      this.overrideView$.next(this.view);
+    }
+    this.isEmbedded = !!this.view;
+  }
+
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectTasksCollectionsByQuery));
-    this.loaded$ = this.store$.pipe(select(selectCurrentQueryTasksLoaded));
-    this.query$ = this.store$.pipe(select(selectViewQuery));
+    this.query$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewQuery));
+      })
+    );
+    this.searchId$ = this.overrideView$.pipe(
+      map(view => {
+        if (view) {
+          return view.code;
+        }
+        return DEFAULT_PERSPECTIVE_ID;
+      })
+    );
+
+    this.collections$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectTasksCollectionsByCustomQuery(query))))
+    );
+    this.loaded$ = this.query$.pipe(switchMap(query => this.store$.pipe(select(selectQueryTasksLoaded(query)))));
+
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
@@ -95,22 +131,30 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
   }
 
   private subscribeSearchId() {
-    this.store$.pipe(select(selectSearchId), take(1)).subscribe(searchId => (this.searchId = searchId));
+    this.subscriptions.add(this.searchId$.subscribe(searchId => (this.searchId = searchId)));
   }
 
   private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {
-    return this.store$.pipe(
-      select(selectSearchConfig),
-      tap(config => (this.config = config)),
-      map(config => config?.documents)
+    return this.searchId$.pipe(
+      switchMap(id =>
+        this.store$.pipe(
+          select(selectSearchConfigById(id)),
+          tap(config => (this.config = config)),
+          map(config => config?.documents)
+        )
+      )
     );
   }
 
   private subscribeDocuments$(): Observable<DocumentModel[]> {
     const pageObservable = this.page$.asObservable();
-    return this.store$.pipe(
-      select(selectTasksDocumentsByQuery),
-      switchMap(documents => pageObservable.pipe(map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1)))))
+    return this.query$.pipe(
+      switchMap(query =>
+        this.store$.pipe(
+          select(selectTasksDocumentsByCustomQuery(query)),
+          switchMap(documents => pageObservable.pipe(map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1)))))
+        )
+      )
     );
   }
 
@@ -134,7 +178,7 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
 
   public onFetchNextPage() {
     this.page$.next(this.page$.value + 1);
-    this.store$.pipe(select(selectViewQuery), take(1)).subscribe(query => {
+    this.query$.pipe(take(1)).subscribe(query => {
       this.fetchTasks(query);
     });
   }
@@ -148,7 +192,7 @@ export class SearchTasksComponent implements OnInit, OnDestroy {
 
     const navigationSubscription = workspace$
       .pipe(
-        switchMap(() => this.store$.pipe(select(selectViewQuery))),
+        switchMap(() => this.query$),
         filter(query => !!query)
       )
       .subscribe(query => {

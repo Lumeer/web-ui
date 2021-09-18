@@ -17,9 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {View} from '../../../../core/store/views/view';
+import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
+  selector: 'search-collections',
   templateUrl: './search-collections.component.html',
 })
-export class SearchCollectionsComponent {}
+export class SearchCollectionsComponent {
+  @Input()
+  public view: View;
+
+  @Input()
+  public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
+}

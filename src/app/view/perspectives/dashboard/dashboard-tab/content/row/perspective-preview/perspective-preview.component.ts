@@ -27,6 +27,7 @@ import {SearchTab} from '../../../../../../../core/store/navigation/search-tab';
   selector: 'perspective-preview',
   templateUrl: './perspective-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'perspective-preview'},
 })
 export class PerspectivePreviewComponent {
   @Input()

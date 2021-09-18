@@ -48,11 +48,28 @@
   </detail-perspective>
 
   <ng-container *ngSwitchCase="perspective.Search">
-    <search-all *ngIf="view.config?.search?.searchTab == searchTab.All">
+    <search-all *ngIf="view.config?.search?.searchTab == searchTab.All"
+                class="p-2 d-block h-100 overflow-auto"
+                [view]="view"
+                [perspectiveConfiguration]="perspectiveConfiguration?.search">
     </search-all>
-    <search-tasks *ngIf="view.config?.search?.searchTab == searchTab.Tasks" [view]="view"
-                  [compactEmptyPages]="true">
+    <search-tasks *ngIf="view.config?.search?.searchTab == searchTab.Tasks"
+                  [view]="view"
+                  class="p-2 d-block h-100 overflow-auto search-tasks"
+                  [compactEmptyPages]="true"
+                  [perspectiveConfiguration]="perspectiveConfiguration?.search"
+                  scrollContainer=".search-tasks">
     </search-tasks>
+    <search-collections *ngIf="view.config?.search?.searchTab === searchTab.Collections"
+                        class="p-2 d-block h-100 overflow-auto"
+                        [view]="view"
+                        [perspectiveConfiguration]="perspectiveConfiguration?.search">
+    </search-collections>
+    <search-views-folders *ngIf="view.config?.search?.searchTab == searchTab.Views"
+                          class="p-2 d-block h-100 overflow-auto"
+                          [view]="view"
+                          [perspectiveConfiguration]="perspectiveConfiguration?.search">
+    </search-views-folders>
   </ng-container>
 
 

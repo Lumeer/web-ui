@@ -49,3 +49,6 @@ export const selectSearch = createSelector(
 );
 
 export const selectSearchConfig = createSelector(selectSearch, search => search?.config);
+
+export const selectSearchConfigById = (id: string) =>
+  createSelector(selectSearchesDictionary, searches => searches[id]?.config);

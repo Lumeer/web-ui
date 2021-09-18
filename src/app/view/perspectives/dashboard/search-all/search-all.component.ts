@@ -17,42 +17,57 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
-  selectCollectionsByQuery,
+  selectCollectionsByCustomQuery,
   selectTasksCollections,
-  selectTasksDocumentsByQuery,
-  selectViewsByQuery,
+  selectTasksDocumentsByCustomQuery,
+  selectViewsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {selectAllViews, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
-import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
+import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {queryIsEmpty} from '../../../../core/store/navigation/query/query.util';
+import {View} from '../../../../core/store/views/view';
+import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'search-all',
   templateUrl: './search-all.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchAllComponent implements OnInit, OnDestroy {
+export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public view: View;
+
+  @Input()
+  public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
+
   public dataLoaded$: Observable<boolean>;
   public hasCollection$: Observable<boolean>;
   public hasTaskCollection$: Observable<boolean>;
   public showTaskTab$: Observable<boolean>;
   public hasView$: Observable<boolean>;
   public hasAnyView$: Observable<boolean>;
-  public query$ = new BehaviorSubject<Query>(null);
+  public query$: Observable<Query>;
 
   private subscriptions = new Subscription();
+  private overrideView$ = new BehaviorSubject<View>(null);
 
   constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.view) {
+      this.overrideView$.next(this.view);
+    }
+  }
 
   public ngOnInit() {
     this.subscribeDataInfo();
@@ -63,32 +78,37 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   private subscribeDataInfo() {
+    this.query$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewQuery));
+      })
+    );
     this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectViewsLoaded)),
-      this.store$.pipe(select(selectCurrentQueryTasksLoaded)),
+      this.query$.pipe(switchMap(query => this.store$.pipe(select(selectQueryTasksLoaded(query))))),
     ]).pipe(map(([collectionsLoaded, viewLoaded, tasksLoaded]) => collectionsLoaded && viewLoaded && tasksLoaded));
 
     const workspace$ = this.store$.pipe(select(selectWorkspace), distinctUntilChanged());
 
     const navigationSubscription = workspace$
       .pipe(
-        switchMap(() => this.store$.pipe(select(selectViewQuery))),
+        switchMap(() => this.query$),
         filter(query => !!query)
       )
-      .subscribe(query => {
-        this.query$.next(query);
-        this.fetchDocuments(query);
-      });
+      .subscribe(query => this.fetchDocuments(query));
     this.subscriptions.add(navigationSubscription);
 
-    this.hasCollection$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
+    this.hasCollection$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query)))),
       map(collections => collections && collections.length > 0)
     );
 
-    this.hasView$ = this.store$.pipe(
-      select(selectViewsByQuery),
+    this.hasView$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectViewsByCustomQuery(query)))),
       map(views => views && views.length > 0)
     );
 
@@ -104,8 +124,8 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
     this.showTaskTab$ = combineLatest([
       this.hasTaskCollection$,
-      this.store$.pipe(select(selectTasksDocumentsByQuery)),
-      this.store$.pipe(select(selectViewQuery)),
+      this.query$.pipe(switchMap(query => this.store$.pipe(select(selectTasksDocumentsByCustomQuery(query))))),
+      this.query$,
     ]).pipe(
       map(
         ([hasTaskCollection, documents, query]) => hasTaskCollection && (documents?.length > 0 || queryIsEmpty(query))

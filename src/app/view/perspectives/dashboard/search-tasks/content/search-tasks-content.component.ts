@@ -55,6 +55,10 @@ import {selectTasksCollections} from '../../../../../core/store/common/permissio
 import {View} from '../../../../../core/store/views/view';
 import {User} from '../../../../../core/store/users/user';
 import {selectHasVisibleSearchTab} from '../../../../../core/store/views/views.state';
+import {
+  defaultSearchPerspectiveConfiguration,
+  SearchPerspectiveConfiguration,
+} from '../../../perspective-configuration';
 
 @Component({
   selector: 'search-tasks-content',
@@ -99,6 +103,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
 
   @Input()
   public currentUser: User;
+
+  @Input()
+  public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();

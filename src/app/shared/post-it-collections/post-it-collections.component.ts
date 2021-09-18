@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
-import {map, tap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -32,24 +32,28 @@ import {NotificationsAction} from '../../core/store/notifications/notifications.
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {Router} from '@angular/router';
-import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
+import {selectCollectionsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 import {selectViewQuery} from '../../core/store/views/views.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {View} from '../../core/store/views/view';
 
 @Component({
   selector: 'post-it-collections',
   templateUrl: './post-it-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItCollectionsComponent implements OnInit {
+export class PostItCollectionsComponent implements OnInit, OnChanges {
   @Input()
   public maxShown: number = -1;
 
   @Input()
   public showAddTaskTable: boolean;
+
+  @Input()
+  public view: View;
 
   public collections$: Observable<Collection[]>;
   public projectPermissions$: Observable<AllowedPermissions>;
@@ -57,20 +61,35 @@ export class PostItCollectionsComponent implements OnInit {
   public workspace$: Observable<Workspace>;
   public loaded$: Observable<boolean>;
 
+  private isEmbedded: boolean;
   private query: Query;
+  private overrideView$ = new BehaviorSubject<View>(null);
 
   constructor(private router: Router, private store$: Store<AppState>) {}
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.view) {
+      this.overrideView$.next(this.view);
+    }
+    this.isEmbedded = !!this.view;
+  }
+
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
-      map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
-    );
-    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
-    this.query$ = this.store$.pipe(
-      select(selectViewQuery),
+    this.query$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewQuery));
+      }),
       tap(query => (this.query = query))
     );
+    this.collections$ = this.query$.pipe(
+      switchMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query)))),
+      map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
+    );
+
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
     this.loaded$ = this.store$.pipe(select(selectCollectionsLoaded));
   }
@@ -106,7 +125,18 @@ export class PostItCollectionsComponent implements OnInit {
 
   private onCreateCollection(collection: Collection) {
     if (queryIsNotEmpty(this.query)) {
-      this.store$.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
+      if (this.isEmbedded) {
+        this.addCollectionToEmbeddedQuery(collection);
+      } else {
+        this.store$.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
+      }
+    }
+  }
+
+  private addCollectionToEmbeddedQuery(collection: Collection) {
+    if (this.view) {
+      const query = {...this.view.query, stems: [...this.view.query.stems, {collectionId: collection.id}]};
+      this.overrideView$.next({...this.view, query});
     }
   }
 }

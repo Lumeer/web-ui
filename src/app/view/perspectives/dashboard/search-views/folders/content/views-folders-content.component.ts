@@ -39,6 +39,7 @@ import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {createObjectFolder, createObjectFolders, ObjectFolders, parseObjectFolder} from './util/object-folders';
 import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../../shared/utils/resource.utils';
+import {SearchPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Component({
   selector: 'views-folders-content',
@@ -68,6 +69,9 @@ export class ViewsFoldersContentComponent implements OnInit, OnChanges, OnDestro
 
   @Input()
   public foldersPath: string[];
+
+  @Input()
+  public perspectiveConfiguration: SearchPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<SearchViewsConfig>();

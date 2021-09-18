@@ -18,7 +18,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Params, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Params,
+  Router,
+  RouterStateSnapshot,
+  UrlSerializer,
+  UrlTree,
+} from '@angular/router';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -38,7 +46,8 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
   public constructor(
     private router: Router,
     private store$: Store<AppState>,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    private serializer: UrlSerializer
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
@@ -84,7 +93,8 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
         }
 
         const currentUrlWithoutQuery = currentUrl.split('?')[0];
-        if (currentUrlWithoutQuery === viewPath.join('/')) {
+        const viewPathString = this.serializer.serialize(this.router.createUrlTree(viewPath));
+        if (currentUrlWithoutQuery === viewPathString) {
           return true;
         }
 

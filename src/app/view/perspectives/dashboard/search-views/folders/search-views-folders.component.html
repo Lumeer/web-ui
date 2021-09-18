@@ -5,6 +5,7 @@
                        [permissions]="permissions$ | async"
                        [queryData]="queryData$ | async"
                        [foldersPath]="foldersPath$ | async"
+                       [perspectiveConfiguration]="perspectiveConfiguration"
                        (configChange)="onConfigChange($event)"
                        (folderPathChange)="onFolderPathChange($event)"
                        (viewFoldersChange)="onViewFoldersChange($event)">

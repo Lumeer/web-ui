@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {SearchViewsComponent} from '../search-views.component';
+import {SearchViewsDirective} from '../search-views.directive';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../core/store/app.state';
 
@@ -29,7 +29,7 @@ import {AppState} from '../../../../../core/store/app.state';
   templateUrl: './search-views-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchViewsPreviewComponent extends SearchViewsComponent implements OnInit, OnDestroy {
+export class SearchViewsPreviewComponent extends SearchViewsDirective implements OnInit, OnDestroy {
   @Input()
   public maxViews: number;
 

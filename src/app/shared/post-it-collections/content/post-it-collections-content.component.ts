@@ -136,7 +136,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
     }
     if (changes.collections || changes.maxCollections) {
       this.truncateContent$.next(
-        !this.userToggledShowAll && this.maxCollections > 0 && this.maxCollections < this.collections?.length
+        !this.userToggledShowAll && this.maxCollections > 0 && this.maxCollections < this.allCollections$.value.length
       );
     }
   }
