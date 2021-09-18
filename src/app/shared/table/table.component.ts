@@ -86,6 +86,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public scrollToSelection: boolean;
 
+  @Input()
+  public detailPanel: boolean;
+
   @Output()
   public columnResize = new EventEmitter<{column: TableColumn; width: number}>();
 
@@ -193,8 +196,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
-      this.detailColumnId = this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
       this.rows = [...(this.tableModel?.rows || []), null];
+    }
+    if (changes.tableModel || changes.detailPanel) {
+      this.detailColumnId =
+        this.detailPanel && this.tableModel?.columns?.find(column => this.columnCanShowDetailIndicator(column))?.id;
     }
   }
 

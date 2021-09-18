@@ -42,6 +42,7 @@
             [selectedDocumentId]="selectedDocumentId"
             [editedCell]="data.editedCell"
             [scrollToSelection]="perspectiveConfiguration?.scrollToSelection"
+            [detailPanel]="perspectiveConfiguration?.showSidebar"
             (columnMove)="onColumnMove(table, $event)"
             (columnResize)="onColumnResize(table, $event)"
             (columnRename)="onColumnRename($event)"

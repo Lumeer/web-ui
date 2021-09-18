@@ -19,13 +19,13 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {SearchAllComponent} from './all/search-all.component';
-import {SearchCollectionsComponent} from './collections/search-collections.component';
-import {SearchTasksComponent} from './tasks/search-tasks.component';
+import {SearchAllComponent} from '../dashboard/search-all/search-all.component';
+import {SearchCollectionsComponent} from '../dashboard/search-collections/search-collections.component';
+import {SearchTasksComponent} from '../dashboard/search-tasks/search-tasks.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
-import {SearchViewsFoldersComponent} from './views/folders/search-views-folders.component';
-import {DashboardTabComponent} from './dashboard/dashboard-tab.component';
+import {SearchViewsFoldersComponent} from '../dashboard/search-views/folders/search-views-folders.component';
+import {DashboardTabComponent} from '../dashboard/dashboard-tab/dashboard-tab.component';
 
 const searchRoutes: Routes = [
   {

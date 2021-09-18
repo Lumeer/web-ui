@@ -47,5 +47,13 @@
                       [perspectiveConfiguration]="perspectiveConfiguration?.detail">
   </detail-perspective>
 
+  <ng-container *ngSwitchCase="perspective.Search">
+    <search-all *ngIf="view.config?.search?.searchTab == searchTab.All">
+    </search-all>
+    <search-tasks *ngIf="view.config?.search?.searchTab == searchTab.Tasks" [view]="view"
+                  [compactEmptyPages]="true">
+    </search-tasks>
+  </ng-container>
+
 
 </ng-container>

@@ -17,21 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../../../core/store/views/view';
-import {cleanObjectFolders} from '../../../../../view/perspectives/dashboard/search-views/folders/content/util/object-folders';
-import {uniqueValues} from '../../../../utils/array.utils';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-@Pipe({
-  name: 'viewsUniqueFolders',
+import {SharedModule} from '../../../../shared/shared.module';
+import {SearchAllComponent} from './search-all.component';
+import {SearchCollectionsModule} from '../search-collections/search-collections.module';
+import {SearchViewsModule} from '../search-views/search-views.module';
+import {SearchTasksModule} from '../search-tasks/search-tasks.module';
+
+@NgModule({
+  imports: [CommonModule, SharedModule, SearchCollectionsModule, SearchViewsModule, SearchTasksModule],
+  declarations: [SearchAllComponent],
+  exports: [SearchAllComponent],
 })
-export class ViewsUniqueFoldersPipe implements PipeTransform {
-  public transform(views: View[]): string[] {
-    return uniqueValues(
-      (views || []).reduce((folders, view) => {
-        folders.push(...cleanObjectFolders(view));
-        return folders;
-      }, [])
-    );
-  }
-}
+export class SearchAllModule {}

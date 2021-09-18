@@ -17,21 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../../../core/store/views/view';
-import {cleanObjectFolders} from '../../../../../view/perspectives/dashboard/search-views/folders/content/util/object-folders';
-import {uniqueValues} from '../../../../utils/array.utils';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SearchViewsModule} from './search-views/search-views.module';
+import {SearchTasksModule} from './search-tasks/search-tasks.module';
+import {SearchCollectionsModule} from './search-collections/search-collections.module';
+import {DashboardTabModule} from './dashboard-tab/dashboard-tab.module';
+import {SearchAllModule} from './search-all/search-all.module';
 
-@Pipe({
-  name: 'viewsUniqueFolders',
+@NgModule({
+  imports: [
+    CommonModule,
+    SearchViewsModule,
+    SearchTasksModule,
+    SearchCollectionsModule,
+    SearchAllModule,
+    DashboardTabModule,
+  ],
+  exports: [SearchViewsModule, SearchTasksModule, SearchCollectionsModule, SearchAllModule, DashboardTabModule],
 })
-export class ViewsUniqueFoldersPipe implements PipeTransform {
-  public transform(views: View[]): string[] {
-    return uniqueValues(
-      (views || []).reduce((folders, view) => {
-        folders.push(...cleanObjectFolders(view));
-        return folders;
-      }, [])
-    );
-  }
-}
+export class DashboardModule {}

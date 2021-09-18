@@ -55,6 +55,9 @@ const PAGE_SIZE = 50;
 })
 export class SearchTasksComponent implements OnInit, OnDestroy {
   @Input()
+  public view: View;
+
+  @Input()
   public maxLines: number = -1;
 
   @Input()

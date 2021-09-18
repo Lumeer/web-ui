@@ -37,6 +37,7 @@ import {selectCurrentQueryTasksLoaded} from '../../../../core/store/data-resourc
 import {queryIsEmpty} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
+  selector: 'search-all',
   templateUrl: './search-all.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

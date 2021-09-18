@@ -17,21 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {View} from '../../../../../core/store/views/view';
-import {cleanObjectFolders} from '../../../../../view/perspectives/dashboard/search-views/folders/content/util/object-folders';
-import {uniqueValues} from '../../../../utils/array.utils';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-@Pipe({
-  name: 'viewsUniqueFolders',
+import {SharedModule} from '../../../../shared/shared.module';
+import {SearchCollectionsComponent} from './search-collections.component';
+
+@NgModule({
+  imports: [CommonModule, SharedModule],
+  declarations: [SearchCollectionsComponent],
+  exports: [SearchCollectionsComponent],
 })
-export class ViewsUniqueFoldersPipe implements PipeTransform {
-  public transform(views: View[]): string[] {
-    return uniqueValues(
-      (views || []).reduce((folders, view) => {
-        folders.push(...cleanObjectFolders(view));
-        return folders;
-      }, [])
-    );
-  }
-}
+export class SearchCollectionsModule {}

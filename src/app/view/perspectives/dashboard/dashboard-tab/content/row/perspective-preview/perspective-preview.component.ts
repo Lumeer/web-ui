@@ -18,9 +18,10 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {View} from '../../../core/store/views/view';
-import {Perspective} from '../perspective';
-import {PerspectiveConfiguration} from '../perspective-configuration';
+import {View} from '../../../../../../../core/store/views/view';
+import {Perspective} from '../../../../../perspective';
+import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
+import {SearchTab} from '../../../../../../../core/store/navigation/search-tab';
 
 @Component({
   selector: 'perspective-preview',
@@ -35,4 +36,5 @@ export class PerspectivePreviewComponent {
   public perspectiveConfiguration: PerspectiveConfiguration;
 
   public readonly perspective = Perspective;
+  public readonly searchTab = SearchTab;
 }

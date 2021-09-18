@@ -1,4 +1,4 @@
-<resizable-sidebar [opened]="!!selectedDocument && !!selectedCollection"
+<resizable-sidebar [opened]="perspectiveConfiguration?.showSidebar && !!selectedDocument && !!selectedCollection"
                    [width]="sidebarWidth"
                    (widthChanged)="sidebarResize.emit($event)">
 
