@@ -3,7 +3,7 @@
                    (widthChanged)="sidebarResize.emit($event)">
 
   <workflow-tables class="d-block content"
-                   [class.mr-3]="!selectedDocument || !selectedCollection"
+                   [class.mr-3]="perspectiveConfiguration?.additionalSpace && (!selectedDocument || !selectedCollection)"
                    [class.ml-3]="perspectiveConfiguration?.additionalSpace"
                    [class.pb-3]="perspectiveConfiguration?.additionalSpace"
                    [collections]="collections"

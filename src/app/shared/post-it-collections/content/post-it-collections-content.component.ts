@@ -44,7 +44,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {createEmptyCollection} from '../../../core/store/collections/collection.util';
 import {AppState} from '../../../core/store/app.state';
@@ -81,6 +81,9 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
 
   @Input()
   public projectPermissions: AllowedPermissions;
+
+  @Input()
+  public collectionsPermissions: AllowedPermissionsMap;
 
   @Input()
   public workspace: Workspace;

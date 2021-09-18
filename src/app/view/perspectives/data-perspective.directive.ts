@@ -18,7 +18,7 @@
  */
 
 import {Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../core/model/allowed-permissions';
@@ -35,12 +35,12 @@ import {View, ViewSettings} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {
   selectCanManageViewConfig,
-  selectCollectionsByCustomQuery,
+  selectCollectionsByCustomViewAndQuery,
   selectDataByCustomQuery,
   selectDocumentsAndLinksByCustomQuerySorted,
-  selectLinkTypesInCustomQuery,
+  selectLinkTypesInCustomViewAndQuery,
+  selectResourcesPermissionsByView,
 } from '../../core/store/common/permissions.selectors';
-import {selectResourcesPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {DataResourcesAction} from '../../core/store/data-resources/data-resources.action';
 import {selectViewDataQuery, selectViewSettings} from '../../core/store/view-settings/view-settings.state';
 import {selectQueryDataResourcesLoaded} from '../../core/store/data-resources/data-resources.state';
@@ -79,13 +79,14 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   protected subscribeDocumentsAndLinks$(
+    view: View,
     query: Query
   ): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(query)));
+    return this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(view, query)));
   }
 
-  protected subscribeData$(query: Query): Observable<DocumentsAndLinksData> {
-    return this.store$.pipe(select(selectDataByCustomQuery(query)));
+  protected subscribeData$(view: View, query: Query): Observable<DocumentsAndLinksData> {
+    return this.store$.pipe(select(selectDataByCustomQuery(view, query)));
   }
 
   protected selectCurrentView$(): Observable<View> {
@@ -141,25 +142,43 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private subscribeData() {
-    this.documentsAndLinks$ = this.query$.pipe(switchMap(query => this.subscribeDocumentsAndLinks$(query)));
-    this.data$ = this.query$.pipe(switchMap(query => this.subscribeData$(query)));
+    this.documentsAndLinks$ = combineLatest([this.currentView$, this.query$]).pipe(
+      switchMap(([currentView, query]) => this.subscribeDocumentsAndLinks$(currentView, query))
+    );
+    this.data$ = combineLatest([this.currentView$, this.query$]).pipe(
+      switchMap(([currentView, query]) => this.subscribeData$(currentView, query))
+    );
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.dataLoaded$ = this.query$.pipe(
       switchMap(query => this.store$.pipe(select(selectQueryDataResourcesLoaded(query))))
     );
-    this.collections$ = this.query$.pipe(
-      switchMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query))))
+    this.collections$ = this.selectCollections$();
+    this.linkTypes$ = this.selectLinkTypes$();
+    this.permissions$ = this.currentView$.pipe(
+      switchMap(view => this.store$.pipe(select(selectResourcesPermissionsByView(view))))
     );
-    this.linkTypes$ = this.query$.pipe(
-      switchMap(query => this.store$.pipe(select(selectLinkTypesInCustomQuery(query))))
-    );
-    this.permissions$ = this.store$.pipe(select(selectResourcesPermissions));
     this.canManageConfig$ = this.currentView$.pipe(
       switchMap(view => this.store$.pipe(select(selectCanManageViewConfig(view))))
     );
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.viewSettings$ = this.currentView$.pipe(
       switchMap(view => (this.isEmbedded ? of(view?.settings) : this.store$.pipe(select(selectViewSettings))))
+    );
+  }
+
+  private selectCollections$(): Observable<Collection[]> {
+    return combineLatest([this.currentView$, this.query$]).pipe(
+      switchMap(([currentView, query]) =>
+        this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(currentView, query)))
+      )
+    );
+  }
+
+  private selectLinkTypes$(): Observable<LinkType[]> {
+    return combineLatest([this.currentView$, this.query$]).pipe(
+      switchMap(([currentView, query]) =>
+        this.store$.pipe(select(selectLinkTypesInCustomViewAndQuery(currentView, query)))
+      )
     );
   }
 

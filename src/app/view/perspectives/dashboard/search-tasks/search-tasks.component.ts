@@ -20,25 +20,26 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
+  selectCollectionsPermissionsByView,
   selectTasksCollectionsByCustomQuery,
   selectTasksDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {selectSearchConfigById} from '../../../../core/store/searches/searches.state';
+import {selectSearchConfigById, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
-import {selectAllViews, selectViewQuery} from '../../../../core/store/views/views.state';
+import {selectAllViews, selectCurrentView, selectViewQuery} from '../../../../core/store/views/views.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
@@ -46,6 +47,7 @@ import {selectWorkspace} from '../../../../core/store/navigation/navigation.stat
 import {View} from '../../../../core/store/views/view';
 import {User} from '../../../../core/store/users/user';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
+import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 
 const PAGE_SIZE = 50;
 
@@ -78,8 +80,10 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
   public searchId$: Observable<string>;
   public query$: Observable<Query>;
   public views$: Observable<View[]>;
+  public view$: Observable<View>;
   public workspace$: Observable<Workspace>;
   public currentUser$: Observable<User>;
+  public permissions$: Observable<AllowedPermissionsMap>;
 
   private isEmbedded: boolean;
   private searchId: string;
@@ -106,17 +110,28 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
         return this.store$.pipe(select(selectViewQuery));
       })
     );
-    this.searchId$ = this.overrideView$.pipe(
-      map(view => {
+    this.view$ = this.overrideView$.pipe(
+      switchMap(view => {
         if (view) {
-          return view.code;
+          return of(view);
         }
-        return DEFAULT_PERSPECTIVE_ID;
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
+    this.searchId$ = this.overrideView$.pipe(
+      mergeMap(view => {
+        if (view) {
+          return of(view.code);
+        }
+        return this.store$.pipe(select(selectSearchId));
       })
     );
 
     this.collections$ = this.query$.pipe(
       switchMap(query => this.store$.pipe(select(selectTasksCollectionsByCustomQuery(query))))
+    );
+    this.permissions$ = this.view$.pipe(
+      switchMap(view => this.store$.pipe(select(selectCollectionsPermissionsByView(view))))
     );
     this.loaded$ = this.query$.pipe(switchMap(query => this.store$.pipe(select(selectQueryTasksLoaded(query)))));
 
@@ -148,10 +163,10 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeDocuments$(): Observable<DocumentModel[]> {
     const pageObservable = this.page$.asObservable();
-    return this.query$.pipe(
-      switchMap(query =>
+    return combineLatest([this.view$, this.query$]).pipe(
+      switchMap(([view, query]) =>
         this.store$.pipe(
-          select(selectTasksDocumentsByCustomQuery(query)),
+          select(selectTasksDocumentsByCustomQuery(view, query)),
           switchMap(documents => pageObservable.pipe(map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1)))))
         )
       )

@@ -2,9 +2,8 @@
 
   <table-perspective *ngSwitchCase="perspective.Table"
                      class="h-100"
-                     [tableId]="view.id"
-                     [config]="view.config?.table"
-                     [query]="view.query">
+                     [view]="view"
+                     [perspectiveConfiguration]="perspectiveConfiguration?.table">
   </table-perspective>
 
   <pivot-perspective *ngSwitchCase="perspective.Pivot"
@@ -33,6 +32,7 @@
   </kanban-perspective>
 
   <workflow-perspective *ngSwitchCase="perspective.Workflow"
+                        class="d-block p-2"
                         [view]="view"
                         [perspectiveConfiguration]="perspectiveConfiguration?.workflow">
   </workflow-perspective>
@@ -43,6 +43,7 @@
   </map-perspective>
 
   <detail-perspective *ngSwitchCase="perspective.Detail"
+                      class="d-block p-2"
                       [view]="view"
                       [perspectiveConfiguration]="perspectiveConfiguration?.detail">
   </detail-perspective>

@@ -20,7 +20,6 @@
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   HostBinding,
   HostListener,
@@ -33,18 +32,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
-import {
-  debounceTime,
-  filter,
-  first,
-  map,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import {debounceTime, filter, map, pairwise, startWith, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query/query.helper';
@@ -57,7 +45,6 @@ import {
   selectCurrentView,
   selectDefaultViewConfig,
   selectDefaultViewConfigSnapshot,
-  selectViewQuery,
 } from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../shared/key-code';
@@ -73,7 +60,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import CreateTable = TablesAction.CreateTable;
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
-import {selectCanManageCurrentViewConfig} from '../../../core/store/common/permissions.selectors';
+import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
 import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
@@ -92,13 +79,7 @@ export const EDITABLE_EVENT = 'editableEvent';
 })
 export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public config: TableConfig;
-
-  @Input()
-  public query: Query;
-
-  @Input()
-  public tableId: string;
+  public view: View;
 
   @Input()
   public perspectiveConfiguration: TablePerspectiveConfiguration = defaultTablePerspectiveConfiguration;
@@ -116,13 +97,16 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public canManageConfig$: Observable<boolean>;
   public table$ = new BehaviorSubject<TableModel>(null);
   public tableId$: Observable<string>;
+  public view$: Observable<View>;
+  public query$: Observable<Query>;
 
+  private overrideView$ = new BehaviorSubject<View>(null);
   private selectedCursor: TableCursor;
+  private query: Query;
 
   private subscriptions = new Subscription();
 
   public constructor(
-    private changeDetector: ChangeDetectorRef,
     private scrollDispatcher: ScrollDispatcher,
     private store$: Store<AppState>,
     private tableRowNumberService: TableRowNumberService
@@ -130,23 +114,48 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.resetDefaultConfigSnapshot();
-    this.prepareTableId();
-    this.initTable();
 
-    this.canManageConfig$ = this.store$.pipe(select(selectCanManageCurrentViewConfig));
-    this.tableId$ = this.tableId ? of(this.tableId) : this.store$.pipe(select(selectTableId));
+    this.view$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
+    this.query$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewDataQuery));
+      }),
+      tap(query => (this.query = query))
+    );
+    this.tableId$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view?.code) {
+          return of(view.code);
+        }
+        return this.store$.pipe(select(selectTableId));
+      })
+    );
+    this.canManageConfig$ = this.view$.pipe(
+      switchMap(view => this.store$.pipe(select(selectCanManageViewConfig(view))))
+    );
 
+    this.initTableByQuery();
     this.subscriptions.add(this.subscribeToTable());
     this.subscriptions.add(this.subscribeToSelectedCursor());
     this.subscriptions.add(this.subscribeToScrolling());
     this.subscriptions.add(this.subscribeToConfigChange());
   }
 
-  private prepareTableId() {
-    if (this.query && !this.tableId) {
-      throw Error('tableId must be set for embedded table!');
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.view) {
+      this.overrideView$.next(this.view);
     }
-    this.embedded = !!this.query;
+    this.embedded = !!this.view;
   }
 
   private setElementId(tableId: string) {
@@ -191,39 +200,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.query && !changes.query.firstChange) {
-      this.refreshEmbeddedTable();
-    }
-  }
-
-  private refreshEmbeddedTable() {
-    this.store$
-      .pipe(
-        select(selectTableById(this.tableId)),
-        first(),
-        filter(table => !!table)
-      )
-      .subscribe(table => {
-        this.refreshTable(this.query, this.tableId, table.config);
-      });
-  }
-
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
-  }
-
-  private initTable() {
-    if (this.embedded) {
-      this.initEmbeddedTable();
-    } else {
-      this.initTableByQuery();
-    }
-  }
-
-  private initEmbeddedTable() {
-    this.createTable(this.query, this.tableId, this.config);
   }
 
   private createTable(query: Query, tableId: string, config?: TableConfig) {
@@ -305,9 +284,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initTableByQuery() {
-    const subscription = this.store$
+    const subscription = this.view$
       .pipe(
-        select(selectCurrentView),
         startWith(null as View),
         pairwise(),
         switchMap(([previousView, view]) =>
@@ -321,9 +299,6 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         } else {
           this.refreshTable(query, tableId, config);
         }
-
-        this.query = query;
-        this.changeDetector.markForCheck();
       });
     this.subscriptions.add(subscription);
   }
@@ -332,8 +307,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     previousView: View,
     view: View
   ): Observable<{query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
-    return this.store$.pipe(
-      select(selectViewDataQuery),
+    return this.query$.pipe(
       switchMap(query => {
         const tableId = view.code;
         return this.store$.pipe(
@@ -365,8 +339,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     tableId: string;
     forceRefresh?: boolean;
   }> {
-    return this.store$.pipe(
-      select(selectViewDataQuery),
+    return this.query$.pipe(
       switchMap(query => {
         const tableId = DEFAULT_TABLE_ID;
         return this.selectCurrentDefaultViewConfig$().pipe(
@@ -415,10 +388,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private selectTableDefaultConfigId$(): Observable<string> {
-    return this.store$.pipe(
-      select(selectViewQuery),
-      map(query => getBaseCollectionIdsFromQuery(query)[0])
-    );
+    return this.query$.pipe(map(query => getBaseCollectionIdsFromQuery(query)[0]));
   }
 
   private queryHasNewLink(query: Query): boolean {

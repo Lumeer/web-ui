@@ -47,7 +47,6 @@ import {AllowedPermissionsMap} from '../../../../../core/model/allowed-permissio
 import {AppState} from '../../../../../core/store/app.state';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
@@ -105,6 +104,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public currentUser: User;
 
   @Input()
+  public permissions: AllowedPermissionsMap;
+
+  @Input()
   public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
 
   @Output()
@@ -115,7 +117,6 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public currentSize: SizeType;
   public collectionsMap: Record<string, Collection>;
   public allTasksCollections$: Observable<Collection[]>;
-  public permissions$: Observable<AllowedPermissionsMap>;
   public truncateContent$ = new BehaviorSubject(false);
 
   private hasTasksTab: boolean;
@@ -131,7 +132,6 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.allTasksCollections$ = this.store$.pipe(select(selectTasksCollections));
 
     this.subscription = this.store$

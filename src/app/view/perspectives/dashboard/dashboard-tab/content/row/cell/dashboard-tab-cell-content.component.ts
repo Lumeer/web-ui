@@ -48,7 +48,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
     map: {},
     calendar: {},
     gantt: {},
-    workflow: {},
+    workflow: {showSidebar: true},
     detail: {},
   };
 

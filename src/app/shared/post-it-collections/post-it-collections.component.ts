@@ -18,10 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {map, switchMap, tap} from 'rxjs/operators';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -31,12 +32,14 @@ import {Workspace} from '../../core/store/navigation/workspace';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {Router} from '@angular/router';
-import {selectCollectionsByCustomQuery} from '../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByCustomViewAndQuery,
+  selectCollectionsPermissionsByView,
+} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
-import {selectViewQuery} from '../../core/store/views/views.state';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 import {View} from '../../core/store/views/view';
 
@@ -57,7 +60,9 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
 
   public collections$: Observable<Collection[]>;
   public projectPermissions$: Observable<AllowedPermissions>;
+  public collectionsPermissions$: Observable<AllowedPermissionsMap>;
   public query$: Observable<Query>;
+  public view$: Observable<View>;
   public workspace$: Observable<Workspace>;
   public loaded$: Observable<boolean>;
 
@@ -84,9 +89,20 @@ export class PostItCollectionsComponent implements OnInit, OnChanges {
       }),
       tap(query => (this.query = query))
     );
-    this.collections$ = this.query$.pipe(
-      switchMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query)))),
+    this.view$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
+    this.collections$ = combineLatest([this.view$, this.query$]).pipe(
+      switchMap(([view, query]) => this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(view, query)))),
       map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
+    );
+    this.collectionsPermissions$ = this.view$.pipe(
+      switchMap(view => this.store$.pipe(select(selectCollectionsPermissionsByView(view))))
     );
 
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));

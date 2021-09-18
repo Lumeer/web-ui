@@ -1,4 +1,4 @@
-<div *ngIf="query | perspectiveDisplayable:1:1; else notDisplayable"
+<div *ngIf="query$ | async | perspectiveDisplayable:1:1; else notDisplayable"
      (clickOutside)="onClickOutside($event)"
      class="flex-grow-1 d-flex flex-column m-0 h-100 content">
   <ng-container *ngIf="{canManageConfig: canManageConfig$ | async, tableId: tableId$ | async} as data">
@@ -15,7 +15,7 @@
                   cdkScrollable>
     </table-header>
     <table-body [tableId]="data.tableId"
-                [query]="query"
+                [query]="query$ | async"
                 [perspectiveConfiguration]="perspectiveConfiguration"
                 [canManageConfig]="data.canManageConfig"
                 class="d-flex flex-grow-1">

@@ -53,6 +53,7 @@ export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestr
   public views$: Observable<View[]>;
   public queryData$: Observable<QueryData>;
   public query$: Observable<Query>;
+  public view$: Observable<View>;
   public workspace$: Observable<Workspace>;
   public viewsConfig$: Observable<SearchViewsConfig>;
   public permissions$: Observable<AllowedPermissionsMap>;

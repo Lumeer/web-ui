@@ -24,19 +24,25 @@ import {distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
-  selectCollectionsByCustomQuery,
+  selectCollectionsByCustomViewAndQuery,
   selectTasksCollections,
   selectTasksDocumentsByCustomQuery,
   selectViewsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {selectAllViews, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {
+  selectAllViews,
+  selectCurrentView,
+  selectViewQuery,
+  selectViewsLoaded,
+} from '../../../../core/store/views/views.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
 import {queryIsEmpty} from '../../../../core/store/navigation/query/query.util';
 import {View} from '../../../../core/store/views/view';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'search-all',
@@ -57,6 +63,7 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
   public hasView$: Observable<boolean>;
   public hasAnyView$: Observable<boolean>;
   public query$: Observable<Query>;
+  public view$: Observable<View>;
 
   private subscriptions = new Subscription();
   private overrideView$ = new BehaviorSubject<View>(null);
@@ -86,6 +93,14 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
         return this.store$.pipe(select(selectViewQuery));
       })
     );
+    this.view$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
     this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectViewsLoaded)),
@@ -102,34 +117,36 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe(query => this.fetchDocuments(query));
     this.subscriptions.add(navigationSubscription);
 
-    this.hasCollection$ = this.query$.pipe(
-      switchMap(query => this.store$.pipe(select(selectCollectionsByCustomQuery(query)))),
-      map(collections => collections && collections.length > 0)
+    this.hasCollection$ = combineLatest([this.view$, this.query$]).pipe(
+      switchMap(([view, query]) => this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(view, query)))),
+      map(collections => collections?.length > 0)
     );
 
     this.hasView$ = this.query$.pipe(
       switchMap(query => this.store$.pipe(select(selectViewsByCustomQuery(query)))),
-      map(views => views && views.length > 0)
+      map(views => views?.length > 0)
     );
 
     this.hasAnyView$ = this.store$.pipe(
       select(selectAllViews),
-      map(views => views && views.length > 0)
+      map(views => views?.length > 0)
     );
 
     this.hasTaskCollection$ = this.store$.pipe(
       select(selectTasksCollections),
-      map(collections => collections && collections.length > 0)
+      map(collections => collections?.length > 0)
     );
 
-    this.showTaskTab$ = combineLatest([
-      this.hasTaskCollection$,
-      this.query$.pipe(switchMap(query => this.store$.pipe(select(selectTasksDocumentsByCustomQuery(query))))),
-      this.query$,
-    ]).pipe(
+    this.showTaskTab$ = combineLatest([this.hasTaskCollection$, this.subscribeDocuments$(), this.query$]).pipe(
       map(
         ([hasTaskCollection, documents, query]) => hasTaskCollection && (documents?.length > 0 || queryIsEmpty(query))
       )
+    );
+  }
+
+  private subscribeDocuments$(): Observable<DocumentModel[]> {
+    return combineLatest([this.view$, this.query$]).pipe(
+      switchMap(([view, query]) => this.store$.pipe(select(selectTasksDocumentsByCustomQuery(view, query))))
     );
   }
 

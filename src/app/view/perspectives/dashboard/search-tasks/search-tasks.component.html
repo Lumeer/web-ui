@@ -10,6 +10,7 @@
                       [currentUser]="currentUser$ | async"
                       [compactEmptyPages]="compactEmptyPages"
                       [views]="views$ | async"
+                      [permissions]="permissions$ | async"
                       [perspectiveConfiguration]="perspectiveConfiguration"
                       (configChange)="configChange($event)"
                       infiniteScroll
