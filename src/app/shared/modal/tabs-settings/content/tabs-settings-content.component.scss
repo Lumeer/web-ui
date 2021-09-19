@@ -1,16 +1,23 @@
+@import '../../../../../styles/variables';
+
 .tabs-content {
   display: grid;
   grid-template-columns: 1fr min-content;
   grid-gap: 0.5rem;
 }
 
-.cdk-drag-preview {
-  box-sizing: border-box;
-  border-radius: 10rem;
-  z-index: 1100 !important; // otherwise shown under modal
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+.tab.dragging {
+  background: $gray-300;
+  border-radius: $border-radius-base;
+
+  & > dashboard-tab-badge {
+    visibility: hidden;
+  }
 }
 
-.cdk-drag-placeholder {
-  opacity: 0;
+.dragging-area {
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  top: 0;
 }

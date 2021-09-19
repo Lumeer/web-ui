@@ -34,7 +34,7 @@ import {SearchTab} from '../store/navigation/search-tab';
 import {View} from '../store/views/view';
 import {selectSearchById} from '../store/searches/searches.state';
 import {QueryParam} from '../store/navigation/query-param';
-import {createSearchPerspectiveTabs} from '../store/views/view.utils';
+import {createSearchPerspectiveTabsByView} from '../store/views/view.utils';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
@@ -99,7 +99,7 @@ export class ViewRedirectGuard implements CanActivate {
       take(1),
       withLatestFrom(this.store$.pipe(select(selectDefaultSearchPerspectiveTabs))),
       map(([search, defaultTabs]) => {
-        const tabs = createSearchPerspectiveTabs(view, defaultTabs).filter(tab => !tab.hidden);
+        const tabs = createSearchPerspectiveTabsByView(view, defaultTabs).filter(tab => !tab.hidden);
         const desiredTab = search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All;
         if (tabs.some(tab => tab.id === desiredTab)) {
           return [...viewPath, desiredTab];

@@ -220,15 +220,18 @@ export const selectDefaultSearchPerspectiveTabs = createSelector(selectViewsStat
   return addDefaultDashboardTabsIfNotPresent(defaultConfig?.config?.search?.dashboard?.tabs);
 });
 
-export const selectDefaultSearchPerspectiveVisibleTabs = createSelector(
-  selectDefaultSearchPerspectiveTabs,
-  tabs => !tabs.filter(tab => tab.hidden)
+export const selectDefaultSearchPerspectiveVisibleTabs = createSelector(selectDefaultSearchPerspectiveTabs, tabs =>
+  tabs.filter(tab => !tab.hidden)
 );
 
-export const selectSearchPerspectiveVisibleTabs = createSelector(
+export const selectSearchPerspectiveTabs = createSelector(
   selectDefaultSearchPerspectiveTabs,
-  selectCurrentView,
-  (defaultTabs, currentView) => createSearchPerspectiveTabs(currentView, defaultTabs).filter(tab => !tab.hidden)
+  selectSearchConfig,
+  (defaultTabs, searchConfig) => createSearchPerspectiveTabs(searchConfig, defaultTabs)
+);
+
+export const selectSearchPerspectiveVisibleTabs = createSelector(selectSearchPerspectiveTabs, tabs =>
+  tabs.filter(tab => !tab.hidden)
 );
 
 export const selectHasVisibleSearchTab = (tabId: string) =>

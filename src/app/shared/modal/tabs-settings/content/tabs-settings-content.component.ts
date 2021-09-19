@@ -18,12 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DashboardTab, defaultDashboardTabs, TabType} from '../../../../core/model/dashboard-tab';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 import {generateId} from '../../../utils/resource.utils';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {addDefaultDashboardTabsIfNotPresent} from '../../../utils/dashboard.utils';
 
 @Component({
   selector: 'tabs-settings-content',
@@ -37,9 +36,14 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
 
   public tabs$ = new BehaviorSubject<DashboardTab[]>(defaultDashboardTabs);
   public selectedTabId$ = new BehaviorSubject<string>(null);
+  public draggedTabIdSubject$ = new BehaviorSubject(null);
+  public dragging$ = new BehaviorSubject(false);
 
+  public draggedTabId$ = this.draggedTabIdSubject$.pipe(distinctUntilChanged());
   public selectedTab$: Observable<DashboardTab>;
   public tabsAreValid$: Observable<boolean>;
+
+  public draggedTab: DashboardTab;
 
   public ngOnInit() {
     this.selectedTab$ = combineLatest([this.tabs$, this.selectedTabId$]).pipe(
@@ -50,7 +54,7 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.savedTabs) {
-      this.setTabs(addDefaultDashboardTabsIfNotPresent(this.savedTabs));
+      this.setTabs(this.savedTabs);
     }
   }
 
@@ -107,10 +111,36 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
     return {correlationId: generateId(), type: TabType.Custom, title};
   }
 
-  public tagDropped(event: CdkDragDrop<DashboardTab, any>) {
-    const tabs = [...this.tabs$.value];
-    moveItemInArray(tabs, event.previousIndex, event.currentIndex);
-    this.setTabs(tabs);
+  public onDragStart(tab: DashboardTab) {
+    this.draggedTab = tab;
+    this.dragging$.next(true);
+    this.draggedTabIdSubject$.next(null);
+  }
+
+  public onDragEnd() {
+    this.draggedTab = null;
+    this.dragging$.next(false);
+    this.draggedTabIdSubject$.next(null);
+  }
+
+  public onDrop(tab: DashboardTab) {
+    if (this.draggedTab) {
+      const previousIndex = this.tabs$.value.findIndex(t => t.id === this.draggedTab.id);
+      const currentIndex = this.tabs$.value.findIndex(t => t.id === tab.id);
+      const tabs = [...this.tabs$.value];
+      moveItemInArray(tabs, previousIndex, currentIndex);
+      this.setTabs(tabs);
+    }
+  }
+
+  public onDragEnter(tab: DashboardTab) {
+    this.draggedTabIdSubject$.next(tab.id);
+  }
+
+  public onDragLeave(tab: DashboardTab) {
+    if (this.draggedTabIdSubject$.value === tab.id) {
+      this.draggedTabIdSubject$.next(null);
+    }
   }
 }
 

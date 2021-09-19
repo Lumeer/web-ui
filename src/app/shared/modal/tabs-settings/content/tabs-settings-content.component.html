@@ -1,21 +1,26 @@
-<div class="tabs-content">
+<div class="tabs-content ">
 
-  <div class="d-flex flex-wrap align-items-center tabs-list" cdkDropList cdkDropListOrientation="horizontal"
-       (cdkDropListDropped)="tagDropped($event)">
+  <div class="d-flex flex-wrap align-items-center tabs-list">
 
-    <dashboard-tab-badge *ngFor="let tab of tabs$ | async; let index = index; let last = last; trackBy: trackByTab"
-                         class="cursor-pointer tab mt-1"
-                         cdkDrag
-                         [class.mr-2]="last"
-                         [class.mr-1]="!last"
-                         [tab]="tab"
-                         [selected]="tab | isTabSelected:(selectedTabId$ | async)"
-                         (remove)="removeTab(index)"
-                         (toggleHidden)="toggleHiddenTab(index)"
-                         (click)="selectTab(tab)">
-      <i class="fa-fw fa fa-grip-horizontal cursor-move mr-2 text-black-50" cdkDragHandle></i>
-    </dashboard-tab-badge>
-
+    <div *ngFor="let tab of tabs$ | async; let index = index; let last = last; trackBy: trackByTab" class="position-relative tab cursor-pointer mt-1"
+         [class.mr-2]="last"
+         [class.mr-1]="!last"
+         [class.dragging]="(draggedTabId$ | async) === tab.id"
+         [draggable]="true"
+         (dragstart)="onDragStart(tab)"
+         (dragend)="onDragEnd()"
+         (dragover)="$event.preventDefault()"
+         (dragenter)="onDragEnter(tab)"
+         (dragleave)="onDragLeave(tab)"
+         (drop)="onDrop(tab)">
+      <dashboard-tab-badge [tab]="tab"
+                           [selected]="tab | isTabSelected:(selectedTabId$ | async)"
+                           (remove)="removeTab(index)"
+                           (toggleHidden)="toggleHiddenTab(index)"
+                           (click)="selectTab(tab)">
+      </dashboard-tab-badge>
+      <div *ngIf="(dragging$ | async) && tab.id !== draggedTab?.id" class="dragging-area position-absolute"></div>
+    </div>
   </div>
 
   <div class="px-2 text-primary clickable d-flex align-items-center" (click)="addTab()">

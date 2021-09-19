@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, ViewChild, OnInit} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewChild, OnInit, Input} from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -25,11 +25,14 @@ import {AppState} from '../../../core/store/app.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
 import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
-import {selectDefaultViewConfig} from '../../../core/store/views/views.state';
-import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/perspective';
-import {map} from 'rxjs/operators';
+import {selectSearchPerspectiveTabs} from '../../../core/store/views/views.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {createDashboardTabId} from '../../utils/dashboard.utils';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
+import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
+import {take} from 'rxjs/operators';
+import {SearchConfig} from '../../../core/store/searches/search';
+import {SearchesAction} from '../../../core/store/searches/searches.action';
 
 @Component({
   selector: 'tabs-settings-modal',
@@ -37,11 +40,13 @@ import {createDashboardTabId} from '../../utils/dashboard.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsSettingsModalComponent implements OnInit {
+  @Input()
+  public perspectiveId: string;
+
   @ViewChild(TabsSettingsContentComponent)
   public content: TabsSettingsContentComponent;
 
   public readonly dialogType = DialogType;
-  private readonly searchId = DEFAULT_PERSPECTIVE_ID;
 
   public performingAction$ = new BehaviorSubject(false);
   public tabs$: Observable<DashboardTab[]>;
@@ -49,22 +54,35 @@ export class TabsSettingsModalComponent implements OnInit {
   constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
 
   public ngOnInit() {
-    this.tabs$ = this.store$.pipe(
-      select(selectDefaultViewConfig(Perspective.Search, this.searchId)),
-      map(defaultView => defaultView?.config?.search?.dashboard?.tabs)
-    );
+    this.tabs$ = this.store$.pipe(select(selectSearchPerspectiveTabs));
   }
 
   public onSubmit() {
-    this.performingAction$.next(true);
+    const tabs = this.assignTabsIds(this.content.tabs$.value);
+    this.submitViewDashboard(tabs);
+    if (this.perspectiveId === DEFAULT_PERSPECTIVE_ID) {
+      this.submitDefaultDashboard(tabs);
+    } else {
+      this.hideDialog();
+    }
+  }
 
+  private submitDefaultDashboard(tabs: DashboardTab[]) {
+    this.performingAction$.next(true);
     this.store$.dispatch(
       new ViewsAction.SetDashboard({
-        dashboard: {tabs: this.assignTabsIds(this.content.tabs$.value)},
+        dashboard: {tabs},
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
     );
+  }
+
+  private submitViewDashboard(tabs: DashboardTab[]) {
+    this.store$.pipe(select(selectSearchConfigById(this.perspectiveId)), take(1)).subscribe(config => {
+      const newConfig: SearchConfig = {...config, dashboard: {tabs}};
+      this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.perspectiveId, config: newConfig}));
+    });
   }
 
   private assignTabsIds(tabs: DashboardTab[]): DashboardTab[] {

@@ -41,7 +41,7 @@ import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/sto
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
+import {selectSearch, selectSearchById, selectSearchId} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
@@ -167,14 +167,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkSearchTabRedirect(config: SearchConfig, view: View) {
     this.store$
-      .pipe(
-        select(selectSearchTab),
-        take(1),
-        withLatestFrom(
-          this.store$.pipe(select(selectNavigation)),
-          this.store$.pipe(select(selectSearchPerspectiveVisibleTabs))
-        )
-      )
+      .pipe(select(selectSearchTab), take(1), withLatestFrom(this.store$.pipe(select(selectNavigation)), this.tabs$))
       .subscribe(([searchTab, navigation, tabs]) => {
         if (this.shouldRedirectToTab(config, navigation, searchTab, tabs)) {
           const path: any[] = ['w', navigation.workspace.organizationCode, navigation.workspace.projectCode, 'view'];
@@ -270,7 +263,9 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onSettingsClick() {
-    this.modalService.showTabsSettings();
+    this.store$
+      .pipe(select(selectSearchId), take(1))
+      .subscribe(searchId => this.modalService.showTabsSettings(searchId));
   }
 
   public trackByTab(index: number, tab: DashboardTab): string {

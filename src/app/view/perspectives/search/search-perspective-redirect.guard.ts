@@ -27,19 +27,27 @@ import {
   UrlSerializer,
   UrlTree,
 } from '@angular/router';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectDefaultViewConfig, selectDefaultViewConfigsLoaded} from '../../../core/store/views/views.state';
+import {
+  selectDefaultSearchPerspectiveTabs,
+  selectDefaultViewConfig,
+  selectDefaultViewConfigsLoaded,
+  selectViewByCode,
+  selectViewsLoaded,
+} from '../../../core/store/views/views.state';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
+import {map, mergeMap, skipWhile, take, tap, withLatestFrom} from 'rxjs/operators';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
-import {DefaultViewConfig} from '../../../core/store/views/view';
+import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
-import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
+import {DashboardTab} from '../../../core/model/dashboard-tab';
+import {selectSearchConfig} from '../../../core/store/searches/searches.state';
+import {createSearchPerspectiveTabs} from '../../../core/store/views/view.utils';
 
 @Injectable()
 export class SearchPerspectiveRedirectGuard implements CanActivate {
@@ -69,22 +77,22 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     queryParams: Params,
     currentUrl: string
   ): Observable<any> {
-    return this.selectDefaultViewConfig$(organization, project).pipe(
+    return combineLatest([
+      this.selectDefaultViewConfig$(organization, project),
+      this.selectViewAndSearchTabs$(organization, project, viewCode),
+    ]).pipe(
       take(1),
-      map(defaultConfig => {
+      map(([defaultConfig, {tabs, view}]) => {
         const viewPath: any[] = ['/w', organization.code, project.code, 'view'];
         if (viewCode) {
           viewPath.push({vc: viewCode});
         }
         viewPath.push(Perspective.Search);
 
-        const tabs = addDefaultDashboardTabsIfNotPresent(defaultConfig?.config?.search?.dashboard?.tabs).filter(
-          tab => !tab.hidden
-        );
         const desiredSearchTab = parseSearchTabFromUrl(currentUrl);
         let selectedTab = desiredSearchTab && tabs.find(tab => tab.id === desiredSearchTab);
         if (!selectedTab) {
-          const configSearchTab = defaultConfig?.config?.search?.searchTab;
+          const configSearchTab = view?.config?.search?.searchTab || defaultConfig?.config?.search?.searchTab;
           selectedTab = (configSearchTab && tabs.find(tab => tab.id === configSearchTab)) || tabs[0];
         }
 
@@ -114,6 +122,37 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
       }),
       skipWhile(loaded => !loaded),
       mergeMap(() => this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID))))
+    );
+  }
+
+  private selectViewsByCode$(organization: Organization, project: Project, code: string): Observable<View> {
+    return this.store$.pipe(
+      select(selectViewsLoaded),
+      tap(loaded => {
+        if (!loaded) {
+          const workspace = {organizationId: organization.id, projectId: project.id};
+          this.store$.dispatch(new ViewsAction.Get({workspace}));
+        }
+      }),
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.pipe(select(selectViewByCode(code))))
+    );
+  }
+
+  private selectViewAndSearchTabs$(
+    organization: Organization,
+    project: Project,
+    viewCode: string
+  ): Observable<{view: View; tabs: DashboardTab[]}> {
+    return this.selectViewsByCode$(organization, project, viewCode).pipe(
+      withLatestFrom(
+        this.store$.pipe(select(selectDefaultSearchPerspectiveTabs)),
+        this.store$.pipe(select(selectSearchConfig))
+      ),
+      map(([view, defaultTabs, searchConfig]) => ({
+        view,
+        tabs: createSearchPerspectiveTabs(searchConfig || view?.config?.search, defaultTabs).filter(tab => !tab.hidden),
+      }))
     );
   }
 

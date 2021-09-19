@@ -47,7 +47,7 @@ import {RouterAction} from '../../core/store/router/router.action';
 import {View} from '../../core/store/views/view';
 import {
   selectCurrentView,
-  selectSearchPerspectiveVisibleTabs,
+  selectDefaultSearchPerspectiveVisibleTabs,
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
@@ -79,6 +79,7 @@ import {
   PerspectiveSettings,
 } from '../../core/store/navigation/settings/perspective-settings';
 import {DashboardTab} from '../../core/model/dashboard-tab';
+import {createSearchPerspectiveTabsByView} from '../../core/store/views/view.utils';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -304,7 +305,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectCurrentView)),
       this.store$.pipe(select(selectViewCursor)),
       this.store$.pipe(select(selectPerspectiveSettings)),
-      this.store$.pipe(select(selectSearchPerspectiveVisibleTabs)),
+      this.store$.pipe(select(selectDefaultSearchPerspectiveVisibleTabs)),
     ])
       .pipe(take(1))
       .subscribe(([view, cursor, perspectiveSettings, tabs]) => {
@@ -321,7 +322,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     workspacePath: any[],
     cursor: ViewCursor,
     perspectiveSettings: PerspectiveSettings,
-    tabs: DashboardTab[]
+    defaultTabs: DashboardTab[]
   ) {
     this.resetName(view);
     this.resetViewSettings(view);
@@ -329,9 +330,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     switch (view.perspective) {
       case Perspective.Search:
         const searchConfig = view.config?.search;
-        const desiredTab =
-          (searchConfig?.searchTab && tabs.find(tab => tab.id === searchConfig.searchTab)) || tabs[0]?.id;
-        const searchPath = [...workspacePath, desiredTab];
+        const tabs = createSearchPerspectiveTabsByView(view, defaultTabs);
+        const desiredTab = (searchConfig?.searchTab && tabs.find(tab => tab.id === searchConfig.searchTab)) || tabs[0];
+        const searchPath = [...workspacePath, desiredTab?.id || ''];
         this.revertQueryWithUrl(searchPath, view.query, cursor, perspectiveSettings);
         this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
         return;

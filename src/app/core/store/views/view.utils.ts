@@ -50,6 +50,7 @@ import {DetailConfig} from '../details/detail';
 import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
 import {DashboardTab} from '../../model/dashboard-tab';
 import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
+import {SearchConfig} from '../searches/search';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -234,12 +235,17 @@ export function createViewSelectItems(views: View[]): SelectItemModel[] {
   }));
 }
 
-export function createSearchPerspectiveTabs(view?: View, defaultTabs: DashboardTab[] = []): DashboardTab[] {
+export function createSearchPerspectiveTabsByView(view?: View, defaultTabs: DashboardTab[] = []): DashboardTab[] {
   if (view?.perspective === Perspective.Search) {
-    const tabs = view?.config?.search?.dashboard?.tabs;
-    if (isNotNullOrUndefined(tabs)) {
-      return addDefaultDashboardTabsIfNotPresent(tabs);
-    }
+    return createSearchPerspectiveTabs(view?.config?.search, defaultTabs);
+  }
+  return addDefaultDashboardTabsIfNotPresent(defaultTabs);
+}
+
+export function createSearchPerspectiveTabs(config?: SearchConfig, defaultTabs: DashboardTab[] = []): DashboardTab[] {
+  const tabs = config?.dashboard?.tabs;
+  if (isNotNullOrUndefined(tabs)) {
+    return addDefaultDashboardTabsIfNotPresent(tabs);
   }
   return addDefaultDashboardTabsIfNotPresent(defaultTabs);
 }

@@ -1,6 +1,6 @@
 <div class="d-inline-flex tab-badge py-1 px-2 align-items-baseline"
      [ngClass]="selected ? 'badge-success' : (isDefault && tab.hidden ? 'badge-outline-secondary' : 'badge-outline-success')">
-  <ng-content></ng-content>
+  <i class="fa-fw fa fa-grip-horizontal cursor-move mr-2 text-black-50"></i>
   <span class="mr-2">{{tab.title}}</span>
   <i *ngIf="isDefault" (click)="toggleHidden.emit(); $event.stopPropagation()" class="text-primary clickable"
      [ngClass]="tab.hidden ? 'far fa-eye-slash' : 'far fa-eye'"
