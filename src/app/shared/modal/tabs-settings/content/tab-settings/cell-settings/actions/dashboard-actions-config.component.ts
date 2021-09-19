@@ -40,8 +40,7 @@ export class DashboardActionsConfigComponent {
 
   public onAdd() {
     const newActions = [...(this.actions || [])];
-    const defaultIcon = 'far fa-external-link';
-    newActions.push({type: DashboardActionType.ViewButton, config: {color: COLOR_SUCCESS, icon: defaultIcon}});
+    newActions.push(createDefaultAction());
     this.actionsChange.next(newActions);
   }
 
@@ -56,4 +55,9 @@ export class DashboardActionsConfigComponent {
     newActions.splice(index, 1);
     this.actionsChange.next(newActions);
   }
+}
+
+export function createDefaultAction(viewId?: string): DashboardAction {
+  const defaultIcon = 'far fa-external-link';
+  return {type: DashboardActionType.ViewButton, config: {color: COLOR_SUCCESS, icon: defaultIcon, viewId}};
 }

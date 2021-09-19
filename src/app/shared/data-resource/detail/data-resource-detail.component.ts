@@ -69,12 +69,11 @@ import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-co
 import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {computeResourcesPermissions} from '../../utils/permission.utils';
 import {User} from '../../../core/store/users/user';
+import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'data-resource-detail',
@@ -178,22 +177,11 @@ export class DataResourceDetailComponent
 
   private bindPermissions() {
     this.resourcesPermissions$ = combineLatest([
-      this.store$.pipe(select(selectCurrentUserForWorkspace)),
-      this.store$.pipe(select(selectWorkspaceModels)),
-      this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllLinkTypes)),
       this.defaultView$.asObservable(),
       this.store$.pipe(select(selectCurrentView)),
     ]).pipe(
-      map(([user, models, collections, linkTypes, defaultView, currentView]) =>
-        computeResourcesPermissions(
-          models?.organization,
-          models?.project,
-          defaultView || currentView,
-          collections,
-          linkTypes,
-          user
-        )
+      switchMap(([defaultView, currentView]) =>
+        this.store$.pipe(select(selectResourcesPermissionsByView(defaultView || currentView)))
       )
     );
 

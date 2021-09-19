@@ -42,6 +42,7 @@ import {map} from 'rxjs/operators';
 import {queryStemWithoutFilters} from '../../../../../core/store/navigation/query/query.util';
 import {WorkflowsAction} from '../../../../../core/store/workflows/workflows.action';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: WORKFLOW_SIDEBAR_SELECTOR,
@@ -58,6 +59,9 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public currentView: View;
 
   @Output()
   public close = new EventEmitter();

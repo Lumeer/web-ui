@@ -12,6 +12,8 @@
                   [selectedCollection]="selectedCollection$ | async"
                   [sidebarWidth]="panelWidth$ | async"
                   [dataLoaded]="dataLoaded$ | async"
+                  [currentView]="currentView$ | async"
+                  [workflowId]="perspectiveId$ | async"
                   [perspectiveConfiguration]="perspectiveConfiguration"
                   (configChange)="onConfigChanged($event)"
                   (closeSidebar)="onCloseSidebar()"

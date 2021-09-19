@@ -33,7 +33,7 @@ import {
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/view';
+import {AttributeSortType, View, ViewSettings} from '../../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {WorkflowTablesService} from './service/workflow-tables.service';
@@ -106,6 +106,12 @@ export class WorkflowTablesComponent implements OnChanges {
   public dataLoaded: boolean;
 
   @Input()
+  public workflowId: string;
+
+  @Input()
+  public currentView: View;
+
+  @Input()
   public perspectiveConfiguration: WorkflowPerspectiveConfiguration;
 
   @Output()
@@ -131,6 +137,12 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentView) {
+      this.tablesService.setCurrentView(this.currentView);
+    }
+    if (changes.workflowId) {
+      this.tablesService.setWorkflowId(this.workflowId);
+    }
     if (this.onlyViewSettingsChanged(changes)) {
       this.tablesService.onUpdateSettings(this.viewSettings);
     } else if (

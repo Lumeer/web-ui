@@ -92,10 +92,7 @@ import {
   objectsByIdMap,
 } from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
-import {
-  selectWorkflowId,
-  selectWorkflowSelectedDocumentId,
-} from '../../../../../../core/store/workflows/workflow.state';
+import {selectWorkflowSelectedDocumentId} from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 import {
   generateDocumentDataByResourceQuery,
@@ -125,7 +122,6 @@ import {Observable} from 'rxjs';
 import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
-import {selectCurrentView} from '../../../../../../core/store/views/views.state';
 import {
   AttributeFilter,
   ConditionType,
@@ -141,7 +137,7 @@ import {NavigationAction} from '../../../../../../core/store/navigation/navigati
 import {CommonAction} from '../../../../../../core/store/common/common.action';
 import {RoleType} from '../../../../../../core/model/role-type';
 import {User} from '../../../../../../core/store/users/user';
-import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 
@@ -153,6 +149,7 @@ export class WorkflowTablesDataService {
   private lockedRowIds: Record<string, string[]> = {}; // grouped by tableId
   private currentView: View;
   private currentUser: User;
+  private workflowId: string;
 
   constructor(
     private store$: Store<AppState>,
@@ -165,8 +162,7 @@ export class WorkflowTablesDataService {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
-    this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.currentView = view));
-    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
+    this.store$.pipe(select(selectCurrentUserForWorkspace)).subscribe(user => (this.currentUser = user));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -184,6 +180,14 @@ export class WorkflowTablesDataService {
 
   public get showHiddenColumns(): boolean {
     return this.stateService.perspectiveConfiguration?.showHiddenColumns;
+  }
+
+  public setWorkflowId(id: string) {
+    this.workflowId = id;
+  }
+
+  public setCurrentView(view: View) {
+    this.currentView = view;
   }
 
   private formatWorkflowValue(
@@ -366,7 +370,7 @@ export class WorkflowTablesDataService {
         if (aggregatedData.items.length) {
           for (const aggregatedDataItem of aggregatedData.items) {
             const title = aggregatedDataItem.value?.toString() || '';
-            const tableId = workflowTableId(stemConfig.stem, title);
+            const tableId = workflowTableId(stemConfig.stem, this.workflowId, title);
             const titleDataValue = constraint.createDataValue(title, constraintData);
             const titleDataResources = aggregatedDataItem.dataResources;
             for (const childItem of aggregatedDataItem.children || []) {
@@ -424,7 +428,7 @@ export class WorkflowTablesDataService {
             }
           }
         } else {
-          const tableId = workflowTableId(stemConfig.stem);
+          const tableId = workflowTableId(stemConfig.stem, this.workflowId);
 
           const {rows, newRow} = this.createRows(
             tableId,
@@ -668,7 +672,7 @@ export class WorkflowTablesDataService {
     }
 
     if (
-      !this.currentView &&
+      (!this.currentView || attributeColumns.length === 0) &&
       isCollection &&
       permissions.roles?.AttributeEdit &&
       !attributeColumns.some(column => !column.attribute)
@@ -878,16 +882,14 @@ export class WorkflowTablesDataService {
   }
 
   public resizeTable(table: WorkflowTable, height: number) {
-    this.setWorkflowConfig(workflowId =>
-      this.store$.dispatch(
-        new WorkflowsAction.SetTableHeight({
-          workflowId,
-          collectionId: table.collectionId,
-          stem: table.stem,
-          value: table.title?.value || '',
-          height,
-        })
-      )
+    this.store$.dispatch(
+      new WorkflowsAction.SetTableHeight({
+        workflowId: this.workflowId,
+        collectionId: table.collectionId,
+        stem: table.stem,
+        value: table.title?.value || '',
+        height,
+      })
     );
   }
 
@@ -1069,24 +1071,18 @@ export class WorkflowTablesDataService {
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {
     if (column.attribute) {
-      this.setWorkflowConfig(workflowId =>
-        this.store$.dispatch(
-          new WorkflowsAction.SetColumnWidth({
-            workflowId,
-            width,
-            attributeId: column.attribute.id,
-            collectionId: column.collectionId,
-            linkTypeId: column.linkTypeId,
-          })
-        )
+      this.store$.dispatch(
+        new WorkflowsAction.SetColumnWidth({
+          workflowId: this.workflowId,
+          width,
+          attributeId: column.attribute.id,
+          collectionId: column.collectionId,
+          linkTypeId: column.linkTypeId,
+        })
       );
     } else {
       this.stateService.resizeColumn(changedTable, column, width);
     }
-  }
-
-  private setWorkflowConfig(callback: (workflowId: string) => void) {
-    this.store$.pipe(select(selectWorkflowId), take(1)).subscribe(workflowId => callback(workflowId));
   }
 
   private onAttributeCreated(attribute: Attribute, column: TableColumn) {

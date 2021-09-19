@@ -27,6 +27,7 @@
       <data-resource-detail [resource]="data.selected?.collection"
                             [dataResource]="data.selected?.document"
                             [query]="data.query"
+                            [defaultView]="currentView$ | async"
                             [allowSelectDocument]="perspectiveConfiguration?.selectDocuments"
                             [settingsQuery]="settingsQuery$ | async"
                             [settingsStem]="data.selected?.collection | detailQueryStem"

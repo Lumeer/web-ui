@@ -17,17 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, ChangeDetectionStrategy, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
   DashboardAction,
   DashboardCell,
   DashboardCellConfig,
   DashboardCellType,
+  DashboardViewCellConfig,
 } from '../../../../../../core/model/dashboard-tab';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {objectValues} from '../../../../../utils/common.utils';
 import {parseSelectTranslation} from '../../../../../utils/translation.utils';
 import {View} from '../../../../../../core/store/views/view';
+import {createDefaultAction} from './actions/dashboard-actions-config.component';
 
 @Component({
   selector: 'dashboard-cell-settings',
@@ -66,7 +68,23 @@ export class DashboardCellSettingsComponent {
 
   public onConfigChanged(config: DashboardCellConfig) {
     const newCell = {...this.cell, config};
-    this.cellChange.emit(newCell);
+    this.cellChange.emit(this.checkViewConfigDefaultAction(newCell));
+  }
+
+  private checkViewConfigDefaultAction(cell: DashboardCell): DashboardCell {
+    if (cell.type === DashboardCellType.View) {
+      const currentViewId = (<DashboardViewCellConfig>this.cell?.config)?.viewId;
+      const newViewId = (<DashboardViewCellConfig>cell.config)?.viewId;
+
+      const viewIdChanged = newViewId && currentViewId !== newViewId;
+      const actionsAreEmpty = (cell.actions || []).length === 0;
+      const actionViewChanged =
+        currentViewId && cell.actions?.length === 1 && cell.actions[0].config?.viewId === currentViewId;
+      if (viewIdChanged && (actionsAreEmpty || actionViewChanged)) {
+        return {...cell, actions: [createDefaultAction(newViewId)]};
+      }
+    }
+    return cell;
   }
 
   public onActionsChange(actions: DashboardAction[]) {

@@ -8,6 +8,7 @@
   <data-resource-detail [resource]="collection"
                         [dataResource]="document"
                         [query]="query"
+                        [defaultView]="currentView"
                         [settingsQuery]="query"
                         [settingsStem]="currentStem$ | async"
                         (documentSelect)="onDocumentSelect($event)">

@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ViewSettings} from '../../../../core/store/views/view';
+import {View, ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -84,6 +84,12 @@ export class WorkflowContentComponent {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public currentView: View;
+
+  @Input()
+  public workflowId: string;
 
   @Input()
   public perspectiveConfiguration: WorkflowPerspectiveConfiguration;

@@ -12,6 +12,8 @@
                    [config]="config"
                    [canManageConfig]="canManageConfig"
                    [query]="query"
+                   [workflowId]="workflowId"
+                   [currentView]="currentView"
                    [permissions]="permissions"
                    [viewSettings]="viewSettings"
                    [constraintData]="constraintData"
@@ -26,6 +28,7 @@
                     [query]="query"
                     [collection]="selectedCollection"
                     [document]="selectedDocument"
+                    [currentView]="currentView"
                     (close)="closeSidebar.emit()">
   </workflow-sidebar>
 

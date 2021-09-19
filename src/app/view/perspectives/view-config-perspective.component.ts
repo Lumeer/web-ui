@@ -130,7 +130,6 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
           this.store$.pipe(select(selectLinkTypesInCustomQuery(query))),
         ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
       ),
-      take(1),
       map(({query, collections, linkTypes}) => this.checkOrTransformConfig(config, query, collections, linkTypes))
     );
   }

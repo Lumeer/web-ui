@@ -33,6 +33,7 @@ import {selectViewCursor} from '../../../core/store/navigation/navigation.state'
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionsByCustomQueryWithoutLinks,
+  selectCollectionsPermissionsByView,
   selectDocumentsByCustomQuery,
   selectReadableCollections,
 } from '../../../core/store/common/permissions.selectors';
@@ -45,10 +46,7 @@ import {
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {
-  selectCollectionPermissions,
-  selectCollectionsPermissions,
-} from '../../../core/store/user-permissions/user-permissions.state';
+import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
@@ -133,7 +131,9 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
       select(selectReadableCollections),
       map(collections => createFlatResourcesSettingsQuery(collections))
     );
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+    this.permissions$ = this.currentView$.pipe(
+      switchMap(view => this.store$.pipe(select(selectCollectionsPermissionsByView(view))))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
