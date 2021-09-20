@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, EMPTY, Observable} from 'rxjs';
+import {combineLatest, EMPTY, Observable, of} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -40,10 +40,12 @@ import {Attribute, Collection} from '../collections/collection';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
 import {
-  selectDocumentsAndLinksByQuery,
-  selectDocumentsByCustomQuery,
-  selectDocumentsByQuery,
-  selectDocumentsByQueryAndIdsSortedByCreation,
+  selectCollectionPermissionsByView,
+  selectCollectionsPermissionsByView,
+  selectDocumentsAndLinksByCustomQuerySorted,
+  selectDocumentsByViewAndCustomQuery,
+  selectDocumentsByViewAndCustomQueryAndIdsSortedByCreation,
+  selectResourcesPermissionsByView,
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
@@ -59,7 +61,7 @@ import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {NavigationAction} from '../navigation/navigation.action';
-import {selectViewCode, selectViewCursor} from '../navigation/navigation.state';
+import {selectViewCursor} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
 import {convertQueryModelToString} from '../navigation/query/query.converter';
 import {isSingleCollectionQuery} from '../navigation/query/query.util';
@@ -117,13 +119,7 @@ import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInit
 import {QueryParam} from '../navigation/query-param';
 import {selectTable} from './tables.state';
 import {AttributesResource} from '../../model/resource';
-import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
-import {
-  selectCollectionPermissions,
-  selectCollectionsPermissions,
-  selectResourcesPermissions,
-} from '../user-permissions/user-permissions.state';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {findAttributeConstraint} from '../collections/collection.util';
@@ -135,14 +131,23 @@ export class TablesEffects {
     this.actions$.pipe(
       ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
       filter(action => isSingleCollectionQuery(action.payload.query)),
+      mergeMap(action => {
+        const documentsObservable$ = this.store$.pipe(
+          select(selectDocumentsByViewAndCustomQuery(action.payload.view, action.payload.query))
+        );
+        const permissionsObservable$ = this.store$.pipe(
+          select(selectCollectionsPermissionsByView(action.payload.view))
+        );
+        return combineLatest([documentsObservable$, permissionsObservable$]).pipe(
+          take(1),
+          map(([documents, collectionsPermissions]) => ({action, documents, collectionsPermissions}))
+        );
+      }),
       withLatestFrom(
         this.store$.pipe(select(selectCollectionsDictionary)),
-        this.store$.pipe(select(selectCollectionsPermissions)),
-        this.store$.pipe(select(selectLinkTypesDictionary)),
-        this.store$.pipe(select(selectDocumentsByQuery)),
-        this.store$.pipe(select(selectViewCode))
+        this.store$.pipe(select(selectLinkTypesDictionary))
       ),
-      mergeMap(([action, collectionsMap, collectionsPermissions, linkTypesMap, documents, viewCode]) => {
+      mergeMap(([{action, documents, collectionsPermissions}, collectionsMap, linkTypesMap]) => {
         const {config, query, embedded} = action.payload;
 
         const queryStem = query.stems[0];
@@ -152,7 +157,13 @@ export class TablesEffects {
         let lastCollectionId = queryStem.collectionId;
         const permissions = collectionsPermissions[lastCollectionId];
         const parts: TableConfigPart[] = [
-          createCollectionPart(primaryCollection, 0, !viewCode && linkTypeIds.length === 0, config, permissions),
+          createCollectionPart(
+            primaryCollection,
+            0,
+            !action.payload.view && linkTypeIds.length === 0,
+            config,
+            permissions
+          ),
         ];
 
         linkTypeIds.forEach((linkTypeId, index) => {
@@ -166,7 +177,7 @@ export class TablesEffects {
             const collectionPart = createCollectionPart(
               collection,
               index * 2 + 2,
-              !viewCode && index === linkTypeIds.length - 1,
+              !action.payload.view && index === linkTypeIds.length - 1,
               config,
               permissions
             );
@@ -262,16 +273,15 @@ export class TablesEffects {
       ofType<TablesAction.SwitchParts>(TablesActionType.SWITCH_PARTS),
       mergeMap(action => this.getLatestTable(action)),
       filter(({action, table}) => table.config.parts.length === 3),
-      withLatestFrom(this.store$.select(selectViewQuery)),
-      mergeMap(([{action, table}, query]) => {
+      mergeMap(({action, table}) => {
         const linkTypeIds = [table.config.parts[1].linkTypeId];
         const collectionId = table.config.parts[2].collectionId;
 
         // in collection only one stem is considered as valid query
-        const firstStem = query.stems && query.stems[0];
+        const firstStem = action.payload.query?.stems?.[0];
         const filters = firstStem && firstStem.filters;
         const linkFilters = firstStem && firstStem.linkFilters;
-        const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
+        const newQuery: Query = {...action.payload.query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
 
         const actions: Action[] = [];
         const parts = [...table.config.parts];
@@ -300,8 +310,7 @@ export class TablesEffects {
     this.actions$.pipe(
       ofType<TablesAction.RemovePart>(TablesActionType.REMOVE_PART),
       mergeMap(action => this.getLatestTable(action)),
-      withLatestFrom(this.store$.select(selectViewQuery)),
-      map(([{action, table}, query]) => {
+      map(({action, table}) => {
         const linkTypeIds = table.config.parts.slice(0, action.payload.cursor.partIndex).reduce((ids, part) => {
           if (part.linkTypeId) {
             ids.push(part.linkTypeId);
@@ -309,8 +318,8 @@ export class TablesEffects {
           return ids;
         }, []);
 
-        const stem = {...query.stems[0], linkTypeIds};
-        const newQuery: Query = {...query, stems: [stem]};
+        const stem = {...action.payload.query.stems[0], linkTypeIds};
+        const newQuery: Query = {...action.payload.query, stems: [stem]};
 
         return new RouterAction.Go({
           path: [],
@@ -587,11 +596,8 @@ export class TablesEffects {
             this.selectResource$(part).pipe(
               filter(entity => !!entity),
               take(1),
-              withLatestFrom(
-                this.store$.pipe(select(selectViewCode)),
-                this.store$.pipe(select(selectResourcesPermissions))
-              ),
-              mergeMap(([entity, viewCode, resourcesPermissions]) => {
+              withLatestFrom(this.store$.pipe(select(selectResourcesPermissionsByView(action.payload.view)))),
+              mergeMap(([entity, resourcesPermissions]) => {
                 const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
                 const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
                 const columns = addMissingTableColumns(initializedColumns, entity.attributes, false);
@@ -603,7 +609,7 @@ export class TablesEffects {
                 const lastPartIndex = table.config.parts.length - 1;
                 if (
                   permissions?.rolesWithView?.AttributeEdit &&
-                  !viewCode &&
+                  !action.payload.view &&
                   cursor.partIndex === lastPartIndex &&
                   (!lastColumn || lastColumn.attributeIds.length)
                 ) {
@@ -638,7 +644,9 @@ export class TablesEffects {
       switchMap(action =>
         combineLatest([
           this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
-          this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false))),
+          this.store$.pipe(
+            select(selectDocumentsByViewAndCustomQuery(action.payload.view, action.payload.query, false))
+          ),
           this.store$.pipe(select(selectMoveTableCursorDown)),
           this.store$.pipe(select(selectTableCursor)),
         ]).pipe(
@@ -648,7 +656,7 @@ export class TablesEffects {
             const {collectionId} = table.config.parts[0];
             const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
             return this.store$.pipe(
-              select(selectCollectionPermissions(collectionId)),
+              select(selectCollectionPermissionsByView(action.payload.view, collectionId)),
               map(permissions => permissions?.rolesWithView?.DataContribute),
               distinctUntilChanged(),
               mergeMap(canCreateDocuments => {
@@ -729,7 +737,7 @@ export class TablesEffects {
     this.actions$.pipe(
       ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
       mergeMap(action => {
-        const {cursor} = action.payload;
+        const {cursor, view, query} = action.payload;
         return combineLatest([
           this.store$.pipe(select(selectTablePart(cursor))),
           this.store$.pipe(select(selectTableRows(cursor.tableId))),
@@ -757,7 +765,7 @@ export class TablesEffects {
                   return ids;
                 }, []);
                 return this.store$.pipe(
-                  select(selectDocumentsByQueryAndIdsSortedByCreation(documentIds)),
+                  select(selectDocumentsByViewAndCustomQueryAndIdsSortedByCreation(view, query, documentIds)),
                   take(1),
                   map(documents =>
                     documents.map(document => {
@@ -1052,7 +1060,7 @@ export class TablesEffects {
               if (tableColumn) {
                 const attributeId = tableColumn.attributeIds?.[0];
                 return this.store$.pipe(
-                  select(selectDocumentsAndLinksByQuery),
+                  select(selectDocumentsAndLinksByCustomQuerySorted(action.payload.view, action.payload.query)),
                   withLatestFrom(
                     this.store$.pipe(select(selectCollectionsDictionary)),
                     this.store$.pipe(select(selectLinkTypesDictionary)),

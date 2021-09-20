@@ -31,6 +31,7 @@ import {
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.component';
 import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-hierarchy-cell',
@@ -44,6 +45,9 @@ export class TableHierarchyCellComponent implements OnChanges {
 
   @Input()
   public cursor: TableBodyCursor;
+
+  @Input()
+  public view: View;
 
   @Input()
   public level: number;

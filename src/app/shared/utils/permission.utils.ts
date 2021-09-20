@@ -21,7 +21,7 @@ import {User} from '../../core/store/users/user';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
-import {AllowedPermissions, ResourcesPermissions} from '../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
 import {View} from '../../core/store/views/view';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
@@ -110,6 +110,9 @@ export function userPermissionsInCollection(
   linkTypes: LinkType[],
   user: User
 ): AllowedPermissions {
+  if (!collection) {
+    return {};
+  }
   const roleTypes = userRoleTypesInResource(organization, project, collection, user);
   if (currentView != null) {
     const viewRoleTypes = userRoleTypesInResource(organization, project, currentView, user);
@@ -134,6 +137,9 @@ export function userPermissionsInLinkType(
   currentView: View,
   user: User
 ): AllowedPermissions {
+  if (!linkType) {
+    return {};
+  }
   const roleTypes = userRoleTypesInLinkType(organization, project, linkType, collections, user);
   if (currentView != null) {
     const viewRoleTypes = userRoleTypesInResource(organization, project, currentView, user);
@@ -363,29 +369,92 @@ export function computeResourcesPermissions(
   linkTypes: LinkType[],
   currentUser: User
 ): ResourcesPermissions {
-  const collectionsPermissions = (collections || []).reduce(
-    (map, collection) => ({
-      ...map,
-      [collection.id]: userPermissionsInCollection(
-        organization,
-        project,
-        collection,
-        currentView,
-        linkTypes,
-        currentUser
-      ),
-    }),
-    {}
-  );
+  const collectionsPermissions = (collections || [])
+    .filter(collection => !!collection)
+    .reduce(
+      (map, collection) => ({
+        ...map,
+        [collection.id]: userPermissionsInCollection(
+          organization,
+          project,
+          collection,
+          currentView,
+          linkTypes,
+          currentUser
+        ),
+      }),
+      {}
+    );
 
-  const linkTypesPermissions = (linkTypes || []).reduce(
-    (map, linkType) => ({
-      ...map,
-      [linkType.id]: userPermissionsInLinkType(organization, project, linkType, collections, currentView, currentUser),
-    }),
-    {}
-  );
+  const linkTypesPermissions = (linkTypes || [])
+    .filter(linkType => !!linkType)
+    .reduce(
+      (map, linkType) => ({
+        ...map,
+        [linkType.id]: userPermissionsInLinkType(
+          organization,
+          project,
+          linkType,
+          collections,
+          currentView,
+          currentUser
+        ),
+      }),
+      {}
+    );
   return {collections: collectionsPermissions, linkTypes: linkTypesPermissions};
+}
+
+export function computeCollectionsPermissions(
+  organization: Organization,
+  project: Project,
+  currentView: View,
+  collections: Collection[],
+  linkTypes: LinkType[],
+  currentUser: User
+): AllowedPermissionsMap {
+  return (collections || [])
+    .filter(collection => !!collection)
+    .reduce(
+      (map, collection) => ({
+        ...map,
+        [collection.id]: userPermissionsInCollection(
+          organization,
+          project,
+          collection,
+          currentView,
+          linkTypes,
+          currentUser
+        ),
+      }),
+      {}
+    );
+}
+
+export function computeLinkTypesPermissions(
+  organization: Organization,
+  project: Project,
+  currentView: View,
+  collections: Collection[],
+  linkTypes: LinkType[],
+  currentUser: User
+): AllowedPermissionsMap {
+  return (linkTypes || [])
+    .filter(linkType => !!linkType)
+    .reduce(
+      (map, linkType) => ({
+        ...map,
+        [linkType.id]: userPermissionsInLinkType(
+          organization,
+          project,
+          linkType,
+          collections,
+          currentView,
+          currentUser
+        ),
+      }),
+      {}
+    );
 }
 
 export function permissionsChanged(p1: Permissions, p2: Permissions): boolean {

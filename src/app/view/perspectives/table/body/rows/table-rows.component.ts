@@ -32,7 +32,7 @@ import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {debounceTime, delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
-import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
+import {selectDocumentsByViewAndCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
@@ -42,6 +42,7 @@ import {selectTableRows} from '../../../../../core/store/tables/tables.selector'
 import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 import {selectQueryDataResourcesLoaded} from '../../../../../core/store/data-resources/data-resources.state';
 import {TablePerspectiveConfiguration} from '../../../perspective-configuration';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-rows',
@@ -55,6 +56,12 @@ export class TableRowsComponent implements OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public tableId: string;
 
   @Input()
   public canManageConfig: boolean;
@@ -73,16 +80,16 @@ export class TableRowsComponent implements OnChanges {
   public constructor(public element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.cursor || changes.query) {
-      this.bindRows(this.cursor, this.query);
+    if (changes.cursor || changes.query || changes.view) {
+      this.bindRows(this.cursor, this.query, this.view);
     }
   }
 
-  private bindRows(cursor: TableBodyCursor, query: Query) {
+  private bindRows(cursor: TableBodyCursor, query: Query, view: View) {
     this.rows$ = combineLatest([
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
       this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query, false)),
+        select(selectDocumentsByViewAndCustomQuery(view, query, false)),
         map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
       ),
     ]).pipe(
@@ -90,7 +97,7 @@ export class TableRowsComponent implements OnChanges {
       map(([rows, existingDocumentIds]) => {
         return rows.filter(row => (row.documentId ? existingDocumentIds.has(row.documentId) : row.correlationId));
       }),
-      tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query}))),
+      tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query, view}))),
       tap(() => setTimeout(() => this.setScrollbarWidth()))
     );
     this.loaded$ = this.rows$.pipe(

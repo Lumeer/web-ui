@@ -49,6 +49,7 @@ import {MenuItem} from '../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {initForceTouch} from '../../../utils/html-modifier';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: '[table-row]',
@@ -83,6 +84,9 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   @Input()
   public linkTypeId: string;
+
+  @Input()
+  public view: View;
 
   @Output()
   public onClick = new EventEmitter<string>();

@@ -24,6 +24,7 @@
                        [ganttChartId]="perspectiveId$ | async"
                        [permissions]="permissions$ | async"
                        [data]="data$ | async"
+                       [view]="currentView$ | async"
                        [linkTypes]="data.linkTypes"
                        [dataLoaded]="dataLoaded$ | async"
                        [config]="data.config"
@@ -45,6 +46,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query$ | async"
+                 [view]="currentView$ | async"
                  [minStems]="1">
   </invalid-query>
 </ng-template>

@@ -24,7 +24,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -41,8 +40,10 @@ import {
   selectTablePart,
   selectTableRowWithHierarchyLevel,
 } from '../../../../../../core/store/tables/tables.selector';
-import {selectReadableCollections} from '../../../../../../core/store/common/permissions.selectors';
+import {selectReadableCollectionsByView} from '../../../../../../core/store/common/permissions.selectors';
 import {AppState} from '../../../../../../core/store/app.state';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-primary-row',
@@ -54,12 +55,18 @@ import {AppState} from '../../../../../../core/store/app.state';
     '[class.table-bg-white]': '!striped',
   },
 })
-export class TablePrimaryRowComponent implements OnInit, OnChanges {
+export class TablePrimaryRowComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
   @Input()
   public row: TableConfigRow;
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
 
   @Input()
   public canManageConfig: boolean;
@@ -76,23 +83,18 @@ export class TablePrimaryRowComponent implements OnInit, OnChanges {
 
   constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
-  public ngOnInit() {
-    this.bindCollectionHasToLink();
-  }
-
-  private bindCollectionHasToLink() {
-    this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectReadableCollections),
-      map(collections => collections.length > 1)
-    );
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
       this.striped = isTableRowStriped([], this.cursor.rowPath);
       this.hasNextParts$ = this.store$.pipe(select(selectHasNextTableParts(this.cursor)));
       this.part$ = this.store$.pipe(select(selectTablePart(this.cursor)));
       this.bindHierarchy(this.cursor);
+    }
+    if (changes.view) {
+      this.hasCollectionToLink$ = this.store$.pipe(
+        select(selectReadableCollectionsByView(this.view)),
+        map(collections => collections.length > 1)
+      );
     }
   }
 

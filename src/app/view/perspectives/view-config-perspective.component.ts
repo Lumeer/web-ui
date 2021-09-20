@@ -28,8 +28,8 @@ import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.s
 import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {DefaultViewConfig, View, ViewConfig} from '../../core/store/views/view';
 import {
-  selectCollectionsByCustomQuery,
-  selectLinkTypesInCustomQuery,
+  selectCollectionsByCustomViewAndQuery,
+  selectLinkTypesInCustomViewAndQuery,
 } from '../../core/store/common/permissions.selectors';
 import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
@@ -112,7 +112,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
         if (
           preferViewConfigUpdate(this.getConfig(previousView?.config), this.getConfig(view?.config), !!entityConfig)
         ) {
-          return this.checkPerspectiveConfig(perspectiveConfig).pipe(
+          return this.checkPerspectiveConfig(perspectiveConfig, view).pipe(
             mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig)),
             map(config => ({perspectiveId, config}))
           );
@@ -122,12 +122,12 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     );
   }
 
-  private checkPerspectiveConfig(config: T): Observable<T> {
+  private checkPerspectiveConfig(config: T, view?: View): Observable<T> {
     return this.selectViewQuery$().pipe(
       switchMap(query =>
         combineLatest([
-          this.store$.pipe(select(selectCollectionsByCustomQuery(query))),
-          this.store$.pipe(select(selectLinkTypesInCustomQuery(query))),
+          this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(view, query))),
+          this.store$.pipe(select(selectLinkTypesInCustomViewAndQuery(view, query))),
         ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
       ),
       map(({query, collections, linkTypes}) => this.checkOrTransformConfig(config, query, collections, linkTypes))

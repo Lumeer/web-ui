@@ -50,7 +50,7 @@ import {
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn} from './model/table-column';
-import {AttributeSortType} from '../../core/store/views/view';
+import {AttributeSortType, View} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {MenuItem} from '../menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, ConstraintType} from '@lumeer/data-filters';
@@ -88,6 +88,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public detailPanel: boolean;
+
+  @Input()
+  public view: View;
 
   @Output()
   public columnResize = new EventEmitter<{column: TableColumn; width: number}>();

@@ -70,6 +70,7 @@
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"
     [collectionId]="collectionId"
+    [view]="view"
     [excludedDocumentIds]="row.document?.id ? [row.document.id] : []"
     [columns]="columns | documentHintsColumns"
     [offsetLeft]="columns | calculateHintsOffset"

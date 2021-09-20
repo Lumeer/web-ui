@@ -67,6 +67,7 @@ import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-re
 import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
 import {DataQuery} from '../../../core/model/data-query';
 import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} from '../perspective-configuration';
+import {clickedInsideElement} from '../../../shared/utils/html-modifier';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -205,12 +206,12 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
   }
 
-  private createTable(query: Query, tableId: string, config?: TableConfig) {
+  private createTable(query: Query, view: View, tableId: string, config?: TableConfig) {
     if (!tableId) {
       throw new Error('tableId has not been set');
     }
     this.tableRowNumberService.setTableId(tableId);
-    this.store$.dispatch(new CreateTable({tableId, query, config}));
+    this.store$.dispatch(new CreateTable({tableId, query, view, config}));
   }
 
   private subscribeToTable(): Subscription {
@@ -221,15 +222,16 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
             select(selectTableById(tableId)),
             filter(table => !!table)
           )
-        )
+        ),
+        withLatestFrom(this.query$)
       )
-      .subscribe(table => {
+      .subscribe(([table, query]) => {
         this.table$.next(table);
-        this.switchPartsIfFirstEmpty(table);
+        this.switchPartsIfFirstEmpty(table, query);
       });
   }
 
-  private switchPartsIfFirstEmpty(table: TableModel) {
+  private switchPartsIfFirstEmpty(table: TableModel, query: Query) {
     if (!table.config || table.config.parts.length !== 3) {
       return;
     }
@@ -241,6 +243,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
             tableId: table.id,
             partIndex: 0,
           },
+          query,
         })
       );
     }
@@ -292,12 +295,12 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           view ? this.initTableWithView(previousView, view) : this.initTableDefaultView()
         )
       )
-      .subscribe(({query, config, tableId, forceRefresh}) => {
+      .subscribe(({query, view, config, tableId, forceRefresh}) => {
         this.setElementId(tableId);
         if (!forceRefresh && this.queryHasNewLink(query)) {
           this.addTablePart(query, tableId);
         } else {
-          this.refreshTable(query, tableId, config);
+          this.refreshTable(query, view, tableId, config);
         }
       });
     this.subscriptions.add(subscription);
@@ -306,7 +309,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTableWithView(
     previousView: View,
     view: View
-  ): Observable<{query: DataQuery; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
+  ): Observable<{query: DataQuery; view: View; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.query$.pipe(
       switchMap(query => {
         const tableId = view.code;
@@ -315,18 +318,19 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           take(1),
           map(table => {
             if (previousView?.id === view.id && this.queryHasNewLink(query)) {
-              return {query, config: view.config.table, tableId};
+              return {query, view, config: view.config.table, tableId};
             }
 
             if (preferViewConfigUpdate(previousView?.config?.table, view?.config?.table, !!table)) {
               return {
                 query,
+                view,
                 config: view.config?.table,
                 tableId,
                 forceRefresh: true,
               };
             }
-            return {query, config: table?.config || view.config?.table, tableId, forceRefresh: true};
+            return {query, view, config: table?.config || view.config?.table, tableId, forceRefresh: true};
           })
         );
       })
@@ -335,6 +339,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private initTableDefaultView(): Observable<{
     query: DataQuery;
+    view: View;
     config: TableConfig;
     tableId: string;
     forceRefresh?: boolean;
@@ -346,11 +351,12 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           withLatestFrom(this.store$.pipe(select(selectTableConfigById(tableId)))),
           map(([{defaultConfig}, tableConfig]) => {
             if (this.queryHasNewLink(query)) {
-              return {query, config: tableConfig, tableId};
+              return {query, view: null, config: tableConfig, tableId};
             }
 
             return {
               query,
+              view: null,
               config: mergeFirstTablePart(tableConfig, defaultConfig?.config?.table),
               tableId,
             };
@@ -403,12 +409,12 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private refreshTable(query: DataQuery, tableId: string, config: TableConfig) {
+  private refreshTable(query: DataQuery, view: View, tableId: string, config: TableConfig) {
     if (queryIsEmpty(query) && tableId === DEFAULT_TABLE_ID) {
       this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
     } else {
       const subscription = this.waitForDataLoaded$(query).subscribe(() => {
-        this.createTable(query, tableId, config);
+        this.createTable(query, view, tableId, config);
       });
       this.subscriptions.add(subscription);
     }
@@ -417,10 +423,17 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private subscribeToScrolling(): Subscription {
     return this.scrollDispatcher
       .scrolled()
-      .pipe(filter(scrollable => !!scrollable && scrollable.getElementRef().nativeElement.id?.startsWith('table')))
-      .subscribe((scrollable: CdkScrollable) => {
+      .pipe(
+        filter(scrollable => !!scrollable),
+        map(scrollable => scrollable as CdkScrollable),
+        withLatestFrom(this.tableId$),
+        filter(([scrollable, tableId]) => scrollable.getElementRef().nativeElement.id.startsWith(tableId))
+      )
+      .subscribe(([scrollable, tableId]) => {
         const left = scrollable.measureScrollOffset('left');
-        const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(s => s !== scrollable);
+        const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(
+          s => s !== scrollable && s.getElementRef().nativeElement.id.startsWith(tableId)
+        );
 
         if (otherScrollable && otherScrollable.measureScrollOffset('left') !== left) {
           otherScrollable.scrollTo({left});
@@ -429,7 +442,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onClickOutside(event: Event) {
-    if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
+    if (this.selectedCursor && !clickedInsideElement(event, 'table-perspective') && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }

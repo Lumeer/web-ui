@@ -1409,7 +1409,7 @@ export class WorkflowTablesDataService {
       if (table.linkingDocumentIds.length === 1) {
         this.addRow(tableId, table.linkingDocumentIds[0]);
       } else {
-        this.modalService.showChooseLinkDocument(table.linkingDocumentIds, document =>
+        this.modalService.showChooseLinkDocument(table.linkingDocumentIds, this.currentView?.id, document =>
           this.addRow(tableId, document.id)
         );
       }

@@ -35,6 +35,7 @@
             [syncScrollIds]="stemData.tables | workflowTablesIds"
             class="lmr-table"
             [tableModel]="table"
+            [view]="currentView"
             [style.height.px]="table.height"
             [style.min-height.px]="table.minHeight"
             [constraintData]="constraintData"
@@ -89,6 +90,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query"
+                 [view]="currentView"
                  [minStems]="1">
   </invalid-query>
 </ng-template>

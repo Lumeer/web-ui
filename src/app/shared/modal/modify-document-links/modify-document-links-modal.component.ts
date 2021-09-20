@@ -45,6 +45,8 @@ import {mergeDocuments} from '../../../core/store/documents/document.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {View} from '../../../core/store/views/view';
+import {selectCurrentView} from '../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -75,6 +77,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
   public query$: Observable<Query>;
+  public currentView$: Observable<View>;
 
   public readonly dialogType = DialogType;
 
@@ -82,6 +85,7 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.selectedLinkTypeId$.next(this.linkTypeIds[0]);
     this.linkType$ = this.selectLinkType$();
     this.collection$ = this.selectCollection$();
@@ -99,10 +103,16 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
   }
 
   private selectDocuments$(): Observable<DocumentModel[]> {
-    return combineLatest([this.query$, this.linkType$]).pipe(
-      switchMap(([query, linkType]) =>
+    return combineLatest([this.query$, this.linkType$, this.currentView$]).pipe(
+      switchMap(([query, linkType, currentView]) =>
         this.store$.pipe(
-          select(selectDocumentsByCollectionAndQuery(getOtherLinkedCollectionId(linkType, this.collectionId), query))
+          select(
+            selectDocumentsByCollectionAndQuery(
+              getOtherLinkedCollectionId(linkType, this.collectionId),
+              query,
+              currentView
+            )
+          )
         )
       ),
       switchMap(documentsByQuery =>

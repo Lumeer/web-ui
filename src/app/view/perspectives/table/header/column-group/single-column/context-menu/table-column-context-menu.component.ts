@@ -29,6 +29,8 @@ import {AllowedPermissions} from '../../../../../../../core/model/allowed-permis
 import {isMacOS} from '../../../../../../../shared/utils/system.utils';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {AppState} from '../../../../../../../core/store/app.state';
+import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-column-context-menu',
@@ -38,6 +40,12 @@ import {AppState} from '../../../../../../../core/store/app.state';
 export class TableColumnContextMenuComponent {
   @Input()
   public cursor: TableHeaderCursor;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
 
   @Input()
   public attribute: Attribute;
@@ -108,7 +116,9 @@ export class TableColumnContextMenuComponent {
   }
 
   public onCopyValues(unique?: boolean) {
-    this.store$.dispatch(new TablesAction.CopyRowValues({cursor: this.cursor, unique}));
+    this.store$.dispatch(
+      new TablesAction.CopyRowValues({cursor: this.cursor, view: this.view, query: this.query, unique})
+    );
   }
 
   public open(x: number, y: number) {

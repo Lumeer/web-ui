@@ -71,8 +71,12 @@ export class ModalService {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
-  public showChooseLinkDocument(documentIds: string[], callback?: (document: DocumentModel) => void): BsModalRef {
-    const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
+  public showChooseLinkDocument(
+    documentIds: string[],
+    viewId: string,
+    callback?: (document: DocumentModel) => void
+  ): BsModalRef {
+    const config = {initialState: {documentIds, viewId, callback}, keyboard: true, class: 'modal-lg'};
     return this.show(ChooseLinkDocumentModalComponent, config);
   }
 

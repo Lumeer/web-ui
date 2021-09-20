@@ -23,6 +23,7 @@
         [document]="data.documentByCollection[otherCollection.id]"
         [linkInstance]="linkInstance"
         [collection]="collection"
+        [view]="view"
         [collectionPermissions]="permissions?.collections && permissions.collections[collection.id]"
         [linkTypePermissions]="permissions?.linkTypes && permissions.linkTypes[linkType.id]"
         [query]="query$ | async"

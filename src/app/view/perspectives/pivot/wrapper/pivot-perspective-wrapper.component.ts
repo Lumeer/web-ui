@@ -42,6 +42,7 @@ import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
+import {View} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
@@ -85,6 +86,9 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public view: View;
 
   @Input()
   public perspectiveConfiguration: PivotPerspectiveConfiguration;

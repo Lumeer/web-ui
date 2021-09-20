@@ -82,6 +82,7 @@ import {selectViewQuery} from '../../../../../../../core/store/views/views.state
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-data-cell',
@@ -98,6 +99,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public document: DocumentModel;
+
+  @Input()
+  public view: View;
 
   @Input()
   public linkInstance: LinkInstance;

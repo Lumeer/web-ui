@@ -31,6 +31,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query"
+                 [view]="view"
                  [minStems]="1">
   </invalid-query>
 </ng-template>

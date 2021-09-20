@@ -72,7 +72,7 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
-import {ViewSettings} from '../../../../../core/store/views/view';
+import {View, ViewSettings} from '../../../../../core/store/views/view';
 import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
@@ -109,6 +109,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public view: View;
 
   @Input()
   public currentUser: User;
@@ -345,7 +348,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   }
 
   private chooseDocument(documentsIds: string[], callback: (document) => void) {
-    this.modalService.showChooseLinkDocument(documentsIds, callback);
+    this.modalService.showChooseLinkDocument(documentsIds, this.view?.id, callback);
   }
 
   private modifyingDocuments(createResource: KanbanCreateResource): boolean {

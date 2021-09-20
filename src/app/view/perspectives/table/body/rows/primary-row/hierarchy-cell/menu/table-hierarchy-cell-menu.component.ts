@@ -31,6 +31,7 @@ import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
 import {TableDataPermissionsService} from '../../../../../service/table-data-permissions.service';
+import {View} from '../../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
@@ -41,6 +42,9 @@ import {TableDataPermissionsService} from '../../../../../service/table-data-per
 export class TableHierarchyCellMenuComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
+
+  @Input()
+  public view: View;
 
   @Input()
   public canManageConfig: boolean;
@@ -67,7 +71,9 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
     if (changes.cursor && this.cursor) {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
-      this.dataPermissions$ = this.dataPermissionsService.selectDataPermissions$(this.cursor);
+    }
+    if ((changes.cursor || changes.view) && this.cursor) {
+      this.dataPermissions$ = this.dataPermissionsService.selectDataPermissions$(this.view, this.cursor);
     }
   }
 

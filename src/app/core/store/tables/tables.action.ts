@@ -25,6 +25,7 @@ import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
 import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
 import {EditedAttribute} from './tables.state';
 import {Query} from '../navigation/query/query';
+import {View} from '../views/view';
 
 export enum TablesActionType {
   CREATE_TABLE = '[Tables] Create Table',
@@ -95,7 +96,9 @@ export namespace TablesAction {
   export class CreateTable implements Action {
     public readonly type = TablesActionType.CREATE_TABLE;
 
-    public constructor(public payload: {tableId: string; query: Query; config: TableConfig; embedded?: boolean}) {}
+    public constructor(
+      public payload: {tableId: string; query: Query; view: View; config: TableConfig; embedded?: boolean}
+    ) {}
   }
 
   export class AddTable implements Action {
@@ -137,13 +140,13 @@ export namespace TablesAction {
   export class SwitchParts implements TableCursorAction {
     public readonly type = TablesActionType.SWITCH_PARTS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {}
+    public constructor(public payload: {cursor: TableHeaderCursor; query: Query}) {}
   }
 
   export class RemovePart implements TableCursorAction {
     public readonly type = TablesActionType.REMOVE_PART;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {}
+    public constructor(public payload: {cursor: TableHeaderCursor; query: Query}) {}
   }
 
   export class AddColumn implements TableCursorAction {
@@ -220,7 +223,7 @@ export namespace TablesAction {
   export class SyncColumns implements Action {
     public readonly type = TablesActionType.SYNC_COLUMNS;
 
-    public constructor(public payload: {cursor: TableHeaderCursor}) {}
+    public constructor(public payload: {cursor: TableHeaderCursor; view: View}) {}
   }
 
   /**
@@ -232,7 +235,7 @@ export namespace TablesAction {
   export class SyncPrimaryRows implements Action {
     public readonly type = TablesActionType.SYNC_PRIMARY_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor; query: Query}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; query: Query; view: View}) {}
   }
 
   /**
@@ -243,7 +246,7 @@ export namespace TablesAction {
   export class SyncLinkedRows implements Action {
     public readonly type = TablesActionType.SYNC_LINKED_ROWS;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; query: Query; view: View}) {}
   }
 
   /**
@@ -370,7 +373,7 @@ export namespace TablesAction {
   export class CopyRowValues implements Action {
     public readonly type = TablesActionType.COPY_ROW_VALUES;
 
-    public constructor(public payload: {cursor: TableHeaderCursor; unique?: boolean}) {}
+    public constructor(public payload: {cursor: TableHeaderCursor; view: View; query: Query; unique?: boolean}) {}
   }
 
   /**

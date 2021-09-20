@@ -21,9 +21,8 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild}
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {debounceTime, filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map, mergeMap, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
-import {selectCollectionsInQuery} from '../../../core/store/common/permissions.selectors';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
@@ -46,6 +45,7 @@ import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
 import {defaultMapPerspectiveConfiguration, MapPerspectiveConfiguration} from '../perspective-configuration';
+import {selectCollectionsInCustomQuery} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'map-perspective',
@@ -150,7 +150,7 @@ export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig>
         select(selectMap),
         debounceTime(1000),
         filter(mapEntity => !!mapEntity),
-        withLatestFrom(this.store$.pipe(select(selectCollectionsInQuery)), this.selectDefaultViewConfig$()),
+        withLatestFrom(this.selectCollectionsInQuery$(), this.selectDefaultViewConfig$()),
         filter(([, collections]) => collections.length > 0)
       )
       .subscribe(([mapEntity, collections, currentViewConfig]) => {
@@ -165,6 +165,10 @@ export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig>
           this.redirectToMapPosition(mapEntity.config.position);
         }
       });
+  }
+
+  private selectCollectionsInQuery$(): Observable<Collection[]> {
+    return this.query$.pipe(switchMap(query => this.store$.pipe(select(selectCollectionsInCustomQuery(query)))));
   }
 
   private selectMapDefaultConfigId$(): Observable<string> {

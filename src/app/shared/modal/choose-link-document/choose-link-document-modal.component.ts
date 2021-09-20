@@ -27,14 +27,15 @@ import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
 import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
-import {mergeMap, tap} from 'rxjs/operators';
+import {mergeMap, switchMap, tap} from 'rxjs/operators';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {uniqueValues} from '../../utils/array.utils';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {selectDocumentsByViewAndCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResource} from '../../../core/model/resource';
+import {selectViewById} from '../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
@@ -47,6 +48,9 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
   @Input()
   public collectionId: string;
+
+  @Input()
+  public viewId: string;
 
   @Input()
   public callback: (document: DocumentModel) => void;
@@ -69,7 +73,8 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
       const query: Query = {stems: [{collectionId: this.collectionId}]};
       this.store$.dispatch(new DocumentsAction.Get({query}));
       this.documents$ = this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query)),
+        select(selectViewById(this.viewId)),
+        switchMap(view => this.store$.pipe(select(selectDocumentsByViewAndCustomQuery(view, query)))),
         tap(documents => {
           this.documents = documents;
           this.checkSelectedDocument(documents);

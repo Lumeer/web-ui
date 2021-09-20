@@ -32,10 +32,11 @@ import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/stor
 import {selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
+  selectCollectionPermissionsByView,
   selectCollectionsByCustomQueryWithoutLinks,
   selectCollectionsPermissionsByView,
-  selectDocumentsByCustomQuery,
-  selectReadableCollections,
+  selectDocumentsByViewAndCustomQuery,
+  selectReadableCollectionsByView,
 } from '../../../core/store/common/permissions.selectors';
 import {
   filterStemsForCollection,
@@ -46,7 +47,6 @@ import {
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
@@ -127,8 +127,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
         return this.store$.pipe(select(selectViewCursor));
       })
     );
-    this.settingsQuery$ = this.store$.pipe(
-      select(selectReadableCollections),
+    this.settingsQuery$ = this.currentView$.pipe(
+      switchMap(view => this.store$.pipe(select(selectReadableCollectionsByView(view)))),
       map(collections => createFlatResourcesSettingsQuery(collections))
     );
     this.permissions$ = this.currentView$.pipe(
@@ -152,15 +152,15 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
   }
 
   private initSelection() {
-    this.selected$ = combineLatest([this.viewCursor$, this.selectQueryAndCollections$()]).pipe(
-      switchMap(([cursor, {query, collections}]) => {
-        return this.selectCollectionByCursor$(cursor, query).pipe(
+    this.selected$ = combineLatest([this.currentView$, this.viewCursor$, this.selectQueryAndCollections$()]).pipe(
+      switchMap(([view, cursor, {query, collections}]) => {
+        return this.selectCollectionByCursor$(cursor, query, view).pipe(
           switchMap(({collection}) => {
             if (collection) {
-              return this.selectByCollection$(collection, query, cursor);
+              return this.selectByCollection$(collection, query, cursor, view);
             }
             if (collections[0]) {
-              return this.selectByCollection$(collections[0], query, cursor);
+              return this.selectByCollection$(collections[0], query, cursor, view);
             }
             return of({collection: null, document: null});
           }),
@@ -171,10 +171,10 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
   }
 
   private selectQueryAndCollections$(): Observable<{query: Query; collections: Collection[]}> {
-    return this.query$.pipe(
-      switchMap(query =>
+    return combineLatest([this.query$, this.currentView$]).pipe(
+      switchMap(([query, view]) =>
         this.store$.pipe(
-          select(selectCollectionsByCustomQueryWithoutLinks(query)),
+          select(selectCollectionsByCustomQueryWithoutLinks(view, query)),
           map(collections => ({query: modifyDetailPerspectiveQuery(query, collections), collections}))
         )
       )
@@ -189,10 +189,14 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
     }
   }
 
-  private selectCollectionByCursor$(cursor: ViewCursor, query: Query): Observable<{collection?: Collection}> {
+  private selectCollectionByCursor$(
+    cursor: ViewCursor,
+    query: Query,
+    view: View
+  ): Observable<{collection?: Collection}> {
     return combineLatest([
       this.store$.pipe(select(selectCollectionById(cursor?.collectionId))),
-      this.store$.pipe(select(selectCollectionPermissions(cursor?.collectionId))),
+      this.store$.pipe(select(selectCollectionPermissionsByView(view, cursor?.collectionId))),
     ]).pipe(
       map(([collection, permissions]) => {
         const baseCollectionIds = getBaseCollectionIdsFromQuery(query);
@@ -207,7 +211,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
   private selectByCollection$(
     collection: Collection,
     query: Query,
-    cursor: ViewCursor
+    cursor: ViewCursor,
+    view: View
   ): Observable<{collection?: Collection; document?: DocumentModel}> {
     const collectionQuery = filterStemsForCollection(collection.id, query);
 
@@ -219,7 +224,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
         }
       }),
       filter(loaded => loaded),
-      mergeMap(() => this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)))),
+      mergeMap(() => this.store$.pipe(select(selectDocumentsByViewAndCustomQuery(view, collectionQuery)))),
       switchMap(documents => {
         if (cursor?.documentId) {
           const documentByCursor = documents.find(doc => doc.id === cursor.documentId);
@@ -240,9 +245,9 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
   }
 
   public selectCollection(collection: Collection) {
-    this.query$
+    combineLatest([this.currentView$, this.query$])
       .pipe(
-        switchMap(query => {
+        switchMap(([view, query]) => {
           const collectionQuery = filterStemsForCollection(collection.id, query);
           return this.store$.pipe(
             select(selectQueryDocumentsLoaded(collectionQuery)),
@@ -254,7 +259,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
             filter(loaded => loaded),
             mergeMap(() =>
               this.store$.pipe(
-                select(selectDocumentsByCustomQuery(collectionQuery)),
+                select(selectDocumentsByViewAndCustomQuery(view, collectionQuery)),
                 map(documents => documents?.[0])
               )
             )

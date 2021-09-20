@@ -29,6 +29,8 @@ import {
 } from '../../../../../../../core/store/tables/tables.selector';
 import {filter, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
+import {Query} from '../../../../../../../core/store/navigation/query/query';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-linked-row',
@@ -46,6 +48,12 @@ export class TableLinkedRowComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public rows: TableConfigRow[];
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
 
   @Input()
   public canManageConfig: boolean;

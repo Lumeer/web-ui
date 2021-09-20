@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -27,7 +27,7 @@ import {selectAllCollections, selectCollectionById} from '../../../core/store/co
 import {map, take, tap} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
 import {isAllDayEvent, isAllDayEventSingle} from '../../../view/perspectives/calendar/util/calendar-util';
-import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
@@ -44,8 +44,6 @@ import {findAttributeConstraint} from '../../../core/store/collections/collectio
 import {toNumber} from '../../utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
-import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {
   AttributeFilter,
   ConstraintData,
@@ -53,6 +51,8 @@ import {
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
+import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
+import {View} from '../../../core/store/views/view';
 
 const DEFAULT_EVENT_DURATION = 60;
 
@@ -82,12 +82,18 @@ export class CalendarEventDetailModalComponent implements OnInit {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
+
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
   public query$: Observable<Query>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
-  public permissions$: Observable<AllowedPermissionsMap>;
+  public permissions$: Observable<ResourcesPermissions>;
 
   public allDay$ = new BehaviorSubject(false);
   public stemIndex$ = new BehaviorSubject<number>(0);
@@ -98,10 +104,9 @@ export class CalendarEventDetailModalComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.linkTypes$ = this.store$.pipe(select(selectAllLinkTypes));
-    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+    this.permissions$ = this.store$.pipe(select(selectResourcesPermissionsByView(this.view)));
 
     this.initResources();
   }
@@ -159,16 +164,16 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private selectNewDataResource$(stemIndex: number): Observable<DataResource> {
-    return combineLatest([this.selectResourceByStemIndex$(stemIndex), this.store$.pipe(select(selectViewQuery))]).pipe(
-      tap(([resource]) => (this.currentResource = resource)),
-      map(([resource, query]) => {
+    return this.selectResourceByStemIndex$(stemIndex).pipe(
+      tap(resource => (this.currentResource = resource)),
+      map(resource => {
         const stemConfig = this.getStemConfig(stemIndex);
         const dataModel = stemConfig?.name || stemConfig?.start;
         const startMoment = moment(this.start);
 
         const data = generateDocumentData(
           resource,
-          this.queryStemFilters(query, stemIndex, dataModel),
+          this.queryStemFilters(this.query, stemIndex, dataModel),
           this.constraintData
         );
 

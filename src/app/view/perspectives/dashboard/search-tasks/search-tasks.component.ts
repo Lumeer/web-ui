@@ -27,7 +27,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
   selectCollectionsPermissionsByView,
-  selectTasksCollectionsByCustomQuery,
+  selectTasksCollectionsByViewAndCustomQuery,
   selectTasksDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -127,8 +127,8 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
       })
     );
 
-    this.collections$ = this.query$.pipe(
-      switchMap(query => this.store$.pipe(select(selectTasksCollectionsByCustomQuery(query))))
+    this.collections$ = combineLatest([this.view$, this.query$]).pipe(
+      switchMap(([view, query]) => this.store$.pipe(select(selectTasksCollectionsByViewAndCustomQuery(view, query))))
     );
     this.permissions$ = this.view$.pipe(
       switchMap(view => this.store$.pipe(select(selectCollectionsPermissionsByView(view))))

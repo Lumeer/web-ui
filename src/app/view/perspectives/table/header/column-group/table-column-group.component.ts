@@ -37,6 +37,8 @@ import {TableColumnType, TableConfigColumn, TableModel} from '../../../../../cor
 import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {DRAG_DELAY} from '../../../../../core/constants';
+import {View} from '../../../../../core/store/views/view';
+import {Query} from '../../../../../core/store/navigation/query/query';
 
 interface ElementHeight {
   element: HTMLElement;
@@ -55,6 +57,12 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
   @Input()
   public cursor: TableHeaderCursor;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
 
   @Input()
   public columns: TableConfigColumn[];
@@ -83,7 +91,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection || changes.linkType) {
-      this.store$.dispatch(new TablesAction.SyncColumns({cursor: this.cursor}));
+      this.store$.dispatch(new TablesAction.SyncColumns({cursor: this.cursor, view: this.view}));
     }
   }
 

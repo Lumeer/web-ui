@@ -140,6 +140,7 @@ export class DataResourceDetailComponent
   public collectionId$ = new BehaviorSubject<string>(null);
   public startEditing$ = new BehaviorSubject<boolean>(false);
 
+  public currentView$: Observable<View>;
   public commentsCount$: Observable<number>;
   public linksCount$: Observable<number>;
   public documentsCount$: Observable<number>;
@@ -171,18 +172,17 @@ export class DataResourceDetailComponent
       map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
       tap(workspace => (this.workspace = workspace))
     );
+    this.currentView$ = combineLatest([
+      this.defaultView$.asObservable(),
+      this.store$.pipe(select(selectCurrentView)),
+    ]).pipe(map(([defaultView, currentView]) => defaultView || currentView));
 
     this.bindPermissions();
   }
 
   private bindPermissions() {
-    this.resourcesPermissions$ = combineLatest([
-      this.defaultView$.asObservable(),
-      this.store$.pipe(select(selectCurrentView)),
-    ]).pipe(
-      switchMap(([defaultView, currentView]) =>
-        this.store$.pipe(select(selectResourcesPermissionsByView(defaultView || currentView)))
-      )
+    this.resourcesPermissions$ = this.currentView$.pipe(
+      switchMap(currentView => this.store$.pipe(select(selectResourcesPermissionsByView(currentView))))
     );
 
     this.linkTypes$ = combineLatest([

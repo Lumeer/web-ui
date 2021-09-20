@@ -34,6 +34,7 @@ import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-hidden-input',
@@ -48,6 +49,9 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   @Input()
   public tableId: string;
+
+  @Input()
+  public view: View;
 
   @ViewChild('hiddenInput', {static: true})
   public hiddenInput: ElementRef<HTMLInputElement>;
@@ -174,7 +178,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         select(selectTableCursor),
         take(1),
         switchMap(cursor =>
-          this.dataPermissionsService.selectDataPermissions$(cursor).pipe(
+          this.dataPermissionsService.selectDataPermissions$(this.view, cursor).pipe(
             take(1),
             filter(() => !!cursor.rowPath),
             map(permissions => [cursor, permissions?.edit])

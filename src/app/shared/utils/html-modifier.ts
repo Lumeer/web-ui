@@ -111,7 +111,7 @@ export function hex2rgba(hex: string, opacity: number): string {
   return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
 }
 
-export function clickedInsideElement(event: MouseEvent, tagName: string): boolean {
+export function clickedInsideElement(event: Event, tagName: string): boolean {
   const paths = (<any>event).path as HTMLElement[];
   if (paths) {
     for (const element of paths) {

@@ -73,12 +73,14 @@
     <div *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
       <links-toolbar class="d-block w-100 text-right"
                      [collection]="resource"
+                     [view]="currentView$ | async"
                      [permissions]="dataResourceData.permissions"
                      (createLink)="showCreateLink($event)">
       </links-toolbar>
       <links-accordeon class="d-block"
                        *ngIf="resource && dataResource?.id"
                        [document]="dataResource"
+                       [view]="currentView$ | async"
                        [preventEventBubble]="preventEventBubble"
                        [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
@@ -108,6 +110,7 @@
                              *ngIf="resource && dataResource?.id"
                              [linkInstance]="dataResource"
                              [linkType]="resource"
+                             [view]="currentView$ | async"
                              [preventEventBubble]="preventEventBubble"
                              [allowSelectDocument]="allowSelectDocument"
                              [permissions]="data.resourcesPermissions"

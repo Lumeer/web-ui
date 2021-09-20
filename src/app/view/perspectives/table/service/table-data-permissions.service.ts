@@ -27,21 +27,22 @@ import {TableCursor} from '../../../../core/store/tables/table-cursor';
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
 import {selectDocumentById} from '../../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {
-  selectCollectionPermissions,
-  selectLinkTypePermissions,
-} from '../../../../core/store/user-permissions/user-permissions.state';
 import {selectCurrentUserForWorkspace} from '../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../shared/utils/permission.utils';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {View} from '../../../../core/store/views/view';
+import {
+  selectCollectionPermissionsByView,
+  selectLinkTypePermissionsByView,
+} from '../../../../core/store/common/permissions.selectors';
 
 @Injectable()
 export class TableDataPermissionsService {
   constructor(private store$: Store<AppState>) {}
 
-  public selectDataPermissions$(cursor: TableCursor): Observable<DataResourcePermissions> {
+  public selectDataPermissions$(view: View, cursor: TableCursor): Observable<DataResourcePermissions> {
     return combineLatest([
       this.store$.pipe(select(selectTableRow(cursor))),
       this.store$.pipe(select(selectTablePart(cursor))),
@@ -50,9 +51,9 @@ export class TableDataPermissionsService {
       switchMap(([tableRow, tablePart]) => {
         if (tableRow) {
           if (tablePart?.collectionId) {
-            return this.selectDocumentPermissions$(tableRow.documentId, tablePart.collectionId);
+            return this.selectDocumentPermissions$(view, tableRow.documentId, tablePart.collectionId);
           } else if (tablePart?.linkTypeId) {
-            return this.selectLinkPermissions$(tableRow.linkInstanceId, tablePart.linkTypeId);
+            return this.selectLinkPermissions$(view, tableRow.linkInstanceId, tablePart.linkTypeId);
           }
         }
         return of({});
@@ -60,11 +61,15 @@ export class TableDataPermissionsService {
     );
   }
 
-  private selectDocumentPermissions$(documentId: string, collectionId: string): Observable<DataResourcePermissions> {
+  private selectDocumentPermissions$(
+    view: View,
+    documentId: string,
+    collectionId: string
+  ): Observable<DataResourcePermissions> {
     return combineLatest([
       this.store$.pipe(select(selectDocumentById(documentId))),
       this.store$.pipe(select(selectCollectionById(collectionId))),
-      this.store$.pipe(select(selectCollectionPermissions(collectionId))),
+      this.store$.pipe(select(selectCollectionPermissionsByView(view, collectionId))),
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
       this.store$.pipe(select(selectConstraintData)),
     ]).pipe(
@@ -75,11 +80,15 @@ export class TableDataPermissionsService {
     );
   }
 
-  private selectLinkPermissions$(linkInstance: string, linkType: string): Observable<DataResourcePermissions> {
+  private selectLinkPermissions$(
+    view: View,
+    linkInstance: string,
+    linkType: string
+  ): Observable<DataResourcePermissions> {
     return combineLatest([
       this.store$.pipe(select(selectLinkInstanceById(linkInstance))),
       this.store$.pipe(select(selectLinkTypeById(linkType))),
-      this.store$.pipe(select(selectLinkTypePermissions(linkType))),
+      this.store$.pipe(select(selectLinkTypePermissionsByView(view, linkType))),
       this.store$.pipe(select(selectCurrentUserForWorkspace)),
       this.store$.pipe(select(selectConstraintData)),
     ]).pipe(

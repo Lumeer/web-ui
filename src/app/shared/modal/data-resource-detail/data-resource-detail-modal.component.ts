@@ -72,6 +72,9 @@ export class DataResourceDetailModalComponent implements OnInit {
   public toolbarRef: TemplateRef<any>;
 
   @Input()
+  public view: View;
+
+  @Input()
   public createDirectly: boolean;
 
   @Output()

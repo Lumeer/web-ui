@@ -28,6 +28,8 @@ import {TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {AppState} from '../../../../../../core/store/app.state';
+import {View} from '../../../../../../core/store/views/view';
+import {Query} from '../../../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'table-linked-rows',
@@ -41,6 +43,12 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public rows: TableConfigRow[];
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
 
   @Input()
   public canManageConfig: boolean;
@@ -69,6 +77,8 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
         this.store$.dispatch(
           new TablesAction.SyncLinkedRows({
             cursor: {...cursor, partIndex: cursor.partIndex + 1},
+            query: this.query,
+            view: this.view,
           })
         )
       )

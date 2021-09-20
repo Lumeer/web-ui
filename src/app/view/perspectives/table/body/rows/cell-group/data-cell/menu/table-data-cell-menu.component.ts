@@ -28,7 +28,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {first, map, switchMap, take, tap} from 'rxjs/operators';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
@@ -54,8 +54,9 @@ import {ModalService} from '../../../../../../../../shared/modal/modal.service';
 import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {CanCreateLinksPipe} from '../../../../../../../../shared/pipes/can-create-links.pipe';
-import {selectLinkTypesPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
 import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
+import {View} from '../../../../../../../../core/store/views/view';
+import {selectLinkTypesPermissionsByView} from '../../../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -65,6 +66,9 @@ import {DataResourcePermissions} from '../../../../../../../../core/model/data-r
 export class TableDataCellMenuComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
+
+  @Input()
+  public view: View;
 
   @Input()
   public document: DocumentModel;
@@ -103,6 +107,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public setLinks$: Observable<boolean>;
   public tableRow$: Observable<TableConfigRow>;
   public tableParts$: Observable<TableConfigPart[]>;
+  public view$ = new BehaviorSubject<View>(null);
 
   private tableParts: TableConfigPart[];
 
@@ -125,6 +130,9 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (changes.linkInstance && this.linkInstance) {
       this.created = !!this.linkInstance.id;
     }
+    if (changes.view) {
+      this.view$.next(this.view);
+    }
     if (changes.cursor && this.cursor) {
       this.indentable$ = this.store$.select(selectTableRowIndentable(this.cursor));
       this.outdentable$ = this.store$.select(selectTableRowOutdentable(this.cursor));
@@ -139,13 +147,13 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   private bindSetLinks$(): Observable<boolean> {
     if (this.created && this.cursor.partIndex % 2 === 0) {
-      return this.tableParts$.pipe(
-        switchMap(parts => {
+      return combineLatest([this.view$, this.tableParts$]).pipe(
+        switchMap(([view, parts]) => {
           const linkPart = parts[this.cursor.partIndex + 1];
           if (linkPart?.linkTypeId) {
             return combineLatest([
               this.store$.pipe(select(selectLinkTypeById(linkPart.linkTypeId))),
-              this.store$.pipe(select(selectLinkTypesPermissions)),
+              this.store$.pipe(select(selectLinkTypesPermissionsByView(view))),
             ]).pipe(map(([linkType, permissions]) => this.canCreateLinksPipe.transform(linkType, permissions)));
           }
           return of(false);

@@ -77,7 +77,7 @@ import {
   durationCountsMapToString,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {ViewSettings} from '../../../../core/store/views/view';
+import {View, ViewSettings} from '../../../../core/store/views/view';
 import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
 
 interface Data {
@@ -132,6 +132,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public view: View;
 
   @Input()
   public dataLoaded: boolean;
@@ -344,7 +347,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
             linkInstanceId,
             documentIds: [documentId, selectedDocument.id],
           });
-        this.modalService.showChooseLinkDocument(otherDocumentIds, callback);
+        this.modalService.showChooseLinkDocument(otherDocumentIds, this.view?.id, callback);
       }
     }
   }
@@ -608,7 +611,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
             linkInstance.documentIds[0] = documentId;
             chain({document, linkInstance});
           };
-          this.modalService.showChooseLinkDocument(possibleLinkDocumentsIds, callback);
+          this.modalService.showChooseLinkDocument(possibleLinkDocumentsIds, this.view?.id, callback);
         } else if (possibleLinkDocumentsIds.length === 1) {
           linkInstance.documentIds[0] = possibleLinkDocumentsIds[0];
           chain({document, linkInstance});

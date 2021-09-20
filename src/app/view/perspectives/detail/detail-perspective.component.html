@@ -7,6 +7,7 @@
       [selectedDocument]="data.selected?.document"
       [attributesSettings]="data.viewSettings?.attributes"
       [query]="data.query"
+      [view]="currentView$ | async"
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
