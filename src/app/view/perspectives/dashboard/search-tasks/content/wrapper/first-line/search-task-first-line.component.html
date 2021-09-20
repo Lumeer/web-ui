@@ -6,7 +6,7 @@
   <data-input-preview class="data-input-preview text-truncate font-weight-bold flex-grow-1 order-2 title"
                       *ngIf="titleDataValue | formatDataValue; else emptyTitle"
                       [constraint]="attributes.title.constraint"
-                      [cursor]="document | dataCursor:attributes.title.id"
+                      [cursor]="document | dataCursor:attributes.title.id:view?.id"
                       [configuration]="configuration"
                       [dataValue]="titleDataValue">
   </data-input-preview>
@@ -19,7 +19,7 @@
     <data-input-preview class="data-input-preview text-truncate ml-0 ml-md-3 py-1"
                         *ngIf="assigneeDataValue | formatDataValue; else emptyTitle"
                         [constraint]="attributes.assignee.constraint"
-                        [cursor]="document | dataCursor:attributes?.assignee?.id"
+                        [cursor]="document | dataCursor:attributes?.assignee?.id:view?.id"
                         [configuration]="assigneeConfiguration"
                         [dataValue]="assigneeDataValue">
     </data-input-preview>
@@ -29,7 +29,7 @@
     <data-input-preview class="data-input-preview text-truncate ml-3 py-1"
                         *ngIf="dueDateDataValue | formatDataValue"
                         [constraint]="attributes.dueDate.constraint"
-                        [cursor]="document | dataCursor:attributes.dueDate.id"
+                        [cursor]="document | dataCursor:attributes.dueDate.id:view?.id"
                         [configuration]="configuration"
                         [dataValue]="dueDateDataValue">
     </data-input-preview>
@@ -39,7 +39,7 @@
     <data-input-preview class="data-input-preview text-truncate ml-3 py-1"
                         *ngIf="stateDataValue | formatDataValue"
                         [constraint]="attributes.state.constraint"
-                        [cursor]="document | dataCursor:attributes.state.id"
+                        [cursor]="document | dataCursor:attributes.state.id:view?.id"
                         [configuration]="stateConfiguration"
                         [dataValue]="stateDataValue">
     </data-input-preview>
@@ -50,7 +50,7 @@
     <data-input-preview class="data-input-preview text-truncate ml-3"
                         *ngIf="priorityDataValue | formatDataValue"
                         [constraint]="attributes.priority.constraint"
-                        [cursor]="document | dataCursor:attributes.priority.id"
+                        [cursor]="document | dataCursor:attributes.priority.id:view?.id"
                         [configuration]="configuration"
                         [dataValue]="priorityDataValue">
     </data-input-preview>

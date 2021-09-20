@@ -60,7 +60,7 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {AttributesSettings, View} from '../../../../core/store/views/view';
+import {AttributesSettings} from '../../../../core/store/views/view';
 import {
   composeViewSettingsLinkTypeCollectionId,
   createAndModifyAttributesSettings,
@@ -98,7 +98,7 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
   public query: Query;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Input()
   public collectionPermissions: AllowedPermissions;

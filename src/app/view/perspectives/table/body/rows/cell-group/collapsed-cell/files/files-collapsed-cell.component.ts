@@ -31,6 +31,7 @@ import {
   DataCursor,
 } from '../../../../../../../../shared/data-input/data-cursor';
 import {AppState} from '../../../../../../../../core/store/app.state';
+import {View} from '../../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'files-collapsed-cell',
@@ -47,6 +48,9 @@ export class FilesCollapsedCellComponent implements OnInit, OnChanges {
 
   @Input()
   public linkInstances: LinkInstance[];
+
+  @Input()
+  public viewId: string;
 
   public fileAttachments$: Observable<FileAttachment[]>;
 
@@ -80,11 +84,11 @@ export class FilesCollapsedCellComponent implements OnInit, OnChanges {
 
   private createCursors(): DataCursor[] {
     if (this.attributeId && this.documents && this.documents.length > 0) {
-      return this.documents.map(document => createDocumentDataCursor(document, this.attributeId));
+      return this.documents.map(document => createDocumentDataCursor(document, this.attributeId, this.viewId));
     }
 
     if (this.attributeId && this.linkInstances && this.linkInstances.length > 0) {
-      return this.linkInstances.map(linkInstance => createLinkDataCursor(linkInstance, this.attributeId));
+      return this.linkInstances.map(linkInstance => createLinkDataCursor(linkInstance, this.attributeId, this.viewId));
     }
 
     return [];

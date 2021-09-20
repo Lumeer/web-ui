@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AttributesSettings, View} from '../../../core/store/views/view';
+import {AttributesSettings} from '../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
@@ -64,7 +64,7 @@ export class LinksAccordeonComponent implements OnInit {
   public attributesSettings: AttributesSettings;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();

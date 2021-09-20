@@ -29,7 +29,7 @@
       [ngClass]="layoutType | postItLayoutTypeClass"
       [layoutType]="layoutType"
       [permissions]="allowedPermissions"
-      [cursor]="dataResource | dataCursor : row.attribute?.id"
+      [cursor]="dataResource | dataCursor : row.attribute?.id:view?.id"
       [constraintData]="constraintData"
       [readonly]="!dataPermissions?.edit || !(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
       [unusedAttributes]="unusedAttributes"

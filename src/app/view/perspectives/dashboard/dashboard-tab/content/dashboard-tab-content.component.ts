@@ -23,7 +23,7 @@ import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {View} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
-import {selectViewsByReadWithComputedData} from '../../../../../core/store/common/permissions.selectors';
+import {selectViewsByRead} from '../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'dashboard-tab-content',
@@ -40,7 +40,7 @@ export class DashboardTabContentComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.views$ = this.store$.pipe(select(selectViewsByReadWithComputedData));
+    this.views$ = this.store$.pipe(select(selectViewsByRead));
   }
 
   public trackByRow(index: number, row: DashboardRow): string {

@@ -36,6 +36,7 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {objectsByIdMap, objectValues} from '../../../utils/common.utils';
 import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
+import {View} from '../../../../core/store/views/view';
 
 export type ResultTableRow = {document: DocumentModel; linkInstance: LinkInstance};
 
@@ -63,6 +64,9 @@ export class ResultsTableComponent implements OnChanges {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public view: View;
 
   @Input()
   public removedLinkInstancesIds: string[];

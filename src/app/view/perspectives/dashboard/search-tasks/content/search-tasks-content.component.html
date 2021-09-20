@@ -20,6 +20,7 @@
         [size]="currentSize"
         [document]="document"
         [currentUser]="currentUser"
+        [view]="view"
         [permissions]="permissions && permissions[document.collectionId]"
         [isOpened]="document | isDocumentOpened:config"
         [collection]="collectionsMap[document.collectionId]"
@@ -39,7 +40,7 @@
                   [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
             <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
                                 [dataValue]="entry.dataValue"
-                                [cursor]="document | dataCursor:entry.attributeId"
+                                [cursor]="document | dataCursor:entry.attributeId:view?.id"
                                 [configuration]="configuration"
                                 [constraint]="entry.constraint">
             </data-input-preview>

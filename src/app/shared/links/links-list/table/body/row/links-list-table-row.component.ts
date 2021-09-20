@@ -44,7 +44,6 @@ import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
 import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
-import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -63,7 +62,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public row: LinkRow;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Input()
   public linkPermissions: DataResourcePermissions;

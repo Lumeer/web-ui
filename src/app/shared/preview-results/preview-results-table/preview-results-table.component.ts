@@ -34,7 +34,7 @@ import {
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings} from '../../../core/store/views/view';
+import {AttributesSettings, View} from '../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../settings/settings.util';
 import {objectsByIdMap} from '../../utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
@@ -67,6 +67,9 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public attributesSettings: AttributesSettings;
+
+  @Input()
+  public view: View;
 
   @Input()
   public resizeable = true;

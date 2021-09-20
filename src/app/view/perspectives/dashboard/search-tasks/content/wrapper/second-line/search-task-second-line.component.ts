@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TaskAttributes} from '../../../model/task-attributes';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'search-task-second-line',
@@ -38,6 +39,9 @@ export class SearchTaskSecondLineComponent {
 
   @Input()
   public attributes: TaskAttributes;
+
+  @Input()
+  public view: View;
 
   @Output()
   public commentClick = new EventEmitter();

@@ -25,6 +25,7 @@ import {AllowedPermissions} from '../../../../../../../core/model/allowed-permis
 import {TaskAttributes} from '../../../model/task-attributes';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
+import {View} from '../../../../../../../core/store/views/view';
 
 @Component({
   selector: 'search-task-first-line',
@@ -44,6 +45,9 @@ export class SearchTaskFirstLineComponent {
 
   @Input()
   public large: boolean;
+
+  @Input()
+  public view: View;
 
   @Input()
   public dataPermissions: DataResourcePermissions;

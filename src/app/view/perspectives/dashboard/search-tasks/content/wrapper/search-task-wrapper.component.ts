@@ -28,6 +28,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {ConstraintData} from '@lumeer/data-filters';
 import {TaskAttributes} from '../../model/task-attributes';
 import {User} from '../../../../../../core/store/users/user';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'search-task-wrapper',
@@ -50,6 +51,9 @@ export class SearchTaskWrapperComponent implements OnChanges {
 
   @Input()
   public size: SizeType;
+
+  @Input()
+  public view: View;
 
   @Input()
   public permissions: AllowedPermissions;

@@ -101,6 +101,9 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   public views: View[];
 
   @Input()
+  public view: View;
+
+  @Input()
   public currentUser: User;
 
   @Input()

@@ -63,6 +63,11 @@ import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute-typ
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {Attribute} from '../../../core/store/collections/collection';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectViewById} from '../../../core/store/views/views.state';
+import {
+  selectCollectionPermissionsByView,
+  selectLinkTypePermissionsByView,
+} from '../../../core/store/common/permissions.selectors';
 
 const loadingTime = 2000;
 
@@ -175,33 +180,65 @@ export class ActionDataInputComponent implements OnChanges {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
-        this.overridePermissions$.asObservable(),
-        this.store$.pipe(select(selectCollectionPermissions(this.cursor.collectionId))),
+        this.selectCollectionPermissions$(this.cursor.collectionId),
         this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([collection, document, overridePermissions, permissions, config, constraintData]) =>
-          this.checkEnabled(collection, document, overridePermissions || permissions, config, constraintData)
+        map(([collection, document, permissions, config, constraintData]) =>
+          this.checkEnabled(collection, document, permissions, config, constraintData)
         )
       );
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
-        this.overridePermissions$.asObservable(),
-        this.store$.pipe(select(selectLinkTypePermissions(this.cursor.linkTypeId))),
+        this.selectLinkTypePermissions$(this.cursor.linkTypeId),
         this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([linkType, linkInstance, overridePermissions, permissions, config, constraintData]) =>
-          this.checkEnabled(linkType, linkInstance, overridePermissions || permissions, config, constraintData)
+        map(([linkType, linkInstance, permissions, config, constraintData]) =>
+          this.checkEnabled(linkType, linkInstance, permissions, config, constraintData)
         )
       );
     }
 
     return of({});
+  }
+
+  private selectCollectionPermissions$(collectionId: string): Observable<AllowedPermissions> {
+    return this.overridePermissions$.pipe(
+      switchMap(overridePermissions => {
+        if (overridePermissions) {
+          return of(overridePermissions);
+        }
+        if (this.cursor?.viewId) {
+          return this.store$.pipe(
+            select(selectViewById(this.cursor.viewId)),
+            switchMap(view => this.store$.pipe(select(selectCollectionPermissionsByView(view, collectionId))))
+          );
+        }
+        return this.store$.pipe(select(selectCollectionPermissions(collectionId)));
+      })
+    );
+  }
+
+  private selectLinkTypePermissions$(linkTypeId: string): Observable<AllowedPermissions> {
+    return this.overridePermissions$.pipe(
+      switchMap(overridePermissions => {
+        if (overridePermissions) {
+          return of(overridePermissions);
+        }
+        if (this.cursor?.viewId) {
+          return this.store$.pipe(
+            select(selectViewById(this.cursor.viewId)),
+            switchMap(view => this.store$.pipe(select(selectLinkTypePermissionsByView(view, linkTypeId))))
+          );
+        }
+        return this.store$.pipe(select(selectLinkTypePermissions(linkTypeId)));
+      })
+    );
   }
 
   private checkEnabled(

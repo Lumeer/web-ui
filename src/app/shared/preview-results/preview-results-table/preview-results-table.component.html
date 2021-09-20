@@ -42,7 +42,7 @@
         <td *ngFor="let attr of attributes">
           <data-input-preview [constraint]="attr.constraint"
                               [configuration]="configuration"
-                              [cursor]="dataResource | dataCursor : attr.id"
+                              [cursor]="dataResource | dataCursor : attr.id:view?.id"
                               [dataValue]="dataResource?.data[attr.id] | dataValue:attr.constraint:constraintData">
           </data-input-preview>
         </td>

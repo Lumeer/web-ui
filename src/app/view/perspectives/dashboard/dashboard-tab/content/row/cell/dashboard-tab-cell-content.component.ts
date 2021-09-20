@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   DashboardCell,
   DashboardCellType,

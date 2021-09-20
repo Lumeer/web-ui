@@ -17,7 +17,7 @@
         *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:(column.editable && columnData.editable):columnData.editing as dataInputInfo">
         <data-input *ngIf="column.linkTypeId"
                     [constraint]="column.attribute?.constraint"
-                    [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
+                    [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id:viewId)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
                     [editableInReadonly]="column.editable && columnData.editable"
@@ -33,7 +33,7 @@
 
         <data-input *ngIf="column.collectionId"
                     [constraint]="column.attribute.constraint"
-                    [cursor]="row.document && (row.document | dataCursor : column.attribute.id)"
+                    [cursor]="row.document && (row.document | dataCursor : column.attribute.id:viewId)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
                     [editableInReadonly]="column.editable && columnData.editable"
@@ -70,7 +70,7 @@
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"
     [collectionId]="collectionId"
-    [view]="view"
+    [viewId]="viewId"
     [excludedDocumentIds]="row.document?.id ? [row.document.id] : []"
     [columns]="columns | documentHintsColumns"
     [offsetLeft]="columns | calculateHintsOffset"

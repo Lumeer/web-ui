@@ -20,6 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {AttributesResource, DataResource} from '../../../../core/model/resource';
 import {ConstraintData} from '@lumeer/data-filters';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'data-resources-preview',
@@ -45,6 +46,9 @@ export class DataResourcesPreviewComponent {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public view: View;
 
   @Output()
   public showDuplicatesChange = new EventEmitter<boolean>();

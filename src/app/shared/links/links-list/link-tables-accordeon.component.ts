@@ -20,10 +20,10 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AttributesSettings, View} from '../../../core/store/views/view';
+import {AttributesSettings} from '../../../core/store/views/view';
 import {Observable, of} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissionsMap, ResourcesPermissions} from '../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -65,7 +65,7 @@ export class LinkTablesAccordeonComponent implements OnChanges {
   public attributesSettings: AttributesSettings;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();

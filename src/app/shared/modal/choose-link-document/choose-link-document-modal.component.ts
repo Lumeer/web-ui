@@ -36,6 +36,7 @@ import {selectDocumentsByViewAndCustomQuery} from '../../../core/store/common/pe
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataResource} from '../../../core/model/resource';
 import {selectViewById} from '../../../core/store/views/views.state';
+import {View} from '../../../core/store/views/view';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
@@ -60,6 +61,7 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
   public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
+  public view$: Observable<View>;
 
   public readonly dialogType = DialogType;
 
@@ -68,12 +70,12 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.view$ = this.store$.pipe(select(selectViewById(this.viewId)));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     if (this.collectionId) {
       const query: Query = {stems: [{collectionId: this.collectionId}]};
       this.store$.dispatch(new DocumentsAction.Get({query}));
-      this.documents$ = this.store$.pipe(
-        select(selectViewById(this.viewId)),
+      this.documents$ = this.view$.pipe(
         switchMap(view => this.store$.pipe(select(selectDocumentsByViewAndCustomQuery(view, query)))),
         tap(documents => {
           this.documents = documents;

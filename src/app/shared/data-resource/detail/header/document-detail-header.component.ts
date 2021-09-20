@@ -46,7 +46,7 @@ import {findAttribute, getDefaultAttributeId} from '../../../../core/store/colle
 import {User} from '../../../../core/store/users/user';
 
 import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings} from '../../../../core/store/views/view';
+import {AttributesSettings, View} from '../../../../core/store/views/view';
 import {DataResourcePermissions} from '../../../../core/model/data-resource-permissions';
 import {ClipboardService} from '../../../../core/service/clipboard.service';
 
@@ -78,6 +78,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public view: View;
 
   @Input()
   public dataPermissions: DataResourcePermissions;

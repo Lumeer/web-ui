@@ -14,6 +14,7 @@
 <search-task-first-line [constraintData]="constraintData"
                         [document]="document"
                         [attributes]="attributes"
+                        [view]="view"
                         [collection]="collection"
                         [dataPermissions]="document | dataResourcePermissions:collection:permissions:currentUser:constraintData"
                         [large]="large"
@@ -23,6 +24,7 @@
 
 <search-task-second-line *ngIf="medium || large"
                          [attributes]="attributes"
+                         [view]="view"
                          [document]="document"
                          [constraintData]="constraintData"
                          (commentClick)="onDetail()">

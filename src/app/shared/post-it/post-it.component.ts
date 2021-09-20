@@ -48,7 +48,7 @@ import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component
 import {ModalService} from '../modal/modal.service';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {PostItLayoutType} from './post-it-layout-type';
-import {ResourceAttributeSettings} from '../../core/store/views/view';
+import {ResourceAttributeSettings, View} from '../../core/store/views/view';
 import {fromEvent, Observable, Subscription} from 'rxjs';
 import {objectChanged} from '../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
@@ -80,6 +80,9 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public view: View;
 
   @Input()
   public tag: PostItTag;

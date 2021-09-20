@@ -33,7 +33,7 @@ import {
 } from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
@@ -55,7 +55,7 @@ import {stripTextHtmlTags} from '../utils/data.utils';
 import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {selectDocumentsByViewAndCustomQuery} from '../../core/store/common/permissions.selectors';
-import {View} from '../../core/store/views/view';
+import {selectViewById} from '../../core/store/views/views.state';
 
 @Component({
   selector: 'document-hints',
@@ -107,7 +107,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public createLinkDirectly = true;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Output()
   public useHint = new EventEmitter<{document: DocumentModel; external: boolean}>();
@@ -147,7 +147,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     if (changes.dataValue && this.dataValue) {
       this.filter$.next(this.dataValue.format());
     }
-    if ((changes.collectionId || changes.view) && this.collectionId) {
+    if ((changes.collectionId || changes.viewId) && this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
       this.bindDocuments();
     }
@@ -159,11 +159,17 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     const query: Query = {
       stems: [{collectionId: this.collectionId}],
     };
-
     const documents$ = this.store$.pipe(
-      select(selectDocumentsByViewAndCustomQuery(this.view, query, true)),
-      map(documents =>
-        documents.filter(document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id))
+      select(selectViewById(this.viewId)),
+      switchMap(view =>
+        this.store$.pipe(
+          select(selectDocumentsByViewAndCustomQuery(view, query, true)),
+          map(documents =>
+            documents.filter(
+              document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id)
+            )
+          )
+        )
       )
     );
 

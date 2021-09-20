@@ -34,6 +34,7 @@
                               [cursor]="cursor | columnCursor:columnIndex"
                               [documents]="data.documents"
                               [linkInstances]="data.linkInstances"
+                              [viewId]="view?.id"
                               [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                               [constraintData]="data.constraintData"
                               [style.width.px]="column | columnWidth:canManageConfig"

@@ -15,6 +15,7 @@
           [selectedId]="selectedDocument?.id"
           [loaded]="data.documentsData.loaded"
           [attributesSettings]="attributesSettings"
+          [view]="view"
           [resource]="selectedCollection"
           [constraintData]="constraintData$ | async"
           (selectDataResource)="setActiveDocument($event)">
