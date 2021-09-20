@@ -19,15 +19,21 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {getQueryFiltersForCollection} from '../../../core/store/navigation/query/query.util';
+import {
+  checkTasksCollectionsQuery,
+  getQueryFiltersForCollection,
+} from '../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectContributeCollections, selectTasksQuery} from '../../../core/store/common/permissions.selectors';
-import {map, take, tap} from 'rxjs/operators';
+import {selectContributeCollectionsByView} from '../../../core/store/common/permissions.selectors';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {View} from '../../../core/store/views/view';
+import {selectCurrentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {Query} from '../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'create-document-modal',
@@ -39,19 +45,45 @@ export class CreateDocumentModalComponent implements OnInit {
   @Input()
   public purpose: CollectionPurposeType;
 
+  @Input()
+  public viewId: string;
+
   public collectionId$ = new BehaviorSubject(null);
   public collections$: Observable<Collection[]>;
   public document$: Observable<DocumentModel>;
+  public view$: Observable<View>;
+  public query$: Observable<Query>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(
-      select(selectContributeCollections),
-      map(collections =>
-        this.purpose ? collections.filter(coll => coll.purpose?.type === this.purpose) : collections
-      ),
-      tap(collections => this.checkSelectedCollection(collections))
+    this.view$ = this.store$.pipe(
+      select(selectViewById(this.viewId)),
+      switchMap(view => {
+        if (view) {
+          return of(view);
+        }
+        return this.store$.pipe(select(selectCurrentView));
+      })
+    );
+    this.query$ = this.view$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewQuery));
+      })
+    );
+    this.collections$ = this.view$.pipe(
+      switchMap(view =>
+        this.store$.pipe(
+          select(selectContributeCollectionsByView(view)),
+          map(collections =>
+            this.purpose ? collections.filter(coll => coll.purpose?.type === this.purpose) : collections
+          ),
+          tap(collections => this.checkSelectedCollection(collections))
+        )
+      )
     );
   }
 
@@ -67,14 +99,15 @@ export class CreateDocumentModalComponent implements OnInit {
     this.collectionId$.next(collectionId);
 
     this.document$ = combineLatest([
-      this.store$.pipe(select(selectTasksQuery)),
+      this.query$,
       this.store$.pipe(select(selectConstraintData)),
       this.collections$,
     ]).pipe(
       take(1),
       map(([query, constraintData, collections]) => {
+        const tasksQuery = checkTasksCollectionsQuery(collections, query, {});
         const collection = collections?.find(coll => coll.id === collectionId);
-        const queryFilters = getQueryFiltersForCollection(query, collectionId);
+        const queryFilters = getQueryFiltersForCollection(tasksQuery, collectionId);
         const data = generateDocumentData(collection, queryFilters, constraintData, true);
         return {data, collectionId};
       })

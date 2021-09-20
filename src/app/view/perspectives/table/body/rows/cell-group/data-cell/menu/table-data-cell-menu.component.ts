@@ -282,11 +282,11 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (this.document) {
       this.store$
         .pipe(select(selectCollectionById(this.document.collectionId)), take(1))
-        .subscribe(collection => this.modalService.showDataResourceDetail(this.document, collection));
+        .subscribe(collection => this.modalService.showDataResourceDetail(this.document, collection, this.view?.id));
     } else if (this.linkInstance) {
       this.store$
         .pipe(select(selectLinkTypeById(this.linkInstance.linkTypeId)), take(1))
-        .subscribe(linkType => this.modalService.showDataResourceDetail(this.linkInstance, linkType));
+        .subscribe(linkType => this.modalService.showDataResourceDetail(this.linkInstance, linkType, this.view?.id));
     }
   }
 
@@ -302,7 +302,9 @@ export class TableDataCellMenuComponent implements OnChanges {
   public onUpdateLinks() {
     const linkTypeId = this.tableParts?.[this.cursor.partIndex + 1]?.linkTypeId;
     if (this.document && linkTypeId) {
-      this.modalService.showModifyDocumentLinks(this.document.id, this.document.collectionId, linkTypeId);
+      this.modalService.showModifyDocumentLinks(this.document.id, this.document.collectionId, linkTypeId, {
+        viewId: this.view?.id,
+      });
     }
   }
 }

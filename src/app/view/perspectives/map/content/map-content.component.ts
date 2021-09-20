@@ -54,6 +54,8 @@ import {LinkInstancesAction} from '../../../../core/store/link-instances/link-in
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {AppState} from '../../../../core/store/app.state';
 import {User} from '../../../../core/store/users/user';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {View} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
@@ -93,6 +95,9 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   @Input()
   public user: User;
+
+  @Input()
+  public view: View;
 
   @Input()
   public map: MapModel;
@@ -187,9 +192,9 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   public onMarkerDetail(properties: MapMarkerProperties) {
     if (properties.resourceType === AttributesResourceType.Collection) {
-      this.modalService.showDocumentDetail(properties.dataResourceId);
+      this.modalService.showDocumentDetail(properties.dataResourceId, this.view?.id);
     } else if (properties.resourceType === AttributesResourceType.LinkType) {
-      this.modalService.showLinkInstanceDetail(properties.dataResourceId);
+      this.modalService.showLinkInstanceDetail(properties.dataResourceId, this.view?.id);
     }
   }
 
@@ -203,6 +208,7 @@ export class MapContentComponent implements OnInit, OnChanges {
             id: properties.dataResourceId,
             data: {[properties.attributeId]: value},
           },
+          workspace: this.currentWorkspace(),
         })
       );
     } else if (properties.resourceType === AttributesResourceType.LinkType) {
@@ -214,8 +220,13 @@ export class MapContentComponent implements OnInit, OnChanges {
             documentIds: [null, null],
             data: {[properties.attributeId]: value},
           },
+          workspace: this.currentWorkspace(),
         })
       );
     }
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 }

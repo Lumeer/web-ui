@@ -254,14 +254,18 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
   }
 
   public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
-    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
+    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments({...payload, workspace: this.currentWorkspace()}));
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 }

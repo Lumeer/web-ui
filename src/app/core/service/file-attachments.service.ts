@@ -25,7 +25,7 @@ import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.
 import {selectViewQuery} from '../store/views/views.state';
 import {filter, switchMap} from 'rxjs/operators';
 import {isNavigatingToOtherWorkspace, queryIsNotEmpty} from '../store/navigation/query/query.util';
-import {selectNavigation, selectPerspective} from '../store/navigation/navigation.state';
+import {selectNavigation} from '../store/navigation/navigation.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {selectTasksQuery} from '../store/common/permissions.selectors';
 

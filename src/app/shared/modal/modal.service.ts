@@ -106,7 +106,7 @@ export class ModalService {
     );
   }
 
-  public showDocumentDetail(id: string) {
+  public showDocumentDetail(id: string, viewId?: string) {
     this.store$
       .pipe(
         select(selectDocumentById(id)),
@@ -120,12 +120,12 @@ export class ModalService {
       )
       .subscribe(({document, collection}) => {
         if (document && collection) {
-          this.showDataResourceDetail(document, collection);
+          this.showDataResourceDetail(document, collection, viewId);
         }
       });
   }
 
-  public showLinkInstanceDetail(id: string) {
+  public showLinkInstanceDetail(id: string, viewId?: string) {
     this.store$
       .pipe(
         select(selectLinkInstanceById(id)),
@@ -139,7 +139,7 @@ export class ModalService {
       )
       .subscribe(({linkType, linkInstance}) => {
         if (linkInstance && linkType) {
-          this.showDataResourceDetail(linkInstance, linkType);
+          this.showDataResourceDetail(linkInstance, linkType, viewId);
         }
       });
   }
@@ -147,10 +147,11 @@ export class ModalService {
   public showDataResourceDetail(
     dataResource: DataResource,
     resource: AttributesResource,
+    viewId: string,
     createDirectly: boolean = true
   ): BsModalRef {
     const config = {
-      initialState: {dataResource, resource, createDirectly},
+      initialState: {dataResource, resource, createDirectly, viewId},
       keyboard: true,
       class: 'modal-lg',
     };

@@ -140,6 +140,7 @@ import {User} from '../../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -1112,7 +1113,9 @@ export class WorkflowTablesDataService {
 
   public unlinkRow(row: TableRow, column: TableColumn) {
     if (row.documentId && row.linkInstanceId) {
-      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: row.linkInstanceId}));
+      this.store$.dispatch(
+        new LinkInstancesAction.DeleteConfirm({linkInstanceId: row.linkInstanceId, workspace: this.currentWorkspace()})
+      );
     } else {
       this.stateService.removeRow(row);
     }
@@ -1124,6 +1127,7 @@ export class WorkflowTablesDataService {
         new DocumentsAction.DeleteConfirm({
           collectionId: column.collectionId,
           documentId: row.documentId,
+          workspace: this.currentWorkspace(),
         })
       );
     } else {
@@ -1263,6 +1267,7 @@ export class WorkflowTablesDataService {
         new DocumentsAction.CreateWithLink({
           document,
           linkInstance,
+          workspace: this.currentWorkspace(),
           otherDocumentId: row.linkedDocumentId,
           afterSuccess: ({documentId, linkInstanceId}) => this.onRowCreated(row, data, documentId, linkInstanceId),
           onFailure: () => this.stateService.endRowCreating(row),
@@ -1272,11 +1277,16 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
+          workspace: this.currentWorkspace(),
           afterSuccess: document => this.onRowCreated(row, data, document.id),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );
     }
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.currentView?.id};
   }
 
   public createOrUpdateLink(row: TableRow, document: DocumentModel) {
@@ -1289,6 +1299,7 @@ export class WorkflowTablesDataService {
         this.store$.dispatch(
           new LinkInstancesAction.ChangeDocuments({
             linkInstanceId: row.linkInstanceId,
+            workspace: this.currentWorkspace(),
             documentIds: [otherDocumentId, document.id],
           })
         );
@@ -1305,6 +1316,7 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new LinkInstancesAction.Create({
           linkInstance,
+          workspace: this.currentWorkspace(),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );
@@ -1371,10 +1383,10 @@ export class WorkflowTablesDataService {
   private patchData(row: TableRow, data: Record<string, any>, collectionId?: string, linkTypeId?: string) {
     if (collectionId && row.documentId) {
       const document: DocumentModel = {id: row.documentId, collectionId, data};
-      this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
     } else if (linkTypeId && row.linkInstanceId) {
       const linkInstance: LinkInstance = {id: row.linkInstanceId, linkTypeId, data, documentIds: ['', '']};
-      this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+      this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
     }
   }
 

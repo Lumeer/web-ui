@@ -63,7 +63,10 @@ import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 import {DataResourcesAction} from '../../../core/store/data-resources/data-resources.action';
-import {selectCurrentQueryDataResourcesLoaded} from '../../../core/store/data-resources/data-resources.state';
+import {
+  selectCurrentQueryDataResourcesLoaded,
+  selectQueryDataResourcesLoaded,
+} from '../../../core/store/data-resources/data-resources.state';
 import {selectViewDataQuery} from '../../../core/store/view-settings/view-settings.state';
 import {DataQuery} from '../../../core/model/data-query';
 import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} from '../perspective-configuration';
@@ -271,9 +274,14 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private waitForDataLoaded$(query?: DataQuery): Observable<boolean> {
+  private waitForDataLoaded$(query?: DataQuery, viewId?: string): Observable<boolean> {
     if (query) {
-      this.fetchData(query);
+      this.fetchData(query, viewId);
+      return this.store$.pipe(
+        select(selectQueryDataResourcesLoaded(query)),
+        filter(loaded => loaded),
+        take(1)
+      );
     }
     return this.store$.pipe(
       select(selectCurrentQueryDataResourcesLoaded),
@@ -282,8 +290,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private fetchData(query: DataQuery) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
+  private fetchData(query: DataQuery, viewId: string) {
+    this.store$.dispatch(new DataResourcesAction.Get({query, workspace: {viewId}}));
   }
 
   private initTableByQuery() {
@@ -298,7 +306,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe(({query, view, config, tableId, forceRefresh}) => {
         this.setElementId(tableId);
         if (!forceRefresh && this.queryHasNewLink(query)) {
-          this.addTablePart(query, tableId);
+          this.addTablePart(query, tableId, view?.id);
         } else {
           this.refreshTable(query, view, tableId, config);
         }
@@ -401,9 +409,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     return this.table$.value && hasQueryNewLink(this.query, query);
   }
 
-  private addTablePart(query: DataQuery, tableId: string) {
+  private addTablePart(query: DataQuery, tableId: string, viewId: string) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
-    const subscription = this.waitForDataLoaded$(query).subscribe(() => {
+    const subscription = this.waitForDataLoaded$(query, viewId).subscribe(() => {
       this.store$.dispatch(new TablesAction.CreatePart({tableId, linkTypeId, last: true}));
     });
     this.subscriptions.add(subscription);
@@ -413,7 +421,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     if (queryIsEmpty(query) && tableId === DEFAULT_TABLE_ID) {
       this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
     } else {
-      const subscription = this.waitForDataLoaded$(query).subscribe(() => {
+      const subscription = this.waitForDataLoaded$(query, view?.id).subscribe(() => {
         this.createTable(query, view, tableId, config);
       });
       this.subscriptions.add(subscription);

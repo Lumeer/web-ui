@@ -45,15 +45,16 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
-import {selectDefaultDocumentView, selectViewQuery} from '../../../core/store/views/views.state';
+import {selectDefaultDocumentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
 import {
   createFlatCollectionSettingsQueryStem,
   createFlatLinkTypeSettingsQueryStem,
   createFlatResourcesSettingsQuery,
 } from '../../../core/store/details/detail.utils';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {View} from '../../../core/store/views/view';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -72,7 +73,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   public toolbarRef: TemplateRef<any>;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Input()
   public createDirectly: boolean;
@@ -93,13 +94,14 @@ export class DataResourceDetailModalComponent implements OnInit {
   public settingsQuery$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
+  public currentView$: Observable<View>;
 
   public detailSettingsQueryStem: QueryStem;
-  public dataResourceDefaultView$: Observable<View>;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
   private initialModalsCount: number;
+  private currentView: View;
 
   constructor(
     private store$: Store<AppState>,
@@ -126,15 +128,24 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.resource$ = this.selectResource$(resource.id);
     this.dataResource$ = dataResource?.id ? this.selectDataResource$(dataResource.id) : of(dataResource);
 
+    if (this.viewId) {
+      this.currentView$ = this.store$.pipe(select(selectViewById(this.viewId)));
+    }
+
     if (this.resourceType === AttributesResourceType.Collection) {
-      this.dataResourceDefaultView$ = this.resource$.pipe(
-        switchMap(resource => this.store$.pipe(select(selectDefaultDocumentView((<Collection>resource)?.purpose))))
-      );
+      if (!this.viewId) {
+        this.currentView$ = this.resource$.pipe(
+          switchMap(resource => this.store$.pipe(select(selectDefaultDocumentView((<Collection>resource)?.purpose))))
+        );
+      }
       this.detailSettingsQueryStem = createFlatCollectionSettingsQueryStem(resource);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
-      this.dataResourceDefaultView$ = of(null);
+      if (!this.viewId) {
+        this.currentView$ = of(null);
+      }
       this.detailSettingsQueryStem = createFlatLinkTypeSettingsQueryStem(<LinkType>resource);
     }
+    this.currentView$ = this.currentView$.pipe(tap(view => (this.currentView = view)));
 
     this.subscribeExist(resource, dataResource);
     this.currentDataResource = dataResource;
@@ -186,6 +197,7 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.store$.dispatch(
       new DocumentsAction.Create({
         document,
+        workspace: this.currentWorkspace(),
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -196,10 +208,15 @@ export class DataResourceDetailModalComponent implements OnInit {
     this.store$.dispatch(
       new LinkInstancesAction.Create({
         linkInstance,
+        workspace: this.currentWorkspace(),
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
     );
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.currentView?.id};
   }
 
   public onClose() {

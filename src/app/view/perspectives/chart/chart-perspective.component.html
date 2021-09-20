@@ -23,6 +23,7 @@
       [linkTypes]="linkTypes$ | async"
       [linkInstances]="data.documentsAndLinks.linkInstances"
       [query]="data.query"
+      [view]="currentView$ | async"
       [user]="currentUser$ | async"
       [permissions]="permissions$ | async"
       [constraintData]="constraintData$ | async"

@@ -243,10 +243,22 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
     }
 
     if (lastDataResource) {
-      const ref = this.modalService.showDataResourceDetail(lastDataResource, createResource.resource, false);
+      const ref = this.modalService.showDataResourceDetail(
+        lastDataResource,
+        createResource.resource,
+        this.view?.id,
+        false
+      );
       ref.content.onSubmit$.subscribe(modifiedDocument => {
         lastDataResource.data = modifiedDocument.data;
-        this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
+        this.store$.dispatch(
+          new DocumentsAction.CreateChain({
+            documents,
+            linkInstances,
+            failureMessage,
+            workspace: this.currentWorkspace(),
+          })
+        );
       });
     }
   }
@@ -371,8 +383,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
     const creatingDocument = this.modifyingDocuments(createResource);
     const modalRef = creatingDocument
-      ? this.modalService.showDataResourceDetail(document, collection, false)
-      : this.modalService.showDataResourceDetail(linkInstance, linkType, false);
+      ? this.modalService.showDataResourceDetail(document, collection, this.view?.id, false)
+      : this.modalService.showDataResourceDetail(linkInstance, linkType, this.view?.id, false);
 
     modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
       if (linkDocumentId && linkTypeId) {
@@ -380,6 +392,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
           new DocumentsAction.CreateWithLink({
             document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
             otherDocumentId: linkDocumentId,
+            workspace: this.currentWorkspace(),
             linkInstance: {
               documentIds: [linkDocumentId, ''],
               linkTypeId,
@@ -393,6 +406,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
+            workspace: this.currentWorkspace(),
             afterSuccess: document => this.onObjectCreated(document.id, column),
           })
         );
@@ -605,7 +619,13 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       return;
     }
     const failureMessage = $localize`:@@perspective.kanban.move.card.failure:Could not move card`;
-    this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
+    this.store$.dispatch(
+      new DocumentsAction.CreateChain({documents, linkInstances, failureMessage, workspace: this.currentWorkspace()})
+    );
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 
   private patchDocument(card: KanbanCard, newValue: any, previousValue: any, stemConfig: KanbanStemConfig) {

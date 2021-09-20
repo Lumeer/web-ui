@@ -17,11 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {View} from '../../../../../../../core/store/views/view';
 import {Perspective} from '../../../../../perspective';
 import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
 import {SearchTab} from '../../../../../../../core/store/navigation/search-tab';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {FileAttachmentsAction} from '../../../../../../../core/store/file-attachments/file-attachments.action';
 
 @Component({
   selector: 'perspective-preview',
@@ -29,7 +33,7 @@ import {SearchTab} from '../../../../../../../core/store/navigation/search-tab';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'perspective-preview'},
 })
-export class PerspectivePreviewComponent {
+export class PerspectivePreviewComponent implements OnChanges {
   @Input()
   public view: View;
 
@@ -38,4 +42,12 @@ export class PerspectivePreviewComponent {
 
   public readonly perspective = Perspective;
   public readonly searchTab = SearchTab;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (objectChanged(changes.view) && this.view) {
+      this.store$.dispatch(new FileAttachmentsAction.GetByView({viewId: this.view.id}));
+    }
+  }
 }

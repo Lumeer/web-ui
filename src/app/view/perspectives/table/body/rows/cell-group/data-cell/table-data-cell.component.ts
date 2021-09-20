@@ -83,6 +83,7 @@ import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDat
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
 import {View} from '../../../../../../../core/store/views/view';
+import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'table-data-cell',
@@ -557,6 +558,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
     const createDocumentAction = new DocumentsAction.Create({
       document,
+      workspace: this.currentWorkspace(),
       onSuccess: this.createLinkInstanceCallback(table),
     });
     const newAttribute = {name: attributeName};
@@ -578,7 +580,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       metaData: this.createDocumentMetaData(row),
     };
 
-    this.store$.dispatch(new DocumentsAction.Create({document, onSuccess: this.createLinkInstanceCallback(table)}));
+    this.store$.dispatch(
+      new DocumentsAction.Create({
+        document,
+        workspace: this.currentWorkspace(),
+        onSuccess: this.createLinkInstanceCallback(table),
+      })
+    );
   }
 
   private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
@@ -590,8 +598,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       return null;
     }
 
-    // TODO what if table is embedded?
-
     const {linkTypeId} = table.config.parts[this.cursor.partIndex - 1];
     const previousRow = findTableRow(table.config.rows, this.cursor.rowPath.slice(0, -1));
 
@@ -602,7 +608,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         correlationId: this.document && this.document.correlationId,
         data: {},
       };
-      this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
+      this.store$.dispatch(new LinkInstancesAction.Create({linkInstance, workspace: this.currentWorkspace()}));
     };
   }
 
@@ -621,7 +627,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       data: {},
       newData: {[attributeName]: {value}},
     };
-    const patchDocumentAction = new DocumentsAction.PatchData({document});
+    const patchDocumentAction = new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()});
     const newAttribute = {name: attributeName};
 
     this.store$.dispatch(
@@ -649,7 +655,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         id: this.document.id,
         data: {[attributeId]: value},
       };
-      this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
     }
   }
 
@@ -668,6 +674,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         collectionId: this.document.collectionId,
         documentId: this.document.id,
         nextAction,
+        workspace: this.currentWorkspace(),
       })
     );
   }
@@ -701,7 +708,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       linkTypeId: null, // linkTypeId is not used
       data: {[attributeId]: value},
     };
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
   }
 
   private createLinkInstance(attributeId: string, attributeName: string, value: any) {
@@ -760,12 +767,17 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
                 correlationId,
                 data: generateDocumentDataByResourceQuery(collection, query, this.constraintData, false),
               },
+              workspace: this.currentWorkspace(),
               otherDocumentId: previousDocumentId,
               linkInstance: {...this.linkInstance, documentIds: [previousDocumentId, ''], data: {[attributeId]: value}},
             })
           );
         }
       });
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 
   private createLinkTypeAttribute(attributeName: string, onSuccess: (attribute: Attribute) => void) {
@@ -885,7 +897,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.showUninitializedLinkedRowWarningAndResetValue();
       return;
     }
-    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: data.linkInstance}));
+    this.store$.dispatch(
+      new LinkInstancesAction.Create({linkInstance: data.linkInstance, workspace: this.currentWorkspace()})
+    );
   }
 
   public onUpdateLink(data: {linkInstance: LinkInstance; nextAction?: Action}) {
@@ -893,6 +907,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       new LinkInstancesAction.Update({
         linkInstance: data.linkInstance,
         nextAction: data.nextAction,
+        workspace: this.currentWorkspace(),
       })
     );
   }

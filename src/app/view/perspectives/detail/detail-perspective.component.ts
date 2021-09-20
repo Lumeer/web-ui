@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -25,9 +25,9 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Query} from '../../../core/store/navigation/query/query';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
@@ -62,7 +62,7 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
   styleUrls: ['./detail-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailPerspectiveComponent implements OnInit, OnChanges {
+export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public view: View;
 
@@ -82,9 +82,11 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
   public overrideCursor$ = new BehaviorSubject<ViewCursor>(null);
 
   private query: Query;
+  private currentView: View;
   private collection: Collection;
   private createdDocuments: string[] = [];
   private isEmbedded: boolean;
+  private subscriptions = new Subscription();
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -101,7 +103,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
           return of(view);
         }
         return this.store$.pipe(select(selectCurrentView));
-      })
+      }),
+      tap(currentView => (this.currentView = currentView))
     );
 
     this.query$ = this.overrideView$.pipe(
@@ -110,8 +113,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
           return of(view.query);
         }
         return this.store$.pipe(select(selectViewDataQuery));
-      }),
-      tap(query => this.onQueryChanged(query))
+      })
     );
   }
 
@@ -134,6 +136,15 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
     this.permissions$ = this.currentView$.pipe(
       switchMap(view => this.store$.pipe(select(selectCollectionsPermissionsByView(view))))
     );
+    this.subscriptions.add(
+      combineLatest([
+        this.currentView$.pipe(
+          map(view => view?.id),
+          distinctUntilChanged()
+        ),
+        this.query$,
+      ]).subscribe(([viewId, query]) => this.onQueryChanged(query, viewId))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -143,11 +154,11 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
     this.isEmbedded = !!this.view;
   }
 
-  private onQueryChanged(query: DataQuery) {
+  private onQueryChanged(query: DataQuery, viewId: string) {
     this.query = query;
 
     if (queryContainsOnlyFulltexts(query)) {
-      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.store$.dispatch(new DocumentsAction.Get({query, workspace: {viewId}}));
     }
   }
 
@@ -253,7 +264,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
             select(selectQueryDocumentsLoaded(collectionQuery)),
             tap(loaded => {
               if (!loaded) {
-                this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+                this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery, workspace: {viewId: view?.id}}));
               }
             }),
             filter(loaded => loaded),
@@ -277,7 +288,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
 
   public selectDocument(document: DocumentModel) {
     this.emit(this.collection, document);
-    this.loadLinkInstances(document);
+    this.loadLinkInstances(document, this.currentView?.id);
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
@@ -307,19 +318,19 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
     }
   }
 
-  private loadLinkInstances(document: DocumentModel) {
+  private loadLinkInstances(document: DocumentModel, viewId: string) {
     if (document) {
       const query: Query = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
-      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+      this.store$.dispatch(new LinkInstancesAction.Get({query, workspace: {viewId}}));
     }
   }
 
   public addDocument() {
     const collection = this.collection;
     if (collection) {
-      combineLatest([this.query$, this.store$.pipe(select(selectConstraintData))])
+      combineLatest([this.query$, this.store$.pipe(select(selectConstraintData)), this.currentView$])
         .pipe(take(1))
-        .subscribe(([query, constraintData]) => {
+        .subscribe(([query, constraintData, view]) => {
           const queryFilters = getQueryFiltersForCollection(query, collection.id);
           const data = generateDocumentData(collection, queryFilters, constraintData, true);
           const document = {data, collectionId: collection.id};
@@ -329,6 +340,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
           this.store$.dispatch(
             new DocumentsAction.Create({
               document,
+              workspace: {viewId: view?.id},
               onSuccess: () => this.creatingDocument$.next(false),
               onFailure: () => this.creatingDocument$.next(false),
               afterSuccess: createdDocument => this.onCreatedDocument(createdDocument),
@@ -336,5 +348,9 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges {
           );
         });
     }
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

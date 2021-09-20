@@ -13,7 +13,7 @@
                           [dataResource]="data.dataResource"
                           [query]="query$ | async"
                           [preventEventBubble]="true"
-                          [defaultView]="dataResourceDefaultView$ | async"
+                          [defaultView]="currentView$ | async"
                           [settingsStem]="detailSettingsQueryStem"
                           [settingsQuery]="settingsQuery$ | async"
                           [toolbarRef]="toolbarRef"

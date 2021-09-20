@@ -39,6 +39,9 @@ export class SearchTasksToolbarComponent {
   @Input()
   public collections: Collection[];
 
+  @Input()
+  public viewId: string;
+
   @Output()
   public sizeChange = new EventEmitter<SizeType>();
 
@@ -50,7 +53,7 @@ export class SearchTasksToolbarComponent {
 
   public onAdd() {
     if (this.collections?.length) {
-      const initialState = {purpose: CollectionPurposeType.Tasks};
+      const initialState = {purpose: CollectionPurposeType.Tasks, viewId: this.viewId};
       this.modalService.showStaticDialog(initialState, CreateDocumentModalComponent);
     }
   }

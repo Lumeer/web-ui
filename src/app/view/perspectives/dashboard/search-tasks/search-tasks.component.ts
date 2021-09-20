@@ -193,13 +193,25 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
 
   public onFetchNextPage() {
     this.page$.next(this.page$.value + 1);
-    this.query$.pipe(take(1)).subscribe(query => {
-      this.fetchTasks(query);
-    });
+    this.selectFetchPayload$()
+      .pipe(take(1))
+      .subscribe(([viewId, query]) => {
+        this.fetchTasks(query, viewId);
+      });
   }
 
-  private fetchTasks(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.GetTasks({query}));
+  private selectFetchPayload$(): Observable<[string, Query]> {
+    return combineLatest([
+      this.view$.pipe(
+        map(view => view?.id),
+        distinctUntilChanged()
+      ),
+      this.query$,
+    ]);
+  }
+
+  private fetchTasks(query: Query, viewId: string) {
+    this.store$.dispatch(new DataResourcesAction.GetTasks({query, workspace: {viewId}}));
   }
 
   private subscribeQueryChange() {
@@ -207,12 +219,12 @@ export class SearchTasksComponent implements OnInit, OnChanges, OnDestroy {
 
     const navigationSubscription = workspace$
       .pipe(
-        switchMap(() => this.query$),
-        filter(query => !!query)
+        switchMap(() => this.selectFetchPayload$()),
+        filter(([, query]) => !!query)
       )
-      .subscribe(query => {
+      .subscribe(([viewId, query]) => {
         this.resetPage();
-        this.fetchTasks(query);
+        this.fetchTasks(query, viewId);
       });
     this.subscriptions.add(navigationSubscription);
   }

@@ -63,6 +63,7 @@ import {findAttribute} from '../../../../../core/store/collections/collection.ut
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {generateDocumentDataByResourceQuery} from '../../../../../core/store/documents/document.utils';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'map-globe-content',
@@ -88,6 +89,9 @@ export class MapGlobeContentComponent implements OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public view: View;
 
   @Output()
   public mapMove = new EventEmitter<MapPosition>();
@@ -268,7 +272,7 @@ export class MapGlobeContentComponent implements OnChanges {
       type === AttributesResourceType.Collection
         ? {collectionId: resource.id, correlationId: generateCorrelationId(), data}
         : {linkTypeId: resource.id, correlationId: generateCorrelationId(), data, documentIds: []};
-    this.modalService.showDataResourceDetail(dataResource, resource);
+    this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
   }
 }
 

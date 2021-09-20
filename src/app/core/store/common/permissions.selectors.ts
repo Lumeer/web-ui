@@ -104,7 +104,8 @@ export const selectReadableCollections = selectCollectionsByPermission([RoleType
 export const selectReadableCollectionsByView = (view: View) =>
   selectCollectionsByViewAndPermission(view, [RoleType.Read]);
 
-export const selectContributeCollections = selectCollectionsByPermission([RoleType.DataContribute]);
+export const selectContributeCollectionsByView = (view: View) =>
+  selectCollectionsByViewAndPermission(view, [RoleType.DataContribute]);
 
 export const selectContributeAndWritableCollections = selectCollectionsByPermission([
   RoleType.DataContribute,
@@ -214,16 +215,6 @@ export const selectCollectionsInCustomQuery = (query: Query) =>
     const collectionIds = uniqueValues(query?.stems?.map(stem => stem.collectionId) || []);
     return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
   });
-
-export const selectCollectionsByCustomQuery = (query: Query) =>
-  createSelector(
-    selectReadableCollections,
-    selectAllDocuments,
-    selectAllLinkTypes,
-    selectConstraintData,
-    (collections, documents, linkTypes, constraintData) =>
-      filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
-  );
 
 export const selectCollectionsByCustomViewAndQuery = (view: View, query: Query) =>
   createSelector(

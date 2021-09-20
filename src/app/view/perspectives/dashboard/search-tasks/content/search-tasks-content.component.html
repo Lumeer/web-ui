@@ -4,6 +4,7 @@
                         [class.mt-3]="perspectiveConfiguration?.additionalSpace"
                         [size]="currentSize"
                         [documentsCount]="documents?.length"
+                        [viewId]="view?.id"
                         [collections]="collections | filterWritableTasksCollections:permissions"
                         (sizeChange)="onSizeChange($event)">
   </search-tasks-toolbar>

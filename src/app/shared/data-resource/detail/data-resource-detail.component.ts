@@ -168,14 +168,13 @@ export class DataResourceDetailComponent
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$.asObservable()]).pipe(
+    this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$]).pipe(
       map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
       tap(workspace => (this.workspace = workspace))
     );
-    this.currentView$ = combineLatest([
-      this.defaultView$.asObservable(),
-      this.store$.pipe(select(selectCurrentView)),
-    ]).pipe(map(([defaultView, currentView]) => defaultView || currentView));
+    this.currentView$ = combineLatest([this.defaultView$, this.store$.pipe(select(selectCurrentView))]).pipe(
+      map(([defaultView, currentView]) => defaultView || currentView)
+    );
 
     this.bindPermissions();
   }

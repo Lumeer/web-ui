@@ -157,7 +157,7 @@ export class SearchTasksContentComponent implements OnInit, OnChanges, OnDestroy
   }
 
   public onDetailClick(document: DocumentModel) {
-    this.modalService.showDocumentDetail(document.id);
+    this.modalService.showDocumentDetail(document.id, this.view?.id);
   }
 
   public trackByDocument(index: number, document: DocumentModel): string {

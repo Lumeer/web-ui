@@ -111,10 +111,18 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
 
     const navigationSubscription = workspace$
       .pipe(
-        switchMap(() => this.query$),
-        filter(query => !!query)
+        switchMap(() =>
+          combineLatest([
+            this.view$.pipe(
+              map(view => view?.id),
+              distinctUntilChanged()
+            ),
+            this.query$,
+          ])
+        ),
+        filter(([, query]) => !!query)
       )
-      .subscribe(query => this.fetchDocuments(query));
+      .subscribe(([viewId, query]) => this.fetchDocuments(query, viewId));
     this.subscriptions.add(navigationSubscription);
 
     this.hasCollection$ = combineLatest([this.view$, this.query$]).pipe(
@@ -150,7 +158,7 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.GetTasks({query}));
+  private fetchDocuments(query: Query, viewId: string) {
+    this.store$.dispatch(new DataResourcesAction.GetTasks({query, workspace: {viewId}}));
   }
 }

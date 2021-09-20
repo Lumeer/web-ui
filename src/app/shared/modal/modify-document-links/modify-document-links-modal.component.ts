@@ -46,7 +46,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectViewById} from '../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './modify-document-links-modal.component.html',
@@ -85,7 +85,9 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.currentView$ = this.workspace?.viewId
+      ? this.store$.pipe(select(selectViewById(this.workspace.viewId)))
+      : this.store$.pipe(select(selectCurrentView));
     this.selectedLinkTypeId$.next(this.linkTypeIds[0]);
     this.linkType$ = this.selectLinkType$();
     this.collection$ = this.selectCollection$();

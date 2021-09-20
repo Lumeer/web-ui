@@ -600,7 +600,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const primaryDataResource = isCollection ? document : linkInstance;
     const resource = this.getResourceById(createModel.resourceId, createModel.resourceType);
     if (primaryDataResource && resource) {
-      const modalRef = this.modalService.showDataResourceDetail(primaryDataResource, resource, false);
+      const modalRef = this.modalService.showDataResourceDetail(primaryDataResource, resource, this.view?.id, false);
       modalRef.content.onCancel$.subscribe(() => cancel());
       modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
         primaryDataResource.data = modifiedDataResource.data;
@@ -725,7 +725,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const resourceId = (<DocumentModel>dataResource).collectionId || (<LinkInstance>dataResource).linkTypeId;
     const resource = this.getResourceById(resourceId, resourceType);
     if (resource) {
-      return this.modalService.showDataResourceDetail(dataResource, resource);
+      return this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
     }
   }
 

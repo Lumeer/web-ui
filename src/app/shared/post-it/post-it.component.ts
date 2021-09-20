@@ -212,6 +212,6 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onDetail() {
-    this.modalService.showDataResourceDetail(this.dataResource, this.resource);
+    this.modalService.showDataResourceDetail(this.dataResource, this.resource, this.view?.id);
   }
 }

@@ -30,7 +30,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectCurrentView, selectSidebarOpened} from '../../core/store/views/views.state';
-import {switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {distinctUntilChanged, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {View, ViewSettings} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {
@@ -48,6 +48,7 @@ import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 import {ViewConfigPerspectiveComponent} from './view-config-perspective.component';
 import {User} from '../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Directive()
 export abstract class DataPerspectiveDirective<T>
@@ -70,6 +71,7 @@ export abstract class DataPerspectiveDirective<T>
   public currentUser$: Observable<User>;
   public currentView$: Observable<View>;
   public query$: Observable<Query>;
+  public workspace$: Observable<Workspace>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public overrideView$ = new BehaviorSubject<View>(null);
@@ -134,11 +136,19 @@ export abstract class DataPerspectiveDirective<T>
   }
 
   private subscribeToQuery() {
-    this.subscriptions.add(this.query$.subscribe(query => this.fetchData(query)));
+    this.subscriptions.add(
+      combineLatest([
+        this.currentView$.pipe(
+          map(view => view?.id),
+          distinctUntilChanged()
+        ),
+        this.query$,
+      ]).subscribe(([viewId, query]) => this.fetchData(query, viewId))
+    );
   }
 
-  private fetchData(query: Query) {
-    this.store$.dispatch(new DataResourcesAction.Get({query}));
+  private fetchData(query: Query, viewId: string) {
+    this.store$.dispatch(new DataResourcesAction.Get({query, workspace: {viewId}}));
   }
 
   private subscribeData() {
@@ -157,6 +167,7 @@ export abstract class DataPerspectiveDirective<T>
     this.permissions$ = this.currentView$.pipe(
       switchMap(view => this.store$.pipe(select(selectResourcesPermissionsByView(view))))
     );
+    this.workspace$ = this.currentView$.pipe(map(view => ({viewId: view?.id})));
     this.canManageConfig$ = this.currentView$.pipe(
       switchMap(view => this.store$.pipe(select(selectCanManageViewConfig(view))))
     );

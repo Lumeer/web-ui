@@ -22,7 +22,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ViewConfig} from '../../../core/store/views/view';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
@@ -82,10 +82,14 @@ export class CalendarPerspectiveComponent
   }
 
   public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new DocumentsAction.PatchData({document, workspace})));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
   }
 }

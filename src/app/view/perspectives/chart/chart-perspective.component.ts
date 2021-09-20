@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ChartConfig} from '../../../core/store/charts/chart';
 import {selectChartById} from '../../../core/store/charts/charts.state';
 import {ViewConfig} from '../../../core/store/views/view';
@@ -84,11 +84,15 @@ export class ChartPerspectiveComponent extends DataPerspectiveDirective<ChartCon
   }
 
   public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new DocumentsAction.PatchData({document, workspace})));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
   }
 
   public onSidebarToggle() {
