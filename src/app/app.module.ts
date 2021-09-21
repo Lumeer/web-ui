@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, InjectionToken, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
@@ -37,8 +37,6 @@ import {ConfigurationService} from './configuration/configuration.service';
 import {configuration} from '../environments/configuration';
 import {TeamsLoadService} from './core/service/teams-load.service';
 
-declare const require; // Use the require method provided by webpack
-
 export const angularticsSettings: Partial<Angulartics2Settings> = {
   developerMode: !configuration.analytics,
   pageTracking: {
@@ -49,8 +47,6 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     anonymizeIp: true,
   },
 };
-
-export const TRANSLATIONS_PATH = new InjectionToken<string>('TRANSLATIONS_PATH');
 
 @NgModule({
   imports: [
@@ -77,21 +73,6 @@ export const TRANSLATIONS_PATH = new InjectionToken<string>('TRANSLATIONS_PATH')
       provide: LOCALE_ID,
       deps: [ConfigurationService],
       useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().locale,
-    },
-    {
-      provide: TRANSLATIONS_PATH,
-      deps: [ConfigurationService],
-      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().i18nPath,
-    },
-    {
-      provide: TRANSLATIONS,
-      useFactory: i18nPath => require(`raw-loader!../../src/i18n/${i18nPath}`).default,
-      deps: [TRANSLATIONS_PATH],
-    },
-    {
-      provide: TRANSLATIONS_FORMAT,
-      deps: [ConfigurationService],
-      useFactory: (configurationService: ConfigurationService) => configurationService.getConfiguration().i18nFormat,
     },
     ConstraintDataService,
     {

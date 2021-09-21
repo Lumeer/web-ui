@@ -40,8 +40,8 @@ $text-margin-tb: 6px;
     }
 
     .slider-point {
-      height: $circle-size / 2;
-      width: $circle-size / 2;
+      height: $circle-size * 0.5;
+      width: $circle-size * 0.5;
       background: $secondary-color;
       border-radius: 50%;
     }

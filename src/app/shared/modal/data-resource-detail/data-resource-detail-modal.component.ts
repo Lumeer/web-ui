@@ -220,7 +220,7 @@ export class DataResourceDetailModalComponent implements OnInit {
   }
 
   public onClose() {
-    this.onCancel$.next();
+    this.onCancel$.next(null);
     this.hideDialog();
   }
 

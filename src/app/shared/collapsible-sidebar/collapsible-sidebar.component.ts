@@ -49,6 +49,6 @@ export class CollapsibleSidebarComponent implements OnChanges {
 
   public onToggle() {
     this.collapsed$.next(!this.collapsed$.getValue());
-    this.toggle.next();
+    this.toggle.next(null);
   }
 }

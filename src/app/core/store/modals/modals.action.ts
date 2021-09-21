@@ -29,7 +29,7 @@ export namespace ModalsAction {
   export class Add implements Action {
     public readonly type = ModalsActionType.ADD;
 
-    public constructor(public payload: {modalId: number}) {}
+    public constructor(public payload: {modalId: string}) {}
   }
 
   export class Hide implements Action {

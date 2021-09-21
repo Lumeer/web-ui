@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {LOCALE_ID} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -280,15 +280,6 @@ describe('Pivot data converter', () => {
         {
           provide: LOCALE_ID,
           useFactory: () => 'en',
-        },
-        {
-          provide: TRANSLATIONS,
-          useFactory: () => require(`raw-loader!../../../../../../src/i18n/messages.en.xlf`).default,
-          deps: [LOCALE_ID],
-        },
-        {
-          provide: TRANSLATIONS_FORMAT,
-          useFactory: () => 'xlf',
         },
       ],
     });

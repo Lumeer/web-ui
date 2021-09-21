@@ -153,7 +153,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onClose() {
-    this.onCancel$.next();
+    this.onCancel$.next(null);
     this.hideDialog();
   }
 

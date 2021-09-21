@@ -318,7 +318,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onScroll() {
-    this.scrollCheckSubject.next();
+    this.scrollCheckSubject.next(null);
   }
 
   public onBodyMenuSelected(data: {row: TableRow; column: TableColumn; item: MenuItem}) {

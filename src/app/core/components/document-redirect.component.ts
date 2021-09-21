@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {combineLatest, of} from 'rxjs';
-import {catchError, take} from 'rxjs/operators';
+import {catchError, map, take} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../store/app.state';
 import {DocumentService} from '../data-service';
@@ -35,7 +35,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {QueryParam} from '../store/navigation/query-param';
 import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
 import {getDefaultAttributeId} from '../store/collections/collection.util';
-import {RoleType} from '../model/role-type';
+import {convertDocumentDtoToModel} from '../store/documents/document.converter';
 
 @Component({
   template: '',
@@ -58,7 +58,10 @@ export class DocumentRedirectComponent implements OnInit {
       const documentId = params.get('documentId');
       this.documentService
         .getDocument(collectionId, documentId)
-        .pipe(catchError(() => of(null)))
+        .pipe(
+          map(document => convertDocumentDtoToModel(document)),
+          catchError(() => of(null))
+        )
         .subscribe(document => {
           if (document) {
             this.handleDocument(organizationCode, projectCode, document);

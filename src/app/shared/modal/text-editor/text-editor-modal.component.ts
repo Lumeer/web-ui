@@ -108,7 +108,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   }
 
   public cancelDialog() {
-    this.onCancel$.next();
+    this.onCancel$.next(null);
     this.hideDialog();
   }
 

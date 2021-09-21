@@ -173,7 +173,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   }
 
   public onClose() {
-    this.onClose$.next();
+    this.onClose$.next(null);
     this.hideDialog();
   }
 
