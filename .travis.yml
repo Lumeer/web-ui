@@ -16,8 +16,8 @@ addons:
       - psmisc
 before_install:
   - 'sudo apt-get install -y libgconf-2-4'
-  - 'nvm install v14.17.6'
-  - 'nvm use v14.17.6'
+  - 'nvm install v14.17.4'
+  - 'nvm use v14.17.4'
   - 'npm i -g npm@latest'
 install:
   - './travis-build.sh'
