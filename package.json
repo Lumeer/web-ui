@@ -170,19 +170,19 @@
       "maxSize": "3500kb"
     },
     {
-      "path": "./dist/lumeer/default-src_app_view_perspectives-chart*.js",
+      "path": "./dist/lumeer/default-src_app_view_perspectives_chart*.js",
       "maxSize": "1379kb"
     },
     {
-      "path": "./dist/lumeer/default-src_app_view_perspectives-detail*.js",
+      "path": "./dist/lumeer/default-src_app_view_perspectives_detail*.js",
       "maxSize": "121kb"
     },
     {
-      "path": "./dist/lumeer/default-src_app_view_perspectives-map*.js",
+      "path": "./dist/lumeer/default-src_app_view_perspectives_map*.js",
       "maxSize": "1179kb"
     },
     {
-      "path": "./dist/lumeer/src_app_view_perspectives-search*.js",
+      "path": "./dist/lumeer/src_app_view_perspectives_search*.js",
       "maxSize": "157kb"
     },
     {

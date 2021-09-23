@@ -28,14 +28,10 @@ import {
   selectTasksCollections,
   selectTasksDocumentsByCustomQuery,
   selectViewsByCustomQuery,
+  selectViewsByRead,
 } from '../../../../core/store/common/permissions.selectors';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {
-  selectAllViews,
-  selectCurrentView,
-  selectViewQuery,
-  selectViewsLoaded,
-} from '../../../../core/store/views/views.state';
+import {selectCurrentView, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {DataResourcesAction} from '../../../../core/store/data-resources/data-resources.action';
 import {selectQueryTasksLoaded} from '../../../../core/store/data-resources/data-resources.state';
@@ -136,7 +132,7 @@ export class SearchAllComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     this.hasAnyView$ = this.store$.pipe(
-      select(selectAllViews),
+      select(selectViewsByRead),
       map(views => views?.length > 0)
     );
 

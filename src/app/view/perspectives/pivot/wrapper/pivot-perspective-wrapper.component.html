@@ -23,7 +23,8 @@
                  [class.pb-5]="perspectiveConfiguration?.additionalSpace"
                  [pivotData]="data.pivotData"
                  [constraintData]="constraintData"
-                 [dataLoaded]="dataLoaded">
+                 [dataLoaded]="dataLoaded"
+                 (cellClick)="onCellClick($event)">
     </pivot-table>
 
   </ng-container>

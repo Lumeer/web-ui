@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {PivotData} from '../../util/pivot-data';
 import {PivotTable, PivotTableCell} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
-import {ModalService} from '../../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'pivot-table',
@@ -41,13 +40,16 @@ export class PivotTableComponent implements OnChanges {
   @Input()
   public dataLoaded: boolean;
 
+  @Output()
+  public cellClick = new EventEmitter<PivotTableCell>();
+
   public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40}};
 
   private pivotTableConverter: PivotTableConverter;
 
   public pivotTables: PivotTable[];
 
-  constructor(private modalService: ModalService) {
+  constructor() {
     const headerSummaryString = $localize`:@@perspective.pivot.table.summary.header:Summary of`;
     const summaryString = $localize`:@@perspective.pivot.table.summary.total:Summary`;
     this.pivotTableConverter = new PivotTableConverter(headerSummaryString, summaryString);
@@ -60,9 +62,6 @@ export class PivotTableComponent implements OnChanges {
   }
 
   public onCellClick(cell: PivotTableCell) {
-    if (!cell.isHeader && cell.dataResources?.length > 0) {
-      const modalTitle = $localize`:@@perspective.pivot.cell.detail.title:Records by value: <b>${cell.value}</b>`;
-      this.modalService.showDataResourcesDetail(cell.dataResources, modalTitle);
-    }
+    this.cellClick.next(cell);
   }
 }

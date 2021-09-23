@@ -158,9 +158,9 @@ export class ModalService {
     return this.show(DataResourceDetailModalComponent, config);
   }
 
-  public showDataResourcesDetail(dataResources: DataResource[], title: string): BsModalRef {
+  public showDataResourcesDetail(dataResources: DataResource[], title: string, viewId: string): BsModalRef {
     const config = {
-      initialState: {dataResources, title},
+      initialState: {dataResources, title, viewId},
       keyboard: true,
       class: 'modal-lg modal-h-100',
     };

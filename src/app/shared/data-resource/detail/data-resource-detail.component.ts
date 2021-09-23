@@ -56,7 +56,7 @@ import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/docu
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
-  selectLinkInstancesByDocumentIds,
+  selectLinkInstancesByTypesAndDocuments,
 } from '../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {objectChanged} from '../../utils/common.utils';
@@ -228,9 +228,10 @@ export class DataResourceDetailComponent
         filter(doc => !!doc),
         map(doc => doc.commentsCount)
       );
-      this.linksCount$ = this.store$.pipe(
-        select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
-        map(links => links?.length || 0)
+      this.linksCount$ = this.linkTypes$.pipe(
+        map(linkTypes => linkTypes.map(linkType => linkType.id)),
+        switchMap(ids => this.store$.pipe(select(selectLinkInstancesByTypesAndDocuments(ids, [this.dataResource.id])))),
+        map(links => links.length || 0)
       );
       this.documentsCount$ = of(null);
       this.collectionId$.next(this.resource?.id);

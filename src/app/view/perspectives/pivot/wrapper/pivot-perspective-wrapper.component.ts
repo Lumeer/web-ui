@@ -43,6 +43,8 @@ import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
 import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
 import {View} from '../../../../core/store/views/view';
+import {PivotTableCell} from '../util/pivot-table';
+import {ModalService} from '../../../../shared/modal/modal.service';
 
 interface Data {
   collections: Collection[];
@@ -104,7 +106,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public pivotData$: Observable<PivotData>;
 
-  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter, private modalService: ModalService) {
     this.pivotTransformer = new PivotDataConverter(constraintItemsFormatter, type =>
       this.createValueAggregationTitle(type)
     );
@@ -178,5 +180,12 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public onSidebarToggle() {
     this.sidebarToggle.emit();
+  }
+
+  public onCellClick(cell: PivotTableCell) {
+    if (!cell.isHeader && cell.dataResources?.length > 0) {
+      const modalTitle = $localize`:@@perspective.pivot.cell.detail.title:Records by value: <b>${cell.value}</b>`;
+      this.modalService.showDataResourcesDetail(cell.dataResources, modalTitle, this.view?.id);
+    }
   }
 }
