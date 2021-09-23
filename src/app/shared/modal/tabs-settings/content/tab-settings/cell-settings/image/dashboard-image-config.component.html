@@ -8,3 +8,19 @@
        (keydown.escape)="revertUrl(); urlInput.blur()"
        id="url"
        type="text">
+
+<label class="mt-2" i18n="@@search.tabs.settings.dialog.config.scale.title">Scale</label>
+<div class="d-flex align-items-center">
+  <div class="scale-type fit mr-2 cursor-pointer" (click)="onSelectScale(scapeType.Fit)"
+       tooltip="Fit image within area and maintain its aspect ratio"
+       i18n-tooltip="@@search.tabs.settings.dialog.config.scale.fit">
+    <i class="fal fa-square image-border"></i>
+    <i class="fas fa-image image text-gray-700" [class.text-success]="scale === scapeType.Fit"></i>
+  </div>
+  <div class="scale-type crop mr-2 cursor-pointer" (click)="onSelectScale(scapeType.Crop)"
+       tooltip="Crop image to fit area"
+       i18n-tooltip="@@search.tabs.settings.dialog.config.scale.crop">
+    <i class="fas fa-image image text-gray-700" [class.text-success]="scale === scapeType.Crop"></i>
+    <i class="fal fa-square image-border"></i>
+  </div>
+</div>

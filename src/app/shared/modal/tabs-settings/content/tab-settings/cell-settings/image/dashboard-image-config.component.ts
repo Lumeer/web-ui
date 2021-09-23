@@ -18,11 +18,16 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
-import {DashboardImageCellConfig} from '../../../../../../../core/model/dashboard-tab';
+import {
+  DashboardImageCellConfig,
+  DashboardImageScaleType,
+  defaultDashboardImageScaleType,
+} from '../../../../../../../core/model/dashboard-tab';
 
 @Component({
   selector: 'dashboard-image-config',
   templateUrl: './dashboard-image-config.component.html',
+  styleUrls: ['./dashboard-image-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardImageConfigComponent implements OnChanges {
@@ -32,17 +37,26 @@ export class DashboardImageConfigComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<DashboardImageCellConfig>();
 
+  public readonly scapeType = DashboardImageScaleType;
+
   public url: string;
+  public scale: string;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
       this.url = this.config?.url || '';
+      this.scale = this.config?.scale || defaultDashboardImageScaleType;
     }
   }
 
   public onBlur() {
     const url = this.url?.trim();
     const newConfig = {...this.config, url};
+    this.configChange.next(newConfig);
+  }
+
+  public onSelectScale(scale: DashboardImageScaleType) {
+    const newConfig = {...this.config, scale};
     this.configChange.next(newConfig);
   }
 

@@ -92,9 +92,11 @@ export function createDefaultNameAndDateRangeConfig(
   return {};
 }
 
-function findBestDateInitialAttributes(
-  attributesResourcesOrder: AttributesResource[]
-): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
+function findBestDateInitialAttributes(attributesResourcesOrder: AttributesResource[]): {
+  index: number;
+  startAttribute?: Attribute;
+  endAttribute?: Attribute;
+} {
   for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
     if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
       continue;

@@ -45,7 +45,8 @@ import {defaultGanttPerspectiveConfiguration, GanttPerspectiveConfiguration} fro
 })
 export class GanttChartPerspectiveComponent
   extends DataPerspectiveDirective<GanttChartConfig>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   @Input()
   public perspectiveConfiguration: GanttPerspectiveConfiguration = defaultGanttPerspectiveConfiguration;
 

@@ -5,7 +5,7 @@
                         [views]="views">
   </dashboard-tab-action>
 </div>
-<img *ngIf="dashboardCell?.type === cellType.Image" class="image" [src]="url" alt=""/>
+<img *ngIf="dashboardCell?.type === cellType.Image" class="image" [ngClass]="scale" [src]="url" alt=""/>
 <ng-container *ngIf="dashboardCell?.type === cellType.View">
 
   <perspective-preview *ngIf="view"

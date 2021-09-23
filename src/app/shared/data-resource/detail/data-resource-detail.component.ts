@@ -83,7 +83,8 @@ import {selectResourcesPermissionsByView} from '../../../core/store/common/permi
 })
 export class DataResourceDetailComponent
   extends ViewConfigPerspectiveComponent<DetailConfig>
-  implements OnInit, OnChanges, OnDestroy {
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input()
   public resource: AttributesResource;
 

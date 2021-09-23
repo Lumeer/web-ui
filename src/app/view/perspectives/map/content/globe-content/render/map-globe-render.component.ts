@@ -351,7 +351,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private createAllMakers(markers: MapMarkerProperties[]): Record<string, Marker> {
     return markers.reduce((markersMap, properties) => {
       const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
-      marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
+      marker.on('dragend', (event: any) => this.onMarkerDragEnd(event, properties));
       markersMap[properties.id] = marker;
       return markersMap;
     }, {});

@@ -182,11 +182,11 @@ export function createDefaultKanbanStemConfig(
   linkTypes?: LinkType[]
 ): KanbanStemConfig {
   if (stem && collections && linkTypes) {
-    const {state: attribute, dueDate, stateList: doneColumnTitles} = createDefaultTaskPurposeConfig(
-      stem,
-      collections,
-      linkTypes
-    );
+    const {
+      state: attribute,
+      dueDate,
+      stateList: doneColumnTitles,
+    } = createDefaultTaskPurposeConfig(stem, collections, linkTypes);
     if (attribute) {
       return {attribute, stem, dueDate, doneColumnTitles};
     }

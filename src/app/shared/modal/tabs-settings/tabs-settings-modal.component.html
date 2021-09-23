@@ -8,7 +8,8 @@
   <span class="title" i18n="@@search.tabs.settings.dialog.title">Setup custom dashboard</span>
 
   <div class="body p-3">
-    <tabs-settings-content [savedTabs]="tabs$ | async">
+    <tabs-settings-content [savedTabs]="tabs$ | async"
+                           [initialTab]="initialTab">
     </tabs-settings-content>
   </div>
 

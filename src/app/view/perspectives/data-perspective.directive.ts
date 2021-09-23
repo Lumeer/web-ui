@@ -53,7 +53,8 @@ import {Workspace} from '../../core/store/navigation/workspace';
 @Directive()
 export abstract class DataPerspectiveDirective<T>
   extends ViewConfigPerspectiveComponent<T>
-  implements OnInit, OnChanges, OnDestroy {
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input()
   public view: View;
 

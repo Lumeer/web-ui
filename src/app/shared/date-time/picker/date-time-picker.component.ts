@@ -178,15 +178,17 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   public onTimePickerKeyDown(event: KeyboardEvent) {
     if (
-      ([
-        KeyCode.Tab,
-        KeyCode.Backspace,
-        KeyCode.Delete,
-        KeyCode.ArrowDown,
-        KeyCode.ArrowLeft,
-        KeyCode.ArrowRight,
-        KeyCode.ArrowUp,
-      ] as string[]).includes(keyboardEventCode(event))
+      (
+        [
+          KeyCode.Tab,
+          KeyCode.Backspace,
+          KeyCode.Delete,
+          KeyCode.ArrowDown,
+          KeyCode.ArrowLeft,
+          KeyCode.ArrowRight,
+          KeyCode.ArrowUp,
+        ] as string[]
+      ).includes(keyboardEventCode(event))
     ) {
       event.stopPropagation();
     }

@@ -321,9 +321,12 @@ export function getDataResourceResourceId(dataResource: DataResource): string {
   return (<DocumentModel>dataResource)?.collectionId || (<LinkInstance>dataResource)?.linkTypeId;
 }
 
-export function getDataResourcesDataIds(
-  dataResources: DataResource[]
-): {collectionIds: string[]; linkTypeIds: string[]; documentIds: string[]; linkInstanceIds: string[]} {
+export function getDataResourcesDataIds(dataResources: DataResource[]): {
+  collectionIds: string[];
+  linkTypeIds: string[];
+  documentIds: string[];
+  linkInstanceIds: string[];
+} {
   const collectionIds = [];
   const linkTypeIds = [];
   const documentIds = [];

@@ -34,6 +34,9 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   @Input()
   public savedTabs: DashboardTab[];
 
+  @Input()
+  public initialTab: string;
+
   public tabs$ = new BehaviorSubject<DashboardTab[]>(defaultDashboardTabs);
   public selectedTabId$ = new BehaviorSubject<string>(null);
   public draggedTabIdSubject$ = new BehaviorSubject(null);
@@ -46,6 +49,7 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   public draggedTab: DashboardTab;
 
   public ngOnInit() {
+    this.selectedTabId$.next(this.initialTab);
     this.selectedTab$ = combineLatest([this.tabs$, this.selectedTabId$]).pipe(
       map(([tabs, selectedId]) => tabs?.find(tab => isTabSelected(tab, selectedId)))
     );

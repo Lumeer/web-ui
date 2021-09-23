@@ -46,6 +46,7 @@ import {PipesModule} from '../../pipes/pipes.module';
 import {DashboardActionConfigComponent} from './content/tab-settings/cell-settings/actions/action/dashboard-action-config.component';
 import {PickerModule} from '../../picker/picker.module';
 import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
     SelectModule,
     PipesModule,
     PickerModule,
+    TooltipModule,
   ],
   exports: [FilterValidCellsPipe],
 })

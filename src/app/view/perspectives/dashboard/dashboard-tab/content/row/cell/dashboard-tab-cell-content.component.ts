@@ -22,7 +22,9 @@ import {
   DashboardCell,
   DashboardCellType,
   DashboardImageCellConfig,
+  DashboardImageScaleType,
   DashboardViewCellConfig,
+  defaultDashboardImageScaleType,
 } from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
 import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
@@ -53,6 +55,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
   };
 
   public url: string;
+  public scale: DashboardImageScaleType;
   public view: View;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -68,6 +71,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
     switch (this.dashboardCell?.type) {
       case DashboardCellType.Image:
         this.url = (<DashboardImageCellConfig>this.dashboardCell?.config)?.url;
+        this.scale = (<DashboardImageCellConfig>this.dashboardCell?.config)?.scale || defaultDashboardImageScaleType;
         break;
       case DashboardCellType.View:
         const viewId = (<DashboardViewCellConfig>this.dashboardCell?.config)?.viewId;

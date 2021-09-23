@@ -99,10 +99,9 @@ export function isQueryItemEditable(
 
   if (queryItem.type === QueryItemType.Attribute) {
     const collectionFilter = (<AttributeQueryItem>queryItem).getAttributeFilter();
-    const sameFilters = getQueryFiltersForCollection(
-      stemIndexQuery,
-      collectionFilter.collectionId
-    ).filter(currentFilter => deepObjectsEquals(collectionFilter, currentFilter));
+    const sameFilters = getQueryFiltersForCollection(stemIndexQuery, collectionFilter.collectionId).filter(
+      currentFilter => deepObjectsEquals(collectionFilter, currentFilter)
+    );
     return sameFilters.length <= sameItemsInStem;
   } else if (queryItem.type === QueryItemType.LinkAttribute) {
     const linkFilter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();

@@ -80,9 +80,9 @@
                   [disabled]="!(view.code && state.permissions.canShare)"
                   (click)="onShareClick()"
                   class="btn btn-primary"
-                  type="button"
-                  title="Share" i18n-title="@@button.share">
+                  type="button">
             <span i18n="@@button.share"
+                  placement="left"
                   tooltip="To share a view, first set its name and save it using the controls to the left."
                   i18n-tooltip="@@view.share.disabled.tooltip"
                   [isDisabled]="!!view.code || state.permissions.canShare">Share</span>

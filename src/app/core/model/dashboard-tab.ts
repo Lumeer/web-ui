@@ -56,7 +56,15 @@ export interface DashboardViewCellConfig {
 
 export interface DashboardImageCellConfig {
   url?: string;
+  scale?: DashboardImageScaleType;
 }
+
+export enum DashboardImageScaleType {
+  Fit = 'fit',
+  Crop = 'crop',
+}
+
+export const defaultDashboardImageScaleType = DashboardImageScaleType.Fit;
 
 export interface DashboardAction {
   type: DashboardActionType;

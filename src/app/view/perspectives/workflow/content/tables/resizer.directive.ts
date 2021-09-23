@@ -84,9 +84,8 @@ export class ResizerDirective {
   }
 
   private findResizingElement(): HTMLElement {
-    const elementsByTag: HTMLCollectionOf<any> = this.element.nativeElement?.parentElement?.getElementsByTagName(
-      'LMR-TABLE'
-    );
+    const elementsByTag: HTMLCollectionOf<any> =
+      this.element.nativeElement?.parentElement?.getElementsByTagName('LMR-TABLE');
     for (let i = 0; i < elementsByTag?.length; i++) {
       if (elementsByTag.item(i).id === this.reference) {
         return elementsByTag.item(i);

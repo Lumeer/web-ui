@@ -172,8 +172,8 @@ export class ModalService {
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
   }
 
-  public showTabsSettings(perspectiveId: string): BsModalRef {
-    const initialState = {perspectiveId};
+  public showTabsSettings(perspectiveId: string, initialTab: string): BsModalRef {
+    const initialState = {perspectiveId, initialTab};
     return this.showStaticDialog(initialState, TabsSettingsModalComponent, 'modal-lg');
   }
 

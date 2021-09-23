@@ -156,9 +156,11 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     );
   }
 
-  private getParams(
-    route: ActivatedRouteSnapshot
-  ): {organizationCode?: string; projectCode?: string; viewCode?: string} {
+  private getParams(route: ActivatedRouteSnapshot): {
+    organizationCode?: string;
+    projectCode?: string;
+    viewCode?: string;
+  } {
     for (const path of route.pathFromRoot) {
       if (path.paramMap.has('organizationCode') && path.paramMap.has('projectCode')) {
         return {

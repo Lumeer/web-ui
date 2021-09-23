@@ -43,6 +43,9 @@ export class TabsSettingsModalComponent implements OnInit {
   @Input()
   public perspectiveId: string;
 
+  @Input()
+  public initialTab: string;
+
   @ViewChild(TabsSettingsContentComponent)
   public content: TabsSettingsContentComponent;
 

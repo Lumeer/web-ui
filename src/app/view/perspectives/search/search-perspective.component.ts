@@ -63,6 +63,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public tabs$: Observable<DashboardTab[]>;
 
   private initialSearchTab: string;
+  private searchId: string;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {}
@@ -126,6 +127,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
           );
           this.checkSearchTabRedirect(config, view);
         }
+        this.searchId = searchId;
       });
     this.subscriptions.add(subscription);
   }
@@ -263,9 +265,8 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onSettingsClick() {
-    this.store$
-      .pipe(select(selectSearchId), take(1))
-      .subscribe(searchId => this.modalService.showTabsSettings(searchId));
+    const currentTab = parseSearchTabFromUrl(this.router.url);
+    this.modalService.showTabsSettings(this.searchId, currentTab);
   }
 
   public trackByTab(index: number, tab: DashboardTab): string {

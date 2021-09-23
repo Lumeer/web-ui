@@ -315,9 +315,12 @@ export class WorkflowTablesStateService {
     return this.tables[tableIndex]?.rows?.length || 0;
   }
 
-  public getCellIndexes(
-    cell: TableCell
-  ): {tableIndex: number; rowIndex: number; columnIndex: number; type: TableCellType} {
+  public getCellIndexes(cell: TableCell): {
+    tableIndex: number;
+    rowIndex: number;
+    columnIndex: number;
+    type: TableCellType;
+  } {
     const tableIndex = this.tables.findIndex(table => table.id === cell.tableId);
     const tableByIndex = this.tables[tableIndex];
     const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);

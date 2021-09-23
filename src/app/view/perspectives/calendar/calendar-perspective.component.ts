@@ -45,7 +45,8 @@ import {CalendarPerspectiveConfiguration, defaultCalendarPerspectiveConfiguratio
 })
 export class CalendarPerspectiveComponent
   extends DataPerspectiveDirective<CalendarConfig>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   @Input()
   public perspectiveConfiguration: CalendarPerspectiveConfiguration = defaultCalendarPerspectiveConfiguration;
 

@@ -46,7 +46,8 @@ import {defaultWorkflowPerspectiveConfiguration, WorkflowPerspectiveConfiguratio
 })
 export class WorkflowPerspectiveComponent
   extends DataPerspectiveDirective<WorkflowConfig>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   @Input()
   public perspectiveConfiguration: WorkflowPerspectiveConfiguration = defaultWorkflowPerspectiveConfiguration;
 
