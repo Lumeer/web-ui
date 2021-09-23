@@ -5,7 +5,7 @@
      [routerLink]="path"
      [class.mb-2]="viewSize !== sizeType.S"
      [class.mb-1]="viewSize === sizeType.S"
-     [class.pb-3]="viewSize == sizeType.L">
+     [class.pb-3]="viewSize === sizeType.L">
 
     <div class="mr-3">
       <i [ngClass]="viewSize | viewIconSize"

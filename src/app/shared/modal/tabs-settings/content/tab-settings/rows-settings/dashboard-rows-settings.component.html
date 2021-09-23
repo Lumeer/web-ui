@@ -8,7 +8,7 @@
                           class="dashboard-row d-block px-2"
                           [row]="row"
                           [views]="views"
-                          [selectedColumn]="selectedCoordinates?.row == index ? selectedCoordinates?.column : null"
+                          [selectedColumn]="selectedCoordinates?.row === index ? selectedCoordinates?.column : null"
                           (rowChange)="rowChange.emit({row: $event, index: index})"
                           (delete)="rowDelete.emit(index)"
                           (cellSelect)="cellSelect.emit({row: index, column: $event})">

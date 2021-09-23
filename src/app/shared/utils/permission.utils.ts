@@ -181,7 +181,7 @@ export function userRoleTypesInLinkType(
   collections: Collection[],
   user: User
 ): RoleType[] {
-  if (linkType.permissionsType == PermissionsType.Custom) {
+  if (linkType.permissionsType === PermissionsType.Custom) {
     return userRoleTypesInPermissions(organization, project, linkType.permissions, user);
   }
 
@@ -472,7 +472,7 @@ export function rolesChanged(roles1: Role[], roles2: Role[]): boolean {
   const otherRoles = [...(roles2 || [])];
   for (const role of roles1 || []) {
     const index = otherRoles.findIndex(r => rolesAreSame(r, role));
-    if (index == -1) {
+    if (index === -1) {
       return true;
     }
     otherRoles.splice(index, 1);
