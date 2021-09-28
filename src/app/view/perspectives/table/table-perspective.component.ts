@@ -450,7 +450,12 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onClickOutside(event: Event) {
-    if (this.selectedCursor && !clickedInsideElement(event, 'table-perspective') && !event[PERSPECTIVE_CHOOSER_CLICK]) {
+    if (
+      this.selectedCursor &&
+      event.isTrusted &&
+      !clickedInsideElement(event, 'table-perspective') &&
+      !event[PERSPECTIVE_CHOOSER_CLICK]
+    ) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }

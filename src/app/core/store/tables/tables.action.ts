@@ -26,6 +26,7 @@ import {TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableMo
 import {EditedAttribute} from './tables.state';
 import {Query} from '../navigation/query/query';
 import {View} from '../views/view';
+import {Workspace} from '../navigation/workspace';
 
 export enum TablesActionType {
   CREATE_TABLE = '[Tables] Create Table',
@@ -331,19 +332,19 @@ export namespace TablesAction {
   export class CloneRow implements Action {
     public readonly type = TablesActionType.CLONE_ROW;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; workspace: Workspace}) {}
   }
 
   export class MoveRowUp implements Action {
     public readonly type = TablesActionType.MOVE_ROW_UP;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; workspace: Workspace}) {}
   }
 
   export class MoveRowDown implements Action {
     public readonly type = TablesActionType.MOVE_ROW_DOWN;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; workspace: Workspace}) {}
   }
 
   export class OrderPrimaryRows implements Action {
@@ -355,13 +356,13 @@ export namespace TablesAction {
   export class IndentRow implements Action {
     public readonly type = TablesActionType.INDENT_ROW;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; workspace: Workspace}) {}
   }
 
   export class OutdentRow implements Action {
     public readonly type = TablesActionType.OUTDENT_ROW;
 
-    public constructor(public payload: {cursor: TableBodyCursor}) {}
+    public constructor(public payload: {cursor: TableBodyCursor; workspace: Workspace}) {}
   }
 
   export class CopyValue implements Action {

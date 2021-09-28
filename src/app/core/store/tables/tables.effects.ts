@@ -892,6 +892,7 @@ export class TablesEffects {
                   newDocumentId,
                   linkInstanceIds,
                   documentIdsMap,
+                  workspace: action.payload.workspace,
                 })
               );
             };
@@ -906,6 +907,7 @@ export class TablesEffects {
                   new DocumentsAction.Duplicate({
                     collectionId: documentsMap[linkedDocumentIds[0]].collectionId,
                     documentIds: linkedDocumentIds,
+                    workspace: action.payload.workspace,
                     onSuccess: documents => duplicateLinkInstances(documentId, documents),
                   })
                 );
@@ -921,6 +923,7 @@ export class TablesEffects {
                 correlationId: emptyRow.correlationId,
                 collectionId: document.collectionId,
                 documentIds: [document.id],
+                workspace: action.payload.workspace,
                 onSuccess: documents => duplicateLinkedDocuments(documents[0].id),
               }),
             ];
@@ -933,19 +936,18 @@ export class TablesEffects {
   public indentRow$ = createEffect(() =>
     this.actions$.pipe(
       ofType<TablesAction.IndentRow>(TablesActionType.INDENT_ROW),
-      map(action => action.payload.cursor),
-      filter(cursor => cursor.partIndex === 0 && cursor.rowPath[0] > 0),
+      filter(action => action.payload.cursor.partIndex === 0 && action.payload.cursor.rowPath[0] > 0),
       withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-      mergeMap(([cursor, documentsMap]) =>
+      mergeMap(([action, documentsMap]) =>
         this.store$.pipe(
-          select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+          select(selectTableRowsWithHierarchyLevels(action.payload.cursor.tableId)),
           first(),
           map(rows => {
-            const rowIndex = cursor.rowPath[0];
+            const rowIndex = action.payload.cursor.rowPath[0];
             const {row, level} = rows[rowIndex];
             const {row: newParentRow = undefined} =
               rows
-                .slice(0, cursor.rowPath[0])
+                .slice(0, action.payload.cursor.rowPath[0])
                 .reverse()
                 .find(hierarchyRow => hierarchyRow.level === level) || {};
             const parentDocumentId = newParentRow && newParentRow.documentId;
@@ -956,10 +958,11 @@ export class TablesEffects {
                 collectionId,
                 documentId,
                 metaData: {parentId: parentDocumentId},
+                workspace: action.payload.workspace,
               });
             } else {
               const updatedRow: TableConfigRow = {...row, parentDocumentId};
-              return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+              return new TablesAction.ReplaceRows({cursor: action.payload.cursor, deleteCount: 1, rows: [updatedRow]});
             }
           })
         )
@@ -970,19 +973,18 @@ export class TablesEffects {
   public outdentRow$ = createEffect(() =>
     this.actions$.pipe(
       ofType<TablesAction.OutdentRow>(TablesActionType.OUTDENT_ROW),
-      map(action => action.payload.cursor),
-      filter(cursor => cursor.partIndex === 0),
+      filter(action => action.payload.cursor.partIndex === 0),
       withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-      mergeMap(([cursor, documentsMap]) =>
+      mergeMap(([action, documentsMap]) =>
         this.store$.pipe(
-          select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+          select(selectTableRowsWithHierarchyLevels(action.payload.cursor.tableId)),
           first(),
           map(rows => {
-            const rowIndex = cursor.rowPath[0];
+            const rowIndex = action.payload.cursor.rowPath[0];
             const {row, level} = rows[rowIndex];
             const {row: previousParentRow = undefined} =
               rows
-                .slice(0, cursor.rowPath[0])
+                .slice(0, action.payload.cursor.rowPath[0])
                 .reverse()
                 .find(hierarchyRow => hierarchyRow.level === level - 1) || {};
             const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
@@ -996,10 +998,11 @@ export class TablesEffects {
                 collectionId,
                 documentId,
                 metaData: {parentId: parentDocumentId},
+                workspace: action.payload.workspace,
               });
             } else {
               const updatedRow: TableConfigRow = {...row, parentDocumentId};
-              return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+              return new TablesAction.ReplaceRows({cursor: action.payload.cursor, deleteCount: 1, rows: [updatedRow]});
             }
           })
         )
@@ -1113,7 +1116,7 @@ export class TablesEffects {
     this.actions$.pipe(
       ofType<TablesAction.MoveRowUp>(TablesActionType.MOVE_ROW_UP),
       mergeMap(action => {
-        const {cursor} = action.payload;
+        const {cursor, workspace} = action.payload;
         const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
         if (rowIndex === 0) {
           return [];
@@ -1149,6 +1152,7 @@ export class TablesEffects {
                   new DocumentsAction.PatchMetaData({
                     collectionId: document.collectionId,
                     documentId: document.id,
+                    workspace,
                     metaData: {parentId: previousParentId},
                     onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
                   }),
@@ -1176,7 +1180,7 @@ export class TablesEffects {
     this.actions$.pipe(
       ofType<TablesAction.MoveRowDown>(TablesActionType.MOVE_ROW_DOWN),
       mergeMap(action => {
-        const {cursor} = action.payload;
+        const {cursor, workspace} = action.payload;
         const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
 
         return combineLatest([
@@ -1237,6 +1241,7 @@ export class TablesEffects {
                   new DocumentsAction.PatchMetaData({
                     collectionId: document.collectionId,
                     documentId: document.id,
+                    workspace,
                     metaData: {parentId: targetParentId},
                     onSuccess: () => actions.forEach(a => this.store$.dispatch(a)),
                   }),

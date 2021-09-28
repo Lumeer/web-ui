@@ -32,6 +32,7 @@ import {AppState} from '../../../../../../../../core/store/app.state';
 import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
 import {TableDataPermissionsService} from '../../../../../service/table-data-permissions.service';
 import {View} from '../../../../../../../../core/store/views/view';
+import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
@@ -78,10 +79,14 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   }
 
   public onIndent() {
-    this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor, workspace: this.workspace()}));
   }
 
   public onOutdent() {
-    this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor, workspace: this.workspace()}));
+  }
+
+  private workspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 }

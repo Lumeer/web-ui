@@ -101,7 +101,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
       this.attributes = this.createAttributes();
       this.color = this.createColor();
     }
-    if (this.dataResources && this.selectedId) {
+    if (changes.dataResources && changes.selectedId && this.dataResources && this.selectedId) {
       this.countPageForDataResource(this.selectedId);
       setTimeout(() => this.scrollToCurrentRow());
     }

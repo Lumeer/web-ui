@@ -131,7 +131,7 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
     if (event.target === this.element.nativeElement) {
-      this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+      this.unsetCursor();
     }
   }
 

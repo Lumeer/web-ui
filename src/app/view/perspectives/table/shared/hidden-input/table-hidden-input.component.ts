@@ -187,22 +187,23 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       )
       .subscribe(([cursor, editable]: [TableBodyCursor, boolean]) => {
         event[EDITABLE_EVENT] = editable;
+        const workspace = {viewId: this.view?.id};
 
-        if (event.altKey && event.shiftKey && editable && this.canManageConfig) {
+        if (event.altKey && event.shiftKey && editable) {
           event.stopPropagation();
           switch (keyboardEventCode(event)) {
             case KeyCode.ArrowRight:
-              this.store$.dispatch(new TablesAction.IndentRow({cursor}));
+              this.store$.dispatch(new TablesAction.IndentRow({cursor, workspace}));
               return;
             case KeyCode.ArrowLeft:
-              this.store$.dispatch(new TablesAction.OutdentRow({cursor}));
+              this.store$.dispatch(new TablesAction.OutdentRow({cursor, workspace}));
               return;
             case KeyCode.ArrowUp:
-              this.store$.dispatch(new TablesAction.MoveRowUp({cursor}));
+              this.store$.dispatch(new TablesAction.MoveRowUp({cursor, workspace}));
               this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
               return;
             case KeyCode.ArrowDown:
-              this.store$.dispatch(new TablesAction.MoveRowDown({cursor}));
+              this.store$.dispatch(new TablesAction.MoveRowDown({cursor, workspace}));
               this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
               return;
           }

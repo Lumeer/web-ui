@@ -831,10 +831,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
         event.preventDefault();
-        return this.suggestions && this.suggestions.moveSelection(Direction.Down);
+        return this.suggestions?.moveSelection(Direction.Down);
       case KeyCode.ArrowUp:
         event.preventDefault();
-        return this.suggestions && this.suggestions.moveSelection(Direction.Up);
+        return this.suggestions?.moveSelection(Direction.Up);
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
         // needs to be executed after the value is stored
@@ -859,21 +859,21 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     const writeWithView = this.editable;
     event[EDITABLE_EVENT] = writeWithView;
 
-    if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {
+    if (event.altKey && event.shiftKey && writeWithView) {
       event.stopPropagation();
       switch (keyboardEventCode(event)) {
         case KeyCode.ArrowRight:
-          this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor, workspace: this.currentWorkspace()}));
           return;
         case KeyCode.ArrowLeft:
-          this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor, workspace: this.currentWorkspace()}));
           return;
         case KeyCode.ArrowUp:
-          this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor, workspace: this.currentWorkspace()}));
           this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
           return;
         case KeyCode.ArrowDown:
-          this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor, workspace: this.currentWorkspace()}));
           this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
           return;
       }

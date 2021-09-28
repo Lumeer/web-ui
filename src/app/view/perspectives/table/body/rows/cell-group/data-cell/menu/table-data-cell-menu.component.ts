@@ -57,6 +57,7 @@ import {CanCreateLinksPipe} from '../../../../../../../../shared/pipes/can-creat
 import {DataResourcePermissions} from '../../../../../../../../core/model/data-resource-permissions';
 import {View} from '../../../../../../../../core/store/views/view';
 import {selectLinkTypesPermissionsByView} from '../../../../../../../../core/store/common/permissions.selectors';
+import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -236,6 +237,7 @@ export class TableDataCellMenuComponent implements OnChanges {
           collectionId: this.document.collectionId,
           documentId: this.document.id,
           nextAction: removeRowAction,
+          workspace: this.workspace(),
         })
       );
     } else {
@@ -252,30 +254,32 @@ export class TableDataCellMenuComponent implements OnChanges {
       )
       .subscribe(linkInstanceId => {
         const nextAction = new TablesAction.RemoveRow({cursor: this.cursor});
-        this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, nextAction}));
+        this.store$.dispatch(
+          new LinkInstancesAction.DeleteConfirm({linkInstanceId, nextAction, workspace: this.workspace()})
+        );
       });
   }
 
   public onMoveUp() {
-    this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor, workspace: this.workspace()}));
     this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
   }
 
   public onMoveDown() {
-    this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor, workspace: this.workspace()}));
     this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
   }
 
   public onIndent() {
-    this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor, workspace: this.workspace()}));
   }
 
   public onOutdent() {
-    this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor, workspace: this.workspace()}));
   }
 
   public onCloneRow() {
-    this.store$.dispatch(new TablesAction.CloneRow({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.CloneRow({cursor: this.cursor, workspace: this.workspace()}));
   }
 
   public onDocumentDetail() {
@@ -302,9 +306,16 @@ export class TableDataCellMenuComponent implements OnChanges {
   public onUpdateLinks() {
     const linkTypeId = this.tableParts?.[this.cursor.partIndex + 1]?.linkTypeId;
     if (this.document && linkTypeId) {
-      this.modalService.showModifyDocumentLinks(this.document.id, this.document.collectionId, linkTypeId, {
-        viewId: this.view?.id,
-      });
+      this.modalService.showModifyDocumentLinks(
+        this.document.id,
+        this.document.collectionId,
+        linkTypeId,
+        this.workspace()
+      );
     }
+  }
+
+  private workspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 }
