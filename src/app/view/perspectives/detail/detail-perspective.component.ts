@@ -167,11 +167,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
       switchMap(([view, cursor, {query, collections}]) => {
         return this.selectCollectionByCursor$(cursor, query, view).pipe(
           switchMap(({collection}) => {
-            if (collection) {
-              return this.selectByCollection$(collection, query, cursor, view);
-            }
-            if (collections[0]) {
-              return this.selectByCollection$(collections[0], query, cursor, view);
+            if (collection || collections[0]) {
+              return this.selectByCollection$(collection || collections[0], query, cursor, view);
             }
             return of({collection: null, document: null});
           }),
@@ -231,7 +228,7 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
       select(selectQueryDocumentsLoaded(collectionQuery)),
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+          this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery, workspace: {viewId: view?.id}}));
         }
       }),
       filter(loaded => loaded),

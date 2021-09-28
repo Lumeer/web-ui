@@ -207,12 +207,16 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   public onClickInsideTables(event: MouseEvent) {
-    this.checkClickOutsideTables(event);
+    if (event.isTrusted) {
+      this.checkClickOutsideTables(event);
+    }
   }
 
   @HostListener('document:click', ['$event'])
   public onDocumentClick(event: MouseEvent) {
-    this.checkClickOutsideTables(event);
+    if (event.isTrusted) {
+      this.checkClickOutsideTables(event);
+    }
   }
 
   private checkClickOutsideTables(event: MouseEvent) {

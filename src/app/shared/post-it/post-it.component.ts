@@ -48,7 +48,7 @@ import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component
 import {ModalService} from '../modal/modal.service';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {PostItLayoutType} from './post-it-layout-type';
-import {ResourceAttributeSettings, View} from '../../core/store/views/view';
+import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {fromEvent, Observable, Subscription} from 'rxjs';
 import {objectChanged} from '../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
@@ -82,7 +82,7 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Input()
   public tag: PostItTag;
@@ -155,6 +155,9 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
     if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(this.resource?.attributes, this.dataResource?.data);
     }
+    if (changes.viewId) {
+      this.dataRowService.setWorkspace({viewId: this.viewId});
+    }
   }
 
   public onNewKey(value: string, index: number) {
@@ -212,6 +215,6 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onDetail() {
-    this.modalService.showDataResourceDetail(this.dataResource, this.resource, this.view?.id);
+    this.modalService.showDataResourceDetail(this.dataResource, this.resource, this.viewId);
   }
 }

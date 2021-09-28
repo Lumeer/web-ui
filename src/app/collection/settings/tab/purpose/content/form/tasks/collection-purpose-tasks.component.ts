@@ -35,12 +35,14 @@ import {
   objectChanged,
 } from '../../../../../../../shared/utils/common.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
-import {selectDocumentsByCollectionId} from '../../../../../../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {map, startWith} from 'rxjs/operators';
 import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
 import {View} from '../../../../../../../core/store/views/view';
-import {selectViewsByReadSorted} from '../../../../../../../core/store/common/permissions.selectors';
+import {
+  selectDocumentsByCollectionAndReadPermission,
+  selectViewsByReadSorted,
+} from '../../../../../../../core/store/common/permissions.selectors';
 import {getBaseCollectionIdsFromQuery} from '../../../../../../../core/store/navigation/query/query.util';
 import {selectAllCollections} from '../../../../../../../core/store/collections/collections.state';
 
@@ -158,7 +160,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
 
   private updateData() {
     this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: this.collection.id}]}}));
-    this.documents$ = this.store$.pipe(select(selectDocumentsByCollectionId(this.collection.id)));
+    this.documents$ = this.store$.pipe(select(selectDocumentsByCollectionAndReadPermission(this.collection.id)));
     this.viewsByCollection$ = this.store$.pipe(
       select(selectViewsByReadSorted),
       map(views => views.filter(view => getBaseCollectionIdsFromQuery(view.query).includes(this.collection.id)))

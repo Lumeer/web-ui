@@ -22,10 +22,12 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
@@ -72,7 +74,7 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
-import {View, ViewSettings} from '../../../../../core/store/views/view';
+import {ViewSettings} from '../../../../../core/store/views/view';
 import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
@@ -82,7 +84,7 @@ import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class KanbanColumnsComponent implements OnInit, OnDestroy {
+export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren('kanbanColumn')
   public columns: QueryList<KanbanColumnComponent>;
 
@@ -111,7 +113,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public query: Query;
 
   @Input()
-  public view: View;
+  public viewId: string;
 
   @Input()
   public currentUser: User;
@@ -157,7 +159,13 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.toggleService.setWorkspace(this.workspace);
+    this.toggleService.setWorkspace(this.currentWorkspace());
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.viewId) {
+      this.toggleService.setWorkspace(this.currentWorkspace());
+    }
   }
 
   public dropColumn(event: CdkDragDrop<string[]>) {
@@ -246,7 +254,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       const ref = this.modalService.showDataResourceDetail(
         lastDataResource,
         createResource.resource,
-        this.view?.id,
+        this.viewId,
         false
       );
       ref.content.onSubmit$.subscribe(modifiedDocument => {
@@ -360,7 +368,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   }
 
   private chooseDocument(documentsIds: string[], callback: (document) => void) {
-    this.modalService.showChooseLinkDocument(documentsIds, this.view?.id, callback);
+    this.modalService.showChooseLinkDocument(documentsIds, this.viewId, callback);
   }
 
   private modifyingDocuments(createResource: KanbanCreateResource): boolean {
@@ -383,8 +391,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
     const creatingDocument = this.modifyingDocuments(createResource);
     const modalRef = creatingDocument
-      ? this.modalService.showDataResourceDetail(document, collection, this.view?.id, false)
-      : this.modalService.showDataResourceDetail(linkInstance, linkType, this.view?.id, false);
+      ? this.modalService.showDataResourceDetail(document, collection, this.viewId, false)
+      : this.modalService.showDataResourceDetail(linkInstance, linkType, this.viewId, false);
 
     modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
       if (linkDocumentId && linkTypeId) {
@@ -625,7 +633,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   }
 
   private currentWorkspace(): Workspace {
-    return {viewId: this.view?.id};
+    return {...this.workspace, viewId: this.viewId};
   }
 
   private patchDocument(card: KanbanCard, newValue: any, previousValue: any, stemConfig: KanbanStemConfig) {

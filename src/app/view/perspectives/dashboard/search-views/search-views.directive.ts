@@ -40,7 +40,7 @@ import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
-import {SearchPerspectiveConfiguration} from '../../perspective-configuration';
+import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Directive()
 export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestroy {
@@ -48,7 +48,7 @@ export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestr
   public view: View;
 
   @Input()
-  public perspectiveConfiguration: SearchPerspectiveConfiguration;
+  public perspectiveConfiguration: SearchPerspectiveConfiguration = defaultSearchPerspectiveConfiguration;
 
   public views$: Observable<View[]>;
   public queryData$: Observable<QueryData>;

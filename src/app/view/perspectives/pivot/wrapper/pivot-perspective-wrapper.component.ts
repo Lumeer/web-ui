@@ -145,7 +145,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   private checkConfig(changes: SimpleChanges) {
-    if (changes.config || changes.query || changes.collections || changes.linkTypes) {
+    if (changes.pivotConfig || changes.query || changes.collections || changes.linkTypes) {
       const previousConfig = {...this.pivotConfig};
       this.pivotConfig = checkOrTransformPivotConfig(this.pivotConfig, this.query, this.collections, this.linkTypes);
       if (!deepObjectsEquals(previousConfig, this.pivotConfig)) {
@@ -157,7 +157,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   private checkData(changes: SimpleChanges) {
     if (
       changes.data ||
-      changes.config ||
+      changes.pivotConfig ||
       changes.collections ||
       changes.linkTypes ||
       changes.query ||

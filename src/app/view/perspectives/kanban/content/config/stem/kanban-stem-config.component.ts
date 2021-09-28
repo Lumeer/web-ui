@@ -31,11 +31,13 @@ import {findAttribute} from '../../../../../../core/store/collections/collection
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
-import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 import {isArray} from '../../../../../../shared/utils/common.utils';
 import {Constraint, ConstraintData, DataValue} from '@lumeer/data-filters';
+import {
+  selectDocumentsByCollectionAndReadPermission,
+  selectLinksByLinkTypeAndReadPermission,
+} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'kanban-stem-config',
@@ -95,9 +97,13 @@ export class KanbanStemConfigComponent implements OnChanges {
       this.config.attribute && findAttribute(this.attributeResource?.attributes, this.config.attribute.attributeId);
     if (this.attributeResource) {
       if (this.config.attribute.resourceType === AttributesResourceType.Collection) {
-        this.dataResources$ = this.store$.pipe(select(selectDocumentsByCollectionId(this.attributeResource.id)));
+        this.dataResources$ = this.store$.pipe(
+          select(selectDocumentsByCollectionAndReadPermission(this.attributeResource.id))
+        );
       } else {
-        this.dataResources$ = this.store$.pipe(select(selectLinkInstancesByType(this.attributeResource.id)));
+        this.dataResources$ = this.store$.pipe(
+          select(selectLinksByLinkTypeAndReadPermission(this.attributeResource.id))
+        );
       }
     } else {
       this.dataResources$ = of([]);

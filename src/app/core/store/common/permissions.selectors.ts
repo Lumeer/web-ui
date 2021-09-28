@@ -43,8 +43,8 @@ import {
   sortDocumentsTasks,
 } from '../documents/document.utils';
 import {selectAllDocuments, selectDocumentsByCollectionId} from '../documents/documents.state';
-import {selectAllLinkInstances} from '../link-instances/link-instances.state';
-import {selectAllLinkTypes, selectLinkTypesDictionary} from '../link-types/link-types.state';
+import {selectAllLinkInstances, selectLinkInstancesByType} from '../link-instances/link-instances.state';
+import {selectAllLinkTypes, selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {Query} from '../navigation/query/query';
 import {
   checkTasksCollectionsQuery,
@@ -237,6 +237,23 @@ export const selectDocumentsByViewAndReadPermission = (view: View) =>
       filterDocumentsByReadPermission(documents, collections, permissionsMap, currentUser, constraintData)
   );
 
+export const selectDocumentsByCollectionAndReadPermission = (collectionId: string, view?: View) =>
+  createSelector(
+    selectDocumentsByCollectionId(collectionId),
+    selectCollectionById(collectionId),
+    selectCollectionPermissionsByView(view, collectionId),
+    selectCurrentUserForWorkspace,
+    selectConstraintData,
+    (documents, collection, permissions, currentUser, constraintData) =>
+      filterDocumentsByReadPermission(
+        documents,
+        [collection],
+        {[collectionId]: permissions},
+        currentUser,
+        constraintData
+      )
+  );
+
 function filterDocumentsByReadPermission(
   documents: DocumentModel[],
   collections: Collection[],
@@ -245,21 +262,23 @@ function filterDocumentsByReadPermission(
   constraintData: ConstraintData
 ) {
   const documentsByCollection = groupDocumentsByCollection(documents);
-  return collections.reduce((allDocuments, collection) => {
-    const permissions = permissionsMap[collection.id];
-    const collectionDocuments = documentsByCollection[collection.id] || [];
-    if (permissions?.rolesWithView?.DataRead) {
-      allDocuments.push(...collectionDocuments);
-    } else {
-      allDocuments.push(
-        ...collectionDocuments.filter(document =>
-          userCanReadDocument(document, collection, permissions, currentUser, constraintData)
-        )
-      );
-    }
+  return (collections || [])
+    .filter(collection => !!collection)
+    .reduce((allDocuments, collection) => {
+      const permissions = permissionsMap[collection.id];
+      const collectionDocuments = documentsByCollection[collection.id] || [];
+      if (permissions?.rolesWithView?.DataRead) {
+        allDocuments.push(...collectionDocuments);
+      } else {
+        allDocuments.push(
+          ...collectionDocuments.filter(document =>
+            userCanReadDocument(document, collection, permissions, currentUser, constraintData)
+          )
+        );
+      }
 
-    return allDocuments;
-  }, []);
+      return allDocuments;
+    }, []);
 }
 
 export const selectLinksByViewAndReadPermission = (view: View) =>
@@ -272,6 +291,16 @@ export const selectLinksByViewAndReadPermission = (view: View) =>
       filterLinksByReadPermission(linkInstances, linkTypes, permissionsMap, currentUser)
   );
 
+export const selectLinksByLinkTypeAndReadPermission = (linkTypeId: string, view?: View) =>
+  createSelector(
+    selectLinkInstancesByType(linkTypeId),
+    selectLinkTypeById(linkTypeId),
+    selectLinkTypePermissionsByView(view, linkTypeId),
+    selectCurrentUserForWorkspace,
+    (linkInstances, linkType, permissions, currentUser) =>
+      filterLinksByReadPermission(linkInstances, [linkType], {[linkTypeId]: permissions}, currentUser)
+  );
+
 function filterLinksByReadPermission(
   linkInstances: LinkInstance[],
   linkTypes: LinkType[],
@@ -279,21 +308,23 @@ function filterLinksByReadPermission(
   currentUser: User
 ) {
   const linkInstancesByLinkTypes = groupLinkInstancesByLinkTypes(linkInstances);
-  return linkTypes.reduce((allLinkInstances, linkType) => {
-    const permissions = permissionsMap[linkType.id];
-    const collectionDocuments = linkInstancesByLinkTypes[linkType.id] || [];
-    if (permissions?.rolesWithView?.DataRead) {
-      allLinkInstances.push(...collectionDocuments);
-    } else {
-      allLinkInstances.push(
-        ...collectionDocuments.filter(linkInstance =>
-          userCanReadLinkInstance(linkInstance, linkType, permissions, currentUser)
-        )
-      );
-    }
+  return (linkTypes || [])
+    .filter(linkType => !!linkType)
+    .reduce((allLinkInstances, linkType) => {
+      const permissions = permissionsMap[linkType.id];
+      const collectionDocuments = linkInstancesByLinkTypes[linkType.id] || [];
+      if (permissions?.rolesWithView?.DataRead) {
+        allLinkInstances.push(...collectionDocuments);
+      } else {
+        allLinkInstances.push(
+          ...collectionDocuments.filter(linkInstance =>
+            userCanReadLinkInstance(linkInstance, linkType, permissions, currentUser)
+          )
+        );
+      }
 
-    return allLinkInstances;
-  }, []);
+      return allLinkInstances;
+    }, []);
 }
 
 export const selectDataByCustomQuery = (view: View, query: Query) =>
@@ -467,7 +498,7 @@ export const selectDocumentsByViewAndCustomQueryAndIdsSortedByCreation = (view: 
 
 export const selectDocumentsByCollectionAndQuery = (collectionId: string, query: Query, view: View) =>
   createSelector(
-    selectDocumentsByCollectionId(collectionId),
+    selectDocumentsByCollectionAndReadPermission(collectionId, view),
     selectCollectionById(collectionId),
     selectCollectionsPermissionsByView(view),
     selectConstraintData,

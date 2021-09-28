@@ -18,7 +18,7 @@
     </collapsible-sidebar>
 
     <calendar-events *ngIf="data.config"
-                     class="flex-grow-1 d-block h-100"
+                     class="flex-grow-1 d-block h-100 w-100"
                      [class.px-4]="perspectiveConfiguration?.additionalSpace"
                      [class.pb-5]="perspectiveConfiguration?.additionalSpace"
                      [collections]="data.collections"
@@ -26,6 +26,7 @@
                      [canManageConfig]="data.canManageConfig"
                      [linkTypes]="data.linkTypes"
                      [config]="data.config"
+                     [view]="currentView$ | async"
                      [permissions]="permissions$ | async"
                      [constraintData]="constraintData$ | async"
                      [query]="data.query"

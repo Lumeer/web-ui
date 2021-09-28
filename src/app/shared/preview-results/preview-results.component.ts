@@ -48,6 +48,7 @@ import {selectConstraintData} from '../../core/store/constraint-data/constraint-
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataQuery} from '../../core/model/data-query';
 import {AttributesSettings, View} from '../../core/store/views/view';
+import {objectChanged} from '../utils/common.utils';
 
 @Component({
   selector: 'preview-results',
@@ -91,7 +92,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedCollection || changes.query || changes.view) {
+    if (objectChanged(changes.selectedCollection) || changes.query || changes.view) {
       this.subscribeToDocuments();
     }
   }

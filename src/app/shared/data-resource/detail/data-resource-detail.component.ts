@@ -188,7 +188,7 @@ export class DataResourceDetailComponent
     this.linkTypes$ = combineLatest([
       this.resourcesPermissions$,
       this.store$.pipe(select(selectAllLinkTypes)),
-      this.collectionId$.asObservable(),
+      this.collectionId$,
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       map(
@@ -201,6 +201,12 @@ export class DataResourceDetailComponent
           []
       ),
       tap(linkTypes => this.readLinkTypesData(linkTypes))
+    );
+
+    this.linksCount$ = this.linkTypes$.pipe(
+      map(linkTypes => linkTypes.map(linkType => linkType.id)),
+      switchMap(ids => this.store$.pipe(select(selectLinkInstancesByTypesAndDocuments(ids, [this.dataResource.id])))),
+      map(links => links.length || 0)
     );
   }
 
@@ -228,11 +234,6 @@ export class DataResourceDetailComponent
         filter(doc => !!doc),
         map(doc => doc.commentsCount)
       );
-      this.linksCount$ = this.linkTypes$.pipe(
-        map(linkTypes => linkTypes.map(linkType => linkType.id)),
-        switchMap(ids => this.store$.pipe(select(selectLinkInstancesByTypesAndDocuments(ids, [this.dataResource.id])))),
-        map(links => links.length || 0)
-      );
       this.documentsCount$ = of(null);
       this.collectionId$.next(this.resource?.id);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
@@ -245,7 +246,6 @@ export class DataResourceDetailComponent
         switchMap(link => this.store$.pipe(select(selectDocumentsByIds(link?.documentIds || [])))),
         map(documents => documents.length)
       );
-      this.linksCount$ = of(null);
       this.collectionId$.next(null);
     }
 

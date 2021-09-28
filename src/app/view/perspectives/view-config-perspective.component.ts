@@ -112,7 +112,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
         if (
           preferViewConfigUpdate(this.getConfig(previousView?.config), this.getConfig(view?.config), !!entityConfig)
         ) {
-          return this.checkPerspectiveConfig(perspectiveConfig, view).pipe(
+          return this.checkPerspectiveConfig(perspectiveId, view).pipe(
             mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig)),
             map(config => ({perspectiveId, config}))
           );
@@ -122,7 +122,8 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     );
   }
 
-  private checkPerspectiveConfig(config: T, view?: View): Observable<T> {
+  private checkPerspectiveConfig(perspectiveId: string, view?: View): Observable<T> {
+    const viewConfig = view && this.getConfig(view.config);
     return this.selectViewQuery$().pipe(
       switchMap(query =>
         combineLatest([
@@ -130,7 +131,10 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
           this.store$.pipe(select(selectLinkTypesInCustomViewAndQuery(view, query))),
         ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
       ),
-      map(({query, collections, linkTypes}) => this.checkOrTransformConfig(config, query, collections, linkTypes))
+      withLatestFrom(this.subscribeConfig$(perspectiveId)),
+      map(([{query, collections, linkTypes}, config]) =>
+        this.checkOrTransformConfig(config || viewConfig, query, collections, linkTypes)
+      )
     );
   }
 
@@ -139,9 +143,8 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     return this.selectViewQuery$().pipe(
       switchMap(() =>
         this.selectDefaultViewConfig$().pipe(
-          withLatestFrom(this.subscribeConfig$(perspectiveId)),
-          mergeMap(([defaultView, config]) =>
-            this.checkPerspectiveConfig(config).pipe(
+          mergeMap(defaultView =>
+            this.checkPerspectiveConfig(perspectiveId).pipe(
               mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig, defaultView))
             )
           ),
