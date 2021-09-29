@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Collection} from '../../../../core/store/collections/collection';
-import {MapConfig, MapModel, MapStemConfig} from '../../../../core/store/maps/map.model';
+import {MapConfig, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
@@ -36,7 +36,7 @@ import {AppState} from '../../../../core/store/app.state';
 })
 export class MapPanelComponent {
   @Input()
-  public map: MapModel;
+  public config: MapConfig;
 
   @Input()
   public collections: Collection[];
@@ -47,18 +47,21 @@ export class MapPanelComponent {
   @Input()
   public query: Query;
 
+  @Input()
+  public mapId: string;
+
   constructor(private store$: Store<AppState>) {}
 
   public readonly defaultStemConfig = createMapDefaultStemConfig();
 
   public onStemConfigChange(stemConfig: MapStemConfig, stem: QueryStem, index: number) {
-    const config = deepObjectCopy<MapConfig>(this.map.config);
+    const config = deepObjectCopy<MapConfig>(this.config);
     config.stemsConfigs[index] = {...stemConfig, stem};
-    this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
+    this.store$.dispatch(new MapsAction.SetConfig({mapId: this.mapId, config}));
   }
 
   public onPositionSavedChange(positionSaved: boolean) {
-    this.store$.dispatch(new MapsAction.ChangePositionSaved({mapId: this.map.id, positionSaved}));
+    this.store$.dispatch(new MapsAction.ChangePositionSaved({mapId: this.mapId, positionSaved}));
   }
 
   public trackByStem(index: number, stem: QueryStem): string {
@@ -66,7 +69,7 @@ export class MapPanelComponent {
   }
 
   public onImageUrlChange(imageUrl: string) {
-    const config = {...this.map.config, imageUrl};
-    this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
+    const config = {...this.config, imageUrl};
+    this.store$.dispatch(new MapsAction.SetConfig({mapId: this.mapId, config}));
   }
 }

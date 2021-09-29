@@ -31,13 +31,7 @@ import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  MapConfig,
-  MapMarkerData,
-  MapMarkerProperties,
-  MapModel,
-  MapPosition,
-} from '../../../../core/store/maps/map.model';
+import {MapConfig, MapMarkerData, MapMarkerProperties, MapPosition} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResourceType} from '../../../../core/model/resource';
@@ -100,7 +94,10 @@ export class MapContentComponent implements OnInit, OnChanges {
   public view: View;
 
   @Input()
-  public map: MapModel;
+  public config: MapConfig;
+
+  @Input()
+  public mapId: string;
 
   @ViewChild(MapGlobeContentComponent)
   public mapGlobeContentComponent: MapGlobeContentComponent;
@@ -128,7 +125,7 @@ export class MapContentComponent implements OnInit, OnChanges {
   private handleData(data: Data): MapMarkerData[] {
     const config = checkOrTransformMapConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
-      this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
+      this.store$.dispatch(new MapsAction.SetConfig({mapId: this.mapId, config}));
     }
 
     return this.converter.convert(
@@ -152,15 +149,15 @@ export class MapContentComponent implements OnInit, OnChanges {
         changes.query ||
         changes.user ||
         changes.constraintData ||
-        this.mapConfigChanged(changes.map)) &&
-      this.map?.config
+        this.mapConfigChanged(changes.config)) &&
+      this?.config
     ) {
       this.dataSubject$.next({
         collections: this.collections,
         linkTypes: this.linkTypes,
         data: this.data,
         permissions: this.permissions,
-        config: this.map.config,
+        config: this.config,
         query: this.query,
         user: this.user,
         constraintData: this.constraintData,
@@ -176,14 +173,14 @@ export class MapContentComponent implements OnInit, OnChanges {
       return true;
     }
 
-    const previousStems = change.previousValue.config?.stemsConfigs;
-    const currentStems = change.currentValue?.config?.stemsConfigs;
+    const previousStems = change.previousValue?.stemsConfigs;
+    const currentStems = change.currentValue?.stemsConfigs;
 
     return !deepArrayEquals(previousStems, currentStems);
   }
 
   public onMapMove(position: MapPosition) {
-    this.store$.dispatch(new MapsAction.ChangePosition({mapId: this.map.id, position}));
+    this.store$.dispatch(new MapsAction.ChangePosition({mapId: this.mapId, position}));
   }
 
   public refreshMapSize() {

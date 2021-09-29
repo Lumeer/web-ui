@@ -58,7 +58,7 @@ export abstract class DataPerspectiveDirective<T>
   @Input()
   public view: View;
 
-  private isEmbedded: boolean;
+  protected isEmbedded: boolean;
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;

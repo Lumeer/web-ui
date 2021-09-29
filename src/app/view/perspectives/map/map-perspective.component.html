@@ -1,18 +1,19 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else invalidQuery">
   <ng-container
-    *ngIf="{collections: collections$ | async, map: perspectiveId$ | async | mapModelFromConfig:(config$ | async), linkTypes: linkTypes$ | async, query: query$ | async} as data">
-    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && data.map && (canManageConfig$ | async)"
+    *ngIf="{collections: collections$ | async, config: config$ | async, linkTypes: linkTypes$ | async, query: query$ | async} as data">
+    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && data.config && (canManageConfig$ | async)"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <map-panel [collections]="data.collections"
                  [linkTypes]="data.linkTypes"
                  [query]="data.query"
-                 [map]="data.map"
+                 [config]="data.config"
+                 [mapId]="perspectiveId$ | async"
                  class="mx-3 mb-3">
       </map-panel>
     </collapsible-sidebar>
 
-    <map-content *ngIf="data.map"
+    <map-content *ngIf="data.config"
                  [collections]="data.collections"
                  [data]="data$ | async"
                  [linkTypes]="data.linkTypes"
@@ -21,7 +22,8 @@
                  [user]="currentUser$ | async"
                  [permissions]="permissions$ | async"
                  [constraintData]="constraintData$ | async"
-                 [map]="data.map">
+                 [mapId]="perspectiveId$ | async"
+                 [config]="data.config">
     </map-content>
   </ng-container>
 </ng-container>

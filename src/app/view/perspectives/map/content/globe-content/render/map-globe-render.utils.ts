@@ -49,7 +49,7 @@ export function createMapboxMap(
   });
 }
 
-export function createMapMarkersGeoJson(markers: MapMarkerProperties[]): FeatureCollection {
+export function createMapMarkersGeoJson(markers: MapMarkerProperties[]): FeatureCollection<Point, MapMarkerProperties> {
   return {
     type: 'FeatureCollection',
     features: markers.map(properties => createMapMarkerFeature(properties)),
@@ -72,8 +72,8 @@ export function createMapClusterMarkersSource(markers: MapMarkerProperties[]): G
     type: 'geojson',
     data: createMapMarkersGeoJson(markers),
     cluster: true,
-    clusterMaxZoom: 13,
-    clusterRadius: 25,
+    clusterMaxZoom: 12,
+    clusterRadius: 20,
   };
 }
 
