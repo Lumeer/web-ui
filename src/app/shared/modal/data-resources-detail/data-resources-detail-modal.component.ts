@@ -54,6 +54,9 @@ export class DataResourcesDetailModalComponent implements OnInit {
   @Input()
   public title: string;
 
+  @Input()
+  public viewId: string;
+
   public hasDuplicates: boolean;
 
   public selectedResourceSubject$ = new BehaviorSubject<AttributesResource>(null);

@@ -20,12 +20,12 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
-import {selectCollectionsByCustomQuery} from '../common/permissions.selectors';
-import {getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
+import {selectCollectionsByCustomViewAndQuery, selectReadableCollectionsByView} from '../common/permissions.selectors';
+import {checkTasksCollectionsQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
 import {createCallbackActions, emitErrorActions} from '../utils/store.utils';
 import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
@@ -33,6 +33,9 @@ import {AttachmentsService} from '../../data-service';
 import {createFileApiPath, FileApiPath} from '../../data-service/attachments/attachments.service';
 import {selectLoadedFileAttachmentsCollections, selectLoadedFileAttachmentsLinkTypes} from './file-attachments.state';
 import {AppState} from '../app.state';
+import {selectCurrentView, selectViewById} from '../views/views.state';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {CollectionPurposeType} from '../collections/collection';
 
 @Injectable()
 export class FileAttachmentsEffects {
@@ -89,32 +92,69 @@ export class FileAttachmentsEffects {
     )
   );
 
+  public getByView$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<FileAttachmentsAction.GetByView>(FileAttachmentsActionType.GET_BY_VIEW),
+      mergeMap(action => {
+        const {viewId} = action.payload;
+
+        return this.store$.pipe(
+          select(selectViewById(viewId)),
+          take(1),
+          mergeMap(view => {
+            if (view?.perspective === Perspective.Search) {
+              return this.store$.pipe(
+                select(selectReadableCollectionsByView(view)),
+                take(1),
+                map(collections =>
+                  collections.filter(collection => collection.purpose?.type === CollectionPurposeType.Tasks)
+                ),
+                map(collections => checkTasksCollectionsQuery(collections, view.query, {})),
+                map(query => new FileAttachmentsAction.GetByQuery({view, query}))
+              );
+            } else if (view) {
+              return of(new FileAttachmentsAction.GetByQuery({view, query: view.query}));
+            }
+            return EMPTY;
+          })
+        );
+      })
+    )
+  );
+
   public getByQuery$ = createEffect(() =>
     this.actions$.pipe(
       ofType<FileAttachmentsAction.GetByQuery>(FileAttachmentsActionType.GET_BY_QUERY),
       mergeMap(action => {
-        const {query} = action.payload;
+        const {query, view} = action.payload;
 
-        return this.store$.pipe(
-          select(selectCollectionsByCustomQuery(query)),
+        const view$ = view ? of(view) : this.store$.pipe(select(selectCurrentView));
+
+        return view$.pipe(
           take(1),
-          withLatestFrom(
-            this.store$.pipe(select(selectLoadedFileAttachmentsCollections)),
-            this.store$.pipe(select(selectLoadedFileAttachmentsLinkTypes))
-          ),
-          mergeMap(([collections, loadedCollections, loadedLinkTypes]) => {
-            const collectionIds = collections.map(collection => collection.id);
-            const linkTypesIds = getAllLinkTypeIdsFromQuery(query);
+          mergeMap(view =>
+            this.store$.pipe(
+              select(selectCollectionsByCustomViewAndQuery(view, query)),
+              take(1),
+              withLatestFrom(
+                this.store$.pipe(select(selectLoadedFileAttachmentsCollections)),
+                this.store$.pipe(select(selectLoadedFileAttachmentsLinkTypes))
+              ),
+              mergeMap(([collections, loadedCollections, loadedLinkTypes]) => {
+                const collectionIds = collections.map(collection => collection.id);
+                const linkTypesIds = getAllLinkTypeIdsFromQuery(query);
 
-            const actions: Action[] = [];
-            collectionIds
-              .filter(collectionId => !loadedCollections.includes(collectionId))
-              .forEach(collectionId => actions.push(new FileAttachmentsAction.Get({collectionId})));
-            linkTypesIds
-              .filter(linkTypeId => !loadedLinkTypes.includes(linkTypeId))
-              .forEach(linkTypeId => actions.push(new FileAttachmentsAction.Get({linkTypeId})));
-            return actions;
-          })
+                const actions: Action[] = [];
+                collectionIds
+                  .filter(collectionId => !loadedCollections.includes(collectionId))
+                  .forEach(collectionId => actions.push(new FileAttachmentsAction.Get({collectionId})));
+                linkTypesIds
+                  .filter(linkTypeId => !loadedLinkTypes.includes(linkTypeId))
+                  .forEach(linkTypeId => actions.push(new FileAttachmentsAction.Get({linkTypeId})));
+                return actions;
+              })
+            )
+          )
         );
       })
     )

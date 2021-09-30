@@ -32,6 +32,7 @@ import {QueryAction} from '../../../core/model/query-action';
 import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {selectHasVisibleSearchTab} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'empty-data',
@@ -43,11 +44,13 @@ export class EmptyDataComponent implements OnInit {
   public query: Query;
 
   public projectPermissions$: Observable<AllowedPermissions>;
+  public hasCollectionsTab$: Observable<boolean>;
 
   constructor(public router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+    this.hasCollectionsTab$ = this.store$.pipe(select(selectHasVisibleSearchTab(SearchTab.Collections)));
   }
 
   public onSwitchToCollectionsTab() {

@@ -31,13 +31,7 @@ import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  MapConfig,
-  MapMarkerData,
-  MapMarkerProperties,
-  MapModel,
-  MapPosition,
-} from '../../../../core/store/maps/map.model';
+import {MapConfig, MapMarkerData, MapMarkerProperties, MapPosition} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResourceType} from '../../../../core/model/resource';
@@ -54,6 +48,8 @@ import {LinkInstancesAction} from '../../../../core/store/link-instances/link-in
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {AppState} from '../../../../core/store/app.state';
 import {User} from '../../../../core/store/users/user';
+import {Workspace} from '../../../../core/store/navigation/workspace';
+import {View} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
@@ -95,7 +91,13 @@ export class MapContentComponent implements OnInit, OnChanges {
   public user: User;
 
   @Input()
-  public map: MapModel;
+  public view: View;
+
+  @Input()
+  public config: MapConfig;
+
+  @Input()
+  public mapId: string;
 
   @ViewChild(MapGlobeContentComponent)
   public mapGlobeContentComponent: MapGlobeContentComponent;
@@ -123,7 +125,7 @@ export class MapContentComponent implements OnInit, OnChanges {
   private handleData(data: Data): MapMarkerData[] {
     const config = checkOrTransformMapConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
-      this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
+      this.store$.dispatch(new MapsAction.SetConfig({mapId: this.mapId, config}));
     }
 
     return this.converter.convert(
@@ -147,15 +149,15 @@ export class MapContentComponent implements OnInit, OnChanges {
         changes.query ||
         changes.user ||
         changes.constraintData ||
-        this.mapConfigChanged(changes.map)) &&
-      this.map?.config
+        this.mapConfigChanged(changes.config)) &&
+      this?.config
     ) {
       this.dataSubject$.next({
         collections: this.collections,
         linkTypes: this.linkTypes,
         data: this.data,
         permissions: this.permissions,
-        config: this.map.config,
+        config: this.config,
         query: this.query,
         user: this.user,
         constraintData: this.constraintData,
@@ -171,14 +173,14 @@ export class MapContentComponent implements OnInit, OnChanges {
       return true;
     }
 
-    const previousStems = change.previousValue.config?.stemsConfigs;
-    const currentStems = change.currentValue?.config?.stemsConfigs;
+    const previousStems = change.previousValue?.stemsConfigs;
+    const currentStems = change.currentValue?.stemsConfigs;
 
     return !deepArrayEquals(previousStems, currentStems);
   }
 
   public onMapMove(position: MapPosition) {
-    this.store$.dispatch(new MapsAction.ChangePosition({mapId: this.map.id, position}));
+    this.store$.dispatch(new MapsAction.ChangePosition({mapId: this.mapId, position}));
   }
 
   public refreshMapSize() {
@@ -187,9 +189,9 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   public onMarkerDetail(properties: MapMarkerProperties) {
     if (properties.resourceType === AttributesResourceType.Collection) {
-      this.modalService.showDocumentDetail(properties.dataResourceId);
+      this.modalService.showDocumentDetail(properties.dataResourceId, this.view?.id);
     } else if (properties.resourceType === AttributesResourceType.LinkType) {
-      this.modalService.showLinkInstanceDetail(properties.dataResourceId);
+      this.modalService.showLinkInstanceDetail(properties.dataResourceId, this.view?.id);
     }
   }
 
@@ -203,6 +205,7 @@ export class MapContentComponent implements OnInit, OnChanges {
             id: properties.dataResourceId,
             data: {[properties.attributeId]: value},
           },
+          workspace: this.currentWorkspace(),
         })
       );
     } else if (properties.resourceType === AttributesResourceType.LinkType) {
@@ -214,8 +217,13 @@ export class MapContentComponent implements OnInit, OnChanges {
             documentIds: [null, null],
             data: {[properties.attributeId]: value},
           },
+          workspace: this.currentWorkspace(),
         })
       );
     }
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 }

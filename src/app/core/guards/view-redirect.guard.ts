@@ -21,11 +21,11 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, NavigationExtras, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {map, mergeMap, skipWhile, switchMap, take, tap} from 'rxjs/operators';
+import {map, mergeMap, skipWhile, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {ViewsAction} from '../store/views/views.action';
-import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
+import {selectDefaultSearchPerspectiveTabs, selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {Organization} from '../store/organizations/organization';
@@ -34,6 +34,7 @@ import {SearchTab} from '../store/navigation/search-tab';
 import {View} from '../store/views/view';
 import {selectSearchById} from '../store/searches/searches.state';
 import {QueryParam} from '../store/navigation/query-param';
+import {createSearchPerspectiveTabsByView} from '../store/views/view.utils';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
@@ -72,7 +73,7 @@ export class ViewRedirectGuard implements CanActivate {
       switchMap(() => this.store$.pipe(select(selectViewByCode(viewCode)))),
       take(1),
       mergeMap(view => {
-        const perspective = view && view.perspective ? view.perspective : Perspective.Search;
+        const perspective = view?.perspective ? view.perspective : Perspective.Search;
         const query = view ? convertQueryModelToString(view.query) : null;
 
         const viewPath: any[] = ['/w', organization.code, project.code, 'view'];
@@ -96,7 +97,18 @@ export class ViewRedirectGuard implements CanActivate {
     return this.store$.pipe(
       select(selectSearchById(view?.code)),
       take(1),
-      map(search => [...viewPath, search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All]),
+      withLatestFrom(this.store$.pipe(select(selectDefaultSearchPerspectiveTabs))),
+      map(([search, defaultTabs]) => {
+        const tabs = createSearchPerspectiveTabsByView(view, defaultTabs).filter(tab => !tab.hidden);
+        const desiredTab = search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All;
+        if (tabs.some(tab => tab.id === desiredTab)) {
+          return [...viewPath, desiredTab];
+        }
+        if (tabs.length) {
+          return [...viewPath, tabs[0].id];
+        }
+        return viewPath;
+      }),
       map(path => {
         this.router.navigate(path, extras);
         return false;

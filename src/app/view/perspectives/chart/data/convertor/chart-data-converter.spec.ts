@@ -18,7 +18,7 @@
  */
 
 import {TestBed} from '@angular/core/testing';
-import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {LOCALE_ID} from '@angular/core';
 
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -96,15 +96,6 @@ describe('Chart data converter single collection', () => {
         {
           provide: LOCALE_ID,
           useFactory: () => 'en',
-        },
-        {
-          provide: TRANSLATIONS,
-          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`).default,
-          deps: [LOCALE_ID],
-        },
-        {
-          provide: TRANSLATIONS_FORMAT,
-          useFactory: () => 'xlf',
         },
       ],
     });
@@ -859,15 +850,6 @@ describe('Chart data converter linked collections', () => {
         {
           provide: LOCALE_ID,
           useFactory: () => 'en',
-        },
-        {
-          provide: TRANSLATIONS,
-          useFactory: () => require(`raw-loader!../../../../../../../src/i18n/messages.en.xlf`).default,
-          deps: [LOCALE_ID],
-        },
-        {
-          provide: TRANSLATIONS_FORMAT,
-          useFactory: () => 'xlf',
         },
       ],
     });

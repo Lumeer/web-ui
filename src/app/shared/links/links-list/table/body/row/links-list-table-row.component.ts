@@ -62,6 +62,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public row: LinkRow;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public linkPermissions: DataResourcePermissions;
 
   @Input()

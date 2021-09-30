@@ -22,10 +22,12 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
@@ -35,7 +37,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -62,9 +64,6 @@ import {
   createPossibleLinkingDocumentsByChains,
 } from '../../../../../shared/utils/data/data-aggregator-util';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
-import {ViewSettings} from '../../../../../core/store/views/view';
-import {Observable} from 'rxjs';
-import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
 import {
   ConditionType,
   Constraint,
@@ -75,6 +74,8 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {User} from '../../../../../core/store/users/user';
+import {ViewSettings} from '../../../../../core/store/views/view';
+import {KanbanPerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
   selector: 'kanban-columns',
@@ -83,7 +84,7 @@ import {User} from '../../../../../core/store/users/user';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class KanbanColumnsComponent implements OnInit, OnDestroy {
+export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren('kanbanColumn')
   public columns: QueryList<KanbanColumnComponent>;
 
@@ -112,6 +113,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public query: Query;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public currentUser: User;
 
   @Input()
@@ -119,6 +123,12 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public viewSettings: ViewSettings;
+
+  @Input()
+  public perspectiveConfiguration: KanbanPerspectiveConfiguration;
 
   @Output()
   public columnsMoved = new EventEmitter<{previousIndex: number; currentIndex: number}>();
@@ -138,8 +148,6 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   @Output()
   public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
 
-  public viewSettings$: Observable<ViewSettings>;
-
   public readonly dragDelay = DRAG_DELAY;
 
   private unknownConstraint: Constraint = new UnknownConstraint();
@@ -151,8 +159,13 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
-    this.toggleService.setWorkspace(this.workspace);
+    this.toggleService.setWorkspace(this.currentWorkspace());
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.viewId) {
+      this.toggleService.setWorkspace(this.currentWorkspace());
+    }
   }
 
   public dropColumn(event: CdkDragDrop<string[]>) {
@@ -238,10 +251,22 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
     }
 
     if (lastDataResource) {
-      const ref = this.modalService.showDataResourceDetail(lastDataResource, createResource.resource, false);
+      const ref = this.modalService.showDataResourceDetail(
+        lastDataResource,
+        createResource.resource,
+        this.viewId,
+        false
+      );
       ref.content.onSubmit$.subscribe(modifiedDocument => {
         lastDataResource.data = modifiedDocument.data;
-        this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
+        this.store$.dispatch(
+          new DocumentsAction.CreateChain({
+            documents,
+            linkInstances,
+            failureMessage,
+            workspace: this.currentWorkspace(),
+          })
+        );
       });
     }
   }
@@ -343,7 +368,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   }
 
   private chooseDocument(documentsIds: string[], callback: (document) => void) {
-    this.modalService.showChooseLinkDocument(documentsIds, callback);
+    this.modalService.showChooseLinkDocument(documentsIds, this.viewId, callback);
   }
 
   private modifyingDocuments(createResource: KanbanCreateResource): boolean {
@@ -366,8 +391,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
     const creatingDocument = this.modifyingDocuments(createResource);
     const modalRef = creatingDocument
-      ? this.modalService.showDataResourceDetail(document, collection, false)
-      : this.modalService.showDataResourceDetail(linkInstance, linkType, false);
+      ? this.modalService.showDataResourceDetail(document, collection, this.viewId, false)
+      : this.modalService.showDataResourceDetail(linkInstance, linkType, this.viewId, false);
 
     modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
       if (linkDocumentId && linkTypeId) {
@@ -375,6 +400,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
           new DocumentsAction.CreateWithLink({
             document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
             otherDocumentId: linkDocumentId,
+            workspace: this.currentWorkspace(),
             linkInstance: {
               documentIds: [linkDocumentId, ''],
               linkTypeId,
@@ -388,6 +414,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
+            workspace: this.currentWorkspace(),
             afterSuccess: document => this.onObjectCreated(document.id, column),
           })
         );
@@ -600,7 +627,13 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       return;
     }
     const failureMessage = $localize`:@@perspective.kanban.move.card.failure:Could not move card`;
-    this.store$.dispatch(new DocumentsAction.CreateChain({documents, linkInstances, failureMessage}));
+    this.store$.dispatch(
+      new DocumentsAction.CreateChain({documents, linkInstances, failureMessage, workspace: this.currentWorkspace()})
+    );
+  }
+
+  private currentWorkspace(): Workspace {
+    return {...this.workspace, viewId: this.viewId};
   }
 
   private patchDocument(card: KanbanCard, newValue: any, previousValue: any, stemConfig: KanbanStemConfig) {

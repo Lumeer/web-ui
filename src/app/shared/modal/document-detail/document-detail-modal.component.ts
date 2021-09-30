@@ -43,7 +43,9 @@ import {selectDocumentById} from '../../../core/store/documents/documents.state'
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {AttributesResourceType} from '../../../core/model/resource';
-import {selectViewQuery} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectViewById, selectViewQuery} from '../../../core/store/views/views.state';
+import {View} from '../../../core/store/views/view';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'document-detail-modal',
@@ -59,6 +61,9 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public document: DocumentModel;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public toolbarRef: TemplateRef<any>;
 
   @Output()
@@ -72,6 +77,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public query$: Observable<Query>;
   public collection$: Observable<Collection>;
   public document$: Observable<DocumentModel>;
+  public view$: Observable<View>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -87,12 +93,30 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnInit() {
     this.initData();
-    this.query$ = this.store$.pipe(select(selectViewQuery));
+
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.initData();
+    if (changes.collection || changes.document) {
+      this.initData();
+    }
+
+    this.view$ = this.viewId
+      ? this.store$.pipe(select(selectViewById(this.viewId)))
+      : this.store$.pipe(select(selectCurrentView));
+    this.query$ = this.selectQuery$();
+  }
+
+  private selectQuery$(): Observable<Query> {
+    return this.view$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.query);
+        }
+        return this.store$.pipe(select(selectViewQuery));
+      })
+    );
   }
 
   private initData() {
@@ -121,6 +145,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
     this.store$.dispatch(
       new DocumentsAction.Create({
         document,
+        workspace: {viewId: this.viewId},
         onSuccess: () => this.hideDialog(),
         onFailure: () => this.performingAction$.next(false),
       })
@@ -128,7 +153,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onClose() {
-    this.onCancel$.next();
+    this.onCancel$.next(null);
     this.hideDialog();
   }
 

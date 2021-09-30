@@ -361,14 +361,8 @@ export class LinkInstancesEffects {
     this.actions$.pipe(
       ofType<LinkInstancesAction.Duplicate>(LinkInstancesActionType.DUPLICATE),
       mergeMap(action => {
-        const {
-          originalDocumentId,
-          newDocumentId,
-          linkInstanceIds,
-          documentIdsMap,
-          onSuccess,
-          onFailure,
-        } = action.payload;
+        const {originalDocumentId, newDocumentId, linkInstanceIds, documentIdsMap, onSuccess, onFailure} =
+          action.payload;
 
         const duplicateDto: LinkInstanceDuplicateDto = {
           originalDocumentId,

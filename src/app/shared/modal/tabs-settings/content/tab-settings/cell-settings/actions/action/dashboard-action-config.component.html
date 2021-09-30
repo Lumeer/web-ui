@@ -1,0 +1,27 @@
+<div class="action">
+  <i class="fa-fw" [ngClass]="icon$ | async" [style.color]="color$ | async"
+     #pickerOrigin (click)="pickerComponent.toggle()">
+  </i>
+
+  <select-item id="select"
+               [selectedId]="action.config?.viewId"
+               [items]="viewSelectItems"
+               [removable]="false"
+               i18n-emptyValue="@@search.tabs.settings.dialog.config.view.placeholder"
+               emptyValue="Select View"
+               (selected)="onViewSelected($event)">
+  </select-item>
+
+  <i class="fal fa-trash-alt text-danger clickable" (click)="remove.emit()"></i>
+
+</div>
+
+<icon-color-picker #pickerComponent
+                   [origin]="pickerOrigin"
+                   [color]="color$ | async"
+                   [icon]="icon$ | async"
+                   (preview)="onIconColorChange($event)"
+                   (selected)="onIconColorChange($event)"
+                   (cancel)="onIconColorChange($event)"
+                   (save)="onIconColorSave($event)">
+</icon-color-picker>

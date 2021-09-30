@@ -82,6 +82,8 @@ import {selectViewQuery} from '../../../../../../../core/store/views/views.state
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint, UnknownDataValue} from '@lumeer/data-filters';
 import {DataResourcePermissions} from '../../../../../../../core/model/data-resource-permissions';
 import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
+import {View} from '../../../../../../../core/store/views/view';
+import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'table-data-cell',
@@ -98,6 +100,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public document: DocumentModel;
+
+  @Input()
+  public view: View;
 
   @Input()
   public linkInstance: LinkInstance;
@@ -553,6 +558,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
     const createDocumentAction = new DocumentsAction.Create({
       document,
+      workspace: this.currentWorkspace(),
       onSuccess: this.createLinkInstanceCallback(table),
     });
     const newAttribute = {name: attributeName};
@@ -574,7 +580,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       metaData: this.createDocumentMetaData(row),
     };
 
-    this.store$.dispatch(new DocumentsAction.Create({document, onSuccess: this.createLinkInstanceCallback(table)}));
+    this.store$.dispatch(
+      new DocumentsAction.Create({
+        document,
+        workspace: this.currentWorkspace(),
+        onSuccess: this.createLinkInstanceCallback(table),
+      })
+    );
   }
 
   private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
@@ -586,8 +598,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       return null;
     }
 
-    // TODO what if table is embedded?
-
     const {linkTypeId} = table.config.parts[this.cursor.partIndex - 1];
     const previousRow = findTableRow(table.config.rows, this.cursor.rowPath.slice(0, -1));
 
@@ -598,7 +608,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         correlationId: this.document && this.document.correlationId,
         data: {},
       };
-      this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
+      this.store$.dispatch(new LinkInstancesAction.Create({linkInstance, workspace: this.currentWorkspace()}));
     };
   }
 
@@ -617,7 +627,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       data: {},
       newData: {[attributeName]: {value}},
     };
-    const patchDocumentAction = new DocumentsAction.PatchData({document});
+    const patchDocumentAction = new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()});
     const newAttribute = {name: attributeName};
 
     this.store$.dispatch(
@@ -645,7 +655,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         id: this.document.id,
         data: {[attributeId]: value},
       };
-      this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
     }
   }
 
@@ -664,6 +674,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         collectionId: this.document.collectionId,
         documentId: this.document.id,
         nextAction,
+        workspace: this.currentWorkspace(),
       })
     );
   }
@@ -697,7 +708,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       linkTypeId: null, // linkTypeId is not used
       data: {[attributeId]: value},
     };
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
   }
 
   private createLinkInstance(attributeId: string, attributeName: string, value: any) {
@@ -756,12 +767,17 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
                 correlationId,
                 data: generateDocumentDataByResourceQuery(collection, query, this.constraintData, false),
               },
+              workspace: this.currentWorkspace(),
               otherDocumentId: previousDocumentId,
               linkInstance: {...this.linkInstance, documentIds: [previousDocumentId, ''], data: {[attributeId]: value}},
             })
           );
         }
       });
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 
   private createLinkTypeAttribute(attributeName: string, onSuccess: (attribute: Attribute) => void) {
@@ -815,10 +831,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     switch (keyboardEventCode(event)) {
       case KeyCode.ArrowDown:
         event.preventDefault();
-        return this.suggestions && this.suggestions.moveSelection(Direction.Down);
+        return this.suggestions?.moveSelection(Direction.Down);
       case KeyCode.ArrowUp:
         event.preventDefault();
-        return this.suggestions && this.suggestions.moveSelection(Direction.Up);
+        return this.suggestions?.moveSelection(Direction.Up);
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
         // needs to be executed after the value is stored
@@ -843,21 +859,21 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     const writeWithView = this.editable;
     event[EDITABLE_EVENT] = writeWithView;
 
-    if (event.altKey && event.shiftKey && writeWithView && this.canManageConfig) {
+    if (event.altKey && event.shiftKey && writeWithView) {
       event.stopPropagation();
       switch (keyboardEventCode(event)) {
         case KeyCode.ArrowRight:
-          this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.IndentRow({cursor: this.cursor, workspace: this.currentWorkspace()}));
           return;
         case KeyCode.ArrowLeft:
-          this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.OutdentRow({cursor: this.cursor, workspace: this.currentWorkspace()}));
           return;
         case KeyCode.ArrowUp:
-          this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.MoveRowUp({cursor: this.cursor, workspace: this.currentWorkspace()}));
           this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
           return;
         case KeyCode.ArrowDown:
-          this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor}));
+          this.store$.dispatch(new TablesAction.MoveRowDown({cursor: this.cursor, workspace: this.currentWorkspace()}));
           this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
           return;
       }
@@ -881,7 +897,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.showUninitializedLinkedRowWarningAndResetValue();
       return;
     }
-    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: data.linkInstance}));
+    this.store$.dispatch(
+      new LinkInstancesAction.Create({linkInstance: data.linkInstance, workspace: this.currentWorkspace()})
+    );
   }
 
   public onUpdateLink(data: {linkInstance: LinkInstance; nextAction?: Action}) {
@@ -889,6 +907,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       new LinkInstancesAction.Update({
         linkInstance: data.linkInstance,
         nextAction: data.nextAction,
+        workspace: this.currentWorkspace(),
       })
     );
   }

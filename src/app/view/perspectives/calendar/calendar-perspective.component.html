@@ -3,7 +3,7 @@
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
                 canManageConfig: canManageConfig$ | async,
                 query: query$ | async, linkTypes: linkTypes$ | async} as data">
-    <collapsible-sidebar *ngIf="data.canManageConfig && data.config"
+    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && data.canManageConfig && data.config"
                          class="h-100"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
@@ -18,12 +18,15 @@
     </collapsible-sidebar>
 
     <calendar-events *ngIf="data.config"
-                     class="flex-grow-1 px-4 pb-5 d-block h-100"
+                     class="flex-grow-1 d-block h-100 w-100"
+                     [class.px-4]="perspectiveConfiguration?.additionalSpace"
+                     [class.pb-5]="perspectiveConfiguration?.additionalSpace"
                      [collections]="data.collections"
                      [data]="data$ | async"
                      [canManageConfig]="data.canManageConfig"
                      [linkTypes]="data.linkTypes"
                      [config]="data.config"
+                     [view]="currentView$ | async"
                      [permissions]="permissions$ | async"
                      [constraintData]="constraintData$ | async"
                      [query]="data.query"
@@ -38,6 +41,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query$ | async"
+                 [view]="currentView$ | async"
                  [minStems]="1">
   </invalid-query>
 </ng-template>

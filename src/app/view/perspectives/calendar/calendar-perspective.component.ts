@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectDocumentsAndLinksByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ViewConfig} from '../../../core/store/views/view';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
@@ -35,17 +34,22 @@ import {checkOrTransformCalendarConfig} from './util/calendar-util';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {CalendarPerspectiveConfiguration, defaultCalendarPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
-  selector: 'calendar',
+  selector: 'calendar-perspective',
   templateUrl: './calendar-perspective.component.html',
   styleUrls: ['./calendar-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarPerspectiveComponent
-  extends DataPerspectiveComponent<CalendarConfig>
-  implements OnInit, OnDestroy {
+  extends DataPerspectiveDirective<CalendarConfig>
+  implements OnInit, OnDestroy
+{
+  @Input()
+  public perspectiveConfiguration: CalendarPerspectiveConfiguration = defaultCalendarPerspectiveConfiguration;
+
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }
@@ -74,19 +78,19 @@ export class CalendarPerspectiveComponent
     );
   }
 
-  public subscribeDocumentsAndLinks$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-  }
-
   public onConfigChanged(config: CalendarConfig) {
     this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: this.perspectiveId$.value, config}));
   }
 
   public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new DocumentsAction.PatchData({document, workspace})));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
   }
 }

@@ -77,5 +77,6 @@ import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.
     PresenterModule,
   ],
   providers: [ResizerDirective],
+  exports: [WorkflowPerspectiveComponent],
 })
 export class WorkflowPerspectiveModule {}

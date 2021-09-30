@@ -42,6 +42,7 @@ import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-doc
 import {ViewModalModule} from './view-modal/view-modal.module';
 import {TextInputModalModule} from './text-input/text-input-modal.module';
 import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
+import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import {DataResourcesDetailModalModule} from './data-resources-detail/data-resou
     ModifyDocumentLinksModalModule,
     ViewModalModule,
     DataResourcesDetailModalModule,
+    TabsSettingsModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -94,6 +96,7 @@ import {DataResourcesDetailModalModule} from './data-resources-detail/data-resou
     ModifyDocumentLinksModalModule,
     ViewModalModule,
     DataResourcesDetailModalModule,
+    TabsSettingsModalModule,
   ],
 })
 export class ModalModule {}

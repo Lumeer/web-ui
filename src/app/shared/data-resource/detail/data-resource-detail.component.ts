@@ -56,7 +56,7 @@ import {selectDocumentById, selectDocumentsByIds} from '../../../core/store/docu
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
-  selectLinkInstancesByDocumentIds,
+  selectLinkInstancesByTypesAndDocuments,
 } from '../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {objectChanged} from '../../utils/common.utils';
@@ -69,12 +69,11 @@ import {ViewConfigPerspectiveComponent} from '../../../view/perspectives/view-co
 import {checkOrTransformDetailConfig} from '../../../core/store/details/detail.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {selectCurrentView} from '../../../core/store/views/views.state';
-import {computeResourcesPermissions} from '../../utils/permission.utils';
 import {User} from '../../../core/store/users/user';
+import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'data-resource-detail',
@@ -84,7 +83,8 @@ import {User} from '../../../core/store/users/user';
 })
 export class DataResourceDetailComponent
   extends ViewConfigPerspectiveComponent<DetailConfig>
-  implements OnInit, OnChanges, OnDestroy {
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input()
   public resource: AttributesResource;
 
@@ -141,6 +141,7 @@ export class DataResourceDetailComponent
   public collectionId$ = new BehaviorSubject<string>(null);
   public startEditing$ = new BehaviorSubject<boolean>(false);
 
+  public currentView$: Observable<View>;
   public commentsCount$: Observable<number>;
   public linksCount$: Observable<number>;
   public documentsCount$: Observable<number>;
@@ -168,39 +169,26 @@ export class DataResourceDetailComponent
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$.asObservable()]).pipe(
+    this.workspace$ = combineLatest([this.store$.pipe(select(selectWorkspace)), this.defaultView$]).pipe(
       map(([workspace, defaultView]) => ({...workspace, viewId: defaultView?.id})),
       tap(workspace => (this.workspace = workspace))
+    );
+    this.currentView$ = combineLatest([this.defaultView$, this.store$.pipe(select(selectCurrentView))]).pipe(
+      map(([defaultView, currentView]) => defaultView || currentView)
     );
 
     this.bindPermissions();
   }
 
   private bindPermissions() {
-    this.resourcesPermissions$ = combineLatest([
-      this.store$.pipe(select(selectCurrentUserForWorkspace)),
-      this.store$.pipe(select(selectWorkspaceModels)),
-      this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllLinkTypes)),
-      this.defaultView$.asObservable(),
-      this.store$.pipe(select(selectCurrentView)),
-    ]).pipe(
-      map(([user, models, collections, linkTypes, defaultView, currentView]) =>
-        computeResourcesPermissions(
-          models?.organization,
-          models?.project,
-          defaultView || currentView,
-          collections,
-          linkTypes,
-          user
-        )
-      )
+    this.resourcesPermissions$ = this.currentView$.pipe(
+      switchMap(currentView => this.store$.pipe(select(selectResourcesPermissionsByView(currentView))))
     );
 
     this.linkTypes$ = combineLatest([
       this.resourcesPermissions$,
       this.store$.pipe(select(selectAllLinkTypes)),
-      this.collectionId$.asObservable(),
+      this.collectionId$,
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       map(
@@ -213,6 +201,12 @@ export class DataResourceDetailComponent
           []
       ),
       tap(linkTypes => this.readLinkTypesData(linkTypes))
+    );
+
+    this.linksCount$ = this.linkTypes$.pipe(
+      map(linkTypes => linkTypes.map(linkType => linkType.id)),
+      switchMap(ids => this.store$.pipe(select(selectLinkInstancesByTypesAndDocuments(ids, [this.dataResource.id])))),
+      map(links => links.length || 0)
     );
   }
 
@@ -240,10 +234,6 @@ export class DataResourceDetailComponent
         filter(doc => !!doc),
         map(doc => doc.commentsCount)
       );
-      this.linksCount$ = this.store$.pipe(
-        select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
-        map(links => links?.length || 0)
-      );
       this.documentsCount$ = of(null);
       this.collectionId$.next(this.resource?.id);
     } else if (this.resourceType === AttributesResourceType.LinkType) {
@@ -256,7 +246,6 @@ export class DataResourceDetailComponent
         switchMap(link => this.store$.pipe(select(selectDocumentsByIds(link?.documentIds || [])))),
         map(documents => documents.length)
       );
-      this.linksCount$ = of(null);
       this.collectionId$.next(null);
     }
 

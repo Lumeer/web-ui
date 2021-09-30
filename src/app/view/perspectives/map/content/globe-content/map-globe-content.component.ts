@@ -29,10 +29,10 @@ import {
 } from '@angular/core';
 import {
   MapAttributeType,
+  MapConfig,
   MapCoordinates,
   MapMarkerData,
   MapMarkerProperties,
-  MapModel,
   MapPosition,
 } from '../../../../../core/store/maps/map.model';
 import {MarkerMoveEvent} from './render/marker-move.event';
@@ -63,6 +63,7 @@ import {findAttribute} from '../../../../../core/store/collections/collection.ut
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {generateDocumentDataByResourceQuery} from '../../../../../core/store/documents/document.utils';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'map-globe-content',
@@ -72,7 +73,7 @@ import {generateCorrelationId} from '../../../../../shared/utils/resource.utils'
 })
 export class MapGlobeContentComponent implements OnChanges {
   @Input()
-  public map: MapModel;
+  public config: MapConfig;
 
   @Input()
   public markerData: MapMarkerData[];
@@ -88,6 +89,9 @@ export class MapGlobeContentComponent implements OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public view: View;
 
   @Output()
   public mapMove = new EventEmitter<MapPosition>();
@@ -243,7 +247,7 @@ export class MapGlobeContentComponent implements OnChanges {
   }
 
   public onNewMarker(coordinates: MapCoordinates) {
-    const attributeConfig = this.map.config?.stemsConfigs?.find(stemConfig => stemConfig?.attributes?.length > 0)
+    const attributeConfig = this.config?.stemsConfigs?.find(stemConfig => stemConfig?.attributes?.length > 0)
       ?.attributes[0];
     const resource = this.findResourceByProperty(attributeConfig?.resourceType, attributeConfig?.resourceId);
     const attribute = findAttribute(resource?.attributes, attributeConfig.attributeId);
@@ -268,7 +272,7 @@ export class MapGlobeContentComponent implements OnChanges {
       type === AttributesResourceType.Collection
         ? {collectionId: resource.id, correlationId: generateCorrelationId(), data}
         : {linkTypeId: resource.id, correlationId: generateCorrelationId(), data, documentIds: []};
-    this.modalService.showDataResourceDetail(dataResource, resource);
+    this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
   }
 }
 

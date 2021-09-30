@@ -41,6 +41,10 @@ import {SelectItemWithConstraintFormatter} from '../../../../shared/select/selec
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {parseSelectTranslation} from '../../../../shared/utils/translation.utils';
+import {PivotPerspectiveConfiguration} from '../../perspective-configuration';
+import {View} from '../../../../core/store/views/view';
+import {PivotTableCell} from '../util/pivot-table';
+import {ModalService} from '../../../../shared/modal/modal.service';
 
 interface Data {
   collections: Collection[];
@@ -74,7 +78,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
-  public config: PivotConfig;
+  public pivotConfig: PivotConfig;
 
   @Input()
   public canManageConfig: boolean;
@@ -84,6 +88,12 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public perspectiveConfiguration: PivotPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<PivotConfig>();
@@ -96,7 +106,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public pivotData$: Observable<PivotData>;
 
-  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter, private modalService: ModalService) {
     this.pivotTransformer = new PivotDataConverter(constraintItemsFormatter, type =>
       this.createValueAggregationTitle(type)
     );
@@ -135,11 +145,11 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   private checkConfig(changes: SimpleChanges) {
-    if (changes.config || changes.query || changes.collections || changes.linkTypes) {
-      const previousConfig = {...this.config};
-      this.config = checkOrTransformPivotConfig(this.config, this.query, this.collections, this.linkTypes);
-      if (!deepObjectsEquals(previousConfig, this.config)) {
-        this.configChange.emit(this.config);
+    if (changes.pivotConfig || changes.query || changes.collections || changes.linkTypes) {
+      const previousConfig = {...this.pivotConfig};
+      this.pivotConfig = checkOrTransformPivotConfig(this.pivotConfig, this.query, this.collections, this.linkTypes);
+      if (!deepObjectsEquals(previousConfig, this.pivotConfig)) {
+        this.configChange.emit(this.pivotConfig);
       }
     }
   }
@@ -147,14 +157,14 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   private checkData(changes: SimpleChanges) {
     if (
       changes.data ||
-      changes.config ||
+      changes.pivotConfig ||
       changes.collections ||
       changes.linkTypes ||
       changes.query ||
       changes.constraintData
     ) {
       this.dataSubject.next({
-        config: this.config,
+        config: this.pivotConfig,
         collections: this.collections,
         linkTypes: this.linkTypes,
         data: this.data,
@@ -170,5 +180,12 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
 
   public onSidebarToggle() {
     this.sidebarToggle.emit();
+  }
+
+  public onCellClick(cell: PivotTableCell) {
+    if (!cell.isHeader && cell.dataResources?.length > 0) {
+      const modalTitle = $localize`:@@perspective.pivot.cell.detail.title:Records by value: <b>${cell.value}</b>`;
+      this.modalService.showDataResourcesDetail(cell.dataResources, modalTitle, this.view?.id);
+    }
   }
 }

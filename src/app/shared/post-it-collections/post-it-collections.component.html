@@ -4,6 +4,7 @@
                              [collections]="collections$ | async"
                              [maxCollections]="maxShown"
                              [projectPermissions]="projectPermissions$ | async"
+                             [collectionsPermissions]="collectionsPermissions$ | async"
                              [showAddTaskTable]="showAddTaskTable"
                              (delete)="onDelete($event)"
                              (update)="onUpdate($event)"

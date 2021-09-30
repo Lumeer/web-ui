@@ -44,12 +44,7 @@ import {
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectAllCollections, selectCollectionById} from '../../../../../../core/store/collections/collections.state';
-import {selectViewQuery} from '../../../../../../core/store/views/views.state';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {
-  selectCollectionPermissions,
-  selectLinkTypePermissions,
-} from '../../../../../../core/store/user-permissions/user-permissions.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AppState} from '../../../../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
@@ -57,6 +52,11 @@ import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-t
 import {User} from '../../../../../../core/store/users/user';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {View} from '../../../../../../core/store/views/view';
+import {
+  selectCollectionPermissionsByView,
+  selectLinkTypePermissionsByView,
+} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-cell-group',
@@ -69,6 +69,12 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public cursor: TableBodyCursor;
 
   @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
+
+  @Input()
   public rows: TableConfigRow[];
 
   @Input()
@@ -76,7 +82,6 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
 
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstance[]>;
-  public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
   public collections$: Observable<Collection[]>;
   public permissions$: Observable<AllowedPermissions>;
@@ -92,12 +97,12 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public table$: Observable<TableModel>;
 
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
+  private view$ = new BehaviorSubject<View>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
   public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
@@ -120,6 +125,9 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
     if (changes.rows && this.rows) {
       this.rows$.next(this.rows);
     }
+    if (changes.view) {
+      this.view$.next(this.view);
+    }
   }
 
   private bindColumns(): Observable<TableConfigColumn[]> {
@@ -134,9 +142,13 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
           select(selectTablePart(cursor)),
           switchMap(part => {
             if (part?.collectionId) {
-              return this.store$.pipe(select(selectCollectionPermissions(part.collectionId)));
+              return this.view$.pipe(
+                switchMap(view => this.store$.pipe(select(selectCollectionPermissionsByView(view, part.collectionId))))
+              );
             } else if (part?.linkTypeId) {
-              return this.store$.pipe(select(selectLinkTypePermissions(part.linkTypeId)));
+              return this.view$.pipe(
+                switchMap(view => this.store$.pipe(select(selectLinkTypePermissionsByView(view, part.linkTypeId))))
+              );
             }
             return of({});
           })
@@ -189,7 +201,9 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   private bindLinkTypePermissions(linkType$: Observable<LinkType>): Observable<AllowedPermissions> {
     return linkType$.pipe(
       filter(linkType => !!linkType),
-      switchMap(linkType => this.store$.pipe(select(selectLinkTypePermissions(linkType.id))))
+      switchMap(linkType =>
+        this.view$.pipe(switchMap(view => this.store$.pipe(select(selectLinkTypePermissionsByView(view, linkType.id)))))
+      )
     );
   }
 

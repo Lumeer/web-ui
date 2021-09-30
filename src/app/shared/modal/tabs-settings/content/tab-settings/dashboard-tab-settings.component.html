@@ -1,0 +1,44 @@
+<div class="row">
+  <label class="col-12" for="title" i18n="@@search.tabs.settings.dialog.title">Title</label>
+  <div class="col-12 col-lg-6">
+    <input class="form-control"
+           #titleInput
+           [(ngModel)]="title"
+           [disabled]="isDefault"
+           [maxLength]="50"
+           (blur)="onNameBlur()"
+           (keydown.enter)="titleInput.blur()"
+           (keydown.escape)="revertName() ;titleInput.blur()"
+           id="title"
+           type="text">
+  </div>
+  <div class="col-12 col-lg-6" *ngIf="isDefault">
+    <toggle-checkbox class="d-block py-2"
+                     [checked]="!tab.hidden"
+                     i18n-label="@@search.tabs.settings.dialog.tab.show"
+                     label="Show tab"
+                     (checkedChange)="onShowChange($event)">
+    </toggle-checkbox>
+  </div>
+</div>
+
+<div class="row" *ngIf="!isDefault && {views: views$ | async} as data">
+
+  <dashboard-rows-settings class="col-12 col-lg-6 d-block mt-4 px-0 rows-settings"
+                           [rows]="tab.rows"
+                           [selectedCoordinates]="selectedCoordinates$ | async"
+                           [views]="data.views"
+                           (rowChange)="onRowChange($event)"
+                           (rowAdd)="onRowAdd($event)"
+                           (rowDelete)="onRowDelete($event)"
+                           (rowMove)="onRowMove($event)"
+                           (cellSelect)="selectCell($event.row, $event.column)">
+  </dashboard-rows-settings>
+
+  <dashboard-cell-settings class="col-12 col-lg-6 d-block mt-4 cell-settings"
+                           [cell]="tab.rows | findCellByCoordinates:(selectedCoordinates$ | async)"
+                           [views]="data.views"
+                           (cellChange)="onCellChange($event)">
+  </dashboard-cell-settings>
+
+</div>

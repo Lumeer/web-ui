@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DocumentDetailModalModule} from '../document-detail/document-detail-modal.module';
 import {SelectModule} from '../../select/select.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {CalendarEventDetailModalComponent} from './calendar-event-detail-modal.component';
@@ -29,7 +28,7 @@ import {CanToggleAllDayPipe} from './pipes/can-toggle-all-day.pipe';
 
 @NgModule({
   declarations: [CalendarEventDetailModalComponent, StemCollectionItemsPipe, CanToggleAllDayPipe],
-  imports: [CommonModule, DocumentDetailModalModule, SelectModule, PipesModule, DataResourceDetailModalModule],
+  imports: [CommonModule, SelectModule, PipesModule, DataResourceDetailModalModule],
   exports: [CalendarEventDetailModalComponent],
 })
 export class CalendarEventDetailModalModule {}

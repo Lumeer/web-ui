@@ -46,7 +46,7 @@ export class TextInputModalComponent {
   }
 
   public cancelDialog() {
-    this.onCancel$.next();
+    this.onCancel$.next(null);
     this.hideDialog();
   }
 

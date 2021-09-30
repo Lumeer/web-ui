@@ -26,18 +26,20 @@ import {DataCursor} from '../../data-input/data-cursor';
   name: 'tableRowDataCursor',
 })
 export class TableRowDataCursorPipe implements PipeTransform {
-  public transform(row: TableRow, column: TableColumn): DataCursor {
+  public transform(row: TableRow, column: TableColumn, viewId: string): DataCursor {
     if (column?.linkTypeId) {
       return {
         linkTypeId: column.linkTypeId,
         linkInstanceId: row.linkInstanceId,
         attributeId: column.attribute?.id,
+        viewId,
       };
     } else if (column?.collectionId) {
       return {
         collectionId: column.collectionId,
         documentId: row.documentId,
         attributeId: column.attribute?.id,
+        viewId,
       };
     }
     return {};

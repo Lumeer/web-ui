@@ -27,8 +27,10 @@ import {TableConfigPart, TableModel} from '../../../../../core/store/tables/tabl
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {selectLinkTypePermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 import {AppState} from '../../../../../core/store/app.state';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {View} from '../../../../../core/store/views/view';
+import {selectLinkTypePermissionsByView} from '../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-header-link',
@@ -39,6 +41,12 @@ import {AppState} from '../../../../../core/store/app.state';
 export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   @Input()
   public cursor: TableHeaderCursor;
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
 
   @Input()
   public table: TableModel;
@@ -62,14 +70,18 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
       this.linkType$ = this.store$.select(selectLinkTypeByIdWithCollections(this.part.linkTypeId));
-      this.permissions$ = this.store$.pipe(select(selectLinkTypePermissions(this.part.linkTypeId)));
+    }
+    if ((changes.part || changes.view) && this.part) {
+      this.permissions$ = this.store$.pipe(select(selectLinkTypePermissionsByView(this.view, this.part.linkTypeId)));
     }
   }
 
   public ngAfterViewInit() {
     const tableElement = getTableElement(this.cursor.tableId);
-    const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');
-    this.linkInfoWidth = parseFloat((linkInfoColumnWidth || '0px').slice(0, -2));
+    if (tableElement) {
+      const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');
+      this.linkInfoWidth = parseFloat((linkInfoColumnWidth || '0px').slice(0, -2));
+    }
   }
 
   public onAddLinkColumn() {
@@ -78,10 +90,10 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   }
 
   public onSwitchParts() {
-    this.store$.dispatch(new TablesAction.SwitchParts({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.SwitchParts({cursor: this.cursor, query: this.query}));
   }
 
   public onRemovePart() {
-    this.store$.dispatch(new TablesAction.RemovePart({cursor: this.cursor}));
+    this.store$.dispatch(new TablesAction.RemovePart({cursor: this.cursor, query: this.query}));
   }
 }

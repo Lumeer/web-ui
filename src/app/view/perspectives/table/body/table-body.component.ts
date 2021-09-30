@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -34,6 +33,8 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
+import {TablePerspectiveConfiguration} from '../../perspective-configuration';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'table-body',
@@ -49,7 +50,13 @@ export class TableBodyComponent implements OnChanges {
   public query: Query;
 
   @Input()
+  public view: View;
+
+  @Input()
   public canManageConfig: boolean;
+
+  @Input()
+  public perspectiveConfiguration: TablePerspectiveConfiguration;
 
   @ViewChild(TableRowsComponent, {static: true})
   public rowsComponent: TableRowsComponent;

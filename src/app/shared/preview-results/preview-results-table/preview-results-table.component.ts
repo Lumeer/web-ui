@@ -34,7 +34,7 @@ import {
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
-import {AttributesSettings} from '../../../core/store/views/view';
+import {AttributesSettings, View} from '../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../settings/settings.util';
 import {objectsByIdMap} from '../../utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
@@ -69,6 +69,9 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   public attributesSettings: AttributesSettings;
 
   @Input()
+  public view: View;
+
+  @Input()
   public resizeable = true;
 
   @Output()
@@ -98,7 +101,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
       this.attributes = this.createAttributes();
       this.color = this.createColor();
     }
-    if (this.dataResources && this.selectedId) {
+    if (changes.dataResources && changes.selectedId && this.dataResources && this.selectedId) {
       this.countPageForDataResource(this.selectedId);
       setTimeout(() => this.scrollToCurrentRow());
     }

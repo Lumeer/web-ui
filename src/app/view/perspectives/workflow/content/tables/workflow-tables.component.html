@@ -20,7 +20,7 @@
 
       <div class="mb-3" (click)="onClickInsideTables($event)"
            *ngIf="{tables: data.tables | filterStemTables:stemConfig} as stemData">
-        <ng-container *ngFor="let table of stemData.tables; trackBy: trackByTable; let first = first">
+        <ng-container *ngFor="let table of stemData.tables; trackBy: trackByTable; let first = first; let last = last">
           <workflow-table-title *ngIf="table.title"
                                 class="d-block mb-2"
                                 [collections]="collections"
@@ -35,12 +35,15 @@
             [syncScrollIds]="stemData.tables | workflowTablesIds"
             class="lmr-table"
             [tableModel]="table"
+            [viewId]="currentView?.id"
             [style.height.px]="table.height"
             [style.min-height.px]="table.minHeight"
             [constraintData]="constraintData"
             [selectedCell]="data.selectedCell"
             [selectedDocumentId]="selectedDocumentId"
             [editedCell]="data.editedCell"
+            [scrollToSelection]="perspectiveConfiguration?.scrollToSelection"
+            [detailPanel]="perspectiveConfiguration?.showSidebar"
             (columnMove)="onColumnMove(table, $event)"
             (columnResize)="onColumnResize(table, $event)"
             (columnRename)="onColumnRename($event)"
@@ -59,9 +62,10 @@
             (rowLinkedDocumentSelect)="onRowLinkedDocumentSelect($event)">
           </lmr-table>
 
-          <div resizer class="resizer d-flex align-items-center justify-content-center mb-5"
+          <div resizer class="resizer d-flex align-items-center justify-content-center"
                *ngIf="table.rows.length || table.newRow; else emptyTable"
                [reference]="table.id"
+               [class.mb-5]="perspectiveConfiguration?.additionalSpace || !last"
                [style.width]="'min(100%, ' + table.width + 'px)'"
                (onResize)="onTableResize(table, $event)"
                i18n-title="@@perspective.workflow.table.resize"
@@ -86,6 +90,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query"
+                 [view]="currentView"
                  [minStems]="1">
   </invalid-query>
 </ng-template>

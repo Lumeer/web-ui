@@ -63,6 +63,9 @@ export class LinksAccordeonComponent implements OnInit {
   @Input()
   public attributesSettings: AttributesSettings;
 
+  @Input()
+  public viewId: string;
+
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 

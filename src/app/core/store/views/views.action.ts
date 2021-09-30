@@ -24,6 +24,7 @@ import {User} from '../users/user';
 import {DefaultViewConfig, View} from './view';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {Team} from '../teams/team';
+import {Dashboard} from '../searches/search';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -60,6 +61,10 @@ export enum ViewsActionType {
 
   SET_DEFAULT_CONFIG = '[Views] Set Default Config',
   SET_DEFAULT_CONFIG_SUCCESS = '[Views] Set Default Config :: Success',
+
+  SET_DASHBOARD = '[Views] Set Dashboard',
+  SET_DASHBOARD_SUCCESS = '[Views] Set Dashboard :: Success',
+  SET_DASHBOARD_FAILURE = '[Views] Set Dashboard :: Failure',
 
   RESET_DEFAULT_CONFIG_BY_SNAPSHOT = '[Views] Reset Default Config By Snapshot',
 
@@ -306,6 +311,24 @@ export namespace ViewsAction {
     public constructor(public payload: {model?: DefaultViewConfig}) {}
   }
 
+  export class SetDashboard implements Action {
+    public readonly type = ViewsActionType.SET_DASHBOARD;
+
+    public constructor(public payload: {dashboard: Dashboard; onSuccess?: () => void; onFailure?: () => void}) {}
+  }
+
+  export class SetDashboardSuccess implements Action {
+    public readonly type = ViewsActionType.SET_DASHBOARD_SUCCESS;
+
+    public constructor(public payload: {model: DefaultViewConfig}) {}
+  }
+
+  export class SetDashboardFailure implements Action {
+    public readonly type = ViewsActionType.SET_DASHBOARD_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
@@ -344,5 +367,8 @@ export namespace ViewsAction {
     | SetDefaultConfigSnapshot
     | GetDefaultConfigs
     | GetDefaultConfigsSuccess
+    | SetDashboard
+    | SetDashboardSuccess
+    | SetDashboardFailure
     | Clear;
 }

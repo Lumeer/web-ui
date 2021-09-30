@@ -83,6 +83,9 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   public document: DocumentModel;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public preventEventBubble: boolean;
 
   @Input()

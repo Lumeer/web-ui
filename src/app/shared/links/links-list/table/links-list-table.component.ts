@@ -98,6 +98,9 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
   public query: Query;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public collectionPermissions: AllowedPermissions;
 
   @Input()

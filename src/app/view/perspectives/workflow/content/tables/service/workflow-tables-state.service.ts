@@ -47,6 +47,7 @@ import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -63,6 +64,7 @@ export class WorkflowTablesStateService {
   private currentPermissions: ResourcesPermissions;
   private currentConstraintData: ConstraintData;
   private currentCanManageConfig: boolean;
+  private currentPerspectiveConfiguration: WorkflowPerspectiveConfiguration;
 
   private initiallySelected: boolean;
 
@@ -75,7 +77,8 @@ export class WorkflowTablesStateService {
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
-    canManageConfig: boolean
+    canManageConfig: boolean,
+    perspectiveConfiguration: WorkflowPerspectiveConfiguration
   ) {
     this.currentCollectionsMap = objectsByIdMap(collections);
     this.currentLinkTypesMap = objectsByIdMap(linkTypes);
@@ -86,6 +89,7 @@ export class WorkflowTablesStateService {
     this.currentViewSettings = viewSettings;
     this.currentConstraintData = constraintData;
     this.currentCanManageConfig = canManageConfig;
+    this.currentPerspectiveConfiguration = perspectiveConfiguration;
   }
 
   public setTables(tables: WorkflowTable[]) {
@@ -146,6 +150,10 @@ export class WorkflowTablesStateService {
 
   public get data(): DocumentsAndLinksData {
     return this.currentData;
+  }
+
+  public get perspectiveConfiguration(): WorkflowPerspectiveConfiguration {
+    return this.currentPerspectiveConfiguration;
   }
 
   public performInitialSelection(cell: TableCell) {
@@ -307,9 +315,12 @@ export class WorkflowTablesStateService {
     return this.tables[tableIndex]?.rows?.length || 0;
   }
 
-  public getCellIndexes(
-    cell: TableCell
-  ): {tableIndex: number; rowIndex: number; columnIndex: number; type: TableCellType} {
+  public getCellIndexes(cell: TableCell): {
+    tableIndex: number;
+    rowIndex: number;
+    columnIndex: number;
+    type: TableCellType;
+  } {
     const tableIndex = this.tables.findIndex(table => table.id === cell.tableId);
     const tableByIndex = this.tables[tableIndex];
     const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);

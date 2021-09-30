@@ -45,6 +45,7 @@ export interface TableColumn {
   default?: boolean;
   hidden?: boolean;
   editable: boolean;
+  editableFilters: boolean;
   filters: AttributeFilter[];
   permissions: AllowedPermissions;
   sort?: AttributeSortType;

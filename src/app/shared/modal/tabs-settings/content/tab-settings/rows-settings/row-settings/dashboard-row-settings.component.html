@@ -1,0 +1,22 @@
+<div class="dashboard-row mb-2" [style.grid-template-columns]="templateColumns">
+  <ng-content></ng-content>
+  <dashboard-cell-preview *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
+                          (click)="cellSelect.emit(index)"
+                          [cell]="cell"
+                          [views]="views"
+                          [class.selected]="selectedColumn === index"
+                          class="dashboard-cell cursor-pointer">
+  </dashboard-cell-preview>
+  <i class="far fa-columns text-primary clickable" #columnsIcon (click)="layout.toggle()"></i>
+  <i class="fal fa-trash-alt text-danger clickable"
+     i18n-title="@@search.tabs.settings.dialog.row.delete"
+     title="Delete Row"
+     (click)="delete.emit()"></i>
+</div>
+
+<dashboard-row-layout #layout
+                      [origin]="columnsIcon"
+                      [showSelection]="true"
+                      [row]="row"
+                      (layoutSelected)="onLayoutSelected($event)">
+</dashboard-row-layout>

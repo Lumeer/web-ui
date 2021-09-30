@@ -1,0 +1,24 @@
+:host {
+  display: grid;
+  grid-template-rows: min-content minmax(0, 1fr);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+
+  &.fit {
+    object-fit: contain;
+  }
+
+  &.crop {
+    object-fit: cover;
+  }
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+}

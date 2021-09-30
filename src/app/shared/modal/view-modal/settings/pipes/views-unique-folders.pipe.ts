@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {View} from '../../../../../core/store/views/view';
-import {cleanObjectFolders} from '../../../../../view/perspectives/search/views/folders/content/util/object-folders';
+import {cleanObjectFolders} from '../../../../../view/perspectives/dashboard/search-views/folders/content/util/object-folders';
 import {uniqueValues} from '../../../../utils/array.utils';
 
 @Pipe({

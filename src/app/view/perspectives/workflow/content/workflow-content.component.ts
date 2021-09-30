@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ViewSettings} from '../../../../core/store/views/view';
+import {View, ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -31,6 +31,7 @@ import {WorkflowTablesStateService} from './tables/service/workflow-tables-state
 import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.service';
 import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
+import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'workflow-content',
@@ -83,6 +84,15 @@ export class WorkflowContentComponent {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public currentView: View;
+
+  @Input()
+  public workflowId: string;
+
+  @Input()
+  public perspectiveConfiguration: WorkflowPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();

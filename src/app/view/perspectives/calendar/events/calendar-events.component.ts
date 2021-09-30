@@ -55,6 +55,7 @@ import {
   DurationConstraint,
   durationCountsMapToString,
 } from '@lumeer/data-filters';
+import {View} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
@@ -101,6 +102,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
+
+  @Input()
+  public view: View;
 
   @Input()
   public sidebarOpened: boolean;
@@ -334,6 +338,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         end,
         stemIndex,
         resource,
+        view: this.view,
+        query: this.query,
         dataResource,
         config: calendarConfig,
         constraintData: this.constraintData,

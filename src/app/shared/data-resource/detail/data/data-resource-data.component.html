@@ -9,7 +9,7 @@
   <data-resource-data-row *ngFor="let row of data.rows; trackBy:trackByRow; let index = index"
                           [row]="row"
                           [permissions]="permissions"
-                          [cursor]="dataResource | dataCursor : row.attribute?.id"
+                          [cursor]="dataResource | dataCursor:row.attribute?.id:view?.id"
                           [constraintData]="constraintData"
                           [readonly]="!data.writable || !(data.resource | resourceAttributeEditable : row.id: permissions: query)"
                           [unusedAttributes]="unusedAttributes$ | async"

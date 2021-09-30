@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Query} from '../navigation/query/query';
 import {FileAttachment} from './file-attachment.model';
 import {FileApiPath} from '../../data-service/attachments/attachments.service';
+import {View} from '../views/view';
 
 export enum FileAttachmentsActionType {
   CREATE = '[File Attachments] Create',
@@ -35,6 +36,7 @@ export enum FileAttachmentsActionType {
   GET_SUCCESS = '[File Attachments] Get :: Success',
 
   GET_BY_QUERY = '[File Attachments] Get By Query',
+  GET_BY_VIEW = '[File Attachments] Get By View',
 
   CLEAR = '[File Attachments] Clear',
 }
@@ -105,9 +107,16 @@ export namespace FileAttachmentsAction {
       public payload: {
         organizationId?: string;
         projectId?: string;
+        view?: View;
         query: Query;
       }
     ) {}
+  }
+
+  export class GetByView implements Action {
+    public readonly type = FileAttachmentsActionType.GET_BY_VIEW;
+
+    constructor(public payload: {viewId?: string}) {}
   }
 
   export class Clear implements Action {

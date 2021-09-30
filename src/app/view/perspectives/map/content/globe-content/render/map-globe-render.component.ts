@@ -336,10 +336,12 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private addMarkersToMap(markers: MapMarkerProperties[]) {
     this.allMarkers = this.createAllMakers(markers);
 
-    if (this.mapboxMap.getSource(MAP_SOURCE_ID)) {
-      this.removeSourceAndLayers();
+    const source = this.mapboxMap.getSource(MAP_SOURCE_ID) as GeoJSONSource;
+    if (source) {
+      source.setData(createMapClusterMarkersSource(markers).data);
+    } else {
+      this.addSourceAndLayers(markers);
     }
-    this.addSourceAndLayers(markers);
 
     this.redrawMarkers();
     this.mapboxMap.once('idle', () => {
@@ -351,7 +353,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   private createAllMakers(markers: MapMarkerProperties[]): Record<string, Marker> {
     return markers.reduce((markersMap, properties) => {
       const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
-      marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
+      marker.on('dragend', (event: any) => this.onMarkerDragEnd(event, properties));
       markersMap[properties.id] = marker;
       return markersMap;
     }, {});
@@ -369,18 +371,10 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
     }
   }
 
-  private removeSourceAndLayers() {
-    if (this.mapboxMap.areTilesLoaded()) {
-      this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
-      this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
-      this.mapboxMap.removeSource(MAP_SOURCE_ID);
-    }
-  }
-
   private fitMarkersBounds(markers: MapMarkerProperties[]) {
-    if (markers.length > 0 && (!this.position || !this.position.center)) {
+    if (markers.length > 0 && !this.position?.center) {
       const bounds = createMapMarkersBounds(markers);
-      this.mapboxMap.fitBounds(bounds, {padding: 100});
+      this.mapboxMap.fitBounds(bounds, {padding: 100, maxZoom: 12});
       this.mapboxMap.once('idle', () => this.redrawMarkers());
     }
   }
@@ -425,9 +419,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
 
   private activateMapTilesLanguageAutoDetection() {
     const mapbox = this.mapboxMap as any;
-    if (mapbox) {
-      mapbox.autodetectLanguage(this.configurationService.getConfiguration().locale);
-    }
+    mapbox?.autodetectLanguage?.(this.configurationService.getConfiguration().locale);
   }
 
   private translateMap(): Record<string, string> {

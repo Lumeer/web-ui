@@ -57,6 +57,8 @@ import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 import {computeElementPositionInParent, preventEvent} from '../../../../../../shared/utils/common.utils';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-single-column',
@@ -68,6 +70,12 @@ import {computeElementPositionInParent, preventEvent} from '../../../../../../sh
 export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public table: TableModel;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
 
   @Input()
   public cursor: TableHeaderCursor;

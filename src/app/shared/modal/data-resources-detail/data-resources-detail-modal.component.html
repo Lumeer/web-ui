@@ -27,6 +27,7 @@
                              class="h-100 py-3"
                              @enterLeftAnimation
                              [resource]="selectedResource$ | async"
+                             [viewId]="viewId"
                              [dataResource]="data.selectedDataResource"
                              (routingPerformed)="hideDialog()"
                              (back)="resetSelectedDataResource()">

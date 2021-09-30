@@ -105,7 +105,7 @@ export class LinkDataInputComponent implements OnChanges {
 
     this.modalService.show(EmbeddedLinkModalComponent, {
       keyboard: true,
-      class: 'modal-xxl modal-xxl-height',
+      class: 'modal-xxl modal-h-100',
       initialState: {url: this.domSanitizer.bypassSecurityTrustResourceUrl(completeLinkValue(this.linkValue))},
     });
   }

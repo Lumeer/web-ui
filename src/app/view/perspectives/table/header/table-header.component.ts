@@ -29,20 +29,21 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, map, skip, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
-import {selectReadableCollections} from '../../../../core/store/common/permissions.selectors';
 import {
-  selectCollectionPermissions,
-  selectProjectPermissions,
-} from '../../../../core/store/user-permissions/user-permissions.state';
+  selectCollectionPermissionsByView,
+  selectReadableCollectionsByView,
+} from '../../../../core/store/common/permissions.selectors';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Table} from '@fullcalendar/daygrid';
 import {selectTableLastCollectionId} from '../../../../core/store/tables/tables.selector';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'table-header',
@@ -56,6 +57,12 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   public table: TableModel;
 
   @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Input()
@@ -65,6 +72,7 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   public canCreateLinks$: Observable<boolean>;
   public permissions$: Observable<AllowedPermissions>;
   public cursor$ = new BehaviorSubject<TableHeaderCursor>(null);
+  public view$ = new BehaviorSubject<View>(null);
 
   public cursor: TableHeaderCursor;
 
@@ -75,8 +83,8 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   }
 
   private bindCollectionHasToLink() {
-    this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectReadableCollections),
+    this.hasCollectionToLink$ = this.view$.pipe(
+      switchMap(view => this.store$.pipe(select(selectReadableCollectionsByView(view)))),
       map(collections => collections.length > 1)
     );
     this.canCreateLinks$ = this.store$.pipe(
@@ -86,7 +94,11 @@ export class TableHeaderComponent implements OnInit, OnChanges {
     this.permissions$ = this.cursor$.pipe(
       filter(cursor => !!cursor),
       switchMap(cursor => this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId)))),
-      switchMap(collectionId => this.store$.pipe(select(selectCollectionPermissions(collectionId))))
+      switchMap(collectionId =>
+        this.view$.pipe(
+          switchMap(view => this.store$.pipe(select(selectCollectionPermissionsByView(view, collectionId))))
+        )
+      )
     );
   }
 
@@ -94,6 +106,9 @@ export class TableHeaderComponent implements OnInit, OnChanges {
     if (changes.table && this.table && hasTableIdChanged(changes.table)) {
       this.cursor = this.createHeaderRootCursor();
       this.cursor$.next(this.cursor);
+    }
+    if (changes.view) {
+      this.view$.next(this.view);
     }
   }
 
@@ -116,7 +131,7 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
     if (event.target === this.element.nativeElement) {
-      this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+      this.unsetCursor();
     }
   }
 

@@ -33,11 +33,10 @@ import {
 } from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
-import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {Query} from '../../core/store/navigation/query/query';
@@ -55,6 +54,8 @@ import {findAttributeConstraint} from '../../core/store/collections/collection.u
 import {stripTextHtmlTags} from '../utils/data.utils';
 import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {selectDocumentsByViewAndCustomQuery} from '../../core/store/common/permissions.selectors';
+import {selectViewById} from '../../core/store/views/views.state';
 
 @Component({
   selector: 'document-hints',
@@ -105,6 +106,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Input()
   public createLinkDirectly = true;
 
+  @Input()
+  public viewId: string;
+
   @Output()
   public useHint = new EventEmitter<{document: DocumentModel; external: boolean}>();
 
@@ -143,7 +147,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     if (changes.dataValue && this.dataValue) {
       this.filter$.next(this.dataValue.format());
     }
-    if (changes.collectionId && this.collectionId) {
+    if ((changes.collectionId || changes.viewId) && this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
       this.bindDocuments();
     }
@@ -155,16 +159,19 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     const query: Query = {
       stems: [{collectionId: this.collectionId}],
     };
-
-    const documents$ = this.store$
-      .select(selectDocumentsByCustomQuery(query, true))
-      .pipe(
-        map(documents =>
-          documents.filter(
-            document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id)
+    const documents$ = this.store$.pipe(
+      select(selectViewById(this.viewId)),
+      switchMap(view =>
+        this.store$.pipe(
+          select(selectDocumentsByViewAndCustomQuery(view, query, true)),
+          map(documents =>
+            documents.filter(
+              document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id)
+            )
           )
         )
-      );
+      )
+    );
 
     this.documents$ = combineLatest([documents$, this.collection$]).pipe(
       mergeMap(([documents, collection]) =>

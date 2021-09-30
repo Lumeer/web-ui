@@ -1,0 +1,11 @@
+<div class="d-inline-flex tab-badge py-1 px-2 align-items-baseline"
+     [ngClass]="selected ? 'badge-success' : (isDefault && tab.hidden ? 'badge-outline-secondary' : 'badge-outline-success')">
+  <i class="fa-fw fa fa-grip-horizontal cursor-move mr-2 text-black-50"></i>
+  <span class="mr-2">{{tab.title}}</span>
+  <i *ngIf="isDefault" (click)="toggleHidden.emit(); $event.stopPropagation()" class="text-primary clickable"
+     [ngClass]="tab.hidden ? 'far fa-eye-slash' : 'far fa-eye'"
+     [title]="tab.hidden ? showTitle : hideTitle"></i>
+  <i *ngIf="!isDefault" (click)="remove.emit(); $event.stopPropagation()" class="far fa-times text-primary clickable"
+     i18n-title="@@search.tabs.settings.dialog.tab.remove"
+     title="Remove tab"></i>
+</div>

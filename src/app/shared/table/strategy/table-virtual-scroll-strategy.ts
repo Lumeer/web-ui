@@ -92,7 +92,7 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
 
   private onScrollStart() {
     if (!this.scrollEndTimeout) {
-      this.scrollStart$.next();
+      this.scrollStart$.next(null);
     }
   }
 
@@ -102,7 +102,7 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
   }
 
   private onScrollEnd() {
-    this.scrollEnd$.next();
+    this.scrollEnd$.next(null);
     this.scrollEndTimeout = null;
   }
 

@@ -23,7 +23,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AttributesSettings} from '../../../core/store/views/view';
 import {Observable, of} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {AllowedPermissionsMap, ResourcesPermissions} from '../../../core/model/allowed-permissions';
+import {ResourcesPermissions} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -63,6 +63,9 @@ export class LinkTablesAccordeonComponent implements OnChanges {
 
   @Input()
   public attributesSettings: AttributesSettings;
+
+  @Input()
+  public viewId: string;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();

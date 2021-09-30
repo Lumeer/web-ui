@@ -1,17 +1,18 @@
 <ng-container
   *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, currentUser: currentUser$ | async, resource: resource$ | async, linkType: linkType$ | async,
-  collection: collections$ | async, permissions: permissions$ | async, linkTypePermissions: linkTypePermissions$ | async, part: part$ | async, query: query$ | async, constraintData: constraintData$ | async} as data">
+  collection: collections$ | async, permissions: permissions$ | async, linkTypePermissions: linkTypePermissions$ | async, part: part$ | async, constraintData: constraintData$ | async} as data">
 
   <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
     <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
       <ng-container *ngIf="!(cursor | cellCollapsed | async); else collapsedCell">
         <table-data-cell
-          *ngIf="{document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: data.query:data.collection :data.constraintData,
+          *ngIf="{document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: query:data.collection :data.constraintData,
                   linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0]} as cellData"
           tableCellScroll
           [column]="column"
           [cursor]="cursor | columnCursor:columnIndex"
           [document]="cellData.document"
+          [view]="view"
           [canManageConfig]="canManageConfig"
           [linkInstance]="cellData.linkInstance"
           [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
@@ -20,7 +21,7 @@
           [linkAllowedPermissions]="data.linkTypePermissions"
           [dataPermissions]="(cellData.document || cellData.linkInstance) | dataResourcePermissions:data.resource:data.permissions:data.currentUser:data.constraintData"
           [linkDataPermissions]="cellData.linkInstance | dataResourcePermissions:data.linkType:data.linkTypePermissions:data.currentUser:data.constraintData"
-          [query]="data.query"
+          [query]="query"
           data-test="table-data-cell"
           [constraintData]="data.constraintData"
           (affect)="onAffect()">
@@ -33,6 +34,7 @@
                               [cursor]="cursor | columnCursor:columnIndex"
                               [documents]="data.documents"
                               [linkInstances]="data.linkInstances"
+                              [viewId]="view?.id"
                               [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                               [constraintData]="data.constraintData"
                               [style.width.px]="column | columnWidth:canManageConfig"

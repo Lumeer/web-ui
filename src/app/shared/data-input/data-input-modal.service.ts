@@ -46,7 +46,7 @@ export class DataInputModalService {
   }
 
   private addModalRef(modalRef: BsModalRef): BsModalRef {
-    this.store$.dispatch(new ModalsAction.Add({modalId: modalRef.id}));
+    this.store$.dispatch(new ModalsAction.Add({modalId: String(modalRef.id)}));
     return modalRef;
   }
 }

@@ -139,7 +139,7 @@ export class CreateProjectModalComponent implements OnInit {
   }
 
   public onClose() {
-    this.onClose$.next();
+    this.onClose$.next(null);
     this.hideDialog();
   }
 

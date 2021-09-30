@@ -34,6 +34,7 @@ import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {TableDataPermissionsService} from '../../service/table-data-permissions.service';
+import {View} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-hidden-input',
@@ -48,6 +49,9 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   @Input()
   public tableId: string;
+
+  @Input()
+  public view: View;
 
   @ViewChild('hiddenInput', {static: true})
   public hiddenInput: ElementRef<HTMLInputElement>;
@@ -174,7 +178,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         select(selectTableCursor),
         take(1),
         switchMap(cursor =>
-          this.dataPermissionsService.selectDataPermissions$(cursor).pipe(
+          this.dataPermissionsService.selectDataPermissions$(this.view, cursor).pipe(
             take(1),
             filter(() => !!cursor.rowPath),
             map(permissions => [cursor, permissions?.edit])
@@ -183,22 +187,23 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       )
       .subscribe(([cursor, editable]: [TableBodyCursor, boolean]) => {
         event[EDITABLE_EVENT] = editable;
+        const workspace = {viewId: this.view?.id};
 
-        if (event.altKey && event.shiftKey && editable && this.canManageConfig) {
+        if (event.altKey && event.shiftKey && editable) {
           event.stopPropagation();
           switch (keyboardEventCode(event)) {
             case KeyCode.ArrowRight:
-              this.store$.dispatch(new TablesAction.IndentRow({cursor}));
+              this.store$.dispatch(new TablesAction.IndentRow({cursor, workspace}));
               return;
             case KeyCode.ArrowLeft:
-              this.store$.dispatch(new TablesAction.OutdentRow({cursor}));
+              this.store$.dispatch(new TablesAction.OutdentRow({cursor, workspace}));
               return;
             case KeyCode.ArrowUp:
-              this.store$.dispatch(new TablesAction.MoveRowUp({cursor}));
+              this.store$.dispatch(new TablesAction.MoveRowUp({cursor, workspace}));
               this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
               return;
             case KeyCode.ArrowDown:
-              this.store$.dispatch(new TablesAction.MoveRowDown({cursor}));
+              this.store$.dispatch(new TablesAction.MoveRowDown({cursor, workspace}));
               this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
               return;
           }

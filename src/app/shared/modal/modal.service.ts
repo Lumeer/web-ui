@@ -57,6 +57,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 import {DataResourcesDetailModalComponent} from './data-resources-detail/data-resources-detail-modal.component';
 import {userHasRoleInOrganization} from '../utils/permission.utils';
 import {RoleType} from '../../core/model/role-type';
+import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -70,8 +71,12 @@ export class ModalService {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
-  public showChooseLinkDocument(documentIds: string[], callback?: (document: DocumentModel) => void): BsModalRef {
-    const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
+  public showChooseLinkDocument(
+    documentIds: string[],
+    viewId: string,
+    callback?: (document: DocumentModel) => void
+  ): BsModalRef {
+    const config = {initialState: {documentIds, viewId, callback}, keyboard: true, class: 'modal-lg'};
     return this.show(ChooseLinkDocumentModalComponent, config);
   }
 
@@ -101,7 +106,7 @@ export class ModalService {
     );
   }
 
-  public showDocumentDetail(id: string) {
+  public showDocumentDetail(id: string, viewId?: string) {
     this.store$
       .pipe(
         select(selectDocumentById(id)),
@@ -115,12 +120,12 @@ export class ModalService {
       )
       .subscribe(({document, collection}) => {
         if (document && collection) {
-          this.showDataResourceDetail(document, collection);
+          this.showDataResourceDetail(document, collection, viewId);
         }
       });
   }
 
-  public showLinkInstanceDetail(id: string) {
+  public showLinkInstanceDetail(id: string, viewId?: string) {
     this.store$
       .pipe(
         select(selectLinkInstanceById(id)),
@@ -134,7 +139,7 @@ export class ModalService {
       )
       .subscribe(({linkType, linkInstance}) => {
         if (linkInstance && linkType) {
-          this.showDataResourceDetail(linkInstance, linkType);
+          this.showDataResourceDetail(linkInstance, linkType, viewId);
         }
       });
   }
@@ -142,21 +147,22 @@ export class ModalService {
   public showDataResourceDetail(
     dataResource: DataResource,
     resource: AttributesResource,
+    viewId: string,
     createDirectly: boolean = true
   ): BsModalRef {
     const config = {
-      initialState: {dataResource, resource, createDirectly},
+      initialState: {dataResource, resource, createDirectly, viewId},
       keyboard: true,
       class: 'modal-lg',
     };
     return this.show(DataResourceDetailModalComponent, config);
   }
 
-  public showDataResourcesDetail(dataResources: DataResource[], title: string): BsModalRef {
+  public showDataResourcesDetail(dataResources: DataResource[], title: string, viewId: string): BsModalRef {
     const config = {
-      initialState: {dataResources, title},
+      initialState: {dataResources, title, viewId},
       keyboard: true,
-      class: 'modal-lg modal-xxl-height',
+      class: 'modal-lg modal-h-100',
     };
     return this.show(DataResourcesDetailModalComponent, config);
   }
@@ -164,6 +170,11 @@ export class ModalService {
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
     return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-xxl');
+  }
+
+  public showTabsSettings(perspectiveId: string, initialTab: string): BsModalRef {
+    const initialState = {perspectiveId, initialTab};
+    return this.showStaticDialog(initialState, TabsSettingsModalComponent, 'modal-lg');
   }
 
   public showViewSettings(view: View) {
@@ -203,7 +214,7 @@ export class ModalService {
   }
 
   private addModalRef(modalRef: BsModalRef): BsModalRef {
-    this.store$.dispatch(new ModalsAction.Add({modalId: modalRef.id}));
+    this.store$.dispatch(new ModalsAction.Add({modalId: String(modalRef.id)}));
     return modalRef;
   }
 
@@ -287,7 +298,7 @@ export class ModalService {
       organizations,
       navigationExtras: extras,
     };
-    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-xxl-height');
+    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-h-100');
   }
 
   public showCopyProjectDialog(

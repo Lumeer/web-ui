@@ -27,7 +27,10 @@ import {AppState} from '../../core/store/app.state';
 import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
 import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {DefaultViewConfig, View, ViewConfig} from '../../core/store/views/view';
-import {selectCollectionsByQuery, selectLinkTypesInQuery} from '../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByCustomViewAndQuery,
+  selectLinkTypesInCustomViewAndQuery,
+} from '../../core/store/common/permissions.selectors';
 import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
 
@@ -49,6 +52,10 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
 
   protected selectViewQuery$(): Observable<Query> {
     return this.store$.pipe(select(selectViewQuery));
+  }
+
+  protected selectCurrentView$(): Observable<View> {
+    return this.store$.pipe(select(selectCurrentView));
   }
 
   protected getDefaultConfig(): T {
@@ -79,9 +86,8 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
   }
 
   private initPerspective() {
-    const subscription = this.store$
+    const subscription = this.selectCurrentView$()
       .pipe(
-        select(selectCurrentView),
         startWith(null as View),
         pairwise(),
         switchMap(([previousView, view]) =>
@@ -101,12 +107,12 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     const perspectiveId = view.code;
     return this.subscribeConfig$(perspectiveId).pipe(
       take(1),
-      mergeMap(entityConfig => {
+      switchMap(entityConfig => {
         const perspectiveConfig = this.getConfig(view.config);
         if (
           preferViewConfigUpdate(this.getConfig(previousView?.config), this.getConfig(view?.config), !!entityConfig)
         ) {
-          return this.checkPerspectiveConfig(perspectiveConfig).pipe(
+          return this.checkPerspectiveConfig(perspectiveId, view).pipe(
             mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig)),
             map(config => ({perspectiveId, config}))
           );
@@ -116,14 +122,19 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     );
   }
 
-  private checkPerspectiveConfig(config: T): Observable<T> {
-    return combineLatest([
-      this.selectViewQuery$(),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-    ]).pipe(
-      take(1),
-      map(([query, collections, linkTypes]) => this.checkOrTransformConfig(config, query, collections, linkTypes))
+  private checkPerspectiveConfig(perspectiveId: string, view?: View): Observable<T> {
+    const viewConfig = view && this.getConfig(view.config);
+    return this.selectViewQuery$().pipe(
+      switchMap(query =>
+        combineLatest([
+          this.store$.pipe(select(selectCollectionsByCustomViewAndQuery(view, query))),
+          this.store$.pipe(select(selectLinkTypesInCustomViewAndQuery(view, query))),
+        ]).pipe(map(([collections, linkTypes]) => ({query, collections, linkTypes})))
+      ),
+      withLatestFrom(this.subscribeConfig$(perspectiveId)),
+      map(([{query, collections, linkTypes}, config]) =>
+        this.checkOrTransformConfig(config || viewConfig, query, collections, linkTypes)
+      )
     );
   }
 
@@ -132,9 +143,8 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     return this.selectViewQuery$().pipe(
       switchMap(() =>
         this.selectDefaultViewConfig$().pipe(
-          withLatestFrom(this.subscribeConfig$(perspectiveId)),
-          mergeMap(([defaultView, config]) =>
-            this.checkPerspectiveConfig(config).pipe(
+          mergeMap(defaultView =>
+            this.checkPerspectiveConfig(perspectiveId).pipe(
               mergeMap(checkedConfig => this.checkConfigWithDefaultView(checkedConfig, defaultView))
             )
           ),

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, OnDestroy, Input} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Observable} from 'rxjs';
@@ -32,14 +32,19 @@ import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {defaultKanbanPerspectiveConfiguration, KanbanPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
+  selector: 'kanban-perspective',
   templateUrl: './kanban-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['kanban-perspective.component.scss'],
 })
-export class KanbanPerspectiveComponent extends DataPerspectiveComponent<KanbanConfig> implements OnInit, OnDestroy {
+export class KanbanPerspectiveComponent extends DataPerspectiveDirective<KanbanConfig> implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: KanbanPerspectiveConfiguration = defaultKanbanPerspectiveConfiguration;
+
   public workspace$: Observable<Workspace>;
 
   constructor(protected store$: Store<AppState>) {

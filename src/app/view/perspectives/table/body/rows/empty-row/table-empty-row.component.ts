@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {calculateColumnsWidth} from '../../../../../../core/store/tables/table.utils';
 import {selectTableParts} from '../../../../../../core/store/tables/tables.selector';
-import {selectReadableCollections} from '../../../../../../core/store/common/permissions.selectors';
+import {selectReadableCollectionsByView} from '../../../../../../core/store/common/permissions.selectors';
 import {AppState} from '../../../../../../core/store/app.state';
+import {View} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-empty-row',
@@ -33,12 +34,15 @@ import {AppState} from '../../../../../../core/store/app.state';
   styleUrls: ['./table-empty-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableEmptyRowComponent implements OnInit, OnChanges {
+export class TableEmptyRowComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
   @Input()
   public cursor: TableBodyCursor;
+
+  @Input()
+  public view: View;
 
   public hasCollectionToLink$: Observable<boolean>;
   public dataColumnsWidth$: Observable<number>;
@@ -46,21 +50,16 @@ export class TableEmptyRowComponent implements OnInit, OnChanges {
 
   constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
 
-  public ngOnInit() {
-    this.bindCollectionHasToLink();
-  }
-
-  private bindCollectionHasToLink() {
-    this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectReadableCollections),
-      map(collections => collections.length > 1)
-    );
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.canManageConfig || changes.cursor) && this.cursor) {
       this.dataColumnsWidth$ = this.bindDataColumnsWidth();
       this.linkInfoCells$ = this.bindLinkInfoCells();
+    }
+    if (changes.currentView) {
+      this.hasCollectionToLink$ = this.store$.pipe(
+        select(selectReadableCollectionsByView(this.view)),
+        map(collections => collections.length > 1)
+      );
     }
   }
 

@@ -166,7 +166,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     this.modalRef = this.modalService.show(TextEditorModalComponent, {
       keyboard: true,
       backdrop: 'static',
-      class: 'modal-xxl modal-xxl-height',
+      class: 'modal-xxl modal-h-100',
       initialState: {
         readonly: this.readonly && !this.editableInReadonly,
         content,

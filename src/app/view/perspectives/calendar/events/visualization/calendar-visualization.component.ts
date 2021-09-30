@@ -113,19 +113,19 @@ export class CalendarVisualizationComponent implements OnChanges {
   public readonly listCustomButtons: Record<string, CustomButtonInput>;
   public readonly calendarCustomButtons: Record<string, CustomButtonInput>;
   public readonly listHeader: ToolbarInput = {
-    left: `listMonth,listWeek,listDay calendarToggle`,
+    start: `listMonth,listWeek,listDay calendarToggle`,
     center: 'title',
-    right: 'prev,today,next',
+    end: 'prev,today,next',
   };
   public readonly calendarHeader: ToolbarInput = {
-    left: `dayGridMonth,timeGridWeek,timeGridDay listToggle`,
+    start: `dayGridMonth,timeGridWeek,timeGridDay listToggle`,
     center: 'title',
-    right: 'prev,today,next',
+    end: 'prev,today,next',
   };
   public readonly gridCalendarHeader: ToolbarInput = {
-    left: `dayGridMonth,resourceTimeGridWeek,resourceTimeGridDay listToggle`,
+    start: `dayGridMonth,resourceTimeGridWeek,resourceTimeGridDay listToggle`,
     center: 'title',
-    right: 'prev,today,next',
+    end: 'prev,today,next',
   };
 
   public defaultView: string;

@@ -57,6 +57,7 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
     case ViewsActionType.REMOVE_FAVORITE_FAILURE:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
     case ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS:
+    case ViewsActionType.SET_DASHBOARD_SUCCESS:
       return setDefaultConfig(state, action);
     case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:
       return updateDefaultConfigs(state, action.payload.configs);
@@ -69,7 +70,10 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
   }
 }
 
-function setDefaultConfig(state: ViewsState, action: ViewsAction.SetDefaultConfigSuccess): ViewsState {
+function setDefaultConfig(
+  state: ViewsState,
+  action: ViewsAction.SetDefaultConfigSuccess | ViewsAction.SetDashboardSuccess
+): ViewsState {
   const defaultConfigs = deepObjectCopy(state.defaultConfigs);
   setDefaultConfigInMap(defaultConfigs, action.payload.model);
 

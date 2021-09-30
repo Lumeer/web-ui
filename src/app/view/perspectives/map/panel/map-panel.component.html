@@ -8,13 +8,13 @@
 </p>
 
 <map-position-checkbox class="d-block mt-3"
-                       [value]="map?.config?.positionSaved"
+                       [value]="config?.positionSaved"
                        (valueChange)="onPositionSavedChange($event)">
 </map-position-checkbox>
 
 <map-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
                  class="d-block mt-4"
-                 [config]="map?.config?.stemsConfigs && map?.config?.stemsConfigs[index] || defaultStemConfig"
+                 [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
                  [stem]="stem"
                  [collections]="collections"
                  [selectItems]="stem | queryStemAttributesSelectItems:collections:linkTypes"
@@ -22,6 +22,6 @@
 </map-stem-config>
 
 <image-input class="d-block mt-4"
-             [imageUrl]="map?.config?.imageUrl"
+             [imageUrl]="config?.imageUrl"
              (valueChange)="onImageUrlChange($event)">
 </image-input>

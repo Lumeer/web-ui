@@ -1,4 +1,4 @@
-<div class="container-fluid col-12 col-lg-10 col-xl-9 pb-5">
+<div [ngClass]="perspectiveConfiguration?.additionalSpace ? 'container-fluid col-12 col-lg-10 col-xl-9 pb-5' : ''">
   <ng-container *ngIf="{selected: selected$ | async, query: query$ | async, viewSettings: viewSettings$ | async,
   permissions: permissions$ | async, creatingDocument: creatingDocument$ | async} as data">
     <preview-results
@@ -7,6 +7,7 @@
       [selectedDocument]="data.selected?.document"
       [attributesSettings]="data.viewSettings?.attributes"
       [query]="data.query"
+      [view]="currentView$ | async"
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
@@ -27,6 +28,8 @@
       <data-resource-detail [resource]="data.selected?.collection"
                             [dataResource]="data.selected?.document"
                             [query]="data.query"
+                            [defaultView]="currentView$ | async"
+                            [allowSelectDocument]="perspectiveConfiguration?.selectDocuments"
                             [settingsQuery]="settingsQuery$ | async"
                             [settingsStem]="data.selected?.collection | detailQueryStem"
                             (documentSelect)="selectCollectionAndDocument($event)">

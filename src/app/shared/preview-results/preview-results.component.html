@@ -11,10 +11,11 @@
         </preview-results-tabs>
         <preview-results-table
           *ngIf="selectedCollection"
-          [dataResources]="data.documentsData.documents | documentsByCollection:selectedCollection?.id"
+          [dataResources]="data.documentsData.documents"
           [selectedId]="selectedDocument?.id"
           [loaded]="data.documentsData.loaded"
           [attributesSettings]="attributesSettings"
+          [view]="view"
           [resource]="selectedCollection"
           [constraintData]="constraintData$ | async"
           (selectDataResource)="setActiveDocument($event)">

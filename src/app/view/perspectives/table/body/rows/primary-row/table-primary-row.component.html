@@ -1,5 +1,6 @@
 <table-row-numbers [cursor]="cursor"
                    [row]="row"
+                   [viewId]="view?.id"
                    (click)="unsetCursor.emit()"
                    class="table-border-right bg-white pl-3">
 </table-row-numbers>
@@ -8,6 +9,7 @@
                       [cursor]="cursor"
                       [level]="hierarchyLevel$ | async"
                       [maxLevel]="maxLevel"
+                      [view]="view"
                       [canManageConfig]="canManageConfig"
                       (toggle)="onHierarchyToggle()"
                       (click)="unsetCursor.emit()"
@@ -16,6 +18,8 @@
 
 <table-cell-group [cursor]="cursor"
                   [rows]="[row]"
+                  [view]="view"
+                  [query]="query"
                   [canManageConfig]="canManageConfig"
                   [style.width.px]="part$ | async | partWidth:canManageConfig">
 </table-cell-group>
@@ -23,6 +27,8 @@
 <table-linked-rows *ngIf="hasNextParts$ | async"
                    [cursor]="cursor"
                    [rows]="[row]"
+                   [view]="view"
+                   [query]="query"
                    [canManageConfig]="canManageConfig"
                    [striped]="striped">
 </table-linked-rows>

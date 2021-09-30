@@ -23,41 +23,50 @@ import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {
+  NavigationState,
   selectNavigation,
   selectPerspectiveSettings,
   selectSearchTab,
 } from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectDefaultViewConfig,
+  selectSearchPerspectiveVisibleTabs,
+  selectViewQuery,
+} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
-import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
+import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
+import {selectSearch, selectSearchById, selectSearchId} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
 import {convertPerspectiveSettingsToString} from '../../../core/store/navigation/settings/perspective-settings';
 import {QueryParam} from '../../../core/store/navigation/query-param';
+import {ModalService} from '../../../shared/modal/modal.service';
+import {DashboardTab} from '../../../core/model/dashboard-tab';
 
 @Component({
+  selector: 'search-perspective',
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
   host: {class: 'search-perspective'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
-  public readonly searchTab = SearchTab;
-
   public queryParams$: Observable<Record<string, string>>;
+  public tabs$: Observable<DashboardTab[]>;
 
-  private initialSearchTab: SearchTab;
+  private initialSearchTab: string;
+  private searchId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private router: Router) {}
+  constructor(private store$: Store<AppState>, private router: Router, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.initialSearchTab = parseSearchTabFromUrl(this.router.url);
@@ -94,6 +103,8 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         return null;
       })
     );
+
+    this.tabs$ = this.store$.pipe(select(selectSearchPerspectiveVisibleTabs));
   }
 
   private subscribeToConfig() {
@@ -116,6 +127,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
           );
           this.checkSearchTabRedirect(config, view);
         }
+        this.searchId = searchId;
       });
     this.subscriptions.add(subscription);
   }
@@ -157,25 +169,42 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkSearchTabRedirect(config: SearchConfig, view: View) {
     this.store$
-      .pipe(select(selectSearchTab), take(1), withLatestFrom(this.store$.pipe(select(selectNavigation))))
-      .subscribe(([searchTab, navigation]) => {
-        if (
-          navigation.workspace &&
-          !isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace) &&
-          config?.searchTab &&
-          searchTab &&
-          config.searchTab !== searchTab &&
-          !this.initialSearchTab
-        ) {
+      .pipe(select(selectSearchTab), take(1), withLatestFrom(this.store$.pipe(select(selectNavigation)), this.tabs$))
+      .subscribe(([searchTab, navigation, tabs]) => {
+        if (this.shouldRedirectToTab(config, navigation, searchTab, tabs)) {
           const path: any[] = ['w', navigation.workspace.organizationCode, navigation.workspace.projectCode, 'view'];
           if (view) {
             path.push({vc: view.code});
           }
-          path.push(...[Perspective.Search, config.searchTab]);
+          path.push(Perspective.Search);
+          if (tabs.some(tab => tab.id === config.searchTab)) {
+            path.push(config.searchTab);
+          } else if (tabs.length) {
+            path.push(tabs[0].id);
+          }
           this.router.navigate(path, {queryParamsHandling: 'preserve'});
         }
         this.initialSearchTab = null;
       });
+  }
+
+  private shouldRedirectToTab(
+    config: SearchConfig,
+    navigation: NavigationState,
+    currentTab: string,
+    tabs: DashboardTab[]
+  ): boolean {
+    if (!navigation.workspace || isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace)) {
+      return false;
+    }
+
+    // tab is hidden or no longer exist
+    if (!tabs.some(tab => tab.id === currentTab)) {
+      return true;
+    }
+
+    // tab changed in config (i.e. in other browser window)
+    return currentTab && config?.searchTab && currentTab !== config.searchTab && !this.initialSearchTab;
   }
 
   private subscribeToSearchTab() {
@@ -204,7 +233,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private selectCurrentTabWithSearch$(): Observable<{searchTab: SearchTab; search: Search}> {
+  private selectCurrentTabWithSearch$(): Observable<{searchTab: string; search: Search}> {
     return this.store$.pipe(
       select(selectSearchTab),
       distinctUntilChanged(),
@@ -233,5 +262,14 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   private resetDefaultConfigSnapshot() {
     this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({}));
+  }
+
+  public onSettingsClick() {
+    const currentTab = parseSearchTabFromUrl(this.router.url);
+    this.modalService.showTabsSettings(this.searchId, currentTab);
+  }
+
+  public trackByTab(index: number, tab: DashboardTab): string {
+    return tab.id;
   }
 }

@@ -28,13 +28,15 @@ import {Attribute} from '../../../../../../core/store/collections/collection';
 import {combineLatest, Observable, of} from 'rxjs';
 import {getAttributesResourceType} from '../../../../../utils/resource.utils';
 import {select, Store} from '@ngrx/store';
-import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
 import {AppState} from '../../../../../../core/store/app.state';
-import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {createSuggestionDataValues} from '../../../../../utils/data-resource.utils';
 import {map} from 'rxjs/operators';
 import {DataValue, SelectConstraintConfig} from '@lumeer/data-filters';
+import {
+  selectDocumentsByCollectionAndReadPermission,
+  selectLinksByLinkTypeAndReadPermission,
+} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'select-constraint-config-form',
@@ -75,7 +77,7 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
       if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
         return combineLatest([
           this.store$.pipe(select(selectConstraintData)),
-          this.store$.pipe(select(selectDocumentsByCollectionId(this.resource.id))),
+          this.store$.pipe(select(selectDocumentsByCollectionAndReadPermission(this.resource.id))),
         ]).pipe(
           map(([constraintData, documents]) =>
             createSuggestionDataValues(documents, this.attribute.id, this.attribute.constraint, constraintData)
@@ -84,7 +86,7 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
       } else if (getAttributesResourceType(this.resource) === AttributesResourceType.LinkType) {
         return combineLatest([
           this.store$.pipe(select(selectConstraintData)),
-          this.store$.pipe(select(selectLinkInstancesByType(this.resource.id))),
+          this.store$.pipe(select(selectLinksByLinkTypeAndReadPermission(this.resource.id))),
         ]).pipe(
           map(([constraintData, linkInstances]) =>
             createSuggestionDataValues(linkInstances, this.attribute.id, this.attribute.constraint, constraintData)

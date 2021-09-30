@@ -102,8 +102,8 @@ describe('Table perspective :: Columns', () => {
 
     // verify table caption and columns
     cy.get('[data-test="table-caption-name"]').should('have.length', 2).last().should('contain', 'second');
-    cy.get('[data-test="table-column-input"]').should('have.length', 2).first().should('have.text', 'A');
-    cy.get('[data-test="table-column-input"]').should('have.length', 2).last().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]').should('have.length', 3).first().should('have.text', 'A');
+    cy.get('[data-test="table-column-input"]').should('have.length', 3).last().should('have.text', 'A');
 
     // init column in the second table
     cy.get('[data-test="table-column-input"]').last().click({force: true});
@@ -112,7 +112,7 @@ describe('Table perspective :: Columns', () => {
     cy.wait('@createAttribute').its('status').should('eq', 200);
 
     // verify column count and names
-    cy.get('[data-test="table-column-input"]').should('have.length', 3);
+    cy.get('[data-test="table-column-input"]').should('have.length', 4);
     cy.get('[data-test="table-column-input"]').last().should('have.text', 'B').click({force: true});
 
     // add new column left in first table
@@ -120,8 +120,8 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
 
     // verify column count and names
-    cy.get('[data-test="table-column-input"]').should('have.length', 4);
-    cy.get('[data-test="table-column-input"]').first().should('have.text', 'B').click({force: true});
+    cy.get('[data-test="table-column-input"]').should('have.length', 5);
+    cy.get('[data-test="table-column-input"]').first().should('have.text', 'C').click({force: true});
 
     // init first column by renaming it
     cy.focused().type('0');
@@ -129,7 +129,7 @@ describe('Table perspective :: Columns', () => {
     cy.wait('@createAttribute').its('status').should('eq', 200);
 
     // verify column count and names
-    cy.get('[data-test="table-column-input"]').should('have.length', 4);
+    cy.get('[data-test="table-column-input"]').should('have.length', 5);
     cy.get('[data-test="table-column-input"]').first().should('have.text', '0');
 
     // add new first column in the second table
@@ -140,8 +140,8 @@ describe('Table perspective :: Columns', () => {
     cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
 
     // verify column count and names
-    cy.get('[data-test="table-column-input"]').should('have.length', 5);
-    cy.get('[data-test="table-column-input"]').eq(2).should('have.text', 'C').click({force: true});
+    cy.get('[data-test="table-column-input"]').should('have.length', 6);
+    cy.get('[data-test="table-column-input"]').eq(3).should('have.text', 'C').click({force: true});
 
     // init first column in the second table
     cy.focused().type('C');
@@ -149,7 +149,7 @@ describe('Table perspective :: Columns', () => {
     cy.wait('@createAttribute').its('status').should('eq', 200);
 
     // verify column count and names
-    cy.get('[data-test="table-column-input"]').should('have.length', 5);
-    cy.get('[data-test="table-column-input"]').eq(2).should('have.text', 'CCC');
+    cy.get('[data-test="table-column-input"]').should('have.length', 6);
+    cy.get('[data-test="table-column-input"]').eq(3).should('have.text', 'CCC');
   });
 });

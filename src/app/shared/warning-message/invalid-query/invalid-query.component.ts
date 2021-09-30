@@ -17,57 +17,66 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
-import {selectReadableCollections, selectCollectionsInQuery} from '../../../core/store/common/permissions.selectors';
-import {map, mergeMap, take} from 'rxjs/operators';
+import {
+  selectReadableCollectionsByView,
+  selectCollectionsInCustomQuery,
+} from '../../../core/store/common/permissions.selectors';
+import {map, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
+import {View} from '../../../core/store/views/view';
 
 @Component({
   selector: 'invalid-query',
   templateUrl: './invalid-query.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InvalidQueryComponent implements OnInit {
+export class InvalidQueryComponent implements OnChanges {
   @Input()
   public minStems: number;
 
   @Input()
   public maxStems: number;
 
+  @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
+
   public collections$: Observable<Collection[]>;
   public hasCollection$: Observable<boolean>;
-  public query$: Observable<Query>;
-  public stemsLength$: Observable<number>;
+
+  public stemsLength: number;
 
   constructor(private store$: Store<AppState>) {}
 
-  public ngOnInit() {
-    this.stemsLength$ = this.store$.pipe(
-      select(selectViewQuery),
-      map(query => query?.stems?.length || 0)
-    );
-    this.collections$ = this.store$.pipe(
-      select(selectViewQuery),
-      mergeMap(query =>
-        queryIsEmptyExceptPagination(query)
-          ? this.store$.pipe(select(selectReadableCollections))
-          : this.store$.pipe(select(selectCollectionsInQuery))
-      ),
-      map(collections => sortResourcesByFavoriteAndLastUsed(collections))
-    );
-    this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.hasCollection$ = this.store$.pipe(
-      select(selectReadableCollections),
-      map(collections => collections?.length > 0)
-    );
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.query) {
+      this.stemsLength = this.query?.stems?.length || 0;
+    }
+    if (changes.query || changes.view) {
+      const collectionsObservable$ = queryIsEmptyExceptPagination(this.query)
+        ? this.store$.pipe(select(selectReadableCollectionsByView(this.view)))
+        : this.store$.pipe(select(selectCollectionsInCustomQuery(this.query)));
+      this.collections$ = collectionsObservable$.pipe(
+        map(collections => sortResourcesByFavoriteAndLastUsed(collections))
+      );
+    }
+    if (changes.view) {
+      this.hasCollection$ = this.store$.pipe(
+        select(selectReadableCollectionsByView(this.view)),
+        map(collections => collections?.length > 0)
+      );
+    }
   }
 
   public onCollectionSelect(data: {collection: Collection; index: number}) {

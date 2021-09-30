@@ -26,12 +26,14 @@ import {Attribute} from '../store/collections/collection';
 import {Observable} from 'rxjs';
 import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
 import {map, switchMap} from 'rxjs/operators';
-import {selectDocumentsByCollectionId} from '../store/documents/documents.state';
-import {selectLinkInstancesByType} from '../store/link-instances/link-instances.state';
 import {DataResource} from '../model/resource';
 import {AppState} from '../store/app.state';
 import {ConfigurationService} from '../../configuration/configuration.service';
 import {localeLanguageTags} from '../model/language-tag';
+import {
+  selectDocumentsByCollectionAndReadPermission,
+  selectLinksByLinkTypeAndReadPermission,
+} from '../store/common/permissions.selectors';
 
 @Injectable()
 export class ConstraintDataService {
@@ -62,7 +64,7 @@ export class ConstraintDataService {
         return constraintData$.pipe(
           switchMap(constraintData =>
             this.store$.pipe(
-              select(selectDocumentsByCollectionId(collectionId)),
+              select(selectDocumentsByCollectionAndReadPermission(collectionId)),
               map(documents => mapDataResourcesInvalidValues(constraintData, attribute, documents))
             )
           )
@@ -71,7 +73,7 @@ export class ConstraintDataService {
         return constraintData$.pipe(
           switchMap(constraintData =>
             this.store$.pipe(
-              select(selectLinkInstancesByType(linkTypeId)),
+              select(selectLinksByLinkTypeAndReadPermission(linkTypeId)),
               map(linkInstances => mapDataResourcesInvalidValues(constraintData, attribute, linkInstances))
             )
           )

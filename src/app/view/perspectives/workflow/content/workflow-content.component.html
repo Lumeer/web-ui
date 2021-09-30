@@ -1,19 +1,24 @@
-<resizable-sidebar [opened]="!!selectedDocument && !!selectedCollection"
+<resizable-sidebar [opened]="perspectiveConfiguration?.showSidebar && !!selectedDocument && !!selectedCollection"
                    [width]="sidebarWidth"
                    (widthChanged)="sidebarResize.emit($event)">
 
-  <workflow-tables class="d-block ml-3 pb-3 content"
-                   [class.mr-3]="!selectedDocument || !selectedCollection"
+  <workflow-tables class="d-block content"
+                   [class.mr-3]="perspectiveConfiguration?.additionalSpace && (!selectedDocument || !selectedCollection)"
+                   [class.ml-3]="perspectiveConfiguration?.additionalSpace"
+                   [class.pb-3]="perspectiveConfiguration?.additionalSpace"
                    [collections]="collections"
                    [data]="data"
                    [linkTypes]="linkTypes"
                    [config]="config"
                    [canManageConfig]="canManageConfig"
                    [query]="query"
+                   [workflowId]="workflowId"
+                   [currentView]="currentView"
                    [permissions]="permissions"
                    [viewSettings]="viewSettings"
                    [constraintData]="constraintData"
                    [dataLoaded]="dataLoaded"
+                   [perspectiveConfiguration]="perspectiveConfiguration"
                    [selectedDocumentId]="selectedDocument?.id"
                    (configChange)="configChange.emit($event)">
   </workflow-tables>
@@ -23,6 +28,7 @@
                     [query]="query"
                     [collection]="selectedCollection"
                     [document]="selectedDocument"
+                    [currentView]="currentView"
                     (close)="closeSidebar.emit()">
   </workflow-sidebar>
 

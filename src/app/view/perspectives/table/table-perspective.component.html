@@ -1,21 +1,26 @@
-<div *ngIf="query | perspectiveDisplayable:1:1; else notDisplayable"
+<div *ngIf="query$ | async | perspectiveDisplayable:1:1; else notDisplayable"
      (clickOutside)="onClickOutside($event)"
      class="flex-grow-1 d-flex flex-column m-0 h-100 content">
-  <ng-container *ngIf="{canManageConfig: canManageConfig$ | async, tableId: tableId$ | async} as data">
+  <ng-container *ngIf="{canManageConfig: canManageConfig$ | async, tableId: tableId$ | async, view: view$ | async, query: query$ | async} as data">
     <table-hidden-input [canManageConfig]="data.canManageConfig"
                         [tableId]="data.tableId"
+                        [view]="data.view"
                         class="position-fixed">
     </table-hidden-input>
 
     <table-header *ngIf="table$ | async as table"
                   [table]="table"
+                  [query]="data.query"
+                  [view]="data.view"
                   [canManageConfig]="data.canManageConfig"
                   [embedded]="embedded"
-                  id="table-header"
+                  [id]="data.tableId + '-header'"
                   cdkScrollable>
     </table-header>
     <table-body [tableId]="data.tableId"
-                [query]="query"
+                [query]="data.query"
+                [view]="data.view"
+                [perspectiveConfiguration]="perspectiveConfiguration"
                 [canManageConfig]="data.canManageConfig"
                 class="d-flex flex-grow-1">
     </table-body>
@@ -24,6 +29,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query$ | async"
+                 [view]="view$ | async"
                  [minStems]="1"
                  [maxStems]="1">
   </invalid-query>

@@ -219,14 +219,16 @@ export class ChartDataConverter {
     }
 
     if (y1Axis && y2Axis) {
-      const {sets: y1Sets, xAxisHelperData: xAxisHelperData1, yAxisHelperData: y1AxisHelperData} = this.convertAxis(
-        config,
-        ChartAxisType.Y1
-      );
-      const {sets: y2Sets, xAxisHelperData: xAxisHelperData2, yAxisHelperData: y2AxisHelperData} = this.convertAxis(
-        config,
-        ChartAxisType.Y2
-      );
+      const {
+        sets: y1Sets,
+        xAxisHelperData: xAxisHelperData1,
+        yAxisHelperData: y1AxisHelperData,
+      } = this.convertAxis(config, ChartAxisType.Y1);
+      const {
+        sets: y2Sets,
+        xAxisHelperData: xAxisHelperData2,
+        yAxisHelperData: y2AxisHelperData,
+      } = this.convertAxis(config, ChartAxisType.Y2);
       this.xAxisHelperData1 = xAxisHelperData1;
       this.xAxisHelperData2 = xAxisHelperData2;
       this.y1AxisHelperData = y1AxisHelperData;
@@ -236,10 +238,11 @@ export class ChartDataConverter {
       this.currentConfig = config;
       return this.convertType(config.type);
     } else if (!y2Axis && (xAxis || y1Axis)) {
-      const {sets: y1Sets, xAxisHelperData, yAxisHelperData: y1AxisHelperData} = this.convertAxis(
-        config,
-        ChartAxisType.Y1
-      );
+      const {
+        sets: y1Sets,
+        xAxisHelperData,
+        yAxisHelperData: y1AxisHelperData,
+      } = this.convertAxis(config, ChartAxisType.Y1);
       this.xAxisHelperData1 = xAxisHelperData;
       this.y1Sets = y1Sets;
       this.y1AxisHelperData = y1AxisHelperData;
@@ -247,10 +250,11 @@ export class ChartDataConverter {
       this.clearOtherSetsByType(ChartAxisType.Y1);
       return this.convertType(config.type);
     } else if (xAxis || y2Axis) {
-      const {sets: y2Sets, xAxisHelperData, yAxisHelperData: y2AxisHelperData} = this.convertAxis(
-        config,
-        ChartAxisType.Y2
-      );
+      const {
+        sets: y2Sets,
+        xAxisHelperData,
+        yAxisHelperData: y2AxisHelperData,
+      } = this.convertAxis(config, ChartAxisType.Y2);
       this.xAxisHelperData2 = xAxisHelperData;
       this.y2Sets = y2Sets;
       this.y2AxisHelperData = y2AxisHelperData;

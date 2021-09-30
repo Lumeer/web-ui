@@ -84,6 +84,9 @@ export class TableRowComponent implements OnInit, OnChanges {
   @Input()
   public linkTypeId: string;
 
+  @Input()
+  public viewId: string;
+
   @Output()
   public onClick = new EventEmitter<string>();
 

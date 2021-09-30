@@ -41,7 +41,7 @@ import {
   selectAllCollections,
   selectCollectionsDictionary,
 } from '../../../../../../../core/store/collections/collections.state';
-import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
+import {selectLinkTypesByViewAndCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
@@ -55,7 +55,8 @@ import {DropdownPosition} from '../../../../../../../shared/dropdown/dropdown-po
 import {DropdownComponent} from '../../../../../../../shared/dropdown/dropdown.component';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
-import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
+import {View} from '../../../../../../../core/store/views/view';
+import {Query} from '../../../../../../../core/store/navigation/query/query';
 
 interface LinkedAttribute {
   linkType?: LinkType;
@@ -83,6 +84,12 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   @Input()
   public linkType: LinkType;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
 
   @Input()
   public origin: ElementRef | HTMLElement;
@@ -123,7 +130,6 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   public constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.linkedAttributes$ = this.bindLinkedAttributes();
     this.allAttributes$ = this.bindAllAttributes();
     this.table$ = this.bindTable();
   }
@@ -139,6 +145,9 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
     }
     if (changes.cursor && this.cursor) {
       this.cursor$.next(this.cursor);
+    }
+    if (changes.query || changes.view) {
+      this.linkedAttributes$ = this.bindLinkedAttributes();
     }
   }
 
@@ -230,13 +239,15 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
       filter(([collection]) => !!collection),
       switchMap(([collection, lastName]) =>
         combineLatest([
-          this.store$.select(selectLinkTypesByCollectionId(collection.id)),
+          this.store$.select(selectLinkTypesByViewAndCollectionId(this.view, collection.id)),
           this.store$.select(selectCollectionsDictionary),
-          this.store$.select(selectViewQuery),
         ]).pipe(
-          map(([linkTypes, collectionsMap, query]) =>
+          map(([linkTypes, collectionsMap]) =>
             linkTypes
-              .filter(linkType => !query.stems[0].linkTypeIds || !query.stems[0].linkTypeIds.includes(linkType.id))
+              .filter(
+                linkType =>
+                  !this.query?.stems?.[0]?.linkTypeIds || !this.query.stems[0].linkTypeIds.includes(linkType.id)
+              )
               .reduce<LinkedAttribute[]>((filtered, linkType) => {
                 if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
                   return filtered.slice(0, 5);

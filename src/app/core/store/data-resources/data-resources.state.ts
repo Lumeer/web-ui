@@ -23,6 +23,7 @@ import {DataQuery} from '../../model/data-query';
 import {selectViewDataQuery} from '../view-settings/view-settings.state';
 import {isDataQueryLoaded} from '../utils/data-query-payload';
 import {configuration} from '../../../../environments/configuration';
+import {Query} from '../navigation/query/query';
 
 export interface DataResourcesState {
   queries: DataQuery[];
@@ -62,6 +63,9 @@ export const selectCurrentQueryTasksLoaded = createSelector(
   selectViewDataQuery,
   (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries, configuration.publicView)
 );
+
+export const selectQueryTasksLoaded = (currentQuery: Query) =>
+  createSelector(selectTasksQueries, queries => isDataQueryLoaded(currentQuery, queries, configuration.publicView));
 
 export const selectQueryDataResourcesLoaded = (query: DataQuery) =>
   createSelector(selectDataResourcesQueries, queries => isDataQueryLoaded(query, queries, configuration.publicView));

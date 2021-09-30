@@ -20,10 +20,9 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {debounceTime, filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
+import {debounceTime, filter, map, mergeMap, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
-import {selectCollectionsInQuery} from '../../../core/store/common/permissions.selectors';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
@@ -42,9 +41,11 @@ import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.uti
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {AppState} from '../../../core/store/app.state';
 import {selectMap} from '../../../core/store/maps/maps.state';
+import {defaultMapPerspectiveConfiguration, MapPerspectiveConfiguration} from '../perspective-configuration';
+import {selectCollectionsInCustomQuery} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'map-perspective',
@@ -52,9 +53,9 @@ import {selectMap} from '../../../core/store/maps/maps.state';
   styleUrls: ['./map-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig> implements OnInit, OnDestroy {
+export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig> implements OnInit, OnDestroy {
   @Input()
-  public query: Query;
+  public perspectiveConfiguration: MapPerspectiveConfiguration = defaultMapPerspectiveConfiguration;
 
   @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;
@@ -106,6 +107,10 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
   }
 
   public checkConfigWithDefaultView(config: MapConfig, defaultConfig?: DefaultViewConfig): Observable<MapConfig> {
+    // when map is embedded, position parameters are not in url query thus cannot be obtained
+    if (this.isEmbedded) {
+      return of(config);
+    }
     return this.store$.pipe(
       select(selectMapPosition),
       take(1),
@@ -149,7 +154,7 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
         select(selectMap),
         debounceTime(1000),
         filter(mapEntity => !!mapEntity),
-        withLatestFrom(this.store$.pipe(select(selectCollectionsInQuery)), this.selectDefaultViewConfig$()),
+        withLatestFrom(this.selectCollectionsInQuery$(), this.selectDefaultViewConfig$()),
         filter(([, collections]) => collections.length > 0)
       )
       .subscribe(([mapEntity, collections, currentViewConfig]) => {
@@ -164,6 +169,10 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
           this.redirectToMapPosition(mapEntity.config.position);
         }
       });
+  }
+
+  private selectCollectionsInQuery$(): Observable<Collection[]> {
+    return this.query$.pipe(switchMap(query => this.store$.pipe(select(selectCollectionsInCustomQuery(query)))));
   }
 
   private selectMapDefaultConfigId$(): Observable<string> {
@@ -185,7 +194,7 @@ export class MapPerspectiveComponent extends DataPerspectiveComponent<MapConfig>
     return this.store$
       .pipe(
         select(selectMapConfig),
-        filter(config => config && !!config.position)
+        filter(config => !!config?.position)
       )
       .subscribe(config => this.redirectToMapPosition(config.position));
   }

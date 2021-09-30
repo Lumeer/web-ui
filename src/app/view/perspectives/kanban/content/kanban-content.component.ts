@@ -42,7 +42,7 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {ViewSettings} from '../../../../core/store/views/view';
+import {View, ViewSettings} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
@@ -51,6 +51,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
+import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
 
 interface Data {
   collections: Collection[];
@@ -92,6 +93,9 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public query: Query;
 
   @Input()
+  public view: View;
+
+  @Input()
   public constraintData: ConstraintData;
 
   @Input()
@@ -105,6 +109,9 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public currentUser: User;
+
+  @Input()
+  public perspectiveConfiguration: KanbanPerspectiveConfiguration;
 
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
@@ -247,14 +254,18 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
   }
 
   public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
-    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
+    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments({...payload, workspace: this.currentWorkspace()}));
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.view?.id};
   }
 }

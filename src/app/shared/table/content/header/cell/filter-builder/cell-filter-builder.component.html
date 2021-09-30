@@ -9,18 +9,23 @@
        *ngIf="{constraintData: constraintData$ | async} as data">
 
     <div class="btn-group mb-3 sort" role="group">
-      <button type="button" class="btn card sort-item" (click)="onSortChanged(null)"
+      <button type="button" class="btn card sort-item"
+              (click)="onSortChanged(null)"
+              [disabled]="!editable"
               [class.active]="!sort">
         <i class="far fa-align-left"></i><span i18n="@@table.cell.sort.none">None</span>
         <i *ngIf="!sort" class="active-icon fas fa-check text-success"></i>
       </button>
       <button type="button" class="btn card sort-item"
+              [disabled]="!editable"
               (click)="onSortChanged(sortType.Ascending)"
               [class.active]="sort === sortType.Ascending">
         <i class="far fa-sort-amount-down-alt"></i><span i18n="@@table.cell.sort.ascending">Ascending</span>
         <i *ngIf="sort === sortType.Ascending" class="active-icon fas fa-check text-success"></i>
       </button>
-      <button type="button" class="btn card sort-item" (click)="onSortChanged(sortType.Descending)"
+      <button type="button" class="btn card sort-item"
+              [disabled]="!editable"
+              (click)="onSortChanged(sortType.Descending)"
               [class.active]="sort === sortType.Descending">
         <i class="far fa-sort-amount-up"></i><span i18n="@@table.cell.sort.descending">Descending</span>
         <i *ngIf="sort === sortType.Descending" class="active-icon fas fa-check text-success"></i>
@@ -36,14 +41,8 @@
                       [attribute]="filterAttribute">
       </filter-preview>
       <div>
-        <i *ngIf="filter.deletable" class="far fa-trash text-danger" (click)="onRemove(index)"></i>
+        <i *ngIf="filter.deletable && editable" class="far fa-trash text-danger" (click)="onRemove(index)"></i>
       </div>
-    </div>
-    <div class="px-2">
-      <button class="btn btn-link px-0 small mx-1" (click)="$event.stopPropagation(); onNewFilter()">
-        <i class="fas fa-plus-circle mr-2"></i><span
-        i18n="@@table.cell.filters.new">Add new filter</span>
-      </button>
     </div>
 
     <ng-container *ngIf="filters && filters[selectedIndex]">
@@ -52,10 +51,18 @@
                               [selectedCondition]="filters[selectedIndex].condition"
                               [selectedValues]="filters[selectedIndex].conditionValues"
                               [constraintData]="constraintData$ | async"
+                              [editable]="editable"
                               (finishEditing)="onFinishEditing()"
                               (valueChange)="onValueChange($event)">
       </filter-builder-content>
     </ng-container>
+
+    <div *ngIf="editable" [class.mt-2]="filters && filters[selectedIndex]">
+      <button class="btn btn-link px-0 small mx-1" (click)="$event.stopPropagation(); onNewFilter()">
+        <i class="fas fa-plus-circle mr-2"></i><span
+        i18n="@@table.cell.filters.new">Add new filter</span>
+      </button>
+    </div>
   </div>
 
 </dropdown>

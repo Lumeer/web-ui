@@ -1,0 +1,74 @@
+<div class="mt-2 pb-5" *ngIf="dataLoaded$ | async; else loading">
+
+  <ng-container
+    *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasTaskCollection: hasTaskCollection$ | async, showTaskTab: showTaskTab$ | async } as data">
+
+    <ng-container *ngIf="data.hasCollection || data.hasView || data.showTaskTab; else noData">
+
+      <ng-container *ngIf="data.showTaskTab">
+        <div class="color-secondary font-capitalize font-weight-bold ml-2" i18n="@@search.all.myTasks">
+          My Current Tasks
+        </div>
+        <search-tasks [maxLines]="7"
+                      [compactEmptyPages]="true"
+                      [view]="view"
+                      [perspectiveConfiguration]="perspectiveConfiguration"
+                      scrollContainer=".search-perspective">
+        </search-tasks>
+      </ng-container>
+
+      <div *ngIf="!data.hasAnyView || data.hasView">
+        <hr *ngIf="data.showTaskTab" class="mt-3 mb-2">
+        <div class="color-secondary font-capitalize font-weight-bold ml-2 float-left" i18n="@@search.all.views" data-tour="search-views-label">
+          Views
+        </div>
+        <search-views-preview *ngIf="data.hasView"
+                              [maxViews]="7"
+                              [perspectiveConfiguration]="perspectiveConfiguration"
+                              [view]="view">
+        </search-views-preview>
+        <div *ngIf="!data.hasAnyView" class="my-5" data-tour="search-views">
+          <h3 i18n="@@search.views.empty.title.task" class="text-center">Your first task is to create a view!</h3>
+          <div class="text-center mb-3">
+            <span i18n="@@search.views.empty.subtitle.task">Views are the most important part of Lumeer that boosts your productivity and saves your time.</span>
+            <br/>
+            <span i18n="@@search.views.empty.createTable1">Create and open a Table. Switch the Perspective</span>
+            <span class="mx-2 badge badge-light text-gray-700" i18n="@@view.perspective.guide.select">1.&nbsp;Select View</span>
+            <span i18n="@@search.views.empty.createTable2">and save the View</span>
+            <button class="mx-2 btn btn-sm btn-primary cursor-default" type="button"><i class="fas fa-save"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <ng-container *ngIf="data.hasCollection">
+        <hr *ngIf="data.hasView || data.showTaskTab" class="my-2">
+        <div class="color-secondary font-capitalize font-weight-bold ml-2" i18n="@@search.all.collections">
+          Tables
+        </div>
+        <post-it-collections [maxShown]="5"
+                             [view]="view"
+                             [showAddTaskTable]="!data.showTaskTab && !data.hasTaskCollection">
+        </post-it-collections>
+      </ng-container>
+
+    </ng-container>
+
+  </ng-container>
+
+</div>
+
+<ng-template #noData>
+  <empty-data [query]="query$ | async"></empty-data>
+</ng-template>
+
+<ng-template #loading>
+  <div class="h-100 d-flex align-items-center justify-content-center flex-column">
+    <div class="spinner-border mb-2"
+         role="status">
+      <span class="sr-only" i18n="@@message.loading">Loading...</span>
+    </div>
+    <h5 i18n="@@data.loading">Loading data</h5>
+  </div>
+</ng-template>

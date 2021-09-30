@@ -49,6 +49,7 @@ import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-v
 import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
 import {Constraint, ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
+import {View} from '../../../../core/store/views/view';
 
 interface Data {
   collections: Collection[];
@@ -97,6 +98,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
 
   @Input()
   public user: User;
+
+  @Input()
+  public view: View;
 
   @Input()
   public constraintData: ConstraintData;
@@ -361,7 +365,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public onDetail(event: ClickEvent) {
     const {resource, dataResource} = this.findResourceAndDataResource(event);
     if (resource && dataResource) {
-      this.modalService.showDataResourceDetail(dataResource, resource);
+      this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
     }
   }
 

@@ -87,7 +87,7 @@ export class ModalWrapperComponent {
   }
 
   public onCloseClick() {
-    this.onClose.next();
+    this.onClose.next(null);
   }
 
   public onSubmitClick() {

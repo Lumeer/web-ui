@@ -6,22 +6,24 @@
       data-test="empty-project-header">Your project is empty!</h3>
 
   <ng-container *ngIf="(projectPermissions$ | async)?.roles.CollectionContribute; else noPermission">
-    <div i18n="@@search.records.empty.project.subtitle"
-         class="text-center mb-3">Go to the Tables tab and create your first table.
-    </div>
+    <ng-container *ngIf="hasCollectionsTab$ | async; else noTab">
+      <div i18n="@@search.records.empty.project.subtitle"
+           class="text-center mb-3">Go to the Tables tab and create your first table.
+      </div>
 
-    <button type="button"
-            class="btn btn-sm btn-primary"
-            data-test="empty-data-create-collection"
-            (click)="onSwitchToCollectionsTab()"
-            data-tour="collection-create">
-      <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
-      <span class="font-weight-bold"
-            i18n="@@create.new.collection">Create New Table</span>
-    </button>
+      <button type="button"
+              class="btn btn-sm btn-primary"
+              data-test="empty-data-create-collection"
+              (click)="onSwitchToCollectionsTab()"
+              data-tour="collection-create">
+        <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+        <span class="font-weight-bold"
+              i18n="@@create.new.collection">Create New Table</span>
+      </button>
 
-    <table-import-button class="ml-2"></table-import-button>
+      <table-import-button class="ml-2"></table-import-button>
 
+    </ng-container>
   </ng-container>
 
 </empty-state>
@@ -29,6 +31,12 @@
 <ng-template #noPermission>
   <div i18n="@@collections.empty.subtitle.norights"
        class="text-center">I am sorry but you do not have permissions to add tables.
+  </div>
+</ng-template>
+
+<ng-template #noTab>
+  <div i18n="@@collections.empty.subtitle.notab"
+       class="text-center">I am sorry but your tables tab is hidden. Show tab in dashboard settings to create new table.
   </div>
 </ng-template>
 

@@ -77,7 +77,8 @@ import {
   durationCountsMapToString,
 } from '@lumeer/data-filters';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
-import {ViewSettings} from '../../../../core/store/views/view';
+import {View, ViewSettings} from '../../../../core/store/views/view';
+import {GanttPerspectiveConfiguration} from '../../perspective-configuration';
 
 interface Data {
   collections: Collection[];
@@ -100,6 +101,7 @@ type PatchDataMap = Record<string, Record<string, any>>;
 
 @Component({
   selector: 'gantt-chart-tasks',
+  styleUrls: ['./gantt-chart-tasks.component.scss'],
   templateUrl: './gantt-chart-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -132,10 +134,16 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public query: Query;
 
   @Input()
+  public view: View;
+
+  @Input()
   public dataLoaded: boolean;
 
   @Input()
   public settings: ViewSettings;
+
+  @Input()
+  public perspectiveConfiguration: GanttPerspectiveConfiguration;
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
@@ -339,7 +347,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
             linkInstanceId,
             documentIds: [documentId, selectedDocument.id],
           });
-        this.modalService.showChooseLinkDocument(otherDocumentIds, callback);
+        this.modalService.showChooseLinkDocument(otherDocumentIds, this.view?.id, callback);
       }
     }
   }
@@ -592,7 +600,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const primaryDataResource = isCollection ? document : linkInstance;
     const resource = this.getResourceById(createModel.resourceId, createModel.resourceType);
     if (primaryDataResource && resource) {
-      const modalRef = this.modalService.showDataResourceDetail(primaryDataResource, resource, false);
+      const modalRef = this.modalService.showDataResourceDetail(primaryDataResource, resource, this.view?.id, false);
       modalRef.content.onCancel$.subscribe(() => cancel());
       modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
         primaryDataResource.data = modifiedDataResource.data;
@@ -603,7 +611,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
             linkInstance.documentIds[0] = documentId;
             chain({document, linkInstance});
           };
-          this.modalService.showChooseLinkDocument(possibleLinkDocumentsIds, callback);
+          this.modalService.showChooseLinkDocument(possibleLinkDocumentsIds, this.view?.id, callback);
         } else if (possibleLinkDocumentsIds.length === 1) {
           linkInstance.documentIds[0] = possibleLinkDocumentsIds[0];
           chain({document, linkInstance});
@@ -717,7 +725,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const resourceId = (<DocumentModel>dataResource).collectionId || (<LinkInstance>dataResource).linkTypeId;
     const resource = this.getResourceById(resourceId, resourceType);
     if (resource) {
-      return this.modalService.showDataResourceDetail(dataResource, resource);
+      return this.modalService.showDataResourceDetail(dataResource, resource, this.view?.id);
     }
   }
 

@@ -27,7 +27,9 @@ import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {selectCollectionPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
+import {View} from '../../../../../core/store/views/view';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {selectCollectionPermissionsByView} from '../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-header-collection',
@@ -46,6 +48,12 @@ export class TableHeaderCollectionComponent implements OnChanges {
   public table: TableModel;
 
   @Input()
+  public view: View;
+
+  @Input()
+  public query: Query;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Input()
@@ -59,7 +67,11 @@ export class TableHeaderCollectionComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
       this.collection$ = this.store$.select(selectCollectionById(this.part.collectionId));
-      this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.part.collectionId)));
+    }
+    if ((changes.part || changes.view) && this.part) {
+      this.permissions$ = this.store$.pipe(
+        select(selectCollectionPermissionsByView(this.view, this.part.collectionId))
+      );
     }
   }
 

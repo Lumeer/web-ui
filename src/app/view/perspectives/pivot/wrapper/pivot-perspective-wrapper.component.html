@@ -2,12 +2,12 @@
 
   <ng-container *ngIf="{pivotData: pivotData$ | async} as data">
 
-    <collapsible-sidebar *ngIf="canManageConfig && config"
+    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && canManageConfig && pivotConfig"
                          [collapsed]="!sidebarOpened"
                          (toggle)="onSidebarToggle()">
 
       <pivot-config-wrapper class="d-block m-3"
-                            [config]="config"
+                            [config]="pivotConfig"
                             [pivotData]="data.pivotData"
                             [collections]="collections"
                             [linkTypes]="linkTypes"
@@ -17,11 +17,14 @@
 
     </collapsible-sidebar>
 
-    <pivot-table *ngIf="config"
-                 class="flex-grow-1 h-100 overflow-auto mx-4 pb-5"
+    <pivot-table *ngIf="pivotConfig"
+                 class="flex-grow-1 h-100 overflow-auto"
+                 [class.mx-4]="perspectiveConfiguration?.additionalSpace"
+                 [class.pb-5]="perspectiveConfiguration?.additionalSpace"
                  [pivotData]="data.pivotData"
                  [constraintData]="constraintData"
-                 [dataLoaded]="dataLoaded">
+                 [dataLoaded]="dataLoaded"
+                 (cellClick)="onCellClick($event)">
     </pivot-table>
 
   </ng-container>
@@ -29,6 +32,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query"
+                 [view]="view"
                  [minStems]="1">
   </invalid-query>
 </ng-template>

@@ -48,13 +48,12 @@ export const selectTablesState = (state: AppState) => state.tables;
 
 export const selectTablesDictionary = createSelector(selectTablesState, tablesAdapter.getSelectors().selectEntities);
 
-export const selectTableId = createSelector(
-  selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_TABLE_ID
-);
+export const selectTableId = createSelector(selectWorkspace, workspace => workspace?.viewCode || DEFAULT_TABLE_ID);
 
 export const selectTable = createSelector(
   selectTablesDictionary,
   selectTableId,
   (tablesMap, tableId) => tableId && tablesMap[tableId]
 );
+
+export const selectTableById = (id: string) => createSelector(selectTablesDictionary, tablesMap => id && tablesMap[id]);

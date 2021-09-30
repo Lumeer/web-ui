@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -34,7 +34,8 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig} from './util/gantt-chart-util';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {defaultGanttPerspectiveConfiguration, GanttPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -43,8 +44,12 @@ import {DataPerspectiveComponent} from '../data-perspective.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GanttChartPerspectiveComponent
-  extends DataPerspectiveComponent<GanttChartConfig>
-  implements OnInit, OnDestroy {
+  extends DataPerspectiveDirective<GanttChartConfig>
+  implements OnInit, OnDestroy
+{
+  @Input()
+  public perspectiveConfiguration: GanttPerspectiveConfiguration = defaultGanttPerspectiveConfiguration;
+
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }
@@ -77,24 +82,36 @@ export class GanttChartPerspectiveComponent
     this.store$.dispatch(new GanttChartAction.SetConfig({ganttChartId: this.perspectiveId$.value, config}));
   }
 
-  public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  public patchDocumentMetaData(payload: {collectionId: string; documentId: string; metaData: DocumentMetaData}) {
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new DocumentsAction.PatchMetaData({...payload, workspace})));
   }
 
-  public patchDocumentMetaData(payload: {collectionId: string; documentId: string; metaData: DocumentMetaData}) {
-    this.store$.dispatch(new DocumentsAction.PatchMetaData(payload));
+  public patchDocumentData(document: DocumentModel) {
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new DocumentsAction.PatchData({document, workspace})));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
   }
 
   public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
-    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.ChangeDocuments({...payload, workspace})));
   }
 
   public createDocumentsChain(data: {documents: DocumentModel[]; linkInstances: LinkInstance[]}) {
     const failureMessage = $localize`:@@perspective.gantt.create.task.failure:Could not create task`;
-    this.store$.dispatch(new DocumentsAction.CreateChain({...data, failureMessage}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace =>
+        this.store$.dispatch(new DocumentsAction.CreateChain({...data, failureMessage, workspace}))
+      );
   }
 }

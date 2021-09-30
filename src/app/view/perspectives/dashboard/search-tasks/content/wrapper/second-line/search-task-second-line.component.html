@@ -1,0 +1,10 @@
+<data-input-preview class="data-input-preview text-truncate py-1 flex-grow-1"
+                    *ngIf="attributes?.tags?.id && document?.data"
+                    [constraint]="attributes.tags.constraint"
+                    [cursor]="document | dataCursor:attributes.tags.id:view?.id"
+                    [dataValue]="document.data[attributes.tags.id] | dataValue:attributes.tags.constraint: constraintData">
+</data-input-preview>
+<comments-count *ngIf="document.commentsCount" class="mx-2"
+                (click)="$event.stopPropagation(); commentClick.emit()"
+                [count]="document.commentsCount">
+</comments-count>

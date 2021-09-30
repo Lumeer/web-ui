@@ -1,0 +1,77 @@
+<ng-container [ngSwitch]="view?.perspective">
+
+  <table-perspective *ngSwitchCase="perspective.Table"
+                     class="h-100"
+                     [view]="view"
+                     [perspectiveConfiguration]="perspectiveConfiguration?.table">
+  </table-perspective>
+
+  <pivot-perspective *ngSwitchCase="perspective.Pivot"
+                     [view]="view"
+                     [perspectiveConfiguration]="perspectiveConfiguration?.pivot">
+  </pivot-perspective>
+
+  <gantt-chart-perspective *ngSwitchCase="perspective.GanttChart"
+                           [view]="view"
+                           [perspectiveConfiguration]="perspectiveConfiguration?.gantt">
+  </gantt-chart-perspective>
+
+  <chart-perspective *ngSwitchCase="perspective.Chart"
+                     [view]="view"
+                     [perspectiveConfiguration]="perspectiveConfiguration?.chart">
+  </chart-perspective>
+
+  <calendar-perspective *ngSwitchCase="perspective.Calendar"
+                        [view]="view"
+                        [perspectiveConfiguration]="perspectiveConfiguration?.calendar">
+  </calendar-perspective>
+
+  <kanban-perspective *ngSwitchCase="perspective.Kanban"
+                      [view]="view"
+                      [perspectiveConfiguration]="perspectiveConfiguration?.kanban">
+  </kanban-perspective>
+
+  <workflow-perspective *ngSwitchCase="perspective.Workflow"
+                        class="d-block p-2"
+                        [view]="view"
+                        [perspectiveConfiguration]="perspectiveConfiguration?.workflow">
+  </workflow-perspective>
+
+  <map-perspective *ngSwitchCase="perspective.Map"
+                   [view]="view"
+                   [perspectiveConfiguration]="perspectiveConfiguration?.map">
+  </map-perspective>
+
+  <detail-perspective *ngSwitchCase="perspective.Detail"
+                      class="d-block p-2"
+                      [view]="view"
+                      [perspectiveConfiguration]="perspectiveConfiguration?.detail">
+  </detail-perspective>
+
+  <ng-container *ngSwitchCase="perspective.Search">
+    <search-all *ngIf="view.config?.search?.searchTab === searchTab.All"
+                class="p-2 d-block h-100 overflow-auto"
+                [view]="view"
+                [perspectiveConfiguration]="perspectiveConfiguration?.search">
+    </search-all>
+    <search-tasks *ngIf="view.config?.search?.searchTab === searchTab.Tasks"
+                  [view]="view"
+                  class="p-2 d-block h-100 overflow-auto search-tasks"
+                  [compactEmptyPages]="true"
+                  [perspectiveConfiguration]="perspectiveConfiguration?.search"
+                  scrollContainer=".search-tasks">
+    </search-tasks>
+    <search-collections *ngIf="view.config?.search?.searchTab === searchTab.Collections"
+                        class="p-2 d-block h-100 overflow-auto"
+                        [view]="view"
+                        [perspectiveConfiguration]="perspectiveConfiguration?.search">
+    </search-collections>
+    <search-views-folders *ngIf="view.config?.search?.searchTab === searchTab.Views"
+                          class="p-2 d-block h-100 overflow-auto"
+                          [view]="view"
+                          [perspectiveConfiguration]="perspectiveConfiguration?.search">
+    </search-views-folders>
+  </ng-container>
+
+
+</ng-container>

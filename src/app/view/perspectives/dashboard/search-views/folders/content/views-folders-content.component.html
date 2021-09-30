@@ -1,0 +1,27 @@
+<div *ngIf="views?.length; else noViews"
+     [class.pt-2]="perspectiveConfiguration?.additionalSpace"
+     [class.pb-5]="perspectiveConfiguration?.additionalSpace" class="position-relative">
+  <div class="d-flex mb-4">
+    <views-folders-breadcrumb class="d-block flex-grow-1"
+                              [viewFolders]="viewFolders"
+                              [foldersPath]="cleanedPath"
+                              (pathSelected)="folderPathChange.emit($event)">
+    </views-folders-breadcrumb>
+    <size-slider class="d-block"
+                 [defaultSize]="currentSize" (newSize)="onSizeChange($event)">
+    </size-slider>
+  </div>
+  <views-folders [viewSize]="currentSize"
+                 [queryData]="queryData"
+                 [permissions]="permissions"
+                 [workspace]="workspace"
+                 [viewFolders]="viewFolders | viewFoldersByPath:cleanedPath"
+                 (favoriteToggle)="onFavoriteToggle($event)"
+                 (folderClick)="showFolder($event)"
+                 (viewFolderAdded)="onViewFolderAdded($event)">
+  </views-folders>
+</div>
+
+<ng-template #noViews>
+  <empty-views [query]="query"></empty-views>
+</ng-template>

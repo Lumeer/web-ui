@@ -33,9 +33,9 @@ import {distinctUntilChanged, map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
-  selectCollectionsByQueryWithoutLinks,
-  selectReadableCollections,
   selectDocumentsByCollectionAndQuery,
+  selectCollectionsByCustomQueryWithoutLinks,
+  selectReadableCollectionsByView,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {
@@ -47,7 +47,8 @@ import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.s
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 import {ConstraintData} from '@lumeer/data-filters';
 import {DataQuery} from '../../core/model/data-query';
-import {AttributesSettings} from '../../core/store/views/view';
+import {AttributesSettings, View} from '../../core/store/views/view';
+import {objectChanged} from '../utils/common.utils';
 
 @Component({
   selector: 'preview-results',
@@ -63,6 +64,9 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
 
   @Input()
   public query: DataQuery;
+
+  @Input()
+  public view: View;
 
   @Input()
   public attributesSettings: AttributesSettings;
@@ -84,12 +88,11 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQueryWithoutLinks));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedCollection || changes.query) {
+    if (objectChanged(changes.selectedCollection) || changes.query || changes.view) {
       this.subscribeToDocuments();
     }
   }
@@ -100,14 +103,14 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
     if (this.selectedCollection && this.query) {
       const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
       documents$ = this.store$.pipe(
-        select(selectDocumentsByCollectionAndQuery(this.selectedCollection.id, collectionQuery))
+        select(selectDocumentsByCollectionAndQuery(this.selectedCollection.id, collectionQuery, this.view))
       );
       loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)), distinctUntilChanged());
     } else {
       documents$ = of([]);
       if (queryIsEmpty(this.query) || queryContainsOnlyFulltexts(this.query)) {
         loaded$ = combineLatest([
-          this.store$.pipe(select(selectReadableCollections)),
+          this.store$.pipe(select(selectReadableCollectionsByView(this.view))),
           this.store$.pipe(select(selectQueryDocumentsLoaded(this.query))),
         ]).pipe(
           map(([collections, loaded]) => collections.length === 0 || loaded),
@@ -115,7 +118,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
         );
       } else {
         loaded$ = this.store$.pipe(
-          select(selectCollectionsByQueryWithoutLinks),
+          select(selectCollectionsByCustomQueryWithoutLinks(this.view, this.query)),
           map(collections => collections.length === 0),
           distinctUntilChanged()
         );
@@ -128,6 +131,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
         documents,
       }))
     );
+    this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQueryWithoutLinks(this.view, this.query)));
   }
 
   public setActiveCollection(collection: Collection) {

@@ -26,8 +26,6 @@ import {parseSelectTranslation} from '../../../../shared/utils/translation.utils
   name: 'pivotValueTypeSelectItems',
 })
 export class PivotValueTypeSelectItemsPipe implements PipeTransform {
-  constructor() {}
-
   public transform(types: PivotValueType[]): SelectItemModel[] {
     return (types || []).map(type => ({id: type, value: this.translateValueType(type)}));
   }

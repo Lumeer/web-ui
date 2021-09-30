@@ -51,14 +51,14 @@
         <data-input-preview *ngIf="row.linkInstance"
                             [constraint]="attr.constraint"
                             [configuration]="configuration"
-                            [cursor]="row.linkInstance | dataCursor : attr.id"
+                            [cursor]="row.linkInstance | dataCursor : attr.id:view?.id"
                             [dataValue]="(row.linkInstance.data && row.linkInstance.data[attr.id]) | dataValue:attr.constraint:constraintData">
         </data-input-preview>
       </td>
       <td *ngFor="let attr of collection.attributes">
         <data-input-preview [constraint]="attr.constraint"
                             [configuration]="configuration"
-                            [cursor]="row.document | dataCursor : attr.id"
+                            [cursor]="row.document | dataCursor : attr.id:view?.id"
                             [dataValue]="(row.document.data && row.document.data[attr.id]) | dataValue:attr.constraint:constraintData">
         </data-input-preview>
       </td>

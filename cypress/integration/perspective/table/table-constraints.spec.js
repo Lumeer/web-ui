@@ -36,10 +36,10 @@ describe('Table perspective :: Constraints', () => {
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .should('have.value', '')
-      .trigger('keydown', {code: 'Backspace'});
+      .trigger('keydown', {code: 'Backspace', force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-column-input')
-      .should('have.text', '')
+      .should('have.value', '')
       .type('Active')
       .trigger('keydown', {code: 'Enter'});
 
@@ -77,7 +77,7 @@ describe('Table perspective :: Constraints', () => {
     // rename third column
 
     cy.get('[data-test="table-column-input"]').eq(2).should('have.text', 'A').click({force: true});
-    cy.focused().trigger('keydown', {code: 'Backspace'});
+    cy.focused().trigger('keydown', {code: 'Backspace', force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-column-input')
       .type('First flight')
@@ -92,7 +92,9 @@ describe('Table perspective :: Constraints', () => {
 
     // rename fourth column
 
-    cy.focused().should('have.attr', 'data-test', 'table-hidden-input').trigger('keydown', {code: 'Backspace'});
+    cy.focused()
+      .should('have.attr', 'data-test', 'table-hidden-input')
+      .trigger('keydown', {code: 'Backspace', force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-column-input')
       .should('have.text', '')

@@ -70,6 +70,9 @@ export class CellFilterBuilderComponent implements OnChanges {
   @Input()
   public linkTypeId: string;
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public sortChanged = new EventEmitter<AttributeSortType | null>();
 

@@ -28,21 +28,24 @@ export interface DataCursor {
   linkInstanceId?: string;
 
   attributeId?: string;
+  viewId?: string;
 }
 
-export function createDocumentDataCursor(document: DocumentModel, attributeId: string): DataCursor {
+export function createDocumentDataCursor(document: DocumentModel, attributeId: string, viewId: string): DataCursor {
   return {
     collectionId: document.collectionId,
     documentId: document.id,
     attributeId,
+    viewId,
   };
 }
 
-export function createLinkDataCursor(linkInstance: LinkInstance, attributeId: string): DataCursor {
+export function createLinkDataCursor(linkInstance: LinkInstance, attributeId: string, viewId: string): DataCursor {
   return {
     linkTypeId: linkInstance.linkTypeId,
     linkInstanceId: linkInstance.id,
     attributeId,
+    viewId,
   };
 }
 

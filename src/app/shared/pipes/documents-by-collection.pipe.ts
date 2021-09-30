@@ -28,6 +28,6 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 })
 export class DocumentsByCollectionPipe implements PipeTransform {
   public transform(documents: DocumentModel[], collectionId: string): DocumentModel[] {
-    return documents && documents.filter(d => d.collectionId === collectionId);
+    return documents?.filter(d => d.collectionId === collectionId);
   }
 }

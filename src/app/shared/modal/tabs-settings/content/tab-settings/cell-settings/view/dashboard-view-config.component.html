@@ -1,0 +1,8 @@
+<select-item id="select"
+             [selectedId]="config?.viewId"
+             [items]="viewSelectItems"
+             [removable]="false"
+             i18n-emptyValue="@@search.tabs.settings.dialog.config.view.placeholder"
+             emptyValue="Select View"
+             (selected)="onViewSelected($event)">
+</select-item>

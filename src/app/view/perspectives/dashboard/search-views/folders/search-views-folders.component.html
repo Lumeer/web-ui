@@ -1,0 +1,12 @@
+<views-folders-content [workspace]="workspace$ | async"
+                       [config]="viewsConfig$ | async"
+                       [views]="views$ | async"
+                       [query]="query$ | async"
+                       [permissions]="permissions$ | async"
+                       [queryData]="queryData$ | async"
+                       [foldersPath]="foldersPath$ | async"
+                       [perspectiveConfiguration]="perspectiveConfiguration"
+                       (configChange)="onConfigChange($event)"
+                       (folderPathChange)="onFolderPathChange($event)"
+                       (viewFoldersChange)="onViewFoldersChange($event)">
+</views-folders-content>

@@ -83,8 +83,24 @@ export const selectLinkInstancesByType = (linkTypeId: string) =>
     sortLinkInstances(linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId))
   );
 
+export const selectLinkInstancesByTypes = (linkTypeIds: string[]) =>
+  createSelector(selectAllLinkInstances, linkInstances =>
+    sortLinkInstances(linkInstances.filter(linkInstance => linkTypeIds.includes(linkInstance.linkTypeId)))
+  );
+
 export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, documentIds: string[]) =>
   createSelector(selectLinkInstancesByType(linkTypeId), selectDocumentsDictionary, (linkInstances, documentsMap) =>
+    sortLinkInstances(
+      linkInstances.filter(linkInstance =>
+        linkInstance.documentIds?.some(
+          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
+        )
+      )
+    )
+  );
+
+export const selectLinkInstancesByTypesAndDocuments = (linkTypeIds: string[], documentIds: string[]) =>
+  createSelector(selectLinkInstancesByTypes(linkTypeIds), selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
       linkInstances.filter(linkInstance =>
         linkInstance.documentIds?.some(

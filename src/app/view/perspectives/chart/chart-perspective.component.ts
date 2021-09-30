@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ChartConfig} from '../../../core/store/charts/chart';
 import {selectChartById} from '../../../core/store/charts/charts.state';
 import {ViewConfig} from '../../../core/store/views/view';
@@ -32,10 +32,11 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ChartDataComponent} from './data/chart-data.component';
 import {checkOrTransformChartConfig} from './visualizer/chart-util';
-import {DataPerspectiveComponent} from '../data-perspective.component';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {Query} from '../../../core/store/navigation/query/query';
+import {ChartPerspectiveConfiguration, defaultChartPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'chart-perspective',
@@ -43,7 +44,10 @@ import {Query} from '../../../core/store/navigation/query/query';
   styleUrls: ['./chart-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartPerspectiveComponent extends DataPerspectiveComponent<ChartConfig> implements OnInit, OnDestroy {
+export class ChartPerspectiveComponent extends DataPerspectiveDirective<ChartConfig> implements OnInit, OnDestroy {
+  @Input()
+  public perspectiveConfiguration: ChartPerspectiveConfiguration = defaultChartPerspectiveConfiguration;
+
   @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 
@@ -80,11 +84,15 @@ export class ChartPerspectiveComponent extends DataPerspectiveComponent<ChartCon
   }
 
   public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new DocumentsAction.PatchData({document, workspace})));
   }
 
   public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+    this.workspace$
+      .pipe(take(1))
+      .subscribe(workspace => this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace})));
   }
 
   public onSidebarToggle() {

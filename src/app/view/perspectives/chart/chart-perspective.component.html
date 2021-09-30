@@ -1,7 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1:1; else notDisplayable">
   <ng-container
     *ngIf="{collections: collections$ | async, config: config$ | async, query: query$ | async, linkTypes: linkTypes$ | async, documentsAndLinks: documentsAndLinks$ | async} as data">
-    <collapsible-sidebar *ngIf="data.config && (canManageConfig$ | async)"
+    <collapsible-sidebar *ngIf="perspectiveConfiguration?.showSidebar && data.config && (canManageConfig$ | async)"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <chart-config
@@ -16,12 +16,14 @@
 
     <chart-data
       *ngIf="data.config"
-      class="flex-grow-1 mx-4 mb-5"
+      class="flex-grow-1 mx-4"
+      [class.mb-5]="perspectiveConfiguration?.additionalSpace"
       [collections]="data.collections"
       [documents]="data.documentsAndLinks.documents"
       [linkTypes]="linkTypes$ | async"
       [linkInstances]="data.documentsAndLinks.linkInstances"
       [query]="data.query"
+      [view]="currentView$ | async"
       [user]="currentUser$ | async"
       [permissions]="permissions$ | async"
       [constraintData]="constraintData$ | async"
@@ -36,6 +38,8 @@
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
+                 [query]="query$ | async"
+                 [view]="currentView$ | async"
                  [minStems]="1"
                  [maxStems]="1">
   </invalid-query>

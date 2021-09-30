@@ -255,13 +255,11 @@ function createInterval(
   endConstraint: Constraint,
   constraintData: ConstraintData
 ): {start: Date; end?: Date; swapped?: boolean} {
-  const {start: startDate, end: endDateInterval, swapped} = createDatesInterval(
-    startString,
-    startConstraint,
-    endString,
-    endConstraint,
-    constraintData
-  );
+  const {
+    start: startDate,
+    end: endDateInterval,
+    swapped,
+  } = createDatesInterval(startString, startConstraint, endString, endConstraint, constraintData);
   let endDate = endDateInterval;
 
   let startMoment = moment(startDate);

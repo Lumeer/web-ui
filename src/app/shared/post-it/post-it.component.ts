@@ -82,6 +82,9 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   public constraintData: ConstraintData;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public tag: PostItTag;
 
   @Input()
@@ -152,6 +155,9 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
     if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(this.resource?.attributes, this.dataResource?.data);
     }
+    if (changes.viewId) {
+      this.dataRowService.setWorkspace({viewId: this.viewId});
+    }
   }
 
   public onNewKey(value: string, index: number) {
@@ -209,6 +215,6 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onDetail() {
-    this.modalService.showDataResourceDetail(this.dataResource, this.resource);
+    this.modalService.showDataResourceDetail(this.dataResource, this.resource, this.viewId);
   }
 }

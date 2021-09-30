@@ -23,7 +23,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, EMPTY, Observable, of, pipe} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {Perspective} from '../../../view/perspectives/perspective';
+import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
@@ -33,7 +33,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {Permission, Role} from '../permissions/permissions';
 import {convertPermissionModelToDto, convertPermissionsDtoToModel} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
-import {View} from './view';
+import {DefaultViewConfig, View} from './view';
 import {
   convertDefaultViewConfigDtoToModel,
   convertDefaultViewConfigModelToDto,
@@ -41,7 +41,7 @@ import {
   convertViewModelToDto,
 } from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {selectViewsDictionary, selectViewsLoaded, selectViewsState} from './views.state';
+import {selectDefaultViewConfig, selectViewsDictionary, selectViewsLoaded, selectViewsState} from './views.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {Angulartics2} from 'angulartics2';
 import mixpanel from 'mixpanel-browser';
@@ -579,7 +579,7 @@ export class ViewsEffects {
     )
   );
 
-  public resetDefaultConfigBySnapshot = createEffect(() =>
+  public resetDefaultConfigBySnapshot$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ViewsAction.ResetDefaultConfigBySnapshot>(ViewsActionType.RESET_DEFAULT_CONFIG_BY_SNAPSHOT),
       withLatestFrom(this.store$.pipe(select(selectViewsState))),
@@ -593,6 +593,52 @@ export class ViewsEffects {
           new ViewsAction.SetDefaultConfig({model: defaultConfigSnapshot}),
           new ViewsAction.SetDefaultConfigSnapshot({}),
         ];
+      })
+    )
+  );
+
+  public setDashboard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ViewsAction.SetDashboard>(ViewsActionType.SET_DASHBOARD),
+      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_PERSPECTIVE_ID)))),
+      mergeMap(([action, defaultView]) => {
+        const config = defaultView?.config || {};
+        const searchConfig = {...config.search, dashboard: action.payload.dashboard};
+        const defaultViewConfig: DefaultViewConfig = {
+          key: DEFAULT_PERSPECTIVE_ID,
+          perspective: Perspective.Search,
+          config: {search: searchConfig},
+        };
+
+        return this.viewService
+          .updateDefaultConfig(
+            convertDefaultViewConfigModelToDto({
+              ...defaultViewConfig,
+              updatedAt: new Date(),
+            })
+          )
+          .pipe(
+            mergeMap(dto =>
+              of(
+                new ViewsAction.SetDashboardSuccess({model: convertDefaultViewConfigDtoToModel(dto)}),
+                ...createCallbackActions(action.payload.onSuccess)
+              )
+            ),
+            catchError(error =>
+              of(new ViewsAction.SetDashboardFailure({error}), ...createCallbackActions(action.payload.onFailure))
+            )
+          );
+      })
+    )
+  );
+
+  public setDashboardFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<ViewsAction.SetDashboardFailure>(ViewsActionType.SET_DASHBOARD_FAILURE),
+      tap(action => console.error(action.payload.error)),
+      map(() => {
+        const message = $localize`:@@view.dashboard.set.fail:Could not set dashboard config`;
+        return new NotificationsAction.Error({message});
       })
     )
   );

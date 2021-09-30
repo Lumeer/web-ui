@@ -33,7 +33,7 @@ export const searchTabsMap: Record<string, SearchTab> = {
   [SearchTab.Views]: SearchTab.Views,
 };
 
-export function parseSearchTabFromUrl(url: string): SearchTab | null {
+export function parseSearchTabFromUrl(url: string): string | null {
   let questionIndex = url.indexOf('?');
   if (questionIndex === -1) {
     questionIndex = url.length;
@@ -47,7 +47,7 @@ export function parseSearchTabFromUrl(url: string): SearchTab | null {
     if (paths[currentIndex].startsWith('view') && paths.length > currentIndex++) {
       const perspective = perspectivesMap[paths[currentIndex]];
       if (perspective === Perspective.Search && paths.length > currentIndex++) {
-        return searchTabsMap[paths[currentIndex]];
+        return paths[currentIndex];
       }
     }
   }

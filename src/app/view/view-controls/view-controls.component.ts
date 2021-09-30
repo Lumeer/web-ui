@@ -47,6 +47,7 @@ import {RouterAction} from '../../core/store/router/router.action';
 import {View} from '../../core/store/views/view';
 import {
   selectCurrentView,
+  selectDefaultSearchPerspectiveVisibleTabs,
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
@@ -57,7 +58,6 @@ import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dr
 import {ModalService} from '../../shared/modal/modal.service';
 import {keyboardEventCode, KeyCode} from '../../shared/key-code';
 import {SearchesAction} from '../../core/store/searches/searches.action';
-import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {ViewsAction} from '../../core/store/views/views.action';
@@ -78,6 +78,8 @@ import {
   convertPerspectiveSettingsToString,
   PerspectiveSettings,
 } from '../../core/store/navigation/settings/perspective-settings';
+import {DashboardTab} from '../../core/model/dashboard-tab';
+import {createSearchPerspectiveTabsByView} from '../../core/store/views/view.utils';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -303,14 +305,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectCurrentView)),
       this.store$.pipe(select(selectViewCursor)),
       this.store$.pipe(select(selectPerspectiveSettings)),
+      this.store$.pipe(select(selectDefaultSearchPerspectiveVisibleTabs)),
     ])
       .pipe(take(1))
-      .subscribe(([view, cursor, perspectiveSettings]) => {
+      .subscribe(([view, cursor, perspectiveSettings, tabs]) => {
         if (!view || !this.workspace) {
           return;
         }
         const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
-        this.revertChangesForView(view, workspacePath, cursor, perspectiveSettings);
+        this.revertChangesForView(view, workspacePath, cursor, perspectiveSettings, tabs);
       });
   }
 
@@ -318,7 +321,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     view: View,
     workspacePath: any[],
     cursor: ViewCursor,
-    perspectiveSettings: PerspectiveSettings
+    perspectiveSettings: PerspectiveSettings,
+    defaultTabs: DashboardTab[]
   ) {
     this.resetName(view);
     this.resetViewSettings(view);
@@ -326,7 +330,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     switch (view.perspective) {
       case Perspective.Search:
         const searchConfig = view.config?.search;
-        const searchPath = [...workspacePath, searchConfig?.searchTab || SearchTab.All];
+        const tabs = createSearchPerspectiveTabsByView(view, defaultTabs);
+        const desiredTab = (searchConfig?.searchTab && tabs.find(tab => tab.id === searchConfig.searchTab)) || tabs[0];
+        const searchPath = [...workspacePath, desiredTab?.id || ''];
         this.revertQueryWithUrl(searchPath, view.query, cursor, perspectiveSettings);
         this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
         return;

@@ -23,9 +23,11 @@
     </table-link-info>
     <table-column-group [table]="table"
                         [cursor]="cursor"
+                        [query]="query"
                         [columns]="part.columns"
                         [canManageConfig]="canManageConfig"
                         [allowedPermissions]="permissions$ | async"
+                        [view]="view"
                         [linkType]="data.linkType"
                         [embedded]="embedded"
                         class="d-block table-border-top">

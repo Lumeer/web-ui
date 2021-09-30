@@ -20,12 +20,12 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {selectViewById, selectViewQuery} from '../../../../core/store/views/views.state';
 import {selectAllCollections, selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {map, tap} from 'rxjs/operators';
@@ -38,6 +38,7 @@ import {getAttributesResourceType} from '../../../utils/resource.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {selectDocumentById} from '../../../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'data-resources-detail',
@@ -52,6 +53,9 @@ export class DataResourcesDetailComponent implements OnInit {
   @Input()
   public dataResource: DataResource;
 
+  @Input()
+  public viewId: string;
+
   @Output()
   public routingPerformed = new EventEmitter();
 
@@ -63,6 +67,7 @@ export class DataResourcesDetailComponent implements OnInit {
 
   public query$: Observable<Query>;
   public settingsQuery$: Observable<Query>;
+  public defaultView$: Observable<View>;
 
   public detailSettingsQueryStem: QueryStem;
 
@@ -76,6 +81,7 @@ export class DataResourcesDetailComponent implements OnInit {
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => createFlatResourcesSettingsQuery(collections, linkTypes)));
+    this.defaultView$ = this.viewId ? this.store$.pipe(select(selectViewById(this.viewId))) : of(null);
   }
 
   public onDocumentSelect(data: {collection: Collection; document: DocumentModel}) {

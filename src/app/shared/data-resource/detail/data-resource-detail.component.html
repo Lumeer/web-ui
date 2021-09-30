@@ -1,6 +1,6 @@
 <ng-container
   *ngIf="{workspace: workspace$ | async, detailConfig: config$ | async, startEditing: startEditing$ | async, attributesSettings: attributesSettings$ | async,
-  constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async,
+  constraintData: constraintData$ | async, commentsCount: commentsCount$ | async, selectedTab: selectedTab$ | async, currentView: currentView$ | async,
   resourcesPermissions: resourcesPermissions$ | async, linkTypes: linkTypes$ | async, currentUser: currentUser$ | async} as data">
   <ng-container
     *ngIf="{permissions: resource | resourcePermissions: data.resourcesPermissions} as dataResourceData">
@@ -8,6 +8,7 @@
                             [resource]="resource"
                             [dataResource]="dataResource"
                             [resourceType]="resourceType"
+                            [view]="data.currentView"
                             [attributesSettings]="data.attributesSettings"
                             [constraintData]="data.constraintData"
                             [permissions]="dataResourceData.permissions"
@@ -39,6 +40,7 @@
                           [constraintData]="data.constraintData"
                           [workspace]="data.workspace"
                           [query]="query"
+                          [view]="data.currentView"
                           [user]="data.currentUser"
                           [toolbarRef]="toolbarRef"
                           [preventEventBubble]="preventEventBubble"
@@ -73,12 +75,14 @@
     <div *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
       <links-toolbar class="d-block w-100 text-right"
                      [collection]="resource"
+                     [view]="data.currentView"
                      [permissions]="dataResourceData.permissions"
                      (createLink)="showCreateLink($event)">
       </links-toolbar>
       <links-accordeon class="d-block"
                        *ngIf="resource && dataResource?.id"
                        [document]="dataResource"
+                       [viewId]="data.currentView?.id"
                        [preventEventBubble]="preventEventBubble"
                        [allowSelectDocument]="allowSelectDocument"
                        [collection]="resource"
@@ -108,6 +112,7 @@
                              *ngIf="resource && dataResource?.id"
                              [linkInstance]="dataResource"
                              [linkType]="resource"
+                             [viewId]="data.currentView?.id"
                              [preventEventBubble]="preventEventBubble"
                              [allowSelectDocument]="allowSelectDocument"
                              [permissions]="data.resourcesPermissions"

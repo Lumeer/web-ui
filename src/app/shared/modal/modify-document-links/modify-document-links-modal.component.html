@@ -33,6 +33,7 @@
                      [style.height.vh]="50"
                      [mainDocumentId]="documentId"
                      [documents]="data.documents"
+                     [view]="currentView$ | async"
                      [linkType]="data.linkType"
                      [collection]="data.collection"
                      [linkInstances]="data.linkInstances"

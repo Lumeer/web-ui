@@ -33,7 +33,7 @@ import {
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/view';
+import {AttributeSortType, View, ViewSettings} from '../../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {WorkflowTablesService} from './service/workflow-tables.service';
@@ -63,6 +63,7 @@ import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {queryStemsAreSame} from '../../../../../core/store/navigation/query/query.util';
+import {WorkflowPerspectiveConfiguration} from '../../../perspective-configuration';
 
 @Component({
   selector: 'workflow-tables',
@@ -104,6 +105,15 @@ export class WorkflowTablesComponent implements OnChanges {
   @Input()
   public dataLoaded: boolean;
 
+  @Input()
+  public workflowId: string;
+
+  @Input()
+  public currentView: View;
+
+  @Input()
+  public perspectiveConfiguration: WorkflowPerspectiveConfiguration;
+
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
 
@@ -127,6 +137,12 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentView) {
+      this.tablesService.setCurrentView(this.currentView);
+    }
+    if (changes.workflowId) {
+      this.tablesService.setWorkflowId(this.workflowId);
+    }
     if (this.onlyViewSettingsChanged(changes)) {
       this.tablesService.onUpdateSettings(this.viewSettings);
     } else if (
@@ -138,7 +154,8 @@ export class WorkflowTablesComponent implements OnChanges {
       changes.linkTypes ||
       changes.config ||
       changes.constraintData ||
-      changes.canManageConfig
+      changes.canManageConfig ||
+      changes.perspectiveConfiguration
     ) {
       this.tablesService.onUpdateData(
         this.collections,
@@ -149,7 +166,8 @@ export class WorkflowTablesComponent implements OnChanges {
         this.query,
         this.viewSettings,
         this.constraintData,
-        this.canManageConfig
+        this.canManageConfig,
+        this.perspectiveConfiguration
       );
     }
   }
@@ -189,12 +207,16 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   public onClickInsideTables(event: MouseEvent) {
-    this.checkClickOutsideTables(event);
+    if (event.isTrusted) {
+      this.checkClickOutsideTables(event);
+    }
   }
 
   @HostListener('document:click', ['$event'])
   public onDocumentClick(event: MouseEvent) {
-    this.checkClickOutsideTables(event);
+    if (event.isTrusted) {
+      this.checkClickOutsideTables(event);
+    }
   }
 
   private checkClickOutsideTables(event: MouseEvent) {
@@ -205,7 +227,7 @@ export class WorkflowTablesComponent implements OnChanges {
     }
 
     const isInsideSidebar = clickedInsideElement(event, WORKFLOW_SIDEBAR_SELECTOR);
-    if (isInsideApp && !isInsideTables && !isInsideSidebar) {
+    if (isInsideApp && !isInsideTables && !isInsideSidebar && this.perspectiveConfiguration?.showSidebar) {
       this.tablesService.resetSidebar();
     }
   }

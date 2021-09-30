@@ -4,10 +4,12 @@
                            [linkTypes]="linkTypes$ | async"
                            [query]="query$ | async"
                            [constraintData]="constraintData$ | async"
-                           [config]="config$ | async"
+                           [pivotConfig]="config$ | async"
+                           [view]="currentView$ | async"
                            [dataLoaded]="dataLoaded$ | async"
                            [canManageConfig]="canManageConfig$ | async"
                            [sidebarOpened]="sidebarOpened$ | async"
+                           [perspectiveConfiguration]="perspectiveConfiguration"
                            (configChange)="onConfigChange($event)"
                            (sidebarToggle)="onSidebarToggle()">
 </pivot-perspective-wrapper>

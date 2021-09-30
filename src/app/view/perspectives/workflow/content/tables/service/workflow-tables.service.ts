@@ -30,7 +30,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {ResourcesPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
-import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
+import {AttributeSortType, View, ViewSettings} from '../../../../../../core/store/views/view';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
@@ -45,6 +45,7 @@ import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 import {ConditionType, ConditionValue, ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -78,6 +79,14 @@ export class WorkflowTablesService {
 
   public setHiddenComponent(hiddenComponent?: () => DataRowHiddenComponent) {
     this.hiddenComponent = hiddenComponent;
+  }
+
+  public setWorkflowId(id: string) {
+    this.dataService.setWorkflowId(id);
+  }
+
+  public setCurrentView(view: View) {
+    this.dataService.setCurrentView(view);
   }
 
   public onRowMenuSelected(
@@ -337,7 +346,8 @@ export class WorkflowTablesService {
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
-    canManageConfig: boolean
+    canManageConfig: boolean,
+    perspectiveConfiguration: WorkflowPerspectiveConfiguration
   ) {
     this.dataService.createAndSyncTables(
       collections,
@@ -348,7 +358,9 @@ export class WorkflowTablesService {
       query,
       viewSettings,
       constraintData,
-      canManageConfig
+      canManageConfig,
+      false,
+      perspectiveConfiguration
     );
   }
 

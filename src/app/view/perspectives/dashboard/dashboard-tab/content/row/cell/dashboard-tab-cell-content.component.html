@@ -1,0 +1,17 @@
+<div class="d-flex flex-row-reverse flex-wrap">
+  <dashboard-tab-action *ngFor="let action of dashboardCell?.actions"
+                        class="p-1"
+                        [action]="action"
+                        [views]="views">
+  </dashboard-tab-action>
+</div>
+<img *ngIf="dashboardCell?.type === cellType.Image" class="image" [ngClass]="scale" [src]="url" alt=""/>
+<ng-container *ngIf="dashboardCell?.type === cellType.View">
+
+  <perspective-preview *ngIf="view"
+                       class="preview"
+                       [view]="view"
+                       [perspectiveConfiguration]="configuration">
+  </perspective-preview>
+
+</ng-container>

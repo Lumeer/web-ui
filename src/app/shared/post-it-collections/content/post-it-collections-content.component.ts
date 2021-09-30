@@ -38,15 +38,18 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {createEmptyCollection} from '../../../core/store/collections/collection.util';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectHasVisibleSearchTab} from '../../../core/store/views/views.state';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -80,6 +83,9 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public projectPermissions: AllowedPermissions;
 
   @Input()
+  public collectionsPermissions: AllowedPermissionsMap;
+
+  @Input()
   public workspace: Workspace;
 
   @Input()
@@ -99,21 +105,30 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
 
   public allCollections$ = new BehaviorSubject<Collection[]>([]);
   public selectedCollections$ = new BehaviorSubject<string[]>([]);
+  public truncateContent$ = new BehaviorSubject(false);
   public correlationIdsOrder = [];
 
   public readonly canImportCollection: boolean;
+
+  private hasCollectionsTab: boolean;
+  private userToggledShowAll: boolean;
+  private subscription = new Subscription();
 
   constructor(
     private toggleService: CollectionFavoriteToggleService,
     private notificationService: NotificationService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private store$: Store<AppState>,
     private configurationService: ConfigurationService
   ) {
     this.canImportCollection = !configurationService.getConfiguration().publicView;
   }
 
   public ngOnInit() {
+    this.subscription = this.store$
+      .pipe(select(selectHasVisibleSearchTab(SearchTab.Collections)))
+      .subscribe(hasTab => (this.hasCollectionsTab = hasTab));
     this.toggleService.setWorkspace(this.workspace);
     this.subscribeOnRoute();
   }
@@ -121,6 +136,11 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collections) {
       this.initCollections();
+    }
+    if (changes.collections || changes.maxCollections) {
+      this.truncateContent$.next(
+        !this.userToggledShowAll && this.maxCollections > 0 && this.maxCollections < this.allCollections$.value.length
+      );
     }
   }
 
@@ -148,9 +168,14 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   }
 
   public onShowAllClicked() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
-      queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
-    });
+    if (this.hasCollectionsTab) {
+      this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
+        queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
+      });
+    } else {
+      this.userToggledShowAll = true;
+      this.truncateContent$.next(false);
+    }
   }
 
   private workspacePath(): string {
@@ -163,6 +188,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
 
   public ngOnDestroy() {
     this.toggleService.onDestroy();
+    this.subscription.unsubscribe();
   }
 
   public onFavoriteToggle(collection: Collection) {

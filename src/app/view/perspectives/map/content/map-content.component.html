@@ -1,18 +1,19 @@
 <ng-container *ngIf="{data: data$ | async} as data">
-  <map-image-content *ngIf="map?.config?.imageUrl"
-                     [map]="map"
+  <map-image-content *ngIf="config?.imageUrl"
+                     [config]="config"
                      [markerData]="data.data"
                      (detail)="onMarkerDetail($event)"
                      (mapMove)="onMapMove($event)"
                      (valueSave)="onSaveValue($event)">
   </map-image-content>
-  <map-globe-content *ngIf="!map?.config?.imageUrl"
-                     [map]="map"
+  <map-globe-content *ngIf="!config?.imageUrl"
+                     [config]="config"
                      [constraintData]="constraintData"
                      [collections]="collections"
                      [linkTypes]="linkTypes"
                      [markerData]="data.data"
                      [query]="query"
+                     [view]="view"
                      (detail)="onMarkerDetail($event)"
                      (mapMove)="onMapMove($event)"
                      (valueSave)="onSaveValue($event)">

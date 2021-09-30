@@ -19,12 +19,12 @@
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {
+  MapConfig,
   MapCoordinates,
   MapImageData,
   MapImageLoadResult,
   MapMarkerData,
   MapMarkerProperties,
-  MapModel,
   MapPosition,
 } from '../../../../../core/store/maps/map.model';
 import {AppState} from '../../../../../core/store/app.state';
@@ -47,7 +47,7 @@ import {ConstraintData, CoordinatesConstraint, CoordinatesConstraintConfig} from
 })
 export class MapImageContentComponent implements OnChanges {
   @Input()
-  public map: MapModel;
+  public config: MapConfig;
 
   @Input()
   public markerData: MapMarkerData[];
@@ -73,8 +73,8 @@ export class MapImageContentComponent implements OnChanges {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.map && this.map) {
-      this.store$.dispatch(new MapsAction.DownloadImageData({url: this.map.config.imageUrl}));
+    if (changes.config && this.config) {
+      this.store$.dispatch(new MapsAction.DownloadImageData({url: this.config.imageUrl}));
       this.refreshObservables();
     }
     if (changes.markerData || changes.constraintData) {
@@ -87,7 +87,7 @@ export class MapImageContentComponent implements OnChanges {
   }
 
   private refreshObservables() {
-    const imageUrl = this.map.config.imageUrl;
+    const imageUrl = this.config.imageUrl;
     this.loading$ = this.store$.pipe(select(selectMapImageDataLoading(imageUrl)));
     this.loaded$ = this.store$.pipe(select(selectMapImageDataLoaded(imageUrl)));
     this.imageData$ = this.store$.pipe(select(selectMapImageData(imageUrl)));

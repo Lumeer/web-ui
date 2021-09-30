@@ -66,6 +66,9 @@ export class KanbanColumnComponent implements OnInit {
   public query: Query;
 
   @Input()
+  public viewId: string;
+
+  @Input()
   public currentUser: User;
 
   @Input()

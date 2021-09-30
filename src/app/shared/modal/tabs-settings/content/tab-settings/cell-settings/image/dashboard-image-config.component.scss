@@ -1,0 +1,32 @@
+.scale-type {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  width: 2rem;
+
+  &.fit {
+    .image-border {
+      font-size: 2rem;
+      position: absolute;
+    }
+
+    .image {
+      font-size: 1.5rem;
+      position: absolute;
+    }
+  }
+
+  &.crop {
+    .image-border {
+      font-size: 2rem;
+      position: absolute;
+    }
+
+    .image {
+      font-size: 2.1rem;
+      position: absolute;
+    }
+  }
+}

@@ -11,13 +11,14 @@
       </table-import-button>
     </div>
 
-    <div class="grid mt-3">
+    <div class="grid mt-3" *ngIf="{truncateContent: truncateContent$ | async} as data">
 
       <post-it-collection class="layout-item d-block" @fadeIn
-                          *ngFor="let collection of (maxCollections > 0 ? (allCollections | slice:0:maxCollections) : allCollections); trackBy:trackByCollection; let idx = index"
+                          *ngFor="let collection of (data.truncateContent ? (allCollections | slice:0:maxCollections) : allCollections); trackBy:trackByCollection"
                           [class.selected]="selectedCollections$ | async | includes:(collection.correlationId || collection.id)"
                           [collection]="collection"
                           [workspace]="workspace"
+                          [permissions]="collectionsPermissions && collection.id && collectionsPermissions[collection.id]"
                           (update)="updateCollection($event)"
                           (create)="createCollection($event)"
                           (delete)="deleteCollection(collection)"
@@ -28,9 +29,8 @@
       </post-it-collection>
 
 
-      <div class="layout-item"
-           *ngIf="maxCollections > 0 && maxCollections < allCollections.length"
-           (click)="onShowAllClicked()">
+      <div *ngIf="data.truncateContent"
+           class="layout-item" (click)="onShowAllClicked()">
         <div class="d-flex h-100 clickable align-items-center justify-content-center cursor-pointer text-center">
           <see-more-button></see-more-button>
         </div>

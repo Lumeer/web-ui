@@ -32,16 +32,10 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
-import {Router} from '@angular/router';
 import {Perspective} from '../../../../view/perspectives/perspective';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Observable} from 'rxjs';
-import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {QueryParam} from '../../../../core/store/navigation/query-param';
 import {permissionsCanManageCollectionDetail} from '../../../utils/permission.utils';
-import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collection',
@@ -55,6 +49,9 @@ export class PostItCollectionComponent implements OnChanges {
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public update = new EventEmitter<Collection>();
@@ -77,20 +74,14 @@ export class PostItCollectionComponent implements OnChanges {
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
-  public permissions$: Observable<AllowedPermissions>;
-  public canManageDetail$: Observable<boolean>;
+  public canManageDetail: boolean;
 
   public path: any[];
   public queryParams: any;
 
-  constructor(private router: Router, private store$: Store<AppState>) {}
-
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collection?.id)));
-      this.canManageDetail$ = this.permissions$.pipe(
-        map(permissions => permissionsCanManageCollectionDetail(permissions))
-      );
+    if (changes.permissions) {
+      this.canManageDetail = permissionsCanManageCollectionDetail(this.permissions);
     }
     if (changes.collection || changes.workspace) {
       if (this.collection?.id) {

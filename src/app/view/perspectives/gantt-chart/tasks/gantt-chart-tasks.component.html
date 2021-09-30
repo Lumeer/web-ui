@@ -2,14 +2,16 @@
   <ng-container *ngIf="{range: data.tasksData?.tasks | tasksInvalidRangeInfo} as invalidInfo">
     <ng-container *ngIf="!invalidInfo.range">
       <gantt-chart-header [currentMode]="config.mode"
+                          class="d-block"
+                          [class.mt-3]="perspectiveConfiguration?.additionalSpace"
                           [canManageConfig]="canManageConfig"
                           (scrollToToday)="visualizationComponent.scrollToToday()"
                           (modeChange)="onModeChanged($event)">
       </gantt-chart-header>
       <gantt-chart-visualization
-        class="d-block pb-6"
+        class="d-block"
+        [class.pb-6]="perspectiveConfiguration?.additionalSpace"
         [canManageConfig]="canManageConfig"
-        [ganttChartId]="ganttChartId"
         [currentMode]="config.mode"
         [tasks]="data.tasksData?.tasks"
         [options]="data.tasksData?.options"

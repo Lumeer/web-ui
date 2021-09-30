@@ -1,0 +1,23 @@
+<search-tasks-content class="d-block" *ngIf="loaded$ | async"
+                      [class.pb-5]="perspectiveConfiguration?.additionalSpace"
+                      [constraintData]="constraintData$ | async"
+                      [query]="query$ | async"
+                      [config]="documentsConfig$ | async"
+                      [maxDocuments]="maxLines"
+                      [collections]="collections$ | async"
+                      [workspace]="workspace$ | async"
+                      [documents]="documents$ | async"
+                      [view]="view$ | async"
+                      [currentUser]="currentUser$ | async"
+                      [compactEmptyPages]="compactEmptyPages"
+                      [views]="views$ | async"
+                      [permissions]="permissions$ | async"
+                      [perspectiveConfiguration]="perspectiveConfiguration"
+                      (configChange)="configChange($event)"
+                      infiniteScroll
+                      [infiniteScrollDisabled]="maxLines > 0"
+                      [infiniteScrollDistance]="2"
+                      [infiniteScrollContainer]="scrollContainer"
+                      [fromRoot]="true"
+                      (scrolled)="onFetchNextPage()">
+</search-tasks-content>

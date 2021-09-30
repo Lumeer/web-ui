@@ -33,8 +33,9 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectReadableCollections} from '../../../../core/store/common/permissions.selectors';
+import {selectReadableCollectionsByView} from '../../../../core/store/common/permissions.selectors';
 import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
+import {View} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'links-toolbar',
@@ -47,6 +48,9 @@ export class LinksToolbarComponent implements OnChanges, OnInit {
 
   @Input()
   public permissions: AllowedPermissions;
+
+  @Input()
+  public view: View;
 
   @Output()
   public createLink = new EventEmitter<[string, string]>();
@@ -63,9 +67,9 @@ export class LinksToolbarComponent implements OnChanges, OnInit {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
+    if (changes.collection || changes.view) {
       this.collections$ = this.store$.pipe(
-        select(selectReadableCollections),
+        select(selectReadableCollectionsByView(this.view)),
         map(collections => collections.filter(collection => collection.id !== this.collection?.id))
       );
     }

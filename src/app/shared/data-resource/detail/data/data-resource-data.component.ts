@@ -50,7 +50,7 @@ import {selectDocumentById} from '../../../../core/store/documents/documents.sta
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
-import {ResourceAttributeSettings} from '../../../../core/store/views/view';
+import {ResourceAttributeSettings, View} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
@@ -85,6 +85,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public user: User;
+
+  @Input()
+  public view: View;
 
   @Input()
   public toolbarRef: TemplateRef<any>;

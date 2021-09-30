@@ -12,7 +12,7 @@ th {
   position: sticky;
   height: $height;
   vertical-align: middle !important;
-  padding: 0 $width / 2 !important;
+  padding: 0 $width * 0.5 !important;
   font-style: italic;
 }
 

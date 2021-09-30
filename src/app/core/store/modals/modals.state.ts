@@ -21,7 +21,7 @@ import {AppState} from '../app.state';
 import {createSelector} from '@ngrx/store';
 
 export interface ModalsState {
-  modalsIds: number[];
+  modalsIds: string[];
 }
 
 export const initialModalsState: ModalsState = {modalsIds: []};

@@ -1,0 +1,18 @@
+@import '~src/styles/variables';
+
+.dashboard-row {
+  display: grid;
+  grid-gap: 0.5rem;
+  align-items: center;
+
+  .dashboard-cell {
+    height: 3rem;
+    border-radius: 0.5rem;
+    border: 1px solid $gray-400;
+
+    &.selected {
+      border: 2px solid $success;
+      background: lighten($success, 60%);
+    }
+  }
+}

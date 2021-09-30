@@ -43,8 +43,11 @@ export class TranslationService {
     return $localize`:@@currency.ordinals:st|nd|rd|th`.split('|');
   }
 
-  public createDurationUnitsMap(): Record<DurationUnit | string, string> {
-    return objectValues(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
+  public createDurationUnitsMap(): Record<DurationUnit, string> {
+    return objectValues(DurationUnit).reduce(
+      (map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}),
+      {}
+    ) as Record<DurationUnit, string>;
   }
 
   public translateDurationUnit(unit: DurationUnit): string {

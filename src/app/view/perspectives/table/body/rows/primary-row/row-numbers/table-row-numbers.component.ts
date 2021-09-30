@@ -58,6 +58,9 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
   @Input()
   public row: TableConfigRow;
 
+  @Input()
+  public viewId: string;
+
   @ViewChildren('rowNumber')
   public rowNumberElements: QueryList<ElementRef>;
 
@@ -162,7 +165,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
       )
       .subscribe(({collection, document}) => {
         if (collection && document) {
-          this.modalService.showDataResourceDetail(document, collection);
+          this.modalService.showDataResourceDetail(document, collection, this.viewId);
         }
       });
   }

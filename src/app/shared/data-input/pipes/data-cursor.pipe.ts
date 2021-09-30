@@ -27,7 +27,7 @@ import {DataResource} from '../../../core/model/resource';
   name: 'dataCursor',
 })
 export class DataCursorPipe implements PipeTransform {
-  public transform(entity: DataResource, attributeId: string): DataCursor {
+  public transform(entity: DataResource, attributeId: string, viewId: string): DataCursor {
     const {collectionId} = entity as DocumentModel;
     const {linkTypeId} = entity as LinkInstance;
 
@@ -37,6 +37,7 @@ export class DataCursorPipe implements PipeTransform {
       linkTypeId: linkTypeId,
       linkInstanceId: linkTypeId && entity.id,
       attributeId,
+      viewId,
     };
   }
 }

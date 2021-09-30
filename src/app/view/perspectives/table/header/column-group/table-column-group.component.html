@@ -22,6 +22,8 @@
            class="d-flex flex-column">
         <table-single-column [table]="table"
                              [cursor]="columnCursor"
+                             [view]="view"
+                             [query]="query"
                              [column]="column"
                              [allowedPermissions]="allowedPermissions"
                              [collection]="collection"
@@ -35,6 +37,8 @@
         </table-single-column>
         <table-column-group *ngIf="column.children.length"
                             [table]="table"
+                            [view]="view"
+                            [query]="query"
                             [cursor]="columnCursor"
                             [columns]="column.children"
                             [canManageConfig]="canManageConfig"

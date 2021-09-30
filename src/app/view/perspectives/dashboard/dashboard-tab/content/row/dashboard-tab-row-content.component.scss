@@ -1,0 +1,16 @@
+@import 'src/styles/variables';
+
+.dashboard-row {
+  display: grid;
+  grid-gap: 1rem;
+  height: 33vw;
+  overflow: hidden;
+
+  .cell {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid $gray-200;
+    border-radius: 0.3rem;
+  }
+}

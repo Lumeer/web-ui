@@ -21,6 +21,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -28,6 +29,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import Gantt, {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
@@ -46,9 +48,6 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
 
   @Input()
   public canManageConfig: boolean;
-
-  @Input()
-  public ganttChartId: string;
 
   @Input()
   public options: GanttOptions;
@@ -76,6 +75,9 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
 
   @Output()
   public taskDetail = new EventEmitter<GanttTask>();
+
+  @ViewChild('ganttElement')
+  public ganttElement: ElementRef<HTMLElement>;
 
   public ganttChart: Gantt;
 
@@ -118,11 +120,11 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
   }
 
   private refreshMode(mode: string) {
-    this.ganttChart.changeViewMode(mode as any);
+    this.ganttChart?.changeViewMode(mode as any);
   }
 
   public scrollToToday() {
-    this.ganttChart && this.ganttChart.scrollToToday();
+    this.ganttChart?.scrollToToday();
   }
 
   public ngAfterViewInit() {
@@ -132,12 +134,11 @@ export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnCh
   }
 
   private createChartAndInitListeners() {
-    const ganttElement = document.getElementById(`ganttChart-${this.ganttChartId}`);
-    if (!ganttElement) {
+    if (!this.ganttElement?.nativeElement) {
       return;
     }
 
-    this.ganttChart = new Gantt(ganttElement, this.tasks, this.options);
+    this.ganttChart = new Gantt(this.ganttElement.nativeElement, this.tasks, this.options);
     this.ganttChart.onSwimlaneResized = (index, width) => this.onSwimlaneResized(index, width);
     this.ganttChart.onTaskChanged = task => this.onTaskChanged(task);
     this.ganttChart.onTaskDependencyAdded = (fromTask, toTask) => this.onDependencyAdded(fromTask, toTask);

@@ -1,5 +1,4 @@
 <a class="card post-it cursor-pointer color-inherit"
-   *ngIf="permissions$ | async as allowedPermissions"
    [class.uninitialized]="!collection.id"
    [class.initialized]="collection.id"
    [routerLink]="path"
@@ -44,7 +43,7 @@
         </i>&nbsp;{{ collection.documentsCount }}</span>
     </div>
 
-    <div *ngIf="collection.id && allowedPermissions.roles?.Read"
+    <div *ngIf="collection.id && permissions.roles?.Read"
          class="toggle-favorite opacity-content clickable text-warning"
          [class.always-visible]="collection.favorite">
       <span *ngIf="collection.favorite"
@@ -68,7 +67,7 @@
     <div *ngIf="collection.id"
          class="buttons opacity-content d-flex flex-column">
       <div id="dropdown-{{collection.id}}">
-        <a *ngIf="canManageDetail$ | async" title="Configure" i18n-title="@@collection.button.configure"
+        <a *ngIf="canManageDetail" title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-left"
            [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id]">
           <i class="fas fa-fw fa-cog" aria-hidden="true"></i>
@@ -90,7 +89,7 @@
   </div>
 
   <post-it-collection-name [collectionName]="collection.name"
-                           [editable]="!collection.id || allowedPermissions?.roles?.Manage"
+                           [editable]="!collection.id || permissions?.roles?.Manage"
                            (changed)="onNameChanged($event)"
                            (selected)="selected.emit()"
                            (unselected)="unselected.emit()">

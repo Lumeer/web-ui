@@ -55,7 +55,7 @@ import {
   isLinkTypeAttributeEditable,
 } from '../../../../../../core/store/collections/collection.util';
 import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
-import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
+import {HeaderMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
@@ -92,10 +92,7 @@ import {
   objectsByIdMap,
 } from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
-import {
-  selectWorkflowId,
-  selectWorkflowSelectedDocumentId,
-} from '../../../../../../core/store/workflows/workflow.state';
+import {selectWorkflowSelectedDocumentId} from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 import {
   generateDocumentDataByResourceQuery,
@@ -125,7 +122,6 @@ import {Observable} from 'rxjs';
 import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
-import {selectCurrentView} from '../../../../../../core/store/views/views.state';
 import {
   AttributeFilter,
   ConditionType,
@@ -141,8 +137,10 @@ import {NavigationAction} from '../../../../../../core/store/navigation/navigati
 import {CommonAction} from '../../../../../../core/store/common/common.action';
 import {RoleType} from '../../../../../../core/model/role-type';
 import {User} from '../../../../../../core/store/users/user';
-import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/users.state';
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
+import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
+import {Workspace} from '../../../../../../core/store/navigation/workspace';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -152,6 +150,7 @@ export class WorkflowTablesDataService {
   private lockedRowIds: Record<string, string[]> = {}; // grouped by tableId
   private currentView: View;
   private currentUser: User;
+  private workflowId: string;
 
   constructor(
     private store$: Store<AppState>,
@@ -164,8 +163,7 @@ export class WorkflowTablesDataService {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
-    this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.currentView = view));
-    this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
+    this.store$.pipe(select(selectCurrentUserForWorkspace)).subscribe(user => (this.currentUser = user));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -175,6 +173,22 @@ export class WorkflowTablesDataService {
         const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
         this.store$.dispatch(new WorkflowsAction.SetSelectedCell({cell, column}));
       });
+  }
+
+  public get editableFilters(): boolean {
+    return this.stateService.perspectiveConfiguration?.editableFilters;
+  }
+
+  public get showHiddenColumns(): boolean {
+    return this.stateService.perspectiveConfiguration?.showHiddenColumns;
+  }
+
+  public setWorkflowId(id: string) {
+    this.workflowId = id;
+  }
+
+  public setCurrentView(view: View) {
+    this.currentView = view;
   }
 
   private formatWorkflowValue(
@@ -213,7 +227,8 @@ export class WorkflowTablesDataService {
         viewSettings,
         this.stateService.constraintData,
         this.stateService.canManageConfig,
-        viewSettingsSortChanged(this.stateService.viewSettings, viewSettings)
+        viewSettingsSortChanged(this.stateService.viewSettings, viewSettings),
+        this.stateService.perspectiveConfiguration
       );
     }
   }
@@ -228,7 +243,8 @@ export class WorkflowTablesDataService {
     viewSettings: ViewSettings,
     constraintData: ConstraintData,
     canManageConfig: boolean,
-    resetLockedRows?: boolean
+    resetLockedRows?: boolean,
+    perspectiveConfiguration?: WorkflowPerspectiveConfiguration
   ) {
     resetLockedRows && this.resetLockedRows();
 
@@ -242,7 +258,8 @@ export class WorkflowTablesDataService {
       query,
       viewSettings,
       constraintData,
-      canManageConfig
+      canManageConfig,
+      perspectiveConfiguration
     );
 
     const {tables, actions} = this.createTablesAndSyncActions(
@@ -354,7 +371,7 @@ export class WorkflowTablesDataService {
         if (aggregatedData.items.length) {
           for (const aggregatedDataItem of aggregatedData.items) {
             const title = aggregatedDataItem.value?.toString() || '';
-            const tableId = workflowTableId(stemConfig.stem, title);
+            const tableId = workflowTableId(stemConfig.stem, this.workflowId, title);
             const titleDataValue = constraint.createDataValue(title, constraintData);
             const titleDataResources = aggregatedDataItem.dataResources;
             for (const childItem of aggregatedDataItem.children || []) {
@@ -412,7 +429,7 @@ export class WorkflowTablesDataService {
             }
           }
         } else {
-          const tableId = workflowTableId(stemConfig.stem);
+          const tableId = workflowTableId(stemConfig.stem, this.workflowId);
 
           const {rows, newRow} = this.createRows(
             tableId,
@@ -606,6 +623,7 @@ export class WorkflowTablesDataService {
         id: currentColumn?.id || generateId(),
         attribute,
         editable,
+        editableFilters: this.editableFilters,
         width: columnSettings?.width || TABLE_COLUMN_WIDTH,
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
@@ -623,9 +641,10 @@ export class WorkflowTablesDataService {
         return columns;
       }
 
-      if (!setting.hidden || permissions?.roles?.Read) {
-        columns.push(column);
+      if (!column.hidden || (this.showHiddenColumns && permissions?.roles?.Read)) {
+        columns.push(this.checkColumnMenuItems(column));
       }
+
       return columns;
     }, []);
 
@@ -654,7 +673,7 @@ export class WorkflowTablesDataService {
     }
 
     if (
-      !this.currentView &&
+      (!this.currentView || attributeColumns.length === 0) &&
       isCollection &&
       permissions.roles?.AttributeEdit &&
       !attributeColumns.some(column => !column.attribute)
@@ -665,6 +684,7 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         editable: true,
+        editableFilters: this.editableFilters,
         filters: [],
         width: TABLE_COLUMN_WIDTH,
         permissions,
@@ -676,6 +696,16 @@ export class WorkflowTablesDataService {
     }
 
     return {columns: attributeColumns, actions: syncActions};
+  }
+
+  private checkColumnMenuItems(column: TableColumn): TableColumn {
+    if (!this.showHiddenColumns) {
+      const hideMenuItem = column.menuItems.find(item => item.id === HeaderMenuId.Hide);
+      if (hideMenuItem) {
+        hideMenuItem.disabled = true;
+      }
+    }
+    return column;
   }
 
   private createColumnFilters(
@@ -722,6 +752,7 @@ export class WorkflowTablesDataService {
         name: generateAttributeName(columnNames),
         linkTypeId: linkType.id,
         editable: true,
+        editableFilters: this.editableFilters,
         permissions,
         width: TABLE_COLUMN_WIDTH,
         color: columnBackgroundColor(null),
@@ -852,16 +883,14 @@ export class WorkflowTablesDataService {
   }
 
   public resizeTable(table: WorkflowTable, height: number) {
-    this.setWorkflowConfig(workflowId =>
-      this.store$.dispatch(
-        new WorkflowsAction.SetTableHeight({
-          workflowId,
-          collectionId: table.collectionId,
-          stem: table.stem,
-          value: table.title?.value || '',
-          height,
-        })
-      )
+    this.store$.dispatch(
+      new WorkflowsAction.SetTableHeight({
+        workflowId: this.workflowId,
+        collectionId: table.collectionId,
+        stem: table.stem,
+        value: table.title?.value || '',
+        height,
+      })
     );
   }
 
@@ -1043,24 +1072,18 @@ export class WorkflowTablesDataService {
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {
     if (column.attribute) {
-      this.setWorkflowConfig(workflowId =>
-        this.store$.dispatch(
-          new WorkflowsAction.SetColumnWidth({
-            workflowId,
-            width,
-            attributeId: column.attribute.id,
-            collectionId: column.collectionId,
-            linkTypeId: column.linkTypeId,
-          })
-        )
+      this.store$.dispatch(
+        new WorkflowsAction.SetColumnWidth({
+          workflowId: this.workflowId,
+          width,
+          attributeId: column.attribute.id,
+          collectionId: column.collectionId,
+          linkTypeId: column.linkTypeId,
+        })
       );
     } else {
       this.stateService.resizeColumn(changedTable, column, width);
     }
-  }
-
-  private setWorkflowConfig(callback: (workflowId: string) => void) {
-    this.store$.pipe(select(selectWorkflowId), take(1)).subscribe(workflowId => callback(workflowId));
   }
 
   private onAttributeCreated(attribute: Attribute, column: TableColumn) {
@@ -1090,7 +1113,9 @@ export class WorkflowTablesDataService {
 
   public unlinkRow(row: TableRow, column: TableColumn) {
     if (row.documentId && row.linkInstanceId) {
-      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: row.linkInstanceId}));
+      this.store$.dispatch(
+        new LinkInstancesAction.DeleteConfirm({linkInstanceId: row.linkInstanceId, workspace: this.currentWorkspace()})
+      );
     } else {
       this.stateService.removeRow(row);
     }
@@ -1102,6 +1127,7 @@ export class WorkflowTablesDataService {
         new DocumentsAction.DeleteConfirm({
           collectionId: column.collectionId,
           documentId: row.documentId,
+          workspace: this.currentWorkspace(),
         })
       );
     } else {
@@ -1241,6 +1267,7 @@ export class WorkflowTablesDataService {
         new DocumentsAction.CreateWithLink({
           document,
           linkInstance,
+          workspace: this.currentWorkspace(),
           otherDocumentId: row.linkedDocumentId,
           afterSuccess: ({documentId, linkInstanceId}) => this.onRowCreated(row, data, documentId, linkInstanceId),
           onFailure: () => this.stateService.endRowCreating(row),
@@ -1250,11 +1277,16 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
+          workspace: this.currentWorkspace(),
           afterSuccess: document => this.onRowCreated(row, data, document.id),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );
     }
+  }
+
+  private currentWorkspace(): Workspace {
+    return {viewId: this.currentView?.id};
   }
 
   public createOrUpdateLink(row: TableRow, document: DocumentModel) {
@@ -1267,6 +1299,7 @@ export class WorkflowTablesDataService {
         this.store$.dispatch(
           new LinkInstancesAction.ChangeDocuments({
             linkInstanceId: row.linkInstanceId,
+            workspace: this.currentWorkspace(),
             documentIds: [otherDocumentId, document.id],
           })
         );
@@ -1283,6 +1316,7 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new LinkInstancesAction.Create({
           linkInstance,
+          workspace: this.currentWorkspace(),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );
@@ -1349,10 +1383,10 @@ export class WorkflowTablesDataService {
   private patchData(row: TableRow, data: Record<string, any>, collectionId?: string, linkTypeId?: string) {
     if (collectionId && row.documentId) {
       const document: DocumentModel = {id: row.documentId, collectionId, data};
-      this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      this.store$.dispatch(new DocumentsAction.PatchData({document, workspace: this.currentWorkspace()}));
     } else if (linkTypeId && row.linkInstanceId) {
       const linkInstance: LinkInstance = {id: row.linkInstanceId, linkTypeId, data, documentIds: ['', '']};
-      this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+      this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance, workspace: this.currentWorkspace()}));
     }
   }
 
@@ -1387,7 +1421,7 @@ export class WorkflowTablesDataService {
       if (table.linkingDocumentIds.length === 1) {
         this.addRow(tableId, table.linkingDocumentIds[0]);
       } else {
-        this.modalService.showChooseLinkDocument(table.linkingDocumentIds, document =>
+        this.modalService.showChooseLinkDocument(table.linkingDocumentIds, this.currentView?.id, document =>
           this.addRow(tableId, document.id)
         );
       }

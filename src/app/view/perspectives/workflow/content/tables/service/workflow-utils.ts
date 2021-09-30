@@ -138,8 +138,8 @@ export function createLinkTypeData(
   return {};
 }
 
-export function workflowTableId(stem: QueryStem, value?: string): string {
-  return [stem.collectionId, ...(stem.linkTypeIds || []), value || ''].join('');
+export function workflowTableId(stem: QueryStem, ...values: string[]): string {
+  return [stem.collectionId, ...(stem.linkTypeIds || []), ...(values || [].filter(value => !!value))].join('');
 }
 
 export function isLinkedOrGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
