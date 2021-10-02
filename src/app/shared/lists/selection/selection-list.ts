@@ -17,25 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SequenceDto} from '../../dto/sequence.dto';
-import {Sequence} from '../../model/sequence';
+import {SelectConstraintOption} from '@lumeer/data-filters';
 
-export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
-  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
-}
-
-export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
-  return {
-    id: dto.id,
-    name: dto.name,
-    seq: dto.seq,
-  };
-}
-
-export function convertSequenceModelToDto(model: Sequence): SequenceDto {
-  return {
-    id: model.id,
-    name: model.name,
-    seq: model.seq,
-  };
+export interface SelectionList {
+  id?: string;
+  name: string;
+  organizationId?: string;
+  projectId?: string;
+  displayValues?: boolean;
+  options: SelectConstraintOption[];
 }

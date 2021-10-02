@@ -17,25 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SequenceDto} from '../../dto/sequence.dto';
-import {Sequence} from '../../model/sequence';
+import {SelectionListDto} from '../../dto/selection-list.dto';
+import {SelectionList} from '../../../shared/lists/selection/selection-list';
+import {convertSelectConstraintOptionsDtosToModels} from '../collections/attribute.converter';
 
-export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
-  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
-}
-
-export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
+export function convertSelectionListDtoToModel(dto: SelectionListDto): SelectionList {
   return {
-    id: dto.id,
-    name: dto.name,
-    seq: dto.seq,
+    ...dto,
+    options: convertSelectConstraintOptionsDtosToModels(dto.options),
   };
 }
 
-export function convertSequenceModelToDto(model: Sequence): SequenceDto {
-  return {
-    id: model.id,
-    name: model.name,
-    seq: model.seq,
-  };
+export function convertSelectionListModelToDto(model: SelectionList): SelectionListDto {
+  return {...model};
 }

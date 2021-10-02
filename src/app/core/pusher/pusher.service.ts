@@ -64,7 +64,7 @@ import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../stor
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
-import {SequenceConverter} from '../store/sequences/sequence.converter';
+import {convertSequenceDtoToModel} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
 import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
 import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
@@ -874,7 +874,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new SequencesAction.UpdateSuccess({
-            sequence: SequenceConverter.fromDto(data.object),
+            sequence: convertSequenceDtoToModel(data.object),
           })
         );
       }

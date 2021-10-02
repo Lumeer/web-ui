@@ -17,25 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SequenceDto} from '../../dto/sequence.dto';
-import {Sequence} from '../../model/sequence';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {SelectionList} from '../../selection-list';
 
-export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
-  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
-}
+@Component({
+  selector: 'selection-list',
+  templateUrl: './selection-list.component.html',
+  styleUrls: ['./selection-list.component.scss']
+})
+export class SelectionListComponent {
 
-export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
-  return {
-    id: dto.id,
-    name: dto.name,
-    seq: dto.seq,
-  };
-}
+  @Input()
+  public list: SelectionList;
 
-export function convertSequenceModelToDto(model: Sequence): SequenceDto {
-  return {
-    id: model.id,
-    name: model.name,
-    seq: model.seq,
-  };
+  @Output()
+  public update = new EventEmitter<SelectionList>();
+
+
 }

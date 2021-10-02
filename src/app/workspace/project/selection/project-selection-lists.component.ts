@@ -17,25 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SequenceDto} from '../../dto/sequence.dto';
-import {Sequence} from '../../model/sequence';
 
-export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
-  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
-}
+import {Component} from '@angular/core';
+import {ResourceType} from '../../../core/model/resource-type';
 
-export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
-  return {
-    id: dto.id,
-    name: dto.name,
-    seq: dto.seq,
-  };
-}
-
-export function convertSequenceModelToDto(model: Sequence): SequenceDto {
-  return {
-    id: model.id,
-    name: model.name,
-    seq: model.seq,
-  };
+@Component({
+  selector: 'project-selection-lists',
+  templateUrl: './project-selection-lists.component.html',
+})
+export class ProjectSelectionListsComponent {
+  public readonly resourceType = ResourceType.Project;
 }

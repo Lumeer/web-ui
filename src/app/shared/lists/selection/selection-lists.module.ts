@@ -17,25 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SequenceDto} from '../../dto/sequence.dto';
-import {Sequence} from '../../model/sequence';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SelectionListsComponent} from './selection-lists.component';
+import { SelectionListComponent } from './content/list/selection-list.component';
+import { SelectionListsContentComponent } from './content/selection-lists-content.component';
+import { SelectionListModalComponent } from './content/modal/selection-list-modal.component';
 
-export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
-  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
-}
-
-export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
-  return {
-    id: dto.id,
-    name: dto.name,
-    seq: dto.seq,
-  };
-}
-
-export function convertSequenceModelToDto(model: Sequence): SequenceDto {
-  return {
-    id: model.id,
-    name: model.name,
-    seq: model.seq,
-  };
+@NgModule({
+  declarations: [
+    SelectionListsComponent,
+    SelectionListComponent,
+    SelectionListsContentComponent,
+    SelectionListModalComponent
+  ],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    SelectionListsComponent
+  ]
+})
+export class SelectionListsModule {
 }

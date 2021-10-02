@@ -27,8 +27,8 @@ import {Router} from '@angular/router';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {SequencesAction, SequencesActionType} from './sequences.action';
 import {selectSequencesLoaded} from './sequences.state';
-import {SequenceConverter} from './sequence.converter';
 import {SequenceService} from '../../rest/sequence.service';
+import {convertSequenceDtosToModels, convertSequenceDtoToModel, convertSequenceModelToDto} from './sequence.converter';
 
 @Injectable()
 export class SequencesEffects {
@@ -42,7 +42,7 @@ export class SequencesEffects {
           map(
             sequences =>
               new SequencesAction.GetSuccess({
-                sequences: SequenceConverter.fromDtos(sequences),
+                sequences: convertSequenceDtosToModels(sequences),
               })
           ),
           catchError(error => of(new SequencesAction.GetFailure({error})))
@@ -66,10 +66,10 @@ export class SequencesEffects {
     this.actions$.pipe(
       ofType<SequencesAction.Update>(SequencesActionType.UPDATE),
       mergeMap(action => {
-        const sequenceDto = SequenceConverter.toDto(action.payload.sequence);
+        const sequenceDto = convertSequenceModelToDto(action.payload.sequence);
 
         return this.sequenceService.updateSequence(sequenceDto).pipe(
-          map(dto => SequenceConverter.fromDto(dto)),
+          map(dto => convertSequenceDtoToModel(dto)),
           map(sequence => new SequencesAction.UpdateSuccess({sequence})),
           catchError(error => of(new SequencesAction.UpdateFailure({error})))
         );

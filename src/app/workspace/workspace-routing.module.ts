@@ -41,6 +41,7 @@ import {ServiceLimitsGuard} from '../core/guards/data/service-limits.guard';
 import {OrganizationTabGuard} from './organization/organization-tab.guard';
 import {RoleType} from '../core/model/role-type';
 import {ProjectTabGuard} from './project/project-tab.guard';
+import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -75,6 +76,11 @@ const workspaceRoutes: Routes = [
       {
         path: 'template',
         component: ProjectTemplateComponent,
+        data: {role: RoleType.TechConfig},
+      },
+      {
+        path: 'selection',
+        component: ProjectSelectionListsComponent,
         data: {role: RoleType.TechConfig},
       },
       {

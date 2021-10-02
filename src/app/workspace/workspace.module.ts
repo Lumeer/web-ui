@@ -49,10 +49,12 @@ import {TeamsModule} from '../shared/teams/teams.module';
 import {ProjectTeamsComponent} from './project/teams/project-teams.component';
 import {OrganizationTabGuard} from './organization/organization-tab.guard';
 import {ProjectTabGuard} from './project/project-tab.guard';
-import {ProjectUploadComponent} from './project/project-upload/project-upload.component';
+import {ProjectUploadComponent} from './project/upload/project-upload.component';
+import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
+import {SelectionListsModule} from '../shared/lists/selection/selection-lists.module';
 
 @NgModule({
-  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule],
+  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule, SelectionListsModule],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,
@@ -74,6 +76,7 @@ import {ProjectUploadComponent} from './project/project-upload/project-upload.co
     OrganizationTeamsComponent,
     ProjectTeamsComponent,
     ProjectUploadComponent,
+    ProjectSelectionListsComponent,
   ],
   exports: [],
   providers: [
@@ -85,4 +88,5 @@ import {ProjectUploadComponent} from './project/project-upload/project-upload.co
     DatePipe,
   ],
 })
-export class WorkspaceModule {}
+export class WorkspaceModule {
+}

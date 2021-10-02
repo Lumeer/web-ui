@@ -17,25 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SequenceDto} from '../../dto/sequence.dto';
-import {Sequence} from '../../model/sequence';
+import {Observable} from 'rxjs';
+import {SelectionListDto} from '../../dto/selection-list.dto';
 
-export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
-  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
-}
+export abstract class SelectionListsService {
+  public abstract create(organizationId: string, dto: SelectionListDto): Observable<SelectionListDto>;
 
-export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
-  return {
-    id: dto.id,
-    name: dto.name,
-    seq: dto.seq,
-  };
-}
+  public abstract update(organizationId: string, id: string, dto: SelectionListDto): Observable<SelectionListDto>;
 
-export function convertSequenceModelToDto(model: Sequence): SequenceDto {
-  return {
-    id: model.id,
-    name: model.name,
-    seq: model.seq,
-  };
+  public abstract delete(organizationId: string, id: string): Observable<string>;
+
+  public abstract get(organizationId: string): Observable<SelectionListDto[]>;
 }
