@@ -17,28 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {SelectionList} from '../../selection-list';
+import {Component, Input} from '@angular/core';
+import {AbstractControl, FormGroup} from '@angular/forms';
+import {SelectionList} from '../../../selection-list';
 
 @Component({
-  selector: 'selection-list',
-  templateUrl: './selection-list.component.html',
-  styleUrls: ['./selection-list.component.scss'],
-  host: {class: 'card p-2'},
+  selector: 'selection-list-modal-content',
+  templateUrl: './selection-list-modal-content.component.html',
+  styleUrls: ['./selection-list-modal-content.component.scss'],
 })
-export class SelectionListComponent {
+export class SelectionListModalContentComponent {
+  @Input()
+  public form: FormGroup;
+
   @Input()
   public list: SelectionList;
 
-  @Input()
-  public editable: boolean;
-
-  @Output()
-  public update = new EventEmitter();
-
-  @Output()
-  public copy = new EventEmitter();
-
-  @Output()
-  public delete = new EventEmitter();
+  public get nameControl(): AbstractControl {
+    return this.form.controls.name;
+  }
 }

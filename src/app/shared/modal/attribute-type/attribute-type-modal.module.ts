@@ -110,6 +110,6 @@ import {ViewConstraintConfigFormComponent} from './form/constraint-config/view/v
     InputModule,
     ProgressModule,
   ],
-  exports: [AttributeTypeModalComponent],
+  exports: [AttributeTypeModalComponent, SelectConstraintOptionsFormComponent],
 })
 export class AttributeTypeModalModule {}

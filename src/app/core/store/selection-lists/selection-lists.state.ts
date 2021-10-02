@@ -37,16 +37,24 @@ export const initialSelectionListsState: SelectionListsState = selectionListsAda
 
 export const selectSelectionListsState = (state: AppState) => state.selectionLists;
 
-export const selectAllSelectionLists = createSelector(selectSelectionListsState, selectionListsAdapter.getSelectors().selectAll);
+export const selectAllSelectionLists = createSelector(
+  selectSelectionListsState,
+  selectionListsAdapter.getSelectors().selectAll
+);
 
 export const selectSelectionListsLoadedOrganization = createSelector(
   selectSelectionListsState,
   state => state.loadedForOrganizationId
 );
 
-export const selectAllSelectionListsSorted = createSelector(selectAllSelectionLists, sequences =>
-  sequences.sort((a, b) => a.name.localeCompare(b.name))
+export const selectAllSelectionListsSorted = createSelector(selectAllSelectionLists, lists =>
+  lists.sort((a, b) => a.name.localeCompare(b.name))
 );
+
+export const selectSelectionListsByProjectSorted = (organizationId: string, projectId: string) =>
+  createSelector(selectAllSelectionListsSorted, lists =>
+    lists.filter(list => list.organizationId === organizationId && list.projectId === projectId)
+  );
 
 export const selectSelectionListsLoaded = (organizationId: string) =>
   createSelector(selectSelectionListsState, state => state.loadedForOrganizationId === organizationId);

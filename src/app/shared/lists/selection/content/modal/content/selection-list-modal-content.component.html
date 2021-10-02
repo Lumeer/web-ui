@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+
+  <div class="form-group row">
+    <label class="col-12 col-form-label"
+           i18n="@@selection.lists.modal.name.title" for="name">Name:</label>
+
+    <div class="col-12">
+      <input type="text"
+             id="name"
+             formControlName="name"
+             class="form-control"
+             i18n-placeholder="@@selection.lists.modal.name.placeholder"
+             placeholder="Enter unique name">
+    </div>
+    <small class="col-12 text-danger mt-1" *ngIf="nameControl.errors?.notEmpty"
+           i18n="@@selection.lists.modal.name.error.notEmpty">List name can not be empty</small>
+  </div>
+
+  <select-constraint-options-form [form]="form"
+                                  [options]="list.options">
+  </select-constraint-options-form>
+
+</form>

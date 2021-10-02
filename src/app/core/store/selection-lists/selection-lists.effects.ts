@@ -32,13 +32,12 @@ import {convertSelectionListDtoToModel} from './selection-list.converter';
 
 @Injectable()
 export class SelectionListsEffects {
-
   public get$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SelectionListsAction.Get>(SelectionListsActionType.GET),
       withLatestFrom(this.store$.pipe(select(selectSelectionListsLoadedOrganization))),
       filter(([, loaded]) => !loaded),
-      mergeMap(([action,]) =>
+      mergeMap(([action]) =>
         this.service.get(action.payload.organizationId).pipe(
           map(dtos => dtos.map(dto => convertSelectionListDtoToModel(dto))),
           map(
@@ -70,7 +69,7 @@ export class SelectionListsEffects {
       ofType<SelectionListsAction.Create>(SelectionListsActionType.CREATE),
       mergeMap(action => {
         const listDto = convertSelectionListDtoToModel(action.payload.list);
-        return this.service.create(action.payload.organizationId, listDto).pipe(
+        return this.service.create(action.payload.list.organizationId, listDto).pipe(
           map(dto => convertSelectionListDtoToModel(dto)),
           map(list => new SelectionListsAction.CreateSuccess({list})),
           catchError(error => of(new SelectionListsAction.CreateFailure({error})))
@@ -95,7 +94,7 @@ export class SelectionListsEffects {
       ofType<SelectionListsAction.Update>(SelectionListsActionType.UPDATE),
       mergeMap(action => {
         const listDto = convertSelectionListDtoToModel(action.payload.list);
-        return this.service.update(action.payload.organizationId, listDto.id, listDto).pipe(
+        return this.service.update(action.payload.list.organizationId, listDto.id, listDto).pipe(
           map(dto => convertSelectionListDtoToModel(dto)),
           map(list => new SelectionListsAction.UpdateSuccess({list})),
           catchError(error => of(new SelectionListsAction.UpdateFailure({error})))
@@ -118,11 +117,11 @@ export class SelectionListsEffects {
   public delete$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SelectionListsAction.Delete>(SelectionListsActionType.DELETE),
-      tap((action) => this.store$.dispatch(new SelectionListsAction.DeleteSuccess({id: action.payload.list.id}))),
+      tap(action => this.store$.dispatch(new SelectionListsAction.DeleteSuccess({id: action.payload.list.id}))),
       mergeMap(action => {
-        const {organizationId, list} = action.payload;
+        const {list} = action.payload;
 
-        return this.service.delete(organizationId, list.id).pipe(
+        return this.service.delete(list.organizationId, list.id).pipe(
           mergeMap(() => EMPTY),
           catchError(error => of(new SelectionListsAction.DeleteFailure({error, list})))
         );
@@ -146,6 +145,5 @@ export class SelectionListsEffects {
     private router: Router,
     private actions$: Actions,
     private service: SelectionListsService
-  ) {
-  }
+  ) {}
 }

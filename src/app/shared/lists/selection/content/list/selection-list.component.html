@@ -1,1 +1,15 @@
-{{list.name}}
+<div class="font-weight-bold">{{list.name}}</div>
+<div class="d-flex align-items-center flex-wrap mt-3">
+  <span *ngFor="let option of list.options" class="d-inline-block select-tag mr-2 mb-2 text-truncate"
+        [style.background]="option.background"
+        [spellcheck]="false"
+        [style.color]="option.background | contrastColor"
+        [title]="option.displayValue || option.value"
+        [innerHTML]="option.displayValue || option.value">
+  </span>
+</div>
+<div class="d-flex align-items-center flex-row-reverse mt-3" *ngIf="editable">
+  <i class="fal fa-trash-alt text-danger clickable" (click)="delete.emit()" title="Delete" i18n-title="@@delete"></i>
+  <i class="far fa-copy text-primary clickable mr-2" (click)="copy.emit()" title="Copy" i18n-title="@@copy"></i>
+  <i class="fas fa-pencil text-success clickable mr-2" (click)="update.emit()" title="Edit" i18n-title="@@edit"></i>
+</div>

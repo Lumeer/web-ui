@@ -27,7 +27,7 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
 import {CoordinatesConstraintFormControl} from './constraint-config/coordinates/coordinates-constraint-form-control';
 import {PercentageConstraintFormControl} from './constraint-config/percentage/percentage-constraint-form-control';
@@ -35,6 +35,7 @@ import {SelectConstraintFormControl} from './constraint-config/select/select-con
 import {
   isSelectConstraintOptionValueRemoved,
   isUsedSelectConstraintAttribute,
+  parseSelectOptionsFromForm,
 } from './constraint-config/select/select-constraint.utils';
 import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
 import {DurationConstraintFormControl} from './constraint-config/duration/duration-constraint-form-control';
@@ -46,7 +47,6 @@ import {convertToBig} from '../../../utils/data.utils';
 import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
 import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
 import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
-import {escapeHtml} from '../../../utils/common.utils';
 import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
 import {
   ActionConstraintFiltersFormControl,
@@ -175,14 +175,13 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.Select:
         const displayValues = this.configForm.get(SelectConstraintFormControl.DisplayValues).value;
-        const options = this.configForm
-          .get(SelectConstraintFormControl.Options)
-          .value.filter(option => option.value || option.value === 0)
-          .map(option => ({...option, value: escapeHtml(option.value), displayValue: escapeHtml(option.displayValue)}));
         return {
           multi: this.configForm.get(SelectConstraintFormControl.Multi).value,
           displayValues,
-          options: displayValues ? options : options.map(option => ({...option, displayValue: undefined})),
+          options: parseSelectOptionsFromForm(
+            this.configForm.get(SelectConstraintFormControl.Options) as FormArray,
+            displayValues
+          ),
         };
       case ConstraintType.Text:
         return {

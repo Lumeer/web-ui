@@ -1,1 +1,22 @@
-<p>selection-list-modal works!</p>
+<modal-wrapper class="d-block"
+               [dialogType]="dialogType"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="form.invalid"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()">
+
+  <span class="title" *ngIf="list.id" i18n="@@selection.lists.modal.update.title">Update selection list</span>
+  <span class="title" *ngIf="!list.id" i18n="@@selection.lists.modal.create.title">Create selection list</span>
+
+  <div class="body m-3">
+    <selection-list-modal-content [form]="form"
+                                  [list]="list">
+    </selection-list-modal-content>
+
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" *ngIf="list.id" i18n="@@button.save">Save</span>
+  <span class="button-submit" *ngIf="!list.id" i18n="@@button.create">Create</span>
+
+</modal-wrapper>

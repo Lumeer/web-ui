@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {createAction, props} from '@ngrx/store';
-import {Update} from '@ngrx/entity';
 
 import {Detail, DetailConfig} from './detail';
 import {QueryStem} from '../navigation/query/query';

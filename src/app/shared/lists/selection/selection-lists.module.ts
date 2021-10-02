@@ -19,24 +19,26 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ReactiveFormsModule} from '@angular/forms';
+
 import {SelectionListsComponent} from './selection-lists.component';
-import { SelectionListComponent } from './content/list/selection-list.component';
-import { SelectionListsContentComponent } from './content/selection-lists-content.component';
-import { SelectionListModalComponent } from './content/modal/selection-list-modal.component';
+import {SelectionListComponent} from './content/list/selection-list.component';
+import {SelectionListsContentComponent} from './content/selection-lists-content.component';
+import {SelectionListModalComponent} from './content/modal/selection-list-modal.component';
+import {ModalWrapperModule} from '../../modal/wrapper/modal-wrapper.module';
+import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-type-modal.module';
+import {SelectionListModalContentComponent} from './content/modal/content/selection-list-modal-content.component';
+import {PipesModule} from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
     SelectionListsComponent,
     SelectionListComponent,
     SelectionListsContentComponent,
-    SelectionListModalComponent
+    SelectionListModalComponent,
+    SelectionListModalContentComponent,
   ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    SelectionListsComponent
-  ]
+  imports: [CommonModule, ModalWrapperModule, AttributeTypeModalModule, ReactiveFormsModule, PipesModule],
+  exports: [SelectionListsComponent],
 })
-export class SelectionListsModule {
-}
+export class SelectionListsModule {}

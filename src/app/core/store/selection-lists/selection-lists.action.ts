@@ -42,85 +42,73 @@ export namespace SelectionListsAction {
   export class Get implements Action {
     public readonly type = SelectionListsActionType.GET;
 
-    public constructor(public payload: { organizationId: string }) {
-    }
+    public constructor(public payload: {organizationId: string}) {}
   }
 
   export class GetSuccess implements Action {
     public readonly type = SelectionListsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { organizationId: string; lists: SelectionList[]; }) {
-    }
+    public constructor(public payload: {organizationId: string; lists: SelectionList[]}) {}
   }
 
   export class GetFailure implements Action {
     public readonly type = SelectionListsActionType.GET_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Create implements Action {
     public readonly type = SelectionListsActionType.CREATE;
 
-    public constructor(public payload: { organizationId: string; list: SelectionList }) {
-    }
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = SelectionListsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: { list: SelectionList }) {
-    }
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class CreateFailure implements Action {
     public readonly type = SelectionListsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Update implements Action {
     public readonly type = SelectionListsActionType.UPDATE;
 
-    public constructor(public payload: { organizationId: string; list: SelectionList }) {
-    }
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = SelectionListsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { list: SelectionList }) {
-    }
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class UpdateFailure implements Action {
     public readonly type = SelectionListsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
-    }
+    public constructor(public payload: {error: any}) {}
   }
 
   export class Delete implements Action {
     public readonly type = SelectionListsActionType.DELETE;
 
-    public constructor(public payload: { organizationId: string; list: SelectionList }) {
-    }
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = SelectionListsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { id: string }) {
-    }
+    public constructor(public payload: {id: string}) {}
   }
 
   export class DeleteFailure implements Action {
     public readonly type = SelectionListsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: { error: any; list: SelectionList }) {
-    }
+    public constructor(public payload: {error: any; list: SelectionList}) {}
   }
 
   export type All =

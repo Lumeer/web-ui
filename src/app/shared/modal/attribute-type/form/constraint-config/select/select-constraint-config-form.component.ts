@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {uniqueValuesValidator} from '../../../../../../core/validators/unique-values-validator';
@@ -127,13 +127,5 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
         ]
       )
     );
-  }
-
-  public get displayValuesControl(): AbstractControl {
-    return this.form.get(SelectConstraintFormControl.DisplayValues);
-  }
-
-  public get optionsForm(): AbstractControl {
-    return this.form.get(SelectConstraintFormControl.Options);
   }
 }
