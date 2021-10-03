@@ -1,5 +1,5 @@
 <div class="row">
-  <label class="col-12" for="title" i18n="@@search.tabs.settings.dialog.title">Title</label>
+  <label class="col-12" for="title" i18n="@@dashboard.tabs.settings.dialog.title">Title</label>
   <div class="col-12 col-lg-6">
     <input class="form-control"
            #titleInput
@@ -15,7 +15,7 @@
   <div class="col-12 col-lg-6" *ngIf="isDefault">
     <toggle-checkbox class="d-block py-2"
                      [checked]="!tab.hidden"
-                     i18n-label="@@search.tabs.settings.dialog.tab.show"
+                     i18n-label="@@dashboard.tabs.settings.dialog.tab.show"
                      label="Show tab"
                      (checkedChange)="onShowChange($event)">
     </toggle-checkbox>

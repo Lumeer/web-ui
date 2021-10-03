@@ -23,14 +23,17 @@
     </div>
   </div>
 
-  <div class="px-2 text-primary clickable d-flex align-items-center" (click)="addTab()">
+  <div class="px-2 text-primary clickable d-flex align-items-center"
+       tooltip="Add a new tab"
+       i18n-tooltip="@@search.tabs.settings.dialog.add.tab"
+       (click)="addTab()">
     <i class="far fa-plus-circle"></i>
   </div>
 
 </div>
 
 <div class="alert alert-danger mt-3" *ngIf="!(tabsAreValid$ | async)" i18n="@@search.tabs.settings.dialog.error.empty">
-  Dashboard must contain at least one visible tab.
+  There must be at least one visible tab in the dashboard.
 </div>
 
 <hr>

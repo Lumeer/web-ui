@@ -1,8 +1,8 @@
-<h6 class="font-weight-bold mb-3" i18n="@@search.tabs.settings.dialog.cell.title">Item configuration</h6>
+<h6 class="font-weight-bold mb-3" i18n="@@search.tabs.settings.dialog.cell.title">Item Configuration</h6>
 
 <div *ngIf="!cell"
      class="text-center"
-     i18n="@@search.tabs.settings.dialog.cell.empty">Select item from dashboard preview to setup configuration
+     i18n="@@search.tabs.settings.dialog.cell.empty">Select an item from the dashboard preview to configure it
 </div>
 <select-item *ngIf="cell"
              class="mb-4 d-block"
@@ -10,7 +10,7 @@
              [items]="typeItems"
              [removable]="false"
              i18n-emptyValue="@@search.tabs.settings.dialog.cell.type.placeholder"
-             emptyValue="Select Item type"
+             emptyValue="Select Item Type"
              (selected)="onTypeSelected($event)">
 </select-item>
 

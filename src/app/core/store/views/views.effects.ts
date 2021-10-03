@@ -637,7 +637,7 @@ export class ViewsEffects {
       ofType<ViewsAction.SetDashboardFailure>(ViewsActionType.SET_DASHBOARD_FAILURE),
       tap(action => console.error(action.payload.error)),
       map(() => {
-        const message = $localize`:@@view.dashboard.set.fail:Could not set dashboard config`;
+        const message = $localize`:@@view.dashboard.set.fail:Could not save dashboard settings`;
         return new NotificationsAction.Error({message});
       })
     )
