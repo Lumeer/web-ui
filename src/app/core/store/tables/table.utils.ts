@@ -531,8 +531,21 @@ export function getTablePart(table: TableModel, cursor: TableCursor): TableConfi
   return table.config.parts[cursor.partIndex];
 }
 
-export function getTableElement(tableId: string): HTMLElement {
+function getTableElement(tableId: string): HTMLElement {
   return document.getElementById(`table-${tableId}`);
+}
+
+export function getTableElementFromInnerElement(element: HTMLElement, tableId: string): HTMLElement {
+  const elementId = `table-${tableId}`;
+  let iterations = 30; // to prevent never ending cycle
+  let currentElement = element;
+  while (iterations-- > 0 && !!currentElement) {
+    if (currentElement?.id == elementId) {
+      return currentElement;
+    }
+    currentElement = currentElement.parentElement;
+  }
+  return getTableElement(tableId);
 }
 
 export function createEmptyTableRow(parentDocumentId?: string): TableConfigRow {

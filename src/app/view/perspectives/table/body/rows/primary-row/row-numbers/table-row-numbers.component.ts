@@ -35,7 +35,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
-import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
+import {countLinkedRows, getTableElementFromInnerElement} from '../../../../../../../core/store/tables/table.utils';
 import {TableRowNumberService} from '../../../../service/table-row-number.service';
 import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/resize-observer';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
@@ -129,7 +129,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   private setRowNumberColumnWidth(width: number) {
-    const tableElement = getTableElement(this.cursor.tableId);
+    const tableElement = getTableElementFromInnerElement(this.element.nativeElement, this.cursor.tableId);
     if (tableElement) {
       const rowNumberColumnWidth = Number(
         (tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2)

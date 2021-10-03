@@ -46,7 +46,7 @@ import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
-import {selectSearchConfig} from '../../../core/store/searches/searches.state';
+import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
 import {createSearchPerspectiveTabs} from '../../../core/store/views/view.utils';
 
 @Injectable()
@@ -147,7 +147,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
     return this.selectViewsByCode$(organization, project, viewCode).pipe(
       withLatestFrom(
         this.store$.pipe(select(selectDefaultSearchPerspectiveTabs)),
-        this.store$.pipe(select(selectSearchConfig))
+        this.store$.pipe(select(selectSearchConfigById(viewCode || DEFAULT_PERSPECTIVE_ID)))
       ),
       map(([view, defaultTabs, searchConfig]) => ({
         view,

@@ -34,7 +34,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumnType, TableConfigColumn, TableModel} from '../../../../../core/store/tables/table.model';
-import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
+import {getTableElementFromInnerElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {View} from '../../../../../core/store/views/view';
@@ -112,7 +112,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     const elementHeight = this.elementCache[id];
 
     if (!elementHeight) {
-      const newElementHeight = {element: getTableElement(id), height};
+      const newElementHeight = {element: getTableElementFromInnerElement(this.element.nativeElement, id), height};
 
       if (newElementHeight.element) {
         this.elementCache[id] = newElementHeight;

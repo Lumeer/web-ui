@@ -32,9 +32,9 @@ import {
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {getTableElementFromInnerElement} from '../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-link-info',
@@ -79,6 +79,8 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatMenuTrigger)
   public trigger: MatMenuTrigger;
 
+  constructor(private element: ElementRef) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.hidden) {
       setTimeout(() => this.setTableLinkInfoWidthCssVariable());
@@ -90,7 +92,7 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
   }
 
   private setTableLinkInfoWidthCssVariable() {
-    const tableElement = getTableElement(this.cursor.tableId);
+    const tableElement = getTableElementFromInnerElement(this.element.nativeElement, this.cursor.tableId);
     if (!tableElement) {
       return;
     }

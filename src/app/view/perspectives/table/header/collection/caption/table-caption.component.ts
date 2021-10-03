@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, Simple
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {getTableElement} from '../../../../../../core/store/tables/table.utils';
+import {getTableElementFromInnerElement} from '../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-caption',
@@ -58,7 +58,7 @@ export class TableCaptionComponent implements OnChanges {
   public calculateCaptionHeight() {
     const height = this.element.nativeElement.clientHeight;
 
-    const tableElement = getTableElement(this.cursor.tableId);
+    const tableElement = getTableElementFromInnerElement(this.element.nativeElement, this.cursor.tableId);
 
     if (tableElement) {
       const captionHeightValue = tableElement.style.getPropertyValue('--caption-height') || '';

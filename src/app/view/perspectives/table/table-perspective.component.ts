@@ -21,6 +21,7 @@ import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   HostBinding,
   HostListener,
   Input,
@@ -100,9 +101,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public embedded: boolean;
   public canManageConfig$: Observable<boolean>;
   public table$ = new BehaviorSubject<TableModel>(null);
-  public tableId$: Observable<string>;
   public view$: Observable<View>;
   public query$: Observable<Query>;
+  public tableId$: Observable<string>;
 
   private overrideView$ = new BehaviorSubject<View>(null);
   private selectedCursor: TableCursor;
@@ -111,6 +112,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
 
   public constructor(
+    private element: ElementRef,
     private scrollDispatcher: ScrollDispatcher,
     private store$: Store<AppState>,
     private tableRowNumberService: TableRowNumberService
@@ -435,18 +437,29 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         filter(scrollable => !!scrollable),
         map(scrollable => scrollable as CdkScrollable),
         withLatestFrom(this.tableId$),
-        filter(([scrollable, tableId]) => scrollable.getElementRef().nativeElement.id.startsWith(tableId))
+        filter(
+          ([scrollable, tableId]) =>
+            scrollable.getElementRef().nativeElement.id.startsWith(tableId) &&
+            this.isScrollableInsideCurrentTable(scrollable)
+        )
       )
       .subscribe(([scrollable, tableId]) => {
         const left = scrollable.measureScrollOffset('left');
         const otherScrollable = Array.from(this.scrollDispatcher.scrollContainers.keys()).find(
-          s => s !== scrollable && s.getElementRef().nativeElement.id.startsWith(tableId)
+          s =>
+            s !== scrollable &&
+            s.getElementRef().nativeElement.id.startsWith(tableId) &&
+            this.isScrollableInsideCurrentTable(s)
         );
 
         if (otherScrollable && otherScrollable.measureScrollOffset('left') !== left) {
           otherScrollable.scrollTo({left});
         }
       });
+  }
+
+  private isScrollableInsideCurrentTable(scrollable: CdkScrollable): boolean {
+    return this.element.nativeElement.contains(scrollable.getElementRef().nativeElement);
   }
 
   public onClickOutside(event: Event) {
