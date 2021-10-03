@@ -2,7 +2,7 @@
   <ng-container [ngSwitch]="result">
     <ng-container *ngSwitchDefault>
       <h3 i18n="@@map.image.fetch.failure.title">Image was not found</h3>
-      <div i18n="@@map.image.fetch.failure.description">Make sure you have provided correct image address. Try opening the address in a browser.</div>
+      <div i18n="@@map.image.fetch.failure.description">Make sure you have provided a correct image address. Try opening the address in a browser.</div>
     </ng-container>
     <ng-container *ngSwitchCase="loadResult.SizeExceeded">
       <h3 i18n="@@map.image.fetch.sizeExceeded.title">Image is too large</h3>
