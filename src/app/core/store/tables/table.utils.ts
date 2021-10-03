@@ -539,11 +539,11 @@ export function getTableElementFromInnerElement(element: HTMLElement, tableId: s
   const elementId = `table-${tableId}`;
   let iterations = 30; // to prevent never ending cycle
   let currentElement = element;
-  while (iterations-- > 0) {
-    currentElement = currentElement.parentElement;
+  while (iterations-- > 0 && !!currentElement) {
     if (currentElement?.id == elementId) {
       return currentElement;
     }
+    currentElement = currentElement.parentElement;
   }
   return getTableElement(tableId);
 }
