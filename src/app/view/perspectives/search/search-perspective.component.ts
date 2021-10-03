@@ -41,7 +41,7 @@ import {createDefaultSearchConfig, Search, SearchConfig} from '../../../core/sto
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {parseSearchTabFromUrl} from '../../../core/store/navigation/search-tab';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {selectSearch, selectSearchById, selectSearchId} from '../../../core/store/searches/searches.state';
+import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
@@ -135,7 +135,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToView(
     previousView: View,
     view: View
-  ): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
+  ): Observable<{searchId: string; config: SearchConfig; view: View}> {
     const searchId = view.code;
     return this.store$.pipe(
       select(selectSearchById(searchId)),
@@ -145,7 +145,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         if (preferViewConfigUpdate(previousView?.config?.search, view?.config?.search, !!search)) {
           return {searchId, config: searchConfig, view};
         }
-        return {searchId, config: search?.config || searchConfig || createDefaultSearchConfig()};
+        return {searchId, config: search?.config || searchConfig || createDefaultSearchConfig(), view};
       })
     );
   }

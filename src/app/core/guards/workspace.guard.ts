@@ -20,9 +20,12 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
-import {catchError, mergeMap, take} from 'rxjs/operators';
+import {catchError, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {NotificationService} from '../notifications/notification.service';
+import {AppState} from '../store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +34,7 @@ export class WorkspaceGuard implements CanActivate {
   public constructor(
     private notificationService: NotificationService,
     private workspaceService: WorkspaceService,
+    private store$: Store<AppState>,
     private router: Router
   ) {}
 
@@ -39,7 +43,8 @@ export class WorkspaceGuard implements CanActivate {
     const projectCode = next.paramMap.get('projectCode');
 
     return this.workspaceService.selectOrGetUserAndWorkspace(organizationCode, projectCode).pipe(
-      mergeMap(({organization, project}) => {
+      withLatestFrom(this.store$.pipe(select(selectWorkspace))),
+      mergeMap(([{organization, project}, workspace]) => {
         if (!organization) {
           const message = $localize`:@@organization.not.exist:Organization does not exist`;
           this.navigateHomeAndShowErrorMessage(message);
@@ -51,7 +56,11 @@ export class WorkspaceGuard implements CanActivate {
           return of(false);
         }
 
-        return this.workspaceService.switchWorkspace(organization, project);
+        if (workspace?.organizationCode !== organizationCode || workspace?.projectCode !== projectCode) {
+          return this.workspaceService.switchWorkspace(organization, project);
+        }
+
+        return of(true);
       }),
       take(1),
       catchError(() => of(false))

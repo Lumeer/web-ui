@@ -541,7 +541,7 @@ export function getTableElementFromInnerElement(element: HTMLElement, tableId: s
   let currentElement = element;
   while (iterations-- > 0) {
     currentElement = currentElement.parentElement;
-    if (currentElement.id == elementId) {
+    if (currentElement?.id == elementId) {
       return currentElement;
     }
   }
