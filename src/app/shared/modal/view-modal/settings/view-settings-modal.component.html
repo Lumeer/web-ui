@@ -11,7 +11,7 @@
                prefix="Settings" i18n-prefix="@@settings">
   </view-header>
 
-  <div class="body p-3" *ngIf="data.view; else contentInvalid">
+  <div class="body p-3" *ngIf="data.view || (performingAction$ | async); else contentInvalid">
 
     <view-settings-modal-body [form]="form"
                               [views]="views$ | async"

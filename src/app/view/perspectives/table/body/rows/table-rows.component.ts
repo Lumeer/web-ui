@@ -36,13 +36,13 @@ import {selectDocumentsByViewAndCustomQuery} from '../../../../../core/store/com
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
-import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
 import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 import {selectQueryDataResourcesLoaded} from '../../../../../core/store/data-resources/data-resources.state';
 import {TablePerspectiveConfiguration} from '../../../perspective-configuration';
 import {View} from '../../../../../core/store/views/view';
+import {getTableElementFromInnerElement} from '../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-rows',
@@ -116,7 +116,7 @@ export class TableRowsComponent implements OnChanges {
     const element = this.virtualScrollViewport.elementRef.nativeElement;
     const scrollbarWidth = element.offsetWidth - element.clientWidth;
 
-    const tableElement = getTableElement(this.cursor.tableId);
+    const tableElement = getTableElementFromInnerElement(this.element.nativeElement, this.cursor.tableId);
     if (tableElement) {
       tableElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     }
