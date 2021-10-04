@@ -49,10 +49,10 @@ export class PercentageConstraintConfigStyleComponent implements OnInit {
 
   constructor() {
     this.items = [
-      {style: PercentageDisplayStyle.Text, title: $localize`:constraint.config.percentage.display.text:Text`},
+      {style: PercentageDisplayStyle.Text, title: $localize`:@@constraint.config.percentage.display.text:Text`},
       {
         style: PercentageDisplayStyle.ProgressBar,
-        title: $localize`:constraint.config.percentage.display.progress:Progress Bar`,
+        title: $localize`:@@constraint.config.percentage.display.progress:Progress Bar`,
       },
     ];
   }

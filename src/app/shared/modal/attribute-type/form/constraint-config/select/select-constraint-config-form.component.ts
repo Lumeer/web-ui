@@ -17,33 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from './select-constraint-form-control';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {uniqueValuesValidator} from '../../../../../../core/validators/unique-values-validator';
 import {minimumValuesCountValidator} from '../../../../../../core/validators/mininum-values-count-validator';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {Attribute} from '../../../../../../core/store/collections/collection';
-import {combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {getAttributesResourceType} from '../../../../../utils/resource.utils';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../../core/store/app.state';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {createSuggestionDataValues} from '../../../../../utils/data-resource.utils';
-import {map} from 'rxjs/operators';
-import {DataValue, SelectConstraintConfig} from '@lumeer/data-filters';
+import {map, tap} from 'rxjs/operators';
+import {DataValue, SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
 import {
   selectDocumentsByCollectionAndReadPermission,
   selectLinksByLinkTypeAndReadPermission,
 } from '../../../../../../core/store/common/permissions.selectors';
+import {selectSelectionListsWithPredefined} from '../../../../../../core/store/selection-lists/selection-lists.state';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {SelectionList} from '../../../../../lists/selection/selection-list';
+import {selectProjectPermissions} from '../../../../../../core/store/user-permissions/user-permissions.state';
+import {selectWorkspace} from '../../../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'select-constraint-config-form',
   templateUrl: './select-constraint-config-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectConstraintConfigFormComponent implements OnChanges {
+export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   @Input()
   public config: SelectConstraintConfig;
 
@@ -58,9 +63,37 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
 
   public readonly formControlName = SelectConstraintFormControl;
 
+  public overrideOptions$ = new BehaviorSubject<SelectConstraintOption[]>(null);
+
   public dataValues$: Observable<DataValue[]>;
+  public selectionListsItems$: Observable<SelectItemModel[]>;
+  public canCreateSelectionLists$: Observable<boolean>;
+  public selectionListsLink$: Observable<string[]>;
+
+  private selectionLists: SelectionList[];
 
   constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    const selectionLists$ = this.store$.pipe(select(selectSelectionListsWithPredefined));
+    this.selectionListsItems$ = selectionLists$.pipe(
+      tap(lists => (this.selectionLists = lists)),
+      map(lists => {
+        return [
+          {id: undefined, value: $localize`:@@constraint.select.lists.custom:Custom`},
+          ...lists.map(list => ({id: list.id, value: list.name})),
+        ];
+      })
+    );
+    this.canCreateSelectionLists$ = this.store$.pipe(
+      select(selectProjectPermissions),
+      map(permissions => permissions?.roles?.TechConfig)
+    );
+    this.selectionListsLink$ = this.store$.pipe(
+      select(selectWorkspace),
+      map(workspace => ['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'selection'])
+    );
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -103,17 +136,14 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.addMultiFormControl();
-    this.addDisplayValuesFormControl();
+    this.addFormControls();
     this.addOptionsFormArray();
   }
 
-  private addMultiFormControl() {
+  private addFormControls() {
     this.form.addControl(SelectConstraintFormControl.Multi, new FormControl(this.config?.multi));
-  }
-
-  private addDisplayValuesFormControl() {
     this.form.addControl(SelectConstraintFormControl.DisplayValues, new FormControl(this.config?.displayValues));
+    this.form.addControl(SelectConstraintFormControl.SelectionList, new FormControl(this.config?.selectionListId));
   }
 
   private addOptionsFormArray() {
@@ -127,5 +157,32 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
         ]
       )
     );
+  }
+
+  public get selectionListControl(): AbstractControl {
+    return this.form.get(SelectConstraintFormControl.SelectionList);
+  }
+
+  public get displayValuesControl(): AbstractControl {
+    return this.form.get(SelectConstraintFormControl.DisplayValues);
+  }
+
+  public get optionsControl(): AbstractControl {
+    return this.form.get(SelectConstraintFormControl.Options);
+  }
+
+  public onSelectionListSelected(selectionListId: string) {
+    this.selectionListControl.setValue(selectionListId);
+    if (selectionListId) {
+      const selectionList = this.selectionLists.find(list => list.id === selectionListId);
+      this.displayValuesControl.setValue(selectionList.displayValues);
+      this.displayValuesControl.disable();
+      setTimeout(() => this.optionsControl.disable());
+      this.overrideOptions$.next(selectionList.options);
+    } else {
+      this.displayValuesControl.enable();
+      this.optionsControl.enable();
+      this.overrideOptions$.next(null);
+    }
   }
 }

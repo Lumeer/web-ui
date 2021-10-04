@@ -16,8 +16,26 @@
 
   </div>
 
-  <select-constraint-options-form [form]="form"
+  <div class="form-group mt-3 mb-0">
+    <label i18n="@@constraint.select.lists.label">
+      Selection list
+    </label>
+    <select-item class="w-100 d-block"
+                 [selectedId]="selectionListControl.value"
+                 [removable]="false"
+                 [items]="selectionListsItems$ | async"
+                 (selected)="onSelectionListSelected($event)"
+                 buttonClasses="flex-grow-1 text-truncate">
+    </select-item>
+  </div>
+
+  <div *ngIf="canCreateSelectionLists$ | async" i18n="@@constraint.select.lists.create" class="mt-1 text-muted">
+    You can create custom lists in <a [routerLink]="selectionListsLink$ | async">Project settings</a>
+  </div>
+
+  <select-constraint-options-form class="mt-3 d-block"
+                                  [form]="form"
                                   [dataValues]="dataValues$ | async"
-                                  [options]="config?.options">
+                                  [options]="(overrideOptions$ | async) || config?.options">
   </select-constraint-options-form>
 </div>

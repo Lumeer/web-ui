@@ -20,7 +20,8 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {AppState} from '../app.state';
 import {createSelector} from '@ngrx/store';
-import {SelectionList} from '../../../shared/lists/selection/selection-list';
+import {predefinedSelectionLists, SelectionList} from '../../../shared/lists/selection/selection-list';
+import {selectWorkspaceModels} from '../common/common.selectors';
 
 export interface SelectionListsState extends EntityState<SelectionList> {
   loadedForOrganizationId: string;
@@ -55,6 +56,17 @@ export const selectSelectionListsByProjectSorted = (organizationId: string, proj
   createSelector(selectAllSelectionListsSorted, lists =>
     lists.filter(list => list.organizationId === organizationId && list.projectId === projectId)
   );
+
+export const selectSelectionListsWithPredefined = createSelector(
+  selectAllSelectionListsSorted,
+  selectWorkspaceModels,
+  (lists, workspace) => [
+    ...predefinedSelectionLists,
+    ...lists.filter(
+      list => list.organizationId === workspace?.organization?.id && list.projectId === workspace?.project?.id
+    ),
+  ]
+);
 
 export const selectSelectionListsLoaded = (organizationId: string) =>
   createSelector(selectSelectionListsState, state => state.loadedForOrganizationId === organizationId);

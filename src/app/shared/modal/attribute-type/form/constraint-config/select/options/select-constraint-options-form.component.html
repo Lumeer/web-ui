@@ -13,7 +13,9 @@
   </div>
 
   <div cdkDropList
+       *ngIf="{enabled: optionsEnabled$ | async} as data"
        (cdkDropListDropped)="onDrop($event)"
+       [cdkDropListDisabled]="!data.enabled"
        class="d-flex flex-column mt-3">
     <div *ngFor="let group of optionsForm?.controls; index as optionIndex"
          cdkDrag
@@ -59,18 +61,20 @@
                  i18n-placeholder="@@constraint.select.option.displayValue">
         </div>
         <div class="flex-grow-0 ml-2 d-flex align-items-center">
-          <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
-             title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
-             i18n-title="@@constraint.select.option.background" #colorElement></i>
-          <color-picker [color]="groupData.background"
-                        #colorPicker
-                        [origin]="colorElement"
-                        (saveOnClose)="$event && onColorSave(optionIndex, $event)"
-                        (valueChange)="onColorChange(optionIndex, $event)"
-                        (cancel)="onColorCancel(optionIndex)"
-                        (save)="onColorSave(optionIndex, $event)">
-          </color-picker>
-          <a *ngIf="optionsForm.controls?.length > 1; else disabledRemoveButton"
+          <ng-container *ngIf="data.enabled">
+            <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
+               title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
+               i18n-title="@@constraint.select.option.background" #colorElement></i>
+            <color-picker [color]="groupData.background"
+                          #colorPicker
+                          [origin]="colorElement"
+                          (saveOnClose)="$event && onColorSave(optionIndex, $event)"
+                          (valueChange)="onColorChange(optionIndex, $event)"
+                          (cancel)="onColorCancel(optionIndex)"
+                          (save)="onColorSave(optionIndex, $event)">
+            </color-picker>
+          </ng-container>
+          <a *ngIf="data.enabled && optionsForm.controls?.length > 1; else disabledRemoveButton"
              title="Remove option"
              i18n-title="@@constraint.select.option.remove"
              (click)="onRemoveOption(optionIndex)">
@@ -89,7 +93,7 @@
 </div>
 
 
-<div class="d-flex justify-content-end mt-2">
+<div *ngIf="(optionsEnabled$ | async)" class="d-flex justify-content-end mt-2">
   <a title="Add option"
      i18n-title="@@constraint.select.add.option"
      (click)="onAddOption()">

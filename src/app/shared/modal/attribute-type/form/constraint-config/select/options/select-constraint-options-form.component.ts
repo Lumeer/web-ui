@@ -36,7 +36,8 @@ import {ColorPickerComponent} from '../../../../../../picker/color/color-picker.
 import {unescapeHtml} from '../../../../../../utils/common.utils';
 import {DataValue, SelectConstraintOption} from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../../../../picker/colors';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 
 @Component({
   selector: 'select-constraint-options-form',
@@ -63,11 +64,16 @@ export class SelectConstraintOptionsFormComponent implements OnInit, OnDestroy {
   public readonly formControlName = SelectConstraintFormControl;
   public readonly formControlNames = SelectConstraintOptionsFormControl;
   public backgroundInitialValues: string[] = [];
+  public optionsEnabled$: Observable<boolean>;
 
   private subscriptions = new Subscription();
 
   public ngOnInit() {
     this.subscriptions.add(this.displayValuesControl.valueChanges.subscribe(() => this.checkOptionsControls()));
+    this.optionsEnabled$ = this.optionsForm.statusChanges.pipe(
+      map(() => this.optionsForm.enabled),
+      distinctUntilChanged()
+    );
   }
 
   private checkOptionsControls() {
