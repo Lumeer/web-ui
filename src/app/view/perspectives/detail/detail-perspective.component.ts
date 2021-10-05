@@ -27,9 +27,9 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
 import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectViewCursor} from '../../../core/store/navigation/navigation.state';
+import {selectNavigatingToOtherWorkspace, selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionPermissionsByView,
@@ -172,6 +172,9 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
             }
             return of({collection: null, document: null});
           }),
+          withLatestFrom(this.store$.pipe(select(selectNavigatingToOtherWorkspace))),
+          filter(([, navigating]) => !navigating),
+          map(([selection]) => selection),
           tap(selection => this.emitCursor(selection.collection, selection.document, cursor))
         );
       })

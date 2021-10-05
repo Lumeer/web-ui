@@ -1,6 +1,7 @@
 <table-cell-group [cursor]="cursor"
                   [rows]="rows"
                   [view]="view"
+                  [correlationId]="correlationId"
                   [query]="query"
                   [canManageConfig]="canManageConfig"
                   [style.width.px]="linkInstancePart$ | async | partWidth:canManageConfig">
@@ -9,6 +10,7 @@
 <table-cell-group [cursor]="cursor | nextPartCursor"
                   [rows]="rows"
                   [view]="view"
+                  [correlationId]="correlationId"
                   [query]="query"
                   [canManageConfig]="canManageConfig"
                   [style.width.px]="documentPart$ | async | partWidth:canManageConfig">
@@ -18,6 +20,7 @@
                    [cursor]="cursor | nextPartCursor"
                    [rows]="rows"
                    [query]="query"
+                   [correlationId]="correlationId"
                    [view]="view"
                    [canManageConfig]="canManageConfig"
                    [striped]="striped">

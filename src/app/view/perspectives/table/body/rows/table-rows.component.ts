@@ -64,6 +64,9 @@ export class TableRowsComponent implements OnChanges {
   public tableId: string;
 
   @Input()
+  public correlationId: string;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Input()

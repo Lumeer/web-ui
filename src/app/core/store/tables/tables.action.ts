@@ -414,7 +414,7 @@ export namespace TablesAction {
   export class EditSelectedCell implements Action {
     public readonly type = TablesActionType.EDIT_SELECTED_CELL;
 
-    public constructor(public payload: {value?: string; clear?: boolean}) {}
+    public constructor(public payload: {correlationId: string; value?: string; clear?: boolean}) {}
   }
 
   export class RemoveSelectedCell implements Action {

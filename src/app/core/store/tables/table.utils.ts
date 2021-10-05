@@ -548,6 +548,10 @@ export function getTableElementFromInnerElement(element: HTMLElement, tableId: s
   return getTableElement(tableId);
 }
 
+export function isEventFromCurrentTable(event: KeyboardEvent, element: HTMLElement, tableId: string): boolean {
+  return getTableElementFromInnerElement(element, tableId)?.contains(event.target as HTMLElement);
+}
+
 export function createEmptyTableRow(parentDocumentId?: string): TableConfigRow {
   return {
     correlationId: generateCorrelationId(),

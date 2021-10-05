@@ -56,7 +56,11 @@ import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
-import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
+import {
+  findTableRow,
+  getTableColumnWidth,
+  getTableElementFromInnerElement,
+} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
 import {
   selectAffected,
@@ -116,6 +120,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public table: TableModel;
+
+  @Input()
+  public correlationId: string;
 
   @Input()
   public allowedPermissions: AllowedPermissions;
@@ -354,7 +361,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
-        if (this.editable && this.isAttributeEditable(attribute)) {
+        if (
+          this.editable &&
+          this.isAttributeEditable(attribute) &&
+          action.payload.correlationId === this.correlationId
+        ) {
           if (action.payload.clear) {
             this.startEditingAndClear();
           } else {
@@ -791,7 +802,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onEdit() {
-    this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+    this.store$.dispatch(new TablesAction.EditSelectedCell({correlationId: this.correlationId}));
   }
 
   public onValueChange(dataValue: DataValue) {

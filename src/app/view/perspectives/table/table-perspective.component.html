@@ -5,6 +5,8 @@
     <table-hidden-input [canManageConfig]="data.canManageConfig"
                         [tableId]="data.tableId"
                         [view]="data.view"
+                        [cursor]="cursor$ | async"
+                        [correlationId]="correlationId"
                         class="position-fixed">
     </table-hidden-input>
 
@@ -20,6 +22,7 @@
     <table-body [tableId]="data.tableId"
                 [query]="data.query"
                 [view]="data.view"
+                [correlationId]="correlationId"
                 [perspectiveConfiguration]="perspectiveConfiguration"
                 [canManageConfig]="data.canManageConfig"
                 class="d-flex flex-grow-1">
