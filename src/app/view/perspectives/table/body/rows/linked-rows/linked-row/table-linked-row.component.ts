@@ -58,6 +58,9 @@ export class TableLinkedRowComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public correlationId: string;
+
   public linkInstancePart$: Observable<TableConfigPart>;
   public documentPart$: Observable<TableConfigPart>;
 

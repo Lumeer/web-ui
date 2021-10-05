@@ -13,6 +13,7 @@
           [cursor]="cursor | columnCursor:columnIndex"
           [document]="cellData.document"
           [view]="view"
+          [correlationId]="correlationId"
           [canManageConfig]="canManageConfig"
           [linkInstance]="cellData.linkInstance"
           [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"

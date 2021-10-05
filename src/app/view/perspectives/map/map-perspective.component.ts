@@ -21,12 +21,21 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild}
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
-import {debounceTime, filter, map, mergeMap, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  mergeMap,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
-import {selectMapPosition} from '../../../core/store/navigation/navigation.state';
+import {selectMapPosition, selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DefaultViewConfig, ViewConfig} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -37,7 +46,7 @@ import {
 } from '../../../core/store/views/views.state';
 import {MapContentComponent} from './content/map-content.component';
 import {DEFAULT_PERSPECTIVE_ID, Perspective} from '../perspective';
-import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.utils';
+import {checkOrTransformMapConfig, mapPositionChanged} from '../../../core/store/maps/map-config.utils';
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -194,9 +203,12 @@ export class MapPerspectiveComponent extends DataPerspectiveDirective<MapConfig>
     return this.store$
       .pipe(
         select(selectMapConfig),
-        filter(config => !!config?.position)
+        withLatestFrom(this.store$.pipe(select(selectNavigatingToOtherWorkspace))),
+        filter(([config, navigating]) => !navigating && !!config?.position),
+        map(([config]) => config?.position),
+        distinctUntilChanged((a, b) => !mapPositionChanged(a, b))
       )
-      .subscribe(config => this.redirectToMapPosition(config.position));
+      .subscribe(position => this.redirectToMapPosition(position));
   }
 
   private redirectToMapPosition(position: MapPosition) {

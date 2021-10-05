@@ -11,6 +11,7 @@
                         [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
                         [rows]="[linkedRow]"
                         [view]="view"
+                        [correlationId]="correlationId"
                         [query]="query"
                         [canManageConfig]="canManageConfig">
       </table-linked-row>
@@ -20,6 +21,7 @@
                         class="h-100"
                         [rows]="table.linkedRows"
                         [view]="view"
+                        [correlationId]="correlationId"
                         [query]="query"
                         [canManageConfig]="canManageConfig">
       </table-linked-row>

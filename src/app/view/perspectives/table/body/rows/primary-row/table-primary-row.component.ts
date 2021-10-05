@@ -69,6 +69,9 @@ export class TablePrimaryRowComponent implements OnChanges {
   public view: View;
 
   @Input()
+  public correlationId: string;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Output()

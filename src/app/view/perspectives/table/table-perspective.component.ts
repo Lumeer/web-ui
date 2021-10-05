@@ -72,6 +72,7 @@ import {selectViewDataQuery} from '../../../core/store/view-settings/view-settin
 import {DataQuery} from '../../../core/model/data-query';
 import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} from '../perspective-configuration';
 import {clickedInsideElement} from '../../../shared/utils/html-modifier';
+import {generateId} from '../../../shared/utils/resource.utils';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -92,6 +93,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   @HostBinding('id')
   public elementId: string;
 
+  @HostBinding('correlationId')
+  public correlationId = generateId();
+
   @ViewChild(TableHeaderComponent)
   public tableHeader: TableHeaderComponent;
 
@@ -104,6 +108,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public view$: Observable<View>;
   public query$: Observable<Query>;
   public tableId$: Observable<string>;
+  public cursor$: Observable<TableCursor>;
 
   private overrideView$ = new BehaviorSubject<View>(null);
   private selectedCursor: TableCursor;
@@ -149,6 +154,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.canManageConfig$ = this.view$.pipe(
       switchMap(view => this.store$.pipe(select(selectCanManageViewConfig(view))))
     );
+    this.cursor$ = this.store$.pipe(select(selectTableCursor));
 
     this.initTableByQuery();
     this.subscriptions.add(this.subscribeToTable());
@@ -176,33 +182,34 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private scrollToEdgeIfEdgeCellSelected(cursor: TableCursor) {
-    const [scrollable] = Array.from(this.scrollDispatcher.scrollContainers.keys());
-    if (cursor && scrollable) {
-      this.scrollLeftIfFirstCellSelected(cursor, scrollable);
-      this.scrollRightIfLastCellSelected(cursor, scrollable);
+    const scrollables = Array.from(this.scrollDispatcher.scrollContainers.keys()).filter(scrollable =>
+      this.isScrollableInsideCurrentTable(scrollable)
+    );
+    if (cursor && scrollables.length) {
+      this.scrollLeftIfFirstCellSelected(cursor, scrollables);
+      this.scrollRightIfLastCellSelected(cursor, scrollables);
     }
   }
 
-  private scrollLeftIfFirstCellSelected(cursor: TableCursor, scrollable: CdkScrollable) {
+  private scrollLeftIfFirstCellSelected(cursor: TableCursor, scrollables: CdkScrollable[]) {
     if (!isFirstTableCell(cursor)) {
       return;
     }
 
-    const scrollLeft = scrollable.measureScrollOffset('left');
+    const scrollLeft = scrollables[0].measureScrollOffset('left');
     if (scrollLeft !== 0) {
-      scrollable.scrollTo({left: 0});
+      scrollables.forEach(scrollable => scrollable.scrollTo({left: 0}));
     }
   }
 
-  private scrollRightIfLastCellSelected(cursor: TableCursor, scrollable: CdkScrollable) {
-    const table = this.table$.getValue();
-    if (!isLastTableCell(cursor, table && table.config)) {
+  private scrollRightIfLastCellSelected(cursor: TableCursor, scrollables: CdkScrollable[]) {
+    if (!isLastTableCell(cursor, this.table$.value?.config)) {
       return;
     }
 
-    const scrollRight = scrollable.measureScrollOffset('right');
+    const scrollRight = scrollables[0].measureScrollOffset('right');
     if (scrollRight !== 0) {
-      scrollable.scrollTo({right: 0});
+      scrollables.forEach(scrollable => scrollable.scrollTo({right: 0}));
     }
   }
 
@@ -479,7 +486,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (!this.selectedCursor) {
+    if (!this.selectedCursor || !this.isEventFromCurrentTable(event)) {
       return;
     }
 
@@ -501,7 +508,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       case KeyCode.Backspace:
         event.preventDefault();
         event.stopPropagation();
-        this.store$.dispatch(new TablesAction.EditSelectedCell({clear: true}));
+        this.store$.dispatch(new TablesAction.EditSelectedCell({correlationId: this.correlationId, clear: true}));
         return;
       case KeyCode.Delete:
         event.preventDefault();
@@ -513,7 +520,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       case KeyCode.F2:
         event.preventDefault();
         if (editableEvent) {
-          return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+          return this.store$.dispatch(new TablesAction.EditSelectedCell({correlationId: this.correlationId}));
         }
         return;
       default:
@@ -521,8 +528,14 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           return;
         }
 
-        return this.store$.dispatch(new TablesAction.EditSelectedCell({clear: true}));
+        return this.store$.dispatch(
+          new TablesAction.EditSelectedCell({correlationId: this.correlationId, clear: true})
+        );
     }
+  }
+
+  private isEventFromCurrentTable(event: KeyboardEvent): boolean {
+    return this.element.nativeElement?.contains(event.target as HTMLElement);
   }
 
   @HostListener('contextmenu', ['$event'])

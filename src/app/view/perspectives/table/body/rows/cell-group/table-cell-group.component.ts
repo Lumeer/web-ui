@@ -78,6 +78,9 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public rows: TableConfigRow[];
 
   @Input()
+  public correlationId: string;
+
+  @Input()
   public canManageConfig: boolean;
 
   public documents$: Observable<DocumentModel[]>;

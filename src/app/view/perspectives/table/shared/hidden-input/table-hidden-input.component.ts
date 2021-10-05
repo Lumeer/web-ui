@@ -21,8 +21,8 @@ import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit
 import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {filter, map, switchMap, take} from 'rxjs/operators';
-import {getTableRowCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
+import {filter, take} from 'rxjs/operators';
+import {getTableRowCursor, TableCursor} from '../../../../../core/store/tables/table-cursor';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 import {selectTableCursor} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
@@ -53,6 +53,12 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   @Input()
   public view: View;
 
+  @Input()
+  public cursor: TableCursor;
+
+  @Input()
+  public correlationId: string;
+
   @ViewChild('hiddenInput', {static: true})
   public hiddenInput: ElementRef<HTMLInputElement>;
 
@@ -63,6 +69,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   private constraintData: ConstraintData;
 
   constructor(
+    private element: ElementRef,
     private actions$: Actions,
     private store$: Store<AppState>,
     private dataPermissionsService: TableDataPermissionsService
@@ -102,6 +109,10 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (!this.isEventFromCurrentTable(event)) {
+      return;
+    }
+
     switch (keyboardEventCode(event)) {
       case KeyCode.KeyQ:
         if (event.altKey) {
@@ -136,12 +147,12 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       case KeyCode.F2:
         event.preventDefault();
         event.stopPropagation();
-        this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+        this.store$.dispatch(new TablesAction.EditSelectedCell({correlationId: this.correlationId}));
         return;
       case KeyCode.Backspace:
         event.preventDefault();
         event.stopPropagation();
-        this.store$.dispatch(new TablesAction.EditSelectedCell({clear: true}));
+        this.store$.dispatch(new TablesAction.EditSelectedCell({correlationId: this.correlationId, clear: true}));
         return;
       case KeyCode.Delete:
         event.preventDefault();
@@ -172,22 +183,22 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
     this.onShortcutKeyDown(event);
   }
 
+  private isEventFromCurrentTable(event: KeyboardEvent): boolean {
+    return this.element.nativeElement.contains(event.target as HTMLElement);
+  }
+
   private onShortcutKeyDown(event: KeyboardEvent) {
-    this.store$
-      .pipe(
-        select(selectTableCursor),
-        take(1),
-        switchMap(cursor =>
-          this.dataPermissionsService.selectDataPermissions$(this.view, cursor).pipe(
-            take(1),
-            filter(() => !!cursor.rowPath),
-            map(permissions => [cursor, permissions?.edit])
-          )
-        )
-      )
-      .subscribe(([cursor, editable]: [TableBodyCursor, boolean]) => {
+    if (!this.cursor?.rowPath) {
+      return;
+    }
+
+    this.dataPermissionsService
+      .selectDataPermissions$(this.view, this.cursor)
+      .pipe(take(1))
+      .subscribe(editable => {
         event[EDITABLE_EVENT] = editable;
         const workspace = {viewId: this.view?.id};
+        const cursor = this.cursor;
 
         if (event.altKey && event.shiftKey && editable) {
           event.stopPropagation();
@@ -217,9 +228,14 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       this.skipCompose = false;
       return;
     }
+    if (!this.isEventFromCurrentTable(event)) {
+      return;
+    }
 
     this.skipCompose = false;
-    this.store$.dispatch(new TablesAction.EditSelectedCell({value: escapeHtml(element.value)}));
+    this.store$.dispatch(
+      new TablesAction.EditSelectedCell({correlationId: this.correlationId, value: escapeHtml(element.value)})
+    );
     element.value = '';
   }
 

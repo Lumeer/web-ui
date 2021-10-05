@@ -51,6 +51,9 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
   public query: Query;
 
   @Input()
+  public correlationId: string;
+
+  @Input()
   public canManageConfig: boolean;
 
   @Input()

@@ -20,6 +20,7 @@
                   [rows]="[row]"
                   [view]="view"
                   [query]="query"
+                  [correlationId]="correlationId"
                   [canManageConfig]="canManageConfig"
                   [style.width.px]="part$ | async | partWidth:canManageConfig">
 </table-cell-group>
@@ -28,6 +29,7 @@
                    [cursor]="cursor"
                    [rows]="[row]"
                    [view]="view"
+                   [correlationId]="correlationId"
                    [query]="query"
                    [canManageConfig]="canManageConfig"
                    [striped]="striped">

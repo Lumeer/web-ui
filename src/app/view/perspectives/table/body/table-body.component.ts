@@ -56,6 +56,9 @@ export class TableBodyComponent implements OnChanges {
   public canManageConfig: boolean;
 
   @Input()
+  public correlationId: string;
+
+  @Input()
   public perspectiveConfiguration: TablePerspectiveConfiguration;
 
   @ViewChild(TableRowsComponent, {static: true})

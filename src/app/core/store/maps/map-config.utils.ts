@@ -19,7 +19,7 @@
 
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Attribute, Collection} from '../collections/collection';
-import {MapAttributeModel, MapConfig, MapConfigVersion, MapStemConfig} from './map.model';
+import {MapAttributeModel, MapConfig, MapConfigVersion, MapPosition, MapStemConfig} from './map.model';
 import {Query, QueryStem} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
 import {
@@ -65,10 +65,14 @@ export function isMapConfigChanged(viewConfig: MapConfig, perspectiveConfig: Map
   }
 
   if (viewConfig.positionSaved || perspectiveConfig.positionSaved) {
-    return !deepObjectsEquals(viewConfig.position, perspectiveConfig.position);
+    return mapPositionChanged(viewConfig.position, perspectiveConfig.position);
   }
 
   return false;
+}
+
+export function mapPositionChanged(p1: MapPosition, p2: MapPosition): boolean {
+  return !deepObjectsEquals(p1, p2);
 }
 
 function mapStemConfigsChanged(c1: MapStemConfig[], c2: MapStemConfig[]): boolean {
