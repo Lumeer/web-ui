@@ -182,34 +182,34 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private scrollToEdgeIfEdgeCellSelected(cursor: TableCursor) {
-    const [scrollable] = Array.from(this.scrollDispatcher.scrollContainers.keys()).filter(scrollable =>
+    const scrollables = Array.from(this.scrollDispatcher.scrollContainers.keys()).filter(scrollable =>
       this.isScrollableInsideCurrentTable(scrollable)
     );
-    if (cursor && scrollable) {
-      this.scrollLeftIfFirstCellSelected(cursor, scrollable);
-      this.scrollRightIfLastCellSelected(cursor, scrollable);
+    if (cursor && scrollables.length) {
+      this.scrollLeftIfFirstCellSelected(cursor, scrollables);
+      this.scrollRightIfLastCellSelected(cursor, scrollables);
     }
   }
 
-  private scrollLeftIfFirstCellSelected(cursor: TableCursor, scrollable: CdkScrollable) {
+  private scrollLeftIfFirstCellSelected(cursor: TableCursor, scrollables: CdkScrollable[]) {
     if (!isFirstTableCell(cursor)) {
       return;
     }
 
-    const scrollLeft = scrollable.measureScrollOffset('left');
+    const scrollLeft = scrollables[0].measureScrollOffset('left');
     if (scrollLeft !== 0) {
-      scrollable.scrollTo({left: 0});
+      scrollables.forEach(scrollable => scrollable.scrollTo({left: 0}));
     }
   }
 
-  private scrollRightIfLastCellSelected(cursor: TableCursor, scrollable: CdkScrollable) {
+  private scrollRightIfLastCellSelected(cursor: TableCursor, scrollables: CdkScrollable[]) {
     if (!isLastTableCell(cursor, this.table$.value?.config)) {
       return;
     }
 
-    const scrollRight = scrollable.measureScrollOffset('right');
+    const scrollRight = scrollables[0].measureScrollOffset('right');
     if (scrollRight !== 0) {
-      scrollable.scrollTo({right: 0});
+      scrollables.forEach(scrollable => scrollable.scrollTo({right: 0}));
     }
   }
 
