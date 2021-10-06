@@ -42,6 +42,7 @@ import {OrganizationTabGuard} from './organization/organization-tab.guard';
 import {RoleType} from '../core/model/role-type';
 import {ProjectTabGuard} from './project/project-tab.guard';
 import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
+import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 
 const workspaceRoutes: Routes = [
   {
@@ -52,6 +53,7 @@ const workspaceRoutes: Routes = [
     resolve: {
       users: UsersGuard,
       groups: GroupsGuard,
+      selection: SelectionListsGuard,
       collections: CollectionsGuard,
       views: ViewsGuard,
       limits: ServiceLimitsGuard,

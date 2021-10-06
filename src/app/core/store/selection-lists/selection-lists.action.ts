@@ -34,6 +34,7 @@ export enum SelectionListsActionType {
   UPDATE_FAILURE = '[Selection Lists] Update :: Failure',
 
   DELETE = '[Selection Lists] Delete',
+  DELETE_CONFIRM = '[Selection Lists] Delete Confirm',
   DELETE_SUCCESS = '[Selection Lists] Delete :: Success',
   DELETE_FAILURE = '[Selection Lists] Delete :: Failure',
 }
@@ -60,7 +61,9 @@ export namespace SelectionListsAction {
   export class Create implements Action {
     public readonly type = SelectionListsActionType.CREATE;
 
-    public constructor(public payload: {list: SelectionList}) {}
+    public constructor(
+      public payload: {list: SelectionList; onSuccess?: () => void; onFailure?: (error: any) => void}
+    ) {}
   }
 
   export class CreateSuccess implements Action {
@@ -78,7 +81,9 @@ export namespace SelectionListsAction {
   export class Update implements Action {
     public readonly type = SelectionListsActionType.UPDATE;
 
-    public constructor(public payload: {list: SelectionList}) {}
+    public constructor(
+      public payload: {list: SelectionList; onSuccess?: () => void; onFailure?: (error: any) => void}
+    ) {}
   }
 
   export class UpdateSuccess implements Action {
@@ -91,6 +96,12 @@ export namespace SelectionListsAction {
     public readonly type = SelectionListsActionType.UPDATE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
+  }
+
+  export class DeleteConfirm implements Action {
+    public readonly type = SelectionListsActionType.DELETE_CONFIRM;
+
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class Delete implements Action {

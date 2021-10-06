@@ -22,23 +22,43 @@ import {Injectable} from '@angular/core';
 import {BaseService} from '../../rest/base.service';
 import {SelectionListsService} from './selection-lists.service';
 import {SelectionListDto} from '../../dto/selection-list.dto';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
+import {Workspace} from '../../store/navigation/workspace';
+import {HttpClient} from '@angular/common/http';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/app.state';
+import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
 export class ApiSelectionListsService extends BaseService implements SelectionListsService {
-  public create(organizationId: string, dto: SelectionListDto): Observable<SelectionListDto> {
-    return of(dto);
+  constructor(
+    private httpClient: HttpClient,
+    protected store$: Store<AppState>,
+    private configurationService: ConfigurationService
+  ) {
+    super(store$);
   }
 
-  public delete(organizationId: string, id: string): Observable<string> {
-    return of(id);
+  public create(organizationId: string, dto: SelectionListDto): Observable<SelectionListDto> {
+    return this.httpClient.post<SelectionListDto>(this.apiPrefix({organizationId}), dto);
+  }
+
+  public delete(organizationId: string, id: string): Observable<any> {
+    return this.httpClient.delete(this.apiPrefix({organizationId}, id));
   }
 
   public get(organizationId: string): Observable<SelectionListDto[]> {
-    return of([]);
+    return this.httpClient.get<SelectionListDto[]>(this.apiPrefix({organizationId}));
   }
 
   public update(organizationId: string, id: string, dto: SelectionListDto): Observable<SelectionListDto> {
-    return of(dto);
+    return this.httpClient.put<SelectionListDto>(this.apiPrefix({organizationId}, id), dto);
+  }
+
+  private apiPrefix(workspace?: Workspace, listId?: string): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/selection-lists${listId ? `/${listId}` : ''}`;
   }
 }

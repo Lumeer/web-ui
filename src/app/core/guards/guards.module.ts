@@ -29,6 +29,7 @@ import {UsersGuard} from './data/users.guard';
 import {ViewDefaultConfigsGuard} from './data/view-default-configs.guard';
 import {GroupsGuard} from './data/groups.guard';
 import {ServiceLimitsGuard} from './data/service-limits.guard';
+import {SelectionListsGuard} from './selection-lists.guard';
 
 @NgModule({
   imports: [CommonModule],
@@ -42,6 +43,7 @@ import {ServiceLimitsGuard} from './data/service-limits.guard';
     CurrentUserGuard,
     UsersGuard,
     GroupsGuard,
+    SelectionListsGuard,
     ServiceLimitsGuard,
     ViewDefaultConfigsGuard,
   ],

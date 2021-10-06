@@ -52,9 +52,12 @@ export const selectAllSelectionListsSorted = createSelector(selectAllSelectionLi
   lists.sort((a, b) => a.name.localeCompare(b.name))
 );
 
+export const selectSelectionListsByOrganizationSorted = (organizationId: string) =>
+  createSelector(selectAllSelectionListsSorted, lists => lists.filter(list => list.organizationId === organizationId));
+
 export const selectSelectionListsByProjectSorted = (organizationId: string, projectId: string) =>
-  createSelector(selectAllSelectionListsSorted, lists =>
-    lists.filter(list => list.organizationId === organizationId && list.projectId === projectId)
+  createSelector(selectSelectionListsByOrganizationSorted(organizationId), lists =>
+    lists.filter(list => list.projectId === projectId)
   );
 
 export const selectSelectionListsWithPredefined = createSelector(

@@ -20,9 +20,9 @@
 import {Component, HostListener, Input, OnInit} from '@angular/core';
 import {SelectionList} from '../../selection-list';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
 import {DialogType} from '../../../../modal/dialog-type';
 import {minLengthValidator} from '../../../../../core/validators/custom-validators';
@@ -30,9 +30,10 @@ import {uniqueValuesValidator} from '../../../../../core/validators/unique-value
 import {SelectConstraintOptionsFormControl} from '../../../../modal/attribute-type/form/constraint-config/select/select-constraint-form-control';
 import {minimumValuesCountValidator} from '../../../../../core/validators/mininum-values-count-validator';
 import {SelectionListsAction} from '../../../../../core/store/selection-lists/selection-lists.action';
-import {generateId} from '../../../../utils/resource.utils';
 import {parseSelectOptionsFromForm} from '../../../../modal/attribute-type/form/constraint-config/select/select-constraint.utils';
 import {keyboardEventCode, KeyCode} from '../../../../key-code';
+import {map, take} from 'rxjs/operators';
+import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
 
 @Component({
   selector: 'selection-list-modal',
@@ -62,7 +63,7 @@ export class SelectionListModalComponent implements OnInit {
 
   private createForm() {
     this.form = this.fb.group({
-      name: [this.list.name, minLengthValidator(1)],
+      name: [this.list.name, minLengthValidator(1), this.uniqueName(this.list?.id)],
       displayValues: [this.list.displayValues],
       options: this.fb.array(
         [],
@@ -74,24 +75,58 @@ export class SelectionListModalComponent implements OnInit {
     });
   }
 
+  public uniqueName(excludeId?: string): AsyncValidatorFn {
+    return (control: AbstractControl) =>
+      this.store$.pipe(
+        select(selectSelectionListsByProjectSorted(this.organizationId, this.projectId)),
+        map(lists => {
+          const allNames = lists
+            .filter(list => list.name && (!excludeId || list.id !== excludeId))
+            .map(list => list.name.trim());
+
+          const value = control.value.trim();
+
+          if (allNames.includes(value)) {
+            return {notUnique: true};
+          } else {
+            return null;
+          }
+        }),
+        take(1)
+      );
+  }
+
   public onSubmit() {
     const displayValues = this.form.controls.displayValues.value;
     const options = parseSelectOptionsFromForm(this.form.controls.options as FormArray, displayValues);
+    const name = this.form.value.name.trim();
     const list = {
       ...this.list,
       ...this.form.value,
+      name,
       options,
       organizationId: this.organizationId,
       projectId: this.projectId,
     };
-    if (this.list.id) {
-      this.store$.dispatch(new SelectionListsAction.Update({list}));
-    } else {
-      list.id = generateId();
-      this.store$.dispatch(new SelectionListsAction.Create({list}));
-    }
+    this.performingAction$.next(true);
 
-    this.hideDialog();
+    if (this.list.id) {
+      this.store$.dispatch(
+        new SelectionListsAction.Update({
+          list,
+          onSuccess: () => this.hideDialog(),
+          onFailure: () => this.performingAction$.next(false),
+        })
+      );
+    } else {
+      this.store$.dispatch(
+        new SelectionListsAction.Create({
+          list,
+          onSuccess: () => this.hideDialog(),
+          onFailure: () => this.performingAction$.next(false),
+        })
+      );
+    }
   }
 
   public hideDialog() {

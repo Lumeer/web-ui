@@ -178,11 +178,19 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
       this.displayValuesControl.setValue(selectionList.displayValues);
       this.displayValuesControl.disable();
       setTimeout(() => this.optionsControl.disable());
-      this.overrideOptions$.next(selectionList.options);
+      this.overrideOptions$.next([...selectionList.options]);
     } else {
       this.displayValuesControl.enable();
       this.optionsControl.enable();
-      this.overrideOptions$.next(null);
+    }
+  }
+
+  public onCopy() {
+    const selectionList = this.selectionLists.find(list => list.id === this.selectionListControl.value);
+    if (selectionList) {
+      this.selectionListControl.setValue(undefined); // custom list
+      this.displayValuesControl.enable();
+      this.optionsControl.enable();
     }
   }
 }

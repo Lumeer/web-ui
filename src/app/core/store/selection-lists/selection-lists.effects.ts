@@ -28,7 +28,8 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {SelectionListsAction, SelectionListsActionType} from './selection-lists.action';
 import {selectSelectionListsLoadedOrganization} from './selection-lists.state';
 import {SelectionListsService} from '../../data-service/selection-lists/selection-lists.service';
-import {convertSelectionListDtoToModel} from './selection-list.converter';
+import {convertSelectionListDtoToModel, convertSelectionListModelToDto} from './selection-list.converter';
+import {createCallbackActions} from '../utils/store.utils';
 
 @Injectable()
 export class SelectionListsEffects {
@@ -68,11 +69,16 @@ export class SelectionListsEffects {
     this.actions$.pipe(
       ofType<SelectionListsAction.Create>(SelectionListsActionType.CREATE),
       mergeMap(action => {
-        const listDto = convertSelectionListDtoToModel(action.payload.list);
+        const listDto = convertSelectionListModelToDto(action.payload.list);
         return this.service.create(action.payload.list.organizationId, listDto).pipe(
           map(dto => convertSelectionListDtoToModel(dto)),
-          map(list => new SelectionListsAction.CreateSuccess({list})),
-          catchError(error => of(new SelectionListsAction.CreateFailure({error})))
+          mergeMap(list => [
+            new SelectionListsAction.CreateSuccess({list}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(new SelectionListsAction.CreateFailure({error}), ...createCallbackActions(action.payload.onFailure))
+          )
         );
       })
     )
@@ -96,8 +102,13 @@ export class SelectionListsEffects {
         const listDto = convertSelectionListDtoToModel(action.payload.list);
         return this.service.update(action.payload.list.organizationId, listDto.id, listDto).pipe(
           map(dto => convertSelectionListDtoToModel(dto)),
-          map(list => new SelectionListsAction.UpdateSuccess({list})),
-          catchError(error => of(new SelectionListsAction.UpdateFailure({error})))
+          mergeMap(list => [
+            new SelectionListsAction.UpdateSuccess({list}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(new SelectionListsAction.UpdateFailure({error}), ...createCallbackActions(action.payload.onFailure))
+          )
         );
       })
     )
@@ -110,6 +121,23 @@ export class SelectionListsEffects {
       map(() => {
         const message = $localize`:@@selection.lists.update.fail:Could not update selection list`;
         return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public deleteConfirm$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SelectionListsAction.DeleteConfirm>(SelectionListsActionType.DELETE_CONFIRM),
+      map((action: SelectionListsAction.DeleteConfirm) => {
+        const title = $localize`:@@selection.lists.delete.dialog.title:Remove selection list`;
+        const message = $localize`:@@selection.lists.delete.dialog.message:Do you really want to remove selection list? Attributes that use selection list will retain its copy of the list configuration.`;
+
+        return new NotificationsAction.Confirm({
+          title,
+          message,
+          action: new SelectionListsAction.Delete(action.payload),
+          type: 'danger',
+        });
       })
     )
   );

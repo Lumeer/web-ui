@@ -30,7 +30,7 @@
   </div>
 
   <div *ngIf="canCreateSelectionLists$ | async" i18n="@@constraint.select.lists.create" class="mt-1 text-muted">
-    You can create custom lists in <a [routerLink]="selectionListsLink$ | async">Project settings</a>
+    Create or edit custom lists in <a [routerLink]="selectionListsLink$ | async">Project settings</a>
   </div>
 
   <select-constraint-options-form class="mt-3 d-block"

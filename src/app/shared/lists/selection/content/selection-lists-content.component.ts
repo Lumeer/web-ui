@@ -29,6 +29,8 @@ import {ModalService} from '../../../modal/modal.service';
 import {SelectionListModalComponent} from './modal/selection-list-modal.component';
 import {selectSelectionListsByProjectSorted} from '../../../../core/store/selection-lists/selection-lists.state';
 import {SelectionListsAction} from '../../../../core/store/selection-lists/selection-lists.action';
+import {tap} from 'rxjs/operators';
+import {createUniqueNameWithSuffix} from '../../../utils/string.utils';
 
 @Component({
   selector: 'selection-lists-content',
@@ -49,6 +51,8 @@ export class SelectionListsContentComponent implements OnChanges {
 
   public lists$: Observable<SelectionList[]>;
 
+  private lists: SelectionList[];
+
   constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -59,7 +63,8 @@ export class SelectionListsContentComponent implements OnChanges {
 
   private subscribeLists() {
     this.lists$ = this.store$.pipe(
-      select(selectSelectionListsByProjectSorted(this.organization?.id, this.project?.id))
+      select(selectSelectionListsByProjectSorted(this.organization?.id, this.project?.id)),
+      tap(lists => (this.lists = lists))
     );
   }
 
@@ -82,10 +87,15 @@ export class SelectionListsContentComponent implements OnChanges {
   }
 
   public onDelete(list: SelectionList) {
-    this.store$.dispatch(new SelectionListsAction.DeleteSuccess({id: list.id}));
+    this.store$.dispatch(new SelectionListsAction.DeleteConfirm({list}));
   }
 
   public onCopy(list: SelectionList) {
-    this.showListModal({...list, id: undefined});
+    this.showListModal({...list, id: undefined, name: this.createUniqueName(list.name)});
+  }
+
+  private createUniqueName(name: string): string {
+    const names = this.lists?.filter(list => !!list.name).map(list => list.name.trim());
+    return createUniqueNameWithSuffix(name, names);
   }
 }
