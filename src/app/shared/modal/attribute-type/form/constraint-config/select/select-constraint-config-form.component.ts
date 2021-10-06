@@ -83,7 +83,8 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
           {id: undefined, value: $localize`:@@constraint.select.lists.custom:Custom`},
           ...lists.map(list => ({id: list.id, value: list.name})),
         ];
-      })
+      }),
+      tap(lists => this.checkValidSelectedSelection(lists))
     );
     this.canCreateSelectionLists$ = this.store$.pipe(
       select(selectProjectPermissions),
@@ -141,9 +142,13 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   }
 
   private addFormControls() {
+    const selectionId = this.config?.selectionListId;
     this.form.addControl(SelectConstraintFormControl.Multi, new FormControl(this.config?.multi));
-    this.form.addControl(SelectConstraintFormControl.DisplayValues, new FormControl(this.config?.displayValues));
-    this.form.addControl(SelectConstraintFormControl.SelectionList, new FormControl(this.config?.selectionListId));
+    this.form.addControl(
+      SelectConstraintFormControl.DisplayValues,
+      new FormControl({value: this.config?.displayValues, disabled: !!selectionId})
+    );
+    this.form.addControl(SelectConstraintFormControl.SelectionList, new FormControl(selectionId));
   }
 
   private addOptionsFormArray() {
@@ -157,6 +162,18 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
         ]
       )
     );
+    if (this.config?.selectionListId) {
+      setTimeout(() => this.optionsControl.disable());
+    }
+  }
+
+  private checkValidSelectedSelection(lists: SelectItemModel[]) {
+    if (this.selectionListControl.value) {
+      const listExists = lists.some(list => list.id === this.selectionListControl.value);
+      if (!listExists) {
+        this.resetSelectionListControlToCustom();
+      }
+    }
   }
 
   public get selectionListControl(): AbstractControl {
@@ -188,9 +205,13 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   public onCopy() {
     const selectionList = this.selectionLists.find(list => list.id === this.selectionListControl.value);
     if (selectionList) {
-      this.selectionListControl.setValue(undefined); // custom list
-      this.displayValuesControl.enable();
-      this.optionsControl.enable();
+      this.resetSelectionListControlToCustom();
     }
+  }
+
+  private resetSelectionListControlToCustom() {
+    this.selectionListControl.setValue(undefined); // custom list
+    this.displayValuesControl.enable();
+    setTimeout(() => this.optionsControl.enable());
   }
 }

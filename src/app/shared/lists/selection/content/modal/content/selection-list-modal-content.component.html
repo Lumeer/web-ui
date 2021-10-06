@@ -12,7 +12,7 @@
              i18n-placeholder="@@selection.lists.modal.name.placeholder"
              placeholder="Enter unique name">
     </div>
-    <small class="col-12 text-danger mt-1" *ngIf="nameControl.errors?.minLength"
+    <small class="col-12 text-danger mt-1" *ngIf="nameControl.touched && nameControl.errors?.minLength"
            i18n="@@selection.lists.modal.name.error.minLength">List name can not be empty</small>
     <small class="col-12 text-danger mt-1" *ngIf="nameControl.errors?.notUnique"
            i18n="@@selection.lists.modal.name.error.notUnique">List name already exists</small>

@@ -177,6 +177,7 @@ export class AttributeTypeFormComponent implements OnChanges {
         const displayValues = this.configForm.get(SelectConstraintFormControl.DisplayValues).value;
         return {
           multi: this.configForm.get(SelectConstraintFormControl.Multi).value,
+          selectionListId: this.configForm.get(SelectConstraintFormControl.SelectionList).value,
           displayValues,
           options: parseSelectOptionsFromForm(
             this.configForm.get(SelectConstraintFormControl.Options) as FormArray,
