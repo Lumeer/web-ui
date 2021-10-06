@@ -84,6 +84,8 @@ import {TeamsAction} from '../store/teams/teams.action';
 import {convertTeamDtoToModel} from '../store/teams/teams.converter';
 import {Team} from '../store/teams/team';
 import {selectTeamById} from '../store/teams/teams.state';
+import {convertSelectionListDtoToModel} from '../store/selection-lists/selection-list.converter';
+import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
 
 @Injectable({
   providedIn: 'root',
@@ -177,6 +179,7 @@ export class PusherService implements OnDestroy {
     this.bindPrintEvents();
     this.bindNavigateEvents();
     this.bindSendEmailEvents();
+    this.bindSelectionListEvents();
   }
 
   private bindOrganizationEvents() {
@@ -823,6 +826,28 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Group:reload', data => {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(new TeamsAction.Get({organizationId: data.organizationId}));
+      }
+    });
+  }
+
+  private bindSelectionListEvents() {
+    this.channel.bind('SelectionList:create', data => {
+      if (this.isCurrentOrganization(data)) {
+        const list = convertSelectionListDtoToModel(data.object);
+        this.store$.dispatch(new SelectionListsAction.CreateSuccess({list}));
+      }
+    });
+
+    this.channel.bind('SelectionList:update', data => {
+      if (this.isCurrentOrganization(data)) {
+        const list = convertSelectionListDtoToModel(data.object);
+        this.store$.dispatch(new SelectionListsAction.UpdateSuccess({list}));
+      }
+    });
+
+    this.channel.bind('Group:remove', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new SelectionListsAction.DeleteSuccess({id: data.id}));
       }
     });
   }
