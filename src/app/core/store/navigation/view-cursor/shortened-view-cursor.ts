@@ -20,6 +20,7 @@
 import {ViewCursor} from './view-cursor';
 
 export interface ShortenedViewCursor {
+  i?: string; // id
   c?: string; // collectionId
   t?: string; // linkTypeId
   d?: string; // documentId
@@ -32,6 +33,7 @@ export interface ShortenedViewCursor {
 export function shortenViewCursor(cursor: ViewCursor): ShortenedViewCursor {
   return (
     cursor && {
+      i: cursor.id,
       c: cursor.collectionId,
       t: cursor.linkTypeId,
       d: cursor.documentId,
@@ -46,6 +48,7 @@ export function shortenViewCursor(cursor: ViewCursor): ShortenedViewCursor {
 export function prolongViewCursor(cursor: ShortenedViewCursor): ViewCursor {
   return (
     cursor && {
+      id: cursor.i,
       collectionId: cursor.c,
       linkTypeId: cursor.t,
       documentId: cursor.d,

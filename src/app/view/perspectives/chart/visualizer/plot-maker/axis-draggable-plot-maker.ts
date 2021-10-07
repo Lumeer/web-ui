@@ -24,6 +24,7 @@ import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/u
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
 import {Constraint, ConstraintType, DateTimeConstraint} from '@lumeer/data-filters';
+import {generateId} from '../../../../../shared/utils/resource.utils';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getTraceIndexForPoint(point: any): number;
@@ -118,6 +119,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
   private createDrag(): any {
     const plotMaker = this;
+    const correlationId = generateId();
     return d3.behavior
       .drag()
       .origin(function (datum: any) {

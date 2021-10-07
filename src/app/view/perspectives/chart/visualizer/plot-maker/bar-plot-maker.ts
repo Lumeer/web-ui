@@ -154,7 +154,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
   }
 
   public getTraceIndexForPoint(point: any): number {
-    const barsContainers = d3.selectAll('.barlayer .trace .points')[0];
+    const barsContainers = d3.selectAll(`.${this.chartId} .barlayer .trace .points`)[0];
     const pointNode = d3.select(point).node().parentNode;
 
     for (let i = 0; i < barsContainers.length; i++) {
@@ -176,6 +176,6 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
   }
 
   public getPoints(): d3.Selection<any> {
-    return d3.selectAll('.barlayer .trace .points .point path');
+    return d3.selectAll(`.${this.chartId} .barlayer .trace .points .point path`);
   }
 }

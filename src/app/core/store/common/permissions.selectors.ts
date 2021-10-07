@@ -606,7 +606,7 @@ export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views)
 );
 
 export const selectViewsByReadWithComputedData = createSelector(
-  selectViewsByRead,
+  selectViewsByReadSorted,
   selectCollectionsDictionary,
   (views, collectionsMap) =>
     views.map(view => ({...view, icon: getViewIcon(view), color: getViewColor(view, collectionsMap)}))

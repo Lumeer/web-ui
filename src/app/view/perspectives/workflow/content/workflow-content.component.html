@@ -1,5 +1,8 @@
 <resizable-sidebar [opened]="perspectiveConfiguration?.showSidebar && !!selectedDocument && !!selectedCollection"
-                   [width]="sidebarWidth"
+                   *ngIf="sidebarData$ | async as sidebarData"
+                   [width]="sidebarWidth || sidebarData.initialWidth"
+                   [minWidth]="sidebarData.minWidth"
+                   [maxWidth]="sidebarData.maxWidth"
                    (widthChanged)="sidebarResize.emit($event)">
 
   <workflow-tables class="d-block content"
@@ -29,6 +32,7 @@
                     [collection]="selectedCollection"
                     [document]="selectedDocument"
                     [currentView]="currentView"
+                    [workflowId]="workflowId"
                     (close)="closeSidebar.emit()">
   </workflow-sidebar>
 

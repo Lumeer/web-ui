@@ -17,13 +17,12 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr min-content;
 
   .sidebar {
     border-left: 1px solid $gray-200;
     box-shadow: 0 5px 20px 0 $gray-200;
-    min-width: min(100vh, 400px);
-    max-width: 60vw;
+    max-width: 100%;
     overflow-y: auto;
   }
 
@@ -33,23 +32,5 @@
     cursor: col-resize;
     position: absolute;
     left: -5px;
-  }
-}
-
-@include media-breakpoint-down(sm) {
-  .wrapper .sidebar {
-    max-width: 100vw;
-  }
-}
-
-@include media-breakpoint-between(sm, lg) {
-  .wrapper .sidebar {
-    max-width: 70vw;
-  }
-}
-
-@include media-breakpoint-up(lg) {
-  .wrapper .sidebar {
-    max-width: 65vw;
   }
 }

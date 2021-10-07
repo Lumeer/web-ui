@@ -37,6 +37,7 @@ import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {defaultWorkflowPerspectiveConfiguration, WorkflowPerspectiveConfiguration} from '../perspective-configuration';
+import {generateId} from '../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'workflow-perspective',
@@ -54,6 +55,7 @@ export class WorkflowPerspectiveComponent
   public selectedDocument$: Observable<DocumentModel>;
   public selectedCollection$: Observable<Collection>;
   public panelWidth$: Observable<number>;
+  public workflowId = generateId();
 
   constructor(protected store$: Store<AppState>) {
     super(store$);
@@ -89,9 +91,9 @@ export class WorkflowPerspectiveComponent
   }
 
   public subscribeAdditionalData() {
-    const selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
-    this.selectedDocument$ = selectedDocumentId$.pipe(
+    this.selectedDocument$ = this.store$.pipe(
+      select(selectWorkflowSelectedDocumentId(this.workflowId)),
       switchMap(documentId => this.store$.pipe(select(selectDocumentById(documentId))))
     );
     this.selectedCollection$ = this.selectedDocument$.pipe(
@@ -109,7 +111,7 @@ export class WorkflowPerspectiveComponent
   }
 
   public onCloseSidebar() {
-    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument());
+    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument({workflowId: this.workflowId}));
   }
 
   public setSidebarWidth(width: number) {

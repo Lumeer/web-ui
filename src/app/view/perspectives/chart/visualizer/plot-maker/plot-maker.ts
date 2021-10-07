@@ -30,6 +30,8 @@ export type PlotlyChartData = Partial<PlotData>;
 export abstract class PlotMaker {
   protected chartData: ChartData;
 
+  protected chartId: string;
+
   protected onValueChanged?: (ValueChange) => void;
 
   protected onDataChanged?: (DataChange) => void;
@@ -52,6 +54,10 @@ export abstract class PlotMaker {
 
   public setOnDataChanged(onDataChanged: (dataChange: DataChange) => void) {
     this.onDataChanged = onDataChanged;
+  }
+
+  public setChartId(id: string) {
+    this.chartId = id;
   }
 
   public abstract createData(): PlotlyChartData[];
