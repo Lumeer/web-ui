@@ -141,6 +141,7 @@ import {selectCurrentUserForWorkspace} from '../../../../../../core/store/users/
 import {dataResourcePermissions} from '../../../../../../shared/utils/permission.utils';
 import {WorkflowPerspectiveConfiguration} from '../../../../perspective-configuration';
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
+import {DEFAULT_PERSPECTIVE_ID} from '../../../../perspective';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -189,6 +190,10 @@ export class WorkflowTablesDataService {
 
   public setCurrentView(view: View) {
     this.currentView = view;
+  }
+
+  private get perspectiveId(): string {
+    return this.currentView?.code || DEFAULT_PERSPECTIVE_ID;
   }
 
   private formatWorkflowValue(
@@ -885,7 +890,7 @@ export class WorkflowTablesDataService {
   public resizeTable(table: WorkflowTable, height: number) {
     this.store$.dispatch(
       new WorkflowsAction.SetTableHeight({
-        workflowId: this.workflowId,
+        workflowId: this.perspectiveId,
         collectionId: table.collectionId,
         stem: table.stem,
         value: table.title?.value || '',
@@ -1074,7 +1079,7 @@ export class WorkflowTablesDataService {
     if (column.attribute) {
       this.store$.dispatch(
         new WorkflowsAction.SetColumnWidth({
-          workflowId: this.workflowId,
+          workflowId: this.perspectiveId,
           width,
           attributeId: column.attribute.id,
           collectionId: column.collectionId,
@@ -1140,6 +1145,7 @@ export class WorkflowTablesDataService {
     const table = this.stateService.findTable(row?.tableId);
     this.store$.dispatch(
       new WorkflowsAction.SetOpenedDocument({
+        workflowId: this.workflowId,
         documentId: row.documentId,
         cell,
         column,
@@ -1408,7 +1414,7 @@ export class WorkflowTablesDataService {
   }
 
   public resetSidebar() {
-    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument());
+    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument({workflowId: this.workflowId}));
   }
 
   public createNewRow(tableId: string) {
@@ -1461,7 +1467,7 @@ export class WorkflowTablesDataService {
 
   private selectSidebarOpened$(): Observable<boolean> {
     return this.store$.pipe(
-      select(selectWorkflowSelectedDocumentId),
+      select(selectWorkflowSelectedDocumentId(this.workflowId)),
       mergeMap(documentId => this.store$.pipe(select(selectDocumentById(documentId)))),
       take(1),
       map(document => !!document)

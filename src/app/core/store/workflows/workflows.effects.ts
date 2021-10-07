@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {EMPTY, of} from 'rxjs';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
-import {delay, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {delay, map, mergeMap, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
 import {NavigationAction} from '../navigation/navigation.action';
 import {AppState} from '../app.state';
@@ -40,6 +40,7 @@ export class WorkflowsEffects {
         action =>
           new NavigationAction.SetViewCursor({
             cursor: {
+              id: action.payload.workflowId,
               documentId: action.payload.documentId,
               linkInstanceId: action.payload.cell?.linkId,
               linkTypeId: action.payload.column?.linkTypeId,
@@ -76,9 +77,11 @@ export class WorkflowsEffects {
     this.actions$.pipe(
       ofType<WorkflowsAction.ResetOpenedDocument>(WorkflowsActionType.RESET_OPENED_DOCUMENT),
       delay(100),
-      withLatestFrom(this.store$.pipe(select(selectWorkflowSelectedDocumentId))),
+      switchMap(action =>
+        this.store$.pipe(select(selectWorkflowSelectedDocumentId(action.payload.workflowId)), take(1))
+      ),
       withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-      mergeMap(([[, selectedDocumentId], documentsMap]) => {
+      mergeMap(([selectedDocumentId, documentsMap]) => {
         const document = documentsMap[selectedDocumentId];
         if (document) {
           return of(new NavigationAction.SetViewCursor({cursor: {}}));

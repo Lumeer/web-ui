@@ -26,6 +26,7 @@ import {
 } from './shortened-view-cursor';
 
 export interface ViewCursor {
+  id?: string;
   collectionId?: string;
   linkTypeId?: string;
   documentId?: string;

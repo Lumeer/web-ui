@@ -225,7 +225,7 @@ export class DataRowService {
     if (row) {
       if ((key || '').trim().length > 0) {
         this.updateAttribute(row, index, key.trim());
-      } else if (isNotNullOrUndefined(value)) {
+      } else {
         this.updateValue(row, index, value);
       }
     }

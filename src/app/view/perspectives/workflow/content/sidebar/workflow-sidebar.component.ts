@@ -63,6 +63,9 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
   @Input()
   public currentView: View;
 
+  @Input()
+  public workflowId: string;
+
   @Output()
   public close = new EventEmitter();
 
@@ -99,6 +102,7 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
   public onDocumentSelect(data: {collection: Collection; document: DocumentModel}) {
     this.store$.dispatch(
       new WorkflowsAction.SetOpenedDocument({
+        workflowId: this.workflowId,
         documentId: data.document.id,
         collectionId: data.collection.id,
         attributeId: getDefaultAttributeId(data.collection),

@@ -37,9 +37,8 @@ export const selectWorkflowsDictionary = createSelector(
 );
 export const selectWorkflowById = id => createSelector(selectWorkflowsDictionary, workflows => workflows[id]);
 
-export const selectWorkflowSelectedDocumentId = createSelector(selectViewCursor, cursor =>
-  cursor?.sidebar ? cursor.documentId : null
-);
+export const selectWorkflowSelectedDocumentId = (workflowId: string) =>
+  createSelector(selectViewCursor, cursor => (cursor?.sidebar && cursor?.id === workflowId ? cursor.documentId : null));
 
 export const selectWorkflowId = createSelector(
   selectWorkspace,

@@ -83,6 +83,7 @@ export namespace WorkflowsAction {
 
     public constructor(
       public payload: {
+        workflowId: string;
         documentId: string;
         cell?: TableCell;
         column?: TableColumn;
@@ -102,6 +103,8 @@ export namespace WorkflowsAction {
 
   export class ResetOpenedDocument implements Action {
     public readonly type = WorkflowsActionType.RESET_OPENED_DOCUMENT;
+
+    public constructor(public payload: {workflowId: string}) {}
   }
 
   export class Clear implements Action {

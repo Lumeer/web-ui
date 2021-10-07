@@ -45,6 +45,12 @@ export class ResizableSidebarComponent {
   @Input()
   public width: number;
 
+  @Input()
+  public minWidth: number;
+
+  @Input()
+  public maxWidth: number;
+
   @Output()
   public widthChanged = new EventEmitter<number>();
 }

@@ -55,6 +55,7 @@ export class ChartVisualizer {
   private onValueChanged: (ValueChange) => void;
   private onDoubleClick: (ClickEvent) => void;
   private onAxisSettingsChange: (AxisSettingsChange) => void;
+  private chartId: string;
 
   constructor(private chartElement: ElementRef) {}
 
@@ -74,6 +75,11 @@ export class ChartVisualizer {
     this.locale = locale;
     this.registerLanguage(locale);
     this.config = this.createConfig();
+  }
+
+  public setChartId(id: string) {
+    this.chartId = id;
+    this.plotMaker?.setChartId(id);
   }
 
   private registerLanguage(locale: string) {
@@ -183,6 +189,7 @@ export class ChartVisualizer {
     const shouldRefreshPlotMaker = this.shouldRefreshPlotMaker(data);
     if (shouldRefreshPlotMaker) {
       this.plotMaker = this.createPlotMakerByType(data.type, this.chartElement);
+      this.plotMaker.setChartId(this.chartId);
       this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
       this.plotMaker.setOnValueChanged(this.onValueChanged);
       this.plotMaker.setOnDoubleClick(this.onDoubleClick);

@@ -13,7 +13,7 @@
                   [sidebarWidth]="panelWidth$ | async"
                   [dataLoaded]="dataLoaded$ | async"
                   [currentView]="currentView$ | async"
-                  [workflowId]="perspectiveId$ | async"
+                  [workflowId]="workflowId"
                   [perspectiveConfiguration]="perspectiveConfiguration"
                   (configChange)="onConfigChanged($event)"
                   (closeSidebar)="onCloseSidebar()"

@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  AfterViewInit,
+  HostListener,
+} from '@angular/core';
 import {View, ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
@@ -32,6 +41,7 @@ import {WorkflowTablesMenuService} from './tables/service/workflow-tables-menu.s
 import {WorkflowTablesDataService} from './tables/service/workflow-tables-data.service';
 import {WorkflowTablesKeyboardService} from './tables/service/workflow-tables-keyboard.service';
 import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'workflow-content',
@@ -45,7 +55,7 @@ import {WorkflowPerspectiveConfiguration} from '../../perspective-configuration'
     WorkflowTablesKeyboardService,
   ],
 })
-export class WorkflowContentComponent {
+export class WorkflowContentComponent implements AfterViewInit {
   @Input()
   public viewSettings: ViewSettings;
 
@@ -102,4 +112,36 @@ export class WorkflowContentComponent {
 
   @Output()
   public sidebarResize = new EventEmitter<number>();
+
+  public sidebarData$ = new BehaviorSubject<{initialWidth?: number; minWidth?: number; maxWidth?: number}>({});
+
+  constructor(private element: ElementRef) {}
+
+  public ngAfterViewInit() {
+    this.computeInitialSidebarWidth();
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.computeInitialSidebarWidth();
+  }
+
+  private computeInitialSidebarWidth() {
+    const width = this.element.nativeElement.offsetWidth;
+    let initialWidth, minWidth;
+    if (width < 500) {
+      initialWidth = width;
+      minWidth = width;
+    } else if (width < 750) {
+      initialWidth = width * 0.8;
+      minWidth = width * 0.5;
+    } else if (width < 1000) {
+      initialWidth = width * 0.6;
+      minWidth = 350;
+    } else {
+      initialWidth = width * 0.5;
+      minWidth = 400;
+    }
+    this.sidebarData$.next({maxWidth: width, minWidth, initialWidth});
+  }
 }

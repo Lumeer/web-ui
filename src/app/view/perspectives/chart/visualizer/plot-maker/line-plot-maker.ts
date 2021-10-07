@@ -122,7 +122,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
   }
 
   public getPoints(): any {
-    return d3.selectAll('.scatterlayer .trace .points path');
+    return d3.selectAll(`.${this.chartId} .scatterlayer .trace .points path`);
   }
 
   public getSetIndexForTraceIndex(traceIx: number): number {

@@ -35,7 +35,7 @@ import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {DataRowComponent} from '../../../../data/data-row-component';
-import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
@@ -170,7 +170,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
     this.editedValue = null;
     const value = dataValue.serialize();
-    if (value !== this.getCurrentValue()) {
+    if (!deepObjectsEquals(value, this.getCurrentValue())) {
       this.newValue.emit(value);
     }
     this.onDataInputCancel();
