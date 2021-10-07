@@ -23,11 +23,7 @@ import {SelectionListsModule} from './selection/selection-lists.module';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    SelectionListsModule,
-  ],
-  exports: [SelectionListsModule,]
+  imports: [CommonModule, SelectionListsModule],
+  exports: [SelectionListsModule],
 })
-export class ListsModule {
-}
+export class ListsModule {}

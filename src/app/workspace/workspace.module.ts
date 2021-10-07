@@ -54,7 +54,15 @@ import {ProjectSelectionListsComponent} from './project/selection/project-select
 import {SelectionListsModule} from '../shared/lists/selection/selection-lists.module';
 
 @NgModule({
-  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule, TeamsModule, SelectionListsModule],
+  imports: [
+    SharedModule,
+    WorkspaceRoutingModule,
+    UsersModule,
+    DirectivesModule,
+    BsDatepickerModule,
+    TeamsModule,
+    SelectionListsModule,
+  ],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,
@@ -88,5 +96,4 @@ import {SelectionListsModule} from '../shared/lists/selection/selection-lists.mo
     DatePipe,
   ],
 })
-export class WorkspaceModule {
-}
+export class WorkspaceModule {}

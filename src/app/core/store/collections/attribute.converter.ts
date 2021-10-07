@@ -27,7 +27,8 @@ import {
   ConstraintType,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
-  SelectConstraintConfig, SelectConstraintOption,
+  SelectConstraintConfig,
+  SelectConstraintOption,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../shared/picker/colors';

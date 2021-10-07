@@ -32,19 +32,16 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
   templateUrl: './selection-lists.component.html',
 })
 export class SelectionListsComponent implements OnInit {
-
   @Input()
   public resourceType: ResourceType;
 
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
   }
-
 }
