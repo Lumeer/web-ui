@@ -130,7 +130,7 @@ export class SelectionListsEffects {
       ofType<SelectionListsAction.DeleteConfirm>(SelectionListsActionType.DELETE_CONFIRM),
       map((action: SelectionListsAction.DeleteConfirm) => {
         const title = $localize`:@@selection.lists.delete.dialog.title:Remove selection list`;
-        const message = $localize`:@@selection.lists.delete.dialog.message:Do you really want to remove selection list? Attributes that use selection list will retain its copy of the list configuration.`;
+        const message = $localize`:@@selection.lists.delete.dialog.message:Do you really want to remove this selection list? Attributes that use this selection list will retain its copy.`;
 
         return new NotificationsAction.Confirm({
           title,
