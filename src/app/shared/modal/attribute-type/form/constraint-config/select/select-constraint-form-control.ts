@@ -21,6 +21,7 @@ export enum SelectConstraintFormControl {
   Multi = 'multi',
   DisplayValues = 'displayValues',
   Options = 'options',
+  SelectionList = 'selectionList',
 }
 
 export enum SelectConstraintOptionsFormControl {

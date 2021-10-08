@@ -28,6 +28,7 @@ import {
   DateTimeConstraintConfig,
   NumberConstraintConfig,
   SelectConstraintConfig,
+  SelectConstraintOption,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../shared/picker/colors';
@@ -95,11 +96,15 @@ function convertNumberConstraintConfigDtoToModel(config: any): NumberConstraintC
 function convertSelectConstraintConfigDtoToModel(config: any): SelectConstraintConfig {
   return {
     ...config,
-    options: (config.options || []).map((option, index) => ({
-      ...option,
-      background: option.background || selectDefaultPalette[index % selectDefaultPalette.length],
-    })),
+    options: convertSelectConstraintOptionsDtosToModels(config.options),
   };
+}
+
+export function convertSelectConstraintOptionsDtosToModels(dtos: any[]): SelectConstraintOption[] {
+  return (dtos || []).map((option, index) => ({
+    ...option,
+    background: option.background || selectDefaultPalette[index % selectDefaultPalette.length],
+  }));
 }
 
 function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto {

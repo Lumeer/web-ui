@@ -64,7 +64,7 @@ import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../stor
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
-import {SequenceConverter} from '../store/sequences/sequence.converter';
+import {convertSequenceDtoToModel} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
 import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
 import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
@@ -84,6 +84,8 @@ import {TeamsAction} from '../store/teams/teams.action';
 import {convertTeamDtoToModel} from '../store/teams/teams.converter';
 import {Team} from '../store/teams/team';
 import {selectTeamById} from '../store/teams/teams.state';
+import {convertSelectionListDtoToModel} from '../store/selection-lists/selection-list.converter';
+import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
 
 @Injectable({
   providedIn: 'root',
@@ -177,6 +179,7 @@ export class PusherService implements OnDestroy {
     this.bindPrintEvents();
     this.bindNavigateEvents();
     this.bindSendEmailEvents();
+    this.bindSelectionListEvents();
   }
 
   private bindOrganizationEvents() {
@@ -827,6 +830,28 @@ export class PusherService implements OnDestroy {
     });
   }
 
+  private bindSelectionListEvents() {
+    this.channel.bind('SelectionList:create', data => {
+      if (this.isCurrentOrganization(data)) {
+        const list = convertSelectionListDtoToModel(data.object);
+        this.store$.dispatch(new SelectionListsAction.CreateSuccess({list}));
+      }
+    });
+
+    this.channel.bind('SelectionList:update', data => {
+      if (this.isCurrentOrganization(data)) {
+        const list = convertSelectionListDtoToModel(data.object);
+        this.store$.dispatch(new SelectionListsAction.UpdateSuccess({list}));
+      }
+    });
+
+    this.channel.bind('Group:remove', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(new SelectionListsAction.DeleteSuccess({id: data.id}));
+      }
+    });
+  }
+
   private checkIfUserGainedTeam(team: Team, isCurrentOrganization: boolean) {
     this.store$.pipe(select(selectTeamById(team.id)), take(1)).subscribe(originalTeam => {
       const usersBefore = originalTeam?.users || [];
@@ -874,7 +899,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new SequencesAction.UpdateSuccess({
-            sequence: SequenceConverter.fromDto(data.object),
+            sequence: convertSequenceDtoToModel(data.object),
           })
         );
       }

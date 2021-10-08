@@ -18,7 +18,10 @@
  */
 
 import {Attribute} from '../../../../../../core/store/collections/collection';
-import {ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
+import {ConstraintType, SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
+import {FormArray, FormGroup} from '@angular/forms';
+import {SelectConstraintFormControl} from './select-constraint-form-control';
+import {escapeHtml} from '../../../../../utils/common.utils';
 
 export function isUsedSelectConstraintAttribute(attribute: Attribute): boolean {
   return (
@@ -34,4 +37,11 @@ export function isSelectConstraintOptionValueRemoved(
   const nextValues = nextConfig.options.map(option => option.value);
 
   return previousValues.some(value => !nextValues.includes(value));
+}
+
+export function parseSelectOptionsFromForm(array: FormArray, displayValues: boolean): SelectConstraintOption[] {
+  const options = array.value
+    .filter(option => option.value || option.value === 0)
+    .map(option => ({...option, value: escapeHtml(option.value), displayValue: escapeHtml(option.displayValue)}));
+  return displayValues ? options : options.map(option => ({...option, displayValue: undefined}));
 }

@@ -1,0 +1,31 @@
+<h5 class="mx-1" i18n="@@selection.lists.modal.title.predefined">Predefined lists</h5>
+
+<div class="row m-0">
+  <div *ngFor="let list of predefinedLists; trackBy: trackByList"
+       class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
+    <selection-list [list]="list"
+                    [editable]="false">
+    </selection-list>
+  </div>
+
+</div>
+
+<h5 class="mx-1 mt-4" i18n="@@selection.lists.modal.title.custom">Custom lists</h5>
+
+<div class="row m-0">
+  <div class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
+    <div class="card p-5 d-flex align-items-center justify-content-center clickable" (click)="onAdd()">
+      <i class="fas fa-plus-circle"></i>
+      <div i18n="@@selection.lists.modal.add" class="mt-1">Add list</div>
+    </div>
+  </div>
+  <div *ngFor="let list of lists$ | async; trackBy: trackByList"
+       class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
+    <selection-list [editable]="true"
+                    [list]="list"
+                    (update)="onUpdate(list)"
+                    (copy)="onCopy(list)"
+                    (delete)="onDelete(list)">
+    </selection-list>
+  </div>
+</div>

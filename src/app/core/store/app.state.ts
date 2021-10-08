@@ -54,6 +54,7 @@ import {initialUserPermissionsState, UserPermissionsState} from './user-permissi
 import {DataResourcesState, initialDataResourcesState} from './data-resources/data-resources.state';
 import {AuditLogsState, initialAuditLogsState} from './audit-logs/audit-logs.state';
 import {DetailsState, initialDetailsState} from './details/detail.state';
+import {initialSelectionListsState, SelectionListsState} from './selection-lists/selection-lists.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -92,6 +93,7 @@ export interface AppState {
   modals: ModalsState;
   userPermissions: UserPermissionsState;
   auditLogs: AuditLogsState;
+  selectionLists: SelectionListsState;
 }
 
 export function initialAppState(): AppState {
@@ -132,5 +134,6 @@ export function initialAppState(): AppState {
     modals: initialModalsState,
     userPermissions: initialUserPermissionsState,
     auditLogs: initialAuditLogsState,
+    selectionLists: initialSelectionListsState,
   };
 }

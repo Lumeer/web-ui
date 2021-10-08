@@ -20,24 +20,22 @@
 import {SequenceDto} from '../../dto/sequence.dto';
 import {Sequence} from '../../model/sequence';
 
-export namespace SequenceConverter {
-  export function fromDtos(dtos: SequenceDto[]): Sequence[] {
-    return dtos.map(dto => SequenceConverter.fromDto(dto)).filter(model => !!model);
-  }
+export function convertSequenceDtosToModels(dtos: SequenceDto[]): Sequence[] {
+  return dtos.map(dto => convertSequenceDtoToModel(dto)).filter(model => !!model);
+}
 
-  export function fromDto(dto: SequenceDto): Sequence {
-    return {
-      id: dto.id,
-      name: dto.name,
-      seq: dto.seq,
-    };
-  }
+export function convertSequenceDtoToModel(dto: SequenceDto): Sequence {
+  return {
+    id: dto.id,
+    name: dto.name,
+    seq: dto.seq,
+  };
+}
 
-  export function toDto(model: Sequence): SequenceDto {
-    return {
-      id: model.id,
-      name: model.name,
-      seq: model.seq,
-    };
-  }
+export function convertSequenceModelToDto(model: Sequence): SequenceDto {
+  return {
+    id: model.id,
+    name: model.name,
+    seq: model.seq,
+  };
 }

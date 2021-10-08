@@ -62,6 +62,9 @@ import {ApiAuditLogService} from './audit-log/api-audit-log.service';
 import {TeamService} from './team/team.service';
 import {PublicTeamService} from './team/public-team.service';
 import {ApiTeamService} from './team/api-team.service';
+import {SelectionListsService} from './selection-lists/selection-lists.service';
+import {PublicSelectionListsService} from './selection-lists/public-selection-lists.service';
+import {ApiSelectionListsService} from './selection-lists/api-selection-lists.service';
 
 @NgModule({
   declarations: [],
@@ -122,6 +125,10 @@ import {ApiTeamService} from './team/api-team.service';
     {
       provide: TeamService,
       useClass: configuration.publicView ? PublicTeamService : ApiTeamService,
+    },
+    {
+      provide: SelectionListsService,
+      useClass: configuration.publicView ? PublicSelectionListsService : ApiSelectionListsService,
     },
   ],
 })

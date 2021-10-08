@@ -7,7 +7,7 @@
   <ng-container *ngIf="multi || readonly">
 
     <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
-        <span class="d-inline-block px-2 py-1 tag text-nowrap"
+        <span class="select-tag"
               [class.m-1]="configuration?.wrapItems"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"

@@ -23,18 +23,21 @@ import {
   Component,
   ElementRef,
   Input,
-  OnChanges,
+  OnDestroy,
+  OnInit,
   QueryList,
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
+import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {SelectConstraintFormControl, SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../utils/form.utils';
 import {ColorPickerComponent} from '../../../../../../picker/color/color-picker.component';
 import {unescapeHtml} from '../../../../../../utils/common.utils';
 import {DataValue, SelectConstraintOption} from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../../../../picker/colors';
+import {Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'select-constraint-options-form',
@@ -42,12 +45,9 @@ import {selectDefaultPalette} from '../../../../../../picker/colors';
   styleUrls: ['./select-constraint-options-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectConstraintOptionsFormComponent implements OnChanges {
+export class SelectConstraintOptionsFormComponent implements OnInit, OnDestroy {
   @Input()
-  public displayValues: boolean;
-
-  @Input()
-  public form: FormArray;
+  public form: FormGroup;
 
   @Input()
   public options: SelectConstraintOption[];
@@ -61,53 +61,67 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   @ViewChildren('displayValueInput')
   public displayValueInputs: QueryList<ElementRef<HTMLInputElement>>;
 
+  public readonly formControlName = SelectConstraintFormControl;
   public readonly formControlNames = SelectConstraintOptionsFormControl;
   public backgroundInitialValues: string[] = [];
+  public optionsEnabled$: Observable<boolean>;
+
+  private subscriptions = new Subscription();
+
+  public ngOnInit() {
+    this.subscriptions.add(this.displayValuesControl.valueChanges.subscribe(() => this.checkOptionsControls()));
+    this.optionsEnabled$ = this.optionsForm.statusChanges.pipe(
+      startWith(''),
+      map(() => this.optionsForm.enabled),
+      distinctUntilChanged()
+    );
+  }
+
+  private checkOptionsControls() {
+    this.optionsForm.controls.forEach(control => control.updateValueAndValidity());
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.options) {
       this.resetForm();
       this.createForm();
     }
-    if (changes.displayValues) {
-      this.form.controls.forEach(control => control.updateValueAndValidity());
-    }
   }
 
   private resetForm() {
-    removeAllFormArrayControls(this.form);
+    removeAllFormArrayControls(this.optionsForm);
   }
 
   private createForm() {
     const options: SelectConstraintOption[] = this.options?.length
       ? this.options
       : (this.dataValues || []).map(dataValue => ({value: dataValue.format()}));
-    options.map((option, index) => this.createOptionForm(index, option)).forEach(form => this.form.push(form));
+    options.map((option, index) => this.createOptionForm(index, option)).forEach(form => this.optionsForm.push(form));
     const optionsLength = options.length;
-    this.form.push(this.createOptionForm(optionsLength));
+    this.optionsForm.push(this.createOptionForm(optionsLength));
 
-    if (this.form.length < 2) {
-      this.form.push(this.createOptionForm(optionsLength + 1));
+    if (this.optionsForm.length < 2) {
+      this.optionsForm.push(this.createOptionForm(optionsLength + 1));
     }
   }
 
   public onAddOption() {
-    this.form.push(this.createOptionForm(this.form.controls.length));
+    this.optionsForm.push(this.createOptionForm(this.optionsForm.controls.length));
   }
 
   public onRemoveOption(index: number) {
-    this.form.removeAt(index);
+    this.optionsForm.removeAt(index);
   }
 
   public onDrop(event: CdkDragDrop<string[]>) {
-    moveFormArrayItem(this.form, event.previousIndex, event.currentIndex);
+    moveFormArrayItem(this.optionsForm, event.previousIndex, event.currentIndex);
   }
 
   public onValueInput(event: Event, index: number) {
     const value = event.target['value'];
 
-    if (index === this.form.controls.length - 1 && value) {
-      this.form.push(this.createOptionForm(this.form.controls.length));
+    if (index === this.optionsForm.controls.length - 1 && value) {
+      this.optionsForm.push(this.createOptionForm(this.optionsForm.controls.length));
     }
   }
 
@@ -145,7 +159,10 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
     return (formGroup: FormGroup): ValidationErrors | null => {
       const valueControl = formGroup.get(SelectConstraintOptionsFormControl.Value);
       const displayValueControl = formGroup.get(SelectConstraintOptionsFormControl.DisplayValue);
-      return this.displayValues && displayValueControl.value && !valueControl.value && valueControl.value !== 0
+      return this.displayValuesControl?.value &&
+        displayValueControl.value &&
+        !valueControl.value &&
+        valueControl.value !== 0
         ? {required: true}
         : null;
     };
@@ -156,11 +173,11 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   }
 
   private patchBackground(optionIndex: number, color: string) {
-    this.form.at(optionIndex).patchValue({[SelectConstraintOptionsFormControl.Background]: color});
+    this.optionsForm.at(optionIndex).patchValue({[SelectConstraintOptionsFormControl.Background]: color});
   }
 
   public onPaletteClick(optionIndex: number, colorPicker: ColorPickerComponent) {
-    this.backgroundInitialValues[optionIndex] = this.form
+    this.backgroundInitialValues[optionIndex] = this.optionsForm
       .at(optionIndex)
       .get(SelectConstraintOptionsFormControl.Background).value;
     colorPicker.open();
@@ -172,5 +189,17 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
 
   public onColorCancel(optionIndex: number) {
     this.patchBackground(optionIndex, this.backgroundInitialValues[optionIndex]);
+  }
+
+  public get optionsForm(): FormArray {
+    return this.form.get(SelectConstraintFormControl.Options) as FormArray;
+  }
+
+  public get displayValuesControl(): AbstractControl {
+    return this.form.get(SelectConstraintFormControl.DisplayValues);
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }
