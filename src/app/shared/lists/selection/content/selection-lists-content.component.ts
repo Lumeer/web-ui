@@ -23,7 +23,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {objectChanged} from '../../../utils/common.utils';
-import {predefinedSelectionLists, SelectionList} from '../selection-list';
+import {SelectionList} from '../selection-list';
 import {Observable} from 'rxjs';
 import {ModalService} from '../../../modal/modal.service';
 import {SelectionListModalComponent} from './modal/selection-list-modal.component';
@@ -46,8 +46,6 @@ export class SelectionListsContentComponent implements OnChanges {
 
   @Input()
   public resourceType: ResourceType;
-
-  public readonly predefinedLists = predefinedSelectionLists;
 
   public lists$: Observable<SelectionList[]>;
 

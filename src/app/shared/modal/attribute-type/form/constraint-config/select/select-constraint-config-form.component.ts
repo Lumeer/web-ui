@@ -37,7 +37,7 @@ import {
   selectDocumentsByCollectionAndReadPermission,
   selectLinksByLinkTypeAndReadPermission,
 } from '../../../../../../core/store/common/permissions.selectors';
-import {selectSelectionListsWithPredefined} from '../../../../../../core/store/selection-lists/selection-lists.state';
+import {selectSelectionListsByWorkspace} from '../../../../../../core/store/selection-lists/selection-lists.state';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {SelectionList} from '../../../../../lists/selection/selection-list';
 import {selectProjectPermissions} from '../../../../../../core/store/user-permissions/user-permissions.state';
@@ -75,7 +75,7 @@ export class SelectConstraintConfigFormComponent implements OnInit, OnChanges {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    const selectionLists$ = this.store$.pipe(select(selectSelectionListsWithPredefined));
+    const selectionLists$ = this.store$.pipe(select(selectSelectionListsByWorkspace));
     this.selectionListsItems$ = selectionLists$.pipe(
       tap(lists => (this.selectionLists = lists)),
       map(lists => {

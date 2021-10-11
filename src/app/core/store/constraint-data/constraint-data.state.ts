@@ -25,7 +25,7 @@ import {selectAllViews} from '../views/views.state';
 import {selectTeamsForWorkspace} from '../teams/teams.state';
 import {
   selectSelectionListsByProjectSorted,
-  selectSelectionListsWithPredefined,
+  selectSelectionListsByWorkspace,
 } from '../selection-lists/selection-lists.state';
 
 export type ConstraintDataState = Partial<ConstraintData>;
@@ -40,7 +40,7 @@ export const selectConstraintData = createSelector(
   selectAllViews,
   selectCurrentUserForWorkspace,
   selectTeamsForWorkspace,
-  selectSelectionListsWithPredefined,
+  selectSelectionListsByWorkspace,
   (state, users, views, currentUser, teams, selectionLists) => ({
     ...state,
     users,
