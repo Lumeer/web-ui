@@ -17,27 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const defaultTextEditorOptions = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-    ['blockquote', 'code-block'],
+import {Component, OnInit} from '@angular/core';
+import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-editor/text-editor.utils';
+import {registerTaskListQuillModule} from './task-list-quill-module';
 
-    [{header: 1}, {header: 2}], // custom button values
-    [{list: 'ordered'}, {list: 'bullet'}, 'task-list'],
-    [{script: 'sub'}, {script: 'super'}], // superscript/subscript
-    [{indent: '-1'}, {indent: '+1'}], // outdent/indent
-    [{direction: 'rtl'}], // text direction
+@Component({
+  selector: 'dashboard-notes',
+  templateUrl: './dashboard-notes.component.html',
+  styleUrls: ['./dashboard-notes.component.scss'],
+})
+export class DashboardNotesComponent implements OnInit {
+  public readonly defaultOptions = defaultTextEditorOptions;
 
-    [{size: ['small', false, 'large', 'huge']}], // custom dropdown
-    [{header: [1, 2, 3, 4, 5, 6, false]}],
+  public text: string;
 
-    [{color: []}, {background: []}], // dropdown with defaults from theme
-    [{font: []}],
-    [{align: []}],
-
-    ['clean'], // remove formatting button
-
-    ['link'], // link and image, video
-  ],
-  'task-list': true,
-};
+  public ngOnInit() {
+    registerTaskListQuillModule();
+  }
+}

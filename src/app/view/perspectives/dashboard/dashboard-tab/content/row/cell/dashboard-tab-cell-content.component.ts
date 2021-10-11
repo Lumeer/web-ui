@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   DashboardCell,
   DashboardCellType,
@@ -54,6 +54,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
     detail: {},
   };
 
+  public computedType: DashboardCellType;
   public url: string;
   public scale: DashboardImageScaleType;
   public view: View;
@@ -72,10 +73,19 @@ export class DashboardTabCellContentComponent implements OnChanges {
       case DashboardCellType.Image:
         this.url = (<DashboardImageCellConfig>this.dashboardCell?.config)?.url;
         this.scale = (<DashboardImageCellConfig>this.dashboardCell?.config)?.scale || defaultDashboardImageScaleType;
+        this.computedType = DashboardCellType.Image;
         break;
       case DashboardCellType.View:
         const viewId = (<DashboardViewCellConfig>this.dashboardCell?.config)?.viewId;
         this.view = viewId && (this.views || []).find(view => view.id === viewId);
+        if (this.view) {
+          this.computedType = DashboardCellType.View;
+        } else {
+          this.computedType = null;
+        }
+        break;
+      case DashboardCellType.Notes:
+        this.computedType = DashboardCellType.Notes;
         break;
     }
   }

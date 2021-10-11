@@ -44,9 +44,12 @@ export class DashboardCellPreviewComponent implements OnChanges {
   @Input()
   public editable: boolean;
 
+  public readonly type = DashboardCellType;
+
   public url: string;
   public scale: DashboardImageScaleType;
   public view: View;
+  public computedType: DashboardCellType;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cell || changes.views) {
@@ -63,10 +66,23 @@ export class DashboardCellPreviewComponent implements OnChanges {
       case DashboardCellType.Image:
         this.url = (<DashboardImageCellConfig>this.cell?.config)?.url;
         this.scale = (<DashboardImageCellConfig>this.cell?.config)?.scale || defaultDashboardImageScaleType;
+        if (this.url) {
+          this.computedType = DashboardCellType.Image;
+        } else {
+          this.computedType = null;
+        }
         break;
       case DashboardCellType.View:
         const viewId = (<DashboardViewCellConfig>this.cell?.config)?.viewId;
         this.view = viewId && (this.views || []).find(view => view.id === viewId);
+        if (this.view) {
+          this.computedType = DashboardCellType.View;
+        } else {
+          this.computedType = null;
+        }
+        break;
+      case DashboardCellType.Notes:
+        this.computedType = DashboardCellType.Notes;
         break;
     }
   }
