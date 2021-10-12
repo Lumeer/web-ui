@@ -3848,36 +3848,21 @@
         </context-group>
       </trans-unit><trans-unit id="selection.lists.create.fail" datatype="html">
         <source>Could not create selection list</source><target>Nemohl jsem vytvořit seznam hodnot</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
-          <context context-type="linenumber">92</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.update.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">127</context></context-group></trans-unit><trans-unit id="selection.lists.update.fail" datatype="html">
         <source>Could not update selection list</source><target>Nemohl jsem upravit seznam hodnot</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
-          <context context-type="linenumber">122</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.delete.dialog.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="selection.lists.delete.dialog.title" datatype="html">
         <source>Remove selection list</source><target>Odstranit seznam</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
-          <context context-type="linenumber">132</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.delete.dialog.message" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">167</context></context-group></trans-unit><trans-unit id="selection.lists.delete.dialog.message" datatype="html">
         <source>Do you really want to remove this selection list? Attributes that use this selection list will retain its copy.</source>
         <target>Chcete skutečně odstranit seznam? Atributy, které jej používali si zachovají jaho kopii.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
-          <context context-type="linenumber">133</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.delete.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">168</context></context-group></trans-unit><trans-unit id="selection.lists.delete.fail" datatype="html">
         <source>Could not delete selection list</source><target>Nemohl jsem odstranit seznam hodnot</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
-          <context context-type="linenumber">165</context>
-        </context-group>
-      </trans-unit><trans-unit id="sequences.get.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context><context context-type="linenumber">200</context></context-group></trans-unit><trans-unit id="sequences.get.fail" datatype="html">
         <source>Could not read sequences</source><target>Nemohu načíst posloupnosti</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/sequences/sequences.effects.ts</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="sequences.update.fail" datatype="html">
@@ -4856,35 +4841,20 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="selection.lists.modal.title.predefined" datatype="html">
-        <source>Predefined Lists</source><target>Připravené seznamy</target>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
+        <source>Add a new list</source><target>Přidat nový seznam</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="selection.lists.modal.adding.sample" datatype="html">
+        <source>Adding sample lists</source><target>Přidávám ukázkové seznamy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">11</context>
         </context-group>
-      </trans-unit><trans-unit id="selection.lists.modal.title.custom" datatype="html">
-        <source>Custom Lists</source><target>Vlastní seznamy</target>
+      </trans-unit><trans-unit id="selection.lists.modal.add.sample" datatype="html">
+        <source>Add sample lists</source><target>Přidat ukázkové seznamy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.modal.add" datatype="html">
-        <source>Add list</source><target>Přidat seznam</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.predefined.tasks" datatype="html">
-        <source>Tasks</source><target>Úkoly</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/lists/selection/selection-list.ts</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.predefined.events" datatype="html">
-        <source>Events</source><target>Události</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/lists/selection/selection-list.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="selection.lists.introduction" datatype="html">
         <source> Selection lists are used in selection attribute types. They can be shared among multiple tables. You can create a selection list once, and reuse anywhere.
