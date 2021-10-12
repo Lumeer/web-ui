@@ -130,7 +130,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   constructor(public element: ElementRef) {}
 
   public ngOnInit() {
-    initForceTouch(this.element.nativeElement, event => this.onContextMenu(this.selectedCell.columnId, event));
+    initForceTouch(this.element.nativeElement, event => this.onContextMenu(this.selectedCell?.columnId, event));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -266,7 +266,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   }
 
   public onContextMenu(columnId: string, event: MouseEvent) {
-    const columnIndex = this.columnGroups?.findIndex(group => group.column?.id === columnId);
+    const columnIndex = columnId && this.columnGroups?.findIndex(group => group.column?.id === columnId);
     const column = this.columnGroups[columnIndex]?.column;
     if (column) {
       this.menuComponent.id = columnId;

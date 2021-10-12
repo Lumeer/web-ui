@@ -30,6 +30,7 @@ const NO_HINTS_CONSTRAINT_TYPES = [
   ConstraintType.View,
   ConstraintType.User,
   ConstraintType.Files,
+  ConstraintType.Link,
 ];
 
 @Pipe({
