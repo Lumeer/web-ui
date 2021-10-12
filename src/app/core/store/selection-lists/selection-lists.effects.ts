@@ -65,6 +65,41 @@ export class SelectionListsEffects {
     )
   );
 
+  public getByProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SelectionListsAction.GetByProject>(SelectionListsActionType.GET_BY_PROJECT),
+      mergeMap(action =>
+        this.service.getByProject(action.payload.organizationId, action.payload.projectId).pipe(
+          map(dtos => dtos.map(dto => convertSelectionListDtoToModel(dto))),
+          map(lists => new SelectionListsAction.GetByProjectSuccess({lists})),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
+
+  public createSampleLists$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SelectionListsAction.CreateSampleLists>(SelectionListsActionType.CREATE_SAMPLE_LISTS),
+      mergeMap(action =>
+        this.service.createSampleLists(action.payload.organizationId, action.payload.projectId).pipe(
+          mergeMap(() => this.service.getByProject(action.payload.organizationId, action.payload.projectId)),
+          map(dtos => dtos.map(dto => convertSelectionListDtoToModel(dto))),
+          mergeMap(lists => [
+            new SelectionListsAction.GetByProjectSuccess({lists}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(
+              new SelectionListsAction.CreateSampleListsFailure({error}),
+              ...createCallbackActions(action.payload.onFailure)
+            )
+          )
+        )
+      )
+    )
+  );
+
   public create$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SelectionListsAction.Create>(SelectionListsActionType.CREATE),

@@ -845,9 +845,17 @@ export class PusherService implements OnDestroy {
       }
     });
 
-    this.channel.bind('Group:remove', data => {
+    this.channel.bind('SelectionList:remove', data => {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(new SelectionListsAction.DeleteSuccess({id: data.id}));
+      }
+    });
+
+    this.channel.bind('SelectionList:reload', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          new SelectionListsAction.GetByProject({organizationId: data.organizationId, projectId: data.projectId})
+        );
       }
     });
   }

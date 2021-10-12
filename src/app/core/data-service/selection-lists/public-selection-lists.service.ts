@@ -30,11 +30,19 @@ export class PublicSelectionListsService extends BaseService implements Selectio
     return of(dto);
   }
 
+  public createSampleLists(organizationId: string, projectId: string): Observable<any> {
+    return of([]);
+  }
+
   public delete(organizationId: string, id: string): Observable<string> {
     return of(id);
   }
 
   public get(organizationId: string): Observable<SelectionListDto[]> {
+    return of([]);
+  }
+
+  public getByProject(organizationId: string, projectId: string): Observable<SelectionListDto[]> {
     return of([]);
   }
 

@@ -24,7 +24,7 @@ import {select, Store} from '@ngrx/store';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {objectChanged} from '../../../utils/common.utils';
 import {SelectionList} from '../selection-list';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {ModalService} from '../../../modal/modal.service';
 import {SelectionListModalComponent} from './modal/selection-list-modal.component';
 import {selectSelectionListsByProjectSorted} from '../../../../core/store/selection-lists/selection-lists.state';
@@ -48,6 +48,7 @@ export class SelectionListsContentComponent implements OnChanges {
   public resourceType: ResourceType;
 
   public lists$: Observable<SelectionList[]>;
+  public addingSampleData$ = new BehaviorSubject(false);
 
   private lists: SelectionList[];
 
@@ -73,6 +74,19 @@ export class SelectionListsContentComponent implements OnChanges {
   public onAdd() {
     const newList: SelectionList = {name: '', options: []};
     this.showListModal(newList);
+  }
+
+  public onAddSample() {
+    this.addingSampleData$.next(true);
+
+    this.store$.dispatch(
+      new SelectionListsAction.CreateSampleLists({
+        organizationId: this.organization?.id,
+        projectId: this.project?.id,
+        onSuccess: () => this.addingSampleData$.next(false),
+        onFailure: () => this.addingSampleData$.next(false),
+      })
+    );
   }
 
   public onUpdate(list: SelectionList) {

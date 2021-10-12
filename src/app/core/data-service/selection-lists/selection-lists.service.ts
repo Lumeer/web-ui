@@ -23,9 +23,13 @@ import {SelectionListDto} from '../../dto/selection-list.dto';
 export abstract class SelectionListsService {
   public abstract create(organizationId: string, dto: SelectionListDto): Observable<SelectionListDto>;
 
+  public abstract createSampleLists(organizationId: string, projectId: string): Observable<any>;
+
   public abstract update(organizationId: string, id: string, dto: SelectionListDto): Observable<SelectionListDto>;
 
   public abstract delete(organizationId: string, id: string): Observable<string>;
 
   public abstract get(organizationId: string): Observable<SelectionListDto[]>;
+
+  public abstract getByProject(organizationId: string, projectId: string): Observable<SelectionListDto[]>;
 }

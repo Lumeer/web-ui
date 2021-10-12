@@ -25,9 +25,15 @@ export enum SelectionListsActionType {
   GET_SUCCESS = '[Selection Lists] Get :: Success',
   GET_FAILURE = '[Selection Lists] Get :: Failure',
 
+  GET_BY_PROJECT = '[Selection Lists] Get By Project',
+  GET_BY_PROJECT_SUCCESS = '[Selection Lists] Get By Project :: Success',
+
   CREATE = '[Selection Lists] Create',
   CREATE_SUCCESS = '[Selection Lists] Create :: Success',
   CREATE_FAILURE = '[Selection Lists] Create :: Failure',
+
+  CREATE_SAMPLE_LISTS = '[Selection Lists] Create Sample Lists',
+  CREATE_SAMPLE_LISTS_FAILURE = '[Selection Lists] Create Sample Lists :: Failure',
 
   UPDATE = '[Selection Lists] Update',
   UPDATE_SUCCESS = '[Selection Lists] Update :: Success',
@@ -58,6 +64,18 @@ export namespace SelectionListsAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class GetByProject implements Action {
+    public readonly type = SelectionListsActionType.GET_BY_PROJECT;
+
+    public constructor(public payload: {organizationId: string; projectId: string}) {}
+  }
+
+  export class GetByProjectSuccess implements Action {
+    public readonly type = SelectionListsActionType.GET_BY_PROJECT_SUCCESS;
+
+    public constructor(public payload: {lists: SelectionList[]}) {}
+  }
+
   export class Create implements Action {
     public readonly type = SelectionListsActionType.CREATE;
 
@@ -74,6 +92,25 @@ export namespace SelectionListsAction {
 
   export class CreateFailure implements Action {
     public readonly type = SelectionListsActionType.CREATE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class CreateSampleLists implements Action {
+    public readonly type = SelectionListsActionType.CREATE_SAMPLE_LISTS;
+
+    public constructor(
+      public payload: {
+        organizationId: string;
+        projectId: string;
+        onSuccess?: () => void;
+        onFailure?: (error: any) => void;
+      }
+    ) {}
+  }
+
+  export class CreateSampleListsFailure implements Action {
+    public readonly type = SelectionListsActionType.CREATE_SAMPLE_LISTS_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
@@ -126,6 +163,7 @@ export namespace SelectionListsAction {
     | Get
     | GetSuccess
     | GetFailure
+    | GetByProjectSuccess
     | Create
     | CreateSuccess
     | CreateFailure

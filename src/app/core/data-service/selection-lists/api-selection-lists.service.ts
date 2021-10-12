@@ -43,12 +43,20 @@ export class ApiSelectionListsService extends BaseService implements SelectionLi
     return this.httpClient.post<SelectionListDto>(this.apiPrefix({organizationId}), dto);
   }
 
+  public createSampleLists(organizationId: string, projectId: string): Observable<any> {
+    return this.httpClient.post(`${this.projectApiPrefix({organizationId, projectId})}/sample`, {});
+  }
+
   public delete(organizationId: string, id: string): Observable<any> {
     return this.httpClient.delete(this.apiPrefix({organizationId}, id));
   }
 
   public get(organizationId: string): Observable<SelectionListDto[]> {
     return this.httpClient.get<SelectionListDto[]>(this.apiPrefix({organizationId}));
+  }
+
+  public getByProject(organizationId: string, projectId: string): Observable<SelectionListDto[]> {
+    return this.httpClient.get<SelectionListDto[]>(this.projectApiPrefix({organizationId, projectId}));
   }
 
   public update(organizationId: string, id: string, dto: SelectionListDto): Observable<SelectionListDto> {
@@ -60,5 +68,13 @@ export class ApiSelectionListsService extends BaseService implements SelectionLi
     return `${
       this.configurationService.getConfiguration().apiUrl
     }/rest/organizations/${organizationId}/selection-lists${listId ? `/${listId}` : ''}`;
+  }
+
+  private projectApiPrefix(workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
+    return `${
+      this.configurationService.getConfiguration().apiUrl
+    }/rest/organizations/${organizationId}/selection-lists/projects/${projectId}`;
   }
 }
