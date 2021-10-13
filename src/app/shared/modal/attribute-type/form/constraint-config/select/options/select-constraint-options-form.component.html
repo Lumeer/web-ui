@@ -1,78 +1,96 @@
-<div cdkDropList
-     (cdkDropListDropped)="onDrop($event)"
-     class="d-flex flex-column">
-  <div *ngFor="let group of form?.controls; index as optionIndex"
-       cdkDrag
-       cdkDragLockAxis="y"
-       cdkDragBoundary=".cdk-drop-list"
-       class="my-1">
-    <div [formGroup]="group"
-         *ngIf="{background: group.get(formControlNames.Background)?.value} as groupData"
-         class="d-flex">
-      <div class="flex-grow-0 mr-1 mt-2">
-        <i cdkDragHandle
-           class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
-           title="Reorder options"
-           i18n-title="@@constraint.select.options.reorder">
-        </i>
-      </div>
-      <div class="flex-grow-1 mx-1">
-        <input #valueInput
-               [formControlName]="formControlNames.Value"
-               [class.is-invalid]="group.touched && group.errors"
-               (input)="onValueInput($event, optionIndex)"
-               (keydown.enter)="onValueEnterKeyDown($event, optionIndex)"
-               [attr.style]="!displayValues ? (('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle) : null"
-               type="text"
-               class="form-control"
-               placeholder="Value"
-               i18n-placeholder="@@constraint.select.option.value">
-        <div *ngIf="group.touched && group.errors?.required"
-             class="invalid-feedback"
-             i18n="@@constraint.select.option.required">
-          You need to provide a value.
+<div [formGroup]="form">
+
+  <div class="d-flex flex-row flex-nowrap pt-1 align-items-center">
+    <label class="switch" [for]="formControlName.DisplayValues">
+      <input type="checkbox" [formControlName]="formControlName.DisplayValues" [id]="formControlName.DisplayValues" #displayValues>
+      <span class="slider round" (click)="$event.stopPropagation()"></span>
+    </label>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.select.displayValues.label" (click)="displayValues.click()">Distinguish display values</span>
+    <i class="fas fa-question-circle ml-1 cursor-help"
+       title="Use different values for users and for computations in functions (e.g. High Priority = 3)."
+       i18n-title="@@constraint.select.displayValues.help">
+    </i>
+  </div>
+
+  <div cdkDropList
+       *ngIf="{enabled: optionsEnabled$ | async} as data"
+       (cdkDropListDropped)="onDrop($event)"
+       [cdkDropListDisabled]="!data.enabled"
+       class="d-flex flex-column mt-3">
+    <div *ngFor="let group of optionsForm?.controls; index as optionIndex"
+         cdkDrag
+         cdkDragLockAxis="y"
+         cdkDragBoundary=".cdk-drop-list"
+         class="my-1">
+      <div [formGroup]="group"
+           *ngIf="{background: group.get(formControlNames.Background)?.value} as groupData"
+           class="d-flex">
+        <div class="flex-grow-0 mr-1 mt-2" *ngIf="data.enabled">
+          <i cdkDragHandle
+             class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
+             title="Reorder options"
+             i18n-title="@@constraint.select.options.reorder">
+          </i>
         </div>
-      </div>
-      <div *ngIf="displayValues"
-           class="flex-grow-1 mx-1">
-        <input #displayValueInput
-               [formControlName]="formControlNames.DisplayValue"
-               (keydown.enter)="onDisplayValueEnterKeyDown($event, optionIndex)"
-               [attr.style]="('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle"
-               type="text"
-               class="form-control"
-               placeholder="Display as..."
-               i18n-placeholder="@@constraint.select.option.displayValue">
-      </div>
-      <div class="flex-grow-0 ml-2 d-flex align-items-center">
-        <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
-           title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
-           i18n-title="@@constraint.select.option.background" #colorElement></i>
-        <color-picker [color]="groupData.background"
-                      #colorPicker
-                      [origin]="colorElement"
-                      (saveOnClose)="$event && onColorSave(optionIndex, $event)"
-                      (valueChange)="onColorChange(optionIndex, $event)"
-                      (cancel)="onColorCancel(optionIndex)"
-                      (save)="onColorSave(optionIndex, $event)">
-        </color-picker>
-        <a *ngIf="form.controls?.length > 1; else disabledRemoveButton"
-           title="Remove option"
-           i18n-title="@@constraint.select.option.remove"
-           (click)="onRemoveOption(optionIndex)">
-          <i class="far fa-fw fa-trash-alt text-danger"></i>
-        </a>
-        <ng-template #disabledRemoveButton>
-          <i class="far fa-fw fa-trash-alt text-secondary cursor-not-allowed"
-             title="Cannot remove option"
-             i18n-title="@@constraint.select.option.remove.disabled"></i>
-        </ng-template>
+        <div class="flex-grow-1 mx-1 select-input-wrapper" [class.disabled]="!data.enabled">
+          <input #valueInput
+                 [formControlName]="formControlNames.Value"
+                 [class.is-invalid]="group.touched && group.errors"
+                 (input)="onValueInput($event, optionIndex)"
+                 (keydown.enter)="onValueEnterKeyDown($event, optionIndex)"
+                 [attr.style]="!displayValuesControl?.value ? (('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle) : null"
+                 type="text"
+                 class="form-control"
+                 placeholder="Value"
+                 i18n-placeholder="@@constraint.select.option.value">
+          <div *ngIf="group.touched && group.errors?.required"
+               class="invalid-feedback"
+               i18n="@@constraint.select.option.required">
+            You need to provide a value.
+          </div>
+        </div>
+        <div *ngIf="displayValuesControl?.value" class="flex-grow-1 mx-1 select-input-wrapper" [class.disabled]="!data.enabled">
+          <input #displayValueInput
+                 [formControlName]="formControlNames.DisplayValue"
+                 (keydown.enter)="onDisplayValueEnterKeyDown($event, optionIndex)"
+                 [attr.style]="('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle"
+                 type="text"
+                 class="form-control"
+                 placeholder="Display as..."
+                 i18n-placeholder="@@constraint.select.option.displayValue">
+        </div>
+        <div *ngIf="data.enabled" class="flex-grow-0 ml-2 d-flex align-items-center">
+          <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
+             title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
+             i18n-title="@@constraint.select.option.background" #colorElement></i>
+          <color-picker [color]="groupData.background"
+                        #colorPicker
+                        [origin]="colorElement"
+                        (saveOnClose)="$event && onColorSave(optionIndex, $event)"
+                        (valueChange)="onColorChange(optionIndex, $event)"
+                        (cancel)="onColorCancel(optionIndex)"
+                        (save)="onColorSave(optionIndex, $event)">
+          </color-picker>
+          <a *ngIf="optionsForm.controls?.length > 1; else disabledRemoveButton"
+             title="Remove option"
+             i18n-title="@@constraint.select.option.remove"
+             (click)="onRemoveOption(optionIndex)">
+            <i class="far fa-fw fa-trash-alt text-danger"></i>
+          </a>
+          <ng-template #disabledRemoveButton>
+            <i class="far fa-fw fa-trash-alt text-secondary cursor-not-allowed"
+               title="Cannot remove option"
+               i18n-title="@@constraint.select.option.remove.disabled"></i>
+          </ng-template>
+        </div>
       </div>
     </div>
   </div>
+
 </div>
 
-<div class="d-flex justify-content-end mt-2">
+
+<div *ngIf="(optionsEnabled$ | async)" class="d-flex justify-content-end mt-2">
   <a title="Add option"
      i18n-title="@@constraint.select.add.option"
      (click)="onAddOption()">
@@ -80,13 +98,13 @@
   </a>
 </div>
 
-<div *ngIf="form?.errors?.uniqueValues"
+<div *ngIf="optionsForm?.errors?.uniqueValues"
      class="text-danger"
      i18n="@@constraint.select.options.unique">
   Values must be unique!
 </div>
 
-<div *ngIf="form?.touched && form?.errors?.minimumValuesCount"
+<div *ngIf="optionsForm?.touched && form?.errors?.minimumValuesCount"
      class="text-danger"
      i18n="@@constraint.select.options.twoValues">
   Please enter at least one value.

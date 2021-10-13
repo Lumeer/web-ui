@@ -86,6 +86,8 @@ import {configuration} from '../../../environments/configuration';
 import {auditLogsReducer} from './audit-logs/audit-logs.reducer';
 import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
 import {detailsReducer} from './details/detail.reducer';
+import {selectionListsReducer} from './selection-lists/selection-lists.reducer';
+import {SelectionListsEffects} from './selection-lists/selection-lists.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -124,6 +126,7 @@ const reducers: ActionReducerMap<AppState> = {
   modals: modalsReducer,
   userPermissions: userPermissionsReducer,
   auditLogs: auditLogsReducer,
+  selectionLists: selectionListsReducer,
 };
 
 const effects = [
@@ -154,6 +157,7 @@ const effects = [
   ModalsEffects,
   WorkflowsEffects,
   AuditLogsEffects,
+  SelectionListsEffects,
 ];
 
 @NgModule({

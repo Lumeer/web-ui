@@ -34,6 +34,7 @@ import {ViewComponent} from './view.component';
 import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';
 import {DocumentRedirectComponent} from '../core/components/document-redirect.component';
 import {GroupsGuard} from '../core/guards/data/groups.guard';
+import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 
 const viewRoutes: Routes = [
   {
@@ -45,6 +46,7 @@ const viewRoutes: Routes = [
       views: ViewsGuard,
       linkTypes: LinkTypesGuard,
       users: UsersGuard,
+      selection: SelectionListsGuard,
       groups: GroupsGuard,
       defaultConfigs: ViewDefaultConfigsGuard,
     },

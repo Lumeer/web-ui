@@ -79,3 +79,21 @@ export function padStart(value: string, num: number, character: string): string 
   }
   return text;
 }
+
+export function createUniqueNameWithSuffix(name: string, otherNames: string[]): string {
+  let currentNamePrefix = name?.trim() || '';
+  let index = 2;
+
+  // if prefix already has distinguishing string, we will cut it out
+  if (currentNamePrefix.match(/^.*\(\d.*\)$/g)) {
+    const leftIndex = currentNamePrefix.lastIndexOf('(');
+    index = Number(currentNamePrefix.substring(leftIndex + 1, currentNamePrefix.length - 1));
+    currentNamePrefix = currentNamePrefix.substring(0, leftIndex).trim();
+  }
+
+  while (otherNames.includes(currentNamePrefix + ` (${index})`)) {
+    index++;
+  }
+
+  return currentNamePrefix + ` (${index})`;
+}

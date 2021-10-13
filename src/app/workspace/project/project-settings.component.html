@@ -70,6 +70,12 @@
            class="nav-link"
            i18n="@@project.settings.tab.template">Publish Project</a>
       </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
+        <a [routerLink]="'selection'"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@project.settings.tab.selection">Selection Lists</a>
+      </li>
     </ul>
     <router-outlet></router-outlet>
   </div>

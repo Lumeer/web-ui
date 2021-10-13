@@ -1,0 +1,7 @@
+<div class="px-1 pt-1 pb-4 text-muted" i18n="@@selection.lists.introduction">
+  Selection lists are used in selection attribute types. They can be shared among multiple tables. You can create a selection list once, and reuse anywhere.
+</div>
+<selection-lists-content [resourceType]="resourceType"
+                         [organization]="organization$ | async"
+                         [project]="project$ | async">
+</selection-lists-content>

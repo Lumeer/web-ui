@@ -149,7 +149,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
@@ -168,7 +168,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
@@ -348,6 +348,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context>
           <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-description/attribute-description-modal.component.html</context>
@@ -725,29 +729,26 @@
           <context context-type="linenumber">124,126</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="840951359074313455" datatype="html">
+      <trans-unit id="cron.unit.days.title" datatype="html">
         <source>Days</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <note priority="1" from="description">cron.unit.days.title</note>
       </trans-unit>
-      <trans-unit id="8365450656480095075" datatype="html">
+      <trans-unit id="cron.unit.weeks.title" datatype="html">
         <source>Weeks</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
           <context context-type="linenumber">77</context>
         </context-group>
-        <note priority="1" from="description">cron.unit.weeks.title</note>
       </trans-unit>
-      <trans-unit id="4845030128243887325" datatype="html">
+      <trans-unit id="cron.unit.months.title" datatype="html">
         <source>Months</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/cron-form/configuration-form/cron-configuration-form.component.ts</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <note priority="1" from="description">cron.unit.months.title</note>
       </trans-unit>
       <trans-unit id="cron.daysOfWeek.units" datatype="html">
         <source>M|T|W|T|F|S|S</source>
@@ -1142,6 +1143,10 @@
           <context context-type="linenumber">31</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/list/selection-list.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/view-modal/settings/body/view-settings-modal-body.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
@@ -1519,35 +1524,35 @@
         <source>Success</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.ok" datatype="html">
         <source>OK</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
@@ -2634,6 +2639,48 @@
           <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="selection.lists.get.fail" datatype="html">
+        <source>Could not read selection lists</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.create.fail" datatype="html">
+        <source>Could not create selection list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.update.fail" datatype="html">
+        <source>Could not update selection list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.delete.dialog.title" datatype="html">
+        <source>Remove selection list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.delete.dialog.message" datatype="html">
+        <source>Do you really want to remove this selection list? Attributes that use this selection list will retain its copy.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.delete.fail" datatype="html">
+        <source>Could not delete selection list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="sequences.get.fail" datatype="html">
         <source>Could not read sequences</source>
         <context-group purpose="location">
@@ -3669,6 +3716,10 @@
           <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-description/attribute-description-modal.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -4192,6 +4243,138 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
           <context context-type="linenumber">263</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="copy" datatype="html">
+        <source>Copy</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/list/selection-list.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
+          <context context-type="linenumber">271</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="edit" datatype="html">
+        <source>Edit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/list/selection-list.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/roles/roles.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/teams/team-list/team/users/team-users.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.name.title" datatype="html">
+        <source>Name:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.name.placeholder" datatype="html">
+        <source>Enter unique name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.name.error.minLength" datatype="html">
+        <source>List name can not be empty</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.name.error.notUnique" datatype="html">
+        <source>List name already exists</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/content/selection-list-modal-content.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.update.title" datatype="html">
+        <source>Update selection list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.create.title" datatype="html">
+        <source>Create selection list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.create" datatype="html">
+        <source>Create</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.add" datatype="html">
+        <source>Add a new list</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.adding.sample" datatype="html">
+        <source>Adding sample lists</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.modal.add.sample" datatype="html">
+        <source>Add sample lists</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/content/selection-lists-content.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="selection.lists.introduction" datatype="html">
+        <source> Selection lists are used in selection attribute types. They can be shared among multiple tables. You can create a selection list once, and reuse anywhere.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/lists/selection/selection-lists.component.html</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.attribute.deleted" datatype="html">
@@ -4787,76 +4970,88 @@
           <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6162693758764653365" datatype="html">
+      <trans-unit id="constraint.config.percentage.display.text" datatype="html">
         <source>Text</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <note priority="1" from="description">constraint.config.percentage.display.text</note>
       </trans-unit>
-      <trans-unit id="3289318978924506385" datatype="html">
+      <trans-unit id="constraint.config.percentage.display.progress" datatype="html">
         <source>Progress Bar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/percentage/style/percentage-constraint-config-style.component.ts</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <note priority="1" from="description">constraint.config.percentage.display.progress</note>
+      </trans-unit>
+      <trans-unit id="constraint.select.displayValues.label" datatype="html">
+        <source>Distinguish display values</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.select.displayValues.help" datatype="html">
+        <source>Use different values for users and for computations in functions (e.g. High Priority = 3).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.reorder" datatype="html">
         <source>Reorder options</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.value" datatype="html">
         <source>Value</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.required" datatype="html">
         <source> You need to provide a value. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">32,34</context>
+          <context context-type="linenumber">48,50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.displayValue" datatype="html">
         <source>Display as...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.background" datatype="html">
         <source>Choose background color</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.remove" datatype="html">
         <source>Remove option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.remove.disabled" datatype="html">
         <source>Cannot remove option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.add.option" datatype="html">
         <source>Add option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.unique" datatype="html">
@@ -4864,7 +5059,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">85,87</context>
+          <context context-type="linenumber">106,108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.twoValues" datatype="html">
@@ -4872,7 +5067,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">91,93</context>
+          <context context-type="linenumber">112,114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.description" datatype="html">
@@ -4889,18 +5084,25 @@
           <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="constraint.select.displayValues.label" datatype="html">
-        <source>Distinguish display values</source>
+      <trans-unit id="constraint.select.lists.label" datatype="html">
+        <source> Selection list </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">20,22</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="constraint.select.displayValues.help" datatype="html">
-        <source>Use different values for users and for computations in functions (e.g. High Priority = 3).</source>
+      <trans-unit id="constraint.select.lists.create" datatype="html">
+        <source> Create or edit custom lists in <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;selectionListsLink$ | async&quot;&gt;"/>Project settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/select-constraint-config-form.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="constraint.select.lists.custom" datatype="html">
+        <source>Custom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/select-constraint-config-form.component.ts</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.text.caseStyle.label" datatype="html">
@@ -5110,25 +5312,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
           <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.create" datatype="html">
-        <source>Create</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.new.dialog.link.label" datatype="html">
@@ -5648,25 +5831,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/dashboard-rows-settings.component.html</context>
           <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="edit" datatype="html">
-        <source>Edit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/roles/roles.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/users/team-users.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context>
-          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.row.delete" datatype="html">
@@ -9038,7 +9202,7 @@
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context>
-          <context context-type="linenumber">479</context>
+          <context context-type="linenumber">490</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.row.noResults" datatype="html">
@@ -9141,17 +9305,6 @@
           <context context-type="linenumber">267</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="copy" datatype="html">
-        <source>Copy</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
-          <context context-type="linenumber">271</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="table.header.menu.add.column.next" datatype="html">
         <source>Add column right</source>
         <context-group purpose="location">
@@ -9244,7 +9397,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1200</context>
+          <context context-type="linenumber">1206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
@@ -9255,7 +9408,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context>
-          <context context-type="linenumber">1201</context>
+          <context context-type="linenumber">1207</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.header.add.link.column" datatype="html">
@@ -10112,6 +10265,13 @@
           <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="project.settings.tab.selection" datatype="html">
+        <source>Selection Lists</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source>
         <context-group purpose="location">
@@ -10166,29 +10326,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
           <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="project.settings.collections.uploadContent" datatype="html">
-        <source>Upload project content</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-upload/project-upload.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="project.settings.upload.inProgress" datatype="html">
-        <source>Previous upload is already in progress. Please wait for it to finish first.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-upload/project-upload.component.ts</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="project.settings.upload.tooLarge" datatype="html">
-        <source>The file size is above the upload limit (<x id="size" equiv-text="size.toFixed(
-        0
-      )"/> MB).</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-upload/project-upload.component.ts</context>
-          <context context-type="linenumber">63,65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="project.settings.sequence.info1" datatype="html">
@@ -10330,6 +10467,29 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">66,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.settings.collections.uploadContent" datatype="html">
+        <source>Upload project content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.settings.upload.inProgress" datatype="html">
+        <source>Previous upload is already in progress. Please wait for it to finish first.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.settings.upload.tooLarge" datatype="html">
+        <source>The file size is above the upload limit (<x id="size" equiv-text="size.toFixed(
+        0
+      )"/> MB).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
+          <context context-type="linenumber">63,65</context>
         </context-group>
       </trans-unit>
     </body>

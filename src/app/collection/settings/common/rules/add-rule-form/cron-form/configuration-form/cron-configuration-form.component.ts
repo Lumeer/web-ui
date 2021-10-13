@@ -73,9 +73,9 @@ export class CronConfigurationFormComponent implements OnInit, OnChanges {
 
   constructor(private configurationService: ConfigurationService, private store$: Store<AppState>) {
     this.unitsItems = [
-      {id: ChronoUnit.Days, value: $localize`:cron.unit.days.title:Days`},
-      {id: ChronoUnit.Weeks, value: $localize`:cron.unit.weeks.title:Weeks`},
-      {id: ChronoUnit.Months, value: $localize`:cron.unit.months.title:Months`},
+      {id: ChronoUnit.Days, value: $localize`:@@cron.unit.days.title:Days`},
+      {id: ChronoUnit.Weeks, value: $localize`:@@cron.unit.weeks.title:Weeks`},
+      {id: ChronoUnit.Months, value: $localize`:@@cron.unit.months.title:Months`},
     ];
 
     const offset = this.configurationService.getConfiguration().locale === LanguageCode.EN ? 1 : 0;
