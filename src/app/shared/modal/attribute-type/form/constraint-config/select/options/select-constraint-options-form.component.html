@@ -25,14 +25,14 @@
       <div [formGroup]="group"
            *ngIf="{background: group.get(formControlNames.Background)?.value} as groupData"
            class="d-flex">
-        <div class="flex-grow-0 mr-1 mt-2">
+        <div class="flex-grow-0 mr-1 mt-2" *ngIf="data.enabled">
           <i cdkDragHandle
              class="fas fa-fw fa-lg fa-grip-vertical cursor-move text-black-50"
              title="Reorder options"
              i18n-title="@@constraint.select.options.reorder">
           </i>
         </div>
-        <div class="flex-grow-1 mx-1">
+        <div class="flex-grow-1 mx-1 select-input-wrapper" [class.disabled]="!data.enabled">
           <input #valueInput
                  [formControlName]="formControlNames.Value"
                  [class.is-invalid]="group.touched && group.errors"
@@ -49,8 +49,7 @@
             You need to provide a value.
           </div>
         </div>
-        <div *ngIf="displayValuesControl?.value"
-             class="flex-grow-1 mx-1">
+        <div *ngIf="displayValuesControl?.value" class="flex-grow-1 mx-1 select-input-wrapper" [class.disabled]="!data.enabled">
           <input #displayValueInput
                  [formControlName]="formControlNames.DisplayValue"
                  (keydown.enter)="onDisplayValueEnterKeyDown($event, optionIndex)"
@@ -60,21 +59,19 @@
                  placeholder="Display as..."
                  i18n-placeholder="@@constraint.select.option.displayValue">
         </div>
-        <div class="flex-grow-0 ml-2 d-flex align-items-center">
-          <ng-container *ngIf="data.enabled">
-            <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
-               title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
-               i18n-title="@@constraint.select.option.background" #colorElement></i>
-            <color-picker [color]="groupData.background"
-                          #colorPicker
-                          [origin]="colorElement"
-                          (saveOnClose)="$event && onColorSave(optionIndex, $event)"
-                          (valueChange)="onColorChange(optionIndex, $event)"
-                          (cancel)="onColorCancel(optionIndex)"
-                          (save)="onColorSave(optionIndex, $event)">
-            </color-picker>
-          </ng-container>
-          <a *ngIf="data.enabled && optionsForm.controls?.length > 1; else disabledRemoveButton"
+        <div *ngIf="data.enabled" class="flex-grow-0 ml-2 d-flex align-items-center">
+          <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
+             title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
+             i18n-title="@@constraint.select.option.background" #colorElement></i>
+          <color-picker [color]="groupData.background"
+                        #colorPicker
+                        [origin]="colorElement"
+                        (saveOnClose)="$event && onColorSave(optionIndex, $event)"
+                        (valueChange)="onColorChange(optionIndex, $event)"
+                        (cancel)="onColorCancel(optionIndex)"
+                        (save)="onColorSave(optionIndex, $event)">
+          </color-picker>
+          <a *ngIf="optionsForm.controls?.length > 1; else disabledRemoveButton"
              title="Remove option"
              i18n-title="@@constraint.select.option.remove"
              (click)="onRemoveOption(optionIndex)">

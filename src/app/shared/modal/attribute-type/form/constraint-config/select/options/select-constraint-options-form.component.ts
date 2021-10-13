@@ -98,7 +98,9 @@ export class SelectConstraintOptionsFormComponent implements OnInit, OnDestroy {
       : (this.dataValues || []).map(dataValue => ({value: dataValue.format()}));
     options.map((option, index) => this.createOptionForm(index, option)).forEach(form => this.optionsForm.push(form));
     const optionsLength = options.length;
-    this.optionsForm.push(this.createOptionForm(optionsLength));
+    if (this.optionsForm.enabled) {
+      this.optionsForm.push(this.createOptionForm(optionsLength));
+    }
 
     if (this.optionsForm.length < 2) {
       this.optionsForm.push(this.createOptionForm(optionsLength + 1));
