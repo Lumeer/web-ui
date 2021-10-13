@@ -23,6 +23,10 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {searchTabsMap} from '../../core/store/navigation/search-tab';
 import {removeAccentFromString} from '@lumeer/data-filters';
 
+export function isViewValidForDashboard(view: View): boolean {
+  return !!view?.config?.search?.dashboard;
+}
+
 export function filterValidDashboardCells(cells: DashboardCell[]): DashboardCell[] {
   return (cells || []).filter(cell => isDashboardCellValid(cell));
 }

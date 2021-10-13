@@ -58,6 +58,9 @@ export class DashboardTabSettingsComponent implements OnInit, OnChanges {
   @Input()
   public tab: DashboardTab;
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public tabChange = new EventEmitter<DashboardTab>();
 

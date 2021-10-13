@@ -1,6 +1,8 @@
 <h6 class="font-weight-bold mb-3 mx-3" i18n="@@search.tabs.settings.dialog.rows.title">Dashboard Preview</h6>
 
-<div class="dashboard-rows px-1" cdkDropList (cdkDropListDropped)="rowDropped($event)">
+<div class="dashboard-rows px-1" cdkDropList
+     (cdkDropListDropped)="rowDropped($event)"
+     [cdkDropListDisabled]="!editable">
   <dashboard-row-settings *ngFor="let row of rows; let index = index; trackBy:trackByRow"
                           cdkDrag
                           cdkDragLockAxis="y"
@@ -8,22 +10,25 @@
                           class="dashboard-row d-block px-2"
                           [row]="row"
                           [views]="views"
+                          [editable]="editable"
                           [selectedColumn]="selectedCoordinates?.row === index ? selectedCoordinates?.column : null"
                           (rowChange)="rowChange.emit({row: $event, index: index})"
                           (delete)="rowDelete.emit(index)"
                           (cellSelect)="cellSelect.emit({row: index, column: $event})">
-    <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
+    <i *ngIf="editable" class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
   </dashboard-row-settings>
 </div>
 
-<div class="px-3">
-  <button #buttonElement class="btn btn-block btn-outline-primary" (click)="layout.toggle()">
-    <i class="far fa-plus mr-2"></i>
-    <span i18n="@@search.tabs.settings.dialog.rows.add">Add Row</span>
-  </button>
-</div>
+<ng-container *ngIf="editable">
+  <div class="px-3">
+    <button #buttonElement class="btn btn-block btn-outline-primary" (click)="layout.toggle()">
+      <i class="far fa-plus mr-2"></i>
+      <span i18n="@@search.tabs.settings.dialog.rows.add">Add Row</span>
+    </button>
+  </div>
 
-<dashboard-row-layout #layout
-                      [origin]="buttonElement"
-                      (layoutSelected)="rowAdd.emit($event)">
-</dashboard-row-layout>
+  <dashboard-row-layout #layout
+                        [origin]="buttonElement"
+                        (layoutSelected)="rowAdd.emit($event)">
+  </dashboard-row-layout>
+</ng-container>

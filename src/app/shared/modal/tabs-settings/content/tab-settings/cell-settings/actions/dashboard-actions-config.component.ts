@@ -35,6 +35,9 @@ export class DashboardActionsConfigComponent {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public actionsChange = new EventEmitter<DashboardAction[]>();
 

@@ -38,6 +38,9 @@ export class DashboardRowsSettingsComponent {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public rowChange = new EventEmitter<{row: DashboardRow; index: number}>();
 

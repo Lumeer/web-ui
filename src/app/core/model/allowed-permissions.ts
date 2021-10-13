@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {RoleType} from './role-type';
+import {RoleType, roleTypesMap} from './role-type';
 
 export interface AllowedPermissions {
   roles?: Record<RoleType, boolean>;
@@ -29,4 +29,16 @@ export type AllowedPermissionsMap = Record<string, AllowedPermissions>;
 export interface ResourcesPermissions {
   collections: AllowedPermissionsMap;
   linkTypes: AllowedPermissionsMap;
+}
+
+export const completeAllowedPermissions: AllowedPermissions = {
+  roles: transformRoleTypesMap(),
+  rolesWithView: transformRoleTypesMap(),
+};
+
+function transformRoleTypesMap(): Record<RoleType, boolean> {
+  return Object.keys(roleTypesMap).reduce((map, key) => {
+    map[key] = true;
+    return map;
+  }, {} as Record<RoleType, boolean>);
 }

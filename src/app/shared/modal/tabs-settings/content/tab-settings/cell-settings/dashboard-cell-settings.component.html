@@ -1,14 +1,19 @@
 <h6 class="font-weight-bold mb-3" i18n="@@search.tabs.settings.dialog.cell.title">Item Configuration</h6>
 
-<div *ngIf="!cell"
+<div *ngIf="editable && !cell"
      class="text-center"
      i18n="@@search.tabs.settings.dialog.cell.empty">Select an item from the dashboard preview to configure it
+</div>
+<div *ngIf="!editable && !cell"
+     class="text-center"
+     i18n="@@search.tabs.settings.dialog.cell.disabled.empty">Select an item from the dashboard preview to see configuration
 </div>
 <select-item *ngIf="cell"
              class="mb-4 d-block"
              [selectedId]="cell?.type"
              [items]="typeItems"
              [removable]="false"
+             [disabled]="!editable"
              i18n-emptyValue="@@search.tabs.settings.dialog.cell.type.placeholder"
              emptyValue="Select Item Type"
              (selected)="onTypeSelected($event)">
@@ -17,11 +22,13 @@
 <ng-container [ngSwitch]="cell?.type">
   <dashboard-view-config *ngSwitchCase="type.View"
                          [config]="cell.config"
+                         [editable]="editable"
                          [views]="views"
                          (configChange)="onConfigChanged($event)">
   </dashboard-view-config>
   <dashboard-image-config *ngSwitchCase="type.Image"
                           [config]="cell.config"
+                          [editable]="editable"
                           (configChange)="onConfigChanged($event)">
   </dashboard-image-config>
 </ng-container>
@@ -30,5 +37,6 @@
                           class="mt-4"
                           [actions]="cell.actions"
                           [views]="views"
+                          [editable]="editable"
                           (actionsChange)="onActionsChange($event)">
 </dashboard-actions-config>

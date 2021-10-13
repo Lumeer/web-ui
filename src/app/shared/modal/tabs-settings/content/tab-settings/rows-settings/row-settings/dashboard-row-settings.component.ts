@@ -36,6 +36,9 @@ export class DashboardRowSettingsComponent implements OnChanges {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public rowChange = new EventEmitter<DashboardRow>();
 
@@ -51,7 +54,7 @@ export class DashboardRowSettingsComponent implements OnChanges {
   public templateColumns: string;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.row) {
+    if (changes.row || changes.editable) {
       this.computeTemplateColumns();
     }
   }
@@ -60,7 +63,11 @@ export class DashboardRowSettingsComponent implements OnChanges {
     const fractions = filterValidDashboardCells(this.row?.cells)
       .map(cell => `${cell.span}fr`)
       .join(' ');
-    this.templateColumns = `min-content ${fractions} min-content min-content`;
+    if (this.editable) {
+      this.templateColumns = `min-content ${fractions} min-content min-content`;
+    } else {
+      this.templateColumns = fractions;
+    }
   }
 
   public onLayoutSelected(layoutType: DashboardLayoutType) {

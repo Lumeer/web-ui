@@ -34,6 +34,9 @@ export class DashboardImageConfigComponent implements OnChanges {
   @Input()
   public config: DashboardImageCellConfig;
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public configChange = new EventEmitter<DashboardImageCellConfig>();
 
@@ -56,8 +59,10 @@ export class DashboardImageConfigComponent implements OnChanges {
   }
 
   public onSelectScale(scale: DashboardImageScaleType) {
-    const newConfig = {...this.config, scale};
-    this.configChange.next(newConfig);
+    if (this.editable) {
+      const newConfig = {...this.config, scale};
+      this.configChange.next(newConfig);
+    }
   }
 
   public revertUrl() {

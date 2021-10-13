@@ -25,7 +25,11 @@ import {map, mergeMap, skipWhile, switchMap, take, tap, withLatestFrom} from 'rx
 import {AppState} from '../store/app.state';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {ViewsAction} from '../store/views/views.action';
-import {selectDefaultSearchPerspectiveTabs, selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
+import {
+  selectDefaultSearchPerspectiveDashboardTabs,
+  selectViewByCode,
+  selectViewsLoaded,
+} from '../store/views/views.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {Organization} from '../store/organizations/organization';
@@ -97,7 +101,7 @@ export class ViewRedirectGuard implements CanActivate {
     return this.store$.pipe(
       select(selectSearchById(view?.code)),
       take(1),
-      withLatestFrom(this.store$.pipe(select(selectDefaultSearchPerspectiveTabs))),
+      withLatestFrom(this.store$.pipe(select(selectDefaultSearchPerspectiveDashboardTabs))),
       map(([search, defaultTabs]) => {
         const tabs = createSearchPerspectiveTabsByView(view, defaultTabs).filter(tab => !tab.hidden);
         const desiredTab = search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All;

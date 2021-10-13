@@ -43,6 +43,9 @@ export class DashboardCellSettingsComponent {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public cellChange = new EventEmitter<DashboardCell>();
 

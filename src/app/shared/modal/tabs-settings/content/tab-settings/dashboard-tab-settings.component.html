@@ -4,7 +4,7 @@
     <input class="form-control"
            #titleInput
            [(ngModel)]="title"
-           [disabled]="isDefault"
+           [disabled]="isDefault || !editable"
            [maxLength]="50"
            (blur)="onNameBlur()"
            (keydown.enter)="titleInput.blur()"
@@ -15,6 +15,7 @@
   <div class="col-12 col-lg-6" *ngIf="isDefault">
     <toggle-checkbox class="d-block py-2"
                      [checked]="!tab.hidden"
+                     [disabled]="!editable"
                      i18n-label="@@dashboard.tabs.settings.dialog.tab.show"
                      label="Show tab"
                      (checkedChange)="onShowChange($event)">
@@ -28,6 +29,7 @@
                            [rows]="tab.rows"
                            [selectedCoordinates]="selectedCoordinates$ | async"
                            [views]="data.views"
+                           [editable]="editable"
                            (rowChange)="onRowChange($event)"
                            (rowAdd)="onRowAdd($event)"
                            (rowDelete)="onRowDelete($event)"
@@ -38,6 +40,7 @@
   <dashboard-cell-settings class="col-12 col-lg-6 d-block mt-4 cell-settings"
                            [cell]="tab.rows | findCellByCoordinates:(selectedCoordinates$ | async)"
                            [views]="data.views"
+                           [editable]="editable"
                            (cellChange)="onCellChange($event)">
   </dashboard-cell-settings>
 

@@ -33,6 +33,9 @@ export class DashboardTabBadgeComponent implements OnChanges {
   @Input()
   public selected: boolean;
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public toggleHidden = new EventEmitter();
 

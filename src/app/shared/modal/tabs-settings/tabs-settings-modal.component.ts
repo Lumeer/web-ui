@@ -17,29 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, ViewChild, OnInit, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewChild, OnInit, Input, OnDestroy} from '@angular/core';
 import {DialogType} from '../dialog-type';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of, combineLatest, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {DashboardTab} from '../../../core/model/dashboard-tab';
 import {TabsSettingsContentComponent} from './content/tabs-settings-content.component';
-import {selectSearchPerspectiveTabs} from '../../../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectDefaultSearchPerspectiveDashboardViewId,
+  selectSearchPerspectiveTabsByView,
+  selectViewById,
+} from '../../../core/store/views/views.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {createDashboardTabId} from '../../utils/dashboard.utils';
+import {createDashboardTabId, isViewValidForDashboard} from '../../utils/dashboard.utils';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
-import {take} from 'rxjs/operators';
-import {SearchConfig} from '../../../core/store/searches/search';
+import {distinctUntilChanged, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
+import {Dashboard, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
+import {View} from '../../../core/store/views/view';
+import {selectViewsByReadWithComputedData} from '../../../core/store/common/permissions.selectors';
+import {AllowedPermissions, completeAllowedPermissions} from '../../../core/model/allowed-permissions';
+import {selectViewPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'tabs-settings-modal',
   templateUrl: './tabs-settings-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabsSettingsModalComponent implements OnInit {
+export class TabsSettingsModalComponent implements OnInit, OnDestroy {
   @Input()
   public perspectiveId: string;
 
@@ -51,34 +60,167 @@ export class TabsSettingsModalComponent implements OnInit {
 
   public readonly dialogType = DialogType;
 
+  public selectedViewId$ = new BehaviorSubject<string>(null);
   public performingAction$ = new BehaviorSubject(false);
+  public performingSecondaryAction$ = new BehaviorSubject(false);
+
   public tabs$: Observable<DashboardTab[]>;
+  public dashboardData$: Observable<DashboardData>;
+  public buttonsData$: Observable<ButtonsData>;
+
+  private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
 
   public ngOnInit() {
-    this.tabs$ = this.store$.pipe(select(selectSearchPerspectiveTabs));
+    this.dashboardData$ = this.subscribeDashboardData$();
+    this.buttonsData$ = this.subscribeButtonsData$();
+    this.tabs$ = this.subscribeTabs$();
+
+    this.subscribeInitialSelectedView();
   }
 
-  public onSubmit() {
-    const tabs = this.assignTabsIds(this.content.tabs$.value);
-    this.submitViewDashboard(tabs);
-    if (this.perspectiveId === DEFAULT_PERSPECTIVE_ID) {
-      this.submitDefaultDashboard(tabs);
+  private subscribeInitialSelectedView() {
+    this.subscriptions.add(
+      this.store$
+        .pipe(select(selectDefaultSearchPerspectiveDashboardViewId))
+        .pipe(
+          startWith(undefined),
+          pairwise(),
+          distinctUntilChanged(([previousViewId, currentViewId]) => previousViewId !== currentViewId)
+        )
+        .subscribe(([previousViewId, currentViewId]) => {
+          if (currentViewId && (!previousViewId || previousViewId === this.selectedViewId$.value))
+            this.selectedViewId$.next(currentViewId);
+        })
+    );
+  }
+
+  private subscribeTabs$(): Observable<DashboardTab[]> {
+    return this.dashboardData$.pipe(
+      switchMap(data => this.store$.pipe(select(selectSearchPerspectiveTabsByView(data.selectedView))))
+    );
+  }
+
+  private subscribeButtonsData$(): Observable<ButtonsData> {
+    return this.dashboardData$.pipe(
+      map(data => {
+        const showSaveButton = !data.selectedView && data.currentViewPermissions?.roles?.PerspectiveConfig;
+
+        const selectedViewIsDifferent =
+          data.selectedView && (!data.userDashboardView || data.userDashboardView.id !== data.selectedView.id);
+        const canSetCurrentViewAsHome =
+          data.currentView && (!data.userDashboardView || data.userDashboardView.id !== data.currentView.id);
+
+        const showSetButton = selectedViewIsDifferent || canSetCurrentViewAsHome;
+        return {showSaveButton, showSetButton};
+      })
+    );
+  }
+
+  private subscribeDashboardData$(): Observable<DashboardData> {
+    return this.store$.pipe(
+      select(selectCurrentView),
+      switchMap(view => {
+        if (isViewValidForDashboard(view)) {
+          return this.subscribeDashboardDataByView(view);
+        }
+        return this.subscribeDashboardDataByDefault();
+      })
+    );
+  }
+
+  private subscribeDashboardDataByDefault(): Observable<DashboardData> {
+    return combineLatest([
+      this.subscribeSelectedView$(),
+      this.subscribeUserDashboardView$(),
+      this.subscribeDashboardViews$(),
+    ]).pipe(
+      map(([selectedView, userDashboardView, dashboardViews]) => ({
+        selectedView,
+        userDashboardView,
+        dashboardViews,
+        currentViewPermissions: completeAllowedPermissions,
+      }))
+    );
+  }
+
+  private subscribeDashboardDataByView(view: View): Observable<DashboardData> {
+    return combineLatest([
+      this.subscribeUserDashboardView$(),
+      this.store$.pipe(select(selectViewPermissions(view.id))),
+    ]).pipe(
+      map(([userDashboardView, permissions]) => ({
+        userDashboardView,
+        currentView: view,
+        currentViewPermissions: permissions,
+      }))
+    );
+  }
+
+  private subscribeDashboardViews$(): Observable<View[]> {
+    return this.store$.pipe(
+      select(selectViewsByReadWithComputedData),
+      map(views => views.filter(view => isViewValidForDashboard(view)))
+    );
+  }
+
+  private subscribeSelectedView$(): Observable<View> {
+    return this.selectedViewId$.pipe(
+      switchMap(viewId => (viewId ? this.store$.pipe(select(selectViewById(viewId))) : of(null)))
+    );
+  }
+
+  private subscribeUserDashboardView$(): Observable<View> {
+    return this.store$.pipe(select(selectDefaultSearchPerspectiveDashboardViewId)).pipe(
+      distinctUntilChanged(),
+      switchMap(viewId => (viewId ? this.store$.pipe(select(selectViewById(viewId))) : of(null))),
+      map(view => (isViewValidForDashboard(view) ? view : null))
+    );
+  }
+
+  public onSubmit(buttonsData: ButtonsData, dashboardData: DashboardData) {
+    if (buttonsData.showSaveButton) {
+      // save config
+      const tabs = this.assignTabsIds(this.content.tabs$.value);
+      this.submitViewDashboard(tabs);
+      if (this.perspectiveId === DEFAULT_PERSPECTIVE_ID) {
+        this.performingAction$.next(true);
+        this.submitDefaultDashboard({tabs});
+      } else {
+        this.hideDialog();
+      }
     } else {
-      this.hideDialog();
+      // set as home screen
+      const viewId = (dashboardData.selectedView || dashboardData.currentView)?.id;
+      if (viewId) {
+        this.performingAction$.next(true);
+        this.submitDefaultDashboard({viewId});
+      }
     }
   }
 
-  private submitDefaultDashboard(tabs: DashboardTab[]) {
-    this.performingAction$.next(true);
+  public onSecondarySubmit(dashboardData: DashboardData) {
+    const viewId = (dashboardData.selectedView || dashboardData.currentView)?.id;
+    if (viewId) {
+      this.performingSecondaryAction$.next(true);
+      this.submitDefaultDashboard({viewId});
+    }
+  }
+
+  private submitDefaultDashboard(dashboard: Dashboard) {
     this.store$.dispatch(
       new ViewsAction.SetDashboard({
-        dashboard: {tabs},
+        dashboard,
         onSuccess: () => this.hideDialog(),
-        onFailure: () => this.performingAction$.next(false),
+        onFailure: () => this.stopPerforming(),
       })
     );
+  }
+
+  private stopPerforming() {
+    this.performingAction$.next(false);
+    this.performingSecondaryAction$.next(false);
   }
 
   private submitViewDashboard(tabs: DashboardTab[]) {
@@ -107,4 +249,21 @@ export class TabsSettingsModalComponent implements OnInit {
   public hideDialog() {
     this.bsModalRef.hide();
   }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+}
+
+interface DashboardData {
+  selectedView?: View;
+  userDashboardView: View;
+  currentViewPermissions: AllowedPermissions;
+  currentView?: View;
+  dashboardViews?: View[];
+}
+
+interface ButtonsData {
+  showSaveButton: boolean;
+  showSetButton: boolean;
 }

@@ -1,7 +1,13 @@
 <img *ngIf="url" [src]="url" alt="" [ngClass]="scale"/>
 <div *ngIf="!view && !url" class="text-success clickable content p-2">
-  <i class="far fa-pencil mr-2"></i>
-  <span class="text-truncate" i18n="@@edit">Edit</span>
+  <ng-container *ngIf="editable">
+    <i class="far fa-pencil mr-2"></i>
+    <span class="text-truncate" i18n="@@edit">Edit</span>
+  </ng-container>
+  <ng-container *ngIf="!editable">
+    <i class="far fa-eye mr-2"></i>
+    <span class="text-truncate" i18n="@@edit">Show</span>
+  </ng-container>
 </div>
 <div class="content p-2" *ngIf="view" [title]="view.name">
   <i class="mr-2" [ngClass]="view.icon" [style.color]="view.color"></i>

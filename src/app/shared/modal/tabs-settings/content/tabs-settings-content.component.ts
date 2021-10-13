@@ -17,12 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  EventEmitter,
+} from '@angular/core';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DashboardTab, defaultDashboardTabs, TabType} from '../../../../core/model/dashboard-tab';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {generateId} from '../../../utils/resource.utils';
+import {View} from '../../../../core/store/views/view';
+import {SelectItemModel} from '../../../select/select-item/select-item.model';
+import {createViewSelectItems} from '../../../../core/store/views/view.utils';
+import {addDefaultDashboardTabsIfNotPresent} from '../../../utils/dashboard.utils';
 
 @Component({
   selector: 'tabs-settings-content',
@@ -37,6 +50,18 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   @Input()
   public initialTab: string;
 
+  @Input()
+  public selectedView: View;
+
+  @Input()
+  public editable: boolean;
+
+  @Input()
+  public dashboardViews: View[];
+
+  @Output()
+  public selectView = new EventEmitter<string>();
+
   public tabs$ = new BehaviorSubject<DashboardTab[]>(defaultDashboardTabs);
   public selectedTabId$ = new BehaviorSubject<string>(null);
   public draggedTabIdSubject$ = new BehaviorSubject(null);
@@ -47,6 +72,7 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   public tabsAreValid$: Observable<boolean>;
 
   public draggedTab: DashboardTab;
+  public viewSelectItems: SelectItemModel[];
 
   public ngOnInit() {
     this.selectedTabId$.next(this.initialTab);
@@ -59,6 +85,9 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.savedTabs) {
       this.setTabs(this.savedTabs);
+    }
+    if (changes.dashboardViews) {
+      this.viewSelectItems = createViewSelectItems(this.dashboardViews);
     }
   }
 
@@ -144,6 +173,13 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   public onDragLeave(tab: DashboardTab) {
     if (this.draggedTabIdSubject$.value === tab.id) {
       this.draggedTabIdSubject$.next(null);
+    }
+  }
+
+  public onCopy() {
+    if (this.selectedView) {
+      this.tabs$.next(addDefaultDashboardTabsIfNotPresent(this.selectedView.config?.search?.dashboard?.tabs));
+      this.selectView.next(null);
     }
   }
 }

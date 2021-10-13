@@ -7,16 +7,19 @@
                           [class.selected]="selectedColumn === index"
                           class="dashboard-cell cursor-pointer">
   </dashboard-cell-preview>
-  <i class="far fa-columns text-primary clickable" #columnsIcon (click)="layout.toggle()"></i>
-  <i class="fal fa-trash-alt text-danger clickable"
-     i18n-title="@@search.tabs.settings.dialog.row.delete"
-     title="Delete Row"
-     (click)="delete.emit()"></i>
+  <ng-container *ngIf="editable">
+    <i class="far fa-columns text-primary clickable" #columnsIcon (click)="layout.toggle()"></i>
+    <i class="fal fa-trash-alt text-danger clickable"
+       i18n-title="@@search.tabs.settings.dialog.row.delete"
+       title="Delete Row"
+       (click)="delete.emit()"></i>
+
+    <dashboard-row-layout #layout
+                          [origin]="columnsIcon"
+                          [showSelection]="true"
+                          [row]="row"
+                          (layoutSelected)="onLayoutSelected($event)">
+    </dashboard-row-layout>
+  </ng-container>
 </div>
 
-<dashboard-row-layout #layout
-                      [origin]="columnsIcon"
-                      [showSelection]="true"
-                      [row]="row"
-                      (layoutSelected)="onLayoutSelected($event)">
-</dashboard-row-layout>
