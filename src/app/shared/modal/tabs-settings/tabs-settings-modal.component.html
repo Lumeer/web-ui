@@ -5,6 +5,7 @@
                [submitDisabled]="content && !(content?.tabsAreValid$ | async)"
                [showSubmit]="data.buttonsData.showSaveButton || data.buttonsData.showSetButton"
                [showSecondarySubmit]="data.buttonsData.showSaveButton && data.buttonsData.showSetButton"
+               [secondaryInfo]="data.dashboardData | tabsSettingsSecondaryInfo"
                [performingSecondaryAction]="performingSecondaryAction$ | async"
                (onSubmit)="onSubmit(data.buttonsData, data.dashboardData)"
                (onSecondarySubmit)="onSecondarySubmit(data.dashboardData)"

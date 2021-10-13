@@ -31,7 +31,6 @@ import {combineLatest, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {
-  selectDefaultSearchPerspectiveDashboardTabs,
   selectDefaultViewConfig,
   selectDefaultViewConfigsLoaded,
   selectSearchPerspectiveTabs,

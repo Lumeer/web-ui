@@ -44,5 +44,8 @@
       <span *ngIf="performingSecondaryAction" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
       <ng-content select=".button-secondary-submit"></ng-content>
     </button>
+    <span *ngIf="secondaryInfo" class="float-right text-muted py-1" [class.mr-3]="showSubmit || showSecondarySubmit">
+      {{secondaryInfo}}
+    </span>
   </div>
 </div>

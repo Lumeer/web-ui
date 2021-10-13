@@ -47,6 +47,7 @@ import {DashboardActionConfigComponent} from './content/tab-settings/cell-settin
 import {PickerModule} from '../../picker/picker.module';
 import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {TabsSettingsSecondaryInfoPipe} from './pipes/tabs-settings-secondary-info.pipe';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     DashboardCellPreviewComponent,
     DashboardActionConfigComponent,
     IsTabSelectedPipe,
+    TabsSettingsSecondaryInfoPipe,
   ],
   imports: [
     CommonModule,

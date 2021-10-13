@@ -87,7 +87,7 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
         .pipe(
           startWith(undefined),
           pairwise(),
-          distinctUntilChanged(([previousViewId, currentViewId]) => previousViewId !== currentViewId)
+          distinctUntilChanged(([previousViewId, currentViewId]) => previousViewId === currentViewId)
         )
         .subscribe(([previousViewId, currentViewId]) => {
           if (currentViewId && (!previousViewId || previousViewId === this.selectedViewId$.value))
@@ -97,8 +97,12 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeTabs$(): Observable<DashboardTab[]> {
-    return this.dashboardData$.pipe(
-      switchMap(data => this.store$.pipe(select(selectSearchPerspectiveTabsByView(data.selectedView))))
+    return this.subscribeSelectedView$().pipe(
+      startWith(undefined),
+      pairwise(),
+      distinctUntilChanged(([previous, current]) => previous?.id === current?.id),
+      map(([, current]) => current),
+      switchMap(selectedView => this.store$.pipe(select(selectSearchPerspectiveTabsByView(selectedView)), take(1)))
     );
   }
 

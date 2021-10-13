@@ -1,6 +1,6 @@
 <div class="row mb-4" *ngIf="dashboardViews?.length">
   <label class="col-12" i18n="@@dashboard.tabs.settings.dialog.override.view.title">Select View with dashboard or leave empty for custom configuration</label>
-  <div class="col-12 col-lg-6">
+  <div class="col-12 col-lg-6 override-view">
     <select-item id="select"
                  [selectedId]="selectedView?.id"
                  [items]="viewSelectItems"
@@ -10,10 +10,13 @@
                  (selected)="selectView.emit($event)"
                  (remove)="selectView.emit(null)">
     </select-item>
+    <i class="far fa-copy text-primary clickable" (click)="onCopy()"
+       tooltip="Copy configuration to custom dashboard"
+       i18n-tooltip="@@search.tabs.settings.dialog.override.view.tooltip"></i>
   </div>
 
-  <div *ngIf="selectedView" class="mt-3 mx-3 text-muted" i18n="@@search.tabs.settings.dialog.override.view.warning">
-    Selected view is not editable. You can create <span class="text-success clickable" (click)="onCopy()">copy</span> and setup custom dashboard.
+  <div *ngIf="selectedView" class="col-12 mt-1 text-muted" i18n="@@search.tabs.settings.dialog.override.view.warning">
+    Selected view is not editable.
   </div>
 </div>
 
