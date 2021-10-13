@@ -399,7 +399,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context>
@@ -3733,7 +3733,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context>
@@ -4268,7 +4268,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/roles/roles.component.html</context>
@@ -5023,35 +5023,35 @@
         <source>Display as...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.background" datatype="html">
         <source>Choose background color</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.remove" datatype="html">
         <source>Remove option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.option.remove.disabled" datatype="html">
         <source>Cannot remove option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.add.option" datatype="html">
         <source>Add option</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.unique" datatype="html">
@@ -5059,7 +5059,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">106,108</context>
+          <context context-type="linenumber">103,105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.twoValues" datatype="html">
@@ -5067,7 +5067,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/select/options/select-constraint-options-form.component.html</context>
-          <context context-type="linenumber">112,114</context>
+          <context context-type="linenumber">109,111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.select.options.description" datatype="html">
@@ -5727,11 +5727,11 @@
         <source>Select View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/actions/action/dashboard-action-config.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/view/dashboard-view-config.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.cell.actions.title" datatype="html">
@@ -5745,7 +5745,7 @@
         <source>Add Action</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/actions/dashboard-actions-config.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.cell.title" datatype="html">
@@ -5763,18 +5763,26 @@
           <context context-type="linenumber">5,6</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="search.tabs.settings.dialog.cell.disabled.empty" datatype="html">
+        <source>Select an item from the dashboard preview to see its configuration.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/dashboard-cell-settings.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.cell.type.placeholder" datatype="html">
         <source>Select Item Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/dashboard-cell-settings.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.cell.type" datatype="html">
         <source>{type, select, view {View} image {Image}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/dashboard-cell-settings.component.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.config.image.title" datatype="html">
@@ -5788,21 +5796,21 @@
         <source>Scale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/image/dashboard-image-config.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.config.scale.fit" datatype="html">
         <source>Fit image within area and maintain its aspect ratio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/image/dashboard-image-config.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.config.scale.crop" datatype="html">
         <source>Crop image to fit area</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/cell-settings/image/dashboard-image-config.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboard.tabs.settings.dialog.title" datatype="html">
@@ -5816,7 +5824,7 @@
         <source>Show tab</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/dashboard-tab-settings.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.rows.title" datatype="html">
@@ -5827,17 +5835,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.rows.add" datatype="html">
-        <source>Add Row</source>
+        <source>Add a Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/dashboard-rows-settings.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="show" datatype="html">
+        <source>Show</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/row-settings/cell/dashboard-cell-preview.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.row.delete" datatype="html">
-        <source>Delete Row</source>
+        <source>Delete a Row</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab-settings/rows-settings/row-settings/dashboard-row-settings.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.tab.remove" datatype="html">
@@ -5851,21 +5866,49 @@
         <source>Hide tab</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab/dashboard-tab-badge.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.tab.show" datatype="html">
         <source>Show tab</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tab/dashboard-tab-badge.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.tabs.settings.dialog.override.view.title" datatype="html">
+        <source>Select an existing view to use its settings. Leave empty for your own configuration.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.tabs.settings.dialog.override.view.placeholder" datatype="html">
+        <source>Select View</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.tabs.settings.dialog.override.view.tooltip" datatype="html">
+        <source>Duplicate the configuration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.tabs.settings.dialog.override.view.warning" datatype="html">
+        <source> The dashboard cannot be updated when an existing view is selected above. If you want to update the settings, either dupliacte the settings, or remove the selection. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.add.tab" datatype="html">
         <source>Add a new tab</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.error.empty" datatype="html">
@@ -5873,21 +5916,39 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
-          <context context-type="linenumber">35,37</context>
+          <context context-type="linenumber">58,60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.tab.newName" datatype="html">
         <source>Custom Tab</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="search.tabs.settings.dialog.title" datatype="html">
-        <source>Setup Custom Dashboard</source>
+      <trans-unit id="search.tabs.settings.dialog.button.home.info" datatype="html">
+        <source>The view is set as a Home Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/pipes/tabs-settings-secondary-info.pipe.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.tabs.configuration.dialog.title" datatype="html">
+        <source>Dashboard Configuration</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.tabs.settings.dialog.button.home" datatype="html">
+        <source>Set as a Home Screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4be44482feb952b217f702aaf0bad3536a4d03ad" datatype="html">
@@ -9059,6 +9120,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.ts</context>
           <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="search.tabs.settings.button.title" datatype="html">
+        <source>Tabs and Dashboards Configuration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/search-perspective.component.html</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.link.expand" datatype="html">

@@ -1,5 +1,5 @@
 <div class="row mb-4" *ngIf="dashboardViews?.length">
-  <label class="col-12" i18n="@@dashboard.tabs.settings.dialog.override.view.title">Select View with dashboard or leave empty for custom configuration</label>
+  <label class="col-12" i18n="@@dashboard.tabs.settings.dialog.override.view.title">Select an existing view to use its settings. Leave empty for your own configuration.</label>
   <div class="col-12 col-lg-6 override-view">
     <select-item id="select"
                  [selectedId]="selectedView?.id"
@@ -11,12 +11,12 @@
                  (remove)="selectView.emit(null)">
     </select-item>
     <i *ngIf="selectedView" class="far fa-copy text-primary clickable" (click)="copySelectedView.emit()"
-       tooltip="Copy configuration to custom dashboard"
+       tooltip="Duplicate the configuration"
        i18n-tooltip="@@search.tabs.settings.dialog.override.view.tooltip"></i>
   </div>
 
   <div *ngIf="selectedView" class="col-12 mt-1 text-muted" i18n="@@search.tabs.settings.dialog.override.view.warning">
-    Selected view is not editable.
+    The dashboard cannot be updated when an existing view is selected above. If you want to update the settings, either dupliacte the settings, or remove the selection.
   </div>
 </div>
 

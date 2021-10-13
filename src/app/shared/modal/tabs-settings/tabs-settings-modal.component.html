@@ -11,7 +11,7 @@
                (onSecondarySubmit)="onSecondarySubmit(data.dashboardData)"
                (onClose)="hideDialog()">
 
-  <span class="title" i18n="@@search.tabs.settings.dialog.title">Setup Custom Dashboard</span>
+  <span class="title" i18n="@@search.tabs.configuration.dialog.title">Dashboard Configuration</span>
 
   <div class="body p-3">
     <tabs-settings-content [savedTabs]="tabs$ | async"
@@ -27,7 +27,7 @@
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
 
   <span *ngIf="data.buttonsData.showSaveButton" class="button-submit" i18n="@@button.save">Save</span>
-  <span *ngIf="data.buttonsData.showSaveButton && data.buttonsData.showSetButton" class="button-secondary-submit" i18n="@@search.tabs.settings.dialog.button.home">Set as Home Screen</span>
-  <span *ngIf="!data.buttonsData.showSaveButton && data.buttonsData.showSetButton" class="button-submit" i18n="@@search.tabs.settings.dialog.button.home">Set as Home Screen</span>
+  <span *ngIf="data.buttonsData.showSaveButton && data.buttonsData.showSetButton" class="button-secondary-submit" i18n="@@search.tabs.settings.dialog.button.home">Set as a Home Screen</span>
+  <span *ngIf="!data.buttonsData.showSaveButton && data.buttonsData.showSetButton" class="button-submit" i18n="@@search.tabs.settings.dialog.button.home">Set as a Home Screen</span>
 
 </modal-wrapper>

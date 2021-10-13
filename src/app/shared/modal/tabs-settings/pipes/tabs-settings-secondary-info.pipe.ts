@@ -26,7 +26,7 @@ import {View} from '../../../../core/store/views/view';
 export class TabsSettingsSecondaryInfoPipe implements PipeTransform {
   public transform(data: {currentView?: View; userDashboardView: View}): string {
     if (data.currentView && data.userDashboardView && data.currentView.id === data.userDashboardView.id) {
-      return $localize`:@@search.tabs.settings.dialog.button.home.info:View set as Home Screen`;
+      return $localize`:@@search.tabs.settings.dialog.button.home.info:The view is set as a Home Screen`;
     }
     return null;
   }
