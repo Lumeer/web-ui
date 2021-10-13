@@ -35,7 +35,6 @@ import {generateId} from '../../../utils/resource.utils';
 import {View} from '../../../../core/store/views/view';
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {createViewSelectItems} from '../../../../core/store/views/view.utils';
-import {addDefaultDashboardTabsIfNotPresent} from '../../../utils/dashboard.utils';
 
 @Component({
   selector: 'tabs-settings-content',
@@ -61,6 +60,9 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
 
   @Output()
   public selectView = new EventEmitter<string>();
+
+  @Output()
+  public copySelectedView = new EventEmitter();
 
   public tabs$ = new BehaviorSubject<DashboardTab[]>(defaultDashboardTabs);
   public selectedTabId$ = new BehaviorSubject<string>(null);
@@ -173,13 +175,6 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
   public onDragLeave(tab: DashboardTab) {
     if (this.draggedTabIdSubject$.value === tab.id) {
       this.draggedTabIdSubject$.next(null);
-    }
-  }
-
-  public onCopy() {
-    if (this.selectedView) {
-      this.tabs$.next(addDefaultDashboardTabsIfNotPresent(this.selectedView.config?.search?.dashboard?.tabs));
-      this.selectView.next(null);
     }
   }
 }

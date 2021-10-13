@@ -35,7 +35,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {createDashboardTabId, isViewValidForDashboard} from '../../utils/dashboard.utils';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {selectSearchConfigById} from '../../../core/store/searches/searches.state';
-import {distinctUntilChanged, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Dashboard, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {View} from '../../../core/store/views/view';
@@ -60,6 +60,7 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
 
   public readonly dialogType = DialogType;
 
+  private defaultConfig$ = new BehaviorSubject<SearchConfig>(null);
   public selectedViewId$ = new BehaviorSubject<string>(null);
   public performingAction$ = new BehaviorSubject(false);
   public performingSecondaryAction$ = new BehaviorSubject(false);
@@ -97,12 +98,15 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
   }
 
   private subscribeTabs$(): Observable<DashboardTab[]> {
-    return this.subscribeSelectedView$().pipe(
+    return this.selectedViewId$.pipe(
       startWith(undefined),
       pairwise(),
-      distinctUntilChanged(([previous, current]) => previous?.id === current?.id),
-      map(([, current]) => current),
-      switchMap(selectedView => this.store$.pipe(select(selectSearchPerspectiveTabsByView(selectedView)), take(1)))
+      distinctUntilChanged(),
+      switchMap(([, viewId]) => this.store$.pipe(select(selectViewById(viewId)), take(1))),
+      withLatestFrom(this.defaultConfig$),
+      switchMap(([selectedView, defaultConfig]) =>
+        this.store$.pipe(select(selectSearchPerspectiveTabsByView(selectedView, defaultConfig)), take(1))
+      )
     );
   }
 
@@ -171,16 +175,23 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
 
   private subscribeSelectedView$(): Observable<View> {
     return this.selectedViewId$.pipe(
-      switchMap(viewId => (viewId ? this.store$.pipe(select(selectViewById(viewId))) : of(null)))
+      switchMap(viewId => (viewId ? this.store$.pipe(select(selectViewById(viewId))) : of(undefined)))
     );
   }
 
   private subscribeUserDashboardView$(): Observable<View> {
     return this.store$.pipe(select(selectDefaultSearchPerspectiveDashboardViewId)).pipe(
       distinctUntilChanged(),
-      switchMap(viewId => (viewId ? this.store$.pipe(select(selectViewById(viewId))) : of(null))),
+      switchMap(viewId => (viewId ? this.store$.pipe(select(selectViewById(viewId))) : of(undefined))),
       map(view => (isViewValidForDashboard(view) ? view : null))
     );
+  }
+
+  public onCopy(data: DashboardData) {
+    if (data.selectedView) {
+      this.defaultConfig$.next(data.selectedView?.config?.search);
+      this.selectedViewId$.next(null);
+    }
   }
 
   public onSubmit(buttonsData: ButtonsData, dashboardData: DashboardData) {

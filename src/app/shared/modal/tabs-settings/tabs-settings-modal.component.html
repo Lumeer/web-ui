@@ -19,7 +19,8 @@
                            [selectedView]="data.dashboardData.selectedView"
                            [editable]="data.buttonsData.showSaveButton"
                            [initialTab]="initialTab"
-                           (selectView)="selectedViewId$.next($event)">
+                           (selectView)="selectedViewId$.next($event)"
+                           (copySelectedView)="onCopy(data.dashboardData)">
     </tabs-settings-content>
   </div>
 

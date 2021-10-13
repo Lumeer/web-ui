@@ -10,7 +10,7 @@
                  (selected)="selectView.emit($event)"
                  (remove)="selectView.emit(null)">
     </select-item>
-    <i class="far fa-copy text-primary clickable" (click)="onCopy()"
+    <i *ngIf="selectedView" class="far fa-copy text-primary clickable" (click)="copySelectedView.emit()"
        tooltip="Copy configuration to custom dashboard"
        i18n-tooltip="@@search.tabs.settings.dialog.override.view.tooltip"></i>
   </div>

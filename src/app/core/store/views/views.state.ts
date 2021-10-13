@@ -49,6 +49,7 @@ import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
+import {SearchConfig} from '../searches/search';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -272,7 +273,7 @@ export const selectSearchPerspectiveTabs = createSelector(
   }
 );
 
-export const selectSearchPerspectiveTabsByView = (view: View) =>
+export const selectSearchPerspectiveTabsByView = (view: View, defaultConfig?: SearchConfig) =>
   createSelector(selectDefaultSearchPerspectiveDashboardTabs, selectSearchesDictionary, (defaultTabs, searchesMap) => {
     if (isViewValidForDashboard(view)) {
       const search = searchesMap[view.code];
@@ -282,7 +283,7 @@ export const selectSearchPerspectiveTabsByView = (view: View) =>
       return createSearchPerspectiveTabsByView(view, defaultTabs);
     }
 
-    return createSearchPerspectiveTabs(searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
+    return createSearchPerspectiveTabs(defaultConfig || searchesMap[DEFAULT_PERSPECTIVE_ID]?.config, defaultTabs);
   });
 
 export const selectSearchPerspectiveVisibleTabs = createSelector(selectSearchPerspectiveTabs, tabs =>
