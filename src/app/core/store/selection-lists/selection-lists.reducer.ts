@@ -27,7 +27,7 @@ export function selectionListsReducer(
   switch (action.type) {
     case SelectionListsActionType.GET_SUCCESS:
       return {
-        ...selectionListsAdapter.upsertMany(action.payload.lists, state),
+        ...selectionListsAdapter.addMany(action.payload.lists, state),
         loadedForOrganizationId: action.payload.organizationId,
       };
     case SelectionListsActionType.GET_BY_PROJECT_SUCCESS:

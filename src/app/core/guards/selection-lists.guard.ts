@@ -45,13 +45,13 @@ export class SelectionListsGuard implements Resolve<SelectionList[]> {
         if (!organization) {
           return of([]);
         }
-        return this.selectGroupsForOrganization(organization);
+        return this.selectSelectionListsForOrganization(organization);
       }),
       first()
     );
   }
 
-  private selectGroupsForOrganization(organization: Organization): Observable<SelectionList[]> {
+  private selectSelectionListsForOrganization(organization: Organization): Observable<SelectionList[]> {
     return this.store$.select(selectSelectionListsLoaded(organization.id)).pipe(
       tap(loaded => {
         if (!loaded) {

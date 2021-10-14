@@ -37,7 +37,7 @@ export class SelectionListsEffects {
     this.actions$.pipe(
       ofType<SelectionListsAction.Get>(SelectionListsActionType.GET),
       withLatestFrom(this.store$.pipe(select(selectSelectionListsLoadedOrganization))),
-      filter(([, loaded]) => !loaded),
+      filter(([action, loadedOrganization]) => loadedOrganization !== action.payload.organizationId),
       mergeMap(([action]) =>
         this.service.get(action.payload.organizationId).pipe(
           map(dtos => dtos.map(dto => convertSelectionListDtoToModel(dto))),
