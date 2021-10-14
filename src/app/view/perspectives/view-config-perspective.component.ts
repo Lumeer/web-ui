@@ -25,7 +25,7 @@ import {Query} from '../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCurrentView, selectViewQuery} from '../../core/store/views/views.state';
-import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {DefaultViewConfig, View, ViewConfig} from '../../core/store/views/view';
 import {
   selectCollectionsByCustomViewAndQuery,
@@ -33,6 +33,7 @@ import {
 } from '../../core/store/common/permissions.selectors';
 import {preferViewConfigUpdate} from '../../core/store/views/view.utils';
 import {DEFAULT_PERSPECTIVE_ID} from './perspective';
+import {selectNavigatingToOtherWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Injectable()
 export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDestroy {
@@ -92,7 +93,10 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
         pairwise(),
         switchMap(([previousView, view]) =>
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
+        ),
+        withLatestFrom(this.store$.pipe(select(selectNavigatingToOtherWorkspace))),
+        filter(([, navigating]) => !navigating),
+        map(([data]) => data)
       )
       .subscribe(({perspectiveId, config}: {perspectiveId?: string; config?: T}) => {
         if (perspectiveId) {

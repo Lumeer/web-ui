@@ -73,6 +73,7 @@ import {DataQuery} from '../../../core/model/data-query';
 import {defaultTablePerspectiveConfiguration, TablePerspectiveConfiguration} from '../perspective-configuration';
 import {clickedInsideElement} from '../../../shared/utils/html-modifier';
 import {generateId} from '../../../shared/utils/resource.utils';
+import {selectNavigatingToOtherWorkspace} from '../../../core/store/navigation/navigation.state';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -310,7 +311,10 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         pairwise(),
         switchMap(([previousView, view]) =>
           view ? this.initTableWithView(previousView, view) : this.initTableDefaultView()
-        )
+        ),
+        withLatestFrom(this.store$.pipe(select(selectNavigatingToOtherWorkspace))),
+        filter(([, navigating]) => !navigating),
+        map(([data]) => data)
       )
       .subscribe(({query, view, config, tableId, forceRefresh}) => {
         this.setElementId(tableId);

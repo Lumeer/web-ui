@@ -24,6 +24,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {
   NavigationState,
+  selectNavigatingToOtherWorkspace,
   selectNavigation,
   selectPerspectiveSettings,
   selectSearchTab,
@@ -115,7 +116,10 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         pairwise(),
         switchMap(([previousView, view]) =>
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
-        )
+        ),
+        withLatestFrom(this.store$.pipe(select(selectNavigatingToOtherWorkspace))),
+        filter(([, navigating]) => !navigating),
+        map(([data]) => data)
       )
       .subscribe(({searchId, config, view}: {searchId?: string; config?: SearchConfig; view?: View}) => {
         if (searchId) {
