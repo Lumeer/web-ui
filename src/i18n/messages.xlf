@@ -5898,7 +5898,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="search.tabs.settings.dialog.override.view.warning" datatype="html">
-        <source> The dashboard cannot be updated when an existing view is selected above. If you want to update the settings, either dupliacte the settings, or remove the selection. </source>
+        <source> The dashboard cannot be updated when an existing view is selected above. If you want to update the settings, either duplicate the settings, or remove the selection. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/tabs-settings/content/tabs-settings-content.component.html</context>
           <context context-type="linenumber">18,20</context>

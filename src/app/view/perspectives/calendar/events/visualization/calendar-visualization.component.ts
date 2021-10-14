@@ -20,6 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -105,6 +106,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     resourceTimeGridPlugin,
   ];
   public readonly buttonText: ButtonTextCompoundInput = {};
+  public readonly shortButtonText: ButtonTextCompoundInput = {};
   public readonly allDayText: string;
   public readonly moreText: string;
   public readonly noEventsText: string;
@@ -134,7 +136,7 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private setupInitialDate = true;
 
-  constructor(private configurationService: ConfigurationService) {
+  constructor(private configurationService: ConfigurationService, private element: ElementRef) {
     this.locale = configurationService.getConfiguration().locale;
     this.calendarText = $localize`:@@perspective.calendar.display.calendar:Calendar`;
     this.listText = $localize`:@@perspective.calendar.display.list:List`;
@@ -146,6 +148,12 @@ export class CalendarVisualizationComponent implements OnChanges {
       month: $localize`:@@perspective.calendar.header.month:Month`,
       week: $localize`:@@perspective.calendar.header.week:Week`,
       day: $localize`:@@perspective.calendar.header.day:Day`,
+    };
+    this.shortButtonText = {
+      ...this.buttonText,
+      month: this.buttonText.month.substring(0, 1),
+      week: this.buttonText.week.substring(0, 1),
+      day: this.buttonText.day.substring(0, 1),
     };
     this.listCustomButtons = {
       calendarToggle: {
@@ -195,18 +203,20 @@ export class CalendarVisualizationComponent implements OnChanges {
   }
 
   private createCalendarOptions() {
+    const elementWith = this.element?.nativeElement?.offsetWidth || Number.MAX_SAFE_INTEGER;
     this.calendarOptions = {
       schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       initialView: this.defaultView,
       initialDate: this.defaultDate,
       events: this.events,
       plugins: this.calendarPlugins,
+      titleFormat: elementWith < 500 ? {year: '2-digit', month: 'short'} : null,
       navLinks: true,
       selectable: this.canCreateEvents,
       customButtons: this.list ? this.listCustomButtons : this.calendarCustomButtons,
       locale: this.locale,
       firstDay: moment.localeData(this.locale).firstDayOfWeek(),
-      buttonText: this.buttonText,
+      buttonText: elementWith < 500 ? this.shortButtonText : this.buttonText,
       allDayText: this.allDayText,
       noEventsText: this.noEventsText,
       height: 'auto',

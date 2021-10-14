@@ -83,13 +83,8 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
 
   private subscribeInitialSelectedView() {
     this.subscriptions.add(
-      this.store$
-        .pipe(select(selectDefaultSearchPerspectiveDashboardViewId))
-        .pipe(
-          startWith(undefined),
-          pairwise(),
-          distinctUntilChanged(([previousViewId, currentViewId]) => previousViewId === currentViewId)
-        )
+      this.subscribeToInitialViewId$()
+        .pipe(startWith(undefined), pairwise())
         .subscribe(([previousViewId, currentViewId]) => {
           if (currentViewId && (!previousViewId || previousViewId === this.selectedViewId$.value))
             this.selectedViewId$.next(currentViewId);
@@ -97,12 +92,23 @@ export class TabsSettingsModalComponent implements OnInit, OnDestroy {
     );
   }
 
+  private subscribeToInitialViewId$(): Observable<string> {
+    return this.store$.pipe(
+      select(selectCurrentView),
+      switchMap(view => {
+        if (view?.id) {
+          return of(view?.id);
+        }
+        return this.store$.pipe(select(selectDefaultSearchPerspectiveDashboardViewId));
+      }),
+      distinctUntilChanged()
+    );
+  }
+
   private subscribeTabs$(): Observable<DashboardTab[]> {
     return this.selectedViewId$.pipe(
-      startWith(undefined),
-      pairwise(),
       distinctUntilChanged(),
-      switchMap(([, viewId]) => this.store$.pipe(select(selectViewById(viewId)), take(1))),
+      switchMap(viewId => this.store$.pipe(select(selectViewById(viewId)), take(1))),
       withLatestFrom(this.defaultConfig$),
       switchMap(([selectedView, defaultConfig]) =>
         this.store$.pipe(select(selectSearchPerspectiveTabsByView(selectedView, defaultConfig)), take(1))
