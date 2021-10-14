@@ -22,10 +22,9 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {DashboardTab} from '../../../../core/model/dashboard-tab';
 import {combineLatest, Observable} from 'rxjs';
-import {Dashboard} from '../../../../core/store/searches/search';
-import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
 import {map} from 'rxjs/operators';
 import {selectSearchTab} from '../../../../core/store/navigation/navigation.state';
+import {selectSearchPerspectiveVisibleTabs} from '../../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './dashboard-tab.component.html',
@@ -37,15 +36,9 @@ export class DashboardTabComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.dashboardTab$ = combineLatest([this.store$.pipe(select(selectSearchTab)), this.selectDashboard$()]).pipe(
-      map(([tabId, dashboard]) => dashboard?.tabs?.find(tab => tab.id === tabId))
-    );
-  }
-
-  private selectDashboard$(): Observable<Dashboard> {
-    return this.store$.pipe(
-      select(selectSearchConfig),
-      map(config => config?.dashboard)
-    );
+    this.dashboardTab$ = combineLatest([
+      this.store$.pipe(select(selectSearchTab)),
+      this.store$.pipe(select(selectSearchPerspectiveVisibleTabs)),
+    ]).pipe(map(([tabId, tabs]) => tabs?.find(tab => tab.id === tabId)));
   }
 }

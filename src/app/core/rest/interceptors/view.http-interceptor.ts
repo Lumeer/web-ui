@@ -41,7 +41,7 @@ export class ViewHttpInterceptor implements HttpInterceptor {
     return this.store.select(selectWorkspaceWithIds).pipe(
       first(),
       mergeMap(workspace => {
-        if (workspace?.viewId) {
+        if (workspace?.viewId && !request.headers.get(viewIdHeader)) {
           const viewRequest = request.clone({
             setHeaders: {[viewIdHeader]: workspace.viewId},
           });

@@ -1,18 +1,22 @@
 <div class="action">
-  <i class="fa-fw" [ngClass]="icon$ | async" [style.color]="color$ | async"
-     #pickerOrigin (click)="pickerComponent.toggle()">
+  <i class="fa-fw" #pickerOrigin
+     [class.cursor-pointer]="editable"
+     [ngClass]="icon$ | async"
+     [style.color]="color$ | async"
+     (click)="editable && pickerComponent.toggle()">
   </i>
 
   <select-item id="select"
                [selectedId]="action.config?.viewId"
                [items]="viewSelectItems"
                [removable]="false"
+               [disabled]="!editable"
                i18n-emptyValue="@@search.tabs.settings.dialog.config.view.placeholder"
                emptyValue="Select View"
                (selected)="onViewSelected($event)">
   </select-item>
 
-  <i class="fal fa-trash-alt text-danger clickable" (click)="remove.emit()"></i>
+  <i *ngIf="editable" class="fal fa-trash-alt text-danger clickable" (click)="remove.emit()"></i>
 
 </div>
 

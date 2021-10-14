@@ -1,4 +1,26 @@
-<div class="tabs-content ">
+<div class="row mb-4" *ngIf="dashboardViews?.length">
+  <label class="col-12" i18n="@@dashboard.tabs.settings.dialog.override.view.title">Select an existing view to use its settings. Leave empty for your own configuration.</label>
+  <div class="col-12 col-lg-6 override-view">
+    <select-item id="select"
+                 [selectedId]="selectedView?.id"
+                 [items]="viewSelectItems"
+                 [removable]="true"
+                 i18n-emptyValue="@@search.tabs.settings.dialog.override.view.placeholder"
+                 emptyValue="Select View"
+                 (selected)="selectView.emit($event)"
+                 (remove)="selectView.emit(null)">
+    </select-item>
+    <i *ngIf="selectedView" class="far fa-copy text-primary clickable" (click)="copySelectedView.emit()"
+       tooltip="Duplicate the configuration"
+       i18n-tooltip="@@search.tabs.settings.dialog.override.view.tooltip"></i>
+  </div>
+
+  <div *ngIf="selectedView" class="col-12 mt-1 text-muted" i18n="@@search.tabs.settings.dialog.override.view.warning">
+    The dashboard cannot be updated when an existing view is selected above. If you want to update the settings, either duplicate the settings, or remove the selection.
+  </div>
+</div>
+
+<div class="tabs-content">
 
   <div class="d-flex flex-wrap align-items-center tabs-list">
 
@@ -6,7 +28,7 @@
          [class.mr-2]="last"
          [class.mr-1]="!last"
          [class.dragging]="(draggedTabId$ | async) === tab.id"
-         [draggable]="true"
+         [draggable]="editable"
          (dragstart)="onDragStart(tab)"
          (dragend)="onDragEnd()"
          (dragover)="$event.preventDefault()"
@@ -16,6 +38,7 @@
       <dashboard-tab-badge [tab]="tab"
                            [selected]="tab | isTabSelected:(selectedTabId$ | async)"
                            (remove)="removeTab(index)"
+                           [editable]="editable"
                            (toggleHidden)="toggleHiddenTab(index)"
                            (click)="selectTab(tab)">
       </dashboard-tab-badge>
@@ -23,7 +46,7 @@
     </div>
   </div>
 
-  <div class="px-2 text-primary clickable d-flex align-items-center"
+  <div *ngIf="editable" class="px-2 text-primary clickable d-flex align-items-center"
        tooltip="Add a new tab"
        i18n-tooltip="@@search.tabs.settings.dialog.add.tab"
        (click)="addTab()">
@@ -32,13 +55,14 @@
 
 </div>
 
-<div class="alert alert-danger mt-3" *ngIf="!(tabsAreValid$ | async)" i18n="@@search.tabs.settings.dialog.error.empty">
+<div class="alert alert-danger mt-3" *ngIf="editable && !(tabsAreValid$ | async)" i18n="@@search.tabs.settings.dialog.error.empty">
   There must be at least one visible tab in the dashboard.
 </div>
 
 <hr>
 
 <dashboard-tab-settings *ngIf="selectedTab$ | async as selectedTab"
+                        [editable]="editable"
                         [tab]="selectedTab"
                         (tabChange)="onSelectedTabChange($event)">
 </dashboard-tab-settings>

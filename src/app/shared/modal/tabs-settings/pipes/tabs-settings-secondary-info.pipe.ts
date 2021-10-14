@@ -17,28 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {RoleType, roleTypesMap} from './role-type';
+import {Pipe, PipeTransform} from '@angular/core';
+import {View} from '../../../../core/store/views/view';
 
-export interface AllowedPermissions {
-  roles?: Record<RoleType, boolean>;
-  rolesWithView?: Record<RoleType, boolean>;
-}
-
-export type AllowedPermissionsMap = Record<string, AllowedPermissions>;
-
-export interface ResourcesPermissions {
-  collections: AllowedPermissionsMap;
-  linkTypes: AllowedPermissionsMap;
-}
-
-export const completeAllowedPermissions: AllowedPermissions = {
-  roles: transformRoleTypesMap(),
-  rolesWithView: transformRoleTypesMap(),
-};
-
-function transformRoleTypesMap(): Record<RoleType, boolean> {
-  return Object.keys(roleTypesMap).reduce((map, key) => {
-    map[key] = true;
-    return map;
-  }, {} as Record<RoleType, boolean>);
+@Pipe({
+  name: 'tabsSettingsSecondaryInfo',
+})
+export class TabsSettingsSecondaryInfoPipe implements PipeTransform {
+  public transform(data: {currentView?: View; userDashboardView: View}): string {
+    if (data.currentView && data.userDashboardView && data.currentView.id === data.userDashboardView.id) {
+      return $localize`:@@search.tabs.settings.dialog.button.home.info:The view is set as a Home Screen`;
+    }
+    return null;
+  }
 }

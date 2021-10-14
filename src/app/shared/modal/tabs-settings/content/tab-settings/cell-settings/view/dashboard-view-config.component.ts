@@ -35,6 +35,9 @@ export class DashboardViewConfigComponent implements OnChanges {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public configChange = new EventEmitter<DashboardViewCellConfig>();
 

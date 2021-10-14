@@ -4,11 +4,12 @@
                          class="mb-1 d-block"
                          [action]="action"
                          [views]="views"
+                         [editable]="editable"
                          (actionChange)="onActionChange($event, index)"
                          (remove)="onActionRemove(index)">
 </dashboard-action-config>
 
-<button class="btn btn-outline-primary mt-1 align-self-center" (click)="onAdd()">
+<button *ngIf="editable" class="btn btn-outline-primary mt-1 align-self-center" (click)="onAdd()">
   <i class="far fa-plus mr-2"></i>
   <span i18n="@@search.tabs.settings.dialog.cell.actions.button">Add Action</span>
 </button>

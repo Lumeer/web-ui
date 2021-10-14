@@ -29,6 +29,7 @@ import {SearchPerspectiveComponent} from './search-perspective.component';
 import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
 import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
 import {DashboardModule} from '../dashboard/dashboard.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import {DashboardModule} from '../dashboard/dashboard.module';
     CreateDocumentModalModule,
     DragDropModule,
     DashboardModule,
+    TooltipModule,
   ],
   declarations: [SearchPerspectiveComponent],
   exports: [SearchPerspectiveComponent],

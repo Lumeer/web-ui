@@ -41,6 +41,9 @@ export class DashboardCellPreviewComponent implements OnChanges {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   public url: string;
   public scale: DashboardImageScaleType;
   public view: View;

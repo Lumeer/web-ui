@@ -8,7 +8,10 @@
            class="nav-link">{{tab.title}}</a>
       </li>
     </ul>
-    <i class="fas fa-cog text-primary clickable" (click)="onSettingsClick()"></i>
+    <i class="fas fa-cog text-primary clickable mr-2 py-3" tooltip="Tabs and Dashboards Configuration"
+       i18n-tooltip="@@search.tabs.settings.button.title" placement="start"
+       (click)="onSettingsClick()">
+    </i>
   </div>
   <router-outlet></router-outlet>
 </div>

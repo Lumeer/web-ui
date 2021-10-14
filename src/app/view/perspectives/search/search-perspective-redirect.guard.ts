@@ -31,9 +31,9 @@ import {combineLatest, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {
-  selectDefaultSearchPerspectiveTabs,
   selectDefaultViewConfig,
   selectDefaultViewConfigsLoaded,
+  selectSearchPerspectiveTabs,
   selectViewByCode,
   selectViewsLoaded,
 } from '../../../core/store/views/views.state';
@@ -146,7 +146,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
   ): Observable<{view: View; tabs: DashboardTab[]}> {
     return this.selectViewsByCode$(organization, project, viewCode).pipe(
       withLatestFrom(
-        this.store$.pipe(select(selectDefaultSearchPerspectiveTabs)),
+        this.store$.pipe(select(selectSearchPerspectiveTabs)),
         this.store$.pipe(select(selectSearchConfigById(viewCode || DEFAULT_PERSPECTIVE_ID)))
       ),
       map(([view, defaultTabs, searchConfig]) => ({

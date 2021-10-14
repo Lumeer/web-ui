@@ -37,6 +37,9 @@ export class DashboardActionConfigComponent implements OnChanges {
   @Input()
   public views: View[];
 
+  @Input()
+  public editable: boolean;
+
   @Output()
   public actionChange = new EventEmitter<DashboardAction>();
 

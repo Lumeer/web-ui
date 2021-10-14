@@ -1,19 +1,33 @@
 <modal-wrapper class="d-block"
+               *ngIf="{dashboardData: dashboardData$ | async, buttonsData: buttonsData$ | async} as data"
                [dialogType]="dialogType.Primary"
                [performingAction]="performingAction$ | async"
                [submitDisabled]="content && !(content?.tabsAreValid$ | async)"
-               (onSubmit)="onSubmit()"
+               [showSubmit]="data.buttonsData.showSaveButton || data.buttonsData.showSetButton"
+               [showSecondarySubmit]="data.buttonsData.showSaveButton && data.buttonsData.showSetButton"
+               [secondaryInfo]="data.dashboardData | tabsSettingsSecondaryInfo"
+               [performingSecondaryAction]="performingSecondaryAction$ | async"
+               (onSubmit)="onSubmit(data.buttonsData, data.dashboardData)"
+               (onSecondarySubmit)="onSecondarySubmit(data.dashboardData)"
                (onClose)="hideDialog()">
 
-  <span class="title" i18n="@@search.tabs.settings.dialog.title">Setup Custom Dashboard</span>
+  <span class="title" i18n="@@search.tabs.configuration.dialog.title">Dashboard Configuration</span>
 
   <div class="body p-3">
     <tabs-settings-content [savedTabs]="tabs$ | async"
-                           [initialTab]="initialTab">
+                           [dashboardViews]="data.dashboardData.dashboardViews"
+                           [selectedView]="data.dashboardData.selectedView"
+                           [editable]="data.buttonsData.showSaveButton"
+                           [initialTab]="initialTab"
+                           (selectView)="selectedViewId$.next($event)"
+                           (copySelectedView)="onCopy(data.dashboardData)">
     </tabs-settings-content>
   </div>
 
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
-  <span class="button-submit" i18n="@@button.save">Save</span>
+
+  <span *ngIf="data.buttonsData.showSaveButton" class="button-submit" i18n="@@button.save">Save</span>
+  <span *ngIf="data.buttonsData.showSaveButton && data.buttonsData.showSetButton" class="button-secondary-submit" i18n="@@search.tabs.settings.dialog.button.home">Set as a Home Screen</span>
+  <span *ngIf="!data.buttonsData.showSaveButton && data.buttonsData.showSetButton" class="button-submit" i18n="@@search.tabs.settings.dialog.button.home">Set as a Home Screen</span>
 
 </modal-wrapper>

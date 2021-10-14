@@ -3,4 +3,8 @@
   grid-template-columns: min-content 1fr min-content;
   grid-gap: 0.5rem;
   align-items: center;
+
+  &.disabled {
+    grid-template-columns: min-content 1fr;
+  }
 }
