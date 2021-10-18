@@ -58,6 +58,7 @@ import {DataResourcePermissions} from '../../../../../../../../core/model/data-r
 import {View} from '../../../../../../../../core/store/views/view';
 import {selectLinkTypesPermissionsByView} from '../../../../../../../../core/store/common/permissions.selectors';
 import {Workspace} from '../../../../../../../../core/store/navigation/workspace';
+import {selectViewSettings} from '../../../../../../../../core/store/view-settings/view-settings.state';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -306,12 +307,22 @@ export class TableDataCellMenuComponent implements OnChanges {
   public onUpdateLinks() {
     const linkTypeId = this.tableParts?.[this.cursor.partIndex + 1]?.linkTypeId;
     if (this.document && linkTypeId) {
-      this.modalService.showModifyDocumentLinks(
-        this.document.id,
-        this.document.collectionId,
-        linkTypeId,
-        this.workspace()
-      );
+      this.store$
+        .pipe(
+          select(selectViewSettings),
+          map(settings => settings?.attributes),
+          take(1)
+        )
+        .subscribe(attributesSettings => {
+          this.modalService.showModifyDocumentLinks(
+            this.document.id,
+            this.document.collectionId,
+            linkTypeId,
+            this.workspace(),
+            attributesSettings?.collections?.[this.document.collectionId],
+            attributesSettings?.linkTypes
+          );
+        });
     }
   }
 

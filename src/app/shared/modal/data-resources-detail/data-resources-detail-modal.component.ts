@@ -25,12 +25,12 @@ import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
 import {map, switchMap} from 'rxjs/operators';
-import {selectAllCollections, selectCollectionsByIds} from '../../../core/store/collections/collections.state';
+import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {uniqueValues} from '../../utils/array.utils';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
-import {getDataResourcesDataIds} from '../../utils/data-resource.utils';
-import {selectAllLinkTypes, selectLinkTypeByIdsWithCollections} from '../../../core/store/link-types/link-types.state';
+import {getDataResourcesDataIds, sortDataResourcesByViewSettings} from '../../utils/data-resource.utils';
+import {selectLinkTypeByIdsWithCollections} from '../../../core/store/link-types/link-types.state';
 import {attributesResourcesAreSame, getAttributesResourceType} from '../../utils/resource.utils';
 import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
@@ -38,9 +38,9 @@ import {selectLinkInstancesByIds} from '../../../core/store/link-instances/link-
 import {groupLinkInstancesByLinkTypes} from '../../../core/store/link-instances/link-instance.utils';
 import {enterLeftAnimation, enterRightAnimation} from '../../animations';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectViewQuery} from '../../../core/store/views/views.state';
 import {keyboardEventCode, KeyCode} from '../../key-code';
-import {createFlatResourcesSettingsQuery} from '../../../core/store/details/detail.utils';
+import {ViewSettings} from '../../../core/store/views/view';
+import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 
 @Component({
   templateUrl: './data-resources-detail-modal.component.html',
@@ -69,6 +69,7 @@ export class DataResourcesDetailModalComponent implements OnInit {
   public dataResources$: Observable<DataResource[]>;
   public constraintData$: Observable<ConstraintData>;
   public query$: Observable<Query>;
+  public viewSettings$: Observable<ViewSettings>;
 
   public readonly dialogType = DialogType;
 
@@ -83,6 +84,7 @@ export class DataResourcesDetailModalComponent implements OnInit {
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.initialModalsCount = this.bsModalService.getModalsCount();
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
 
     const {documentIds: allDocumentIds, linkInstanceIds: allLinkInstanceIds} = getDataResourcesDataIds(
       this.dataResources
@@ -132,12 +134,35 @@ export class DataResourcesDetailModalComponent implements OnInit {
       )
     );
 
-    this.dataResources$ = this.selectedResource$.pipe(
-      switchMap(resource => {
+    this.dataResources$ = combineLatest([this.selectedResource$, this.viewSettings$, this.constraintData$]).pipe(
+      switchMap(([resource, viewSettings, constraintData]) => {
+        const resourceMap = {[resource?.id]: resource};
         if (resource && getAttributesResourceType(resource) === AttributesResourceType.Collection) {
-          return documentsMap$.pipe(map(documentsMap => documentsMap[resource.id]));
+          return documentsMap$.pipe(
+            map(documentsMap => documentsMap[resource.id]),
+            map(documents =>
+              sortDataResourcesByViewSettings(
+                documents,
+                resourceMap,
+                AttributesResourceType.Collection,
+                viewSettings?.attributes,
+                constraintData
+              )
+            )
+          );
         } else if (resource) {
-          return linkInstancesMap$.pipe(map(linkInstancesMap => linkInstancesMap[resource.id]));
+          return linkInstancesMap$.pipe(
+            map(linkInstancesMap => linkInstancesMap[resource.id]),
+            map(linkInstances =>
+              sortDataResourcesByViewSettings(
+                linkInstances,
+                resourceMap,
+                AttributesResourceType.LinkType,
+                viewSettings?.attributes,
+                constraintData
+              )
+            )
+          );
         }
         return of([]);
       })

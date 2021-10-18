@@ -19,6 +19,7 @@
                               [showDuplicates]="showDuplicates$ | async"
                               [hasDuplicates]="hasDuplicates"
                               [selectedResource]="selectedResource$ | async"
+                              [viewSettings]="viewSettings$ | async"
                               (selectDataResource)="onSelectDataResource($event)"
                               (selectResource)="onSelectResource($event)"
                               (showDuplicatesChange)="showDuplicates$.next($event)">

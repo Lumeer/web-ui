@@ -36,9 +36,14 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {objectsByIdMap, objectValues} from '../../../utils/common.utils';
 import {isResultRowChecked} from './pipes/is-result-row-checked.pipe';
-import {View} from '../../../../core/store/views/view';
+import {ResourceAttributeSettings, View} from '../../../../core/store/views/view';
+import {
+  filterVisibleAttributesByResourceSettings,
+  filterVisibleAttributesBySettings,
+} from '../../../utils/attribute.utils';
+import {sortDataObjectsByResourceAttributesSettings} from '../../../utils/data-resource.utils';
 
-export type ResultTableRow = {document: DocumentModel; linkInstance: LinkInstance};
+export type ResultTableRow = {document: DocumentModel; linkInstance?: LinkInstance};
 
 @Component({
   selector: 'results-table',
@@ -67,6 +72,12 @@ export class ResultsTableComponent implements OnChanges {
 
   @Input()
   public view: View;
+
+  @Input()
+  public collectionAttributesSettings: ResourceAttributeSettings[];
+
+  @Input()
+  public linkTypesAttributesSettings: Record<string, ResourceAttributeSettings[]>;
 
   @Input()
   public removedLinkInstancesIds: string[];
@@ -103,15 +114,36 @@ export class ResultsTableComponent implements OnChanges {
 
   public rows: ResultTableRow[];
   public isAllChecked: boolean;
+  public collectionAttributes: Attribute[] = [];
+  public linkTypeAttributes: Attribute[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.linkInstances) {
+    let sortRows = false;
+    if (
+      changes.collection ||
+      changes.linkType ||
+      changes.constraintData ||
+      changes.collectionAttributesSettings ||
+      changes.linkTypesAttributesSettings
+    ) {
+      sortRows = true;
+    }
+    if (changes.documents || changes.linkInstances || sortRows) {
       this.rows = this.createRows();
     }
     if (changes.documents || changes.linkInstances || changes.removedLinkInstancesIds || changes.selectedDocumentIds) {
       this.isAllChecked = this.rows.every(row =>
         isResultRowChecked(row, this.removedLinkInstancesIds, this.selectedDocumentIds)
       );
+    }
+    if (changes.collection || changes.collectionAttributesSettings) {
+      this.collectionAttributes = filterVisibleAttributesByResourceSettings(
+        this.collection,
+        this.collectionAttributesSettings
+      );
+    }
+    if (changes.linkType || changes.linkTypesAttributesSettings) {
+      this.linkTypeAttributes = filterVisibleAttributesBySettings(this.linkType, this.linkTypesAttributesSettings);
     }
   }
 
@@ -129,7 +161,18 @@ export class ResultsTableComponent implements OnChanges {
       }
     }
 
-    return [...rows, ...objectValues(documentsMap).map(document => ({document}))];
+    return [...this.sortRows(rows), ...this.sortRows(objectValues(documentsMap).map(document => ({document})))];
+  }
+
+  private sortRows(rows: ResultTableRow[]): ResultTableRow[] {
+    return sortDataObjectsByResourceAttributesSettings(
+      rows,
+      this.collection,
+      this.linkType,
+      this.collectionAttributesSettings,
+      this.linkTypesAttributesSettings?.[this.linkType?.id],
+      this.constraintData
+    );
   }
 
   public toggleRow(row: ResultTableRow) {

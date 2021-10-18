@@ -27,6 +27,7 @@
                              [dataResources]="data.documents | documentsByCollection:data.selectedCollectionId"
                              [resource]="data.collections | collectionById:data.selectedCollectionId"
                              [selectedId]="selectedDocumentId$ | async"
+                             [attributesSettings]="(viewSettings$ | async)?.attributes"
                              [view]="view$ | async"
                              [loaded]="true"
                              [resizeable]="false"

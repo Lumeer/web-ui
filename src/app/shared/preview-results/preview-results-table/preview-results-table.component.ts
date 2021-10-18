@@ -35,11 +35,10 @@ import {Attribute, Collection} from '../../../core/store/collections/collection'
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings, View} from '../../../core/store/views/view';
-import {createAttributesSettingsOrder} from '../../settings/settings.util';
-import {objectsByIdMap} from '../../utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {shadeColor} from '../../utils/html-modifier';
+import {filterVisibleAttributesBySettings} from '../../utils/attribute.utils';
 
 const PAGE_SIZE = 100;
 
@@ -98,7 +97,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resource || changes.attributesSettings) {
-      this.attributes = this.createAttributes();
+      this.attributes = filterVisibleAttributesBySettings(this.resource, this.attributesSettings?.collections);
       this.color = this.createColor();
     }
     if (changes.dataResources && changes.selectedId && this.dataResources && this.selectedId) {
@@ -113,15 +112,6 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
       return shadeColor(color, 0.5);
     }
     return null;
-  }
-
-  private createAttributes(): Attribute[] {
-    const settings = this.attributesSettings?.collections?.[this.resource?.id];
-    const attributesMap = objectsByIdMap(this.resource?.attributes);
-    return createAttributesSettingsOrder(this.resource?.attributes, settings)
-      .filter(setting => !setting.hidden)
-      .map(setting => attributesMap[setting.attributeId])
-      .filter(attribute => !!attribute);
   }
 
   public activate(dataResource: DataResource) {

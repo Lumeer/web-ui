@@ -42,7 +42,11 @@ import {
   sortDocumentsByCreationDate,
   sortDocumentsTasks,
 } from '../documents/document.utils';
-import {selectAllDocuments, selectDocumentsByCollectionId} from '../documents/documents.state';
+import {
+  selectAllDocuments,
+  selectDocumentsByCollectionId,
+  selectDocumentsDictionary,
+} from '../documents/documents.state';
 import {selectAllLinkInstances, selectLinkInstancesByType} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes, selectLinkTypeById, selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {Query} from '../navigation/query/query';
@@ -517,6 +521,24 @@ export const selectDocumentsByCollectionAndQuery = (collectionId: string, query:
       const collectionsMap = {[collectionId]: collection};
       return sortDataResourcesByViewSettings(
         data.documents,
+        collectionsMap,
+        AttributesResourceType.Collection,
+        viewSettings?.attributes,
+        constraintData
+      );
+    }
+  );
+
+export const selectDocumentsByIdsSorted = (ids: string[]) =>
+  createSelector(
+    selectDocumentsDictionary,
+    selectCollectionsDictionary,
+    selectConstraintData,
+    selectViewSettings,
+    (documentsMap, collectionsMap, constraintData, viewSettings) => {
+      const documents = (ids || []).map(id => documentsMap[id]).filter(doc => doc);
+      return sortDataResourcesByViewSettings(
+        documents,
         collectionsMap,
         AttributesResourceType.Collection,
         viewSettings?.attributes,

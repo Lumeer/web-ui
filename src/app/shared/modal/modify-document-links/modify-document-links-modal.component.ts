@@ -45,7 +45,7 @@ import {mergeDocuments} from '../../../core/store/documents/document.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {generateCorrelationId} from '../../utils/resource.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {View} from '../../../core/store/views/view';
+import {ResourceAttributeSettings, View} from '../../../core/store/views/view';
 import {selectCurrentView, selectViewById} from '../../../core/store/views/views.state';
 
 @Component({
@@ -61,6 +61,12 @@ export class ModifyDocumentLinksModalComponent implements OnInit {
 
   @Input()
   public linkTypeIds: string[];
+
+  @Input()
+  public collectionAttributesSettings: ResourceAttributeSettings[];
+
+  @Input()
+  public linkTypesAttributesSettings: Record<string, ResourceAttributeSettings[]>;
 
   @Input()
   public workspace: Workspace;

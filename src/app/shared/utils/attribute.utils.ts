@@ -31,6 +31,9 @@ import {
   ViewConstraint,
   ViewConstraintConfig,
 } from '@lumeer/data-filters';
+import {createAttributesSettingsOrder} from '../settings/settings.util';
+import {AttributesResource} from '../../core/model/resource';
+import {ResourceAttributeSettings} from '../../core/store/views/view';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS_REGEX = /\./g;
@@ -283,4 +286,24 @@ export function modifyAttributeForQueryFilter(attribute: Attribute): Attribute {
     default:
       return attribute;
   }
+}
+
+export function filterVisibleAttributesBySettings(
+  resource: AttributesResource,
+  settingsMap: Record<string, ResourceAttributeSettings[]>,
+  key: string = resource?.id
+): Attribute[] {
+  const settings = settingsMap?.[key];
+  return filterVisibleAttributesByResourceSettings(resource, settings);
+}
+
+export function filterVisibleAttributesByResourceSettings(
+  resource: AttributesResource,
+  resourceSettings: ResourceAttributeSettings[]
+): Attribute[] {
+  const attributesMap = objectsByIdMap(resource?.attributes);
+  return createAttributesSettingsOrder(resource?.attributes, resourceSettings)
+    .filter(setting => !setting.hidden)
+    .map(setting => attributesMap[setting.attributeId])
+    .filter(attribute => !!attribute);
 }
