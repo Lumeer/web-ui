@@ -31,6 +31,7 @@ import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {preventEvent} from '../../utils/common.utils';
+import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 
 @Component({
   selector: 'links-accordeon',
@@ -106,7 +107,12 @@ export class LinksAccordeonComponent implements OnInit {
   public attributeType = new EventEmitter<{collectionId: string; linkTypeId: string; attributeId: string}>();
 
   @Output()
-  public modifyLinks = new EventEmitter<{collectionId: string; linkTypeId: string; documentId: string}>();
+  public modifyLinks = new EventEmitter<{
+    collectionId: string;
+    linkTypeId: string;
+    documentId: string;
+    otherCollectionId: string;
+  }>();
 
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
@@ -122,7 +128,12 @@ export class LinksAccordeonComponent implements OnInit {
     preventEvent(event);
 
     if (this.collection && this.document) {
-      this.modifyLinks.emit({collectionId: this.collection.id, linkTypeId: linkType.id, documentId: this.document.id});
+      this.modifyLinks.emit({
+        collectionId: this.collection.id,
+        linkTypeId: linkType.id,
+        documentId: this.document.id,
+        otherCollectionId: getOtherLinkedCollectionId(linkType, this.collection.id),
+      });
     }
   }
 

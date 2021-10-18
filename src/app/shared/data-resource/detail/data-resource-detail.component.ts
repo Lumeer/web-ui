@@ -74,6 +74,7 @@ import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.stat
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {User} from '../../../core/store/users/user';
 import {selectResourcesPermissionsByView} from '../../../core/store/common/permissions.selectors';
+import {composeViewSettingsLinkTypeCollectionId} from '../../settings/settings.util';
 
 @Component({
   selector: 'data-resource-detail',
@@ -148,6 +149,7 @@ export class DataResourceDetailComponent
 
   public resourceType: AttributesResourceType;
   private workspace: Workspace;
+  private attributesSettings: AttributesSettings;
 
   constructor(
     protected store$: Store<AppState>,
@@ -190,17 +192,19 @@ export class DataResourceDetailComponent
       this.store$.pipe(select(selectAllLinkTypes)),
       this.collectionId$,
       this.store$.pipe(select(selectCollectionsDictionary)),
+      this.workspace$,
     ]).pipe(
-      map(
-        ([permissions, linkTypes, collectionId, collectionsMap]) =>
+      map(([permissions, linkTypes, collectionId, collectionsMap, workspace]) => {
+        const mappedLinkTypes =
           (collectionId &&
             linkTypes
               .filter(linkType => permissions?.linkTypes?.[linkType.id]?.rolesWithView?.Read)
               .filter(linkType => linkType.collectionIds?.includes(collectionId))
               .map(linkType => mapLinkTypeCollections(linkType, collectionsMap))) ||
-          []
-      ),
-      tap(linkTypes => this.readLinkTypesData(linkTypes))
+          [];
+        this.readLinkTypesData(mappedLinkTypes, workspace);
+        return mappedLinkTypes;
+      })
     );
 
     this.linksCount$ = this.linkTypes$.pipe(
@@ -259,14 +263,14 @@ export class DataResourceDetailComponent
           return of(stemConfig?.attributesSettings);
         }
         return this.store$.pipe(select(selectDetailAttributesSettings(settingsStem)));
-      })
+      }),
+      tap(settings => (this.attributesSettings = settings))
     );
   }
 
-  private readLinkTypesData(linkTypes: LinkType[]) {
+  private readLinkTypesData(linkTypes: LinkType[], workspace: Workspace) {
     const loadingCollections = new Set();
     const loadingLinkTypes = new Set();
-    const workspace = this.workspace;
     linkTypes.forEach(linkType => {
       const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
 
@@ -362,8 +366,18 @@ export class DataResourceDetailComponent
     this.modalService.showAttributeDescription(attributeId, collectionId, linkTypeId, this.workspace);
   }
 
-  public showModifyLinks(collectionId: string, linkTypeId: string, documentId: string) {
-    this.modalService.showModifyDocumentLinks(documentId, collectionId, linkTypeId, this.workspace);
+  public showModifyLinks(collectionId: string, linkTypeId: string, documentId: string, otherCollectionId: string) {
+    const key = composeViewSettingsLinkTypeCollectionId(otherCollectionId, linkTypeId);
+    const collectionSettings = this.attributesSettings?.linkTypesCollections?.[key];
+    const linkTypesSettings = this.attributesSettings?.linkTypes;
+    this.modalService.showModifyDocumentLinks(
+      documentId,
+      collectionId,
+      linkTypeId,
+      this.workspace,
+      collectionSettings,
+      linkTypesSettings
+    );
   }
 
   public showCreateLink(ids: [string, string]) {

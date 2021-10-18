@@ -88,6 +88,26 @@ export function sortDataObjectsByViewSettings<T extends {linkInstance?: LinkInst
     collectionSettings = attributesSettings?.collections?.[collection?.id];
   }
 
+  return sortDataObjectsByResourceAttributesSettings(
+    dataObjects,
+    collection,
+    linkType,
+    collectionSettings,
+    linkTypeSettings,
+    constraintData
+  );
+}
+
+export function sortDataObjectsByResourceAttributesSettings<
+  T extends {linkInstance?: LinkInstance; document?: DocumentModel}
+>(
+  dataObjects: T[],
+  collection: Collection,
+  linkType: LinkType,
+  collectionSettings: ResourceAttributeSettings[],
+  linkTypeSettings: ResourceAttributeSettings[],
+  constraintData: ConstraintData
+): T[] {
   const linkTypeSortSettings = (linkTypeSettings || []).filter(setting => !!setting.sort);
   const collectionSortSettings = (collectionSettings || []).filter(setting => !!setting.sort);
 

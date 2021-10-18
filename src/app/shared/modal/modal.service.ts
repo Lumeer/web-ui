@@ -34,7 +34,7 @@ import {selectAllCollections, selectCollectionById} from '../../core/store/colle
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
-import {View} from '../../core/store/views/view';
+import {ResourceAttributeSettings, View} from '../../core/store/views/view';
 import {ShareViewModalComponent} from './view-modal/share/share-view-modal.component';
 import {AttributesResource, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
@@ -92,7 +92,9 @@ export class ModalService {
     documentId: string,
     collectionId: string,
     linkTypeId: string,
-    workspace?: Workspace
+    workspace: Workspace,
+    collectionAttributesSettings: ResourceAttributeSettings[],
+    linkTypesAttributesSettings: Record<string, ResourceAttributeSettings[]>
   ): BsModalRef {
     return this.showStaticDialog(
       {
@@ -100,6 +102,8 @@ export class ModalService {
         collectionId,
         linkTypeIds: [linkTypeId],
         workspace,
+        collectionAttributesSettings,
+        linkTypesAttributesSettings,
       },
       ModifyDocumentLinksModalComponent,
       'modal-xxl'

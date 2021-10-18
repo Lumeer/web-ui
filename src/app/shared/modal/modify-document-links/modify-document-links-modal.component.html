@@ -38,6 +38,8 @@
                      [collection]="data.collection"
                      [linkInstances]="data.linkInstances"
                      [constraintData]="constraintData$ | async"
+                     [collectionAttributesSettings]="collectionAttributesSettings"
+                     [linkTypesAttributesSettings]="linkTypesAttributesSettings"
                      [removedLinkInstancesIds]="removedLinkInstancesIds$ | async"
                      [selectedDocumentIds]="selectedDocumentIds$ | async"
                      (selectRow)="onRowSelected($event)"

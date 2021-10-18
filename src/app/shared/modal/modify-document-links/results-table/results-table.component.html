@@ -14,7 +14,7 @@
       </th>
       <th class="sticky-header"
           [style.top]="inverseTranslation"
-          *ngFor="let attr of linkType?.attributes; trackBy:trackByAttribute; let idx = index"
+          *ngFor="let attr of linkTypeAttributes; trackBy:trackByAttribute; let idx = index"
           scope="col"
           [style.font-weight]="'normal'"
           title="{{attr.name}}">
@@ -24,7 +24,7 @@
           [style.background-color]="collection.color | lightenColor:0.5"
           [style.top]="inverseTranslation"
           [style.font-weight]="attr.id === collection.defaultAttributeId || (!collection.defaultAttributeId && idx === 0) ? 'bold' : 'normal'"
-          *ngFor="let attr of collection.attributes; trackBy:trackByAttribute; let idx = index"
+          *ngFor="let attr of collectionAttributes; trackBy:trackByAttribute; let idx = index"
           scope="col"
           title="{{attr.name}}">
         {{attr.name}}
@@ -33,7 +33,7 @@
     </thead>
     <tbody>
     <tr *ngIf="documents.length === 0">
-      <td [attr.colspan]="collection.attributes.length" class="text-center font-weight-bold">
+      <td [attr.colspan]="collectionAttributes.length" class="text-center font-weight-bold">
         <h4 i18n="@@shared.preview.results.noResults">No records found.</h4>
       </td>
     </tr>
@@ -47,7 +47,7 @@
                          (click)="$event.stopPropagation()">
         </custom-checkbox>
       </td>
-      <td *ngFor="let attr of linkType?.attributes">
+      <td *ngFor="let attr of linkTypeAttributes">
         <data-input-preview *ngIf="row.linkInstance"
                             [constraint]="attr.constraint"
                             [configuration]="configuration"
@@ -55,7 +55,7 @@
                             [dataValue]="(row.linkInstance.data && row.linkInstance.data[attr.id]) | dataValue:attr.constraint:constraintData">
         </data-input-preview>
       </td>
-      <td *ngFor="let attr of collection.attributes">
+      <td *ngFor="let attr of collectionAttributes">
         <data-input-preview [constraint]="attr.constraint"
                             [configuration]="configuration"
                             [cursor]="row.document | dataCursor : attr.id:view?.id"
