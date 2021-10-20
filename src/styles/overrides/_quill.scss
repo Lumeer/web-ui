@@ -60,32 +60,16 @@ span[data-denotation-char='@'] > span {
   margin: 0 3px;
 }
 
-.ql-editor ul.task-list > li {
-  pointer-events: none;
-}
-
-.ql-editor ul.task-list > li::before {
-  color: $primary;
-  border: 1px solid $primary;
-  content: ' ';
-  font-size: 16px;
-  height: 16px;
-  border-radius: 4px;
-  line-height: 1;
-  position: absolute;
-  text-align: center;
-  vertical-align: middle;
-  width: 16px;
-  cursor: default;
-  pointer-events: all;
-}
-
-.ql-editor ul.task-list > li.checked-true {
+.ql-editor ul[data-checked='true'] > li {
   text-decoration: line-through;
+
+  &::before {
+    color: $primary;
+    font-size: 1.2rem;
+  }
 }
 
-.ql-editor ul.task-list > li.checked-true::before {
-  content: '✓';
-  color: white;
-  background: $primary;
+.ql-editor ul[data-checked='false'] > li::before {
+  color: $primary;
+  font-size: 1.2rem;
 }

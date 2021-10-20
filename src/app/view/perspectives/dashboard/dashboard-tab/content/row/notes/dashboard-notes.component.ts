@@ -17,21 +17,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, HostBinding, HostListener} from '@angular/core';
 import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-editor/text-editor.utils';
-import {registerTaskListQuillModule} from './task-list-quill-module';
+import {Blur, Focus} from 'ngx-quill';
 
 @Component({
   selector: 'dashboard-notes',
   templateUrl: './dashboard-notes.component.html',
   styleUrls: ['./dashboard-notes.component.scss'],
 })
-export class DashboardNotesComponent implements OnInit {
+export class DashboardNotesComponent {
   public readonly defaultOptions = defaultTextEditorOptions;
+
+  @HostBinding('class.editing')
+  public editing: boolean;
 
   public text: string;
 
-  public ngOnInit() {
-    registerTaskListQuillModule();
+  constructor(private element: ElementRef) {}
+
+  public onFocus(focus: Focus) {
+    this.editing = true;
+    this.computeEditorHeightAfterTimeout();
+  }
+
+  public onBlur(blur: Blur) {
+    this.editing = false;
+    this.computeEditorHeightAfterTimeout();
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.computeEditorHeight();
+  }
+
+  public ngAfterViewInit() {
+    this.computeEditorHeightAfterTimeout();
+  }
+
+  private computeEditorHeightAfterTimeout() {
+    setTimeout(() => this.computeEditorHeight());
+  }
+
+  private computeEditorHeight() {
+    const toolbar = this.element.nativeElement.querySelector('.ql-toolbar');
+    const toolbarHeight = toolbar ? +toolbar.clientHeight : 0;
+
+    const height = +this.element.nativeElement.parentElement.clientHeight - toolbarHeight;
+
+    this.element.nativeElement.style.setProperty('--editor-height', `${height}px`);
   }
 }

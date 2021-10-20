@@ -8,6 +8,7 @@
   .cell {
     height: 33vw;
     width: 100%;
+    min-width: 0;
     border: 1px solid $gray-200;
     border-radius: 0.3rem;
   }
