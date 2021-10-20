@@ -22,7 +22,6 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {MapPosition} from '../maps/map.model';
 import {Query} from './query/query';
-import {SearchTab} from './search-tab';
 import {ViewCursor} from './view-cursor/view-cursor';
 import {Workspace} from './workspace';
 import {PerspectiveSettings} from './settings/perspective-settings';
@@ -50,7 +49,7 @@ export const initialNavigationState: NavigationState = {
 };
 
 export const selectNavigation = (state: AppState) => state.navigation;
-export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
+export const selectRawQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
 
 export const selectPerspective = createSelector(selectNavigation, (state: NavigationState) => state.perspective);
 export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);

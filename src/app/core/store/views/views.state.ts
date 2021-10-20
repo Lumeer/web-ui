@@ -29,12 +29,13 @@ import {selectGanttChartConfig} from '../gantt-charts/gantt-charts.state';
 import {selectKanbanConfig} from '../kanbans/kanban.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {selectMapConfig} from '../maps/maps.state';
-import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navigation.state';
+import {selectPerspective, selectRawQuery, selectViewCode} from '../navigation/navigation.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
 import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {
+  canChangeViewQuery,
   createSearchPerspectiveTabs,
   createSearchPerspectiveTabsByView,
   getViewColor,
@@ -43,13 +44,13 @@ import {
 } from './view.utils';
 import {selectSearchConfig, selectSearchesDictionary} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
-import {isQuerySubset, queryIsEmpty} from '../navigation/query/query.util';
-import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {appendQueryFiltersByVisibleAttributes} from '../navigation/query/query.util';
 import {selectDetailConfig} from '../details/detail.state';
 import {CollectionPurpose, CollectionPurposeType} from '../collections/collection';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
 import {SearchConfig} from '../searches/search';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -167,18 +168,13 @@ export const selectViewConfigChanged = createSelector(
 
 export const selectViewQuery = createSelector(
   selectCurrentView,
-  selectQuery,
+  selectRawQuery,
   selectViewsPermissions,
   (view, query, permissions) => {
-    if (
-      !view ||
-      permissions?.[view.id]?.roles?.QueryConfig ||
-      queryIsEmpty(view.query) ||
-      isQuerySubset(query, view.query)
-    ) {
-      return query;
+    if (!canChangeViewQuery(view, permissions)) {
+      return appendQueryFiltersByVisibleAttributes(view?.query, query, view?.settings?.attributes);
     }
-    return view.query;
+    return query;
   }
 );
 

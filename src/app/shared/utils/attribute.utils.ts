@@ -307,3 +307,10 @@ export function filterVisibleAttributesByResourceSettings(
     .map(setting => attributesMap[setting.attributeId])
     .filter(attribute => !!attribute);
 }
+
+export function isAttributeVisibleInResourceSettings(
+  attributeId: string,
+  resourceSettings: ResourceAttributeSettings[]
+): boolean {
+  return !(resourceSettings || []).some(setting => setting.attributeId === attributeId && setting.hidden);
+}

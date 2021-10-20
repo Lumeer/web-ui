@@ -24,8 +24,6 @@ import {AppState} from '../../../../core/store/app.state';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {ViewsAction} from '../../../../core/store/views/views.action';
@@ -41,6 +39,8 @@ import {selectViewQuery} from '../../../../core/store/views/views.state';
 import {AllowedPermissionsMap} from '../../../../core/model/allowed-permissions';
 import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 
 @Directive()
 export abstract class SearchViewsDirective implements OnInit, OnChanges, OnDestroy {

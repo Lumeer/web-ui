@@ -57,7 +57,7 @@ import {
   queryWithoutLinks,
   tasksCollectionsQuery,
 } from '../navigation/query/query.util';
-import {View} from '../views/view';
+import {View, ViewSettings} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
 import {LinkInstance} from '../link-instances/link.instance';
@@ -79,7 +79,7 @@ import {
 } from '../user-permissions/user-permissions.state';
 import {Collection, CollectionPurposeType} from '../collections/collection';
 import {selectCurrentUserForWorkspace} from '../users/users.state';
-import {getViewColor, getViewIcon} from '../views/view.utils';
+import {canChangeViewQuery, getViewColor, getViewIcon} from '../views/view.utils';
 import {LinkType} from '../link-types/link.type';
 import {AllowedPermissionsMap, ResourcesPermissions} from '../../model/allowed-permissions';
 import {DataQuery} from '../../model/data-query';
@@ -92,6 +92,7 @@ import {
   userPermissionsInLinkType,
 } from '../../../shared/utils/permission.utils';
 import {User} from '../users/user';
+import {filterVisibleAttributesBySettings} from '../../../shared/utils/attribute.utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
@@ -613,10 +614,8 @@ export const selectCanManageCurrentViewConfig = createSelector(
 export const selectCanManageViewConfig = (view: View) =>
   createSelector(selectViewsPermissions, permissions => !view || permissions?.[view.id]?.roles.PerspectiveConfig);
 
-export const selectCanChangeViewQuery = createSelector(
-  selectCurrentView,
-  selectViewsPermissions,
-  (view, permissions) => !view || permissions?.[view.id]?.roles.QueryConfig
+export const selectCanChangeViewQuery = createSelector(selectCurrentView, selectViewsPermissions, (view, permissions) =>
+  canChangeViewQuery(view, permissions)
 );
 
 export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermissions, (views, permissions) =>
@@ -675,6 +674,72 @@ export const selectCollectionPermissionsByView = (view: View, collectionId: stri
         user
       )
   );
+
+export const selectAllCollectionsWithoutHiddenAttributes = createSelector(
+  selectCanChangeViewQuery,
+  selectAllCollections,
+  selectViewSettings,
+  (canChangeQuery, collections, viewSettings) =>
+    mapCollectionsWithoutHiddenAttributes(canChangeQuery, collections, viewSettings)
+);
+
+export const selectCollectionsByIdsWithoutHiddenAttributes = (ids: string[]) =>
+  createSelector(
+    selectCanChangeViewQuery,
+    selectCollectionsDictionary,
+    selectViewSettings,
+    (canChangeQuery, collectionsDictionary, viewSettings) => {
+      const collections = ids.map(id => collectionsDictionary[id]).filter(collection => !!collection);
+      return mapCollectionsWithoutHiddenAttributes(canChangeQuery, collections, viewSettings);
+    }
+  );
+
+function mapCollectionsWithoutHiddenAttributes(
+  canChangeQuery: boolean,
+  collections: Collection[],
+  viewSettings: ViewSettings
+): Collection[] {
+  if (canChangeQuery) {
+    return collections;
+  }
+  return collections.map(collection => ({
+    ...collection,
+    attributes: filterVisibleAttributesBySettings(collection, viewSettings?.attributes?.collections),
+  }));
+}
+
+export const selectAllLinkTypesWithoutHiddenAttributes = createSelector(
+  selectCanChangeViewQuery,
+  selectAllLinkTypes,
+  selectViewSettings,
+  (canChangeQuery, linkTypes, viewSettings) =>
+    mapLinkTypesWithoutHiddenAttributes(canChangeQuery, linkTypes, viewSettings)
+);
+
+export const selectLinkTypesByIdsWithoutHiddenAttributes = (ids: string[]) =>
+  createSelector(
+    selectCanChangeViewQuery,
+    selectLinkTypesDictionary,
+    selectViewSettings,
+    (canChangeQuery, linkTypesDictionary, viewSettings) => {
+      const linkTypes = ids.map(id => linkTypesDictionary[id]).filter(collection => !!collection);
+      return mapLinkTypesWithoutHiddenAttributes(canChangeQuery, linkTypes, viewSettings);
+    }
+  );
+
+function mapLinkTypesWithoutHiddenAttributes(
+  canChangeQuery: boolean,
+  linkTypes: LinkType[],
+  viewSettings: ViewSettings
+): LinkType[] {
+  if (canChangeQuery) {
+    return linkTypes;
+  }
+  return linkTypes.map(linkType => ({
+    ...linkType,
+    attributes: filterVisibleAttributesBySettings(linkType, viewSettings?.attributes?.linkTypes),
+  }));
+}
 
 export const selectLinkTypesPermissionsByView = (view: View) =>
   createSelector(

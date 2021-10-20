@@ -39,6 +39,11 @@ import {View} from '../store/views/view';
 import {selectSearchById} from '../store/searches/searches.state';
 import {QueryParam} from '../store/navigation/query-param';
 import {createSearchPerspectiveTabsByView} from '../store/views/view.utils';
+import {cleanQueryFromHiddenAttributes} from '../store/navigation/query/query.util';
+import {selectViewsPermissions} from '../store/user-permissions/user-permissions.state';
+import {selectWorkspaceModels} from '../store/common/common.selectors';
+import {selectCurrentUser} from '../store/users/users.state';
+import {userPermissionsInView} from '../../shared/utils/permission.utils';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
@@ -76,9 +81,15 @@ export class ViewRedirectGuard implements CanActivate {
       skipWhile(loaded => !loaded),
       switchMap(() => this.store$.pipe(select(selectViewByCode(viewCode)))),
       take(1),
-      mergeMap(view => {
+      withLatestFrom(this.store$.pipe(select(selectCurrentUser))),
+      mergeMap(([view, user]) => {
+        const permissions = view && userPermissionsInView(organization, project, view, user);
         const perspective = view?.perspective ? view.perspective : Perspective.Search;
-        const query = view ? convertQueryModelToString(view.query) : null;
+        const query = view
+          ? convertQueryModelToString(
+              cleanQueryFromHiddenAttributes(view.query, view.settings?.attributes, permissions)
+            )
+          : null;
 
         const viewPath: any[] = ['/w', organization.code, project.code, 'view'];
         if (viewCode) {

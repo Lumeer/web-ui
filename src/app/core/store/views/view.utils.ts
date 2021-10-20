@@ -51,6 +51,7 @@ import {SelectItemModel} from '../../../shared/select/select-item/select-item.mo
 import {DashboardTab} from '../../model/dashboard-tab';
 import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 import {SearchConfig} from '../searches/search';
+import {AllowedPermissions} from '../../model/allowed-permissions';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -248,4 +249,8 @@ export function createSearchPerspectiveTabs(config?: SearchConfig, defaultTabs: 
     return addDefaultDashboardTabsIfNotPresent(tabs);
   }
   return addDefaultDashboardTabsIfNotPresent(defaultTabs);
+}
+
+export function canChangeViewQuery(view: View, permissions: Record<string, AllowedPermissions>) {
+  return !view || permissions?.[view.id]?.roles.QueryConfig;
 }

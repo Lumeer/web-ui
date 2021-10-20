@@ -34,6 +34,7 @@ export interface TableModel {
   columns: TableColumn[];
   rows: TableRow[];
   newRow?: TableRow;
+  bottomToolbar: boolean;
 }
 
 export interface SelectedTableCell extends TableCell {}

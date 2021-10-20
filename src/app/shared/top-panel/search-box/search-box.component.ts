@@ -25,9 +25,9 @@ import {select, Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
 import {debounceTime, filter, map, skip, startWith, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
-import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
-import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
-import {selectNavigation, selectPerspective} from '../../../core/store/navigation/navigation.state';
+import {selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
+import {selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
+import {selectNavigation, selectPerspective, selectRawQuery} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {View} from '../../../core/store/views/view';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -58,6 +58,8 @@ import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {
+  selectAllCollectionsWithoutHiddenAttributes,
+  selectAllLinkTypesWithoutHiddenAttributes,
   selectCanChangeViewQuery,
   selectCanManageCurrentViewConfig,
 } from '../../../core/store/common/permissions.selectors';
@@ -119,7 +121,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = combineLatest([this.store$.pipe(select(selectViewQuery)), this.loadData()])
+    const querySubscription = combineLatest([this.store$.pipe(select(selectRawQuery)), this.subscribeData$()])
       .pipe(
         debounceTime(100),
         withLatestFrom(this.router.events.pipe(startWith(null))),
@@ -156,10 +158,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscriptions.add(workspaceSubscription);
   }
 
-  private loadData(): Observable<QueryData> {
+  private subscribeData$(): Observable<QueryData> {
     return combineLatest([
-      this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllLinkTypes)),
+      this.store$.pipe(select(selectAllCollectionsWithoutHiddenAttributes)),
+      this.store$.pipe(select(selectAllLinkTypesWithoutHiddenAttributes)),
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectLinkTypesLoaded)),
     ]).pipe(

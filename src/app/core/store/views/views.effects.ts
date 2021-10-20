@@ -50,7 +50,7 @@ import {User} from '../users/user';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {convertUserModelToDto} from '../users/user.converter';
 import {createCallbackActions} from '../utils/store.utils';
-import {mapPositionPathParams} from '../navigation/query/query.util';
+import {cleanQueryFromHiddenAttributes, mapPositionPathParams} from '../navigation/query/query.util';
 import {SearchesAction} from '../searches/searches.action';
 import {TablesAction} from '../tables/tables.action';
 import {PivotsAction} from '../pivots/pivots.action';
@@ -70,6 +70,7 @@ import {getPerspectiveSavedPerspectives} from './view.utils';
 import {TeamService} from '../../data-service/team/team.service';
 import {Team} from '../teams/team';
 import {convertTeamModelToDto} from '../teams/teams.converter';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
 
 @Injectable()
 export class ViewsEffects {
@@ -225,12 +226,13 @@ export class ViewsEffects {
   public updateSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS),
-      withLatestFrom(this.store$.pipe(select(selectNavigation))),
-      mergeMap(([action, navigation]) => {
+      withLatestFrom(this.store$.pipe(select(selectNavigation)), this.store$.pipe(select(selectViewsPermissions))),
+      mergeMap(([action, navigation, viewsPermissions]) => {
         const viewCodeInUrl = navigation && navigation.workspace && navigation.workspace.viewCode;
-        const {code, query} = action.payload.view;
-        if (viewCodeInUrl && viewCodeInUrl === code && !areQueriesEqual(query, navigation.query)) {
-          return [new NavigationAction.SetQuery({query})];
+        const {id, code, query, settings} = action.payload.view;
+        const cleanedView = cleanQueryFromHiddenAttributes(query, settings?.attributes, viewsPermissions?.[id]);
+        if (viewCodeInUrl && viewCodeInUrl === code && !areQueriesEqual(cleanedView, navigation.query)) {
+          return [new NavigationAction.SetQuery({query: cleanedView})];
         }
         return [];
       })

@@ -45,11 +45,13 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
 import {DataQuery} from '../../../model/data-query';
-import {AllowedPermissionsMap} from '../../../model/allowed-permissions';
+import {AllowedPermissions, AllowedPermissionsMap} from '../../../model/allowed-permissions';
 import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
+import {AttributesSettings, ResourceAttributeSettings} from '../../views/view';
+import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -100,13 +102,13 @@ export function isQueryItemEditable(
   if (queryItem.type === QueryItemType.Attribute) {
     const collectionFilter = (<AttributeQueryItem>queryItem).getAttributeFilter();
     const sameFilters = getQueryFiltersForCollection(stemIndexQuery, collectionFilter.collectionId).filter(
-      currentFilter => deepObjectsEquals(collectionFilter, currentFilter)
+      currentFilter => areFiltersEqual(collectionFilter, currentFilter)
     );
     return sameFilters.length <= sameItemsInStem;
   } else if (queryItem.type === QueryItemType.LinkAttribute) {
     const linkFilter = (<LinkAttributeQueryItem>queryItem).getLinkAttributeFilter();
     const sameFilters = getQueryFiltersForLinkType(stemIndexQuery, linkFilter.linkTypeId).filter(currentFilter =>
-      deepObjectsEquals(linkFilter, currentFilter)
+      areFiltersEqual(linkFilter, currentFilter)
     );
     return sameFilters.length <= sameItemsInStem;
   } else if (queryItem.type === QueryItemType.Collection) {
@@ -146,12 +148,12 @@ function queryItemsAreSame(q1: QueryItem, q2: QueryItem): boolean {
     case QueryItemType.Link:
       return (<LinkQueryItem>q1).linkType.id === (<LinkQueryItem>q2).linkType.id;
     case QueryItemType.Attribute:
-      return deepObjectsEquals(
+      return areFiltersEqual(
         (<AttributeQueryItem>q1).getAttributeFilter(),
         (<AttributeQueryItem>q2).getAttributeFilter()
       );
     case QueryItemType.LinkAttribute:
-      return deepObjectsEquals(
+      return areFiltersEqual(
         (<LinkAttributeQueryItem>q1).getLinkAttributeFilter(),
         (<LinkAttributeQueryItem>q2).getLinkAttributeFilter()
       );
@@ -269,7 +271,7 @@ export function getQueryStemFiltersForResource(
 export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {
   return (query?.stems || []).reduce((filters, stem) => {
     const newFilters = (stem.filters || []).filter(
-      filter => filter.collectionId === collectionId && !filters.find(f => deepObjectsEquals(f, filter))
+      filter => filter.collectionId === collectionId && !filters.find(f => areFiltersEqual(f, filter))
     );
     filters.push(...newFilters);
     return filters;
@@ -279,11 +281,15 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
 export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): LinkAttributeFilter[] {
   return (query?.stems || []).reduce((filters, stem) => {
     const newFilters = (stem.linkFilters || []).filter(
-      filter => filter.linkTypeId === linkTypeId && !filters.find(f => deepObjectsEquals(f, filter))
+      filter => filter.linkTypeId === linkTypeId && !filters.find(f => areFiltersEqual(f, filter))
     );
     filters.push(...newFilters);
     return filters;
   }, []);
+}
+
+export function areFiltersEqual(f1: AttributeFilter, f2: AttributeFilter): boolean {
+  return deepObjectsEquals(f1, f2);
 }
 
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
@@ -393,11 +399,11 @@ export function tasksCollectionQueryStem(collection: Collection, permissions: Al
 }
 
 function isQueryFiltersSubset(superset: CollectionAttributeFilter[], subset: CollectionAttributeFilter[]): boolean {
-  return subset.every(sub => superset.some(sup => deepObjectsEquals(sub, sup)));
+  return subset.every(sub => superset.some(sup => areFiltersEqual(sub, sup)));
 }
 
 function isQueryLinkFiltersSubset(superset: LinkAttributeFilter[], subset: LinkAttributeFilter[]): boolean {
-  return subset.every(sub => superset.some(sup => deepObjectsEquals(sub, sup)));
+  return subset.every(sub => superset.some(sup => areFiltersEqual(sub, sup)));
 }
 
 export function queryContainsOnlyFulltexts(query: Query): boolean {
@@ -670,4 +676,73 @@ export function parseQueryParams(queryString: string) {
     query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
   }
   return query;
+}
+
+export function appendQueryFiltersByVisibleAttributes(
+  q1: Query,
+  q2: Query,
+  attributesSettings: AttributesSettings
+): Query {
+  if (!q1 || !q2) {
+    return q1 || q2;
+  }
+
+  const stems = (q1.stems || []).map(stem => {
+    const filters = [...(stem.filters || [])];
+    const linkFilters = [...(stem.linkFilters || [])];
+
+    const otherStem = q2.stems?.find(s => s.id === stem.id);
+    if (otherStem) {
+      const newFilters = (otherStem.filters || []).filter(filter => {
+        const settings = attributesSettings?.collections?.[filter.collectionId];
+        return shouldAppendVisibleFilter(filter, filters, settings);
+      });
+      filters.push(...newFilters);
+
+      const newLinkFilters = (otherStem.linkFilters || []).filter(filter => {
+        const settings = attributesSettings?.linkTypes?.[filter.linkTypeId];
+        return shouldAppendVisibleFilter(filter, linkFilters, settings);
+      });
+      linkFilters.push(...newLinkFilters);
+    }
+
+    return {...stem, filters, linkFilters};
+  });
+  return {...q1, stems};
+}
+
+function shouldAppendVisibleFilter(
+  filter: AttributeFilter,
+  currentFilters: AttributeFilter[],
+  settings: ResourceAttributeSettings[]
+): boolean {
+  if (settings?.some(s => s.attributeId === filter.attributeId && s.hidden)) {
+    return false;
+  }
+  return !currentFilters.some(currentFilter => areFiltersEqual(currentFilter, filter));
+}
+
+export function cleanQueryFromHiddenAttributes(
+  query: Query,
+  attributesSettings: AttributesSettings,
+  permissions: AllowedPermissions
+): Query {
+  if (permissions?.roles?.QueryConfig) {
+    return query;
+  }
+
+  const stems = (query.stems || []).map(stem => {
+    const filters = stem.filters?.filter(filter => {
+      const settings = attributesSettings?.collections?.[filter.collectionId];
+      return isAttributeVisibleInResourceSettings(filter.attributeId, settings);
+    });
+    const linkFilters = stem.linkFilters?.filter(filter => {
+      const settings = attributesSettings?.linkTypes?.[filter.linkTypeId];
+      return isAttributeVisibleInResourceSettings(filter.attributeId, settings);
+    });
+
+    return {...stem, filters, linkFilters};
+  });
+
+  return {...query, stems};
 }

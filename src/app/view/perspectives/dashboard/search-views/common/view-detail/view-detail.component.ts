@@ -29,6 +29,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {Workspace} from '../../../../../../core/store/navigation/workspace';
 import {getViewColor, getViewIcon} from '../../../../../../core/store/views/view.utils';
 import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {filterVisibleAttributesInQueryItems} from '../../../../../../shared/top-panel/search-box/util/search-box.util';
 
 @Component({
   selector: 'view-detail',
@@ -66,8 +67,10 @@ export class ViewDetailComponent implements OnChanges {
   public constructor(private modalService: ModalService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.queryData || changes.view) {
+    if (changes.queryData || changes.view || changes.permissions) {
       this.createQueryItems();
+    }
+    if (changes.queryData || changes.view) {
       this.color = getViewColor(this.view, objectsByIdMap(this.queryData?.collections));
     }
     if (changes.view) {
@@ -87,9 +90,11 @@ export class ViewDetailComponent implements OnChanges {
   }
 
   private createQueryItems() {
-    if (this.queryData) {
-      this.queryItems = new QueryItemsConverter(this.queryData).fromQuery(this.view.query);
-    }
+    this.queryItems = filterVisibleAttributesInQueryItems(
+      new QueryItemsConverter(this.queryData).fromQuery(this.view.query),
+      this.permissions,
+      this.view
+    );
   }
 
   public onShareClick() {

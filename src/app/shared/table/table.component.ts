@@ -172,10 +172,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('tableNewRow', {read: ElementRef})
   private tableNewRow: ElementRef;
 
+  public readonly toolbarHeight = TABLE_BOTTOM_TOOLBAR_HEIGHT;
+
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
   public scrollOffsetLeft: number;
-  public toolbarHeight = TABLE_BOTTOM_TOOLBAR_HEIGHT;
   public rows: TableRow[];
 
   private scrollOffsetTop: number;
@@ -199,7 +200,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.tableModel) {
       this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
-      this.rows = [...(this.tableModel?.rows || []), null];
+      if (this.tableModel.bottomToolbar) {
+        this.rows = [...(this.tableModel?.rows || []), null];
+      } else {
+        this.rows = this.tableModel?.rows;
+      }
     }
     if (changes.tableModel || changes.detailPanel) {
       this.detailColumnId =
