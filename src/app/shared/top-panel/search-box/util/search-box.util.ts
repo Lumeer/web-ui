@@ -32,6 +32,9 @@ import {
   findStemIndexForLinkTypeToJoin,
 } from '../../../../core/store/navigation/query/query.util';
 import {LinkAttributeQueryItem} from '../query-item/model/link-attribute.query-item';
+import {isAttributeVisibleInResourceSettings} from '../../../utils/attribute.utils';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {View} from '../../../../core/store/views/view';
 
 export function addQueryItemWithRelatedItems(
   queryData: QueryData,
@@ -278,4 +281,28 @@ function removeQueryItem(queryItems: QueryItem[], index: number): QueryItem[] {
   const queryItemsCopy = [...queryItems];
   queryItemsCopy.splice(index, 1);
   return queryItemsCopy;
+}
+
+export function filterVisibleAttributesInQueryItems(
+  queryItems: QueryItem[],
+  permissions: AllowedPermissions,
+  view: View
+): QueryItem[] {
+  if (permissions?.roles?.QueryConfig) {
+    return queryItems;
+  }
+
+  return (queryItems || []).filter(item => {
+    if (item.type === QueryItemType.Attribute) {
+      const attributeId = (item as AttributeQueryItem).attribute.id;
+      const collectionId = (item as AttributeQueryItem).collection.id;
+      return isAttributeVisibleInResourceSettings(attributeId, view?.settings?.attributes?.collections?.[collectionId]);
+    }
+    if (item.type === QueryItemType.LinkAttribute) {
+      const attributeId = (item as LinkAttributeQueryItem).attribute.id;
+      const linkTypeId = (item as LinkAttributeQueryItem).linkType.id;
+      return isAttributeVisibleInResourceSettings(attributeId, view?.settings?.attributes?.linkTypes?.[linkTypeId]);
+    }
+    return true;
+  });
 }

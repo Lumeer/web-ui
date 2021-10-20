@@ -60,7 +60,7 @@
       </tbody>
     </table>
   </cdk-virtual-scroll-viewport>
-  <div class="more-content" [style.height.px]="toolbarHeight">
+  <div *ngIf="tableModel?.bottomToolbar" class="more-content" [style.height.px]="toolbarHeight">
     <table-new-row *ngIf="tableModel?.newRow"
                    class="d-inline-block h-100 new-row"
                    #tableNewRow

@@ -28,7 +28,7 @@ import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
 import {DeletedQueryItem} from './model/deleted.query-item';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {isNotNullOrUndefined} from '../../../utils/common.utils';
+import {isNotNullOrUndefined, objectsByIdMap} from '../../../utils/common.utils';
 import {collectionIdsChainForStem} from '../../../../core/store/navigation/query/query.util';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -80,7 +80,13 @@ export function convertQueryItemsToQueryModel(queryItems: QueryItem[]): Query {
 }
 
 export class QueryItemsConverter {
-  constructor(private data: QueryData) {}
+  private readonly collectionsMap: Record<string, Collection>;
+  private readonly linkTypesMap: Record<string, LinkType>;
+
+  constructor(private data: QueryData) {
+    this.collectionsMap = objectsByIdMap(data.collections);
+    this.linkTypesMap = objectsByIdMap(data.linkTypes);
+  }
 
   public fromQuery(query: Query, skipDeleted?: boolean): QueryItem[] {
     return [...this.createStemsItems(query.stems, skipDeleted), ...this.createFulltextsItems(query.fulltexts)];
@@ -96,7 +102,7 @@ export class QueryItemsConverter {
   }
 
   private createStemItems(stem: QueryStem, skipDeleted: boolean): QueryItem[] {
-    const collection = this.findCollection(stem.collectionId);
+    const collection = this.collectionsMap[stem.collectionId];
     if (!collection && skipDeleted) {
       return [];
     }
@@ -111,12 +117,8 @@ export class QueryItemsConverter {
     );
   }
 
-  private findCollection(collectionId: string): Collection {
-    return (this.data.collections || []).find(col => col.id === collectionId);
-  }
-
   public createCollectionItem(collectionId: string, stemId: string): QueryItem {
-    const collection = this.findCollection(collectionId);
+    const collection = this.collectionsMap[collectionId];
     if (collection) {
       return new CollectionQueryItem(stemId, collection);
     }
@@ -126,7 +128,7 @@ export class QueryItemsConverter {
   private createLinkItems(linkTypeIds: string[], stemId: string, skipDeleted: boolean): QueryItem[] {
     const items = [];
     for (const linkTypeId of linkTypeIds || []) {
-      const linkType = this.findLinkType(linkTypeId);
+      const linkType = this.linkTypesMap[linkTypeId];
       const {collection1, collection2} = this.findCollectionsForLinkType(linkType);
       if (skipDeleted && (!collection1 || !collection2)) {
         return items;
@@ -142,15 +144,9 @@ export class QueryItemsConverter {
     return items;
   }
 
-  private findLinkType(linkTypeId: string): LinkType {
-    return (this.data.linkTypes || []).find(linkType => linkType.id === linkTypeId);
-  }
-
   private findCollectionsForLinkType(linkType: LinkType): {collection1: Collection; collection2: Collection} {
-    const collection1 =
-      linkType && (this.data.collections || []).find(collection => collection.id === linkType.collectionIds?.[0]);
-    const collection2 =
-      linkType && (this.data.collections || []).find(collection => collection.id === linkType.collectionIds?.[1]);
+    const collection1 = linkType && this.collectionsMap[linkType.collectionIds?.[0]];
+    const collection2 = linkType && this.collectionsMap[linkType.collectionIds?.[1]];
     return {collection1, collection2};
   }
 
@@ -158,7 +154,7 @@ export class QueryItemsConverter {
     const items = [];
     const filters = stem.filters || [];
     const linkFilters = stem.linkFilters || [];
-    const collectionIdsChain = collectionIdsChainForStem(stem, this.data.linkTypes);
+    const collectionIdsChain = collectionIdsChainForStem(stem, this.data?.linkTypes);
     const linkTypeIdsChain = stem.linkTypeIds || [];
 
     for (let i = 0; i < Math.max(collectionIdsChain.length, linkTypeIdsChain.length); i++) {
@@ -166,7 +162,7 @@ export class QueryItemsConverter {
       const linkTypeId = linkTypeIdsChain[i];
 
       if (collectionId) {
-        const collection = this.findCollection(collectionId);
+        const collection = this.collectionsMap[collectionId];
         if (skipDeleted && !collection) {
           return items;
         }
@@ -185,7 +181,7 @@ export class QueryItemsConverter {
       }
 
       if (linkTypeId) {
-        const linkType = this.findLinkType(linkTypeId);
+        const linkType = this.linkTypesMap[linkTypeId];
         const {collection1, collection2} = this.findCollectionsForLinkType(linkType);
         if (skipDeleted && (!collection1 || !collection2)) {
           return items;

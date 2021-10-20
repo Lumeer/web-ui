@@ -41,6 +41,7 @@ import {
   ViewSettings,
 } from '../../../../../../core/store/views/view';
 import {
+  TABLE_BOTTOM_TOOLBAR_HEIGHT,
   TABLE_COLUMN_WIDTH,
   TABLE_ROW_HEIGHT,
   TableCell,
@@ -409,6 +410,9 @@ export class WorkflowTablesDataService {
               };
 
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
+              const minHeight = computeTableHeight(rows, newRow, 1);
+              const maxHeight = computeTableHeight(rows, newRow);
+              const height = tableSettings?.height || computeTableHeight(rows, newRow, 5);
               const workflowTable: WorkflowTable = {
                 id: tableId,
                 columns: columns.map(column => ({...column, tableId})),
@@ -422,8 +426,9 @@ export class WorkflowTablesDataService {
                   dataResources: titleDataResources,
                 },
                 stem: stemConfig.stem,
-                minHeight: computeTableHeight(rows, newRow, 1),
-                height: tableSettings?.height || computeTableHeight(rows, newRow, 5),
+                minHeight,
+                height,
+                bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
                 width: columnsWidth + 1, // + 1 for border
                 newRow: newRow ? {...newRow, tableId, data: newRowDataAggregated} : undefined,
                 linkingDocumentIds:
@@ -450,6 +455,9 @@ export class WorkflowTablesDataService {
           );
 
           const tableSettings = stemTableSettings?.find(tab => !tab.value);
+          const minHeight = computeTableHeight(rows, newRow, 1);
+          const maxHeight = computeTableHeight(rows, newRow);
+          const height = tableSettings?.height || maxHeight;
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
@@ -457,10 +465,11 @@ export class WorkflowTablesDataService {
             collectionId: collection.id,
             linkTypeId: linkType?.id,
             stem: stemConfig.stem,
-            minHeight: computeTableHeight(rows, newRow, 1),
-            height: tableSettings?.height || computeTableHeight(rows, newRow),
+            minHeight,
+            height,
             width: columnsWidth + 1, // + 1 for border
             newRow: newRow ? {...newRow, tableId, data: newRow.data || newRowData} : undefined,
+            bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             linkingCollectionId,
           };
           tables.push(workflowTable);
@@ -1532,4 +1541,8 @@ export class WorkflowTablesDataService {
       this.lockedRowIds = {};
     }
   }
+}
+
+function shouldShowToolbarWithoutNewRow(height: number, minHeight: number, maxHeight: number): boolean {
+  return height < maxHeight && height > minHeight + TABLE_BOTTOM_TOOLBAR_HEIGHT;
 }
