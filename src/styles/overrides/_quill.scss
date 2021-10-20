@@ -65,11 +65,15 @@ span[data-denotation-char='@'] > span {
 
   &::before {
     color: $primary;
-    font-size: 1.2rem;
+    vertical-align: middle;
+    height: 18px;
+    content: url('~assets/img/checkbox_checked.svg');
   }
 }
 
 .ql-editor ul[data-checked='false'] > li::before {
   color: $primary;
-  font-size: 1.2rem;
+  vertical-align: middle;
+  height: 18px;
+  content: url('~assets/img/checkbox_unchecked.svg');
 }
