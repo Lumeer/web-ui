@@ -17,33 +17,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostBinding, HostListener} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-editor/text-editor.utils';
-import {Blur, Focus} from 'ngx-quill';
+
+interface DashboardNotesCellData {
+  content: string;
+}
 
 @Component({
   selector: 'dashboard-notes',
   templateUrl: './dashboard-notes.component.html',
   styleUrls: ['./dashboard-notes.component.scss'],
 })
-export class DashboardNotesComponent {
+export class DashboardNotesComponent implements OnChanges {
+  @Input()
+  public data: DashboardNotesCellData;
+
+  @Output()
+  public dataChange = new EventEmitter<DashboardNotesCellData>();
+
   public readonly defaultOptions = defaultTextEditorOptions;
 
   @HostBinding('class.editing')
   public editing: boolean;
 
-  public text: string;
+  public content: string;
 
   constructor(private element: ElementRef) {}
 
-  public onFocus(focus: Focus) {
+  public ngOnChanges(changes: SimpleChanges) {
+    this.content = this.data?.content || '';
+  }
+
+  public onFocus() {
     this.editing = true;
     this.computeEditorHeightAfterTimeout();
   }
 
-  public onBlur(blur: Blur) {
+  public onBlur() {
     this.editing = false;
     this.computeEditorHeightAfterTimeout();
+
+    if (this.content !== this.data?.content) {
+      this.dataChange.emit({content: this.content});
+    }
   }
 
   @HostListener('window:resize')

@@ -88,6 +88,7 @@ import {AuditLogsEffects} from './audit-logs/audit-logs.effects';
 import {detailsReducer} from './details/detail.reducer';
 import {selectionListsReducer} from './selection-lists/selection-lists.reducer';
 import {SelectionListsEffects} from './selection-lists/selection-lists.effects';
+import {dashboardDataReducer} from './dashboard-data/dashboard-data.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -127,6 +128,7 @@ const reducers: ActionReducerMap<AppState> = {
   userPermissions: userPermissionsReducer,
   auditLogs: auditLogsReducer,
   selectionLists: selectionListsReducer,
+  dashboardData: dashboardDataReducer,
 };
 
 const effects = [

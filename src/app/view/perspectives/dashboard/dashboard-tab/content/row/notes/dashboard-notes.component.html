@@ -1,7 +1,7 @@
-<quill-editor [(ngModel)]="text"
+<quill-editor [(ngModel)]="content"
               [modules]="defaultOptions"
-              (onFocus)="onFocus($event)"
-              (onBlur)="onBlur($event)"
+              (onFocus)="onFocus()"
+              (onBlur)="onBlur()"
               placeholder="Insert text here..."
               i18n-placeholder="@@textEditor.insertTextPlaceholder">
 </quill-editor>
