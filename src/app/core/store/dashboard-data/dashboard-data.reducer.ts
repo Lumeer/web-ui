@@ -19,11 +19,17 @@
 
 import {createReducer, on} from '@ngrx/store';
 import * as DashboardDataActions from './dashboard-data.actions';
-import {dashboardDataAdapter, initialDashboardDataState} from './dashboard-data.state';
+import {
+  dashboardDataAdapter,
+  dashboardDataPropertiesSelectorId,
+  initialDashboardDataState,
+} from './dashboard-data.state';
 
 export const dashboardDataReducer = createReducer(
   initialDashboardDataState,
-  on(DashboardDataActions.loadSuccess, (state, action) => dashboardDataAdapter.upsertMany(action.data, state)),
+  on(DashboardDataActions.getSuccess, (state, action) =>
+    dashboardDataAdapter.upsertMany(action.data, {...state, loaded: true})
+  ),
   on(DashboardDataActions.updateSuccess, (state, action) =>
     dashboardDataAdapter.upsertOne(action.dashboardData, state)
   ),
@@ -32,7 +38,7 @@ export const dashboardDataReducer = createReducer(
   ),
   on(DashboardDataActions.deleteDataSuccess, (state, action) =>
     dashboardDataAdapter.removeMany(
-      action.ids.map(id => `${action.type}:${id}`),
+      action.ids.map(id => dashboardDataPropertiesSelectorId(action.dataType, id)),
       state
     )
   ),

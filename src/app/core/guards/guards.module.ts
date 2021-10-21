@@ -30,6 +30,7 @@ import {ViewDefaultConfigsGuard} from './data/view-default-configs.guard';
 import {GroupsGuard} from './data/groups.guard';
 import {ServiceLimitsGuard} from './data/service-limits.guard';
 import {SelectionListsGuard} from './selection-lists.guard';
+import {DashboardDataGuard} from './data/dashboard-data.guard';
 
 @NgModule({
   imports: [CommonModule],
@@ -46,6 +47,7 @@ import {SelectionListsGuard} from './selection-lists.guard';
     SelectionListsGuard,
     ServiceLimitsGuard,
     ViewDefaultConfigsGuard,
+    DashboardDataGuard,
   ],
 })
 export class GuardsModule {}

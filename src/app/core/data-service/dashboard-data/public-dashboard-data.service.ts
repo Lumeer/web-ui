@@ -17,22 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DashboardData {
-  type: DashboardDataType;
-  typeId: string;
-  data?: DashboardCellData;
-}
+import {Injectable} from '@angular/core';
 
-export enum DashboardDataType {
-  Cell = 'cell',
-}
+import {DashboardDataService} from './dashboard-data.service';
+import {BaseService} from '../../rest/base.service';
+import {Observable, of} from 'rxjs';
+import {DashboardDataDto} from '../../dto/dashboard-data.dto';
 
-export const dashboardDataTypesMap = {
-  [DashboardDataType.Cell]: DashboardDataType.Cell,
-};
+@Injectable()
+export class PublicDashboardDataService extends BaseService implements DashboardDataService {
+  public deleteByType(type: string, ids: string[]): Observable<any> {
+    return of(true);
+  }
 
-export type DashboardCellData = DashboardNotesCellData;
+  public getAll(): Observable<DashboardDataDto[]> {
+    return of([]);
+  }
 
-export interface DashboardNotesCellData {
-  content: string;
+  public update(data: DashboardDataDto): Observable<DashboardDataDto> {
+    return of(data);
+  }
 }

@@ -20,12 +20,13 @@
 import {createAction, props} from '@ngrx/store';
 
 import {DashboardData, DashboardDataType} from './dashboard-data';
+import {Workspace} from '../navigation/workspace';
 
-export const load = createAction('[DashboardData] Load');
+export const get = createAction('[DashboardData] Get', props<{workspace?: Workspace}>());
 
-export const loadSuccess = createAction('[DashboardData] Load :: Success', props<{data: DashboardData[]}>());
+export const getSuccess = createAction('[DashboardData] Get :: Success', props<{data: DashboardData[]}>());
 
-export const loadFailure = createAction('[DashboardData] Load :: Failure', props<{error: any}>());
+export const getFailure = createAction('[DashboardData] Get :: Failure', props<{error: any}>());
 
 export const update = createAction('[DashboardData] Update', props<{dashboardData: DashboardData}>());
 

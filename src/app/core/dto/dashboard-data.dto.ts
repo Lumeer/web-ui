@@ -17,22 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DashboardData {
-  type: DashboardDataType;
+export interface DashboardDataDto {
+  type: string;
   typeId: string;
-  data?: DashboardCellData;
-}
-
-export enum DashboardDataType {
-  Cell = 'cell',
-}
-
-export const dashboardDataTypesMap = {
-  [DashboardDataType.Cell]: DashboardDataType.Cell,
-};
-
-export type DashboardCellData = DashboardNotesCellData;
-
-export interface DashboardNotesCellData {
-  content: string;
+  data?: any;
 }

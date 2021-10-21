@@ -60,6 +60,7 @@ import {convertUserDtoToModel} from '../store/users/user.converter';
 import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {View} from '../store/views/view';
+import * as DashboardDataActions from '../store/dashboard-data/dashboard-data.actions';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
@@ -86,6 +87,7 @@ import {Team} from '../store/teams/team';
 import {selectTeamById} from '../store/teams/teams.state';
 import {convertSelectionListDtoToModel} from '../store/selection-lists/selection-list.converter';
 import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
+import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -180,6 +182,7 @@ export class PusherService implements OnDestroy {
     this.bindNavigateEvents();
     this.bindSendEmailEvents();
     this.bindSelectionListEvents();
+    this.bindDashboardDataEvents();
   }
 
   private bindOrganizationEvents() {
@@ -1063,6 +1066,16 @@ export class PusherService implements OnDestroy {
           this.currentProject = null;
         }
       });
+  }
+
+  private bindDashboardDataEvents() {
+    this.channel.bind('DashboardData:update', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          DashboardDataActions.updateSuccess({dashboardData: convertDashboardDataDtoToModel(data.object)})
+        );
+      }
+    });
   }
 
   public ngOnDestroy() {

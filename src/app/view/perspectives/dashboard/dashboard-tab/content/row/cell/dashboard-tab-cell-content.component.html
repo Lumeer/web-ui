@@ -14,7 +14,9 @@
                        [perspectiveConfiguration]="configuration">
   </perspective-preview>
 
-  <dashboard-notes *ngSwitchCase="cellType.Notes">
+  <dashboard-notes *ngSwitchCase="cellType.Notes"
+                   [data]="(cellData$ | async)?.data"
+                   (dataChange)="onDataChange($event)">
   </dashboard-notes>
 
 </ng-container>

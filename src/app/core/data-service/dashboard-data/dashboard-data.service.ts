@@ -17,22 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DashboardData {
-  type: DashboardDataType;
-  typeId: string;
-  data?: DashboardCellData;
-}
+import {Observable} from 'rxjs';
+import {DashboardDataDto} from '../../dto/dashboard-data.dto';
+import {Workspace} from '../../store/navigation/workspace';
 
-export enum DashboardDataType {
-  Cell = 'cell',
-}
+export abstract class DashboardDataService {
+  public abstract update(data: DashboardDataDto): Observable<DashboardDataDto>;
 
-export const dashboardDataTypesMap = {
-  [DashboardDataType.Cell]: DashboardDataType.Cell,
-};
+  public abstract deleteByType(type: string, ids: string[]): Observable<any>;
 
-export type DashboardCellData = DashboardNotesCellData;
-
-export interface DashboardNotesCellData {
-  content: string;
+  public abstract getAll(workspace?: Workspace): Observable<DashboardDataDto[]>;
 }

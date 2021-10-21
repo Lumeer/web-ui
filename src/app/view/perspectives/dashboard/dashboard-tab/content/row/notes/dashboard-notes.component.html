@@ -2,6 +2,7 @@
               [modules]="defaultOptions"
               (onFocus)="onFocus()"
               (onBlur)="onBlur()"
+              (ngModelChange)="onContentChange()"
               placeholder="Insert text here..."
               i18n-placeholder="@@textEditor.insertTextPlaceholder">
 </quill-editor>

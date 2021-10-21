@@ -20,26 +20,39 @@
 import {EntityState, EntityAdapter, createEntityAdapter} from '@ngrx/entity';
 import {DashboardData, DashboardDataType} from './dashboard-data';
 import {createSelector} from '@ngrx/store';
+import {AppState} from '../app.state';
 
 export interface DashboardDataState extends EntityState<DashboardData> {
   loaded?: boolean;
 }
 
 export const dashboardDataAdapter: EntityAdapter<DashboardData> = createEntityAdapter<DashboardData>({
-  selectId: data => dataSelectorId(data),
+  selectId: data => dashboardDataSelectorId(data),
 });
 
 export const initialDashboardDataState: DashboardDataState = dashboardDataAdapter.getInitialState();
 
-export const {selectEntities: selectDashboardDataEntities} = dashboardDataAdapter.getSelectors();
+export const selectDashboardDataState = (state: AppState) => state.dashboardData;
+
+export const selectDashboardDataEntities = createSelector(
+  selectDashboardDataState,
+  dashboardDataAdapter.getSelectors().selectEntities
+);
+
+export const selectDashboardDataObjects = createSelector(
+  selectDashboardDataState,
+  dashboardDataAdapter.getSelectors().selectEntities
+);
 
 export const selectDashboardDataByType = (type: DashboardDataType, id: string) =>
-  createSelector(selectDashboardDataEntities, entities => entities[dataPropertiesSelectorId(type, id)]);
+  createSelector(selectDashboardDataEntities, entities => entities[dashboardDataPropertiesSelectorId(type, id)]);
 
-function dataSelectorId(data: DashboardData): string {
-  return dataPropertiesSelectorId(data.type, data.typeId);
+export const selectDashboardDataLoaded = createSelector(selectDashboardDataState, state => state.loaded);
+
+export function dashboardDataSelectorId(data: DashboardData): string {
+  return dashboardDataPropertiesSelectorId(data.type, data.typeId);
 }
 
-function dataPropertiesSelectorId(type: DashboardDataType, id: string): string {
+export function dashboardDataPropertiesSelectorId(type: DashboardDataType, id: string): string {
   return `${type}:${id}`;
 }

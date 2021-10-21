@@ -89,6 +89,7 @@ import {detailsReducer} from './details/detail.reducer';
 import {selectionListsReducer} from './selection-lists/selection-lists.reducer';
 import {SelectionListsEffects} from './selection-lists/selection-lists.effects';
 import {dashboardDataReducer} from './dashboard-data/dashboard-data.reducer';
+import {DashboardDataEffects} from './dashboard-data/dashboard-data.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -160,6 +161,7 @@ const effects = [
   WorkflowsEffects,
   AuditLogsEffects,
   SelectionListsEffects,
+  DashboardDataEffects,
 ];
 
 @NgModule({

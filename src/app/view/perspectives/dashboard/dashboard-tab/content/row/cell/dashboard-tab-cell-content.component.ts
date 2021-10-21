@@ -28,6 +28,17 @@ import {
 } from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
 import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {
+  DashboardData,
+  DashboardDataType,
+  DashboardNotesCellData,
+} from '../../../../../../../core/store/dashboard-data/dashboard-data';
+import {Observable} from 'rxjs';
+import {selectDashboardDataByType} from '../../../../../../../core/store/dashboard-data/dashboard-data.state';
+import * as DashboardDataActions from './../../../../../../../core/store/dashboard-data/dashboard-data.actions';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'dashboard-tab-cell-content',
@@ -59,9 +70,18 @@ export class DashboardTabCellContentComponent implements OnChanges {
   public scale: DashboardImageScaleType;
   public view: View;
 
+  public cellData$: Observable<DashboardData>;
+
+  constructor(private store$: Store<AppState>) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dashboardCell || changes.views) {
       this.setupData();
+    }
+    if (objectChanged(changes.dashboardCell)) {
+      this.cellData$ = this.store$.pipe(
+        select(selectDashboardDataByType(DashboardDataType.Cell, this.dashboardCell.id))
+      );
     }
   }
 
@@ -88,5 +108,10 @@ export class DashboardTabCellContentComponent implements OnChanges {
         this.computedType = DashboardCellType.Notes;
         break;
     }
+  }
+
+  public onDataChange(data: DashboardNotesCellData) {
+    const dashboardData: DashboardData = {type: DashboardDataType.Cell, typeId: this.dashboardCell.id, data};
+    this.store$.dispatch(DashboardDataActions.update({dashboardData}));
   }
 }

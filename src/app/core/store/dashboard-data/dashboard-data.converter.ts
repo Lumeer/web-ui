@@ -17,22 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DashboardData {
-  type: DashboardDataType;
-  typeId: string;
-  data?: DashboardCellData;
+import {DashboardDataDto} from '../../dto/dashboard-data.dto';
+import {DashboardData, dashboardDataTypesMap} from './dashboard-data';
+
+export function convertDashboardDataDtoToModel(dto: DashboardDataDto): DashboardData {
+  return {
+    data: dto.data,
+    typeId: dto.typeId,
+    type: dashboardDataTypesMap[dto.type],
+  };
 }
 
-export enum DashboardDataType {
-  Cell = 'cell',
-}
-
-export const dashboardDataTypesMap = {
-  [DashboardDataType.Cell]: DashboardDataType.Cell,
-};
-
-export type DashboardCellData = DashboardNotesCellData;
-
-export interface DashboardNotesCellData {
-  content: string;
+export function convertDashboardDataModelToDto(model: DashboardData): DashboardDataDto {
+  return {
+    data: model.data,
+    typeId: model.typeId,
+    type: model.type,
+  };
 }

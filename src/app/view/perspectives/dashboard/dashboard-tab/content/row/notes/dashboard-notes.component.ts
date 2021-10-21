@@ -29,10 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {defaultTextEditorOptions} from '../../../../../../../shared/modal/text-editor/text-editor.utils';
-
-interface DashboardNotesCellData {
-  content: string;
-}
+import {DashboardNotesCellData} from '../../../../../../../core/store/dashboard-data/dashboard-data';
 
 @Component({
   selector: 'dashboard-notes',
@@ -56,7 +53,9 @@ export class DashboardNotesComponent implements OnChanges {
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.content = this.data?.content || '';
+    if (changes.data) {
+      this.content = this.data?.content || '';
+    }
   }
 
   public onFocus() {
@@ -67,7 +66,10 @@ export class DashboardNotesComponent implements OnChanges {
   public onBlur() {
     this.editing = false;
     this.computeEditorHeightAfterTimeout();
+    this.checkContentChange();
+  }
 
+  private checkContentChange() {
     if (this.content !== this.data?.content) {
       this.dataChange.emit({content: this.content});
     }
@@ -93,5 +95,11 @@ export class DashboardNotesComponent implements OnChanges {
     const height = +this.element.nativeElement.parentElement.clientHeight - toolbarHeight;
 
     this.element.nativeElement.style.setProperty('--editor-height', `${height}px`);
+  }
+
+  public onContentChange() {
+    if (!this.editing) {
+      this.checkContentChange();
+    }
   }
 }

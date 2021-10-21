@@ -59,10 +59,9 @@ import {ProjectService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {WorkflowsAction} from '../workflows/workflows.action';
 import {DataResourcesAction} from '../data-resources/data-resources.action';
-import {UserPermissionsAction} from '../user-permissions/user-permissions.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import * as DetailActions from './../details/detail.actions';
-import {TeamsAction} from '../teams/teams.action';
+import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 
 @Injectable()
 export class ProjectsEffects {
@@ -567,6 +566,7 @@ export class ProjectsEffects {
           new ChartAction.Clear(),
           new WorkflowsAction.Clear(),
           new SearchesAction.Clear(),
+          DashboardDataActions.clear(),
         ];
 
         if (nextAction) {
