@@ -840,11 +840,25 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new SelectionListsAction.CreateSuccess({list}));
       }
     });
+    this.channel.bind('SelectionList:create:ALT', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          new SelectionListsAction.GetOne({organizationId: data.organizationId, selectionListId: data.id})
+        );
+      }
+    });
 
     this.channel.bind('SelectionList:update', data => {
       if (this.isCurrentOrganization(data)) {
         const list = convertSelectionListDtoToModel(data.object);
         this.store$.dispatch(new SelectionListsAction.UpdateSuccess({list}));
+      }
+    });
+    this.channel.bind('SelectionList:update:ALT', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          new SelectionListsAction.GetOne({organizationId: data.organizationId, selectionListId: data.id})
+        );
       }
     });
 
@@ -1045,11 +1059,11 @@ export class PusherService implements OnDestroy {
   }
 
   private getCurrentOrganizationId(): string {
-    return this.currentOrganization && this.currentOrganization.id;
+    return this.currentOrganization?.id;
   }
 
   private getCurrentProjectId(): string {
-    return this.currentProject && this.currentProject.id;
+    return this.currentProject?.id;
   }
 
   private subscribeToWorkspace() {
@@ -1074,6 +1088,11 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(
           DashboardDataActions.updateSuccess({dashboardData: convertDashboardDataDtoToModel(data.object)})
         );
+      }
+    });
+    this.channel.bind('DashboardData:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(DashboardDataActions.getOne({dataType: data.object.type, id: data.object.typeId}));
       }
     });
   }

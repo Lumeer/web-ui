@@ -31,5 +31,7 @@ export abstract class SelectionListsService {
 
   public abstract get(organizationId: string): Observable<SelectionListDto[]>;
 
+  public abstract getOne(organizationId: string, id: string): Observable<SelectionListDto>;
+
   public abstract getByProject(organizationId: string, projectId: string): Observable<SelectionListDto[]>;
 }

@@ -18,17 +18,18 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {EMPTY, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
-import {Router} from '@angular/router';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {dashboardDataSelectorId, selectDashboardDataEntities, selectDashboardDataLoaded} from './dashboard-data.state';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 import {DashboardDataService} from '../../data-service/dashboard-data/dashboard-data.service';
 import {convertDashboardDataDtoToModel, convertDashboardDataModelToDto} from './dashboard-data.converter';
+import {checkDeletedDashboardData} from './dashboard-data.utils';
 
 @Injectable()
 export class DashboardDataEffects {
@@ -55,6 +56,19 @@ export class DashboardDataEffects {
         const message = $localize`:@@dashboard.data.get.fail:Could not read dashboard data`;
         return new NotificationsAction.Error({message});
       })
+    )
+  );
+
+  public getOne$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DashboardDataActions.getOne),
+      mergeMap(action =>
+        this.service.getOne(action.dataType, action.id, action.workspace).pipe(
+          map(dto => convertDashboardDataDtoToModel(dto)),
+          map(data => DashboardDataActions.getOneSuccess({data})),
+          catchError(error => of(DashboardDataActions.getFailure({error})))
+        )
+      )
     )
   );
 
@@ -87,6 +101,20 @@ export class DashboardDataEffects {
       map(() => {
         const message = $localize`:@@dashboard.data.update.fail:Could not update dashboard data`;
         return new NotificationsAction.Error({message});
+      })
+    )
+  );
+
+  public checkDeletedData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DashboardDataActions.checkDeletedData),
+      mergeMap(action => {
+        const deletedData = checkDeletedDashboardData(action.oldDashboard, action.currentDashboard);
+        if (deletedData.ids.length) {
+          return of(DashboardDataActions.deleteData({dataType: deletedData.type, ids: deletedData.ids}));
+        }
+
+        return EMPTY;
       })
     )
   );

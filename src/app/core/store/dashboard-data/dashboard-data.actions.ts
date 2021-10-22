@@ -21,10 +21,18 @@ import {createAction, props} from '@ngrx/store';
 
 import {DashboardData, DashboardDataType} from './dashboard-data';
 import {Workspace} from '../navigation/workspace';
+import {Dashboard} from '../searches/search';
 
 export const get = createAction('[DashboardData] Get', props<{workspace?: Workspace}>());
 
+export const getOne = createAction(
+  '[DashboardData] Get One',
+  props<{workspace?: Workspace; dataType: DashboardDataType; id: string}>()
+);
+
 export const getSuccess = createAction('[DashboardData] Get :: Success', props<{data: DashboardData[]}>());
+
+export const getOneSuccess = createAction('[DashboardData] Get One :: Success', props<{data: DashboardData}>());
 
 export const getFailure = createAction('[DashboardData] Get :: Failure', props<{error: any}>());
 
@@ -35,6 +43,11 @@ export const updateSuccess = createAction('[DashboardData] Update :: Success', p
 export const updateFailure = createAction(
   '[DashboardData] Update :: Failure',
   props<{error: any; dashboardData: DashboardData}>()
+);
+
+export const checkDeletedData = createAction(
+  '[DashboardData] Check Deleted Data',
+  props<{oldDashboard: Dashboard; currentDashboard: Dashboard}>()
 );
 
 export const deleteData = createAction('[DashboardData] Delete', props<{dataType: DashboardDataType; ids: string[]}>());

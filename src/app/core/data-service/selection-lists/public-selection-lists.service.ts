@@ -49,4 +49,8 @@ export class PublicSelectionListsService extends BaseService implements Selectio
   public update(organizationId: string, id: string, dto: SelectionListDto): Observable<SelectionListDto> {
     return of(dto);
   }
+
+  public getOne(organizationId: string, id: string): Observable<SelectionListDto> {
+    return of(null);
+  }
 }

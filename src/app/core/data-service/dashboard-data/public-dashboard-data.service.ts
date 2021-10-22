@@ -37,4 +37,8 @@ export class PublicDashboardDataService extends BaseService implements Dashboard
   public update(data: DashboardDataDto): Observable<DashboardDataDto> {
     return of(data);
   }
+
+  public getOne(type: string, id: string): Observable<DashboardDataDto> {
+    return of({type, typeId: id});
+  }
 }

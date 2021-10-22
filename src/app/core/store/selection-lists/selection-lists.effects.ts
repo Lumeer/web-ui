@@ -65,6 +65,19 @@ export class SelectionListsEffects {
     )
   );
 
+  public getOne$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SelectionListsAction.GetOne>(SelectionListsActionType.GET_ONE),
+      mergeMap(action =>
+        this.service.getOne(action.payload.organizationId, action.payload.selectionListId).pipe(
+          map(dto => convertSelectionListDtoToModel(dto)),
+          map(list => new SelectionListsAction.GetOneSuccess({list})),
+          catchError(error => of(new SelectionListsAction.GetFailure({error})))
+        )
+      )
+    )
+  );
+
   public getByProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SelectionListsAction.GetByProject>(SelectionListsActionType.GET_BY_PROJECT),

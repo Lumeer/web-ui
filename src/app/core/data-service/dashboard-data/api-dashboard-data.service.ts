@@ -47,6 +47,10 @@ export class ApiDashboardDataService extends BaseService implements DashboardDat
     return this.httpClient.get<DashboardDataDto[]>(this.apiPrefix(workspace));
   }
 
+  public getOne(type: string, typeId: string, workspace?: Workspace): Observable<DashboardDataDto> {
+    return this.httpClient.get<DashboardDataDto>(`${this.apiPrefix(workspace)}/${type}/${typeId}`);
+  }
+
   public deleteByType(type: string, ids: string[]): Observable<DashboardDataDto> {
     return this.httpClient.post<DashboardDataDto>(`${this.apiPrefix()}/${type}/delete`, ids);
   }

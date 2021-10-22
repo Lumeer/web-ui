@@ -30,6 +30,7 @@ export const dashboardDataReducer = createReducer(
   on(DashboardDataActions.getSuccess, (state, action) =>
     dashboardDataAdapter.upsertMany(action.data, {...state, loaded: true})
   ),
+  on(DashboardDataActions.getOneSuccess, (state, action) => dashboardDataAdapter.upsertOne(action.data, {...state})),
   on(DashboardDataActions.updateSuccess, (state, action) =>
     dashboardDataAdapter.upsertOne(action.dashboardData, state)
   ),

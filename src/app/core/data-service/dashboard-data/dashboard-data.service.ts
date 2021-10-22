@@ -27,4 +27,6 @@ export abstract class DashboardDataService {
   public abstract deleteByType(type: string, ids: string[]): Observable<any>;
 
   public abstract getAll(workspace?: Workspace): Observable<DashboardDataDto[]>;
+
+  public abstract getOne(type: string, id: string, workspace?: Workspace): Observable<DashboardDataDto>;
 }

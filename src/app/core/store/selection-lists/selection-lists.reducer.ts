@@ -30,6 +30,8 @@ export function selectionListsReducer(
         ...selectionListsAdapter.addMany(action.payload.lists, state),
         loadedForOrganizationId: action.payload.organizationId,
       };
+    case SelectionListsActionType.GET_ONE_SUCCESS:
+      return selectionListsAdapter.upsertOne(action.payload.list, state);
     case SelectionListsActionType.GET_BY_PROJECT_SUCCESS:
       return selectionListsAdapter.upsertMany(action.payload.lists, state);
     case SelectionListsActionType.CREATE_SUCCESS:

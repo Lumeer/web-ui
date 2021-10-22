@@ -50,6 +50,12 @@ export function areArraysSame(array1: any[], array2: any[]): boolean {
   return a1.length === a2.length && a1.every((value, index) => deepObjectsEquals(value, a2[index]));
 }
 
+export function arraySubtract<T>(array1: T[], array2: T[]): T[] {
+  const a = array1 || [];
+  const b = array2 || [];
+  return a.filter(x => !b.includes(x));
+}
+
 export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {
   if (bigArray.length < smallArray.length) {
     return getArrayDifference(smallArray, bigArray);
