@@ -17,26 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const defaultTextEditorOptions = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-    ['blockquote', 'code-block'],
+export interface DashboardData {
+  type: DashboardDataType;
+  typeId: string;
+  data?: DashboardCellData;
+}
 
-    [{header: 1}, {header: 2}], // custom button values
-    [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
-    [{script: 'sub'}, {script: 'super'}], // superscript/subscript
-    [{indent: '-1'}, {indent: '+1'}], // outdent/indent
-    [{direction: 'rtl'}], // text direction
+export enum DashboardDataType {
+  Cell = 'cell',
+}
 
-    [{size: ['small', false, 'large', 'huge']}], // custom dropdown
-    [{header: [1, 2, 3, 4, 5, 6, false]}],
-
-    [{color: []}, {background: []}], // dropdown with defaults from theme
-    [{font: []}],
-    [{align: []}],
-
-    ['clean'], // remove formatting button
-
-    ['link'], // link and image, video
-  ],
+export const dashboardDataTypesMap = {
+  [DashboardDataType.Cell]: DashboardDataType.Cell,
 };
+
+export type DashboardCellData = DashboardNotesCellData;
+
+export interface DashboardNotesCellData {
+  content: string;
+}

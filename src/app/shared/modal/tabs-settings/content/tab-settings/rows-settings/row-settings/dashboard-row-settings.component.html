@@ -3,6 +3,7 @@
   <dashboard-cell-preview *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
                           (click)="cellSelect.emit(index)"
                           [cell]="cell"
+                          [editable]="editable"
                           [views]="views"
                           [class.selected]="selectedColumn === index"
                           class="dashboard-cell cursor-pointer">

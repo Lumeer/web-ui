@@ -75,7 +75,6 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public readonly macOS = isMacOS();
   public readonly defaultOptions = defaultTextEditorOptions;
   public readonly dialogType = DialogType;
-  public insertTextPlaceholder: string;
 
   constructor(private bsModalRef: BsModalRef, private element: ElementRef<HTMLElement>) {}
 
@@ -152,8 +151,6 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
 
   public ngOnInit() {
     this.checkValid(stripTextHtmlTags(this.content));
-
-    this.insertTextPlaceholder = $localize`:@@textEditor.insertTextPlaceholder:Insert text here...`;
   }
 
   public ngAfterViewInit() {

@@ -22,6 +22,17 @@ import {View} from '../../core/store/views/view';
 import {Perspective} from '../../view/perspectives/perspective';
 import {searchTabsMap} from '../../core/store/navigation/search-tab';
 import {removeAccentFromString} from '@lumeer/data-filters';
+import {Dashboard} from '../../core/store/searches/search';
+
+export function getAllDashboardCells(dashboard: Dashboard): DashboardCell[] {
+  return (dashboard?.tabs || []).reduce((cells, tab) => {
+    for (const row of tab.rows || []) {
+      cells.push(...(row.cells || []));
+    }
+
+    return cells;
+  }, []);
+}
 
 export function isViewValidForDashboard(view: View): boolean {
   return !!view?.config?.search?.dashboard;

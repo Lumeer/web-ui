@@ -17,26 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const defaultTextEditorOptions = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-    ['blockquote', 'code-block'],
+import {Injectable} from '@angular/core';
 
-    [{header: 1}, {header: 2}], // custom button values
-    [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
-    [{script: 'sub'}, {script: 'super'}], // superscript/subscript
-    [{indent: '-1'}, {indent: '+1'}], // outdent/indent
-    [{direction: 'rtl'}], // text direction
+import {DashboardDataService} from './dashboard-data.service';
+import {BaseService} from '../../rest/base.service';
+import {Observable, of} from 'rxjs';
+import {DashboardDataDto} from '../../dto/dashboard-data.dto';
 
-    [{size: ['small', false, 'large', 'huge']}], // custom dropdown
-    [{header: [1, 2, 3, 4, 5, 6, false]}],
+@Injectable()
+export class PublicDashboardDataService extends BaseService implements DashboardDataService {
+  public deleteByType(type: string, ids: string[]): Observable<any> {
+    return of(true);
+  }
 
-    [{color: []}, {background: []}], // dropdown with defaults from theme
-    [{font: []}],
-    [{align: []}],
+  public getAll(): Observable<DashboardDataDto[]> {
+    return of([]);
+  }
 
-    ['clean'], // remove formatting button
+  public update(data: DashboardDataDto): Observable<DashboardDataDto> {
+    return of(data);
+  }
 
-    ['link'], // link and image, video
-  ],
-};
+  public getOne(type: string, id: string): Observable<DashboardDataDto> {
+    return of({type, typeId: id});
+  }
+}

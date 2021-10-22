@@ -56,7 +56,7 @@ export class DashboardCellSettingsComponent {
     this.typeItems = objectValues(DashboardCellType).map(type => ({
       id: type,
       value: parseSelectTranslation(
-        $localize`:@@search.tabs.settings.dialog.cell.type:{type, select, view {View} image {Image}}`,
+        $localize`:@@search.tabs.settings.dialog.cell.type:{type, select, view {View} image {Image} notes {Notes}}`,
         {type}
       ),
     }));

@@ -41,6 +41,8 @@ import {SearchViewsModule} from '../search-views/search-views.module';
 import {SearchTasksModule} from '../search-tasks/search-tasks.module';
 import {SearchCollectionsModule} from '../search-collections/search-collections.module';
 import {SearchAllModule} from '../search-all/search-all.module';
+import {DashboardNotesComponent} from './content/row/notes/dashboard-notes.component';
+import {QuillModule} from 'ngx-quill';
 
 @NgModule({
   imports: [
@@ -60,6 +62,7 @@ import {SearchAllModule} from '../search-all/search-all.module';
     SearchTasksModule,
     SearchCollectionsModule,
     SearchAllModule,
+    QuillModule,
   ],
   declarations: [
     PerspectivePreviewComponent,
@@ -68,6 +71,7 @@ import {SearchAllModule} from '../search-all/search-all.module';
     DashboardTabRowContentComponent,
     DashboardTabCellContentComponent,
     DashboardTabActionComponent,
+    DashboardNotesComponent,
   ],
   exports: [DashboardTabComponent, PerspectivePreviewComponent],
 })

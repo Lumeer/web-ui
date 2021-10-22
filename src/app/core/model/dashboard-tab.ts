@@ -48,6 +48,7 @@ export type DashboardCellConfig = DashboardViewCellConfig | DashboardImageCellCo
 export enum DashboardCellType {
   View = 'view',
   Image = 'image',
+  Notes = 'notes',
 }
 
 export interface DashboardViewCellConfig {

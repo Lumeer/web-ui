@@ -66,6 +66,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {UsersAction} from '../users/users.action';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as DetailActions from './../details/detail.actions';
+import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 import {getPerspectiveSavedPerspectives} from './view.utils';
 import {TeamService} from '../../data-service/team/team.service';
 import {Team} from '../teams/team';
@@ -611,6 +612,7 @@ export class ViewsEffects {
           perspective: Perspective.Search,
           config: {search: searchConfig},
         };
+        const oldDashboard = defaultView?.config?.search?.dashboard;
 
         return this.viewService
           .updateDefaultConfig(
@@ -620,9 +622,14 @@ export class ViewsEffects {
             })
           )
           .pipe(
-            mergeMap(dto =>
+            map(dto => convertDefaultViewConfigDtoToModel(dto)),
+            mergeMap(model =>
               of(
-                new ViewsAction.SetDashboardSuccess({model: convertDefaultViewConfigDtoToModel(dto)}),
+                DashboardDataActions.checkDeletedData({
+                  oldDashboard,
+                  currentDashboard: model.config?.search?.dashboard,
+                }),
+                new ViewsAction.SetDashboardSuccess({model}),
                 ...createCallbackActions(action.payload.onSuccess)
               )
             ),

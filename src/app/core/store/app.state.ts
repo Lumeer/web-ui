@@ -55,6 +55,7 @@ import {DataResourcesState, initialDataResourcesState} from './data-resources/da
 import {AuditLogsState, initialAuditLogsState} from './audit-logs/audit-logs.state';
 import {DetailsState, initialDetailsState} from './details/detail.state';
 import {initialSelectionListsState, SelectionListsState} from './selection-lists/selection-lists.state';
+import {DashboardDataState, initialDashboardDataState} from './dashboard-data/dashboard-data.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -94,6 +95,7 @@ export interface AppState {
   userPermissions: UserPermissionsState;
   auditLogs: AuditLogsState;
   selectionLists: SelectionListsState;
+  dashboardData: DashboardDataState;
 }
 
 export function initialAppState(): AppState {
@@ -135,5 +137,6 @@ export function initialAppState(): AppState {
     userPermissions: initialUserPermissionsState,
     auditLogs: initialAuditLogsState,
     selectionLists: initialSelectionListsState,
+    dashboardData: initialDashboardDataState,
   };
 }

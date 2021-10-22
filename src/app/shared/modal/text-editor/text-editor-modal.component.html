@@ -13,7 +13,8 @@
       [readOnly]="readonly"
       [maxLength]="maxLength"
       [minLength]="minLength"
-      [placeholder]="insertTextPlaceholder"
+      placeholder="Insert text here..."
+      i18n-placeholder="@@textEditor.insertTextPlaceholder"
       [modules]="defaultOptions"
       (onEditorCreated)="focusEditor($event)"
       (onContentChanged)="contentChanged($event)">

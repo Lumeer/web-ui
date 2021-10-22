@@ -25,6 +25,9 @@ export enum SelectionListsActionType {
   GET_SUCCESS = '[Selection Lists] Get :: Success',
   GET_FAILURE = '[Selection Lists] Get :: Failure',
 
+  GET_ONE = '[Selection Lists] Get One',
+  GET_ONE_SUCCESS = '[Selection Lists] Get One :: Success',
+
   GET_BY_PROJECT = '[Selection Lists] Get By Project',
   GET_BY_PROJECT_SUCCESS = '[Selection Lists] Get By Project :: Success',
 
@@ -62,6 +65,18 @@ export namespace SelectionListsAction {
     public readonly type = SelectionListsActionType.GET_FAILURE;
 
     public constructor(public payload: {error: any}) {}
+  }
+
+  export class GetOne implements Action {
+    public readonly type = SelectionListsActionType.GET_ONE;
+
+    public constructor(public payload: {organizationId: string; selectionListId: string}) {}
+  }
+
+  export class GetOneSuccess implements Action {
+    public readonly type = SelectionListsActionType.GET_ONE_SUCCESS;
+
+    public constructor(public payload: {list: SelectionList}) {}
   }
 
   export class GetByProject implements Action {
@@ -163,6 +178,7 @@ export namespace SelectionListsAction {
     | Get
     | GetSuccess
     | GetFailure
+    | GetOneSuccess
     | GetByProjectSuccess
     | Create
     | CreateSuccess

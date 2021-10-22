@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   DashboardCell,
   DashboardCellType,
@@ -28,6 +28,17 @@ import {
 } from '../../../../../../../core/model/dashboard-tab';
 import {View} from '../../../../../../../core/store/views/view';
 import {PerspectiveConfiguration} from '../../../../../perspective-configuration';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {
+  DashboardData,
+  DashboardDataType,
+  DashboardNotesCellData,
+} from '../../../../../../../core/store/dashboard-data/dashboard-data';
+import {Observable} from 'rxjs';
+import {selectDashboardDataByType} from '../../../../../../../core/store/dashboard-data/dashboard-data.state';
+import * as DashboardDataActions from './../../../../../../../core/store/dashboard-data/dashboard-data.actions';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'dashboard-tab-cell-content',
@@ -54,13 +65,23 @@ export class DashboardTabCellContentComponent implements OnChanges {
     detail: {},
   };
 
+  public computedType: DashboardCellType;
   public url: string;
   public scale: DashboardImageScaleType;
   public view: View;
 
+  public cellData$: Observable<DashboardData>;
+
+  constructor(private store$: Store<AppState>) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dashboardCell || changes.views) {
       this.setupData();
+    }
+    if (objectChanged(changes.dashboardCell)) {
+      this.cellData$ = this.store$.pipe(
+        select(selectDashboardDataByType(DashboardDataType.Cell, this.dashboardCell.id))
+      );
     }
   }
 
@@ -72,11 +93,25 @@ export class DashboardTabCellContentComponent implements OnChanges {
       case DashboardCellType.Image:
         this.url = (<DashboardImageCellConfig>this.dashboardCell?.config)?.url;
         this.scale = (<DashboardImageCellConfig>this.dashboardCell?.config)?.scale || defaultDashboardImageScaleType;
+        this.computedType = DashboardCellType.Image;
         break;
       case DashboardCellType.View:
         const viewId = (<DashboardViewCellConfig>this.dashboardCell?.config)?.viewId;
         this.view = viewId && (this.views || []).find(view => view.id === viewId);
+        if (this.view) {
+          this.computedType = DashboardCellType.View;
+        } else {
+          this.computedType = null;
+        }
+        break;
+      case DashboardCellType.Notes:
+        this.computedType = DashboardCellType.Notes;
         break;
     }
+  }
+
+  public onDataChange(data: DashboardNotesCellData) {
+    const dashboardData: DashboardData = {type: DashboardDataType.Cell, typeId: this.dashboardCell.id, data};
+    this.store$.dispatch(DashboardDataActions.update({dashboardData}));
   }
 }

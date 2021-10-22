@@ -17,26 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const defaultTextEditorOptions = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-    ['blockquote', 'code-block'],
+import {DashboardDataDto} from '../../dto/dashboard-data.dto';
+import {DashboardData, dashboardDataTypesMap} from './dashboard-data';
 
-    [{header: 1}, {header: 2}], // custom button values
-    [{list: 'ordered'}, {list: 'bullet'}, {list: 'check'}],
-    [{script: 'sub'}, {script: 'super'}], // superscript/subscript
-    [{indent: '-1'}, {indent: '+1'}], // outdent/indent
-    [{direction: 'rtl'}], // text direction
+export function convertDashboardDataDtoToModel(dto: DashboardDataDto): DashboardData {
+  return {
+    data: dto.data,
+    typeId: dto.typeId,
+    type: dashboardDataTypesMap[dto.type],
+  };
+}
 
-    [{size: ['small', false, 'large', 'huge']}], // custom dropdown
-    [{header: [1, 2, 3, 4, 5, 6, false]}],
-
-    [{color: []}, {background: []}], // dropdown with defaults from theme
-    [{font: []}],
-    [{align: []}],
-
-    ['clean'], // remove formatting button
-
-    ['link'], // link and image, video
-  ],
-};
+export function convertDashboardDataModelToDto(model: DashboardData): DashboardDataDto {
+  return {
+    data: model.data,
+    typeId: model.typeId,
+    type: model.type,
+  };
+}

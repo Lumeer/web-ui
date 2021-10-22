@@ -5,13 +5,19 @@
                         [views]="views">
   </dashboard-tab-action>
 </div>
-<img *ngIf="dashboardCell?.type === cellType.Image" class="image" [ngClass]="scale" [src]="url" alt=""/>
-<ng-container *ngIf="dashboardCell?.type === cellType.View">
+<ng-container [ngSwitch]="dashboardCell?.type">
+  <img *ngSwitchCase="cellType.Image" class="image" [ngClass]="scale" [src]="url" alt=""/>
 
-  <perspective-preview *ngIf="view"
+  <perspective-preview *ngSwitchCase="cellType.View"
                        class="preview"
                        [view]="view"
                        [perspectiveConfiguration]="configuration">
   </perspective-preview>
 
+  <dashboard-notes *ngSwitchCase="cellType.Notes"
+                   [data]="(cellData$ | async)?.data"
+                   (dataChange)="onDataChange($event)">
+  </dashboard-notes>
+
 </ng-container>
+

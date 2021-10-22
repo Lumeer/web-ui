@@ -51,6 +51,10 @@ export class ApiSelectionListsService extends BaseService implements SelectionLi
     return this.httpClient.delete(this.apiPrefix({organizationId}, id));
   }
 
+  public getOne(organizationId: string, id: string): Observable<SelectionListDto> {
+    return this.httpClient.get<SelectionListDto>(this.apiPrefix({organizationId}, id));
+  }
+
   public get(organizationId: string): Observable<SelectionListDto[]> {
     return this.httpClient.get<SelectionListDto[]>(this.apiPrefix({organizationId}));
   }

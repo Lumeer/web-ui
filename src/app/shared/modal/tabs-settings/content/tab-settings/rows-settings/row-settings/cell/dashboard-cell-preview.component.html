@@ -1,15 +1,28 @@
-<img *ngIf="url" [src]="url" alt="" [ngClass]="scale"/>
-<div *ngIf="!view && !url" class="text-success clickable content p-2">
-  <ng-container *ngIf="editable">
-    <i class="far fa-pencil mr-2"></i>
-    <span class="text-truncate" i18n="@@edit">Edit</span>
-  </ng-container>
-  <ng-container *ngIf="!editable">
-    <i class="far fa-eye mr-2"></i>
-    <span class="text-truncate" i18n="@@show">Show</span>
-  </ng-container>
-</div>
-<div class="content p-2" *ngIf="view" [title]="view.name">
-  <i class="mr-2" [ngClass]="view.icon" [style.color]="view.color"></i>
-  <span class="text-truncate">{{view.name}}</span>
-</div>
+<ng-container [ngSwitch]="computedType">
+
+  <img *ngSwitchCase="type.Image"
+       [src]="url" alt="" [ngClass]="scale"/>
+
+  <div *ngSwitchCase="type.View"
+       class="content p-2" [title]="view.name">
+    <i class="mr-2" [ngClass]="view.icon" [style.color]="view.color"></i>
+    <span class="text-truncate">{{view.name}}</span>
+  </div>
+
+  <div *ngSwitchCase="type.Notes" class="content p-2">
+    <i class="far fa-list mr-2"></i>
+    <span [style.margin-bottom.rem]="0.1" class="text-truncate" i18n="@@notes">Notes</span>
+  </div>
+
+  <div *ngSwitchDefault class="text-success clickable content p-2">
+    <ng-container *ngIf="editable">
+      <i class="far fa-pencil mr-2"></i>
+      <span class="text-truncate" i18n="@@edit">Edit</span>
+    </ng-container>
+    <ng-container *ngIf="!editable">
+      <i class="far fa-eye mr-2"></i>
+      <span class="text-truncate" i18n="@@show">Show</span>
+    </ng-container>
+  </div>
+
+</ng-container>

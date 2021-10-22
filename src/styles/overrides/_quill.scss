@@ -59,3 +59,21 @@ span[data-denotation-char='@'] {
 span[data-denotation-char='@'] > span {
   margin: 0 3px;
 }
+
+.ql-editor ul[data-checked='true'] > li {
+  text-decoration: line-through;
+
+  &::before {
+    color: $primary;
+    vertical-align: middle;
+    height: 18px;
+    content: url('~assets/img/checkbox_checked.svg');
+  }
+}
+
+.ql-editor ul[data-checked='false'] > li::before {
+  color: $primary;
+  vertical-align: middle;
+  height: 18px;
+  content: url('~assets/img/checkbox_unchecked.svg');
+}

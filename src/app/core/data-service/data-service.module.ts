@@ -65,6 +65,9 @@ import {ApiTeamService} from './team/api-team.service';
 import {SelectionListsService} from './selection-lists/selection-lists.service';
 import {PublicSelectionListsService} from './selection-lists/public-selection-lists.service';
 import {ApiSelectionListsService} from './selection-lists/api-selection-lists.service';
+import {DashboardDataService} from './dashboard-data/dashboard-data.service';
+import {PublicDashboardDataService} from './dashboard-data/public-dashboard-data.service';
+import {ApiDashboardDataService} from './dashboard-data/api-dashboard-data.service';
 
 @NgModule({
   declarations: [],
@@ -129,6 +132,10 @@ import {ApiSelectionListsService} from './selection-lists/api-selection-lists.se
     {
       provide: SelectionListsService,
       useClass: configuration.publicView ? PublicSelectionListsService : ApiSelectionListsService,
+    },
+    {
+      provide: DashboardDataService,
+      useClass: configuration.publicView ? PublicDashboardDataService : ApiDashboardDataService,
     },
   ],
 })
