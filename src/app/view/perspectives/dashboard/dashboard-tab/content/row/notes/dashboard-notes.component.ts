@@ -18,6 +18,8 @@
  */
 
 import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -35,8 +37,9 @@ import {DashboardNotesCellData} from '../../../../../../../core/store/dashboard-
   selector: 'dashboard-notes',
   templateUrl: './dashboard-notes.component.html',
   styleUrls: ['./dashboard-notes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardNotesComponent implements OnChanges {
+export class DashboardNotesComponent implements OnChanges, AfterViewInit {
   @Input()
   public data: DashboardNotesCellData;
 

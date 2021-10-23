@@ -29,8 +29,6 @@ import {PipesModule} from '../../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../../shared/shared.module';
 import {TablePipesModule} from '../shared/pipes/table-pipes.module';
 import {TableSharedModule} from '../shared/table-shared.module';
-import {TableRowGroupFooterComponent} from './row-group/footer/table-row-group-footer.component';
-import {TableRowGroupComponent} from './row-group/table-row-group.component';
 import {BooleanCollapsedCellComponent} from './rows/cell-group/collapsed-cell/boolean/boolean-collapsed-cell.component';
 import {ColorCollapsedCellComponent} from './rows/cell-group/collapsed-cell/color/color-collapsed-cell.component';
 import {GroupColorsByCountPipe} from './rows/cell-group/collapsed-cell/color/group-colors-by-count.pipe';
@@ -68,8 +66,6 @@ import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user
   ],
   declarations: [
     TableBodyComponent,
-    TableRowGroupComponent,
-    TableRowGroupFooterComponent,
     TableCellGroupComponent,
     TableLinkCellComponent,
     TableRowsComponent,

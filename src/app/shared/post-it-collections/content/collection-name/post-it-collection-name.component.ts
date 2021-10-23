@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'post-it-collection-name',
   templateUrl: './post-it-collection-name.component.html',
   styleUrls: ['./post-it-collection-name.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItCollectionNameComponent {
   @ViewChild('collectionNameInput', {static: true}) public input: ElementRef;

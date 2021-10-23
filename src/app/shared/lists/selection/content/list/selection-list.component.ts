@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {SelectionList} from '../../selection-list';
 
 @Component({
@@ -25,6 +25,7 @@ import {SelectionList} from '../../selection-list';
   templateUrl: './selection-list.component.html',
   styleUrls: ['./selection-list.component.scss'],
   host: {class: 'card p-2'},
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionListComponent {
   @Input()

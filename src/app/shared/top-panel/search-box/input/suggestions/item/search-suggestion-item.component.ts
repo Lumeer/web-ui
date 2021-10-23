@@ -17,26 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {QueryItem} from '../../../query-item/model/query-item';
 import {QueryItemType} from '../../../query-item/model/query-item-type';
 
 @Component({
   selector: 'search-suggestion-item',
   templateUrl: './search-suggestion-item.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SuggestionItemComponent {
+export class SuggestionItemComponent implements OnChanges {
   @Input()
   public suggestion: QueryItem;
 
   @Input()
   public text: string;
 
-  public isCollectionItem(): boolean {
-    return this.suggestion.type === QueryItemType.Collection;
-  }
+  public isCollectionItem: boolean;
+  public isFulltextItem: boolean;
 
-  public isFulltextItem(): boolean {
-    return this.suggestion.type === QueryItemType.Fulltext;
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.suggestion) {
+      this.isCollectionItem = this.suggestion?.type === QueryItemType.Collection;
+      this.isFulltextItem = this.suggestion?.type === QueryItemType.Fulltext;
+    }
   }
 }

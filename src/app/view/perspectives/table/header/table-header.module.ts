@@ -23,7 +23,6 @@ import {MatMenuModule} from '@angular/material/menu';
 import {CommonModule} from '@angular/common';
 import {ResizableModule} from 'angular-resizable-element';
 import {SharedModule} from '../../../../shared/shared.module';
-import {TableRowGroupHeaderComponent} from '../body/row-group/header/table-row-group-header.component';
 import {TableSharedModule} from '../shared/table-shared.module';
 import {TableHeaderAddButtonComponent} from './add-button/table-header-add-button.component';
 import {TableCaptionComponent} from './collection/caption/table-caption.component';
@@ -65,7 +64,6 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     TableHiddenColumnComponent,
     TableHierarchyColumnComponent,
     TableLinkInfoComponent,
-    TableRowGroupHeaderComponent,
     TableSingleColumnComponent,
   ],
   exports: [TableHeaderComponent],

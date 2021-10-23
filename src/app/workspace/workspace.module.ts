@@ -26,7 +26,6 @@ import {ProjectUsersComponent} from './project/users/project-users.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {WorkspaceService} from './workspace.service';
-import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
 import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
 import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
@@ -37,7 +36,6 @@ import {PaymentsStateComponent} from './organization/detail/payments-panel/payme
 import {OrganizationUsersComponent} from './organization/users/organization-users.component';
 import {UsersModule} from '../shared/users/users.module';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
-import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
 import {ProjectTemplateComponent} from './project/template/project-template.component';
 import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
@@ -67,9 +65,6 @@ import {SelectionListsModule} from '../shared/lists/selection/selection-lists.mo
     OrganizationDetailComponent,
     ProjectUsersComponent,
     OrganizationUsersComponent,
-    OrganizationGroupsComponent,
-    OrganizationRegistrationComponent,
-    OrganizationGroupsComponent,
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
     ContactFormComponent,

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, HostListener, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {SelectionList} from '../../selection-list';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
@@ -36,9 +36,8 @@ import {map, take} from 'rxjs/operators';
 import {selectSelectionListsByProjectSorted} from '../../../../../core/store/selection-lists/selection-lists.state';
 
 @Component({
-  selector: 'selection-list-modal',
   templateUrl: './selection-list-modal.component.html',
-  styleUrls: ['./selection-list-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionListModalComponent implements OnInit {
   @Input()

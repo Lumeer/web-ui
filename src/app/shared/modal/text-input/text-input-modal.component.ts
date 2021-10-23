@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, Input} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {keyboardEventCode, KeyCode} from '../../key-code';
 import {Subject} from 'rxjs';
@@ -27,14 +27,23 @@ import {DialogType} from '../dialog-type';
   templateUrl: './text-input-modal.component.html',
 })
 export class TextInputModalComponent {
+  @Input()
+  public title = '';
+
+  @Input()
+  public description = '';
+
+  @Input()
+  public placeholder = '';
+
+  @Input()
+  public validationFunction: (content: string) => boolean;
+
+  public valid = false;
+  public content = '';
+
   public onSave$ = new Subject<string>();
   public onCancel$ = new Subject();
-  public validationFunction: (content: string) => boolean;
-  public title = '';
-  public description = '';
-  public placeholder = '';
-  public content = '';
-  public valid = false;
 
   public readonly dialogType = DialogType;
 
@@ -61,9 +70,9 @@ export class TextInputModalComponent {
     }
   }
 
-  public validate($event: any) {
+  public validate(event: any) {
     if (this.validationFunction) {
-      this.valid = this.validationFunction($event);
+      this.valid = this.validationFunction(event);
     }
   }
 }

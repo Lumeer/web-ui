@@ -20,7 +20,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
-import {FilterBoxComponent} from './filter-box/filter-box.component';
 import {InputBoxComponent} from './input-box/input-box.component';
 import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
 import {HiddenInputComponent} from './hidden-input/hidden-input.component';
@@ -36,7 +35,6 @@ import {ToggleCheckboxComponent} from './toggle-checkbox/toggle-checkbox.compone
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, DirectivesModule, DropdownModule],
   declarations: [
-    FilterBoxComponent,
     InputBoxComponent,
     InvitationTypeSelectComponent,
     HiddenInputComponent,
@@ -47,7 +45,6 @@ import {ToggleCheckboxComponent} from './toggle-checkbox/toggle-checkbox.compone
     ToggleCheckboxComponent,
   ],
   exports: [
-    FilterBoxComponent,
     InputBoxComponent,
     InvitationTypeSelectComponent,
     HiddenInputComponent,

@@ -28,6 +28,7 @@ import {
   ElementRef,
   SimpleChanges,
   HostListener,
+  OnChanges,
 } from '@angular/core';
 import {QueryItem} from '../model/query-item';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
@@ -51,7 +52,7 @@ import {QueryItemType} from '../model/query-item-type';
   styleUrls: ['../query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SimpleQueryItemComponent implements OnInit {
+export class SimpleQueryItemComponent implements OnInit, OnChanges {
   @Input()
   public queryItem: QueryItem;
 

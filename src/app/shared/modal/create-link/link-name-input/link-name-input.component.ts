@@ -17,12 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'link-name-input',
   templateUrl: './link-name-input.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkNameInputComponent implements OnChanges {
   @Input()
@@ -41,7 +50,7 @@ export class LinkNameInputComponent implements OnChanges {
   public linkName: ElementRef;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('focused') && this.focused) {
+    if (changes.focused && this.focused) {
       this.linkName.nativeElement.focus();
     }
   }

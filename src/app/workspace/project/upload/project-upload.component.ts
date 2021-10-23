@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {FileAttachment} from '../../../core/store/file-attachments/file-attachment.model';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -25,7 +25,7 @@ import {NotificationService} from '../../../core/notifications/notification.serv
 @Component({
   selector: 'project-upload',
   templateUrl: './project-upload.component.html',
-  styleUrls: ['./project-upload.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectUploadComponent {
   @Input()

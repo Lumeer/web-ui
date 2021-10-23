@@ -17,18 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'tag',
   templateUrl: './tag.component.html',
   styleUrls: ['./tag.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagComponent {
-  @Input() public value: string;
-  @Input() public readonly: boolean;
+  @Input()
+  public value: string;
 
-  @Output() public remove = new EventEmitter<void>();
+  @Input()
+  public readonly: boolean;
+
+  @Output()
+  public remove = new EventEmitter<void>();
 
   public onRemove() {
     this.remove.emit();

@@ -16,21 +16,21 @@
       "projectType": "application",
       "prefix": "",
       "schematics": {
-        "@ngrx/schematics:component": {
+        "@schematics/angular:component": {
           "changeDetection": "OnPush",
           "skipTests": true,
           "style": "scss"
         },
-        "@ngrx/schematics:guard": {
+        "@schematics/angular:guard": {
           "skipTests": true
         },
-        "@ngrx/schematics:module": {
+        "@schematics/angular:module": {
           "skipTests": true
         },
-        "@ngrx/schematics:pipe": {
+        "@schematics/angular:pipe": {
           "skipTests": true
         },
-        "@ngrx/schematics:service": {
+        "@schematics/angular:service": {
           "skipTests": true
         }
       },
