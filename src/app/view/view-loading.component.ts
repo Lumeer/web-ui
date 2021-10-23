@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   selector: 'view-loading',
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewLoadingComponent {}

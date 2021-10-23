@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 import {AppState} from '../../../core/store/app.state';
 import {Observable} from 'rxjs';
@@ -30,6 +30,7 @@ import {selectProjectByWorkspace} from '../../../core/store/projects/projects.st
 @Component({
   selector: 'selection-lists',
   templateUrl: './selection-lists.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionListsComponent implements OnInit {
   @Input()

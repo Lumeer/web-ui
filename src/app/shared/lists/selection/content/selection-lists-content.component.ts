@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
 import {AppState} from '../../../../core/store/app.state';
@@ -36,6 +36,7 @@ import {createUniqueNameWithSuffix} from '../../../utils/string.utils';
   selector: 'selection-lists-content',
   templateUrl: './selection-lists-content.component.html',
   styleUrls: ['./selection-lists-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionListsContentComponent implements OnChanges {
   @Input()

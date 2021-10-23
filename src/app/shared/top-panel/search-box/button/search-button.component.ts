@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'search-button',
   templateUrl: './search-button.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchButtonComponent {
   @Input()

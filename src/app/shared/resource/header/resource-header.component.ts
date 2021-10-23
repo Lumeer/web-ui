@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
@@ -29,6 +29,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
   styleUrls: ['./resource-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceHeaderComponent implements OnInit {
   @Input()

@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {View} from '../../../../core/store/views/view';
 import {defaultSearchPerspectiveConfiguration, SearchPerspectiveConfiguration} from '../../perspective-configuration';
 
 @Component({
   selector: 'search-collections',
   templateUrl: './search-collections.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchCollectionsComponent {
   @Input()

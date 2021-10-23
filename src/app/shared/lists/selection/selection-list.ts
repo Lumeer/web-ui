@@ -18,7 +18,6 @@
  */
 
 import {SelectConstraintOption} from '@lumeer/data-filters';
-import {selectDefaultPalette} from '../../picker/colors';
 
 export interface SelectionList {
   id?: string;
@@ -28,30 +27,3 @@ export interface SelectionList {
   displayValues?: boolean;
   options: SelectConstraintOption[];
 }
-
-export const predefinedSelectionLists: SelectionList[] = [
-  {
-    id: '_task',
-    name: $localize`:@@selection.lists.predefined.tasks:Tasks`,
-    displayValues: true,
-    options: [
-      {value: '0', displayValue: 'New', background: selectDefaultPalette[0]},
-      {value: '1', displayValue: 'Cancelled', background: selectDefaultPalette[1]},
-      {value: '2', displayValue: 'In Progress', background: selectDefaultPalette[2]},
-      {value: '3', displayValue: 'Testing', background: selectDefaultPalette[3]},
-      {value: '4', displayValue: 'Done', background: selectDefaultPalette[4]},
-      {value: '5', displayValue: 'In Production', background: selectDefaultPalette[5]},
-    ],
-  },
-  {
-    id: '_event',
-    name: $localize`:@@selection.lists.predefined.events:Events`,
-    displayValues: true,
-    options: [
-      {value: '0', displayValue: 'Scheduled', background: selectDefaultPalette[0]},
-      {value: '1', displayValue: 'Cancelled', background: selectDefaultPalette[1]},
-      {value: '2', displayValue: 'In Progress', background: selectDefaultPalette[2]},
-      {value: '3', displayValue: 'Finished', background: selectDefaultPalette[3]},
-    ],
-  },
-];

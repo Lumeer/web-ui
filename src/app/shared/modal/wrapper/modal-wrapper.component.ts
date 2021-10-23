@@ -39,7 +39,7 @@ export class ModalWrapperComponent {
   public showSubmit = true;
 
   @Input()
-  public showSecondarySubmit = false;
+  public showSecondarySubmit: boolean;
 
   @Input()
   public showClose = true;
@@ -51,25 +51,25 @@ export class ModalWrapperComponent {
   public showFooter = true;
 
   @Input()
-  public submitDisabled = false;
+  public submitDisabled: boolean;
 
   @Input()
-  public secondarySubmitDisabled = false;
+  public secondarySubmitDisabled: boolean;
 
   @Input()
   public secondarySubmitClass: string;
 
   @Input()
-  public closeDisabled = false;
+  public closeDisabled: boolean;
 
   @Input()
   public secondaryInfo: string;
 
   @Input()
-  public performingAction = false;
+  public performingAction: boolean;
 
   @Input()
-  public performingSecondaryAction = false;
+  public performingSecondaryAction: boolean;
 
   @Input()
   public customHeader: boolean;

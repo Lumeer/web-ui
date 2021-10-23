@@ -23,6 +23,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   QueryList,
@@ -45,7 +46,7 @@ import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
   styleUrls: ['./select-constraint-options-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectConstraintOptionsFormComponent implements OnInit, OnDestroy {
+export class SelectConstraintOptionsFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public form: FormGroup;
 

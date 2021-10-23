@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {SelectionList} from '../../../selection-list';
 
 @Component({
   selector: 'selection-list-modal-content',
   templateUrl: './selection-list-modal-content.component.html',
-  styleUrls: ['./selection-list-modal-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectionListModalContentComponent {
   @Input()

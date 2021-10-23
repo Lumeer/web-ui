@@ -1,8 +1,8 @@
-<div class="d-inline-flex" [class.font-weight-bold]="isCollectionItem()">
+<div class="d-inline-flex" [class.font-weight-bold]="isCollectionItem">
   <icons-presenter [colors]="suggestion.colors"
                    [icons]="suggestion.icons">
   </icons-presenter>
-  <span [innerHTML]="!isFulltextItem() ? (suggestion.text | truncate:40 | highlightText:text) : (suggestion.text | truncate:40)"
+  <span [innerHTML]="!isFulltextItem ? (suggestion.text | truncate:40 | highlightText:text) : (suggestion.text | truncate:40)"
         [title]="suggestion.text"
         class="ml-2"></span>
 </div>
