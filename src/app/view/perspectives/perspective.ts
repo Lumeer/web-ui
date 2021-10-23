@@ -30,6 +30,7 @@ export enum Perspective {
   Pivot = 'pivot',
   GanttChart = 'ganttChart',
   Workflow = 'workflow',
+  Form = 'form',
 }
 
 export const perspectivesMap: Record<string, Perspective> = {
@@ -44,6 +45,7 @@ export const perspectivesMap: Record<string, Perspective> = {
   [Perspective.Search]: Perspective.Search,
   [Perspective.Table]: Perspective.Table,
   [Perspective.Workflow]: Perspective.Workflow,
+  [Perspective.Form]: Perspective.Form,
 };
 
 export const perspectiveIconsMap: Record<string, string> = {
@@ -58,4 +60,5 @@ export const perspectiveIconsMap: Record<string, string> = {
   [Perspective.Search]: 'far fa-fw fa-search',
   [Perspective.Table]: 'far fa-fw fa-table',
   [Perspective.Workflow]: 'far fa-fw fa-user-chart',
+  [Perspective.Form]: 'far fa-fw fa-line-columns',
 };

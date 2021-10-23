@@ -17,20 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {parseSelectTranslation} from '../utils/translation.utils';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
-@Pipe({
-  name: 'perspectiveName',
+@Component({
+  selector: 'form-perspective',
+  templateUrl: './form-perspective.component.html',
+  styleUrls: ['./form-perspective.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class PerspectiveNamePipe implements PipeTransform {
-  public transform(perspective: string): string {
-    return parseSelectTranslation(
-      $localize`:@@view.perspective.name:{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} form {Form}}`,
-      {perspective}
-    );
-  }
-}
+export class FormPerspectiveComponent {}

@@ -17,20 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {parseSelectTranslation} from '../utils/translation.utils';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {FormPerspectiveComponent} from './form-perspective.component';
 
-@Pipe({
-  name: 'perspectiveName',
+const routes: Routes = [
+  {
+    path: '',
+    component: FormPerspectiveComponent,
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class PerspectiveNamePipe implements PipeTransform {
-  public transform(perspective: string): string {
-    return parseSelectTranslation(
-      $localize`:@@view.perspective.name:{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} form {Form}}`,
-      {perspective}
-    );
-  }
-}
+export class FormPerspectiveRoutingModule {}
