@@ -8,5 +8,6 @@
             [organization]="organization"
             [project]="project"
             [changeRoles]="data.serviceLimits?.groups"
+            [emitAllChanges]="true"
             (teamRolesChange)="teamRolesChange.emit($event)">
 </team-table>

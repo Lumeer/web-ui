@@ -21,7 +21,7 @@ import {Attribute, Collection} from '../../core/store/collections/collection';
 import {AttributesSettings, ResourceAttributeSettings, ViewSettings} from '../../core/store/views/view';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {deepArrayEquals, moveItemsInArray} from '../utils/array.utils';
+import {deepArrayEquals, moveItemsInArray, uniqueValues} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {objectValues} from '../utils/common.utils';
@@ -114,7 +114,8 @@ function viewResourceAttributesSettingsChanged(
   resourcesMap: Record<string, AttributesResource>,
   composed?: boolean
 ): boolean {
-  return Object.keys(currentSettings || {}).some(key => {
+  const keys = uniqueValues([...Object.keys(currentSettings || {}), ...Object.keys(previousSettings || {})]);
+  return keys.some(key => {
     const resourceId = composed ? parseViewSettingsLinkTypeCollectionIds(key).collectionId : key;
     const attributes = resourcesMap[resourceId]?.attributes || [];
     const previousOrder = createAttributesSettingsOrder(attributes, previousSettings?.[key]);

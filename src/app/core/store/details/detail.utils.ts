@@ -68,13 +68,17 @@ export function isDetailConfigChanged(
     return true;
   }
 
-  const viewConfigStems = (viewConfig?.stemsConfigs || []).filter(stemConfig => !detailStemConfigIsEmpty(stemConfig));
-  const previousConfigStems = (previousConfig?.stemsConfigs || []).filter(
+  let viewConfigStems = (viewConfig?.stemsConfigs || []).filter(stemConfig => !detailStemConfigIsEmpty(stemConfig));
+  let previousConfigStems = (previousConfig?.stemsConfigs || []).filter(
     stemConfig => !detailStemConfigIsEmpty(stemConfig)
   );
 
   if (viewConfigStems.length !== previousConfigStems.length) {
-    return true;
+    viewConfigStems = cleanEmptyStemConfigs(viewConfigStems, collectionsMap, linkTypesMap);
+    previousConfigStems = cleanEmptyStemConfigs(previousConfigStems, collectionsMap, linkTypesMap);
+    if (viewConfigStems.length !== previousConfigStems.length) {
+      return true;
+    }
   }
 
   const viewConfigStemsCopy = [...viewConfigStems];
@@ -98,6 +102,14 @@ export function isDetailConfigChanged(
   );
 }
 
+function cleanEmptyStemConfigs(
+  stemConfigs: DetailStemConfig[],
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): DetailStemConfig[] {
+  return stemConfigs.filter(stemConfig => isDetailStemConfigChanged(stemConfig, null, collectionsMap, linkTypesMap));
+}
+
 export function createDetailSaveConfig(config: DetailConfig): DetailConfig {
   const stemsConfigs = (config?.stemsConfigs || []).filter(config => !detailStemConfigIsEmpty(config));
   return {
@@ -116,7 +128,7 @@ export function isDetailStemConfigChanged(
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): boolean {
-  return viewAttributeSettingsChanged(s1.attributesSettings, s2.attributesSettings, collectionsMap, linkTypesMap);
+  return viewAttributeSettingsChanged(s1?.attributesSettings, s2?.attributesSettings, collectionsMap, linkTypesMap);
 }
 
 export function checkOrTransformDetailConfig(

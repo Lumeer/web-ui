@@ -81,11 +81,12 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   public overrideView$ = new BehaviorSubject<View>(null);
   public overrideCursor$ = new BehaviorSubject<ViewCursor>(null);
 
+  public isEmbedded: boolean;
+
   private query: Query;
   private currentView: View;
   private collection: Collection;
   private createdDocuments: string[] = [];
-  private isEmbedded: boolean;
   private subscriptions = new Subscription();
 
   public constructor(private store$: Store<AppState>) {}

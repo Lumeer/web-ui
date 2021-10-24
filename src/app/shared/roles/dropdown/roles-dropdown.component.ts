@@ -56,6 +56,9 @@ export class RolesDropdownComponent implements OnChanges {
   @Input()
   public groups: RoleGroup[];
 
+  @Input()
+  public emitAllChanges: boolean;
+
   @Output()
   public change = new EventEmitter<Role[]>();
 
@@ -114,7 +117,7 @@ export class RolesDropdownComponent implements OnChanges {
         newRoles = this.removeRoleFromArray(role, newRoles);
       }
     });
-    this.selectedRoles$.next(newRoles);
+    this.setRoles(newRoles);
   }
 
   public onClose() {
@@ -143,6 +146,13 @@ export class RolesDropdownComponent implements OnChanges {
     } else {
       newRoles = this.removeRoleFromArray(role, this.selectedRoles$.value);
     }
-    this.selectedRoles$.next(newRoles);
+    this.setRoles(newRoles);
+  }
+
+  private setRoles(roles: Role[]) {
+    this.selectedRoles$.next(roles);
+    if (this.emitAllChanges) {
+      this.change.emit(roles);
+    }
   }
 }

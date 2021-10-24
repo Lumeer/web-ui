@@ -66,6 +66,9 @@ export class WorkflowSidebarComponent implements OnInit, OnChanges {
   @Input()
   public workflowId: string;
 
+  @Input()
+  public isEmbedded: boolean;
+
   @Output()
   public close = new EventEmitter();
 

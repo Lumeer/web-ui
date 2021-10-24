@@ -63,6 +63,9 @@ export class TeamTableComponent {
   public editableTeams: boolean;
 
   @Input()
+  public emitAllChanges: boolean;
+
+  @Input()
   public organization: Organization;
 
   @Input()

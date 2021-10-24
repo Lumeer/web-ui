@@ -113,6 +113,9 @@ export class DataResourceDetailComponent
   @Input()
   public defaultView: View;
 
+  @Input()
+  public isEmbedded: boolean;
+
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
 
@@ -257,7 +260,7 @@ export class DataResourceDetailComponent
       switchMap(([overrideSettings, defaultView, settingsStem]) => {
         if (overrideSettings) {
           return of(overrideSettings);
-        } else if (defaultView?.config?.detail) {
+        } else if (this.isEmbedded && defaultView?.config?.detail) {
           const stemsConfigs = defaultView.config.detail.stemsConfigs || [];
           const stemConfig = stemsConfigs.find(config => config.stem?.collectionId === this.collectionId$.value);
           return of(stemConfig?.attributesSettings);
@@ -462,7 +465,7 @@ export class DataResourceDetailComponent
   }
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
-    if (this.defaultView) {
+    if (this.isEmbedded) {
       this.overrideSettings$.next(attributesSettings);
     } else if (this.settingsStem) {
       this.store$.dispatch(
