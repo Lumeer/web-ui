@@ -29,6 +29,7 @@
                             [dataResource]="data.selected?.document"
                             [query]="data.query"
                             [defaultView]="currentView$ | async"
+                            [isEmbedded]="isEmbedded"
                             [allowSelectDocument]="perspectiveConfiguration?.selectDocuments"
                             [settingsQuery]="settingsQuery$ | async"
                             [settingsStem]="data.selected?.collection | detailQueryStem"

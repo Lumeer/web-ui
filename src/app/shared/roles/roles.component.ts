@@ -55,6 +55,9 @@ export class RolesComponent implements OnChanges {
   @Input()
   public editable: boolean;
 
+  @Input()
+  public emitAllChanges: boolean;
+
   @Output()
   public change = new EventEmitter<Role[]>();
 

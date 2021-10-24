@@ -102,6 +102,9 @@ export class WorkflowContentComponent implements AfterViewInit {
   public workflowId: string;
 
   @Input()
+  public isEmbedded: boolean;
+
+  @Input()
   public perspectiveConfiguration: WorkflowPerspectiveConfiguration;
 
   @Output()

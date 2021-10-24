@@ -65,6 +65,9 @@ export class UserTableComponent {
   @Input()
   public editableGroups: boolean;
 
+  @Input()
+  public emitAllChanges: boolean;
+
   @Output()
   public userUpdated = new EventEmitter<User>();
 

@@ -48,6 +48,9 @@ export class UserComponent {
   public changeRoles: boolean;
 
   @Input()
+  public emitAllChanges: boolean;
+
+  @Input()
   public user: User;
 
   @Input()

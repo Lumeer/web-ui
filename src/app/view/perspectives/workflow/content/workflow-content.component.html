@@ -29,6 +29,7 @@
   <workflow-sidebar class="d-block sidebar mr-1"
                     *ngIf="selectedDocument && selectedCollection"
                     [query]="query"
+                    [isEmbedded]="isEmbedded"
                     [collection]="selectedCollection"
                     [document]="selectedDocument"
                     [currentView]="currentView"

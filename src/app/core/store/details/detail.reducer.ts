@@ -64,6 +64,9 @@ function setStemAttributes(
     if (stemConfigIndex !== -1) {
       stemsConfigs[stemConfigIndex] = {...stemsConfigs[stemConfigIndex], attributesSettings};
       return detailsAdapter.updateOne({id: detailId, changes: {config: {...detail.config, stemsConfigs}}}, state);
+    } else {
+      stemsConfigs.push({stem, attributesSettings});
+      return detailsAdapter.upsertOne({id: detailId, config: {stemsConfigs}}, state);
     }
   }
 

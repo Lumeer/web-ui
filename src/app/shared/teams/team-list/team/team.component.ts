@@ -58,6 +58,9 @@ export class TeamComponent {
   public changeRoles: boolean;
 
   @Input()
+  public emitAllChanges: boolean;
+
+  @Input()
   public allTeams: Team[];
 
   @Input()
