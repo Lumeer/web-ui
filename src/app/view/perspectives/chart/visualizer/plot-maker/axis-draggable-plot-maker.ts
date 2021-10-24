@@ -18,7 +18,7 @@
  */
 
 import * as moment from 'moment';
-import {d3} from 'plotly.js';
+import * as d3 from '@plotly/d3';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {DraggablePlotMaker} from './draggable-plot-maker';

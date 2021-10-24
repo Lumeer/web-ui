@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout, d3} from 'plotly.js';
+import {Data, Layout} from 'plotly.js';
+import * as d3 from '@plotly/d3';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ChartDataSet, ChartPoint} from '../../data/convertor/chart-data';
 import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';

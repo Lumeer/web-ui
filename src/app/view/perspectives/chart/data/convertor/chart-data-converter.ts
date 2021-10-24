@@ -582,7 +582,7 @@ export class ChartDataConverter {
       const colorDataResources = dataObject.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const attributeColor = this.dataObjectAggregator.getAttributeColor(colorAxis, colorDataResources);
 
-      const setName = dataObject.groupingObjects?.[0] || ' ';
+      const setName = dataObject.groupingObjects?.[0] || this.attributeNameForAxis(yAxis);
       let setIndex: number;
       let axisColor: string;
       if (setsMap[setName]) {

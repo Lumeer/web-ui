@@ -19,9 +19,10 @@
 
 import {ElementRef} from '@angular/core';
 import PlotlyJS from 'plotly.js';
+import * as d3 from '@plotly/d3';
 import CSLocale from 'plotly.js/lib/locales/cs.js';
 import HULocale from 'plotly.js/lib/locales/hu.js';
-import {Config, d3, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
+import {Config, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
 import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
 import {DataChange, PlotlyChartData, PlotMaker} from './plot-maker/plot-maker';
 import {ChartData, ChartSettings} from '../data/convertor/chart-data';
@@ -215,13 +216,16 @@ export class ChartVisualizer {
 
   private setFormatters(data: ChartData) {
     const currentLocale = d3.locale;
-    d3.locale = locale => {
+    console.log(d3);
+    d3.localee = locale => {
       const result = currentLocale(locale);
       const numberFormat = result.numberFormat;
       result.numberFormat = format => {
         return formatLocaleValue(format, data, numberFormat(format));
       };
       const timeFormat = result.timeFormat;
+
+      console.log(result, numberFormat, timeFormat);
 
       const customTimeFormat = specifier => {
         const customFormatter: d3.time.Format = formatLocaleValue(specifier, data, timeFormat(specifier));
