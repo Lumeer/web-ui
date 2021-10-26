@@ -85,6 +85,7 @@ export class ChartVisualizer {
   private registerLanguage(locale: string) {
     switch (locale) {
       case LanguageCode.CZ:
+        CSLocale.dictionary['Download plot as a png'] = 'Uložit jako PNG';
         (PlotlyJS as any).register(CSLocale);
         break;
       case LanguageCode.HU:
