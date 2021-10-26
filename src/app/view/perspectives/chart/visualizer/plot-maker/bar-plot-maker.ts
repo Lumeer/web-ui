@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Layout} from 'plotly.js';
-import * as d3 from '@plotly/d3';
+import {Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
