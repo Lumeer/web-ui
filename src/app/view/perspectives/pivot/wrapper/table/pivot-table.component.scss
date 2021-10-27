@@ -1,16 +1,35 @@
 @import '~src/styles/variables';
 
 .pivot-data-cell,
-.pivot-group-data-cell {
+.pivot-data-group-cell {
   text-align: right;
 }
 
 .pivot-column-header-cell,
 .pivot-row-header-cell,
-.pivot-group-data-cell,
-.pivot-group-header-cell {
+.pivot-data-group-cell,
+.pivot-row-group-header-cell,
+.pivot-column-group-header-cell {
   font-weight: bold;
   border: 1px $gray-100 solid;
+}
+
+.pivot-row-header-cell,
+.pivot-row-group-header-cell {
+  &.sticky {
+    position: sticky;
+    left: 0;
+    top: unset !important;
+    z-index: 9;
+  }
+}
+
+.pivot-column-header-cell,
+.pivot-column-group-header-cell {
+  &.sticky {
+    position: sticky;
+    z-index: 10;
+  }
 }
 
 .pivot-empty-cell {

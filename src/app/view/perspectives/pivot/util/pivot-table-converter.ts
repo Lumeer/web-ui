@@ -61,10 +61,11 @@ interface ValueTypeInfo {
 export class PivotTableConverter {
   public static readonly emptyClass = 'pivot-empty-cell';
   public static readonly dataClass = 'pivot-data-cell';
-  public static readonly groupDataClass = 'pivot-group-data-cell';
+  public static readonly groupDataClass = 'pivot-data-group-cell';
   public static readonly rowHeaderClass = 'pivot-row-header-cell';
+  public static readonly rowGroupHeaderClass = 'pivot-row-group-header-cell';
   public static readonly columnHeaderClass = 'pivot-column-header-cell';
-  public static readonly groupHeaderClass = 'pivot-group-header-cell';
+  public static readonly columnGroupHeaderClass = 'pivot-column-group-header-cell';
 
   private readonly groupColors = [COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500];
 
@@ -172,6 +173,7 @@ export class PivotTableConverter {
         value: header.title,
         cssClass: PivotTableConverter.rowHeaderClass,
         isHeader: true,
+        sticky: this.isRowLevelSticky(level),
         rowSpan,
         colSpan: 1,
         background: this.getHeaderBackground(header, level),
@@ -204,8 +206,9 @@ export class PivotTableConverter {
         value: parentHeader?.title,
         constraint: parentHeader?.constraint,
         label: parentHeader?.attributeName,
-        cssClass: PivotTableConverter.groupHeaderClass,
+        cssClass: PivotTableConverter.rowGroupHeaderClass,
         isHeader: true,
+        sticky: this.isRowLevelSticky(level),
         rowSpan: 1,
         colSpan: this.rowLevels - columnIndex,
         background,
@@ -223,7 +226,7 @@ export class PivotTableConverter {
   }
 
   private getHeaderBackground(header: PivotDataHeader, level: number): string {
-    if (header && header.color) {
+    if (header?.color) {
       return shadeColor(header.color, this.getLevelOpacity(level));
     }
 
@@ -232,6 +235,15 @@ export class PivotTableConverter {
 
   private getLevelOpacity(level: number): number {
     return Math.min(80, 50 + level * 5) / 100;
+  }
+
+  private isRowLevelSticky(level: number): boolean {
+    return this.data?.rowSticky?.[level];
+  }
+
+  private isColumnLevelSticky(level: number): boolean {
+    const maxLevel = Math.min(level, (this.data?.columnSticky?.length ?? Number.MAX_SAFE_INTEGER) - 1);
+    return this.data?.columnSticky?.[maxLevel];
   }
 
   private getSummaryBackground(level: number): string {
@@ -398,6 +410,7 @@ export class PivotTableConverter {
         isHeader: true,
         rowSpan: 1,
         colSpan,
+        sticky: this.isColumnLevelSticky(level),
         background: this.getHeaderBackground(header, level),
         constraint: header.constraint,
         label: header.attributeName,
@@ -431,8 +444,9 @@ export class PivotTableConverter {
         value: parentHeader?.title,
         constraint: parentHeader?.constraint,
         label: parentHeader?.attributeName,
-        cssClass: PivotTableConverter.groupHeaderClass,
+        cssClass: PivotTableConverter.columnGroupHeaderClass,
         isHeader: true,
+        sticky: this.isColumnLevelSticky(level),
         rowSpan: this.columnLevels - rowIndex - (shouldAddValueHeaders ? 1 : 0),
         colSpan: numberOfSums,
         background,
@@ -446,8 +460,9 @@ export class PivotTableConverter {
             const valueTitle = this.data.valueTitles[i];
             cells[this.columnLevels - 1][columnIndexInCells] = {
               value: valueTitle,
-              cssClass: PivotTableConverter.groupHeaderClass,
+              cssClass: PivotTableConverter.columnGroupHeaderClass,
               isHeader: true,
+              sticky: this.isColumnLevelSticky(level),
               rowSpan: 1,
               colSpan: 1,
               background,

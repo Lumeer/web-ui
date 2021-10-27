@@ -35,4 +35,5 @@ export interface PivotTableCell {
   isHeader: boolean;
   background?: string;
   label?: string;
+  sticky?: boolean;
 }

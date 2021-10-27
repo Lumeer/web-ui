@@ -2,14 +2,16 @@
   <table *ngFor="let pivotTable of pivotTables; let first"
          class="table table-bordered table-md"
          [class.mt-4]="!first">
-    <tr *ngFor="let row of pivotTable.cells">
+    <tr *ngFor="let rowCells of pivotTable.cells; let rowIndex = index">
 
-      <ng-container *ngFor="let cell of row">
+      <ng-container *ngFor="let cell of rowCells">
         <td *ngIf="cell && {hasValue: cell | pivotTableCellHasValue} as cellData"
             class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}} text-truncate"
             [style.max-width.px]="300"
+            [class.sticky]="cell.sticky"
             [rowSpan]="cell.rowSpan"
             [colSpan]="cell.colSpan"
+            [style.top.px]="rowIndex * 39"
             [ngClass]="cell.cssClass"
             [style.background]="cell.background"
             [style.color]="cell.background && (cell.background | contrastColor)">

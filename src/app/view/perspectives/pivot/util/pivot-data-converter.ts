@@ -79,8 +79,10 @@ interface PivotColors {
 
 interface PivotConfigData {
   rowShowSums: boolean[];
+  rowSticky: boolean[];
   rowSorts: PivotSort[];
   columnShowSums: boolean[];
+  columnSticky: boolean[];
   columnSorts: PivotSort[];
   rowAttributes: Attribute[];
   columnAttributes: Attribute[];
@@ -252,9 +254,11 @@ export class PivotDataConverter {
       if (!additionalData) {
         additionalData = {
           rowShowSums: (config.rowAttributes || []).map(attr => attr.showSums),
+          rowSticky: (config.rowAttributes || []).map(attr => attr.sticky),
           rowSorts: (config.rowAttributes || []).map(attr => attr.sort),
           rowAttributes: (config.rowAttributes || []).map(attr => this.pivotAttributeAttribute(attr)),
           columnShowSums: (config.columnAttributes || []).map(attr => attr.showSums),
+          columnSticky: (config.columnAttributes || []).map(attr => attr.sticky),
           columnSorts: (config.columnAttributes || []).map(attr => attr.sort),
           columnAttributes: (config.columnAttributes || []).map(attr => this.pivotAttributeAttribute(attr)),
         };
@@ -392,8 +396,10 @@ export class PivotDataConverter {
       valueAggregations: data.aggregations,
 
       rowShowSums: [],
+      rowSticky: [],
       rowSorts: [],
       columnShowSums: [],
+      columnSticky: [],
       columnSorts: [],
 
       hasAdditionalColumnLevel: true,
