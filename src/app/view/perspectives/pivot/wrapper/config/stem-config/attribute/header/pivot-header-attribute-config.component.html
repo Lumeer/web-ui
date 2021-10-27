@@ -35,7 +35,8 @@
   <label [for]="showStickyId"
          class="custom-control-label">
   </label>
-  <span i18n="@@perspective.pivot.config.attribute.sticky">Sticky</span>
+  <span i18n="@@perspective.pivot.config.attribute.sticky.row" *ngIf="isRow">Fixed column</span>
+  <span i18n="@@perspective.pivot.config.attribute.sticky.column" *ngIf="!isRow">Fixed row</span>
 </div>
 
 <pivot-attribute-sort
