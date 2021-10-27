@@ -46,6 +46,9 @@ export class PivotHeaderAttributeConfigComponent {
   @Input()
   public pivotData: PivotStemData;
 
+  @Input()
+  public canSetSticky: boolean;
+
   @Output()
   public attributeSelect = new EventEmitter<PivotRowColumnAttribute>();
 

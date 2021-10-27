@@ -248,7 +248,7 @@ describe('Chart data converter single collection', () => {
           xSort: 'Sport',
         },
       ],
-      name: ' ',
+      name: 'Kala',
       draggable: true,
       color: '#ffffff',
       yAxisType: ChartAxisType.Y1,

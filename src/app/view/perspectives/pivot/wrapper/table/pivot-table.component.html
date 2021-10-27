@@ -1,17 +1,19 @@
 <ng-container *ngIf="pivotTables?.length && !(pivotData | pivotDataEmpty); else emptyCells">
   <table *ngFor="let pivotTable of pivotTables; let first"
-         class="table table-bordered table-md"
+         class="table table-md"
          [class.mt-4]="!first">
     <tr *ngFor="let rowCells of pivotTable.cells; let rowIndex = index">
 
-      <ng-container *ngFor="let cell of rowCells">
+      <ng-container *ngFor="let cell of rowCells; let cellIndex = index">
         <td *ngIf="cell && {hasValue: cell | pivotTableCellHasValue} as cellData"
             class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}} text-truncate"
             [style.max-width.px]="300"
-            [class.sticky]="cell.sticky"
+            [class.sticky-start]="cell.stickyStart"
+            [class.sticky-top]="cell.stickyTop"
             [rowSpan]="cell.rowSpan"
             [colSpan]="cell.colSpan"
-            [style.top.px]="rowIndex * 39"
+            [style.top.px]="cell.stickyTop ? (rowIndex * 40) : undefined"
+            [style.left.px]="cell.stickyStart ? (cellIndex * 150) : undefined"
             [ngClass]="cell.cssClass"
             [style.background]="cell.background"
             [style.color]="cell.background && (cell.background | contrastColor)">

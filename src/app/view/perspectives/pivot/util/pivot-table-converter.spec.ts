@@ -33,6 +33,7 @@ describe('Pivot table converter', () => {
         {
           valueTitles: [],
           rowHeaders: [],
+          rowSticky: [],
           columnHeaders: [],
           values: [],
           dataResources: [],
@@ -41,6 +42,7 @@ describe('Pivot table converter', () => {
           columnSorts: [],
           columnShowSums: [],
           valueTypes: [],
+          columnSticky: [],
         },
       ],
     };
@@ -53,6 +55,7 @@ describe('Pivot table converter', () => {
         {
           valueTitles: ['A', 'B', 'C'],
           rowHeaders: [],
+          rowSticky: [],
           columnHeaders: [
             {title: 'A', targetIndex: 0, color: undefined, isValueHeader: false},
             {title: 'B', targetIndex: 1, color: undefined, isValueHeader: false},
@@ -62,6 +65,7 @@ describe('Pivot table converter', () => {
           dataResources: [],
           rowShowSums: [],
           columnShowSums: [],
+          columnSticky: [],
           hasAdditionalColumnLevel: true,
         },
       ],
@@ -80,6 +84,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'B',
@@ -90,6 +95,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][2]).toEqual({
       value: 'C',
@@ -100,6 +106,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: '10',
@@ -132,6 +139,7 @@ describe('Pivot table converter', () => {
       data: [
         {
           valueTitles: [],
+          rowSticky: [],
           rowHeaders: [
             {
               title: 'A',
@@ -160,6 +168,7 @@ describe('Pivot table converter', () => {
             },
           ],
           columnHeaders: [],
+          columnSticky: [],
           values: [],
           dataResources: [],
           rowShowSums: [true, true],
@@ -180,6 +189,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'a1',
@@ -190,6 +200,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual(undefined);
     expect(pivotTable.cells[1][1]).toEqual({
@@ -201,6 +212,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[2][0]).toEqual({
       value: 'A',
@@ -208,10 +220,11 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       colSpan: 2,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.rowGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[2][1]).toEqual(undefined);
 
@@ -224,6 +237,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[3][1]).toEqual({
       value: 'a1',
@@ -234,6 +248,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[4][0]).toEqual({
       value: 'B',
@@ -241,10 +256,11 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       colSpan: 2,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.rowGroupHeaderClass,
       background: COLOR_GRAY200,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[4][1]).toEqual(undefined);
 
@@ -257,6 +273,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[5][1]).toEqual({
       value: 'a2',
@@ -267,6 +284,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[6][0]).toEqual(undefined);
     expect(pivotTable.cells[6][1]).toEqual({
@@ -278,6 +296,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[7][0]).toEqual(undefined);
     expect(pivotTable.cells[7][1]).toEqual({
@@ -289,6 +308,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[8][0]).toEqual({
       value: 'C',
@@ -296,10 +316,11 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       colSpan: 2,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.rowGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[8][1]).toEqual(undefined);
     expect(pivotTable.cells[9][0]).toEqual({
@@ -308,10 +329,11 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       colSpan: 2,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.rowGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY100,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[9][1]).toEqual(undefined);
 
@@ -326,6 +348,7 @@ describe('Pivot table converter', () => {
         {
           valueTitles: [],
           rowHeaders: [],
+          rowSticky: [],
           columnHeaders: [
             {
               title: 'X',
@@ -354,6 +377,7 @@ describe('Pivot table converter', () => {
           ],
           values: [],
           dataResources: [],
+          columnSticky: [],
           columnShowSums: [true, true],
           rowShowSums: [],
         },
@@ -372,6 +396,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: 'a1',
@@ -382,6 +407,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'X',
@@ -389,10 +415,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][1]).toEqual(undefined);
 
@@ -405,6 +432,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual(undefined);
     expect(pivotTable.cells[1][2]).toEqual({
@@ -416,6 +444,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][3]).toEqual({
       value: 'a2',
@@ -426,6 +455,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][4]).toEqual({
       value: 'Y',
@@ -433,10 +463,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][4]).toEqual(undefined);
 
@@ -449,6 +480,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][6]).toEqual(undefined);
     expect(pivotTable.cells[1][5]).toEqual({
@@ -460,6 +492,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][6]).toEqual({
       value: 'a3',
@@ -470,6 +503,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][7]).toEqual({
       value: 'Z',
@@ -477,10 +511,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][7]).toEqual(undefined);
     expect(pivotTable.cells[0][8]).toEqual({
@@ -489,10 +524,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY100,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][8]).toEqual(undefined);
 
@@ -507,6 +543,7 @@ describe('Pivot table converter', () => {
       data: [
         {
           valueTitles: ['X', 'Y'],
+          rowSticky: [],
           rowHeaders: [
             {
               title: 'A',
@@ -549,6 +586,7 @@ describe('Pivot table converter', () => {
           dataResources: [],
           rowShowSums: [true, true],
           columnShowSums: [],
+          columnSticky: [],
           hasAdditionalColumnLevel: true,
         },
       ],
@@ -560,9 +598,11 @@ describe('Pivot table converter', () => {
     expect(pivotTable.cells[0][0]).toEqual({
       value: '',
       rowSpan: 1,
-      colSpan: 2,
+      colSpan: 1,
       isHeader: false,
       cssClass: PivotTableConverter.emptyClass,
+      stickyStart: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][2]).toEqual({
       value: 'X',
@@ -573,6 +613,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual({
       value: 'Y',
@@ -583,6 +624,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
 
     expect(pivotTable.cells[1][2].value).toEqual('1');
@@ -654,7 +696,9 @@ describe('Pivot table converter', () => {
             new PercentageConstraint({} as PercentageConstraintConfig),
           ],
           rowShowSums: [true, true],
+          rowSticky: [],
           columnShowSums: [],
+          columnSticky: [],
           hasAdditionalColumnLevel: true,
         },
       ],
@@ -721,8 +765,10 @@ describe('Pivot table converter', () => {
           ],
           values: [[1, 5, 6, 2, null, 1, 4, 5, null]],
           dataResources: [],
+          rowSticky: [],
           rowShowSums: [],
           columnShowSums: [true],
+          columnSticky: [],
           hasAdditionalColumnLevel: true,
         },
       ],
@@ -738,6 +784,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual({
       value: 'B',
@@ -748,6 +795,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][6]).toEqual({
       value: 'C',
@@ -758,6 +806,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][9]).toEqual({
       value: undefined,
@@ -765,10 +814,11 @@ describe('Pivot table converter', () => {
       isHeader: true,
       colSpan: 3,
       rowSpan: 1,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY100,
       label: undefined,
+      stickyTop: undefined,
     });
 
     expect(pivotTable.cells[1][9]).toEqual({
@@ -776,24 +826,27 @@ describe('Pivot table converter', () => {
       isHeader: true,
       colSpan: 1,
       rowSpan: 1,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       background: COLOR_GRAY100,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][10]).toEqual({
       value: 'Y',
       isHeader: true,
       colSpan: 1,
       rowSpan: 1,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       background: COLOR_GRAY100,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[1][11]).toEqual({
       value: 'Z',
       isHeader: true,
       colSpan: 1,
       rowSpan: 1,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       background: COLOR_GRAY100,
+      stickyTop: undefined,
     });
 
     expect(pivotTable.cells[2][0].value).toEqual('1');
@@ -865,7 +918,9 @@ describe('Pivot table converter', () => {
             [1, 0, 1, 1, 2],
           ],
           dataResources: [],
+          rowSticky: [],
           rowShowSums: [false, true],
+          columnSticky: [],
           columnShowSums: [true, true],
         },
       ],
@@ -874,10 +929,12 @@ describe('Pivot table converter', () => {
     const pivotTable = converter.transform(data)[0];
     expect(pivotTable.cells[0][0]).toEqual({
       value: '',
-      rowSpan: 2,
-      colSpan: 2,
+      rowSpan: 1,
+      colSpan: 1,
       isHeader: false,
       cssClass: PivotTableConverter.emptyClass,
+      stickyTop: undefined,
+      stickyStart: undefined,
     });
 
     expect(pivotTable.cells[5][0]).toEqual({
@@ -886,10 +943,11 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       colSpan: 2,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.rowGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[6][0]).toEqual({
       value: 'B',
@@ -900,6 +958,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyStart: undefined,
     });
     expect(pivotTable.cells[8][0]).toEqual({
       value: 'B',
@@ -907,10 +966,11 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       colSpan: 2,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.rowGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyStart: undefined,
     });
 
     expect(pivotTable.cells[0][2]).toEqual({
@@ -922,6 +982,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][5]).toEqual({
       value: 'Y',
@@ -932,6 +993,7 @@ describe('Pivot table converter', () => {
       background: undefined,
       constraint: undefined,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][4]).toEqual({
       value: 'X',
@@ -939,10 +1001,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][8]).toEqual({
       value: 'Y',
@@ -950,10 +1013,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY200,
       label: undefined,
+      stickyTop: undefined,
     });
     expect(pivotTable.cells[0][9]).toEqual({
       value: undefined,
@@ -961,10 +1025,11 @@ describe('Pivot table converter', () => {
       rowSpan: 2,
       colSpan: 1,
       isHeader: true,
-      cssClass: PivotTableConverter.groupHeaderClass,
+      cssClass: PivotTableConverter.columnGroupHeaderClass,
       constraint: undefined,
       background: COLOR_GRAY100,
       label: undefined,
+      stickyTop: undefined,
     });
 
     expect(pivotTable.cells[2].slice(2).map(v => v.value)).toEqual(['1', '2', '3', '4', '1', '2', '7', '10']);

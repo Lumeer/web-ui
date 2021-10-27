@@ -25,7 +25,7 @@
   <span i18n="@@perspective.pivot.config.attribute.sums">Show summary</span>
 </div>
 
-<div class="custom-control custom-checkbox mt-1" *ngIf="pivotAttribute">
+<div class="custom-control custom-checkbox mt-1" *ngIf="canSetSticky && pivotAttribute">
   <input [id]="showStickyId"
          [attr.checked]="pivotAttribute.sticky"
          [checked]="pivotAttribute.sticky"

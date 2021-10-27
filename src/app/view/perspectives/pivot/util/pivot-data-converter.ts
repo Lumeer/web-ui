@@ -254,11 +254,11 @@ export class PivotDataConverter {
       if (!additionalData) {
         additionalData = {
           rowShowSums: (config.rowAttributes || []).map(attr => attr.showSums),
-          rowSticky: (config.rowAttributes || []).map(attr => attr.sticky),
+          rowSticky: this.mapStickyValues((config.rowAttributes || []).map(attr => attr.sticky)),
           rowSorts: (config.rowAttributes || []).map(attr => attr.sort),
           rowAttributes: (config.rowAttributes || []).map(attr => this.pivotAttributeAttribute(attr)),
           columnShowSums: (config.columnAttributes || []).map(attr => attr.showSums),
-          columnSticky: (config.columnAttributes || []).map(attr => attr.sticky),
+          columnSticky: this.mapStickyValues((config.columnAttributes || []).map(attr => attr.sticky)),
           columnSorts: (config.columnAttributes || []).map(attr => attr.sort),
           columnAttributes: (config.columnAttributes || []).map(attr => this.pivotAttributeAttribute(attr)),
         };
@@ -266,6 +266,14 @@ export class PivotDataConverter {
     }
 
     return this.convertAggregatedData(mergedAggregatedData, mergedValueAttributes, pivotColors, additionalData);
+  }
+
+  private mapStickyValues(values: boolean[]): boolean[] {
+    // we support only sticky rows/columns in a row
+    return values.reduce((stickyValues, sticky, index) => {
+      stickyValues.push(sticky && (index === 0 || stickyValues[index - 1]));
+      return stickyValues;
+    }, []);
   }
 
   private pivotAttributeConstraint(pivotAttribute: PivotAttribute): Constraint {

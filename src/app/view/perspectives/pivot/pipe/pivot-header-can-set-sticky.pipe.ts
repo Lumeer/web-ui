@@ -17,24 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '@lumeer/data-filters';
-import {DataResource} from '../../../../core/model/resource';
+import {Pipe, PipeTransform} from '@angular/core';
+import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 
-export interface PivotTable {
-  cells: PivotTableCell[][];
-}
-
-export interface PivotTableCell {
-  value: any;
-  dataResources?: DataResource[];
-  constraint?: Constraint;
-  summary?: string;
-  rowSpan: number;
-  colSpan: number;
-  cssClass: string;
-  isHeader: boolean;
-  background?: string;
-  label?: string;
-  stickyTop?: boolean;
-  stickyStart?: boolean;
+@Pipe({
+  name: 'pivotHeaderCanSetSticky',
+})
+export class PivotHeaderCanSetStickyPipe implements PipeTransform {
+  public transform(attributes: PivotRowColumnAttribute[], index: number): boolean {
+    if (index === 0) {
+      return true;
+    }
+    return (attributes || []).slice(0, index).every(attribute => attribute.sticky);
+  }
 }
