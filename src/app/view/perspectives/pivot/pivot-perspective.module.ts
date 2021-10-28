@@ -44,6 +44,7 @@ import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {PivotCellConfigurationPipe} from './pipe/pivot-cell-configuration.pipe';
 import {PivotDataEmptyPipe} from './pipe/pivot-data-empty.pipe';
 import {PivotCellClickablePipe} from './pipe/pivot-cell-clickable.pipe';
+import {PivotHeaderCanSetStickyPipe} from './pipe/pivot-header-can-set-sticky.pipe';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import {PivotCellClickablePipe} from './pipe/pivot-cell-clickable.pipe';
     PivotCellConfigurationPipe,
     PivotDataEmptyPipe,
     PivotCellClickablePipe,
+    PivotHeaderCanSetStickyPipe,
   ],
   imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule, DataInputModule],
   exports: [PivotPerspectiveComponent],

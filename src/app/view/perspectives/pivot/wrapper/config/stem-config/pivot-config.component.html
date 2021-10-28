@@ -33,6 +33,7 @@
                                        [selectedAttributes]="config.rowAttributes || []"
                                        [pivotData]="pivotData"
                                        [isRow]="true"
+                                       [canSetSticky]="config?.rowAttributes | pivotHeaderCanSetSticky:index"
                                        (attributeSelect)="onRowAttributeSelect($event, attribute)"
                                        (attributeRemove)="onRowAttributeRemove(index)"
                                        (attributeChange)="onRowAttributeChange(index, $event)">
@@ -85,6 +86,7 @@
                                        [attributesResources]="data.attributesResources"
                                        [selectedAttributes]="config.columnAttributes || []"
                                        [pivotData]="pivotData"
+                                       [canSetSticky]="config?.columnAttributes | pivotHeaderCanSetSticky:index"
                                        (attributeSelect)="onColumnAttributeSelect($event, attribute)"
                                        (attributeRemove)="onColumnAttributeRemove(index)"
                                        (attributeChange)="onColumnAttributeChange(index, $event)">

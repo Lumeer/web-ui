@@ -61,10 +61,11 @@ interface ValueTypeInfo {
 export class PivotTableConverter {
   public static readonly emptyClass = 'pivot-empty-cell';
   public static readonly dataClass = 'pivot-data-cell';
-  public static readonly groupDataClass = 'pivot-group-data-cell';
+  public static readonly groupDataClass = 'pivot-data-group-cell';
   public static readonly rowHeaderClass = 'pivot-row-header-cell';
+  public static readonly rowGroupHeaderClass = 'pivot-row-group-header-cell';
   public static readonly columnHeaderClass = 'pivot-column-header-cell';
-  public static readonly groupHeaderClass = 'pivot-group-header-cell';
+  public static readonly columnGroupHeaderClass = 'pivot-column-group-header-cell';
 
   private readonly groupColors = [COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500];
 
@@ -79,6 +80,7 @@ export class PivotTableConverter {
   private columnLevels: number;
   private columnsTransformationArray: number[];
   private valueTypeInfo: ValueTypeInfo[];
+  private nonStickyRowIndex: number;
 
   constructor(private headerSummaryString: string, private summaryString: string) {}
 
@@ -106,6 +108,7 @@ export class PivotTableConverter {
     const numberOfSums = Math.max(1, (data.valueTitles || []).length);
     this.valueTypeInfo = getValuesTypeInfo(data.values, data.valueTypes, numberOfSums);
     this.data = preparePivotData(data, this.constraintData, this.valueTypeInfo);
+    this.nonStickyRowIndex = this.data.rowSticky?.findIndex(sticky => !sticky) || 0;
     this.values = data.values || [];
     this.dataResources = data.dataResources || [];
     this.rowLevels = (data.rowShowSums || []).length;
@@ -172,6 +175,7 @@ export class PivotTableConverter {
         value: header.title,
         cssClass: PivotTableConverter.rowHeaderClass,
         isHeader: true,
+        stickyStart: this.isRowLevelSticky(level),
         rowSpan,
         colSpan: 1,
         background: this.getHeaderBackground(header, level),
@@ -200,14 +204,37 @@ export class PivotTableConverter {
       const background = this.getSummaryBackground(level);
       const summary = level === 0 ? this.summaryString : this.headerSummaryString;
       const columnIndex = Math.max(level - 1, 0);
+      let colSpan = this.rowLevels - columnIndex;
+      const stickyStart = this.isRowLevelSticky(columnIndex);
+
+      // split row group header cell because of correct sticky scroll
+      if (stickyStart && this.nonStickyRowIndex > 0 && colSpan > 1) {
+        const newColspan = this.nonStickyRowIndex - columnIndex;
+
+        cells[currentIndex][this.nonStickyRowIndex] = {
+          value: undefined,
+          constraint: undefined,
+          label: undefined,
+          cssClass: PivotTableConverter.rowGroupHeaderClass,
+          isHeader: true,
+          rowSpan: 1,
+          colSpan: colSpan - newColspan,
+          background,
+          summary: undefined,
+        };
+
+        colSpan = newColspan;
+      }
+
       cells[currentIndex][columnIndex] = {
         value: parentHeader?.title,
         constraint: parentHeader?.constraint,
         label: parentHeader?.attributeName,
-        cssClass: PivotTableConverter.groupHeaderClass,
+        cssClass: PivotTableConverter.rowGroupHeaderClass,
         isHeader: true,
+        stickyStart,
         rowSpan: 1,
-        colSpan: this.rowLevels - columnIndex,
+        colSpan,
         background,
         summary,
       };
@@ -223,7 +250,7 @@ export class PivotTableConverter {
   }
 
   private getHeaderBackground(header: PivotDataHeader, level: number): string {
-    if (header && header.color) {
+    if (header?.color) {
       return shadeColor(header.color, this.getLevelOpacity(level));
     }
 
@@ -232,6 +259,15 @@ export class PivotTableConverter {
 
   private getLevelOpacity(level: number): number {
     return Math.min(80, 50 + level * 5) / 100;
+  }
+
+  private isRowLevelSticky(level: number): boolean {
+    return this.data?.rowSticky?.[level];
+  }
+
+  private isColumnLevelSticky(level: number): boolean {
+    const maxLevel = Math.min(level, (this.data?.columnSticky?.length ?? Number.MAX_SAFE_INTEGER) - 1);
+    return this.data?.columnSticky?.[maxLevel];
   }
 
   private getSummaryBackground(level: number): string {
@@ -398,6 +434,7 @@ export class PivotTableConverter {
         isHeader: true,
         rowSpan: 1,
         colSpan,
+        stickyTop: this.isColumnLevelSticky(level),
         background: this.getHeaderBackground(header, level),
         constraint: header.constraint,
         label: header.attributeName,
@@ -431,8 +468,9 @@ export class PivotTableConverter {
         value: parentHeader?.title,
         constraint: parentHeader?.constraint,
         label: parentHeader?.attributeName,
-        cssClass: PivotTableConverter.groupHeaderClass,
+        cssClass: PivotTableConverter.columnGroupHeaderClass,
         isHeader: true,
+        stickyTop: this.isColumnLevelSticky(level),
         rowSpan: this.columnLevels - rowIndex - (shouldAddValueHeaders ? 1 : 0),
         colSpan: numberOfSums,
         background,
@@ -446,8 +484,9 @@ export class PivotTableConverter {
             const valueTitle = this.data.valueTitles[i];
             cells[this.columnLevels - 1][columnIndexInCells] = {
               value: valueTitle,
-              cssClass: PivotTableConverter.groupHeaderClass,
+              cssClass: PivotTableConverter.columnGroupHeaderClass,
               isHeader: true,
+              stickyTop: this.isColumnLevelSticky(level),
               rowSpan: 1,
               colSpan: 1,
               background,
@@ -649,13 +688,19 @@ export class PivotTableConverter {
     }
 
     if (this.rowLevels > 0 && this.columnLevels > 0) {
-      matrix[0][0] = {
-        value: '',
-        cssClass: PivotTableConverter.emptyClass,
-        rowSpan: this.columnLevels,
-        colSpan: this.rowLevels,
-        isHeader: false,
-      };
+      for (let i = 0; i < this.columnLevels; i++) {
+        for (let j = 0; j < this.rowLevels; j++) {
+          matrix[i][j] = {
+            value: '',
+            cssClass: PivotTableConverter.emptyClass,
+            rowSpan: 1,
+            colSpan: 1,
+            stickyStart: this.isRowLevelSticky(j),
+            stickyTop: this.isColumnLevelSticky(i),
+            isHeader: false,
+          };
+        }
+      }
     }
 
     return matrix;

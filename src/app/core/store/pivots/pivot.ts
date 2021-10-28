@@ -47,6 +47,7 @@ export interface PivotAttribute extends QueryAttribute {}
 
 export interface PivotRowColumnAttribute extends PivotAttribute {
   showSums?: boolean;
+  sticky?: boolean;
   sort?: PivotSort;
 }
 

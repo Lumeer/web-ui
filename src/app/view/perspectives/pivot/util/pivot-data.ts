@@ -41,8 +41,10 @@ export interface PivotStemData {
   valueAggregations?: DataAggregationType[];
 
   rowShowSums: boolean[];
+  rowSticky: boolean[];
   rowSorts?: PivotSort[];
   columnShowSums: boolean[];
+  columnSticky: boolean[];
   columnSorts?: PivotSort[];
   hasAdditionalColumnLevel?: boolean;
 }

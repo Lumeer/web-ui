@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AppState} from '../app.state';
-import {createSelector} from '@ngrx/store';
+import {Pipe, PipeTransform} from '@angular/core';
+import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 
-export interface ModalsState {
-  modalsIds: any[];
+@Pipe({
+  name: 'pivotHeaderCanSetSticky',
+})
+export class PivotHeaderCanSetStickyPipe implements PipeTransform {
+  public transform(attributes: PivotRowColumnAttribute[], index: number): boolean {
+    if (index === 0) {
+      return true;
+    }
+    return (attributes || []).slice(0, index).every(attribute => attribute.sticky);
+  }
 }
-
-export const initialModalsState: ModalsState = {modalsIds: []};
-
-export const selectModalsState = (state: AppState) => state.modals;
-
-export const selectModalsIds = createSelector(selectModalsState, state => state.modalsIds);

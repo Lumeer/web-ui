@@ -18,9 +18,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {map, take, tap} from 'rxjs/operators';
 import {ModalsAction, ModalsActionType} from './modals.action';
 import {AppState} from '../app.state';

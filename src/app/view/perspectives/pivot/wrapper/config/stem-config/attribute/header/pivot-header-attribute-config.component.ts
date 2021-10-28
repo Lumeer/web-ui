@@ -22,7 +22,7 @@ import {PivotAttribute, PivotRowColumnAttribute} from '../../../../../../../../c
 import {PivotStemData} from '../../../../../util/pivot-data';
 import {AttributesResource} from '../../../../../../../../core/model/resource';
 import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
+import {generateCorrelationId, getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
 import {Constraint} from '@lumeer/data-filters';
 
 @Component({
@@ -46,6 +46,9 @@ export class PivotHeaderAttributeConfigComponent {
   @Input()
   public pivotData: PivotStemData;
 
+  @Input()
+  public canSetSticky: boolean;
+
   @Output()
   public attributeSelect = new EventEmitter<PivotRowColumnAttribute>();
 
@@ -56,7 +59,8 @@ export class PivotHeaderAttributeConfigComponent {
   public attributeRemove = new EventEmitter();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
-  public readonly showSumsId = 'pivot-show-sums-' + Math.random().toString(36).substr(2);
+  public readonly showSumsId = 'pivot-show-sums-' + generateCorrelationId();
+  public readonly showStickyId = 'pivot-sticky-' + generateCorrelationId();
   public readonly emptyValueString: string;
 
   constructor() {
@@ -65,6 +69,11 @@ export class PivotHeaderAttributeConfigComponent {
 
   public onShowSumsChange(checked: boolean) {
     const newAttribute = {...this.pivotAttribute, showSums: checked};
+    this.attributeChange.emit(newAttribute);
+  }
+
+  public onStickyChange(checked: boolean) {
+    const newAttribute = {...this.pivotAttribute, sticky: checked};
     this.attributeChange.emit(newAttribute);
   }
 

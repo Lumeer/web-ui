@@ -25,6 +25,20 @@
   <span i18n="@@perspective.pivot.config.attribute.sums">Show summary</span>
 </div>
 
+<div class="custom-control custom-checkbox mt-1" *ngIf="canSetSticky && pivotAttribute">
+  <input [id]="showStickyId"
+         [attr.checked]="pivotAttribute.sticky"
+         [checked]="pivotAttribute.sticky"
+         (change)="onStickyChange($event.target.checked)"
+         type="checkbox"
+         class="custom-control-input">
+  <label [for]="showStickyId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.pivot.config.attribute.sticky.row" *ngIf="isRow">Fixed column</span>
+  <span i18n="@@perspective.pivot.config.attribute.sticky.column" *ngIf="!isRow">Fixed row</span>
+</div>
+
 <pivot-attribute-sort
   *ngIf="pivotAttribute"
   [pivotAttribute]="pivotAttribute"

@@ -1,20 +1,52 @@
 @import '~src/styles/variables';
 
+.table {
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
 .pivot-data-cell,
-.pivot-group-data-cell {
+.pivot-data-group-cell {
   text-align: right;
 }
 
 .pivot-column-header-cell,
 .pivot-row-header-cell,
-.pivot-group-data-cell,
-.pivot-group-header-cell {
+.pivot-data-group-cell,
+.pivot-row-group-header-cell,
+.pivot-column-group-header-cell {
   font-weight: bold;
   border: 1px $gray-100 solid;
 }
 
+.pivot-row-header-cell,
+.pivot-row-group-header-cell,
 .pivot-empty-cell {
-  border: 1px transparent solid;
+  &.sticky-start {
+    position: sticky;
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px !important;
+    z-index: 9;
+  }
+}
+
+.pivot-column-header-cell,
+.pivot-column-group-header-cell,
+.pivot-empty-cell {
+  &.sticky-top {
+    position: sticky;
+    z-index: 10;
+  }
+}
+
+.pivot-empty-cell {
+  background: white;
+  border: 1px white solid;
+
+  &.sticky-top {
+    z-index: 11;
+  }
 }
 
 .cell.color {
