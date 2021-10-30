@@ -6764,69 +6764,69 @@
         <source>Free plan</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.update.serviceLimits.message" datatype="html">
         <source>You are currently on the Free plan which does not support Teams. Do you want to upgrade to Business now? </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">45,47</context>
+          <context context-type="linenumber">46,48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.update.serviceLimits.button" datatype="html">
         <source>Upgrade now!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.header.configuration.remark" datatype="html">
         <source>Teams are created at the organizational level.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.header.teams.roles.tooltip.rights" datatype="html">
         <source>Rights</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="users.header.teams.roles.tooltip.direct" datatype="html">
-        <source>directly assigned</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="users.header.teams.roles.tooltip.indirect" datatype="html">
-        <source>gained from organization, project, or team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
           <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="users.header.teams.roles.tooltip.direct" datatype="html">
+        <source>directly assigned</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="users.header.teams.roles.tooltip.indirect" datatype="html">
+        <source>gained from organization, project, or team</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.header.title.main" datatype="html">
@@ -6894,54 +6894,54 @@
         <source>Remove team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="groups.group.delete.message" datatype="html">
         <source>Do you want to permanently remove this team?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="groups.group.delete.title" datatype="html">
         <source>Remove team?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.user.changeRoles" datatype="html">
         <source>You cannot change these rights. Either you are this user, or you are the last manager here, or you do not have sufficient rights.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.user.inheritedManager" datatype="html">
         <source>This user is a manager of the organization and their rights cannot be changed. Remove organization manage first.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.team.name.existing" datatype="html">
         <source>I am sorry, the team &apos;<x id="name" equiv-text="name"/>&apos; already exists.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="team.users.add.users" datatype="html">
@@ -7981,14 +7981,14 @@
         <source>Teams</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.header.teams.roles.tooltip.member" datatype="html">
         <source>the user is member of</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.header.inviteUser" datatype="html">
@@ -8016,28 +8016,28 @@
         <source>Delete User</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.actions.remove" datatype="html">
         <source>Remove User</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.user.delete.message" datatype="html">
         <source>Do you want to permanently remove this user?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="users.user.delete.title" datatype="html">
         <source>Remove user?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="search.records.empty.project.title" datatype="html">
@@ -9026,11 +9026,25 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="perspective.pivot.config.attribute.sticky.row" datatype="html">
+        <source>Fixed column</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.pivot.config.attribute.sticky.column" datatype="html">
+        <source>Fixed row</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context>
@@ -9091,25 +9105,25 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.pivot.config.column.header" datatype="html">
         <source> Columns </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context>
-          <context context-type="linenumber">56,58</context>
+          <context context-type="linenumber">57,59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.pivot.config.value.header" datatype="html">
         <source> Values </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context>
-          <context context-type="linenumber">107,109</context>
+          <context context-type="linenumber">109,111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.pivot.data.aggregation" datatype="html">
@@ -9130,14 +9144,14 @@
         <source>Cannot display anything</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source> Please make sure your query results in some data (by switching to the Detail view for example). Also check your pivot table configuration in the sidebar on the left. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">48,51</context>
+          <context context-type="linenumber">52,55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.pivot.table.summary.header" datatype="html">

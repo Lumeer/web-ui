@@ -1602,18 +1602,18 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.title" datatype="html">
         <source>Free plan</source><target>Verze zdarma</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.message" datatype="html">
         <source>You are currently on the Free plan which does not support Teams. Do you want to upgrade to Business now? </source>
         <target>Používáte verzi zdarma, která nepodporuje týmy. Chcete přejít na Business verzi? </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.button" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.button" datatype="html">
         <source>Upgrade now!</source><target>Získat týmy!</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="teams.header.configuration.remark" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="teams.header.configuration.remark" datatype="html">
         <source>Teams are created at the organizational level.</source>
         <target>Týmy se vytváří na úrovni organizace.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="teams.header.title.main" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="teams.header.title.main" datatype="html">
         <source>Start building a new team</source><target>Vytvořte nový tým</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.html</context>
@@ -1654,20 +1654,14 @@
         <source>Remove team</source><target>Odstranit tým</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="groups.group.delete.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="groups.group.delete.message" datatype="html">
         <source>Do you want to permanently remove this team?</source>
         <target>Chcete trvale odstranit tento tým?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit><trans-unit id="groups.group.delete.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="groups.group.delete.title" datatype="html">
         <source>Remove team?</source><target>Odstranit tým?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit>
 
 
             <trans-unit id="organization.settings.users.count" datatype="html">
@@ -3228,26 +3222,26 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">128</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">79</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">130</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.column.header" datatype="html">
         <source> Columns </source><target>
     Sloupce
   </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.value.header" datatype="html">
         <source> Values </source><target>
     Hodnoty
   </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.title" datatype="html">
         <source>Cannot display anything</source><target>Nemohu nic zobrazit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source> Please make sure your query results in some data (by switching to the Detail view for example). Also check your pivot table configuration in the sidebar on the left. </source><target>
     Ujistěte se, že váš dotaz obsahuje nějaké údaje (například přepnutím do pohledu Detail).
     Také prověřte nastavení pivot tabulky v panelu vlevo.
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
         <source>Select value aggregation</source><target>Zvolte způsob agregace hodnot</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.valueAbsOrRel" datatype="html">
@@ -3273,7 +3267,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sums" datatype="html">
         <source>Show summary</source><target>Zobrazovat shrnutí</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.sort.order" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sticky.row" datatype="html">
+        <source>Fixed column</source><target>Přichytit sloupec</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sticky.column" datatype="html">
+        <source>Fixed row</source><target>Přichytit řádek</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.sort.order" datatype="html">
         <source>Select values order</source><target>Zvolte pořadí hodnot</target>
 
 
@@ -4098,11 +4104,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="users.actions.delete" datatype="html">
         <source>Delete User</source><target>Odstranit uživatele</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 
 
             <trans-unit id="users.header.search.placeholder" datatype="html">
@@ -4116,32 +4119,26 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.teams" datatype="html">
         <source>Teams</source><target>Týmy</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="users.header.teams.roles.tooltip.member" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.member" datatype="html">
         <source>the user is member of</source><target>jichž je uživatel členem</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="users.header.teams.roles.tooltip.rights" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.rights" datatype="html">
         <source>Rights</source><target>Práva</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.direct" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.direct" datatype="html">
         <source>directly assigned</source><target>přidělená přímo</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.indirect" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.indirect" datatype="html">
         <source>gained from organization, project, or team</source><target>získaná z organizace, projektu, nebo z týmu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
             <trans-unit id="users.actions.remove" datatype="html">
                 <source>Remove User</source>
                 <target>Odstranit uživatele</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
             <trans-unit id="users.add.button" datatype="html">
                 <source>Invite user</source>
                 <target>Pozvat uživatele</target>
@@ -4632,25 +4629,22 @@
                 <source>Do you want to permanently remove this user?</source>
                 <target>Chcete skutečně trvale odstranit tohoto uživatele?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit>
             <trans-unit id="users.user.delete.title" datatype="html">
                 <source>Remove user?</source>
                 <target>Odstranit uživatele?</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="users.user.changeRoles" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="users.user.changeRoles" datatype="html">
         <source>You cannot change these rights. Either you are this user, or you are the last manager here, or you do not have sufficient rights.</source><target>Tato oprávnění nemůžete měnit. Buď se jedná o vašeho uživatele, nebo jste posledním správcem, nebo nemáte dostatečná oprávnění.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">86</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="users.user.inheritedManager" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">89</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="users.user.inheritedManager" datatype="html">
         <source>This user is a manager of the organization and their rights cannot be changed. Remove organization manage first.</source><target>Tento uživatel je správcem celé organizace a oprávnění zde nelze změnit. Nějdříve odeberte roli správce organizace v nastavení organizace.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="teams.team.name.existing" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="teams.team.name.existing" datatype="html">
         <source>I am sorry, the team '<x id="name" equiv-text="name"/>' already exists.</source>
         <target>Je mi líto, ale tým '<x id="name" equiv-text="name"/>' již existuje.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-      </trans-unit><trans-unit id="team.users.add.users" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="team.users.add.users" datatype="html">
         <source>Add Users</source><target>Přidat uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/users/team-users.component.html</context>
@@ -4818,7 +4812,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.summary" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.summary" datatype="html">
         <source>Summary</source><target>Suma</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.ts</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.subSort" datatype="html">
