@@ -3561,11 +3561,23 @@
 				<trans-unit datatype="html" id="perspective.pivot.config.attribute.sums">
 					<source>Show summary</source>
 					<target>Összegzés megjelenítése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.attribute.sticky.row" datatype="html">
+        <source>Fixed column</source><target state="new">Fixed column</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.pivot.config.attribute.sticky.column" datatype="html">
+        <source>Fixed row</source><target state="new">Fixed row</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.config.column.header">
 					<source> Columns </source>
 					<target>Oszlopok</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.config.merge">
 					<source>Merge tables</source>
 					<target>Táblázatok egyesítése</target>
@@ -3578,7 +3590,7 @@
 				<trans-unit datatype="html" id="perspective.pivot.config.reorder">
 					<source>Reorder attributes</source>
 					<target>Tulajdonságok átrendezése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">78</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">128</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">79</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">130</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.config.row.header">
 					<source> Rows </source>
 					<target>Sorok</target>
@@ -3602,7 +3614,7 @@
 				<trans-unit datatype="html" id="perspective.pivot.config.value.header">
 					<source> Values </source>
 					<target>Értékek</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.config.value.type">
 					<source>{type, select, default {Default} row {% of row} column {% of column} all {% of all values}}</source>
 					<target>{type, select, default {Alapértelmezett} row {%-a a sornak} column {%-a az oszlopnak} all {% of all {%-a az összes értéknek} }</target>
@@ -3622,11 +3634,11 @@
 				<trans-unit datatype="html" id="perspective.pivot.table.empty.description">
 					<source> Please make sure your query results in some data (by switching to the Detail view for example). Also check your pivot table configuration in the sidebar on the left. </source>
 					<target>Győződj meg arról, hogy a lekérdezésed bizonyos adatokat eredményez (például a Részletek nézetre való váltással). Ellenőrizd a pivot tábla konfigurációját is a bal oldali oldalsávon.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.table.empty.title">
 					<source>Cannot display anything</source>
 					<target>Nem jeleníthető meg semmi</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.pivot.table.summary.header">
 					<source>Summary of</source>
 					<target>Összefoglalása</target>
@@ -3688,16 +3700,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.title" datatype="html">
         <source>Free plan</source><target state="new">Free plan</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.message" datatype="html">
         <source>You are currently on the Free plan which does not support Teams. Do you want to upgrade to Business now? </source><target state="new">You are currently on the Free plan which does not allow you to have manipulate with Teams. Do you want to upgrade to Business now? </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.button" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="teams.update.serviceLimits.button" datatype="html">
         <source>Upgrade now!</source><target state="new">Upgrade now!</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="teams.header.configuration.remark" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="teams.header.configuration.remark" datatype="html">
         <source>Teams are created at the organizational level.</source><target state="new">Teams are created at the organizational level.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="teams.header.title.main" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="teams.header.title.main" datatype="html">
         <source>Start building a new team</source><target state="new">Start building new team</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.html</context>
@@ -3734,19 +3746,13 @@
         <source>Remove team</source><target state="new">Remove team</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="groups.group.delete.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="groups.group.delete.message" datatype="html">
         <source>Do you want to permanently remove this team?</source><target state="new">Do you want to permanently remove this group?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit><trans-unit id="groups.group.delete.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="groups.group.delete.title" datatype="html">
         <source>Remove team?</source><target state="new">Remove group?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">85</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="perspective.workflow.table.resize">
 					<source>Resize table</source>
 					<target>Táblázat átméretezése</target>
@@ -3758,7 +3764,7 @@
 				<trans-unit datatype="html" id="pivot.config.attribute.empty">
 					<source>Select attribute</source>
 					<target>Tulajdonság kijelölése</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="privacyPolicy">
 					<source>Privacy Policy</source>
 					<target>Adatvédelmi irányelvek</target>
@@ -5420,7 +5426,7 @@
 				<trans-unit datatype="html" id="users.actions.remove">
 					<source>Remove User</source>
 					<target>Felhasználót eltávolít</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="users.add.button">
 					<source>Invite user</source>
 					<target>Felhasználó meghívása</target>
@@ -5445,11 +5451,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/teams/user-teams.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="users.actions.delete" datatype="html">
         <source>Delete User</source><target state="new">Delete User</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="users.header.search.placeholder">
 					<source>Search user...</source>
 					<target>Felhasználó keresése...</target>
@@ -5459,39 +5462,33 @@
 					<target>Felhasználók keresése</target>
 				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.teams" datatype="html">
         <source>Teams</source><target state="new">Teams</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="users.header.teams.roles.tooltip.member" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.member" datatype="html">
         <source>the user is member of</source><target state="new">the user is member of</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="users.header.teams.roles.tooltip.rights" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.rights" datatype="html">
         <source>Rights</source><target state="new">Rights</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.direct" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.direct" datatype="html">
         <source>directly assigned</source><target state="new">directly assigned</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.indirect" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="users.header.teams.roles.tooltip.indirect" datatype="html">
         <source>gained from organization, project, or team</source><target state="new">gained from organization, project, or team</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/table/team-table.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/table/user-table.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="users.user.changeRoles">
 					<source>You cannot change these rights. Either you are this user, or you are the last manager here, or you do not have sufficient rights.</source>
 					<target>Ezek a szerepkörök nem módosíthatók. Vagy te vagy ez a felhasználó, vagy te vagy a legutóbbi menedzser itt, vagy nem rendelkezel megfelelő jogokkal.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">86</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">89</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">88</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="users.user.delete.message">
 					<source>Do you want to permanently remove this user?</source>
 					<target>Véglegesen eltávolítod ezt a felhasználót?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">83</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="users.user.delete.title">
 					<source>Remove user?</source>
 					<target>Eltávolítod a felhasználót?</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">84</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">87</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="users.user.email.duplicate">
 					<source> This user email is already invited. Try another one!
 </source>
@@ -5514,13 +5511,10 @@
 				<trans-unit datatype="html" id="users.user.inheritedManager">
 					<source>This user is a manager of the organization and their rights cannot be changed. Remove organization manage first.</source>
 					<target>Ez a felhasználó a szervezet vezetője, és engedélyeik nem módosíthatók. Először távolítsd el a szervezeti kezeléseket.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">87</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="teams.team.name.existing" datatype="html">
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user/user.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="teams.team.name.existing" datatype="html">
         <source>I am sorry, the team '<x id="name" equiv-text="name"/>' already exists.</source><target state="new">I am sorry, the team '<x id="name" equiv-text="name"/>' already exists.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-      </trans-unit><trans-unit id="team.users.add.users" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="team.users.add.users" datatype="html">
         <source>Add Users</source><target state="new">Add Users</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/teams/team-list/team/users/team-users.component.html</context>
