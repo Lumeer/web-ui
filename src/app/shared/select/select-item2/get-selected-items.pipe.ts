@@ -28,7 +28,7 @@ export class GetSelectedItemsPipe implements PipeTransform {
   public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
 
   public transform(idsPath: any[], items: SelectItem2Model[]): SelectItem2Model {
-    const item = items.find(itm => this.areIdsEqualPipe.transform(idsPath?.[0], itm.id));
+    const item = (items || []).find(itm => this.areIdsEqualPipe.transform(idsPath?.[0], itm.id));
     if (item) {
       const path = [item];
       for (let i = 1; i < idsPath.length; i++) {

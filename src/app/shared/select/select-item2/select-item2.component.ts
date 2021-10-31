@@ -48,6 +48,9 @@ export class SelectItem2Component implements OnChanges {
   @Input()
   public showAsLink = true;
 
+  @Input()
+  public bordered: boolean;
+
   @Output()
   public selectPath = new EventEmitter<SelectItem2Model[]>();
 

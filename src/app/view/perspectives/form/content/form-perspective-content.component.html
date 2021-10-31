@@ -1,1 +1,4 @@
-<form-editor [config]="config" (configChange)="configChange.emit($event)"></form-editor>
+<form-editor [config]="config"
+             [collection]="basicCollection"
+             (configChange)="configChange.emit($event)">
+</form-editor>

@@ -1,6 +1,26 @@
-<ng-content></ng-content>
+<div class="form-editor-row mb-3" [style.grid-template-columns]="templateColumns">
 
-<form-editor-cell *ngFor="let cell of row.cells; let index = index; trackBy:trackByCell"
-                  [cell]="cell"
-                  class="dashboard-cell cursor-pointer">
-</form-editor-cell>
+  <ng-content></ng-content>
+
+  <form-editor-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
+                    [cell]="cell"
+                    [collection]="collection"
+                    (cellChange)="onCellChange($event, index)"
+                    class="dashboard-cell cursor-pointer">
+  </form-editor-cell>
+
+  <i class="far fa-columns text-primary clickable" #columnsIcon (click)="layout.toggle()"></i>
+
+  <i class="fal fa-trash-alt text-danger clickable"
+     i18n-title="@@perspective.form.editor.row.action.delete"
+     title="Delete a Row"
+     (click)="delete.emit()"></i>
+
+  <row-layout-dropdown #layout
+                       [origin]="columnsIcon"
+                       [showSelection]="true"
+                       [selectedLayout]="row | selectedLayoutInRow"
+                       (layoutSelected)="onLayoutSelected($event)">
+  </row-layout-dropdown>
+
+</div>

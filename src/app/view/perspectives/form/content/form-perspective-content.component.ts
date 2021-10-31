@@ -17,8 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {FormConfig} from '../../../../core/store/form/form-model';
+import {Collection} from '../../../../core/store/collections/collection';
+import {Query} from '../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'form-perspective-content',
@@ -26,12 +28,34 @@ import {FormConfig} from '../../../../core/store/form/form-model';
   styleUrls: ['./form-perspective-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormPerspectiveContentComponent {
+export class FormPerspectiveContentComponent implements OnChanges {
 
   @Input()
   public config: FormConfig;
 
+  @Input()
+  public collections: Collection[];
+
+  @Input()
+  public query: Query;
+
   @Output()
   public configChange = new EventEmitter<FormConfig>();
+
+  public basicCollection: Collection;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collections || changes.query) {
+      this.basicCollection = this.findBasicCollection();
+    }
+  }
+
+  private findBasicCollection(): Collection {
+    const collectionId = this.query?.stems?.[0]?.collectionId;
+    if (collectionId) {
+      return (this.collections || []).find(collection => collection.id === collectionId);
+    }
+    return null;
+  }
 
 }

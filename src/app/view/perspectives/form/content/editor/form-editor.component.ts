@@ -21,6 +21,8 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {FormConfig, FormRow, FormRowLayoutType} from '../../../../../core/store/form/form-model';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
 
 @Component({
   selector: 'form-editor',
@@ -32,6 +34,9 @@ export class FormEditorComponent {
 
   @Input()
   public config: FormConfig;
+
+  @Input()
+  public collection: Collection;
 
   @Output()
   public configChange = new EventEmitter<FormConfig>();
@@ -53,6 +58,20 @@ export class FormEditorComponent {
   }
 
   public rowDropped(event: CdkDragDrop<FormRow, any>) {
+    const newRows = [...(this.config?.rows || [])];
+    moveItemsInArray(newRows, event.previousIndex, event.currentIndex);
+    this.onRowsChange(newRows);
+  }
 
+  public onRowChange(row: FormRow, index: number) {
+    const newRows = [...(this.config?.rows || [])];
+    newRows[index] = row;
+    this.onRowsChange(newRows);
+  }
+
+  public onRowDelete(index: number) {
+    const newRows = [...(this.config?.rows || [])];
+    newRows.splice(index, 1);
+    this.onRowsChange(newRows);
   }
 }

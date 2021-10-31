@@ -17,8 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
-import {FormCell} from '../../../../../../../core/store/form/form-model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {FormAttributeCellConfig, FormCell, FormCellType} from '../../../../../../../core/store/form/form-model';
+import {Collection} from '../../../../../../../core/store/collections/collection';
+import {SelectItem2Model} from '../../../../../../../shared/select/select-item2/select-item2.model';
+import {AttributesResourceType} from '../../../../../../../core/model/resource';
+import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'form-editor-cell',
@@ -26,15 +30,76 @@ import {FormCell} from '../../../../../../../core/store/form/form-model';
   styleUrls: ['./form-editor-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormEditorCellComponent implements OnInit {
+export class FormEditorCellComponent implements OnChanges {
 
   @Input()
   public cell: FormCell;
 
-  constructor() {
+  @Input()
+  public collection: Collection;
+
+  @Output()
+  public cellChange = new EventEmitter<FormCell>();
+
+  public selectedItemPath: string[];
+  public items: SelectItem2Model[] = [];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection) {
+      this.items = this.mapItems();
+    }
+    if (changes.cell || objectChanged(changes.collection)) {
+      this.selectedItemPath = this.mapSelectedItem();
+    }
   }
 
-  ngOnInit(): void {
+  private mapSelectedItem(): string[] {
+    if (this.cell?.type === FormCellType.Attribute) {
+      const config = <FormAttributeCellConfig>this.cell?.config || {};
+      if (config.resourceId === this.collection?.id && config.resourceType === AttributesResourceType.Collection) {
+        return [FormCellType.Attribute, config.attributeId];
+      }
+    }
+
+    return [];
   }
 
+  private mapItems(): SelectItem2Model[] {
+    return [this.createAttributeItem()];
+  }
+
+  private createAttributeItem(): SelectItem2Model {
+    const attributeItems: SelectItem2Model[] = (this.collection?.attributes || [])
+      .map(attribute => ({id: attribute.id, value: attribute.name, icons: [this.collection?.icon], iconColors: [this.collection?.color]}))
+
+    return {
+      id: FormCellType.Attribute,
+      value: $localize`:@@perspective.form.editor.row.cell.attribute:Attribute`,
+      children: attributeItems
+    };
+  }
+
+  public onSelectPath(path: SelectItem2Model[]) {
+    if (path.length < 2) {
+      return;
+    }
+
+    switch (path[0].id) {
+      case FormCellType.Attribute:
+        this.onSelectAttribute(path[1]);
+        break;
+    }
+  }
+
+  private onSelectAttribute(item: SelectItem2Model) {
+    const copyConfig = this.cell?.type === FormCellType.Attribute ? this.cell?.config : {};
+    const config: FormAttributeCellConfig = {
+      ...copyConfig,
+      attributeId: item.id,
+      resourceType: AttributesResourceType.Collection,
+      resourceId: this.collection?.id,
+    };
+    const newCell: FormCell = {...this.cell, config, type: FormCellType.Attribute};
+    this.cellChange.emit(newCell);
+  }
 }
