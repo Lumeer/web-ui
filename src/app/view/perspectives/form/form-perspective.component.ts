@@ -17,12 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {DataPerspectiveDirective} from '../data-perspective.directive';
+import {FormConfig} from '../../../core/store/form/form-model';
+import {Query} from '../../../core/store/navigation/query/query';
+import {Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {ViewConfig} from '../../../core/store/views/view';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {map} from 'rxjs/operators';
+import {selectFormById} from '../../../core/store/form/form.state';
+import * as FormsActions from '../../../core/store/form/form.actions';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'form-perspective',
   templateUrl: './form-perspective.component.html',
-  styleUrls: ['./form-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPerspectiveComponent {}
+export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfig> {
+
+  constructor(protected store$: Store<AppState>) {
+    super(store$);
+  }
+
+  protected checkOrTransformConfig(config: FormConfig, query: Query, collections: Collection[], linkTypes: LinkType[]): FormConfig {
+    return config;
+  }
+
+  protected configChanged(perspectiveId: string, config: FormConfig) {
+    this.store$.dispatch(FormsActions.add({model: {id: perspectiveId, config}}));
+  }
+
+  protected getConfig(viewConfig: ViewConfig): FormConfig {
+    return viewConfig?.form;
+  }
+
+  protected subscribeConfig$(perspectiveId: string): Observable<FormConfig> {
+    return this.store$.pipe(
+      select(selectFormById(perspectiveId)),
+      map(entity => entity?.config)
+    );
+  }
+
+  public onConfigChanged(config: FormConfig) {
+    this.store$.dispatch(FormsActions.setConfig({id: this.perspectiveId$.value, config}));
+  }
+
+}

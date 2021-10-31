@@ -48,7 +48,7 @@ export const detailsReducer = createReducer(
   on(DetailActions.setConfig, (state, action) =>
     detailsAdapter.updateOne({id: action.detailId, changes: {config: action.config}}, state)
   ),
-  on(DetailActions.clear, state => detailsAdapter.removeAll(state))
+  on(DetailActions.clear, () => initialDetailsState)
 );
 
 function setStemAttributes(

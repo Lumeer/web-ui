@@ -56,6 +56,7 @@ import {AuditLogsState, initialAuditLogsState} from './audit-logs/audit-logs.sta
 import {DetailsState, initialDetailsState} from './details/detail.state';
 import {initialSelectionListsState, SelectionListsState} from './selection-lists/selection-lists.state';
 import {DashboardDataState, initialDashboardDataState} from './dashboard-data/dashboard-data.state';
+import {FormsState, initialFormsState} from './form/form.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -85,6 +86,7 @@ export interface AppState {
   kanbans: KanbansState;
   searches: SearchesState;
   details: DetailsState;
+  forms: FormsState;
   sequences: SequencesState;
   constraintData: ConstraintDataState;
   publicData: PublicDataState;
@@ -127,6 +129,7 @@ export function initialAppState(): AppState {
     kanbans: initialKanbansState,
     searches: initialSearchesState,
     details: initialDetailsState,
+    forms: initialFormsState,
     sequences: initialSequencesState,
     constraintData: initialConstraintDataState,
     publicData: initialPublicDataState,

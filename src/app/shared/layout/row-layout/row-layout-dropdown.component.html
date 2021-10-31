@@ -1,17 +1,17 @@
 <dropdown [closeOnClickOutside]="true"
           [closeOnClickOrigin]="true"
           [showBackdrop]="false"
-          [fitParent]="!showSelection"
+          [fitParent]="fitParent"
           [origin]="origin"
           [pushOnScreen]="true"
           [positions]="dropdownPositions">
   <div class="card overflow-hidden"
-       [class.w-100]="!showSelection"
-       [style.width.px]="showSelection ? 260 : null">
+       [class.w-100]="fitParent"
+       [style.width.px]="fitParent ? null : 260">
 
     <a class="dropdown-item py-2" *ngFor="let layout of layouts" (click)="onChooseLayout(layout)"
        [class.selectable]="showSelection">
-      <i *ngIf="showSelection" class="fa-fw far mr-2" [ngClass]="(layout | isLayoutSelectedInRow:row) ? 'fa-check' : 'fa-none'"></i>
+      <i *ngIf="showSelection" class="fa-fw far mr-2" [ngClass]="(layout | isLayoutSelected:selectedLayout) ? 'fa-check' : 'fa-none'"></i>
       <div class="layout" [style.grid-template-columns]="layout | layoutTemplateColumns">
         <div *ngFor="let item of layout" class="layout-item"></div>
       </div>

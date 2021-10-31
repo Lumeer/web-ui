@@ -17,20 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, Output, EventEmitter} from '@angular/core';
-import {DropdownPosition} from '../../../../../../dropdown/dropdown-position';
-import {DropdownComponent} from '../../../../../../dropdown/dropdown.component';
-import {DashboardLayoutType, DashboardRow, dashboardRowLayouts} from '../../../../../../../core/model/dashboard-tab';
+import {Component, ChangeDetectionStrategy, Input, ElementRef, Output, EventEmitter, ViewChild} from '@angular/core';
+import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {DropdownPosition} from '../../dropdown/dropdown-position';
+import {defaultRowLayouts, RowLayoutType} from './row-layout';
 
 @Component({
-  selector: 'dashboard-row-layout',
-  templateUrl: './dashboard-row-layout.component.html',
-  styleUrls: ['./dashboard-row-layout.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'row-layout-dropdown',
+  templateUrl: './row-layout-dropdown.component.html',
+  styleUrls: ['./row-layout-dropdown.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardRowLayoutComponent {
+export class RowLayoutDropdownComponent {
+
   @Input()
-  public row: DashboardRow;
+  public selectedLayout: RowLayoutType;
+
+  @Input()
+  public layouts: RowLayoutType[] = defaultRowLayouts;
 
   @Input()
   public origin: ElementRef | HTMLElement;
@@ -38,8 +42,11 @@ export class DashboardRowLayoutComponent {
   @Input()
   public showSelection: boolean;
 
+  @Input()
+  public fitParent: boolean;
+
   @Output()
-  public layoutSelected = new EventEmitter<DashboardLayoutType>();
+  public layoutSelected = new EventEmitter<RowLayoutType>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -50,8 +57,6 @@ export class DashboardRowLayoutComponent {
     DropdownPosition.BottomEnd,
     DropdownPosition.TopEnd,
   ];
-
-  public layouts = dashboardRowLayouts;
 
   public toggle() {
     if (this.dropdown?.isOpen()) {
@@ -77,7 +82,7 @@ export class DashboardRowLayoutComponent {
     return this.dropdown?.isOpen();
   }
 
-  public onChooseLayout(layout: DashboardLayoutType) {
+  public onChooseLayout(layout: RowLayoutType) {
     this.layoutSelected.emit(layout);
     this.close();
   }

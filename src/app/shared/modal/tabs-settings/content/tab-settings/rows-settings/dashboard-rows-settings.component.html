@@ -27,8 +27,9 @@
     </button>
   </div>
 
-  <dashboard-row-layout #layout
-                        [origin]="buttonElement"
-                        (layoutSelected)="rowAdd.emit($event)">
-  </dashboard-row-layout>
+  <row-layout-dropdown #layout
+                       [origin]="buttonElement"
+                       [fitParent]="true"
+                       (layoutSelected)="rowAdd.emit($event)">
+  </row-layout-dropdown>
 </ng-container>

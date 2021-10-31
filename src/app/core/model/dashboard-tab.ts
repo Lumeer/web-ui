@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {RowLayoutType} from '../../shared/layout/row-layout/row-layout';
+
 export interface DashboardTab {
   id?: string;
   correlationId?: string;
@@ -31,9 +33,7 @@ export interface DashboardRow {
   cells: DashboardCell[];
 }
 
-export type DashboardLayoutType = number[];
-
-export const dashboardRowLayouts: DashboardLayoutType[] = [[1], [1, 1], [1, 2], [2, 1], [1, 1, 1], [1, 2, 1]];
+export type DashboardLayoutType = RowLayoutType;
 
 export interface DashboardCell {
   id: string;

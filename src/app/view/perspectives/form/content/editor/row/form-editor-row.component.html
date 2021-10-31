@@ -1,0 +1,6 @@
+<ng-content></ng-content>
+
+<form-editor-cell *ngFor="let cell of row.cells; let index = index; trackBy:trackByCell"
+                  [cell]="cell"
+                  class="dashboard-cell cursor-pointer">
+</form-editor-cell>

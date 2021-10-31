@@ -17,17 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DashboardLayoutType} from '../../../../core/model/dashboard-tab';
+export type RowLayoutType = number[];
 
-@Pipe({
-  name: 'layoutTemplateColumns',
-})
-export class LayoutTemplateColumnsPipe implements PipeTransform {
-  public transform(layout: DashboardLayoutType): string {
-    return (layout || [])
-      .filter(num => !!num)
-      .map(num => `${num}fr`)
-      .join(' ');
-  }
-}
+export const defaultRowLayouts: RowLayoutType[] = [[1], [1, 1], [1, 2], [2, 1], [1, 1, 1], [1, 2, 1]];

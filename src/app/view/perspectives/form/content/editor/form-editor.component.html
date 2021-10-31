@@ -1,0 +1,25 @@
+
+
+<div class="dashboard-rows px-1" cdkDropList
+     (cdkDropListDropped)="rowDropped($event)">
+  <form-editor-row *ngFor="let row of config?.rows; let index = index; trackBy:trackByRow"
+                          cdkDrag
+                          cdkDragLockAxis="y"
+                          cdkDragBoundary=".cdk-drop-list"
+                          class="dashboard-row d-block px-2"
+                          [row]="row">
+    <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
+  </form-editor-row>
+</div>
+
+<div class="px-3">
+  <button #buttonElement class="btn btn-outline-primary" (click)="layout.toggle()">
+    <i class="far fa-plus mr-2"></i>
+    <span i18n="@@search.tabs.settings.dialog.rows.add">Add a Row</span>
+  </button>
+</div>
+
+<row-layout-dropdown #layout
+                     [origin]="buttonElement"
+                     (layoutSelected)="addRow($event)">
+</row-layout-dropdown>

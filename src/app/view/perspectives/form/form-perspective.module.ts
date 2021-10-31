@@ -22,10 +22,16 @@ import {CommonModule} from '@angular/common';
 import {FormPerspectiveComponent} from './form-perspective.component';
 import {RouterModule} from '@angular/router';
 import {FormPerspectiveRoutingModule} from './form-perspective-routing.module';
+import { FormPerspectiveContentComponent } from './content/form-perspective-content.component';
+import { FormEditorComponent } from './content/editor/form-editor.component';
+import {LayoutModule} from '../../../shared/layout/layout.module';
+import { FormEditorRowComponent } from './content/editor/row/form-editor-row.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { FormEditorCellComponent } from './content/editor/row/cell/form-editor-cell.component';
 
 @NgModule({
-  declarations: [FormPerspectiveComponent],
-  imports: [CommonModule, RouterModule, FormPerspectiveRoutingModule],
+  declarations: [FormPerspectiveComponent, FormPerspectiveContentComponent, FormEditorComponent, FormEditorRowComponent, FormEditorCellComponent],
+  imports: [CommonModule, RouterModule, FormPerspectiveRoutingModule, LayoutModule, DragDropModule],
   exports: [FormPerspectiveComponent],
 })
 export class FormPerspectiveModule {}

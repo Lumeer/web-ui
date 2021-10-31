@@ -31,6 +31,7 @@ import {MapConfig} from '../maps/map.model';
 import {WorkflowConfig} from '../workflows/workflow';
 import {DetailConfig} from '../details/detail';
 import {RoleType} from '../../model/role-type';
+import {FormConfig} from '../form/form-model';
 
 export interface View extends Resource {
   perspective?: Perspective;
@@ -55,6 +56,7 @@ export interface ViewConfig {
   pivot?: PivotConfig;
   map?: MapConfig;
   workflow?: WorkflowConfig;
+  form?: FormConfig;
 }
 
 export type PerspectiveConfig =
@@ -67,7 +69,8 @@ export type PerspectiveConfig =
   | KanbanConfig
   | MapConfig
   | WorkflowConfig
-  | PivotConfig;
+  | PivotConfig
+  | FormConfig;
 
 export interface ViewGlobalConfig {
   sidebarOpened?: boolean;

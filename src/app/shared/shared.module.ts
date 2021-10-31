@@ -60,6 +60,7 @@ import {ButtonModule} from './button/button.module';
 import {LoadingModule} from './loading/loading.module';
 import {ProgressModule} from './progress/progress.module';
 import {HintBoxModule} from './hint-box/hint-box.module';
+import {LayoutModule} from './layout/layout.module';
 
 @NgModule({
   imports: [
@@ -102,6 +103,7 @@ import {HintBoxModule} from './hint-box/hint-box.module';
     ButtonModule,
     ProgressModule,
     HintBoxModule,
+    LayoutModule,
   ],
   declarations: [ResourceHeaderComponent, TourComponent],
   exports: [
@@ -147,6 +149,7 @@ import {HintBoxModule} from './hint-box/hint-box.module';
     ButtonModule,
     ProgressModule,
     HintBoxModule,
+    LayoutModule,
   ],
 })
 export class SharedModule {}

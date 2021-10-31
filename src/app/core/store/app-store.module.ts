@@ -90,6 +90,7 @@ import {selectionListsReducer} from './selection-lists/selection-lists.reducer';
 import {SelectionListsEffects} from './selection-lists/selection-lists.effects';
 import {dashboardDataReducer} from './dashboard-data/dashboard-data.reducer';
 import {DashboardDataEffects} from './dashboard-data/dashboard-data.effects';
+import {formsReducer} from './form/form.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -119,6 +120,7 @@ const reducers: ActionReducerMap<AppState> = {
   kanbans: kanbansReducer,
   searches: searchesReducer,
   details: detailsReducer,
+  forms: formsReducer,
   sequences: sequencesReducer,
   constraintData: constraintDataReducer,
   publicData: publicDataReducer,

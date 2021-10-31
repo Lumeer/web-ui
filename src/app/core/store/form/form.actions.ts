@@ -17,16 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DashboardLayoutType, DashboardRow} from '../../../../core/model/dashboard-tab';
-import {deepArrayEquals} from '../../../utils/array.utils';
+import {createAction, props} from '@ngrx/store';
+import {FormConfig, FormModel} from './form-model';
 
-@Pipe({
-  name: 'isLayoutSelectedInRow',
-})
-export class IsLayoutSelectedInRowPipe implements PipeTransform {
-  public transform(layout: DashboardLayoutType, row: DashboardRow): boolean {
-    const selected = row?.cells?.map(row => row.span).filter(span => !!span) || [];
-    return deepArrayEquals(layout, selected);
-  }
-}
+export const add = createAction('[Form] Add', props<{model: FormModel}>());
+
+export const remove = createAction('[Form] Remove', props<{id: string}>());
+
+export const setConfig = createAction(
+  '[Form] Set Config',
+  props<{id: string; config: Partial<FormConfig>}>()
+);
+
+export const clear = createAction('[Form] Clear');
