@@ -21,7 +21,7 @@ import {Attribute, Collection} from '../../core/store/collections/collection';
 import {AttributesSettings, ResourceAttributeSettings, ViewSettings} from '../../core/store/views/view';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
-import {deepArrayEquals, moveItemsInArray, uniqueValues} from '../utils/array.utils';
+import {deepArrayEquals, moveItemInArray, uniqueValues} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {objectValues} from '../utils/common.utils';
@@ -237,7 +237,7 @@ export function moveAttributeInSettings(
 ): ViewSettings {
   const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
   return createAndModifyViewSettings(state, linkType || collection, resourceType, attributesSettings =>
-    moveItemsInArray(attributesSettings, from, to)
+    moveItemInArray(attributesSettings, from, to)
   );
 }
 

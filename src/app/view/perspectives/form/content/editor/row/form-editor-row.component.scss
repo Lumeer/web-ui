@@ -3,6 +3,9 @@
 .form-editor-row {
   display: grid;
   grid-gap: 0.5rem;
-  align-items: center;
+  align-items: flex-start;
 
+  i.clickable {
+    padding-top: 3.125rem;
+  }
 }

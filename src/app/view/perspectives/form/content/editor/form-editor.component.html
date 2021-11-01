@@ -1,26 +1,25 @@
-<div class="dashboard-rows px-1" cdkDropList
-     (cdkDropListDropped)="rowDropped($event)">
-  <form-editor-row *ngFor="let row of config?.rows; let index = index; trackBy:trackByRow"
-                   cdkDrag
-                   cdkDragLockAxis="y"
-                   cdkDragBoundary=".cdk-drop-list"
-                   class="dashboard-row d-block px-2"
-                   [row]="row"
-                   [collection]="collection"
-                   (rowChange)="onRowChange($event, index)"
-                   (delete)="onRowDelete(index)">
-    <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
-  </form-editor-row>
-</div>
+<form-editor-section class="d-block card mx-2"
+                     [collection]="collection"
+                     [emptySection]="true"
+                     [section]="emptySection"
+                     [sectionIds]="sectionIds"
+                     (sectionChange)="onEmptySectionChanged($event)"
+                     (rowMoveToSection)="onRowMoveToSection($event)">
+</form-editor-section>
 
-<div class="px-3">
-  <button #buttonElement class="btn btn-outline-primary" (click)="layout.toggle()">
+<form-editor-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index"
+                     class="d-block card mx-2 mt-2"
+                     [section]="section"
+                     [collection]="collection"
+                     [sectionIds]="sectionIds"
+                     (sectionChange)="onSectionChanged($event, index)"
+                     (rowMoveToSection)="onRowMoveToSection($event)"
+                     (delete)="onSectionDelete(index)">
+</form-editor-section>
+
+<div class="px-3 mt-3 mb-5">
+  <button class="btn btn-outline-primary" (click)="addSection()">
     <i class="far fa-plus mr-2"></i>
-    <span i18n="@@search.tabs.settings.dialog.rows.add">Add a Row</span>
+    <span i18n="@@perspective.form.editor.section.action.add">Add a Section</span>
   </button>
 </div>
-
-<row-layout-dropdown #layout
-                     [origin]="buttonElement"
-                     (layoutSelected)="addRow($event)">
-</row-layout-dropdown>

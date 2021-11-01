@@ -1,7 +1,40 @@
+<input-box class="d-block mb-1"
+           placeholder="Title"
+           [canStayEmpty]="false"
+           [maxLines]="1"
+           [initialValue]="cell?.title"
+           (newValue)="onNewTitle($event)">
+</input-box>
+
 <select-item2 [items]="items"
               [selectedPath]="selectedItemPath"
               bordered="true"
               emptyValue="Select"
               (selectPath)="onSelectPath($event)">
-
 </select-item2>
+
+<input-box class="d-block mt-1"
+           placeholder="Description"
+           [fontSizeRem]="0.8"
+           [color]="descriptionColor"
+           [canStayEmpty]="true"
+           [initialValue]="cell?.description"
+           (newValue)="onNewDescription($event)">
+</input-box>
+
+<ng-container [ngSwitch]="cell.type">
+
+  <form-editor-cell-attribute-config *ngSwitchCase="type.Attribute"
+                                     class="d-block mt-2"
+                                     [config]="cell.config"
+                                     (configChange)="onConfigChange($event)">
+  </form-editor-cell-attribute-config>
+
+  <form-editor-cell-link-config *ngSwitchCase="type.Link"
+                                class="d-block mt-2"
+                                [config]="cell.config"
+                                (configChange)="onConfigChange($event)">
+  </form-editor-cell-link-config>
+
+
+</ng-container>

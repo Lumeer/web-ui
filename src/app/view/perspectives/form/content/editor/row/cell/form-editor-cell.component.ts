@@ -18,20 +18,25 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {FormAttributeCellConfig, FormCell, FormCellType} from '../../../../../../../core/store/form/form-model';
+import {
+  FormAttributeCellConfig,
+  FormCell,
+  FormCellConfig,
+  FormCellType,
+} from '../../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {SelectItem2Model} from '../../../../../../../shared/select/select-item2/select-item2.model';
 import {AttributesResourceType} from '../../../../../../../core/model/resource';
 import {objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {COLOR_GRAY700} from '../../../../../../../core/constants';
 
 @Component({
   selector: 'form-editor-cell',
   templateUrl: './form-editor-cell.component.html',
   styleUrls: ['./form-editor-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormEditorCellComponent implements OnChanges {
-
   @Input()
   public cell: FormCell;
 
@@ -40,6 +45,9 @@ export class FormEditorCellComponent implements OnChanges {
 
   @Output()
   public cellChange = new EventEmitter<FormCell>();
+
+  public readonly type = FormCellType;
+  public readonly descriptionColor = COLOR_GRAY700;
 
   public selectedItemPath: string[];
   public items: SelectItem2Model[] = [];
@@ -69,13 +77,17 @@ export class FormEditorCellComponent implements OnChanges {
   }
 
   private createAttributeItem(): SelectItem2Model {
-    const attributeItems: SelectItem2Model[] = (this.collection?.attributes || [])
-      .map(attribute => ({id: attribute.id, value: attribute.name, icons: [this.collection?.icon], iconColors: [this.collection?.color]}))
+    const attributeItems: SelectItem2Model[] = (this.collection?.attributes || []).map(attribute => ({
+      id: attribute.id,
+      value: attribute.name,
+      icons: [this.collection?.icon],
+      iconColors: [this.collection?.color],
+    }));
 
     return {
       id: FormCellType.Attribute,
       value: $localize`:@@perspective.form.editor.row.cell.attribute:Attribute`,
-      children: attributeItems
+      children: attributeItems,
     };
   }
 
@@ -99,7 +111,23 @@ export class FormEditorCellComponent implements OnChanges {
       resourceType: AttributesResourceType.Collection,
       resourceId: this.collection?.id,
     };
-    const newCell: FormCell = {...this.cell, config, type: FormCellType.Attribute};
+    const title = this.cell?.title || item.value;
+    const newCell: FormCell = {...this.cell, title, config, type: FormCellType.Attribute};
+    this.cellChange.emit(newCell);
+  }
+
+  public onNewTitle(title: string) {
+    const newCell: FormCell = {...this.cell, title};
+    this.cellChange.emit(newCell);
+  }
+
+  public onNewDescription(description: string) {
+    const newCell: FormCell = {...this.cell, description};
+    this.cellChange.emit(newCell);
+  }
+
+  onConfigChange(config: FormCellConfig) {
+    const newCell: FormCell = {...this.cell, config};
     this.cellChange.emit(newCell);
   }
 }

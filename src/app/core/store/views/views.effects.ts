@@ -66,6 +66,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {UsersAction} from '../users/users.action';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import * as DetailActions from './../details/detail.actions';
+import * as FormActions from './../form/form.actions';
 import * as DashboardDataActions from './../dashboard-data/dashboard-data.actions';
 import {getPerspectiveSavedPerspectives} from './view.utils';
 import {TeamService} from '../../data-service/team/team.service';
@@ -299,6 +300,9 @@ export class ViewsEffects {
       case Perspective.Detail:
         const detailConfig = view.config?.detail;
         return [DetailActions.setConfig({detailId: view.code, config: detailConfig})];
+      case Perspective.Form:
+        const formConfig = view.config?.form;
+        return [FormActions.setConfig({id: view.code, config: formConfig})];
       default:
         return [];
     }

@@ -39,7 +39,7 @@ import {
   objectValues,
 } from '../../../../../../shared/utils/common.utils';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
-import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
+import {moveItemInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
@@ -491,7 +491,7 @@ export class WorkflowTablesStateService {
     for (let i = 0; i < newTables.length; i++) {
       const table = newTables[i];
       if (tablesAreSame(table, changedTable)) {
-        const newColumns = moveItemsInArray(table.columns, from, to);
+        const newColumns = moveItemInArray(table.columns, from, to);
         newTables[i] = {...table, columns: newColumns};
       }
     }

@@ -1,0 +1,51 @@
+<ng-container *ngIf="!emptySection">
+  <input-box class="d-block mt-1 mx-2"
+             placeholder="Section title"
+             [initialValue]="section?.title"
+             (newValue)="onNewTitle($event)">
+  </input-box>
+
+  <input-box class="d-block mt-1 mx-2"
+             placeholder="Section description"
+             [initialValue]="section?.description"
+             [color]="descriptionColor"
+             [fontSizeRem]="0.8"
+             (newValue)="onNewDescription($event)">
+  </input-box>
+</ng-container>
+
+
+<div class="px-1 py-3" cdkDropList id="{{section.id}}"
+     [cdkDropListConnectedTo]="sectionIds"
+     [cdkDropListData]="section"
+     (cdkDropListDropped)="rowDropped($event)">
+  <form-editor-row *ngFor="let row of section?.rows; let index = index; trackBy:trackByRow"
+                   cdkDrag
+                   cdkDragLockAxis="y"
+                   [cdkDragData]="row"
+                   class="dashboard-row d-block px-2"
+                   [row]="row"
+                   [collection]="collection"
+                   (rowChange)="onRowChange($event, index)"
+                   (delete)="onRowDelete(index)">
+    <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
+  </form-editor-row>
+</div>
+
+<div class="d-flex justify-content-between px-3 mb-2">
+  <button #buttonElement class="btn btn-link px-0" (click)="layout.toggle()">
+    <i class="far fa-plus-circle mr-2"></i>
+    <span i18n="@@perspective.form.editor.row.action.add">Add a Row</span>
+  </button>
+
+
+  <button *ngIf="!emptySection" class="btn btn-link text-danger px-0" (click)="delete.emit()">
+    <i class="far fa-trash-alt mr-2"></i>
+    <span i18n="@@perspective.form.editor.row.action.delete">Delete a Section</span>
+  </button>
+</div>
+
+<row-layout-dropdown #layout
+                     [origin]="buttonElement"
+                     (layoutSelected)="addRow($event)">
+</row-layout-dropdown>

@@ -1,0 +1,10 @@
+@import '~src/styles/variables';
+
+.fa-grip-vertical {
+  padding-top: 3.125rem;
+}
+
+.cdk-drag-placeholder {
+  background-color: $light;
+  border-radius: $border-radius-base;
+}

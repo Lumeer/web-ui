@@ -27,10 +27,9 @@ import {Collection} from '../../../../../../core/store/collections/collection';
   selector: 'form-editor-row',
   templateUrl: './form-editor-row.component.html',
   styleUrls: ['./form-editor-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormEditorRowComponent implements OnChanges {
-
   @Input()
   public row: FormRow;
 
@@ -53,13 +52,13 @@ export class FormEditorRowComponent implements OnChanges {
 
   private computeTemplateColumns() {
     const fractions = filterValidFormCells(this.row?.cells)
-      .map(cell => `${cell.span}fr`)
+      .map(cell => `minmax(0, ${cell.span}fr)`)
       .join(' ');
     this.templateColumns = `min-content ${fractions} min-content min-content`;
   }
 
   public trackByCell(index: number, cell: FormCell): string {
-    return cell.id
+    return cell.id;
   }
 
   public onLayoutSelected(layout: FormRowLayoutType) {

@@ -22,21 +22,46 @@ import {CommonModule} from '@angular/common';
 import {FormPerspectiveComponent} from './form-perspective.component';
 import {RouterModule} from '@angular/router';
 import {FormPerspectiveRoutingModule} from './form-perspective-routing.module';
-import { FormPerspectiveContentComponent } from './content/form-perspective-content.component';
-import { FormEditorComponent } from './content/editor/form-editor.component';
+import {FormPerspectiveContentComponent} from './content/form-perspective-content.component';
+import {FormEditorComponent} from './content/editor/form-editor.component';
 import {LayoutModule} from '../../../shared/layout/layout.module';
-import { FormEditorRowComponent } from './content/editor/row/form-editor-row.component';
+import {FormEditorRowComponent} from './content/editor/row/form-editor-row.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { FormEditorCellComponent } from './content/editor/row/cell/form-editor-cell.component';
-import { SelectedLayoutInRowPipe } from './pipes/selected-layout-in-row.pipe';
-import { FilterValidCellsPipe } from './pipes/filter-valid-cells.pipe';
+import {FormEditorCellComponent} from './content/editor/row/cell/form-editor-cell.component';
+import {SelectedLayoutInRowPipe} from './pipes/selected-layout-in-row.pipe';
+import {FilterValidCellsPipe} from './pipes/filter-valid-cells.pipe';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {SelectModule} from '../../../shared/select/select.module';
+import {InputModule} from '../../../shared/input/input.module';
+import {FormEditorCellAttributeConfigComponent} from './content/editor/row/cell/attribute/form-editor-cell-attribute-config.component';
+import {FormEditorCellLinkConfigComponent} from './content/editor/row/cell/link/form-editor-cell-link-config.component';
+import {FormEditorSectionComponent} from './content/editor/section/form-editor-section.component';
 
 @NgModule({
-  declarations: [FormPerspectiveComponent, FormPerspectiveContentComponent, FormEditorComponent, FormEditorRowComponent, FormEditorCellComponent, SelectedLayoutInRowPipe, FilterValidCellsPipe],
-  imports: [CommonModule, RouterModule, FormPerspectiveRoutingModule, LayoutModule, DragDropModule, PipesModule, WarningMessageModule, SelectModule],
+  declarations: [
+    FormPerspectiveComponent,
+    FormPerspectiveContentComponent,
+    FormEditorComponent,
+    FormEditorRowComponent,
+    FormEditorCellComponent,
+    SelectedLayoutInRowPipe,
+    FilterValidCellsPipe,
+    FormEditorCellAttributeConfigComponent,
+    FormEditorCellLinkConfigComponent,
+    FormEditorSectionComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormPerspectiveRoutingModule,
+    LayoutModule,
+    DragDropModule,
+    PipesModule,
+    WarningMessageModule,
+    SelectModule,
+    InputModule,
+  ],
   exports: [FormPerspectiveComponent],
 })
 export class FormPerspectiveModule {}

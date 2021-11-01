@@ -33,9 +33,9 @@ export interface FormConfig {
 
 export interface FormSection {
   id: string;
-  title: string;
+  title?: string;
   description?: string;
-  rows?: FormRow[];
+  rows: FormRow[];
 }
 
 export interface FormRow {
