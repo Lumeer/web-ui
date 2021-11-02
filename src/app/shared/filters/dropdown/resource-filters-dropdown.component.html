@@ -1,0 +1,14 @@
+<dropdown [origin]="origin"
+          [closeOnClickOutside]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <resource-filters class="card p-2 overflow-auto"
+                    [resource]="resource"
+                    [resourceType]="resourceType"
+                    [filters]="filters"
+                    [inline]="true"
+                    (filtersChange)="filtersChange.emit($event)">
+  </resource-filters>
+
+</dropdown>

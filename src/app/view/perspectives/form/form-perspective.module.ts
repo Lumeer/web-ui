@@ -45,6 +45,7 @@ import {FormEditorCellLinkActionsComponent} from './content/editor/row/cell/acti
 import {FormLinkAttributesSettingsDropdownComponent} from './content/editor/row/cell/actions/link/attributes-settings/form-link-attributes-settings-dropdown.component';
 import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
 import {AttributesSettingsModule} from '../../../shared/settings/attributes/attributes-settings.module';
+import {FiltersModule} from '../../../shared/filters/filters.module';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import {AttributesSettingsModule} from '../../../shared/settings/attributes/attr
     FormsModule,
     DropdownModule,
     AttributesSettingsModule,
+    FiltersModule,
   ],
   exports: [FormPerspectiveComponent],
 })

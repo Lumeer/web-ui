@@ -24,9 +24,9 @@
       </ng-container>
     </ng-container>
 
-    <collection-filters [collection]="data.collection"
-                        (filtersChange)="onFiltersChange($event)">
-    </collection-filters>
+    <resource-filters [resource]="data.collection"
+                      (filtersChange)="onFiltersChange($event)">
+    </resource-filters>
 
     <ng-container *ngIf="data.documents.length; else noData">
       <results-table class="d-block mt-2"

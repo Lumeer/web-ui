@@ -102,17 +102,20 @@ export class FilterBuilderContentComponent implements OnChanges {
       this.initFocusedItem();
     }
     if (changes.visible) {
-      this.checkKeydownListener();
+      this.onVisibleChanged();
     }
   }
 
-  private checkKeydownListener() {
+  private onVisibleChanged() {
     if (this.visible && !this.keyDownListener) {
       this.keyDownListener = event => this.onKeyDown(event);
       document.addEventListener('keydown', this.keyDownListener);
     } else if (!this.visible && this.keyDownListener) {
       document.removeEventListener('keydown', this.keyDownListener);
       this.keyDownListener = null;
+    }
+    if (this.visible) {
+      this.focus();
     }
   }
 

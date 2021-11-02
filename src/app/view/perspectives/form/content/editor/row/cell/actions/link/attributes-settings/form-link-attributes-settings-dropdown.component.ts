@@ -80,6 +80,14 @@ export class FormLinkAttributesSettingsDropdownComponent implements OnChanges {
     }
   }
 
+  public toggle() {
+    if (this.isOpen()) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
   public isOpen(): boolean {
     return this.dropdown?.isOpen();
   }

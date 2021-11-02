@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, OnChanges, Input, SimpleChanges, OnInit} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnChanges,
+  Input,
+  SimpleChanges,
+  OnInit,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {AppState} from '../../../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {FormLinkCellConfig} from '../../../../../../../../../core/store/form/form-model';
@@ -31,6 +40,8 @@ import {selectLinkTypeByIdWithCollections} from '../../../../../../../../../core
 import {Collection} from '../../../../../../../../../core/store/collections/collection';
 import {getOtherLinkedCollectionId} from '../../../../../../../../../shared/utils/link-type.utils';
 import {selectCollectionById} from '../../../../../../../../../core/store/collections/collections.state';
+import {CollectionAttributeFilter} from '../../../../../../../../../core/store/navigation/query/query';
+import {AttributesResourceType} from '../../../../../../../../../core/model/resource';
 
 @Component({
   selector: 'form-editor-cell-link-actions',
@@ -44,6 +55,11 @@ export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
 
   @Input()
   public collectionId: string;
+
+  @Output()
+  public configChange = new EventEmitter<FormLinkCellConfig>();
+
+  public readonly resourceType = AttributesResourceType;
 
   public attributeSettings$: Observable<AttributesSettings>;
   public linkType$: Observable<LinkType>;
@@ -76,5 +92,10 @@ export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, attributes: attributesSettings};
     this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
+  }
+
+  public onFiltersChanged(filters: CollectionAttributeFilter[]) {
+    const newConfig = {...this.config, filters};
+    this.configChange.emit(newConfig);
   }
 }

@@ -2,8 +2,8 @@
 
   <form-editor-cell-link-actions *ngSwitchCase="cellType.Link"
                                  [config]="config"
-                                 [collectionId]="collectionId">
+                                 [collectionId]="collectionId"
+                                 (configChange)="configChange.emit($event)">
   </form-editor-cell-link-actions>
-
 
 </ng-container>

@@ -18,7 +18,7 @@
  */
 
 import {AttributesResourceType} from '../../model/resource';
-import {LinkAttributeFilter} from '../navigation/query/query';
+import {CollectionAttributeFilter} from '../navigation/query/query';
 import {RowLayoutType} from '../../../shared/layout/row-layout/row-layout';
 
 export interface FormModel {
@@ -72,5 +72,5 @@ export interface FormLinkCellConfig {
   linkTypeId?: string;
   minLinks?: number;
   maxLinks?: number;
-  filters?: LinkAttributeFilter[];
+  filters?: CollectionAttributeFilter[];
 }

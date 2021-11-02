@@ -19,17 +19,21 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Query} from '../../../core/store/navigation/query/query';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, take} from 'rxjs/operators';
 import {ViewConfig} from '../../../core/store/views/view';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectPanelWidth} from '../../../core/store/views/views.state';
 import {WorkflowConfig} from '../../../core/store/workflows/workflow';
-import {selectWorkflowById, selectWorkflowSelectedDocumentId} from '../../../core/store/workflows/workflow.state';
+import {
+  selectWorkflowById,
+  selectWorkflowId,
+  selectWorkflowSelectedDocumentId,
+} from '../../../core/store/workflows/workflow.state';
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -55,7 +59,7 @@ export class WorkflowPerspectiveComponent
   public selectedDocument$: Observable<DocumentModel>;
   public selectedCollection$: Observable<Collection>;
   public panelWidth$: Observable<number>;
-  public workflowId = generateId();
+  public workflowId$: Observable<string>;
 
   constructor(protected store$: Store<AppState>) {
     super(store$);
@@ -91,10 +95,19 @@ export class WorkflowPerspectiveComponent
   }
 
   public subscribeAdditionalData() {
+    if (this.isEmbedded) {
+      this.workflowId$ = of(generateId());
+    } else {
+      this.workflowId$ = this.store$.pipe(select(selectWorkflowId));
+    }
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
-    this.selectedDocument$ = this.store$.pipe(
-      select(selectWorkflowSelectedDocumentId(this.workflowId)),
-      switchMap(documentId => this.store$.pipe(select(selectDocumentById(documentId))))
+    this.selectedDocument$ = this.workflowId$.pipe(
+      switchMap(workflowId =>
+        this.store$.pipe(
+          select(selectWorkflowSelectedDocumentId(workflowId)),
+          switchMap(documentId => this.store$.pipe(select(selectDocumentById(documentId))))
+        )
+      )
     );
     this.selectedCollection$ = this.selectedDocument$.pipe(
       switchMap(document => this.store$.pipe(select(selectCollectionById(document?.collectionId))))
@@ -111,7 +124,9 @@ export class WorkflowPerspectiveComponent
   }
 
   public onCloseSidebar() {
-    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument({workflowId: this.workflowId}));
+    this.workflowId$
+      .pipe(take(1))
+      .subscribe(workflowId => this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument({workflowId})));
   }
 
   public setSidebarWidth(width: number) {

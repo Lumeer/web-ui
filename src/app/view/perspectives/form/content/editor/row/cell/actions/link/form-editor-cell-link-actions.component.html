@@ -1,18 +1,28 @@
 <ng-container *ngIf="linkType$ | async as linkType">
-  <span class="ml-2 text-primary clickable" #element (click)="settings.open()">
+  <span class="ml-2 text-primary clickable" #settingsElement (click)="settings.toggle()">
     <i class="far fa-line-columns"></i>
   </span>
 
   <form-link-attributes-settings-dropdown #settings
-                                          [origin]="element"
+                                          [origin]="settingsElement"
                                           [linkType]="linkType"
                                           [collection]="otherCollection$ | async"
                                           [settings]="attributeSettings$ | async"
                                           (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
   </form-link-attributes-settings-dropdown>
+
+  <div class="ml-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()">
+    <span class="text-primary clickable">
+      <i class="far fa-filter"></i>
+    </span>
+    <span class="number" *ngIf="config?.filters?.length">{{config?.filters?.length}}</span>
+  </div>
+  <resource-filters-dropdown #filters
+                             [origin]="filtersElement"
+                             [resource]="otherCollection$ | async"
+                             [resourceType]="resourceType.Collection"
+                             [filters]="config?.filters"
+                             (filtersChange)="onFiltersChanged($event)">
+
+  </resource-filters-dropdown>
 </ng-container>
-
-
-<span class="ml-2 text-primary clickable">
-  <i class="far fa-filter"></i>
-</span>

@@ -19,28 +19,25 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {SelectModule} from '../../select/select.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {ModifyDocumentLinksModalComponent} from './modify-document-links-modal.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PreviewResultsModule} from '../../preview-results/preview-results.module';
-import {CollectionFiltersComponent} from './filters/collection-filters.component';
-import {CollectionFilterComponent} from './filters/filter/collection-filter.component';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
 import {ResultsTableComponent} from './results-table/results-table.component';
 import {DataInputModule} from '../../data-input/data-input.module';
-import {ScrollingModule} from '@angular/cdk/scrolling';
 import {InputModule} from '../../input/input.module';
 import {IsResultRowCheckedPipe} from './results-table/pipes/is-result-row-checked.pipe';
 import {WarningMessageModule} from '../../warning-message/warning-message.module';
 import {CountSelectedLinkedDocumentsPipe} from './pipes/count-selected-linked-documents.pipe';
+import {FiltersModule} from '../../filters/filters.module';
 
 @NgModule({
   declarations: [
     ModifyDocumentLinksModalComponent,
-    CollectionFiltersComponent,
-    CollectionFilterComponent,
     ResultsTableComponent,
     IsResultRowCheckedPipe,
     CountSelectedLinkedDocumentsPipe,
@@ -57,6 +54,7 @@ import {CountSelectedLinkedDocumentsPipe} from './pipes/count-selected-linked-do
     ScrollingModule,
     InputModule,
     WarningMessageModule,
+    FiltersModule,
   ],
   exports: [ModifyDocumentLinksModalComponent],
 })
