@@ -18,25 +18,22 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {FormConfig} from '../../../../core/store/form/form-model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {FormCellConfig, FormCellType} from '../../../../../../../../core/store/form/form-model';
 
 @Component({
-  selector: 'form-perspective-content',
-  templateUrl: './form-perspective-content.component.html',
+  selector: 'form-editor-cell-config',
+  templateUrl: './form-editor-cell-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPerspectiveContentComponent {
+export class FormEditorCellConfigComponent {
   @Input()
-  public config: FormConfig;
+  public type: FormCellType;
 
   @Input()
-  public collection: Collection;
-
-  @Input()
-  public collectionLinkTypes: LinkType[];
+  public config: FormCellConfig;
 
   @Output()
-  public configChange = new EventEmitter<FormConfig>();
+  public configChange = new EventEmitter<FormCellConfig>();
+
+  public readonly cellType = FormCellType;
 }

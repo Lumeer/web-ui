@@ -1,0 +1,14 @@
+<ng-container [ngSwitch]="type">
+
+  <form-editor-cell-attribute-config *ngSwitchCase="cellType.Attribute"
+                                     [config]="config"
+                                     (configChange)="configChange.emit($event)">
+  </form-editor-cell-attribute-config>
+
+  <form-editor-cell-link-config *ngSwitchCase="cellType.Link"
+                                [config]="config"
+                                (configChange)="configChange.emit($event)">
+  </form-editor-cell-link-config>
+
+
+</ng-container>

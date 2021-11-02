@@ -1,9 +1,9 @@
 <accordion [closeOthers]="true">
-  <ng-container *ngFor="let resourceData of attributesResourcesData; let first = first; trackBy:trackByResourceId">
+  <ng-container *ngFor="let resourceData of attributesResourcesData; let index = index; trackBy:trackByResourceId">
     <accordion-group panelClass="lmr-accordion"
                      *ngIf="resourceData.resource?.attributes | createAttributesSettingsOrder: (settings | resourceAttributesSettings:resourceData.type:resourceData.resource.id:resourceData.composedWithId) as attributesSettings"
                      [isDisabled]="attributesSettings.length === 0"
-                     [isOpen]="first">
+                     [isOpen]="index === firstNonEmptyAttributesIndex">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: resourceData.resource | resourceIconsColors} as data">
         <icons-presenter class="d-block mr-1"
                          [colors]="data.iconColors.colors"

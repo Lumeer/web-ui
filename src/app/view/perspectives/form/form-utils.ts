@@ -17,7 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormCell} from '../../../core/store/form/form-model';
+import {
+  FormAttributeCellConfig,
+  FormCell,
+  FormCellType,
+  FormConfig,
+  FormLinkCellConfig,
+  FormRow,
+} from '../../../core/store/form/form-model';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function filterValidFormCells(cells: FormCell[]): FormCell[] {
   return (cells || []).filter(cell => isFormCellValid(cell));
@@ -25,4 +33,36 @@ export function filterValidFormCells(cells: FormCell[]): FormCell[] {
 
 export function isFormCellValid(cell: FormCell): boolean {
   return !!cell?.span;
+}
+
+export function collectAttributesIdsFromFormConfig(config: FormConfig): string[] {
+  return collectValuesFromFormConfigCells(
+    config,
+    cell => cell.type === FormCellType.Attribute && (<FormAttributeCellConfig>cell.config)?.attributeId
+  );
+}
+
+export function collectLinkIdsFromFormConfig(config: FormConfig): string[] {
+  return collectValuesFromFormConfigCells(
+    config,
+    cell => cell.type === FormCellType.Link && (<FormLinkCellConfig>cell.config)?.linkTypeId
+  );
+}
+
+function collectValuesFromFormConfigCells<T>(config: FormConfig, fun: (cell: FormCell) => T): T[] {
+  const defaultCells = collectCellsFromFormRows(config?.rows);
+  return (config?.sections || [])
+    .reduce((cells, section) => {
+      cells.push(...collectCellsFromFormRows(section?.rows));
+      return cells;
+    }, defaultCells)
+    .map(cell => fun(cell))
+    .filter(value => isNotNullOrUndefined(value));
+}
+
+function collectCellsFromFormRows(rows: FormRow[]): FormCell[] {
+  return (rows || []).reduce((cells, row) => {
+    cells.push(...filterValidFormCells(row.cells));
+    return cells;
+  }, []);
 }

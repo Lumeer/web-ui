@@ -1,10 +1,16 @@
-<input-box class="d-block mb-1"
-           placeholder="Title"
-           [canStayEmpty]="false"
-           [maxLines]="1"
-           [initialValue]="cell?.title"
-           (newValue)="onNewTitle($event)">
-</input-box>
+<div class="title-row mb-1">
+  <input-box placeholder="Title"
+             [canStayEmpty]="false"
+             [maxLines]="1"
+             [initialValue]="cell?.title"
+             (newValue)="onNewTitle($event)">
+  </input-box>
+  <form-editor-cell-actions [config]="cell?.config"
+                            [type]="cell?.type"
+                            [collectionId]="collection?.id"
+                            (configChange)="onConfigChange($event)">
+  </form-editor-cell-actions>
+</div>
 
 <select-item2 [items]="items"
               [selectedPath]="selectedItemPath"
@@ -22,19 +28,8 @@
            (newValue)="onNewDescription($event)">
 </input-box>
 
-<ng-container [ngSwitch]="cell.type">
-
-  <form-editor-cell-attribute-config *ngSwitchCase="type.Attribute"
-                                     class="d-block mt-2"
-                                     [config]="cell.config"
-                                     (configChange)="onConfigChange($event)">
-  </form-editor-cell-attribute-config>
-
-  <form-editor-cell-link-config *ngSwitchCase="type.Link"
-                                class="d-block mt-2"
-                                [config]="cell.config"
-                                (configChange)="onConfigChange($event)">
-  </form-editor-cell-link-config>
-
-
-</ng-container>
+<form-editor-cell-config class="d-block mt-2"
+                         [config]="cell?.config"
+                         [type]="cell?.type"
+                         (configChange)="onConfigChange($event)">
+</form-editor-cell-config>

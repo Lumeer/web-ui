@@ -5,6 +5,9 @@
   <form-editor-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
                     [cell]="cell"
                     [collection]="collection"
+                    [collectionLinkTypes]="collectionLinkTypes"
+                    [usedAttributeIds]="usedAttributeIds"
+                    [usedLinkTypeIds]="usedLinkTypeIds"
                     (cellChange)="onCellChange($event, index)"
                     class="dashboard-cell cursor-pointer">
   </form-editor-cell>

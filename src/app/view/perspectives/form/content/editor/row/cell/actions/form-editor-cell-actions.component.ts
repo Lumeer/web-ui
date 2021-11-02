@@ -17,24 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {FormAttributeCellConfig} from '../../../../../../../../core/store/form/form-model';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {FormCellConfig, FormCellType} from '../../../../../../../../core/store/form/form-model';
+import {Collection} from '../../../../../../../../core/store/collections/collection';
 
 @Component({
-  selector: 'form-editor-cell-attribute-config',
-  templateUrl: './form-editor-cell-attribute-config.component.html',
-  styleUrls: ['./form-editor-cell-attribute-config.component.scss'],
+  selector: 'form-editor-cell-actions',
+  templateUrl: './form-editor-cell-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormEditorCellAttributeConfigComponent {
+export class FormEditorCellActionsComponent {
   @Input()
-  public config: FormAttributeCellConfig;
+  public type: FormCellType;
+
+  @Input()
+  public config: FormCellConfig;
+
+  @Input()
+  public collectionId: string;
 
   @Output()
-  public configChange = new EventEmitter<FormAttributeCellConfig>();
+  public configChange = new EventEmitter<FormCellConfig>();
 
-  public onMandatoryChange(mandatory: boolean) {
-    const config: FormAttributeCellConfig = {...this.config, mandatory};
-    this.configChange.emit(config);
-  }
+  public readonly cellType = FormCellType;
 }

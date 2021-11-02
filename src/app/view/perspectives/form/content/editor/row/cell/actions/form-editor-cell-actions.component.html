@@ -1,0 +1,9 @@
+<ng-container [ngSwitch]="type">
+
+  <form-editor-cell-link-actions *ngSwitchCase="cellType.Link"
+                                 [config]="config"
+                                 [collectionId]="collectionId">
+  </form-editor-cell-link-actions>
+
+
+</ng-container>

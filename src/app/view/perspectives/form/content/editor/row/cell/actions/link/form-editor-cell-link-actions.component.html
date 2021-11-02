@@ -1,0 +1,18 @@
+<ng-container *ngIf="linkType$ | async as linkType">
+  <span class="ml-2 text-primary clickable" #element (click)="settings.open()">
+    <i class="far fa-line-columns"></i>
+  </span>
+
+  <form-link-attributes-settings-dropdown #settings
+                                          [origin]="element"
+                                          [linkType]="linkType"
+                                          [collection]="otherCollection$ | async"
+                                          [settings]="attributeSettings$ | async"
+                                          (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
+  </form-link-attributes-settings-dropdown>
+</ng-container>
+
+
+<span class="ml-2 text-primary clickable">
+  <i class="far fa-filter"></i>
+</span>

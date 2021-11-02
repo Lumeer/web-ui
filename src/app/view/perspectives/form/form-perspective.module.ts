@@ -34,9 +34,17 @@ import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {SelectModule} from '../../../shared/select/select.module';
 import {InputModule} from '../../../shared/input/input.module';
-import {FormEditorCellAttributeConfigComponent} from './content/editor/row/cell/attribute/form-editor-cell-attribute-config.component';
-import {FormEditorCellLinkConfigComponent} from './content/editor/row/cell/link/form-editor-cell-link-config.component';
+import {FormEditorCellAttributeConfigComponent} from './content/editor/row/cell/config/attribute/form-editor-cell-attribute-config.component';
+import {FormEditorCellLinkConfigComponent} from './content/editor/row/cell/config/link/form-editor-cell-link-config.component';
 import {FormEditorSectionComponent} from './content/editor/section/form-editor-section.component';
+import {DirectivesModule} from '../../../shared/directives/directives.module';
+import {FormsModule} from '@angular/forms';
+import {FormEditorCellConfigComponent} from './content/editor/row/cell/config/form-editor-cell-config.component';
+import {FormEditorCellActionsComponent} from './content/editor/row/cell/actions/form-editor-cell-actions.component';
+import {FormEditorCellLinkActionsComponent} from './content/editor/row/cell/actions/link/form-editor-cell-link-actions.component';
+import {FormLinkAttributesSettingsDropdownComponent} from './content/editor/row/cell/actions/link/attributes-settings/form-link-attributes-settings-dropdown.component';
+import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
+import {AttributesSettingsModule} from '../../../shared/settings/attributes/attributes-settings.module';
 
 @NgModule({
   declarations: [
@@ -50,6 +58,10 @@ import {FormEditorSectionComponent} from './content/editor/section/form-editor-s
     FormEditorCellAttributeConfigComponent,
     FormEditorCellLinkConfigComponent,
     FormEditorSectionComponent,
+    FormEditorCellConfigComponent,
+    FormEditorCellActionsComponent,
+    FormEditorCellLinkActionsComponent,
+    FormLinkAttributesSettingsDropdownComponent,
   ],
   imports: [
     CommonModule,
@@ -61,6 +73,10 @@ import {FormEditorSectionComponent} from './content/editor/section/form-editor-s
     WarningMessageModule,
     SelectModule,
     InputModule,
+    DirectivesModule,
+    FormsModule,
+    DropdownModule,
+    AttributesSettingsModule,
   ],
   exports: [FormPerspectiveComponent],
 })

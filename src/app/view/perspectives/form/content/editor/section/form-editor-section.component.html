@@ -26,6 +26,9 @@
                    class="dashboard-row d-block px-2"
                    [row]="row"
                    [collection]="collection"
+                   [collectionLinkTypes]="collectionLinkTypes"
+                   [usedAttributeIds]="usedAttributeIds"
+                   [usedLinkTypeIds]="usedLinkTypeIds"
                    (rowChange)="onRowChange($event, index)"
                    (delete)="onRowDelete(index)">
     <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>

@@ -23,12 +23,14 @@ import {
   FormCell,
   FormCellConfig,
   FormCellType,
+  FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../../core/store/collections/collection';
 import {SelectItem2Model} from '../../../../../../../shared/select/select-item2/select-item2.model';
 import {AttributesResourceType} from '../../../../../../../core/model/resource';
 import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {COLOR_GRAY700} from '../../../../../../../core/constants';
+import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'form-editor-cell',
@@ -43,6 +45,15 @@ export class FormEditorCellComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
+  @Input()
+  public collectionLinkTypes: LinkType[];
+
+  @Input()
+  public usedAttributeIds: string[];
+
+  @Input()
+  public usedLinkTypeIds: string[];
+
   @Output()
   public cellChange = new EventEmitter<FormCell>();
 
@@ -53,7 +64,7 @@ export class FormEditorCellComponent implements OnChanges {
   public items: SelectItem2Model[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
+    if (changes.cell || changes.collection || changes.usedAttributesIds || changes.usedLinkTypeIds) {
       this.items = this.mapItems();
     }
     if (changes.cell || objectChanged(changes.collection)) {
@@ -62,32 +73,67 @@ export class FormEditorCellComponent implements OnChanges {
   }
 
   private mapSelectedItem(): string[] {
-    if (this.cell?.type === FormCellType.Attribute) {
-      const config = <FormAttributeCellConfig>this.cell?.config || {};
-      if (config.resourceId === this.collection?.id && config.resourceType === AttributesResourceType.Collection) {
-        return [FormCellType.Attribute, config.attributeId];
-      }
+    switch (this.cell?.type) {
+      case FormCellType.Attribute:
+        return this.mapAttributeItem();
+      case FormCellType.Link:
+        return this.mapLinkItem();
+      default:
+        return [];
     }
+  }
 
-    return [];
+  private mapAttributeItem(): string[] {
+    const config = <FormAttributeCellConfig>this.cell?.config || {};
+    if (config.resourceId !== this.collection?.id || config.resourceType !== AttributesResourceType.Collection) {
+      return [];
+    }
+    return [FormCellType.Attribute, config.attributeId];
+  }
+
+  private mapLinkItem(): string[] {
+    const config = <FormLinkCellConfig>this.cell?.config || {};
+    return [FormCellType.Link, config.linkTypeId];
   }
 
   private mapItems(): SelectItem2Model[] {
-    return [this.createAttributeItem()];
+    return [
+      this.createAttributeItem(removeSelectedAttributeIdFromRestricted(this.usedAttributeIds, this.cell)),
+      this.createLinkItem(removeSelectedLinkIdFromRestricted(this.usedLinkTypeIds, this.cell)),
+    ];
   }
 
-  private createAttributeItem(): SelectItem2Model {
-    const attributeItems: SelectItem2Model[] = (this.collection?.attributes || []).map(attribute => ({
-      id: attribute.id,
-      value: attribute.name,
-      icons: [this.collection?.icon],
-      iconColors: [this.collection?.color],
-    }));
+  private createAttributeItem(restrictedAttributesIds: string[]): SelectItem2Model {
+    const attributeItems: SelectItem2Model[] = (this.collection?.attributes || [])
+      .filter(attribute => !restrictedAttributesIds?.includes(attribute.id))
+      .map(attribute => ({
+        id: attribute.id,
+        value: attribute.name,
+        icons: [this.collection?.icon],
+        iconColors: [this.collection?.color],
+      }));
 
     return {
       id: FormCellType.Attribute,
       value: $localize`:@@perspective.form.editor.row.cell.attribute:Attribute`,
       children: attributeItems,
+    };
+  }
+
+  private createLinkItem(restrictedIds: string[]): SelectItem2Model {
+    const items: SelectItem2Model[] = (this.collectionLinkTypes || [])
+      .filter(attribute => !restrictedIds?.includes(attribute.id))
+      .map(linkType => ({
+        id: linkType.id,
+        value: linkType.name,
+        icons: linkType.collections?.map(collection => collection.icon) as [string, string],
+        iconColors: linkType.collections?.map(collection => collection.color) as [string, string],
+      }));
+
+    return {
+      id: FormCellType.Link,
+      value: $localize`:@@perspective.form.editor.row.cell.link:Link Type`,
+      children: items,
     };
   }
 
@@ -99,6 +145,9 @@ export class FormEditorCellComponent implements OnChanges {
     switch (path[0].id) {
       case FormCellType.Attribute:
         this.onSelectAttribute(path[1]);
+        break;
+      case FormCellType.Link:
+        this.onSelectLink(path[1]);
         break;
     }
   }
@@ -116,6 +165,17 @@ export class FormEditorCellComponent implements OnChanges {
     this.cellChange.emit(newCell);
   }
 
+  private onSelectLink(item: SelectItem2Model) {
+    const copyConfig = this.cell?.type === FormCellType.Link ? this.cell?.config : {};
+    const config: FormLinkCellConfig = {
+      ...copyConfig,
+      linkTypeId: item.id,
+    };
+    const title = this.cell?.title || item.value;
+    const newCell: FormCell = {...this.cell, title, config, type: FormCellType.Link};
+    this.cellChange.emit(newCell);
+  }
+
   public onNewTitle(title: string) {
     const newCell: FormCell = {...this.cell, title};
     this.cellChange.emit(newCell);
@@ -126,8 +186,24 @@ export class FormEditorCellComponent implements OnChanges {
     this.cellChange.emit(newCell);
   }
 
-  onConfigChange(config: FormCellConfig) {
+  public onConfigChange(config: FormCellConfig) {
     const newCell: FormCell = {...this.cell, config};
     this.cellChange.emit(newCell);
   }
+}
+
+function removeSelectedAttributeIdFromRestricted(ids: string[], cell: FormCell): string[] {
+  if (cell.type === FormCellType.Attribute) {
+    const attributeId = (<FormAttributeCellConfig>cell.config)?.attributeId;
+    return (ids || []).filter(id => id !== attributeId);
+  }
+  return ids;
+}
+
+function removeSelectedLinkIdFromRestricted(ids: string[], cell: FormCell): string[] {
+  if (cell.type === FormCellType.Link) {
+    const linkTypeId = (<FormLinkCellConfig>cell.config)?.linkTypeId;
+    return (ids || []).filter(id => id !== linkTypeId);
+  }
+  return ids;
 }

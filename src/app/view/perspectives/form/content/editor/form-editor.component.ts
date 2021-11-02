@@ -21,13 +21,14 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChang
 import {FormConfig, FormRow, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {generateId} from '../../../../../shared/utils/resource.utils';
+import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 const DEFAULT_SECTION_ID = 'default';
 
 @Component({
   selector: 'form-editor',
   templateUrl: './form-editor.component.html',
-  styleUrls: ['./form-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormEditorComponent implements OnChanges {
@@ -37,17 +38,24 @@ export class FormEditorComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
+  @Input()
+  public collectionLinkTypes: LinkType[];
+
   @Output()
   public configChange = new EventEmitter<FormConfig>();
 
   // first section without title and description
   public emptySection: FormSection;
   public sectionIds: string[];
+  public usedAttributeIds: string[];
+  public usedLinkTypeIds: string[];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
       this.emptySection = {id: DEFAULT_SECTION_ID, rows: this.config?.rows};
       this.sectionIds = [DEFAULT_SECTION_ID, ...(this.config?.sections || []).map(section => section.id)];
+      this.usedAttributeIds = collectAttributesIdsFromFormConfig(this.config);
+      this.usedLinkTypeIds = collectLinkIdsFromFormConfig(this.config);
     }
   }
 

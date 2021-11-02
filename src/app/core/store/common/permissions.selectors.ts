@@ -93,6 +93,7 @@ import {
 } from '../../../shared/utils/permission.utils';
 import {User} from '../users/user';
 import {filterVisibleAttributesBySettings} from '../../../shared/utils/attribute.utils';
+import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
 
 const selectCollectionsByPermission = (roleTypes: RoleType[]) =>
   createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
@@ -598,6 +599,13 @@ export const selectLinkTypesByCollectionId = (collectionId: string) =>
 export const selectLinkTypesByViewAndCollectionId = (view: View, collectionId: string) =>
   createSelector(selectReadableLinkTypesByView(view), linkTypes =>
     linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
+  );
+
+export const selectLinkTypesByViewAndCollectionIdWithCollections = (view: View, collectionId: string) =>
+  createSelector(selectReadableLinkTypesByView(view), selectCollectionsDictionary, (linkTypes, collectionsMap) =>
+    linkTypes
+      .filter(linkType => linkType.collectionIds.includes(collectionId))
+      .map(linkType => mapLinkTypeCollections(linkType, collectionsMap))
   );
 
 export const selectLinkTypesByCollectionIds = (collectionIds: string[]) =>

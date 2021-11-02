@@ -314,6 +314,10 @@ export function getBaseCollectionIdsFromQuery(query: Query): string[] {
   return query?.stems?.map(stem => stem.collectionId) || [];
 }
 
+export function getBaseCollectionIdFromQuery(query: Query): string {
+  return query?.stems?.[0]?.collectionId;
+}
+
 export function isQuerySubset(superset: Query, subset: Query, excludeLinksTypes?: boolean): boolean {
   if (!isArraySubset(superset?.fulltexts || [], subset?.fulltexts || [])) {
     return false;

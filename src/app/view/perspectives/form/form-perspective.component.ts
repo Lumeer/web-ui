@@ -17,32 +17,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {FormConfig} from '../../../core/store/form/form-model';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ViewConfig} from '../../../core/store/views/view';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {map} from 'rxjs/operators';
 import {selectFormById} from '../../../core/store/form/form.state';
 import * as FormsActions from '../../../core/store/form/form.actions';
 import {AppState} from '../../../core/store/app.state';
+import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectLinkTypesByViewAndCollectionIdWithCollections} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'form-perspective',
   templateUrl: './form-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfig> {
+export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfig> implements OnInit {
+  public basicCollection$: Observable<Collection>;
+  public collectionLinkTypes$: Observable<LinkType[]>;
 
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }
 
-  protected checkOrTransformConfig(config: FormConfig, query: Query, collections: Collection[], linkTypes: LinkType[]): FormConfig {
+  public ngOnInit() {
+    super.ngOnInit();
+
+    const basicCollectionId$ = this.query$.pipe(map(query => getBaseCollectionIdFromQuery(query)));
+
+    this.basicCollection$ = basicCollectionId$.pipe(
+      switchMap(collectionId => this.store$.pipe(select(selectCollectionById(collectionId))))
+    );
+
+    this.collectionLinkTypes$ = combineLatest([basicCollectionId$, this.currentView$]).pipe(
+      switchMap(([collectionId, view]) =>
+        this.store$.pipe(select(selectLinkTypesByViewAndCollectionIdWithCollections(view, collectionId)))
+      )
+    );
+  }
+
+  protected checkOrTransformConfig(
+    config: FormConfig,
+    query: Query,
+    collections: Collection[],
+    linkTypes: LinkType[]
+  ): FormConfig {
     return config;
   }
 
@@ -64,5 +90,4 @@ export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfi
   public onConfigChanged(config: FormConfig) {
     this.store$.dispatch(FormsActions.setConfig({id: this.perspectiveId$.value, config}));
   }
-
 }

@@ -24,6 +24,7 @@ import {FormRow, FormRowLayoutType, FormSection} from '../../../../../../core/st
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {generateCorrelationId} from '../../../../../../shared/utils/resource.utils';
 import {COLOR_GRAY700} from '../../../../../../core/constants';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'form-editor-section',
@@ -42,7 +43,16 @@ export class FormEditorSectionComponent {
   public collection: Collection;
 
   @Input()
+  public collectionLinkTypes: LinkType[];
+
+  @Input()
   public sectionIds: string[];
+
+  @Input()
+  public usedAttributeIds: string[];
+
+  @Input()
+  public usedLinkTypeIds: string[];
 
   @Output()
   public sectionChange = new EventEmitter<FormSection>();

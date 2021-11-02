@@ -1,0 +1,11 @@
+<label class="d-block">Minimum links</label>
+<input class="form-control d-inline-block w-auto mw-100" type="number" integer
+       [(ngModel)]="minLinks"
+       [maxValue]="maxLinks"
+       (blur)="onMinValueBlur()">
+
+<label class="d-block mt-1">Maximum links</label>
+<input class="form-control d-inline-block w-auto mw-100" type="number" integer
+       [(ngModel)]="maxLinks"
+       [minValue]="minLinks"
+       (blur)="onMaxValueBlur()">
