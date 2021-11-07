@@ -68,6 +68,8 @@ export enum SlotDuration {
   Five = 'Five',
 }
 
+export const defaultSlotDuration = SlotDuration.Half;
+
 export const slotDurationsMap: Record<SlotDuration, string> = {
   [SlotDuration.Hour]: '1:00:00',
   [SlotDuration.Half]: '0:30:00',

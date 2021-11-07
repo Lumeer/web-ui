@@ -24,6 +24,7 @@ import {
   CalendarConfig,
   SlotDuration,
   CalendarMode,
+  defaultSlotDuration,
 } from '../../../../core/store/calendars/calendar';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
@@ -57,7 +58,7 @@ export class CalendarConfigComponent {
   public readonly savePositionId = generateId();
   public readonly defaultStemConfig = getCalendarDefaultStemConfig();
   public readonly slotDurations = this.getSlotDurationItems();
-  public readonly defaultDuration = SlotDuration.Half;
+  public readonly defaultDuration = defaultSlotDuration;
   public readonly configModeMonth = CalendarMode.Month;
 
   public onStemConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {

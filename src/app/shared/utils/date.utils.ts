@@ -81,7 +81,7 @@ export function parseDateTimeByConstraint(value: any, constraint: Constraint): D
     return value;
   }
 
-  if (constraint && constraint.type === ConstraintType.DateTime) {
+  if (constraint?.type === ConstraintType.DateTime) {
     return (<DateTimeConstraint>constraint).createDataValue(value).toDate();
   }
 

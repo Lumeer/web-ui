@@ -23,6 +23,7 @@ import {
   CalendarConfigVersion,
   CalendarMode,
   CalendarStemConfig,
+  defaultSlotDuration,
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
@@ -55,6 +56,12 @@ export function isAllDayEventSingle(date: Date): boolean {
 
 export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfig: CalendarConfig): boolean {
   if (viewConfig.mode !== currentConfig.mode || viewConfig.list !== currentConfig.list) {
+    return true;
+  }
+
+  const slotDuration = viewConfig.slotDuration || defaultSlotDuration;
+  const currentSlotDuration = currentConfig.slotDuration || defaultSlotDuration;
+  if (slotDuration !== currentSlotDuration) {
     return true;
   }
 
