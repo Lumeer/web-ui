@@ -28,6 +28,7 @@ import {FilterDropdownOptionsPipe} from './pipes/filter-dropdown-options.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropdown-position.pipe';
 import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
+import {DropdownDirective} from './dropdown.directive';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],

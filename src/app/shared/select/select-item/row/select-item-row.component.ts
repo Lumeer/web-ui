@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {SelectItem2Model} from '../../select-item2/select-item2.model';
+import {SelectedItemDisplayValue, SelectItem2Model} from '../../select-item2/select-item2.model';
 import {preventEvent} from '../../../utils/common.utils';
 
 @Component({
@@ -32,18 +32,19 @@ export class SelectItemRowComponent implements OnChanges {
   public item: SelectItem2Model;
 
   @Input()
-  public displayChildren: boolean;
-
-  @Input()
   public removable: boolean;
 
   @Input()
   public disabled: boolean;
 
+  @Input()
+  public displayValue: SelectedItemDisplayValue = SelectedItemDisplayValue.LastChild;
+
   @Output()
   public remove = new EventEmitter();
 
-  public displayValue: string;
+  public formattedValue: string;
+  public formattedItem: SelectItem2Model;
 
   public onRemove(event: MouseEvent) {
     preventEvent(event);
@@ -51,16 +52,26 @@ export class SelectItemRowComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.item || changes.displayChildren) {
-      this.displayValue = this.buildDisplayValue();
+    if (changes.item || changes.displayValue) {
+      this.formatValues();
     }
   }
 
-  private buildDisplayValue(): string {
-    if (this.displayChildren && this.item) {
-      return this.childrenDisplayValue(this.item);
+  private formatValues() {
+    switch (this.displayValue) {
+      case SelectedItemDisplayValue.FirstChild:
+        this.formattedItem = this.item;
+        this.formattedValue = this.item?.value;
+        break;
+      case SelectedItemDisplayValue.LastChild:
+        const lastChild = findLastChild(this.item);
+        this.formattedItem = lastChild;
+        this.formattedValue = lastChild?.value;
+        break;
+      case SelectedItemDisplayValue.FullPath:
+        this.formattedItem = this.item;
+        this.formattedValue = this.childrenDisplayValue(this.item);
     }
-    return this.item.value;
   }
 
   private childrenDisplayValue(item: SelectItem2Model): string {
@@ -69,4 +80,12 @@ export class SelectItemRowComponent implements OnChanges {
     }
     return item.value;
   }
+}
+
+function findLastChild(item: SelectItem2Model): SelectItem2Model {
+  let lastChild = item;
+  while (lastChild?.children?.length) {
+    lastChild = lastChild?.children?.[0];
+  }
+  return lastChild;
 }

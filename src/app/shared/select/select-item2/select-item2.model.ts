@@ -22,3 +22,9 @@ import {SelectItemModel} from '../select-item/select-item.model';
 export interface SelectItem2Model extends SelectItemModel {
   children?: SelectItem2Model[];
 }
+
+export enum SelectedItemDisplayValue {
+  FullPath,
+  LastChild,
+  FirstChild,
+}

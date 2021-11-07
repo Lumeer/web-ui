@@ -6,4 +6,9 @@
                                  (configChange)="configChange.emit($event)">
   </form-editor-cell-link-actions>
 
+  <form-editor-cell-attribute-actions *ngSwitchCase="cellType.Attribute"
+                                      [config]="config"
+                                      (configChange)="configChange.emit($event)">
+  </form-editor-cell-attribute-actions>
+
 </ng-container>

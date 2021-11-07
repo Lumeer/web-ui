@@ -17,23 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {FormAttributeCellConfig} from '../../../../../../../../../core/store/form/form-model';
 
 @Component({
-  selector: 'form-editor-cell-attribute-config',
-  templateUrl: './form-editor-cell-attribute-config.component.html',
+  selector: 'form-editor-cell-attribute-actions',
+  templateUrl: './form-editor-cell-attribute-actions.component.html',
+  styleUrls: ['./form-editor-cell-attribute-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormEditorCellAttributeConfigComponent {
+export class FormEditorCellAttributeActionsComponent {
   @Input()
   public config: FormAttributeCellConfig;
 
   @Output()
   public configChange = new EventEmitter<FormAttributeCellConfig>();
 
-  public onMandatoryChange(mandatory: boolean) {
-    const config: FormAttributeCellConfig = {...this.config, mandatory};
-    this.configChange.emit(config);
+  public toggleMandatory() {
+    const mandatory = !this.config?.mandatory;
+    this.configChange.emit({...this.config, mandatory});
   }
 }

@@ -98,4 +98,14 @@ export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
     const newConfig = {...this.config, filters};
     this.configChange.emit(newConfig);
   }
+
+  public onMinLinksChange(minLinks: number) {
+    const newConfig = {...this.config, minLinks};
+    this.configChange.emit(newConfig);
+  }
+
+  public onMaxLinksChange(maxLinks: number) {
+    const newConfig = {...this.config, maxLinks};
+    this.configChange.emit(newConfig);
+  }
 }

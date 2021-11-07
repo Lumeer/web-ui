@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {SelectItem2Model} from './select-item2.model';
+import {SelectedItemDisplayValue, SelectItem2Model} from './select-item2.model';
 import {preventEvent} from '../../utils/common.utils';
 import {MenuItem} from '../../menu/model/menu-item';
 import {convertMenuItemsPath} from '../../menu/model/menu-utils';
@@ -50,6 +50,9 @@ export class SelectItem2Component implements OnChanges {
 
   @Input()
   public bordered: boolean;
+
+  @Input()
+  public displayValue: SelectedItemDisplayValue;
 
   @Output()
   public selectPath = new EventEmitter<SelectItem2Model[]>();

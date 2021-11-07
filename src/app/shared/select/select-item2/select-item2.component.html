@@ -12,7 +12,7 @@
     <select-item-row *ngIf="data.selectedItem; else empty"
                      class="mr-2"
                      [item]="data.selectedItem"
-                     [displayChildren]="true"
+                     [displayValue]="displayValue"
                      [disabled]="disabled"
                      [removable]="removable"
                      (remove)="remove.emit()">

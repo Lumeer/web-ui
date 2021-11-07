@@ -1,11 +1,13 @@
 <div class="title-row mb-1">
   <input-box placeholder="Title"
+             i18n-placeholder="@@perspective.form.editor.row.cell.title"
              [canStayEmpty]="false"
              [maxLines]="1"
              [initialValue]="cell?.title"
              (newValue)="onNewTitle($event)">
   </input-box>
-  <form-editor-cell-actions [config]="cell?.config"
+  <form-editor-cell-actions class="ml-2"
+                            [config]="cell?.config"
                             [type]="cell?.type"
                             [collectionId]="collection?.id"
                             (configChange)="onConfigChange($event)">
@@ -14,22 +16,21 @@
 
 <select-item2 [items]="items"
               [selectedPath]="selectedItemPath"
+              [removable]="true"
+              [displayValue]="displayValue.LastChild"
               bordered="true"
               emptyValue="Select"
-              (selectPath)="onSelectPath($event)">
+              i18n-emptyValue="@@perspective.form.editor.row.cell.select.empty"
+              (selectPath)="onSelectPath($event)"
+              (remove)="onRemovePath()">
 </select-item2>
 
 <input-box class="d-block mt-1"
            placeholder="Description"
+           i18n-placeholder="@@perspective.form.editor.row.cell.description"
            [fontSizeRem]="0.8"
            [color]="descriptionColor"
            [canStayEmpty]="true"
            [initialValue]="cell?.description"
            (newValue)="onNewDescription($event)">
 </input-box>
-
-<form-editor-cell-config class="d-block mt-2"
-                         [config]="cell?.config"
-                         [type]="cell?.type"
-                         (configChange)="onConfigChange($event)">
-</form-editor-cell-config>

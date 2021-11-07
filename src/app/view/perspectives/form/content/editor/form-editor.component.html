@@ -4,18 +4,6 @@
   <span>Form View</span>
 </div>
 
-<form-editor-section class="d-block card mx-2"
-                     [collection]="collection"
-                     [collectionLinkTypes]="collectionLinkTypes"
-                     [emptySection]="true"
-                     [section]="emptySection"
-                     [sectionIds]="sectionIds"
-                     [usedAttributeIds]="usedAttributeIds"
-                     [usedLinkTypeIds]="usedLinkTypeIds"
-                     (sectionChange)="onEmptySectionChanged($event)"
-                     (rowMoveToSection)="onRowMoveToSection($event)">
-</form-editor-section>
-
 <form-editor-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index"
                      class="d-block card mx-2 mt-2"
                      [section]="section"
@@ -30,8 +18,8 @@
 </form-editor-section>
 
 <div class="px-3 mt-3 mb-5">
-  <button class="btn btn-outline-primary" (click)="addSection()">
-    <i class="far fa-plus mr-2"></i>
+  <button class="btn btn-link px-0" (click)="addSection()">
+    <i class="far fa-plus-square mr-2"></i>
     <span i18n="@@perspective.form.editor.section.action.add">Add a Section</span>
   </button>
 </div>

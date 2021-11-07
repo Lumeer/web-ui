@@ -1,5 +1,19 @@
 <ng-container *ngIf="linkType$ | async as linkType">
-  <span class="ml-2 text-primary clickable" #settingsElement (click)="settings.toggle()">
+  <span class="text-primary text-nowrap clickable small range-element text-truncate"
+        tooltip="Minimum and maximum number of links"
+        i18n-tooltip="@@perspective.form.editor.row.cell.actions.range.tooltip"
+        #rangeElement (click)="range.toggle()">
+    {{this.config?.minLinks || 0}}-{{this.config?.maxLinks || '∞'}}
+  </span>
+  <form-link-range-dropdown [origin]="rangeElement" #range
+                            [minLinks]="config?.minLinks"
+                            [maxLinks]="config?.maxLinks"
+                            (minLinksChange)="onMinLinksChange($event)"
+                            (maxLinksChange)="onMaxLinksChange($event)">
+  </form-link-range-dropdown>
+  <span class="ml-2 text-primary clickable" #settingsElement (click)="settings.toggle()"
+        tooltip="Query"
+        i18n-tooltip="@@perspective.form.editor.row.cell.actions.query">
     <i class="far fa-line-columns"></i>
   </span>
 
@@ -11,7 +25,9 @@
                                           (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
   </form-link-attributes-settings-dropdown>
 
-  <div class="ml-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()">
+  <div class="ml-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()"
+       tooltip="Filter"
+       i18n-tooltip="@@perspective.form.editor.row.cell.actions.filter">
     <span class="text-primary clickable">
       <i class="far fa-filter"></i>
     </span>

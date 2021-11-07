@@ -27,7 +27,6 @@ export interface FormModel {
 }
 
 export interface FormConfig {
-  rows?: FormRow[];
   sections?: FormSection[];
 }
 

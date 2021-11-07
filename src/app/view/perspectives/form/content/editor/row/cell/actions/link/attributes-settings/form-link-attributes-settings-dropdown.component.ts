@@ -17,34 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AttributesSettings} from '../../../../../../../../../../core/store/views/view';
 import {LinkType} from '../../../../../../../../../../core/store/link-types/link.type';
 import {AttributesResourceData} from '../../../../../../../../../../shared/settings/attributes/attributes-settings-configuration';
 import {AttributesResourceType} from '../../../../../../../../../../core/model/resource';
-import {DropdownComponent} from '../../../../../../../../../../shared/dropdown/dropdown.component';
 import {Collection} from '../../../../../../../../../../core/store/collections/collection';
 import {getDefaultAttributeId} from '../../../../../../../../../../core/store/collections/collection.util';
+import {DropdownDirective} from '../../../../../../../../../../shared/dropdown/dropdown.directive';
 
 @Component({
   selector: 'form-link-attributes-settings-dropdown',
   templateUrl: './form-link-attributes-settings-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormLinkAttributesSettingsDropdownComponent implements OnChanges {
-  @Input()
-  public origin: ElementRef | HTMLElement;
-
+export class FormLinkAttributesSettingsDropdownComponent extends DropdownDirective implements OnChanges {
   @Input()
   public settings: AttributesSettings;
 
@@ -56,9 +43,6 @@ export class FormLinkAttributesSettingsDropdownComponent implements OnChanges {
 
   @Output()
   public attributeSettingsChanged = new EventEmitter<AttributesSettings>();
-
-  @ViewChild(DropdownComponent)
-  public dropdown: DropdownComponent;
 
   public attributesResourceData: AttributesResourceData[] = [];
 
@@ -78,25 +62,5 @@ export class FormLinkAttributesSettingsDropdownComponent implements OnChanges {
         },
       ];
     }
-  }
-
-  public toggle() {
-    if (this.isOpen()) {
-      this.close();
-    } else {
-      this.open();
-    }
-  }
-
-  public isOpen(): boolean {
-    return this.dropdown?.isOpen();
-  }
-
-  public open() {
-    this.dropdown?.open();
-  }
-
-  public close() {
-    this.dropdown?.close();
   }
 }

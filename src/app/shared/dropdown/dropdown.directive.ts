@@ -17,23 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {FormCellConfig, FormCellType} from '../../../../../../../../core/store/form/form-model';
+import {Input, ElementRef, ViewChild, Directive} from '@angular/core';
+import {DropdownComponent} from './dropdown.component';
 
-@Component({
-  selector: 'form-editor-cell-config',
-  templateUrl: './form-editor-cell-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class FormEditorCellConfigComponent {
+@Directive()
+export abstract class DropdownDirective {
   @Input()
-  public type: FormCellType;
+  public origin: ElementRef | HTMLElement;
 
-  @Input()
-  public config: FormCellConfig;
+  @ViewChild(DropdownComponent)
+  public dropdown: DropdownComponent;
 
-  @Output()
-  public configChange = new EventEmitter<FormCellConfig>();
+  public toggle() {
+    if (this.isOpen()) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
 
-  public readonly cellType = FormCellType;
+  public isOpen(): boolean {
+    return this.dropdown?.isOpen();
+  }
+
+  public open() {
+    this.dropdown?.open();
+  }
+
+  public close() {
+    this.dropdown?.close();
+  }
 }

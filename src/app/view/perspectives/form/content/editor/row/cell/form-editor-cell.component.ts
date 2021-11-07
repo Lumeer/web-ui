@@ -25,8 +25,11 @@ import {
   FormCellType,
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
-import {Collection} from '../../../../../../../core/store/collections/collection';
-import {SelectItem2Model} from '../../../../../../../shared/select/select-item2/select-item2.model';
+import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
+import {
+  SelectedItemDisplayValue,
+  SelectItem2Model,
+} from '../../../../../../../shared/select/select-item2/select-item2.model';
 import {AttributesResourceType} from '../../../../../../../core/model/resource';
 import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {COLOR_GRAY700} from '../../../../../../../core/constants';
@@ -58,6 +61,7 @@ export class FormEditorCellComponent implements OnChanges {
   public cellChange = new EventEmitter<FormCell>();
 
   public readonly type = FormCellType;
+  public readonly displayValue = SelectedItemDisplayValue;
   public readonly descriptionColor = COLOR_GRAY700;
 
   public selectedItemPath: string[];
@@ -84,16 +88,26 @@ export class FormEditorCellComponent implements OnChanges {
   }
 
   private mapAttributeItem(): string[] {
+    const attribute = this.getSelectedAttribute();
+    return attribute ? [FormCellType.Attribute, attribute.id] : [];
+  }
+
+  private getSelectedAttribute(): Attribute {
     const config = <FormAttributeCellConfig>this.cell?.config || {};
     if (config.resourceId !== this.collection?.id || config.resourceType !== AttributesResourceType.Collection) {
-      return [];
+      return null;
     }
-    return [FormCellType.Attribute, config.attributeId];
+    return this.collection?.attributes?.find(attribute => attribute.id === config.attributeId);
   }
 
   private mapLinkItem(): string[] {
+    const link = this.getSelectedLink();
+    return link ? [FormCellType.Link, link.id] : [];
+  }
+
+  private getSelectedLink(): LinkType {
     const config = <FormLinkCellConfig>this.cell?.config || {};
-    return [FormCellType.Link, config.linkTypeId];
+    return this.collectionLinkTypes?.find(link => link.id === config.linkTypeId);
   }
 
   private mapItems(): SelectItem2Model[] {
@@ -160,9 +174,28 @@ export class FormEditorCellComponent implements OnChanges {
       resourceType: AttributesResourceType.Collection,
       resourceId: this.collection?.id,
     };
-    const title = this.cell?.title || item.value;
+    const title = this.checkSelectedItemTitle(item);
     const newCell: FormCell = {...this.cell, title, config, type: FormCellType.Attribute};
     this.cellChange.emit(newCell);
+  }
+
+  private checkSelectedItemTitle(item: SelectItem2Model): string {
+    if (this.currentSelectedItemTitle() === this.cell?.title) {
+      return item.value;
+    }
+
+    return this.cell?.title || item.value;
+  }
+
+  private currentSelectedItemTitle(): string {
+    switch (this.cell?.type) {
+      case FormCellType.Attribute:
+        return this.getSelectedAttribute()?.name;
+      case FormCellType.Link:
+        return this.getSelectedLink()?.name;
+      default:
+        return '';
+    }
   }
 
   private onSelectLink(item: SelectItem2Model) {
@@ -171,7 +204,7 @@ export class FormEditorCellComponent implements OnChanges {
       ...copyConfig,
       linkTypeId: item.id,
     };
-    const title = this.cell?.title || item.value;
+    const title = this.checkSelectedItemTitle(item);
     const newCell: FormCell = {...this.cell, title, config, type: FormCellType.Link};
     this.cellChange.emit(newCell);
   }
@@ -188,6 +221,11 @@ export class FormEditorCellComponent implements OnChanges {
 
   public onConfigChange(config: FormCellConfig) {
     const newCell: FormCell = {...this.cell, config};
+    this.cellChange.emit(newCell);
+  }
+
+  public onRemovePath() {
+    const newCell: FormCell = {...this.cell, config: {}, type: undefined};
     this.cellChange.emit(newCell);
   }
 }

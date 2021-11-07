@@ -1,18 +1,16 @@
-<ng-container *ngIf="!emptySection">
-  <input-box class="d-block mt-1 mx-2"
-             placeholder="Section title"
-             [initialValue]="section?.title"
-             (newValue)="onNewTitle($event)">
-  </input-box>
+<input-box class="d-block mt-1 mx-2"
+           placeholder="Section title"
+           [initialValue]="section?.title"
+           (newValue)="onNewTitle($event)">
+</input-box>
 
-  <input-box class="d-block mt-1 mx-2"
-             placeholder="Section description"
-             [initialValue]="section?.description"
-             [color]="descriptionColor"
-             [fontSizeRem]="0.8"
-             (newValue)="onNewDescription($event)">
-  </input-box>
-</ng-container>
+<input-box class="d-block mt-1 mx-2"
+           placeholder="Section description"
+           [initialValue]="section?.description"
+           [color]="descriptionColor"
+           [fontSizeRem]="0.8"
+           (newValue)="onNewDescription($event)">
+</input-box>
 
 
 <div class="px-1 py-3" cdkDropList id="{{section.id}}"
@@ -37,12 +35,12 @@
 
 <div class="d-flex justify-content-between px-3 mb-2">
   <button #buttonElement class="btn btn-link px-0" (click)="layout.toggle()">
-    <i class="far fa-plus-circle mr-2"></i>
+    <i class="far fa-plus mr-2"></i>
     <span i18n="@@perspective.form.editor.row.action.add">Add a Row</span>
   </button>
 
 
-  <button *ngIf="!emptySection" class="btn btn-link text-danger px-0" (click)="delete.emit()">
+  <button class="btn btn-link text-danger px-0" (click)="delete.emit()">
     <i class="far fa-trash-alt mr-2"></i>
     <span i18n="@@perspective.form.editor.row.action.delete">Delete a Section</span>
   </button>

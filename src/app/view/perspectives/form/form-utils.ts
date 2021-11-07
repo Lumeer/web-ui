@@ -50,12 +50,11 @@ export function collectLinkIdsFromFormConfig(config: FormConfig): string[] {
 }
 
 function collectValuesFromFormConfigCells<T>(config: FormConfig, fun: (cell: FormCell) => T): T[] {
-  const defaultCells = collectCellsFromFormRows(config?.rows);
   return (config?.sections || [])
     .reduce((cells, section) => {
       cells.push(...collectCellsFromFormRows(section?.rows));
       return cells;
-    }, defaultCells)
+    }, [])
     .map(cell => fun(cell))
     .filter(value => isNotNullOrUndefined(value));
 }

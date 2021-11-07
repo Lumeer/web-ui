@@ -37,9 +37,6 @@ export class FormEditorSectionComponent {
   public section: FormSection;
 
   @Input()
-  public emptySection: boolean;
-
-  @Input()
   public collection: Collection;
 
   @Input()

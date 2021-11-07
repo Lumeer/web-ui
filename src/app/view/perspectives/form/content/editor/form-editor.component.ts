@@ -18,13 +18,12 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {FormConfig, FormRow, FormSection} from '../../../../../core/store/form/form-model';
+import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-
-const DEFAULT_SECTION_ID = 'default';
+import {transferArrayItem} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'form-editor',
@@ -44,24 +43,16 @@ export class FormEditorComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<FormConfig>();
 
-  // first section without title and description
-  public emptySection: FormSection;
   public sectionIds: string[];
   public usedAttributeIds: string[];
   public usedLinkTypeIds: string[];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
-      this.emptySection = {id: DEFAULT_SECTION_ID, rows: this.config?.rows};
-      this.sectionIds = [DEFAULT_SECTION_ID, ...(this.config?.sections || []).map(section => section.id)];
+      this.sectionIds = [...(this.config?.sections || []).map(section => section.id)];
       this.usedAttributeIds = collectAttributesIdsFromFormConfig(this.config);
       this.usedLinkTypeIds = collectLinkIdsFromFormConfig(this.config);
     }
-  }
-
-  public onEmptySectionChanged(section: FormSection) {
-    const config = {...this.config, rows: section.rows};
-    this.configChange.emit(config);
   }
 
   public onSectionChanged(section: FormSection, index: number) {
@@ -81,31 +72,12 @@ export class FormEditorComponent implements OnChanges {
   }
 
   public onRowMoveToSection(data: {fromSection: string; toSection: string; from: number; to: number}) {
-    const defaultRows = [...(this.config?.rows || [])];
-    const sections = [...(this.config?.sections || [])];
+    const sections = [...(this.config?.sections || [])].map(section => ({...section, rows: [...(section.rows || [])]}));
+    const previousSection = sections.find(section => section.id === data.fromSection);
+    const currentSection = sections.find(section => section.id === data.toSection);
+    transferArrayItem(previousSection.rows, currentSection.rows, data.from, data.to);
 
-    let row: FormRow;
-    if (data.fromSection === DEFAULT_SECTION_ID) {
-      row = defaultRows.splice(data.from, 1)[0];
-    } else {
-      const sectionIndex = sections.findIndex(section => section.id === data.fromSection);
-      const section = sections[sectionIndex];
-      const rows = [...(section.rows || [])];
-      row = rows.splice(data.from, 1)[0];
-      sections[sectionIndex] = {...section, rows};
-    }
-
-    if (data.toSection === DEFAULT_SECTION_ID) {
-      defaultRows.splice(data.to, 0, row);
-    } else {
-      const sectionIndex = sections.findIndex(section => section.id === data.toSection);
-      const section = sections[sectionIndex];
-      const rows = [...(section.rows || [])];
-      rows.splice(data.to, 0, row);
-      sections[sectionIndex] = {...section, rows};
-    }
-
-    this.configChange.emit({...this.config, rows: defaultRows, sections});
+    this.configChange.emit({...this.config, sections});
   }
 
   public onSectionDelete(index: number) {
