@@ -170,6 +170,16 @@ export class CalendarConverter {
       for (let i = 0; i < titles.length; i++) {
         const titleFormatted = nameConstraint.createDataValue(titles[i], this.constraintData).title();
 
+        let resourceIds;
+        let formattedGroups;
+
+        if (stemConfig.group) {
+          resourceIds = item.groupingObjects;
+          formattedGroups = resourceIds.map(value =>
+            unescapeHtml(groupConstraint.createDataValue(value, this.constraintData).preview())
+          );
+        }
+
         const extendedProps: CalendarMetaData = {
           startDataId: interval.swapped ? endDataResource?.id : startDataResource?.id,
           endDataId: interval.swapped ? startDataResource?.id : endDataResource?.id,
@@ -177,12 +187,13 @@ export class CalendarConverter {
           stemConfig: interval.swapped ? {...stemConfig, start: stemConfig.end, end: stemConfig.start} : stemConfig,
           stemIndex,
           dataResourcesChain: item.dataResourcesChain,
+          formattedGroups,
         };
 
         const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
         const eventGroupId = groupId(item);
         const event: CalendarEvent = {
-          id: eventUniqueId(extendedProps, eventGroupId),
+          id: eventUniqueId(extendedProps, eventGroupId, resourceIds),
           title: titleFormatted,
           start: interval.start,
           end: interval.end,
@@ -211,14 +222,8 @@ export class CalendarConverter {
               this.constraintData
             ),
           extendedProps,
+          resourceIds,
         };
-
-        if (stemConfig.group) {
-          event.resourceIds = item.groupingObjects;
-          event.extendedProps.formattedGroups = event.resourceIds.map(value =>
-            unescapeHtml(groupConstraint.createDataValue(value, this.constraintData).preview())
-          );
-        }
 
         events.push(event);
       }
@@ -228,10 +233,11 @@ export class CalendarConverter {
   }
 }
 
-function eventUniqueId(metadata: CalendarMetaData, groupId: string): string {
+function eventUniqueId(metadata: CalendarMetaData, groupId: string, resourceIds: string[]): string {
   const stemConfig = metadata.stemConfig;
   const attributesId = `${stemConfig.name?.attributeId}:${stemConfig.start?.attributeId}:${stemConfig.end?.attributeId}`;
-  return `${groupId}:${attributesId}`;
+  const resourcesIds = (resourceIds || []).join(':');
+  return `${groupId}:${attributesId}:${resourcesIds}`;
 }
 
 function filterUniqueEvents(events: CalendarEvent[]): CalendarEvent[] {

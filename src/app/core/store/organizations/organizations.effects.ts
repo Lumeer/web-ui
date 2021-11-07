@@ -65,7 +65,7 @@ export class OrganizationsEffects {
       mergeMap(action =>
         this.organizationService.getOrganization(action.payload.organizationId).pipe(
           map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
-          map(organization => new OrganizationsAction.GetSuccess({organizations: [organization]})),
+          map(organization => new OrganizationsAction.GetOneSuccess({organization})),
           catchError(error => of(new OrganizationsAction.GetFailure({error})))
         )
       )
