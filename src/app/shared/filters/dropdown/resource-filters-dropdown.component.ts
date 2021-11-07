@@ -17,20 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {AttributeFilter} from '@lumeer/data-filters';
+import {DropdownDirective} from '../../dropdown/dropdown.directive';
 
 @Component({
   selector: 'resource-filters-dropdown',
   templateUrl: './resource-filters-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceFiltersDropdownComponent {
-  @Input()
-  public origin: ElementRef | HTMLElement;
-
+export class ResourceFiltersDropdownComponent extends DropdownDirective {
   @Input()
   public resource: AttributesResource;
 
@@ -42,27 +39,4 @@ export class ResourceFiltersDropdownComponent {
 
   @Output()
   public filtersChange = new EventEmitter<AttributeFilter[]>();
-
-  @ViewChild(DropdownComponent)
-  public dropdown: DropdownComponent;
-
-  public toggle() {
-    if (this.isOpen()) {
-      this.close();
-    } else {
-      this.open();
-    }
-  }
-
-  public isOpen(): boolean {
-    return this.dropdown?.isOpen();
-  }
-
-  public open() {
-    this.dropdown?.open();
-  }
-
-  public close() {
-    this.dropdown?.close();
-  }
 }

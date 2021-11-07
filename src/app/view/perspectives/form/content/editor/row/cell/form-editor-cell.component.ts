@@ -127,6 +127,14 @@ export class FormEditorCellComponent implements OnChanges {
         iconColors: [this.collection?.color],
       }));
 
+    if (attributeItems.length === 0) {
+      attributeItems.push({
+        id: '',
+        disabled: true,
+        value: $localize`:@@perspective.form.editor.row.cell.attribute.empty:No Attributes found`,
+      });
+    }
+
     return {
       id: FormCellType.Attribute,
       value: $localize`:@@perspective.form.editor.row.cell.attribute:Attribute`,
@@ -143,6 +151,14 @@ export class FormEditorCellComponent implements OnChanges {
         icons: linkType.collections?.map(collection => collection.icon) as [string, string],
         iconColors: linkType.collections?.map(collection => collection.color) as [string, string],
       }));
+
+    if (items.length === 0) {
+      items.push({
+        id: '',
+        disabled: true,
+        value: $localize`:@@perspective.form.editor.row.cell.link.empty:No Link Types found`,
+      });
+    }
 
     return {
       id: FormCellType.Link,

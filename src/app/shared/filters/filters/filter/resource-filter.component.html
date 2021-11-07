@@ -5,6 +5,7 @@
                   [class.flex-grow-1]="!data.attribute"
                   [removable]="false"
                   [disabled]="false"
+                  [stopEventsPropagation]="true"
                   emptyValue="Select attribute"
                   [items]="attributeSelectItems"
                   (click)="$event.stopPropagation()"

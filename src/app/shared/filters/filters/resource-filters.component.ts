@@ -56,7 +56,7 @@ export class ResourceFiltersComponent implements OnChanges {
     if (changes.resource) {
       this.attributeSelectItems = resourceAttributesSelectItems(this.resource);
     }
-    if (changes.filters) {
+    if (changes.filters && changes.filters.firstChange) {
       this.filters$.next(this.filters || []);
     }
   }

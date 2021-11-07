@@ -59,10 +59,6 @@ export class SelectItemRowComponent implements OnChanges {
 
   private formatValues() {
     switch (this.displayValue) {
-      case SelectedItemDisplayValue.FirstChild:
-        this.formattedItem = this.item;
-        this.formattedValue = this.item?.value;
-        break;
       case SelectedItemDisplayValue.LastChild:
         const lastChild = findLastChild(this.item);
         this.formattedItem = lastChild;
@@ -71,6 +67,11 @@ export class SelectItemRowComponent implements OnChanges {
       case SelectedItemDisplayValue.FullPath:
         this.formattedItem = this.item;
         this.formattedValue = this.childrenDisplayValue(this.item);
+        break;
+      default:
+        this.formattedItem = this.item;
+        this.formattedValue = this.item?.value;
+        break;
     }
   }
 
