@@ -17,32 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {AttributeFilter} from '@lumeer/data-filters';
-import {DropdownDirective} from '../../dropdown/dropdown.directive';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {FormButtonConfig, FormButtonsConfig} from '../../../../../../core/store/form/form-model';
 
 @Component({
-  selector: 'resource-filters-dropdown',
-  templateUrl: './resource-filters-dropdown.component.html',
+  selector: 'form-editor-buttons',
+  templateUrl: './form-editor-buttons.component.html',
+  styleUrls: ['./form-editor-buttons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceFiltersDropdownComponent extends DropdownDirective implements OnChanges {
+export class FormEditorButtonsComponent {
   @Input()
-  public resource: AttributesResource;
-
-  @Input()
-  public resourceType: AttributesResourceType;
-
-  @Input()
-  public filters: AttributeFilter[];
+  public buttons: FormButtonsConfig;
 
   @Output()
-  public filtersChange = new EventEmitter<AttributeFilter[]>();
+  public buttonsChange = new EventEmitter<FormButtonsConfig>();
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.filters) {
-      setTimeout(() => this.dropdown?.updatePosition());
-    }
+  public onCreateButtonChange(button: FormButtonConfig) {
+    this.buttonsChange.emit({
+      ...this.buttons,
+      create: button,
+    });
+  }
+
+  public onUpdateButtonChange(button: FormButtonConfig) {
+    this.buttonsChange.emit({
+      ...this.buttons,
+      update: button,
+    });
   }
 }

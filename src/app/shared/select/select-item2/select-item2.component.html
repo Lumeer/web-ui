@@ -1,5 +1,5 @@
 <ng-container *ngIf="{selectedItem: selectedPath | getSelectedItems:items } as data">
-  <button class="btn text-decoration-none d-flex align-items-center flex-nowrap w-100"
+  <button class="btn text-decoration-none align-items-center w-100 main-content"
           type="button"
           [disabled]="disabled"
           [class.px-0]="!bordered"
@@ -12,7 +12,7 @@
           (menuClosed)="onMenuClosed()">
 
     <select-item-row *ngIf="data.selectedItem; else empty"
-                     class="mr-2"
+                     class="mr-2 w-100"
                      [item]="data.selectedItem"
                      [displayValue]="displayValue"
                      [disabled]="disabled"

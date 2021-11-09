@@ -28,6 +28,18 @@ export interface FormModel {
 
 export interface FormConfig {
   sections?: FormSection[];
+  buttons?: FormButtonsConfig;
+}
+
+export interface FormButtonsConfig {
+  create?: FormButtonConfig;
+  update?: FormButtonConfig;
+}
+
+export interface FormButtonConfig {
+  title: string;
+  icon: string;
+  color: string;
 }
 
 export interface FormSection {

@@ -17,9 +17,13 @@
                      (delete)="onSectionDelete(index)">
 </form-editor-section>
 
-<div class="px-3 mt-3 mb-5">
+<div class="mt-3">
   <button class="btn btn-link px-0" (click)="addSection()">
     <i class="far fa-plus-square mr-2"></i>
     <span i18n="@@perspective.form.editor.section.action.add">Add a Section</span>
   </button>
 </div>
+
+<form-editor-buttons class="mt-5 mb-5" [buttons]="config?.buttons"
+                     (buttonsChange)="onButtonsChange($event)">
+</form-editor-buttons>

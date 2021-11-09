@@ -46,6 +46,9 @@ import {FiltersModule} from '../../../shared/filters/filters.module';
 import {FormEditorCellAttributeActionsComponent} from './content/editor/row/cell/actions/attribute/form-editor-cell-attribute-actions.component';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {FormLinkRangeDropdownComponent} from './content/editor/row/cell/actions/link/range/form-link-range-dropdown.component';
+import {FormEditorButtonsComponent} from './content/editor/buttons/form-editor-buttons.component';
+import {FormEditorButtonComponent} from './content/editor/buttons/button/form-editor-button.component';
+import {PickerModule} from '../../../shared/picker/picker.module';
 
 @NgModule({
   declarations: [
@@ -62,6 +65,8 @@ import {FormLinkRangeDropdownComponent} from './content/editor/row/cell/actions/
     FormLinkAttributesSettingsDropdownComponent,
     FormEditorCellAttributeActionsComponent,
     FormLinkRangeDropdownComponent,
+    FormEditorButtonsComponent,
+    FormEditorButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -79,6 +84,7 @@ import {FormLinkRangeDropdownComponent} from './content/editor/row/cell/actions/
     AttributesSettingsModule,
     FiltersModule,
     TooltipModule,
+    PickerModule,
   ],
   exports: [FormPerspectiveComponent],
 })

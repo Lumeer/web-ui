@@ -1,0 +1,11 @@
+<form-editor-button [button]="buttons?.create"
+                    buttonLabel="Create Button"
+                    i18n-buttonLabel="@@perspective.form.editor.buttons.create.label"
+                    (buttonChange)="onCreateButtonChange($event)">
+</form-editor-button>
+
+<form-editor-button [button]="buttons?.update"
+                    buttonLabel="Update Button"
+                    i18n-buttonLabel="@@perspective.form.editor.buttons.update.label"
+                    (buttonChange)="onUpdateButtonChange($event)">
+</form-editor-button>

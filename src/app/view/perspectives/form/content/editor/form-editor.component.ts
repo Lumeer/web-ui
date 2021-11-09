@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
+import {FormButtonsConfig, FormConfig, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {collectAttributesIdsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
@@ -84,5 +84,9 @@ export class FormEditorComponent implements OnChanges {
     const sections = [...(this.config?.sections || [])];
     sections.splice(index, 1);
     this.configChange.emit({...this.config, sections});
+  }
+
+  public onButtonsChange(buttons: FormButtonsConfig) {
+    this.configChange.emit({...this.config, buttons});
   }
 }

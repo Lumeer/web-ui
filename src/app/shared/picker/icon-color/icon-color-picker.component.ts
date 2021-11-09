@@ -17,20 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ElementRef,
-  ViewChild,
-  OnDestroy,
-  EventEmitter,
-  Output,
-} from '@angular/core';
-import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {Component, ChangeDetectionStrategy, Input, ViewChild, OnDestroy, EventEmitter, Output} from '@angular/core';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {IconChooseComponent} from './icon/icon-choose.component';
 import {BehaviorSubject} from 'rxjs';
+import {DropdownDirective} from '../../dropdown/dropdown.directive';
 
 @Component({
   selector: 'icon-color-picker',
@@ -38,10 +29,7 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./icon-color-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconColorPickerComponent implements OnDestroy {
-  @Input()
-  public origin: ElementRef | HTMLElement;
-
+export class IconColorPickerComponent extends DropdownDirective implements OnDestroy {
   @Input()
   public icon: string;
 
@@ -62,9 +50,6 @@ export class IconColorPickerComponent implements OnDestroy {
 
   @Output()
   public preview = new EventEmitter<{icon: string; color: string}>();
-
-  @ViewChild(DropdownComponent)
-  public dropdown: DropdownComponent;
 
   @ViewChild(IconChooseComponent)
   public iconPickerComponent: IconChooseComponent;
@@ -98,16 +83,6 @@ export class IconColorPickerComponent implements OnDestroy {
   public close() {
     this.dropdown?.close();
     this.cancel.emit({color: this.initialColor, icon: this.initialIcon});
-  }
-
-  public toggle() {
-    if (this.dropdown) {
-      if (this.dropdown.isOpen()) {
-        this.close();
-      } else {
-        this.open();
-      }
-    }
   }
 
   public ngOnDestroy() {

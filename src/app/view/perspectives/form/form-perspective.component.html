@@ -1,5 +1,6 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1:1; else notDisplayable">
-  <form-perspective-content [config]="config$ | async"
+  <form-perspective-content class="container-fluid d-block col-12 col-lg-11 col-xl-10 col-xxl-9"
+                            [config]="config$ | async"
                             [collection]="basicCollection$ | async"
                             [collectionLinkTypes]="collectionLinkTypes$ | async"
                             (configChange)="onConfigChanged($event)">
