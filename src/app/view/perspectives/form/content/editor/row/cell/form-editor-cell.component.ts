@@ -241,7 +241,7 @@ export class FormEditorCellComponent implements OnChanges {
   }
 
   public onRemovePath() {
-    const newCell: FormCell = {...this.cell, config: {}, type: undefined};
+    const newCell: FormCell = {...this.cell, config: {}, type: undefined, title: '', description: ''};
     this.cellChange.emit(newCell);
   }
 }

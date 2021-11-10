@@ -49,6 +49,12 @@ import {FormLinkRangeDropdownComponent} from './content/editor/row/cell/actions/
 import {FormEditorButtonsComponent} from './content/editor/buttons/form-editor-buttons.component';
 import {FormEditorButtonComponent} from './content/editor/buttons/button/form-editor-button.component';
 import {PickerModule} from '../../../shared/picker/picker.module';
+import {FormViewComponent} from './content/view/form-view.component';
+import {FormViewSectionComponent} from './content/view/section/form-view-section.component';
+import {FormViewRowComponent} from './content/view/row/form-view-row.component';
+import {FormViewCellComponent} from './content/view/row/cell/form-view-cell.component';
+import {DataInputModule} from '../../../shared/data-input/data-input.module';
+import {FormViewSubmitComponent} from './content/view/form-view-submit/form-view-submit.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +73,11 @@ import {PickerModule} from '../../../shared/picker/picker.module';
     FormLinkRangeDropdownComponent,
     FormEditorButtonsComponent,
     FormEditorButtonComponent,
+    FormViewComponent,
+    FormViewSectionComponent,
+    FormViewRowComponent,
+    FormViewCellComponent,
+    FormViewSubmitComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +96,7 @@ import {PickerModule} from '../../../shared/picker/picker.module';
     FiltersModule,
     TooltipModule,
     PickerModule,
+    DataInputModule,
   ],
   exports: [FormPerspectiveComponent],
 })

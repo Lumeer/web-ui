@@ -1,0 +1,17 @@
+<form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
+                   class="d-block card p-3"
+                   [class.mt-2]="!first"
+                   [constraintData]="constraintData$ | async"
+                   [section]="section"
+                   [document]="document$ | async"
+                   [collection]="collection"
+                   [collectionLinkTypes]="collectionLinkTypes"
+                   (attributeValueChange)="onAttributeValueChange($event)">
+</form-view-section>
+
+<form-view-submit class="mt-4"
+                  [document]="document$ | async"
+                  [buttons]="config?.buttons"
+                  [loading]="performingAction$ | async"
+                  (submit)="onSubmit()">
+</form-view-submit>

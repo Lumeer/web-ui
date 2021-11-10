@@ -1,0 +1,19 @@
+@import '~src/styles/variables';
+
+.required:after {
+  content: '*';
+  color: $danger;
+}
+
+.data-input {
+  border: 1px solid $gray-400;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+
+  &.editing {
+    border: 1px solid $success;
+  }
+}

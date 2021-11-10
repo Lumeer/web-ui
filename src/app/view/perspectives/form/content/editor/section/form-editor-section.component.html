@@ -1,4 +1,5 @@
 <input-box class="d-block mt-1 mx-2"
+           innerClass="font-weight-bold"
            placeholder="Section title"
            [initialValue]="section?.title"
            (newValue)="onNewTitle($event)">
@@ -12,7 +13,6 @@
            (newValue)="onNewDescription($event)">
 </input-box>
 
-
 <div class="px-1 py-3" cdkDropList id="{{section.id}}"
      [cdkDropListConnectedTo]="sectionIds"
      [cdkDropListData]="section"
@@ -21,7 +21,7 @@
                    cdkDrag
                    cdkDragLockAxis="y"
                    [cdkDragData]="row"
-                   class="dashboard-row d-block px-2"
+                   class="d-block px-2"
                    [row]="row"
                    [collection]="collection"
                    [collectionLinkTypes]="collectionLinkTypes"

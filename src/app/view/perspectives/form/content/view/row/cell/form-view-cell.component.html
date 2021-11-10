@@ -1,0 +1,17 @@
+<div class="text-truncate font-weight-bold" [class.required]="mandatory">{{cell?.title}}</div>
+
+<div *ngIf="cell?.type === type.Attribute"
+     class="data-input mt-1 px-1 cursor-pointer" (click)="onDataInputClick($event)">
+  <data-input class="w-100 h-100"
+              [constraint]="attribute?.constraint"
+              [dataValue]="dataValue"
+              [readonly]="!(editing$ | async)"
+              [editableInReadonly]="true"
+              [configuration]="dataInputConfiguration"
+              [focus]="true"
+              (save)="onValueSave($event)"
+              (cancel)="onCancelEditing()">
+  </data-input>
+</div>
+<div class="form-control mt-1" *ngIf="cell?.type === type.Link"></div>
+<div class="text-muted small mt-1">{{cell?.description}}</div>

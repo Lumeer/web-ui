@@ -442,8 +442,16 @@ export class DocumentsEffects {
         const documentDto = convertDocumentModelToDto(action.payload.document);
         return this.documentService.updateDocumentData(documentDto, action.payload.workspace).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
-          map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
-          catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
+          mergeMap(document => [
+            new DocumentsAction.UpdateSuccess({document, originalDocument}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(
+              new DocumentsAction.UpdateFailure({error, originalDocument}),
+              ...createCallbackActions(action.payload.onFailure)
+            )
+          )
         );
       })
     )

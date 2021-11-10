@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {FormConfig} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'form-perspective-content',
@@ -39,4 +40,6 @@ export class FormPerspectiveContentComponent {
 
   @Output()
   public configChange = new EventEmitter<FormConfig>();
+
+  public editMode$ = new BehaviorSubject(false);
 }

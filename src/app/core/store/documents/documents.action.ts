@@ -225,14 +225,27 @@ export namespace DocumentsAction {
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class UpdateDataInternal implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA_INTERNAL;
 
     public constructor(
-      public payload: {document: DocumentModel; originalDocument?: DocumentModel; workspace?: Workspace}
+      public payload: {
+        document: DocumentModel;
+        originalDocument?: DocumentModel;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 

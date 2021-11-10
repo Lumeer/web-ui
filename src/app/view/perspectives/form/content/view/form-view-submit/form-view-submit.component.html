@@ -1,0 +1,9 @@
+<button class="btn text-truncate text-nowrap"
+        [style.background]="button?.color"
+        [disabled]="loading"
+        [style.color]="button?.color | contrastColor" (click)="submit.emit()">
+  <span *ngIf="loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+  <i *ngIf="button?.icon" [ngClass]="button?.icon"></i>
+  <ng-container *ngIf="button?.title && button?.icon || !button?.title && !button?.icon">&nbsp;</ng-container>
+  <span *ngIf="button?.title">{{button?.title}}</span>
+</button>

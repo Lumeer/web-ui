@@ -162,7 +162,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
 
         event.preventDefault();
 
-        if (!this.commonConfiguration.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;

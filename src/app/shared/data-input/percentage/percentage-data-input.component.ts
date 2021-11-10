@@ -188,7 +188,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.percentageInput.nativeElement.value);
-      if (this.commonConfiguration.skipValidation || dataValue.isValid()) {
+      if (this.commonConfiguration?.skipValidation || dataValue.isValid()) {
         this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();

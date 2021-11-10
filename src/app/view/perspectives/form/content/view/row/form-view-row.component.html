@@ -1,0 +1,12 @@
+<div class="form-view-row" [style.grid-template-columns]="templateColumns">
+
+  <form-view-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
+                  [cell]="cell"
+                  [constraintData]="constraintData"
+                  [collection]="collection"
+                  [document]="document"
+                  [collectionLinkTypes]="collectionLinkTypes"
+                  (attributeValueChange)="attributeValueChange.emit($event)">
+  </form-view-cell>
+
+</div>
