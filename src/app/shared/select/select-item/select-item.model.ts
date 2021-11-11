@@ -20,6 +20,7 @@
 export interface SelectItemModel {
   id: any;
   value: string;
+  classList?: string;
   icons?: [string, string?];
   iconColors?: [string, string?];
   disabled?: boolean;

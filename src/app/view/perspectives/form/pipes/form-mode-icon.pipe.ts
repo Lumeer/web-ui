@@ -17,16 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  imageUrl?: string;
-  value: any;
-  color?: string;
-  background?: string;
-  border?: string;
-  classList?: string;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
-  group?: string;
+import {Pipe, PipeTransform} from '@angular/core';
+import {FormMode} from '../content/mode/form-mode';
+
+@Pipe({
+  name: 'formModeIcon',
+})
+export class FormModeIconPipe implements PipeTransform {
+  public transform(mode: FormMode): string {
+    switch (mode) {
+      case FormMode.Build:
+        return 'fas fa-hammer';
+      case FormMode.Create:
+        return 'fas fa-plus';
+      case FormMode.Update:
+        return 'fas fa-pencil';
+      default:
+        return '';
+    }
+  }
 }

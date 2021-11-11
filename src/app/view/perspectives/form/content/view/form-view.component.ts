@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -31,6 +31,10 @@ import {DataResourceData} from '../../../../../core/model/resource';
 import {objectChanged} from '../../../../../shared/utils/common.utils';
 import {map, take} from 'rxjs/operators';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {AttributesSettings, View} from '../../../../../core/store/views/view';
+import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
+import {FormMode} from '../mode/form-mode';
 
 @Component({
   selector: 'form-view',
@@ -47,10 +51,24 @@ export class FormViewComponent implements OnInit, OnChanges {
   @Input()
   public collectionLinkTypes: LinkType[];
 
+  @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Input()
+  public mode: FormMode.Create | FormMode.Update;
+
+  public readonly modeType = FormMode;
+
   public constraintData$: Observable<ConstraintData>;
   public document$: Observable<DocumentModel>;
 
-  public selectedDocument$ = new BehaviorSubject<DocumentModel>(null);
+  public selectedDocumentId$ = new BehaviorSubject<string>(null);
   public data$ = new BehaviorSubject<DataResourceData>({});
 
   public performingAction$ = new BehaviorSubject(false);
@@ -68,13 +86,21 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   private observeDocument() {
-    this.document$ = combineLatest([this.selectedDocument$, this.data$]).pipe(
-      map(([document, data]) => {
-        if (document) {
-          return {...document, data};
+    this.document$ = combineLatest([this.selectedDocumentId$, this.data$]).pipe(
+      switchMap(([documentId, data]) => {
+        if (documentId) {
+          return this.store$.pipe(
+            select(selectDocumentById(documentId)),
+            map(document => {
+              if (document) {
+                return {...document, data: mergeData(document.data, data)};
+              }
+              return {id: null, data, collectionId: this.collection.id};
+            })
+          );
         }
 
-        return {id: null, data, collectionId: this.collection.id};
+        return of({id: null, data, collectionId: this.collection.id});
       })
     );
   }
@@ -128,4 +154,14 @@ export class FormViewComponent implements OnInit, OnChanges {
       })
     );
   }
+
+  public selectDocument(document: DocumentModel) {
+    this.selectedDocumentId$.next(document.id);
+  }
+}
+
+function mergeData(data: DataResourceData, overrideData: DataResourceData): DataResourceData {
+  const copy = {...data};
+  Object.keys(overrideData).forEach(key => (copy[key] = overrideData[key]));
+  return copy;
 }

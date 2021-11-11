@@ -3,6 +3,11 @@
                             [config]="config$ | async"
                             [collection]="basicCollection$ | async"
                             [collectionLinkTypes]="collectionLinkTypes$ | async"
+                            [query]="query$ | async"
+                            [view]="currentView$ | async"
+                            [attributesSettings]="(viewSettings$ | async)?.attributes"
+                            [canManageConfig]="canManageConfig$ | async"
+                            [permissions]="permissions$ | async"
                             (configChange)="onConfigChanged($event)">
   </form-perspective-content>
 </ng-container>

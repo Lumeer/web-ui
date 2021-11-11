@@ -17,11 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormConfig} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {BehaviorSubject} from 'rxjs';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {AttributesSettings, View} from '../../../../core/store/views/view';
+import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {FormMode} from './mode/form-mode';
 
 @Component({
   selector: 'form-perspective-content',
@@ -38,8 +42,29 @@ export class FormPerspectiveContentComponent {
   @Input()
   public collectionLinkTypes: LinkType[];
 
+  @Input()
+  public query: Query;
+
+  @Input()
+  public view: View;
+
+  @Input()
+  public attributesSettings: AttributesSettings;
+
+  @Input()
+  public permissions: ResourcesPermissions;
+
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public configChange = new EventEmitter<FormConfig>();
 
-  public editMode$ = new BehaviorSubject(false);
+  public readonly mode = FormMode;
+
+  public mode$ = new BehaviorSubject<FormMode>(null);
+
+  public onModeChange(mode: FormMode) {
+    this.mode$.next(mode);
+  }
 }

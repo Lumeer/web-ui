@@ -54,7 +54,10 @@ import {FormViewSectionComponent} from './content/view/section/form-view-section
 import {FormViewRowComponent} from './content/view/row/form-view-row.component';
 import {FormViewCellComponent} from './content/view/row/cell/form-view-cell.component';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
-import {FormViewSubmitComponent} from './content/view/form-view-submit/form-view-submit.component';
+import {FormViewSubmitComponent} from './content/view/submit/form-view-submit.component';
+import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
+import {FormModeComponent} from './content/mode/form-mode.component';
+import {FormModeIconPipe} from './pipes/form-mode-icon.pipe';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,8 @@ import {FormViewSubmitComponent} from './content/view/form-view-submit/form-view
     FormViewRowComponent,
     FormViewCellComponent,
     FormViewSubmitComponent,
+    FormModeComponent,
+    FormModeIconPipe,
   ],
   imports: [
     CommonModule,
@@ -97,6 +102,7 @@ import {FormViewSubmitComponent} from './content/view/form-view-submit/form-view
     TooltipModule,
     PickerModule,
     DataInputModule,
+    PreviewResultsModule,
   ],
   exports: [FormPerspectiveComponent],
 })

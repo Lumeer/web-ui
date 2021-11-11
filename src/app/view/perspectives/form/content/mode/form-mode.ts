@@ -17,16 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  imageUrl?: string;
-  value: any;
-  color?: string;
-  background?: string;
-  border?: string;
-  classList?: string;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
-  group?: string;
+export enum FormMode {
+  Build = 'build',
+  Create = 'create',
+  Update = 'update',
 }

@@ -1,6 +1,7 @@
 <input-box class="d-block mt-1 mx-2"
            innerClass="font-weight-bold"
            placeholder="Section title"
+           [canStayEmpty]="true"
            [initialValue]="section?.title"
            (newValue)="onNewTitle($event)">
 </input-box>
@@ -9,6 +10,7 @@
            placeholder="Section description"
            [initialValue]="section?.description"
            [color]="descriptionColor"
+           [canStayEmpty]="true"
            [fontSizeRem]="0.8"
            (newValue)="onNewDescription($event)">
 </input-box>

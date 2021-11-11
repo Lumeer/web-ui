@@ -4,23 +4,43 @@
   <span>Form View</span>
 </div>
 
-<toggle-checkbox class="d-block mt-2"
-                 [checked]="editMode$ | async"
-                 label="Edit mode"
-                 (checkedChange)="editMode$.next($event)">
-</toggle-checkbox>
+<form-mode [collection]="collection"
+           [canManageConfig]="canManageConfig"
+           [selectedMode]="mode$ | async"
+           [resourcesPermissions]="permissions"
+           (modeChange)="onModeChange($event)">
+</form-mode>
 
-<form-editor *ngIf="(editMode$ | async)"
-             class="d-block mt-2 mb-6"
+<ng-container [ngSwitch]="mode$ | async">
+
+  <form-editor *ngSwitchCase="mode.Build"
+               class="d-block mt-3 mb-6"
+               [config]="config"
+               [collection]="collection"
+               [collectionLinkTypes]="collectionLinkTypes"
+               (configChange)="configChange.emit($event)">
+  </form-editor>
+
+  <form-view *ngSwitchCase="mode.Create"
+             class="d-block mt-3 mb-6"
              [config]="config"
              [collection]="collection"
-             [collectionLinkTypes]="collectionLinkTypes"
-             (configChange)="configChange.emit($event)">
-</form-editor>
+             [query]="query"
+             [view]="view"
+             [mode]="mode.Create"
+             [attributesSettings]="attributesSettings"
+             [collectionLinkTypes]="collectionLinkTypes">
+  </form-view>
 
-<form-view *ngIf="!(editMode$ | async)"
-           class="d-block mt-2 mb-6"
-           [config]="config"
-           [collection]="collection"
-           [collectionLinkTypes]="collectionLinkTypes">
-</form-view>
+  <form-view *ngSwitchCase="mode.Update"
+             class="d-block mt-3 mb-6"
+             [config]="config"
+             [collection]="collection"
+             [query]="query"
+             [view]="view"
+             [mode]="mode.Update"
+             [attributesSettings]="attributesSettings"
+             [collectionLinkTypes]="collectionLinkTypes">
+  </form-view>
+
+</ng-container>

@@ -1,6 +1,6 @@
 <form-editor-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
-                     class="d-block card"
-                     [class.mt-2]="!first"
+                     class="d-block card shadow-light"
+                     [class.mt-3]="!first"
                      [section]="section"
                      [collection]="collection"
                      [collectionLinkTypes]="collectionLinkTypes"
