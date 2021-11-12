@@ -2,9 +2,9 @@
 
   <form-view-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
                   [cell]="cell"
-                  [constraintData]="constraintData"
+                  [dataValues]="dataValues"
                   [collection]="collection"
-                  [document]="document"
+                  [documentId]="documentId"
                   [collectionLinkTypes]="collectionLinkTypes"
                   (attributeValueChange)="attributeValueChange.emit($event)">
   </form-view-cell>

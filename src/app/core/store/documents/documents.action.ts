@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
-import {DocumentMetaData, DocumentModel} from './document.model';
+import {DocumentAdditionalDataRequest, DocumentMetaData, DocumentModel} from './document.model';
 import {LinkInstance} from '../link-instances/link.instance';
 import {DataQuery} from '../../model/data-query';
 import {DataQueryPayload} from '../utils/data-query-payload';
@@ -36,6 +36,8 @@ export enum DocumentsActionType {
   CREATE_WITH_LINK = '[Documents] Create With Link',
   CREATE_SUCCESS = '[Documents] Create :: Success',
   CREATE_FAILURE = '[Documents] Create :: Failure',
+
+  CREATE_WITH_ADDITIONAL_DATA = '[Documents] Create With Additional Data',
 
   CREATE_CHAIN = '[Documents] Create Chain',
   CREATE_CHAIN_SUCCESS = '[Documents] Create Chain :: Success',
@@ -125,6 +127,20 @@ export namespace DocumentsAction {
         onFailure?: () => void;
         afterSuccess?: (document: DocumentModel) => void;
         workspace?: Workspace;
+      }
+    ) {}
+  }
+
+  export class CreateWithAdditionalData implements Action {
+    public readonly type = DocumentsActionType.CREATE_WITH_ADDITIONAL_DATA;
+
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        data: DocumentAdditionalDataRequest;
+        workspace?: Workspace;
+        onSuccess?: (documentId: string) => void;
+        onFailure?: () => void;
       }
     ) {}
   }

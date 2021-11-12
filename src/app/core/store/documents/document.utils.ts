@@ -24,7 +24,7 @@ import {
   getQueryFiltersForLinkType,
   queryStemsAreSameById,
 } from '../navigation/query/query.util';
-import {DocumentModel} from './document.model';
+import {DocumentModel, DocumentAdditionalDataRequest} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
@@ -40,9 +40,27 @@ import {
   DataValue,
   DateTimeConstraint,
   DocumentsAndLinksData,
+  FilesDataValue,
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {LinkInstance} from '../link-instances/link.instance';
+
+export function createDocumentRequestAdditionalData(
+  collection: Collection,
+  dataValues: Record<string, DataValue>
+): DocumentAdditionalDataRequest {
+  return (collection?.attributes || []).reduce(
+    (data, attribute) => {
+      if (attribute?.constraint?.type === ConstraintType.Files) {
+        const dataValue = <FilesDataValue>dataValues?.[attribute.id];
+        data.createFilesMap[attribute.id] = dataValue?.filesInMemory || [];
+        data.deleteFilesMap[attribute.id] = dataValue?.removedFiles || [];
+      }
+      return data;
+    },
+    {createFilesMap: {}, deleteFilesMap: {}}
+  );
+}
 
 export function getDocumentsAndLinksByStemData(
   data: DocumentsAndLinksData,

@@ -26,11 +26,11 @@ import {
 } from '../../../../../../../core/store/form/form-model';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
-import {ConstraintData, DataValue} from '@lumeer/data-filters';
+import {DataValue} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
-import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
 
 @Component({
   selector: 'form-view-cell',
@@ -43,16 +43,16 @@ export class FormViewCellComponent implements OnChanges {
   public cell: FormCell;
 
   @Input()
-  public document: DocumentModel;
-
-  @Input()
   public collection: Collection;
 
   @Input()
   public collectionLinkTypes: LinkType[];
 
   @Input()
-  public constraintData: ConstraintData;
+  public dataValues: Record<string, DataValue>;
+
+  @Input()
+  public documentId: string;
 
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
@@ -60,19 +60,21 @@ export class FormViewCellComponent implements OnChanges {
   public readonly type = FormCellType;
   public readonly dataInputConfiguration: DataInputConfiguration = {
     common: {allowRichText: true},
+    files: {saveInMemory: true},
   };
 
   public editing$ = new BehaviorSubject(false);
 
   public attribute: Attribute;
   public dataValue: DataValue;
+  public cursor: DataCursor;
   public mandatory: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cell) {
       this.initVariables();
     }
-    if (changes.cell || changes.constraintData || changes.document) {
+    if (changes.cell || changes.dataValues || changes.collection || changes.documentOd) {
       this.initDataVariables();
     }
   }
@@ -89,8 +91,8 @@ export class FormViewCellComponent implements OnChanges {
     const config = <FormAttributeCellConfig>this.cell?.config;
 
     this.attribute = findAttribute(this.collection?.attributes, config?.attributeId);
-    const value = this.document?.data?.[this.attribute?.id];
-    this.dataValue = this.attribute?.constraint?.createDataValue(value, this.constraintData);
+    this.dataValue = this.dataValues?.[this.attribute?.id];
+    this.cursor = {attributeId: this.attribute?.id, collectionId: this.collection?.id, documentId: this.documentId};
   }
 
   private initVariables() {

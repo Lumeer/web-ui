@@ -58,6 +58,7 @@ import {FormViewSubmitComponent} from './content/view/submit/form-view-submit.co
 import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 import {FormModeComponent} from './content/mode/form-mode.component';
 import {FormModeIconPipe} from './pipes/form-mode-icon.pipe';
+import {IsFormViewVisiblePipe} from './pipes/is-form-view-visible.pipe';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import {FormModeIconPipe} from './pipes/form-mode-icon.pipe';
     FormViewSubmitComponent,
     FormModeComponent,
     FormModeIconPipe,
+    IsFormViewVisiblePipe,
   ],
   imports: [
     CommonModule,

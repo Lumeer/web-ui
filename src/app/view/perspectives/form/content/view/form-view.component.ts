@@ -21,20 +21,20 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {ConstraintData, DataValue} from '@lumeer/data-filters';
+import {DataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../../../core/store/app.state';
 import {BehaviorSubject, combineLatest, Observable, of, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {DocumentModel, DocumentAdditionalDataRequest} from '../../../../../core/store/documents/document.model';
 import {DataResourceData} from '../../../../../core/model/resource';
-import {objectChanged} from '../../../../../shared/utils/common.utils';
-import {map, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, take} from 'rxjs/operators';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../../core/store/views/view';
 import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
 import {FormMode} from '../mode/form-mode';
+import {createDocumentRequestAdditionalData} from '../../../../../core/store/documents/document.utils';
 
 @Component({
   selector: 'form-view',
@@ -65,50 +65,78 @@ export class FormViewComponent implements OnInit, OnChanges {
 
   public readonly modeType = FormMode;
 
-  public constraintData$: Observable<ConstraintData>;
+  public documentDataValues$: Observable<Record<string, DataValue>>;
   public document$: Observable<DocumentModel>;
 
+  public collection$ = new BehaviorSubject<Collection>(null);
   public selectedDocumentId$ = new BehaviorSubject<string>(null);
   public data$ = new BehaviorSubject<DataResourceData>({});
+  public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
 
   public performingAction$ = new BehaviorSubject(false);
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.observeDocument();
+    this.observeDataValues();
+  }
+
+  private observeDataValues() {
+    const documentDataValues$ = combineLatest([
+      this.store$.pipe(select(selectConstraintData)),
+      this.collection$,
+      this.document$,
+    ]).pipe(
+      map(([constraintData, collection, document]) =>
+        (collection?.attributes || []).reduce((dataValues, attribute) => ({
+          ...dataValues,
+          [attribute.id]: attribute?.constraint?.createDataValue(document?.data?.[attribute.id], constraintData),
+        }))
+      )
+    );
+
+    this.documentDataValues$ = combineLatest([documentDataValues$, this.dataValues$]).pipe(
+      map(([documentDataValues, dataValues]) => mergeMap(documentDataValues, dataValues))
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (objectChanged(changes.collection)) {
-      this.observeDocument();
+    if (changes.collection) {
+      this.collection$.next(this.collection);
     }
   }
 
   private observeDocument() {
-    this.document$ = combineLatest([this.selectedDocumentId$, this.data$]).pipe(
-      switchMap(([documentId, data]) => {
+    const collectionId$ = this.collection$.pipe(
+      map(collection => collection.id),
+      distinctUntilChanged()
+    );
+    this.document$ = combineLatest([this.selectedDocumentId$, this.data$, collectionId$]).pipe(
+      switchMap(([documentId, data, collectionId]) => {
         if (documentId) {
           return this.store$.pipe(
             select(selectDocumentById(documentId)),
             map(document => {
               if (document) {
-                return {...document, data: mergeData(document.data, data)};
+                return {...document, data: mergeMap(document.data, data)};
               }
-              return {id: null, data, collectionId: this.collection.id};
+              return {id: null, data, collectionId};
             })
           );
         }
 
-        return of({id: null, data, collectionId: this.collection.id});
+        return of({id: null, data, collectionId});
       })
     );
   }
 
   public onAttributeValueChange(data: {attributeId: string; dataValue: DataValue}) {
     const newData = {...this.data$.value, [data.attributeId]: data.dataValue.serialize()};
+    const newDataValues = {...this.dataValues$.value, [data.attributeId]: data.dataValue};
 
     this.data$.next(newData);
+    this.dataValues$.next(newDataValues);
   }
 
   public trackBySection(index: number, section: FormSection): string {
@@ -122,19 +150,21 @@ export class FormViewComponent implements OnInit, OnChanges {
   private submit(document: DocumentModel) {
     this.performingAction$.next(true);
 
+    const additionalData = createDocumentRequestAdditionalData(this.collection, this.dataValues$.value);
     if (document.id) {
       this.updateDocument(document);
     } else {
-      this.createDocument(document);
+      this.createDocument(document, additionalData);
     }
   }
 
-  private createDocument(document: DocumentModel) {
+  private createDocument(document: DocumentModel, data: DocumentAdditionalDataRequest) {
     this.store$.dispatch(
-      new DocumentsAction.Create({
+      new DocumentsAction.CreateWithAdditionalData({
         document,
+        data,
         onSuccess: () => {
-          this.data$.next({});
+          this.clearData();
           this.performingAction$.next(false);
         },
         onFailure: () => this.performingAction$.next(false),
@@ -147,7 +177,7 @@ export class FormViewComponent implements OnInit, OnChanges {
       new DocumentsAction.UpdateData({
         document,
         onSuccess: () => {
-          this.data$.next({});
+          this.clearData();
           this.performingAction$.next(false);
         },
         onFailure: () => this.performingAction$.next(false),
@@ -155,12 +185,17 @@ export class FormViewComponent implements OnInit, OnChanges {
     );
   }
 
+  public clearData() {
+    this.data$.next({});
+    this.dataValues$.next({});
+  }
+
   public selectDocument(document: DocumentModel) {
     this.selectedDocumentId$.next(document.id);
   }
 }
 
-function mergeData(data: DataResourceData, overrideData: DataResourceData): DataResourceData {
+function mergeMap(data: Record<string, any>, overrideData: Record<string, any>): Record<string, any> {
   const copy = {...data};
   Object.keys(overrideData).forEach(key => (copy[key] = overrideData[key]));
   return copy;

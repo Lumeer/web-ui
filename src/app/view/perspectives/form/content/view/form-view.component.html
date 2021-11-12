@@ -1,28 +1,36 @@
-<preview-results class="mb-4 d-block"
-                 *ngIf="mode === modeType.Update"
-                 [selectedCollection]="collection"
-                 [selectedDocument]="document$ | async"
-                 [attributesSettings]="attributesSettings"
-                 [query]="query"
-                 [view]="view"
-                 [initialSelectDocument]="true"
-                 (selectDocument)="selectDocument($event)">
-</preview-results>
+<ng-container *ngIf="document$ | async as document">
 
-<form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
-                   class="d-block card p-3 shadow-light"
-                   [class.mt-3]="mode === modeType.Update || !first"
-                   [constraintData]="constraintData$ | async"
-                   [section]="section"
-                   [document]="document$ | async"
-                   [collection]="collection"
-                   [collectionLinkTypes]="collectionLinkTypes"
-                   (attributeValueChange)="onAttributeValueChange($event)">
-</form-view-section>
+  <preview-results class="mb-4 d-block"
+                   *ngIf="mode === modeType.Update"
+                   [selectedCollection]="collection"
+                   [selectedDocument]="document"
+                   [attributesSettings]="attributesSettings"
+                   [query]="query"
+                   [view]="view"
+                   [initialSelectDocument]="true"
+                   (selectDocument)="selectDocument($event)">
+  </preview-results>
 
-<form-view-submit class="mt-4"
-                  [document]="document$ | async"
-                  [buttons]="config?.buttons"
-                  [loading]="performingAction$ | async"
-                  (submit)="onSubmit()">
-</form-view-submit>
+  <ng-container *ngIf="mode | isFormViewVisible:document">
+
+    <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
+                       class="d-block card p-3 shadow-light"
+                       [class.mt-3]="mode === modeType.Update || !first"
+                       [dataValues]="documentDataValues$ | async"
+                       [section]="section"
+                       [collection]="collection"
+                       [documentId]="document?.id"
+                       [collectionLinkTypes]="collectionLinkTypes"
+                       (attributeValueChange)="onAttributeValueChange($event)">
+    </form-view-section>
+
+    <form-view-submit class="mt-4"
+                      [document]="document"
+                      [buttons]="config?.buttons"
+                      [loading]="performingAction$ | async"
+                      (submit)="onSubmit()">
+    </form-view-submit>
+
+  </ng-container>
+
+</ng-container>

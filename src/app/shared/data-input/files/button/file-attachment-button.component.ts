@@ -105,7 +105,7 @@ export class FileAttachmentButtonComponent {
   }
 
   private showErrorNotification(error: HttpErrorResponse) {
-    if (error && error.status === 404) {
+    if (error?.status === 404) {
       this.showFileNotExistNotification();
     } else {
       this.showDownloadErrorNotification();

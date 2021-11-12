@@ -17,21 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataResource} from '../../model/resource';
+import {Pipe, PipeTransform} from '@angular/core';
+import {FormMode} from '../content/mode/form-mode';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-export interface DocumentModel extends DataResource {
-  collectionId: string;
-  metaData?: DocumentMetaData;
-  favorite?: boolean;
-  commentsCount?: number;
-}
-
-export interface DocumentMetaData {
-  originalDocumentId?: string;
-  parentId?: string;
-}
-
-export interface DocumentAdditionalDataRequest {
-  createFilesMap?: Record<string, File[]>;
-  deleteFilesMap?: Record<string, string[]>;
+@Pipe({
+  name: 'isFormViewVisible',
+})
+export class IsFormViewVisiblePipe implements PipeTransform {
+  public transform(mode: FormMode, document: DocumentModel): boolean {
+    switch (mode) {
+      case FormMode.Create:
+        return true;
+      case FormMode.Update:
+        return !!document?.id;
+      default:
+        return false;
+    }
+  }
 }

@@ -21,8 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Out
 import {FormRow, FormSection} from '../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {ConstraintData, DataValue} from '@lumeer/data-filters';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {DataValue} from '@lumeer/data-filters';
 
 @Component({
   selector: 'form-view-section',
@@ -40,10 +39,10 @@ export class FormViewSectionComponent implements OnChanges {
   public collectionLinkTypes: LinkType[];
 
   @Input()
-  public constraintData: ConstraintData;
+  public dataValues: Record<string, DataValue>;
 
   @Input()
-  public document: DocumentModel;
+  public documentId: string;
 
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();

@@ -53,6 +53,8 @@ import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {DocumentUtilsService} from '../../service/document-utils.service';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
 
 @Injectable()
 export class DocumentsEffects {
@@ -169,6 +171,34 @@ export class DocumentsEffects {
             );
           })
         );
+      })
+    )
+  );
+
+  public createWithData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DocumentsAction.CreateWithAdditionalData>(DocumentsActionType.CREATE_WITH_ADDITIONAL_DATA),
+      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([action, workspace]) => {
+        const {document: currentDocument, data, onSuccess, onFailure} = action.payload;
+        const documentDto = convertDocumentModelToDto(currentDocument);
+        const finalWorkspace = {...workspace, ...action.payload.workspace};
+        const correlationId = currentDocument.correlationId;
+
+        return this.documentUtilsService
+          .createWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
+          .pipe(
+            mergeMap(({document, createdAttachments}) => {
+              return [
+                ...createCallbackActions(onSuccess, document.id),
+                new DocumentsAction.CreateSuccess({document}),
+                new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
+              ];
+            }),
+            catchError(error =>
+              of(...createCallbackActions(onFailure), new DocumentsAction.CreateFailure({correlationId, error}))
+            )
+          );
       })
     )
   );
@@ -663,6 +693,7 @@ export class DocumentsEffects {
   constructor(
     private actions$: Actions,
     private documentService: DocumentService,
+    private documentUtilsService: DocumentUtilsService,
     private linkInstanceService: LinkInstanceService,
     private collectionService: CollectionService,
     private searchService: SearchService,

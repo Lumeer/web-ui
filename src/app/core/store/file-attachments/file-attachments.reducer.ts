@@ -40,7 +40,7 @@ export function fileAttachmentsReducer(
         state
       );
     case FileAttachmentsActionType.CREATE_SUCCESS:
-      return fileAttachmentsAdapter.addOne(action.payload.fileAttachment, state);
+      return fileAttachmentsAdapter.addMany(action.payload.fileAttachments, state);
     case FileAttachmentsActionType.REMOVE_SUCCESS:
       return fileAttachmentsAdapter.removeOne(action.payload.fileId, state);
     case FileAttachmentsActionType.CLEAR:

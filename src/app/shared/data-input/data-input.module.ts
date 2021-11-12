@@ -75,6 +75,7 @@ import {ViewsIdsPipe} from './view/pipes/views-ids.pipe';
 import {RouterModule} from '@angular/router';
 import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
 import {UsersAndTeamsNamesPipe} from './user/pipes/users-and-teams-names.pipe';
+import {FileButtonComponent} from './files/file-button/file-button.component';
 
 @NgModule({
   imports: [
@@ -138,6 +139,7 @@ import {UsersAndTeamsNamesPipe} from './user/pipes/users-and-teams-names.pipe';
     FilterValidViewsPipe,
     ViewsIdsPipe,
     ViewDataInputComponent,
+    FileButtonComponent,
   ],
   exports: [
     DataInputComponent,

@@ -17,21 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataResource} from '../../model/resource';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
-export interface DocumentModel extends DataResource {
-  collectionId: string;
-  metaData?: DocumentMetaData;
-  favorite?: boolean;
-  commentsCount?: number;
+@Component({
+  selector: 'file-button',
+  templateUrl: './file-button.component.html',
+  styleUrls: ['./file-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FileButtonComponent {
+  @Input()
+  public file: File;
+
+  public onClick() {
+    showBlob(this.file);
+  }
 }
 
-export interface DocumentMetaData {
-  originalDocumentId?: string;
-  parentId?: string;
-}
-
-export interface DocumentAdditionalDataRequest {
-  createFilesMap?: Record<string, File[]>;
-  deleteFilesMap?: Record<string, string[]>;
+function showBlob(blob: Blob | File) {
+  const fileURL: any = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = fileURL;
+  a.target = '_blank';
+  a.click();
 }

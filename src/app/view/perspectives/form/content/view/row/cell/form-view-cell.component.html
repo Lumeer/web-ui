@@ -7,6 +7,7 @@
               [dataValue]="dataValue"
               [readonly]="!(editing$ | async)"
               [editableInReadonly]="true"
+              [cursor]="cursor"
               [configuration]="dataInputConfiguration"
               [focus]="true"
               (save)="onValueSave($event)"

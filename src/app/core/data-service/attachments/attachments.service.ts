@@ -23,7 +23,7 @@ import {Workspace} from '../../store/navigation/workspace';
 import {DataCursor} from '../../../shared/data-input/data-cursor';
 
 export abstract class AttachmentsService {
-  public abstract createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto>;
+  public abstract createFiles(path: FileApiPath, files: FileAttachmentDto[]): Observable<FileAttachmentDto[]>;
 
   public abstract removeFile(path: Partial<FileApiPath>, fileId: string): Observable<any>;
 
