@@ -38,6 +38,10 @@ export class PublicAttachmentsService implements AttachmentsService {
     return of(fileId);
   }
 
+  public removeFiles(path: Partial<FileApiPath>, fileIds: string[]): Observable<any> {
+    return of(fileIds);
+  }
+
   public getFilesByCollection(path: FileApiPath): Observable<FileAttachmentDto[]> {
     return this.http
       .get<FileAttachmentDto[]>(`${this.filesUrl(path)}/collection/${path.collectionId}`)

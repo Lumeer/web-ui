@@ -38,6 +38,7 @@ export enum DocumentsActionType {
   CREATE_FAILURE = '[Documents] Create :: Failure',
 
   CREATE_WITH_ADDITIONAL_DATA = '[Documents] Create With Additional Data',
+  UPDATE_WITH_ADDITIONAL_DATA = '[Documents] Update With Additional Data',
 
   CREATE_CHAIN = '[Documents] Create Chain',
   CREATE_CHAIN_SUCCESS = '[Documents] Create Chain :: Success',
@@ -140,6 +141,20 @@ export namespace DocumentsAction {
         data: DocumentAdditionalDataRequest;
         workspace?: Workspace;
         onSuccess?: (documentId: string) => void;
+        onFailure?: () => void;
+      }
+    ) {}
+  }
+
+  export class UpdateWithAdditionalData implements Action {
+    public readonly type = DocumentsActionType.UPDATE_WITH_ADDITIONAL_DATA;
+
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        data: DocumentAdditionalDataRequest;
+        workspace?: Workspace;
+        onSuccess?: () => void;
         onFailure?: () => void;
       }
     ) {}

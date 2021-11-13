@@ -152,7 +152,7 @@ export class FormViewComponent implements OnInit, OnChanges {
 
     const additionalData = createDocumentRequestAdditionalData(this.collection, this.dataValues$.value);
     if (document.id) {
-      this.updateDocument(document);
+      this.updateDocument(document, additionalData);
     } else {
       this.createDocument(document, additionalData);
     }
@@ -172,10 +172,11 @@ export class FormViewComponent implements OnInit, OnChanges {
     );
   }
 
-  private updateDocument(document: DocumentModel) {
+  private updateDocument(document: DocumentModel, data: DocumentAdditionalDataRequest) {
     this.store$.dispatch(
-      new DocumentsAction.UpdateData({
+      new DocumentsAction.UpdateWithAdditionalData({
         document,
+        data,
         onSuccess: () => {
           this.clearData();
           this.performingAction$.next(false);

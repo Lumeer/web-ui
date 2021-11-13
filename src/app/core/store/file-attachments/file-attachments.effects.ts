@@ -66,7 +66,10 @@ export class FileAttachmentsEffects {
       mergeMap(([action, workspace]) => {
         const {fileId, onSuccess, onFailure} = action.payload;
         return this.attachmentsService.removeFile(workspace, fileId).pipe(
-          mergeMap(() => [new FileAttachmentsAction.RemoveSuccess({fileId}), ...createCallbackActions(onSuccess)]),
+          mergeMap(() => [
+            new FileAttachmentsAction.RemoveSuccess({fileIds: [fileId]}),
+            ...createCallbackActions(onSuccess),
+          ]),
           catchError(error => emitErrorActions(error, onFailure))
         );
       })

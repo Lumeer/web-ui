@@ -36,6 +36,10 @@ export class ApiAttachmentsService implements AttachmentsService {
     return this.http.delete(`${this.filesUrl(path)}/${fileId}`);
   }
 
+  public removeFiles(path: Partial<FileApiPath>, ids: string[]): Observable<any> {
+    return this.http.delete(`${this.filesUrl(path)}/multiple`, {body: {ids}});
+  }
+
   public getFilesByCollection(path: FileApiPath): Observable<FileAttachmentDto[]> {
     return this.http.get<FileAttachmentDto[]>(`${this.filesUrl(path)}/collection/${path.collectionId}`);
   }

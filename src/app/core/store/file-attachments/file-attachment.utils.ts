@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {FileAttachment} from './file-attachment.model';
+import {FileApiPath} from '../../data-service/attachments/attachments.service';
+
 export function getFileTypeIcon(fileName: string): string {
   if (fileName.match(/^.+\.(txt|log)$/)) {
     return 'fa-file-alt';
@@ -59,4 +62,15 @@ export function getFileTypeIcon(fileName: string): string {
   }
 
   return 'fa-file';
+}
+
+export function fileAttachmentHasApiPath(attachment: FileAttachment, path: FileApiPath): boolean {
+  return (
+    attachment.organizationId === path.organizationId &&
+    attachment.projectId === path.projectId &&
+    (attachment.collectionId || '') === (path.collectionId || '') &&
+    (attachment.documentId || '') === (path.documentId || '') &&
+    (attachment.linkTypeId || '') === (path.linkTypeId || '') &&
+    (attachment.linkInstanceId || '') === (path.linkInstanceId || '')
+  );
 }

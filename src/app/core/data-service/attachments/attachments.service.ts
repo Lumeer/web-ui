@@ -27,6 +27,8 @@ export abstract class AttachmentsService {
 
   public abstract removeFile(path: Partial<FileApiPath>, fileId: string): Observable<any>;
 
+  public abstract removeFiles(path: Partial<FileApiPath>, fileIds: string[]): Observable<any>;
+
   public abstract getFilesByCollection(path: FileApiPath): Observable<FileAttachmentDto[]>;
 
   public abstract getFilesByDocument(path: FileApiPath): Observable<FileAttachmentDto[]>;

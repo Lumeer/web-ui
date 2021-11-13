@@ -20,6 +20,8 @@
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
 import {fileAttachmentsAdapter, FileAttachmentsState, initialFileAttachmentsState} from './file-attachments.state';
 import {FileApiPath} from '../../data-service/attachments/attachments.service';
+import {FileAttachment} from './file-attachment.model';
+import {fileAttachmentHasApiPath} from './file-attachment.utils';
 
 export function fileAttachmentsReducer(
   state: FileAttachmentsState = initialFileAttachmentsState,
@@ -27,10 +29,7 @@ export function fileAttachmentsReducer(
 ): FileAttachmentsState {
   switch (action.type) {
     case FileAttachmentsActionType.GET_SUCCESS:
-      return fileAttachmentsAdapter.upsertMany(
-        action.payload.fileAttachments,
-        addLoadedResources(state, action.payload.path)
-      );
+      return getSuccessAttachments(state, action.payload.path, action.payload.fileAttachments);
     case FileAttachmentsActionType.SET_UPLOADING:
       return fileAttachmentsAdapter.updateOne(
         {
@@ -42,12 +41,25 @@ export function fileAttachmentsReducer(
     case FileAttachmentsActionType.CREATE_SUCCESS:
       return fileAttachmentsAdapter.addMany(action.payload.fileAttachments, state);
     case FileAttachmentsActionType.REMOVE_SUCCESS:
-      return fileAttachmentsAdapter.removeOne(action.payload.fileId, state);
+      return fileAttachmentsAdapter.removeMany(action.payload.fileIds, state);
     case FileAttachmentsActionType.CLEAR:
       return initialFileAttachmentsState;
     default:
       return state;
   }
+}
+
+function getSuccessAttachments(
+  state: FileAttachmentsState,
+  path: FileApiPath,
+  fileAttachments: FileAttachment[]
+): FileAttachmentsState {
+  const deletedState = fileAttachmentsAdapter.removeMany(
+    attachment => fileAttachmentHasApiPath(attachment, path),
+    state
+  );
+
+  return fileAttachmentsAdapter.upsertMany(fileAttachments, addLoadedResources(deletedState, path));
 }
 
 function addLoadedResources(state: FileAttachmentsState, path: FileApiPath): FileAttachmentsState {

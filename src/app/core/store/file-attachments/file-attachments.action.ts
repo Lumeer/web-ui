@@ -75,7 +75,7 @@ export namespace FileAttachmentsAction {
   export class RemoveSuccess implements Action {
     public readonly type = FileAttachmentsActionType.REMOVE_SUCCESS;
 
-    constructor(public payload: {fileId: string}) {}
+    constructor(public payload: {fileIds: string[]}) {}
   }
 
   export class Get implements Action {

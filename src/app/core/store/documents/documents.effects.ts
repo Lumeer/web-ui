@@ -203,6 +203,37 @@ export class DocumentsEffects {
     )
   );
 
+  public updateWithData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DocumentsAction.UpdateWithAdditionalData>(DocumentsActionType.UPDATE_WITH_ADDITIONAL_DATA),
+      withLatestFrom(
+        this.store$.pipe(select(selectWorkspaceWithIds)),
+        this.store$.pipe(select(selectDocumentsDictionary))
+      ),
+      mergeMap(([action, workspace, documentsMap]) => {
+        const {document: currentDocument, data, onSuccess, onFailure} = action.payload;
+        const documentDto = convertDocumentModelToDto(currentDocument);
+        const finalWorkspace = {...workspace, ...action.payload.workspace};
+        const correlationId = currentDocument.correlationId;
+        const originalDocument = documentsMap[currentDocument.id];
+
+        return this.documentUtilsService
+          .updateWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
+          .pipe(
+            mergeMap(({document, createdAttachments, deletedAttachments}) => {
+              return [
+                ...createCallbackActions(onSuccess, document.id),
+                new DocumentsAction.UpdateSuccess({document, originalDocument}),
+                new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
+                new FileAttachmentsAction.RemoveSuccess({fileIds: deletedAttachments}),
+              ];
+            }),
+            catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.UpdateFailure({error})))
+          );
+      })
+    )
+  );
+
   public createWithLink$ = createEffect(() =>
     this.actions$.pipe(
       ofType<DocumentsAction.CreateWithLink>(DocumentsActionType.CREATE_WITH_LINK),
