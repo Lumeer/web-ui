@@ -184,7 +184,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public contentChanged(event: ContentChange) {
-    this.text = event.html;
+    this.text = event.html || '';
     const newValue = this.value.parseInput(this.text);
     this.valueChange.emit(newValue);
     this.refreshBackgroundClass(newValue);

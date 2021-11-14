@@ -23,6 +23,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {filterValidFormCells} from '../../../form-utils';
 import {DataValue} from '@lumeer/data-filters';
+import {FormError} from '../validation/form-validation';
 
 @Component({
   selector: 'form-view-row',
@@ -45,6 +46,9 @@ export class FormViewRowComponent implements OnChanges {
 
   @Input()
   public documentId: string;
+
+  @Input()
+  public formErrors: FormError[];
 
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();

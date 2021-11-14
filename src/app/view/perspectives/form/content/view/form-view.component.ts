@@ -28,18 +28,21 @@ import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel, DocumentAdditionalDataRequest} from '../../../../../core/store/documents/document.model';
 import {DataResourceData} from '../../../../../core/model/resource';
-import {distinctUntilChanged, map, take} from 'rxjs/operators';
+import {distinctUntilChanged, map, take, tap} from 'rxjs/operators';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../../core/store/views/view';
 import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
 import {FormMode} from '../mode/form-mode';
 import {createDocumentRequestAdditionalData} from '../../../../../core/store/documents/document.utils';
+import {FormValidationService} from './validation/form-validation.service';
+import {FormValidation} from './validation/form-validation';
 
 @Component({
   selector: 'form-view',
   templateUrl: './form-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FormValidationService],
 })
 export class FormViewComponent implements OnInit, OnChanges {
   @Input()
@@ -67,17 +70,19 @@ export class FormViewComponent implements OnInit, OnChanges {
 
   public documentDataValues$: Observable<Record<string, DataValue>>;
   public document$: Observable<DocumentModel>;
+  public validation$: Observable<FormValidation>;
 
   public collection$ = new BehaviorSubject<Collection>(null);
   public selectedDocumentId$ = new BehaviorSubject<string>(null);
   public data$ = new BehaviorSubject<DataResourceData>({});
   public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
-
   public performingAction$ = new BehaviorSubject(false);
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private formValidation: FormValidationService) {}
 
   public ngOnInit() {
+    this.validation$ = this.formValidation.validation$;
+
     this.observeDocument();
     this.observeDataValues();
   }
@@ -89,21 +94,33 @@ export class FormViewComponent implements OnInit, OnChanges {
       this.document$,
     ]).pipe(
       map(([constraintData, collection, document]) =>
-        (collection?.attributes || []).reduce((dataValues, attribute) => ({
-          ...dataValues,
-          [attribute.id]: attribute?.constraint?.createDataValue(document?.data?.[attribute.id], constraintData),
-        }))
+        (collection?.attributes || []).reduce<Record<string, DataValue>>(
+          (dataValues, attribute) => ({
+            ...dataValues,
+            [attribute.id]: attribute?.constraint?.createDataValue(document?.data?.[attribute.id], constraintData),
+          }),
+          {}
+        )
       )
     );
 
     this.documentDataValues$ = combineLatest([documentDataValues$, this.dataValues$]).pipe(
-      map(([documentDataValues, dataValues]) => mergeMap(documentDataValues, dataValues))
+      tap(([documentDataValues, dataValues]) => this.formValidation.setDataValues(documentDataValues, dataValues)),
+      map(([documentDataValues, dataValues]) => mergeMapData(documentDataValues, dataValues))
     );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
       this.collection$.next(this.collection);
+      this.formValidation.setCollection(this.collection);
+    }
+    if (changes.config) {
+      this.formValidation.setConfig(this.config);
+    }
+    if (changes.mode && this.mode !== changes.mode.previousValue) {
+      this.clearData();
+      this.formValidation.setMode(this.mode);
     }
   }
 
@@ -119,7 +136,7 @@ export class FormViewComponent implements OnInit, OnChanges {
             select(selectDocumentById(documentId)),
             map(document => {
               if (document) {
-                return {...document, data: mergeMap(document.data, data)};
+                return {...document, data: mergeMapData(document.data, data)};
               }
               return {id: null, data, collectionId};
             })
@@ -196,7 +213,7 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 }
 
-function mergeMap(data: Record<string, any>, overrideData: Record<string, any>): Record<string, any> {
+function mergeMapData(data: Record<string, any>, overrideData: Record<string, any>): Record<string, any> {
   const copy = {...data};
   Object.keys(overrideData).forEach(key => (copy[key] = overrideData[key]));
   return copy;

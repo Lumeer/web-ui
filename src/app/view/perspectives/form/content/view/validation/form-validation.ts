@@ -17,22 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {isNotNullOrUndefined} from '../utils/common.utils';
+export interface FormValidation {
+  errors: FormError[];
+}
 
-@Pipe({
-  name: 'attributeTitle',
-})
-export class AttributeTitlePipe implements PipeTransform {
-  public transform(attribute: Attribute, backupValue: string = '', skipDescription = false): string {
-    if (isNotNullOrUndefined(attribute)) {
-      return attribute.description
-        ? skipDescription
-          ? ''
-          : `${attribute.name}: ${attribute.description}`
-        : attribute.name;
-    }
-    return backupValue || '';
-  }
+export interface FormError {
+  type: FormViewErrorType;
+  title: string;
+  display: boolean;
+
+  sectionId: string;
+  rowId: string;
+  cellId: string;
+}
+
+export enum FormViewErrorType {
+  Mandatory = 'mandatory',
+  Validation = 'validation',
 }

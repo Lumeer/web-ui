@@ -18,21 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {isNotNullOrUndefined} from '../utils/common.utils';
+import {FormError} from '../content/view/validation/form-validation';
 
 @Pipe({
-  name: 'attributeTitle',
+  name: 'formErrorsByRow',
 })
-export class AttributeTitlePipe implements PipeTransform {
-  public transform(attribute: Attribute, backupValue: string = '', skipDescription = false): string {
-    if (isNotNullOrUndefined(attribute)) {
-      return attribute.description
-        ? skipDescription
-          ? ''
-          : `${attribute.name}: ${attribute.description}`
-        : attribute.name;
-    }
-    return backupValue || '';
+export class FormErrorsByRowPipe implements PipeTransform {
+  public transform(errors: FormError[], rowId: string): FormError[] {
+    return (errors || []).filter(error => error.rowId === rowId && error.display);
   }
 }

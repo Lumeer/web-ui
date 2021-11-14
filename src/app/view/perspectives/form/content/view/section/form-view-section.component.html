@@ -12,5 +12,6 @@
                [collection]="collection"
                [documentId]="documentId"
                [collectionLinkTypes]="collectionLinkTypes"
+               [formErrors]="formErrors | formErrorsByRow:row.id"
                (attributeValueChange)="attributeValueChange.emit($event)">
 </form-view-row>

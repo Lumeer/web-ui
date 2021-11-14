@@ -20,6 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {FormButtonConfig, FormButtonsConfig} from '../../../../../../core/store/form/form-model';
+import {FormValidation} from '../validation/form-validation';
 
 @Component({
   selector: 'form-view-submit',
@@ -37,14 +38,21 @@ export class FormViewSubmitComponent implements OnChanges {
   @Input()
   public loading: boolean;
 
+  @Input()
+  public validation: FormValidation;
+
   @Output()
   public submit = new EventEmitter();
 
   public button: FormButtonConfig;
+  public valid: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document || changes.buttons) {
       this.findButton();
+    }
+    if (changes.validation) {
+      this.valid = (this.validation?.errors || []).length === 0;
     }
   }
 

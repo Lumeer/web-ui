@@ -59,6 +59,9 @@ import {PreviewResultsModule} from '../../../shared/preview-results/preview-resu
 import {FormModeComponent} from './content/mode/form-mode.component';
 import {FormModeIconPipe} from './pipes/form-mode-icon.pipe';
 import {IsFormViewVisiblePipe} from './pipes/is-form-view-visible.pipe';
+import {FormErrorsBySectionPipe} from './pipes/form-errors-by-section.pipe';
+import {FormErrorsByRowPipe} from './pipes/form-errors-by-row.pipe';
+import {FormErrorsByCellPipe} from './pipes/form-errors-by-cell.pipe';
 
 @NgModule({
   declarations: [
@@ -85,6 +88,9 @@ import {IsFormViewVisiblePipe} from './pipes/is-form-view-visible.pipe';
     FormModeComponent,
     FormModeIconPipe,
     IsFormViewVisiblePipe,
+    FormErrorsBySectionPipe,
+    FormErrorsByRowPipe,
+    FormErrorsByCellPipe,
   ],
   imports: [
     CommonModule,

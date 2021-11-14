@@ -31,6 +31,7 @@ import {findAttribute} from '../../../../../../../core/store/collections/collect
 import {BehaviorSubject} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
+import {FormError} from '../../validation/form-validation';
 
 @Component({
   selector: 'form-view-cell',
@@ -54,12 +55,15 @@ export class FormViewCellComponent implements OnChanges {
   @Input()
   public documentId: string;
 
+  @Input()
+  public formErrors: FormError[];
+
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
 
   public readonly type = FormCellType;
   public readonly dataInputConfiguration: DataInputConfiguration = {
-    common: {allowRichText: true},
+    common: {allowRichText: true, skipValidation: true},
     files: {saveInMemory: true},
   };
 

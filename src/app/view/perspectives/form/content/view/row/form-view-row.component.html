@@ -6,6 +6,7 @@
                   [collection]="collection"
                   [documentId]="documentId"
                   [collectionLinkTypes]="collectionLinkTypes"
+                  [formErrors]="formErrors | formErrorsByCell:cell.id"
                   (attributeValueChange)="attributeValueChange.emit($event)">
   </form-view-cell>
 

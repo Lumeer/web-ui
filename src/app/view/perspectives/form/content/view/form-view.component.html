@@ -20,6 +20,7 @@
                        [section]="section"
                        [collection]="collection"
                        [documentId]="document?.id"
+                       [formErrors]="(validation$ | async).errors | formErrorsBySection:section.id"
                        [collectionLinkTypes]="collectionLinkTypes"
                        (attributeValueChange)="onAttributeValueChange($event)">
     </form-view-section>
@@ -28,6 +29,7 @@
                       [document]="document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"
+                      [validation]="validation$ | async"
                       (submit)="onSubmit()">
     </form-view-submit>
 

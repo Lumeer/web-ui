@@ -15,4 +15,5 @@
   </data-input>
 </div>
 <div class="form-control mt-1" *ngIf="cell?.type === type.Link"></div>
+<div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>
 <div class="text-muted small mt-1">{{cell?.description}}</div>

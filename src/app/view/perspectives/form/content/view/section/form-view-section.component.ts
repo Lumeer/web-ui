@@ -22,6 +22,7 @@ import {FormRow, FormSection} from '../../../../../../core/store/form/form-model
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {DataValue} from '@lumeer/data-filters';
+import {FormError} from '../validation/form-validation';
 
 @Component({
   selector: 'form-view-section',
@@ -43,6 +44,9 @@ export class FormViewSectionComponent implements OnChanges {
 
   @Input()
   public documentId: string;
+
+  @Input()
+  public formErrors: FormError[];
 
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
