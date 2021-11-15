@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormAttributeCellConfig,
   FormCell,
@@ -25,17 +34,18 @@ import {
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
-import {DataValue} from '@lumeer/data-filters';
+import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
 import {FormError} from '../../validation/form-validation';
-import {FormLinkData} from '../../model/form-link-data';
+import {FormLinkData, FormLinkSelectedData} from '../../model/form-link-data';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/store/common/permissions.selectors';
+import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'form-view-cell',
@@ -43,7 +53,7 @@ import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/sto
   styleUrls: ['./form-view-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormViewCellComponent implements OnChanges {
+export class FormViewCellComponent implements OnInit, OnChanges {
   @Input()
   public cell: FormCell;
 
@@ -66,7 +76,7 @@ export class FormViewCellComponent implements OnChanges {
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
 
   @Output()
-  public linkValueChange = new EventEmitter<{linkTypeId: string; documentIds: string[]}>();
+  public linkValueChange = new EventEmitter<{linkTypeId: string; selectedData: FormLinkSelectedData}>();
 
   public readonly type = FormCellType;
   public readonly dataInputConfiguration: DataInputConfiguration = {
@@ -85,8 +95,13 @@ export class FormViewCellComponent implements OnChanges {
   public mandatory: boolean;
 
   public linkDocuments$: Observable<DocumentModel[]>;
+  public constraintData$: Observable<ConstraintData>;
 
   constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cell) {
@@ -179,11 +194,11 @@ export class FormViewCellComponent implements OnChanges {
     this.editing$.next(false);
   }
 
-  public onSelectedDocumentIdsChange(documentIds: string[]) {
+  public onSelectedDocumentIdsChange(selectedData: FormLinkSelectedData) {
     this.editing$.next(false);
 
     if (this.linkData?.linkType) {
-      this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, documentIds});
+      this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, selectedData});
     }
   }
 }

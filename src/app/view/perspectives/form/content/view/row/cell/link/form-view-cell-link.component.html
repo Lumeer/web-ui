@@ -10,8 +10,13 @@
               [class.ml-2]="!first"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"
-              [spellcheck]="false"
-              [innerHTML]="option.displayValue || option.value">
+              [spellcheck]="false">
+            <icons-presenter *ngIf="option.icons && option.iconColors"
+                             [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
+                             [colors]="option.iconColors"
+                             [icons]="option.icons">
+          </icons-presenter>
+          <span [innerHTML]="option.displayValue || option.value"></span>
         </span>
     </ng-container>
 

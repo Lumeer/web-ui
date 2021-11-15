@@ -22,7 +22,8 @@
                        [collection]="collection"
                        [documentId]="document?.id"
                        [formErrors]="(validation$ | async).errors | formErrorsBySection:section.id"
-                       (attributeValueChange)="onAttributeValueChange($event)">
+                       (attributeValueChange)="onAttributeValueChange($event)"
+                       (linkValueChange)="onLinkValueChange($event)">
     </form-view-section>
 
     <form-view-submit class="mt-4"

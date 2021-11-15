@@ -20,11 +20,11 @@
 import {Injectable} from '@angular/core';
 
 import {DocumentAdditionalDataRequest, DocumentModel} from '../store/documents/document.model';
-import {mergeMap, Observable, of, zip} from 'rxjs';
-import {AttachmentsService, DocumentService} from '../data-service';
+import {mergeMap, Observable, of, switchMap, zip} from 'rxjs';
+import {AttachmentsService, DocumentService, LinkInstanceService} from '../data-service';
 import {FileApiService} from './file-api.service';
 import {Workspace} from '../store/navigation/workspace';
-import {catchError, map, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, take, withLatestFrom} from 'rxjs/operators';
 import {convertDocumentDtoToModel} from '../store/documents/document.converter';
 import {DocumentDto} from '../dto';
 import {FileAttachment, FileAttachmentType} from '../store/file-attachments/file-attachment.model';
@@ -36,6 +36,14 @@ import {DataCursor} from '../../shared/data-input/data-cursor';
 import {select, Store} from '@ngrx/store';
 import {selectFileAttachmentsByDataCursor} from '../store/file-attachments/file-attachments.state';
 import {AppState} from '../store/app.state';
+import {LinkInstance} from '../store/link-instances/link.instance';
+import {selectLinkInstancesByTypeAndDocuments} from '../store/link-instances/link-instances.state';
+import {isAnyDocumentInLinkInstance} from '../store/link-instances/link-instance.utils';
+import {DocumentLinksDto} from '../dto/document-links.dto';
+import {
+  convertLinkInstanceDtoToModel,
+  convertLinkInstanceModelToDto,
+} from '../store/link-instances/link-instance.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +53,8 @@ export class DocumentUtilsService {
     private store$: Store<AppState>,
     private service: DocumentService,
     private attachmentService: AttachmentsService,
-    private fileApiService: FileApiService
+    private fileApiService: FileApiService,
+    private linkInstanceService: LinkInstanceService
   ) {}
 
   public createWithAdditionalData(
@@ -53,21 +62,17 @@ export class DocumentUtilsService {
     workspace: Workspace,
     data: DocumentAdditionalDataRequest,
     correlationId: string
-  ): Observable<{
-    document: DocumentModel;
-    createdAttachments: FileAttachment[];
-    uncreatedAttachments: number;
-  }> {
+  ): Observable<DocumentWithAdditionalDataStats & {document: DocumentModel}> {
     return this.service.createDocument(dto, workspace).pipe(
       mergeMap(createdDto =>
         this.createDocumentAttachments(createdDto, data, workspace).pipe(
           mergeMap(created => this.patchCreatedAttachments(createdDto, workspace, {created})),
-          map(({dto: patchedDto, attachmentsData}) => {
+          mergeMap(result =>
+            this.setDocumentLinks(createdDto, data, workspace).pipe(map(linksData => ({...result, linksData})))
+          ),
+          map(({dto: patchedDto, attachmentsData, linksData}) => {
             const document = convertDocumentDtoToModel(patchedDto, correlationId);
-            const createdAttachments = collectCreatedAttachments(attachmentsData);
-            const shouldCreateAttachmentsNumber = shouldCreateFilesNumber(data);
-            const uncreatedAttachments = shouldCreateAttachmentsNumber - createdAttachments.length;
-            return {document, createdAttachments, uncreatedAttachments};
+            return {document, ...collectionDocumentWithAdditionalDataStats(data, attachmentsData, linksData)};
           })
         )
       )
@@ -79,31 +84,19 @@ export class DocumentUtilsService {
     workspace: Workspace,
     data: DocumentAdditionalDataRequest,
     correlationId: string
-  ): Observable<{
-    document: DocumentModel;
-    createdAttachments: FileAttachment[];
-    uncreatedAttachments: number;
-    deletedAttachments: string[];
-    undeletedAttachments: number;
-  }> {
+  ): Observable<DocumentWithAdditionalDataStats & {document: DocumentModel}> {
     return this.createDocumentAttachments(dto, data, workspace).pipe(
       mergeMap(created => this.deleteDocumentAttachments(data, workspace).pipe(map(deleted => ({created, deleted})))),
       withLatestFrom(this.selectFileAttachments$(dto)),
       mergeMap(([attachmentsData, documentAttachments]) =>
         this.updateDocumentAndChangedAttachments(dto, workspace, attachmentsData, documentAttachments)
       ),
-      map(({dto: updatedDto, attachmentsData}) => {
+      mergeMap(result =>
+        this.setDocumentLinks(result.dto, data, workspace).pipe(map(linksData => ({...result, linksData})))
+      ),
+      map(({dto: updatedDto, attachmentsData, linksData}) => {
         const document = convertDocumentDtoToModel(updatedDto, correlationId);
-
-        const createdAttachments = collectCreatedAttachments(attachmentsData);
-        const shouldCreateAttachmentsNumber = shouldCreateFilesNumber(data);
-        const uncreatedAttachments = shouldCreateAttachmentsNumber - createdAttachments.length;
-
-        const deletedAttachments = collectDeletedAttachments(attachmentsData);
-        const shouldDeleteAttachmentsNumber = shouldDeleteFilesNumber(data);
-        const undeletedAttachments = shouldDeleteAttachmentsNumber - deletedAttachments.length;
-
-        return {document, createdAttachments, uncreatedAttachments, deletedAttachments, undeletedAttachments};
+        return {document, ...collectionDocumentWithAdditionalDataStats(data, attachmentsData, linksData)};
       })
     );
   }
@@ -204,6 +197,116 @@ export class DocumentUtilsService {
       catchError(() => of({}))
     );
   }
+
+  private setDocumentLinks(
+    dto: DocumentDto,
+    data: DocumentAdditionalDataRequest,
+    workspace: Workspace
+  ): Observable<ChangedLinksData> {
+    const requests = Object.keys(data.linkDocumentIdsChangeMap || []).map(linkTypeId => {
+      const addedDocumentIds = data.linkDocumentIdsChangeMap[linkTypeId].addedDocumentIds;
+      const removedDocumentIds = data.linkDocumentIdsChangeMap[linkTypeId].removedDocumentIds;
+
+      return this.store$.pipe(
+        select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [dto.id])),
+        take(1),
+        switchMap(linkInstances => {
+          const removedLinkInstancesIds = linkInstances
+            .filter(linkInstance => isAnyDocumentInLinkInstance(linkInstance, removedDocumentIds))
+            .map(linkInstance => linkInstance.id);
+          const createdLinkInstances: LinkInstance[] = addedDocumentIds.map(documentId => ({
+            id: null,
+            documentIds: [documentId, dto.id],
+            linkTypeId,
+            data: {},
+          }));
+
+          if (createdLinkInstances.length > 0 || removedLinkInstancesIds.length > 0) {
+            const documentLinksDto: DocumentLinksDto = {
+              documentId: dto.id,
+              removedLinkInstancesIds,
+              createdLinkInstances: createdLinkInstances.map(linkInstance =>
+                convertLinkInstanceModelToDto(linkInstance)
+              ),
+            };
+
+            return this.linkInstanceService.setDocumentLinks(linkTypeId, documentLinksDto, workspace).pipe(
+              catchError(() => of([])),
+              map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
+              map(createdLinkInstances => ({createdLinkInstances, removedLinkInstancesIds}))
+            );
+          } else {
+            return of({createdLinkInstances: [], removedLinkInstancesIds: []});
+          }
+        })
+      );
+    });
+
+    if (requests.length > 0) {
+      return zip(requests).pipe(
+        map(results =>
+          results.reduce(
+            (data, result) => {
+              data.created.push(...result.createdLinkInstances);
+              data.removed.push(...result.removedLinkInstancesIds);
+
+              return data;
+            },
+            {created: [], removed: []}
+          )
+        )
+      );
+    }
+
+    return of({created: [], deleted: []});
+  }
+}
+
+interface DocumentWithAdditionalDataStats {
+  createdAttachments: FileAttachment[];
+  unCreatedAttachments: number;
+
+  deletedAttachments?: string[];
+  unDeletedAttachments?: number;
+
+  createdLinkInstances: LinkInstance[];
+  unCreatedLinkInstances: number;
+
+  removedLinkInstancesIds?: string[];
+  unRemovedLinkInstances?: number;
+}
+
+function collectionDocumentWithAdditionalDataStats(
+  data: DocumentAdditionalDataRequest,
+  attachmentsData: ChangedAttachmentsData,
+  linksData: ChangedLinksData
+): DocumentWithAdditionalDataStats {
+  const createdAttachments = collectCreatedAttachments(attachmentsData);
+  const shouldCreateFilesNum = shouldCreateFilesNumber(data);
+  const unCreatedAttachments = shouldCreateFilesNum - createdAttachments.length;
+
+  const deletedAttachments = collectDeletedAttachments(attachmentsData);
+  const shouldDeleteAttachmentsNumber = shouldDeleteFilesNumber(data);
+  const unDeletedAttachments = shouldDeleteAttachmentsNumber - deletedAttachments.length;
+
+  const createdLinkInstances = linksData.created || [];
+  const shouldCreateLinksNum = shouldCreateLinksNumber(data);
+  const unCreatedLinkInstances = shouldCreateLinksNum - createdLinkInstances.length;
+
+  const removedLinkInstancesIds = linksData.deleted || [];
+  const shouldRemoveLinksNum = shouldDeleteLinksNumber(data);
+  const unRemovedLinkInstances = shouldRemoveLinksNum - removedLinkInstancesIds.length;
+
+  return {
+    createdAttachments,
+    unCreatedAttachments,
+    deletedAttachments,
+    unDeletedAttachments,
+    createdLinkInstances,
+    unCreatedLinkInstances,
+    removedLinkInstancesIds,
+    unRemovedLinkInstances,
+  };
 }
 
 type CreatedAttachmentsData = Record<string, FileAttachment[]>;
@@ -212,6 +315,14 @@ type DeletedAttachmentsData = Record<string, string[]>;
 interface ChangedAttachmentsData {
   created: CreatedAttachmentsData;
   deleted?: DeletedAttachmentsData;
+}
+
+type CreatedLinksData = LinkInstance[];
+type RemovedLinksData = string[];
+
+interface ChangedLinksData {
+  created: CreatedLinksData;
+  deleted?: RemovedLinksData;
 }
 
 function createPatchData(
@@ -291,8 +402,20 @@ function shouldCreateFilesNumber(data: DocumentAdditionalDataRequest): number {
   }, 0);
 }
 
+function shouldCreateLinksNumber(data: DocumentAdditionalDataRequest): number {
+  return Object.keys(data.linkDocumentIdsChangeMap || {}).reduce((num, linkTypeId) => {
+    return num + (data.linkDocumentIdsChangeMap?.[linkTypeId]?.addedDocumentIds || []).length;
+  }, 0);
+}
+
 function shouldDeleteFilesNumber(data: DocumentAdditionalDataRequest): number {
   return Object.keys(data.deleteFilesMap || {}).reduce((num, attributeId) => {
     return num + (data.deleteFilesMap[attributeId] || []).length;
+  }, 0);
+}
+
+function shouldDeleteLinksNumber(data: DocumentAdditionalDataRequest): number {
+  return Object.keys(data.linkDocumentIdsChangeMap || {}).reduce((num, linkTypeId) => {
+    return num + (data.linkDocumentIdsChangeMap?.[linkTypeId]?.removedDocumentIds || []).length;
   }, 0);
 }

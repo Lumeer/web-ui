@@ -37,11 +37,13 @@ import {FormMode} from '../mode/form-mode';
 import {createDocumentRequestAdditionalData} from '../../../../../core/store/documents/document.utils';
 import {FormValidationService} from './validation/form-validation.service';
 import {FormValidation} from './validation/form-validation';
-import {FormLinkData} from './model/form-link-data';
+import {FormLinkData, FormLinkSelectedData} from './model/form-link-data';
 import {collectLinkConfigsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
 import {filter} from 'rxjs';
 import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
 import {selectCollectionsByIds} from '../../../../../core/store/collections/collections.state';
+import {selectLinkInstancesByTypesAndDocuments} from '../../../../../core/store/link-instances/link-instances.state';
+import {getOtherLinkedDocumentId} from '../../../../../core/store/link-instances/link.instance';
 
 @Component({
   selector: 'form-view',
@@ -85,6 +87,7 @@ export class FormViewComponent implements OnInit, OnChanges {
   public selectedDocumentId$ = new BehaviorSubject<string>(null);
   public data$ = new BehaviorSubject<DataResourceData>({});
   public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
+  public selectedLinkData$ = new BehaviorSubject<Record<string, FormLinkSelectedData>>({});
   public performingAction$ = new BehaviorSubject(false);
 
   constructor(private store$: Store<AppState>, private formValidation: FormValidationService) {}
@@ -181,21 +184,69 @@ export class FormViewComponent implements OnInit, OnChanges {
         return this.store$.pipe(select(selectCollectionsByIds(otherCollectionIds)));
       })
     );
-    this.linkData$ = combineLatest([this.config$, this.linkTypes$, this.view$, collectionId$, collections$]).pipe(
-      map(([config, allLinkTypes, view, collectionId, allCollections]) => {
-        return collectLinkConfigsFromFormConfig(config).reduce<Record<string, FormLinkData>>((linkDataMap, config) => {
-          const linkType = allLinkTypes.find(lt => lt.id === config.linkTypeId);
-          if (linkType) {
-            const otherCollectionId = getOtherLinkedCollectionId(linkType, collectionId);
-            const otherCollection = allCollections.find(collection => collection.id === otherCollectionId);
-            if (otherCollection) {
-              linkDataMap[linkType.id] = {view, linkType, collection: otherCollection, selectedDocumentIds: []};
-            }
-          }
 
-          return linkDataMap;
-        }, {});
+    const linkInstances$ = combineLatest([this.config$, this.document$]).pipe(
+      switchMap(([config, document]) => {
+        if (document?.id) {
+          const linkTypeIds = collectLinkIdsFromFormConfig(config);
+          return this.store$.pipe(select(selectLinkInstancesByTypesAndDocuments(linkTypeIds, [document.id])));
+        }
+        return of([]);
       })
+    );
+
+    this.linkData$ = combineLatest([
+      this.config$,
+      this.linkTypes$,
+      this.view$,
+      this.selectedLinkData$,
+      this.selectedDocumentId$,
+      linkInstances$,
+      collectionId$,
+      collections$,
+    ]).pipe(
+      map(
+        ([
+          config,
+          allLinkTypes,
+          view,
+          selectedLinkData,
+          documentId,
+          allLinkInstances,
+          collectionId,
+          allCollections,
+        ]) => {
+          return collectLinkConfigsFromFormConfig(config).reduce<Record<string, FormLinkData>>(
+            (linkDataMap, config) => {
+              const linkType = allLinkTypes.find(lt => lt.id === config.linkTypeId);
+              if (linkType) {
+                const otherCollectionId = getOtherLinkedCollectionId(linkType, collectionId);
+                const otherCollection = allCollections.find(collection => collection.id === otherCollectionId);
+                if (otherCollection) {
+                  const linkInstances = allLinkInstances.filter(
+                    linkInstance => linkInstance.linkTypeId === linkType.id
+                  );
+                  const linkDocumentIds = linkInstances.map(linkInstance =>
+                    getOtherLinkedDocumentId(linkInstance, documentId)
+                  );
+                  linkDataMap[linkType.id] = {
+                    view,
+                    linkType,
+                    collection: otherCollection,
+                    linkInstances,
+                    linkDocumentIds,
+                    ...selectedLinkData[linkType.id],
+                  };
+                }
+              }
+
+              return linkDataMap;
+            },
+            {}
+          );
+        }
+      ),
+      tap(linkData => this.formValidation.setLinkData(linkData))
     );
   }
 
@@ -205,6 +256,12 @@ export class FormViewComponent implements OnInit, OnChanges {
 
     this.data$.next(newData);
     this.dataValues$.next(newDataValues);
+  }
+
+  public onLinkValueChange(data: {linkTypeId: string; selectedData: FormLinkSelectedData}) {
+    const newData = {...this.selectedLinkData$.value, [data.linkTypeId]: data.selectedData};
+
+    this.selectedLinkData$.next(newData);
   }
 
   public trackBySection(index: number, section: FormSection): string {
@@ -218,7 +275,11 @@ export class FormViewComponent implements OnInit, OnChanges {
   private submit(document: DocumentModel) {
     this.performingAction$.next(true);
 
-    const additionalData = createDocumentRequestAdditionalData(this.collection, this.dataValues$.value);
+    const additionalData = createDocumentRequestAdditionalData(
+      this.collection,
+      this.dataValues$.value,
+      this.selectedLinkData$.value
+    );
     if (document.id) {
       this.updateDocument(document, additionalData);
     } else {
@@ -231,6 +292,7 @@ export class FormViewComponent implements OnInit, OnChanges {
       new DocumentsAction.CreateWithAdditionalData({
         document,
         data,
+        workspace: {viewId: this.view?.id},
         onSuccess: () => {
           this.clearData();
           this.performingAction$.next(false);
@@ -245,6 +307,7 @@ export class FormViewComponent implements OnInit, OnChanges {
       new DocumentsAction.UpdateWithAdditionalData({
         document,
         data,
+        workspace: {viewId: this.view?.id},
         onSuccess: () => {
           this.clearData();
           this.performingAction$.next(false);
@@ -257,6 +320,7 @@ export class FormViewComponent implements OnInit, OnChanges {
   public clearData() {
     this.data$.next({});
     this.dataValues$.next({});
+    this.selectedLinkData$.next({});
   }
 
   public selectDocument(document: DocumentModel) {

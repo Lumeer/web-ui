@@ -63,6 +63,7 @@ import {FormErrorsBySectionPipe} from './pipes/form-errors-by-section.pipe';
 import {FormErrorsByRowPipe} from './pipes/form-errors-by-row.pipe';
 import {FormErrorsByCellPipe} from './pipes/form-errors-by-cell.pipe';
 import {FormViewCellLinkComponent} from './content/view/row/cell/link/form-view-cell-link.component';
+import {PresenterModule} from '../../../shared/presenter/presenter.module';
 
 @NgModule({
   declarations: [
@@ -113,6 +114,7 @@ import {FormViewCellLinkComponent} from './content/view/row/cell/link/form-view-
     PickerModule,
     DataInputModule,
     PreviewResultsModule,
+    PresenterModule,
   ],
   exports: [FormPerspectiveComponent],
 })

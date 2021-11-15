@@ -24,7 +24,7 @@ import {
   getQueryFiltersForLinkType,
   queryStemsAreSameById,
 } from '../navigation/query/query.util';
-import {DocumentModel, DocumentAdditionalDataRequest} from './document.model';
+import {DocumentModel, DocumentAdditionalDataRequest, DocumentIdsData} from './document.model';
 import {findAttribute, findAttributeConstraint} from '../collections/collection.util';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../shared/utils/common.utils';
@@ -47,7 +47,8 @@ import {LinkInstance} from '../link-instances/link.instance';
 
 export function createDocumentRequestAdditionalData(
   collection: Collection,
-  dataValues: Record<string, DataValue>
+  dataValues: Record<string, DataValue>,
+  documentIdsDataMap: Record<string, DocumentIdsData>
 ): DocumentAdditionalDataRequest {
   return (collection?.attributes || []).reduce(
     (data, attribute) => {
@@ -58,7 +59,7 @@ export function createDocumentRequestAdditionalData(
       }
       return data;
     },
-    {createFilesMap: {}, deleteFilesMap: {}}
+    {createFilesMap: {}, deleteFilesMap: {}, linkDocumentIdsChangeMap: documentIdsDataMap}
   );
 }
 

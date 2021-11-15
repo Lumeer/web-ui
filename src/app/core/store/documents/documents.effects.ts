@@ -188,15 +188,19 @@ export class DocumentsEffects {
         return this.documentUtilsService
           .createWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
           .pipe(
-            mergeMap(({document, createdAttachments}) => {
+            mergeMap(({document, createdAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
               return [
-                ...createCallbackActions(onSuccess, document.id),
                 new DocumentsAction.CreateSuccess({document}),
                 new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
+                new LinkInstancesAction.SetDocumentLinksSuccess({
+                  linkInstances: createdLinkInstances,
+                  removedLinkInstancesIds,
+                }),
+                ...createCallbackActions(onSuccess, document.id),
               ];
             }),
             catchError(error =>
-              of(...createCallbackActions(onFailure), new DocumentsAction.CreateFailure({correlationId, error}))
+              of(new DocumentsAction.CreateFailure({correlationId, error}), ...createCallbackActions(onFailure))
             )
           );
       })
@@ -220,14 +224,20 @@ export class DocumentsEffects {
         return this.documentUtilsService
           .updateWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
           .pipe(
-            mergeMap(({document, createdAttachments, deletedAttachments}) => {
-              return [
-                ...createCallbackActions(onSuccess, document.id),
-                new DocumentsAction.UpdateSuccess({document, originalDocument}),
-                new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
-                new FileAttachmentsAction.RemoveSuccess({fileIds: deletedAttachments}),
-              ];
-            }),
+            mergeMap(
+              ({document, createdAttachments, deletedAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
+                return [
+                  ...createCallbackActions(onSuccess, document.id),
+                  new DocumentsAction.UpdateSuccess({document, originalDocument}),
+                  new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
+                  new FileAttachmentsAction.RemoveSuccess({fileIds: deletedAttachments}),
+                  new LinkInstancesAction.SetDocumentLinksSuccess({
+                    linkInstances: createdLinkInstances,
+                    removedLinkInstancesIds,
+                  }),
+                ];
+              }
+            ),
             catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.UpdateFailure({error})))
           );
       })

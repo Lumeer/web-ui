@@ -20,10 +20,9 @@
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {FormRow, FormSection} from '../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {DataValue} from '@lumeer/data-filters';
 import {FormError} from '../validation/form-validation';
-import {FormLinkData} from '../model/form-link-data';
+import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 
 @Component({
   selector: 'form-view-section',
@@ -51,6 +50,9 @@ export class FormViewSectionComponent implements OnChanges {
 
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
+
+  @Output()
+  public linkValueChange = new EventEmitter<{linkTypeId: string; selectedData: FormLinkSelectedData}>();
 
   public title: string;
   public description: string;

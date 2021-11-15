@@ -1,5 +1,5 @@
 <div *ngIf="title"
-     class="font-weight-bold" >{{title}}</div>
+     class="font-weight-bold">{{title}}</div>
 <div *ngIf="description"
      class="text-muted small"
      [class.mt-1]="title">{{description}}</div>
@@ -13,5 +13,6 @@
                [collection]="collection"
                [documentId]="documentId"
                [formErrors]="formErrors | formErrorsByRow:row.id"
-               (attributeValueChange)="attributeValueChange.emit($event)">
+               (attributeValueChange)="attributeValueChange.emit($event)"
+               (linkValueChange)="linkValueChange.emit($event)">
 </form-view-row>

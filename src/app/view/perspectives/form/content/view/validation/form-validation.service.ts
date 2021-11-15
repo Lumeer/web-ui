@@ -31,6 +31,8 @@ import {DataValue} from '@lumeer/data-filters';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {FormMode} from '../../mode/form-mode';
 import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {FormLinkData} from '../model/form-link-data';
+import {arraySubtract} from '../../../../../../shared/utils/array.utils';
 
 @Injectable()
 export class FormValidationService {
@@ -43,6 +45,7 @@ export class FormValidationService {
   private attributesMap: Record<string, Attribute>;
   private documentDataValues: Record<string, DataValue> = {};
   private dataValues: Record<string, DataValue> = {};
+  private linkData: Record<string, FormLinkData> = {};
 
   constructor() {
     this.validation$ = this.formValidation$.asObservable();
@@ -68,6 +71,11 @@ export class FormValidationService {
   public setDataValues(documentDataValues: Record<string, DataValue>, dataValues: Record<string, DataValue>) {
     this.documentDataValues = documentDataValues || {};
     this.dataValues = dataValues || {};
+    this.revalidate();
+  }
+
+  public setLinkData(data: Record<string, FormLinkData>) {
+    this.linkData = data;
     this.revalidate();
   }
 
@@ -147,7 +155,32 @@ export class FormValidationService {
   }
 
   private linkCellFormErrors(config: FormLinkCellConfig): FormPartialError[] {
-    return [];
+    const errors: FormPartialError[] = [];
+
+    const linkData = this.linkData?.[config.linkTypeId];
+
+    if (config.minLinks > 0 || config.maxLinks > 0) {
+      const selectedIds = [
+        ...arraySubtract(linkData?.linkDocumentIds, linkData?.removedDocumentIds),
+        ...(linkData?.addedDocumentIds || []),
+      ];
+
+      if (selectedIds.length < (config.minLinks || Number.MIN_SAFE_INTEGER)) {
+        errors.push({
+          type: FormViewErrorType.Validation,
+          title: $localize`:@@perspective.form.view.validation.link.minimum:Number of links should be greater than ${config.minLinks}.`,
+          display: true,
+        });
+      } else if (selectedIds.length > (config.maxLinks || Number.MAX_SAFE_INTEGER)) {
+        errors.push({
+          type: FormViewErrorType.Validation,
+          title: $localize`:@@perspective.form.view.validation.link.maximum:Number of links should be lower than ${config.minLinks}.`,
+          display: true,
+        });
+      }
+    }
+
+    return errors;
   }
 
   private isAllDataDefined(): boolean {

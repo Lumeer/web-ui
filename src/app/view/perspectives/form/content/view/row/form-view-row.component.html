@@ -7,7 +7,8 @@
                   [collection]="collection"
                   [documentId]="documentId"
                   [formErrors]="formErrors | formErrorsByCell:cell.id"
-                  (attributeValueChange)="attributeValueChange.emit($event)">
+                  (attributeValueChange)="attributeValueChange.emit($event)"
+                  (linkValueChange)="linkValueChange.emit($event)">
   </form-view-cell>
 
 </div>

@@ -32,13 +32,14 @@ import {Collection} from '../../../../../../../../core/store/collections/collect
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../../../../../core/store/link-types/link.type';
 import {BehaviorSubject} from 'rxjs';
-import {SelectConstraintOption, UnknownConstraint} from '@lumeer/data-filters';
+import {ConstraintData, SelectConstraintOption, UnknownConstraint} from '@lumeer/data-filters';
 import {DropdownOption} from '../../../../../../../../shared/dropdown/options/dropdown-option';
 import {findAttribute, getDefaultAttributeId} from '../../../../../../../../core/store/collections/collection.util';
 import {OptionsDropdownComponent} from '../../../../../../../../shared/dropdown/options/options-dropdown.component';
-import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
-import {HtmlModifier, isElementActive} from '../../../../../../../../shared/utils/html-modifier';
+import {arraySubtract, uniqueValues} from '../../../../../../../../shared/utils/array.utils';
+import {HtmlModifier, isElementActive, shadeColor} from '../../../../../../../../shared/utils/html-modifier';
 import {keyboardEventCode, KeyCode} from '../../../../../../../../shared/key-code';
+import {FormLinkSelectedData} from '../../../model/form-link-data';
 
 @Component({
   selector: 'form-view-cell-link',
@@ -60,13 +61,22 @@ export class FormViewCellLinkComponent implements OnChanges {
   public documents: DocumentModel[];
 
   @Input()
-  public selectedDocumentIds: string[];
+  public constraintData: ConstraintData;
+
+  @Input()
+  public linkDocumentIds: string[];
+
+  @Input()
+  public removedDocumentIds: string[];
+
+  @Input()
+  public addedDocumentIds: string[];
 
   @Input()
   public readonly: boolean;
 
   @Output()
-  public selectedDocumentIdsChange = new EventEmitter<string[]>();
+  public selectedDataChange = new EventEmitter<FormLinkSelectedData>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -102,9 +112,34 @@ export class FormViewCellLinkComponent implements OnChanges {
     if (changes.readonly && this.readonly) {
       this.preventSaveAndBlur();
     }
-    if (changes.collection || changes.documents || changes.collection) {
+
+    let optionsChanged = false;
+    if (changes.documents || changes.collection || changes.constraintData) {
       this.createOptions();
+      optionsChanged = true;
     }
+
+    if (optionsChanged || changes.linkDocumentIds || changes.removedDocumentIds || changes.addedDocumentIds) {
+      this.checkSelectedDocuments();
+    }
+  }
+
+  private checkSelectedDocuments() {
+    let addedDocumentIds: string[];
+    let removedDocumentIds: string[];
+    if (this.readonly) {
+      addedDocumentIds = this.addedDocumentIds || [];
+      removedDocumentIds = this.removedDocumentIds || [];
+    } else {
+      const checked = checkAddedAndRemovedDocumentIds(
+        this.selectedDocuments$.value.map(document => document.value),
+        this.linkDocumentIds
+      );
+      addedDocumentIds = checked.addedDocumentIds;
+      removedDocumentIds = checked.removedDocumentIds;
+    }
+    const selectedIds = [...arraySubtract(this.linkDocumentIds, removedDocumentIds), ...addedDocumentIds];
+    this.selectedDocuments$.next((this.dropdownOptions || []).filter(option => selectedIds.includes(option.value)));
   }
 
   private createOptions() {
@@ -112,7 +147,10 @@ export class FormViewCellLinkComponent implements OnChanges {
     const constraint = findAttribute(this.collection?.attributes, attributeId)?.constraint || new UnknownConstraint();
     this.dropdownOptions = (this.documents || []).map(document => ({
       value: document.id,
-      displayValue: constraint.createDataValue(document.data?.[attributeId]).format(), // TODO constraintData
+      displayValue: constraint.createDataValue(document.data?.[attributeId], this.constraintData).format(),
+      background: shadeColor(this.collection?.color, 0.5),
+      icons: [this.collection?.icon],
+      iconColors: [this.collection?.color],
     }));
   }
 
@@ -198,14 +236,14 @@ export class FormViewCellLinkComponent implements OnChanges {
     if (this.multi) {
       const options = [...this.selectedDocuments$.value, activeOption].filter(option => !!option);
       const ids = uniqueValues(options.map(option => option.value));
-      this.selectedDocumentIdsChange.emit(ids);
+      this.emitDataChange(ids);
       this.preventSaveAndBlur();
       return;
     }
 
     if (activeOption || !this.text) {
       const ids = [activeOption?.value].filter(id => !!id);
-      this.selectedDocumentIdsChange.emit(ids);
+      this.emitDataChange(ids);
       this.preventSaveAndBlur();
     } else {
       this.onCancel();
@@ -214,11 +252,15 @@ export class FormViewCellLinkComponent implements OnChanges {
     this.resetSearchInput();
   }
 
+  private emitDataChange(documentIds: string[]) {
+    this.selectedDataChange.emit(checkAddedAndRemovedDocumentIds(documentIds, this.linkDocumentIds));
+  }
+
   private onCancel() {
     this.resetScroll();
     this.resetSearchInput();
     this.cancel.emit();
-    this.selectedDocuments$.next([]); // TODO
+    this.checkSelectedDocuments();
   }
 
   private preventSaveAndBlur() {
@@ -289,4 +331,21 @@ export class FormViewCellLinkComponent implements OnChanges {
   private resetSearchInput() {
     this.text = '';
   }
+}
+
+function checkAddedAndRemovedDocumentIds(
+  documentIds: string[],
+  linkDocumentIds: string[]
+): {addedDocumentIds: string[]; removedDocumentIds: string[]} {
+  const removedDocumentIds = [...(linkDocumentIds || [])];
+  const addedDocumentIds = [];
+  for (const documentId of documentIds) {
+    const indexInRemoved = removedDocumentIds.findIndex(removedId => removedId === documentId);
+    if (indexInRemoved >= 0) {
+      removedDocumentIds.splice(indexInRemoved, 1);
+    } else {
+      addedDocumentIds.push(documentId);
+    }
+  }
+  return {addedDocumentIds, removedDocumentIds};
 }

@@ -20,9 +20,12 @@
                      [linkType]="linkData?.linkType"
                      [collection]="linkData?.collection"
                      [documents]="linkDocuments$ | async"
+                     [constraintData]="constraintData$ | async"
+                     [linkDocumentIds]="linkData?.linkDocumentIds"
+                     [removedDocumentIds]="linkData?.removedDocumentIds"
+                     [addedDocumentIds]="linkData?.addedDocumentIds"
+                     (selectedDataChange)="onSelectedDocumentIdsChange($event)"
                      (click)="onElementClick($event)"
-                     [selectedDocumentIds]="linkData?.selectedDocumentIds"
-                     (selectedDocumentIdsChange)="onSelectedDocumentIdsChange($event)"
                      (cancel)="onCancelEditing()">
 </form-view-cell-link>
 <div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>

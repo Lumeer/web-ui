@@ -20,10 +20,16 @@
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {View} from '../../../../../../core/store/views/view';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {DocumentIdsData} from '../../../../../../core/store/documents/document.model';
 
-export interface FormLinkData {
+export interface FormLinkData extends FormLinkSelectedData {
   linkType: LinkType;
   collection: Collection;
   view: View;
-  selectedDocumentIds: string[];
+
+  linkInstances: LinkInstance[];
+  linkDocumentIds: string[];
 }
+
+export interface FormLinkSelectedData extends DocumentIdsData {}
