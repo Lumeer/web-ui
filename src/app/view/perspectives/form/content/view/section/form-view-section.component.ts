@@ -23,6 +23,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {DataValue} from '@lumeer/data-filters';
 import {FormError} from '../validation/form-validation';
+import {FormLinkData} from '../model/form-link-data';
 
 @Component({
   selector: 'form-view-section',
@@ -37,10 +38,10 @@ export class FormViewSectionComponent implements OnChanges {
   public collection: Collection;
 
   @Input()
-  public collectionLinkTypes: LinkType[];
+  public dataValues: Record<string, DataValue>;
 
   @Input()
-  public dataValues: Record<string, DataValue>;
+  public linkValues: Record<string, FormLinkData>;
 
   @Input()
   public documentId: string;

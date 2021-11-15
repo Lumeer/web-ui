@@ -20,10 +20,10 @@
 import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges, Output, EventEmitter} from '@angular/core';
 import {FormCell, FormRow} from '../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {filterValidFormCells} from '../../../form-utils';
 import {DataValue} from '@lumeer/data-filters';
 import {FormError} from '../validation/form-validation';
+import {FormLinkData} from '../model/form-link-data';
 
 @Component({
   selector: 'form-view-row',
@@ -39,10 +39,10 @@ export class FormViewRowComponent implements OnChanges {
   public collection: Collection;
 
   @Input()
-  public collectionLinkTypes: LinkType[];
+  public dataValues: Record<string, DataValue>;
 
   @Input()
-  public dataValues: Record<string, DataValue>;
+  public linkValues: Record<string, FormLinkData>;
 
   @Input()
   public documentId: string;

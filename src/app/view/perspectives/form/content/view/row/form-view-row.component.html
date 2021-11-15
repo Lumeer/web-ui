@@ -3,9 +3,9 @@
   <form-view-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
                   [cell]="cell"
                   [dataValues]="dataValues"
+                  [linkValues]="linkValues"
                   [collection]="collection"
                   [documentId]="documentId"
-                  [collectionLinkTypes]="collectionLinkTypes"
                   [formErrors]="formErrors | formErrorsByCell:cell.id"
                   (attributeValueChange)="attributeValueChange.emit($event)">
   </form-view-cell>

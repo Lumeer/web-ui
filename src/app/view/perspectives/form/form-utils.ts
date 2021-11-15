@@ -49,6 +49,13 @@ export function collectLinkIdsFromFormConfig(config: FormConfig): string[] {
   );
 }
 
+export function collectLinkConfigsFromFormConfig(config: FormConfig): FormLinkCellConfig[] {
+  return collectValuesFromFormConfigCells(
+    config,
+    cell => cell.type === FormCellType.Link && <FormLinkCellConfig>cell.config
+  );
+}
+
 function collectValuesFromFormConfigCells<T>(config: FormConfig, fun: (cell: FormCell) => T): T[] {
   return (config?.sections || [])
     .reduce((cells, section) => {

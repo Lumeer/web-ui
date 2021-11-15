@@ -37,6 +37,11 @@ import {FormMode} from '../mode/form-mode';
 import {createDocumentRequestAdditionalData} from '../../../../../core/store/documents/document.utils';
 import {FormValidationService} from './validation/form-validation.service';
 import {FormValidation} from './validation/form-validation';
+import {FormLinkData} from './model/form-link-data';
+import {collectLinkConfigsFromFormConfig, collectLinkIdsFromFormConfig} from '../../form-utils';
+import {filter} from 'rxjs';
+import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.utils';
+import {selectCollectionsByIds} from '../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'form-view',
@@ -71,8 +76,12 @@ export class FormViewComponent implements OnInit, OnChanges {
   public documentDataValues$: Observable<Record<string, DataValue>>;
   public document$: Observable<DocumentModel>;
   public validation$: Observable<FormValidation>;
+  public linkData$: Observable<Record<string, FormLinkData>>;
 
+  public view$ = new BehaviorSubject<View>(null);
+  public config$ = new BehaviorSubject<FormConfig>(null);
   public collection$ = new BehaviorSubject<Collection>(null);
+  public linkTypes$ = new BehaviorSubject<LinkType[]>([]);
   public selectedDocumentId$ = new BehaviorSubject<string>(null);
   public data$ = new BehaviorSubject<DataResourceData>({});
   public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
@@ -85,29 +94,7 @@ export class FormViewComponent implements OnInit, OnChanges {
 
     this.observeDocument();
     this.observeDataValues();
-  }
-
-  private observeDataValues() {
-    const documentDataValues$ = combineLatest([
-      this.store$.pipe(select(selectConstraintData)),
-      this.collection$,
-      this.document$,
-    ]).pipe(
-      map(([constraintData, collection, document]) =>
-        (collection?.attributes || []).reduce<Record<string, DataValue>>(
-          (dataValues, attribute) => ({
-            ...dataValues,
-            [attribute.id]: attribute?.constraint?.createDataValue(document?.data?.[attribute.id], constraintData),
-          }),
-          {}
-        )
-      )
-    );
-
-    this.documentDataValues$ = combineLatest([documentDataValues$, this.dataValues$]).pipe(
-      tap(([documentDataValues, dataValues]) => this.formValidation.setDataValues(documentDataValues, dataValues)),
-      map(([documentDataValues, dataValues]) => mergeMapData(documentDataValues, dataValues))
-    );
+    this.observeFormLinkData();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -116,7 +103,14 @@ export class FormViewComponent implements OnInit, OnChanges {
       this.formValidation.setCollection(this.collection);
     }
     if (changes.config) {
+      this.config$.next(this.config);
       this.formValidation.setConfig(this.config);
+    }
+    if (changes.view) {
+      this.view$.next(this.view);
+    }
+    if (changes.collectionLinkTypes) {
+      this.linkTypes$.next(this.collectionLinkTypes || []);
     }
     if (changes.mode && this.mode !== changes.mode.previousValue) {
       this.clearData();
@@ -144,6 +138,63 @@ export class FormViewComponent implements OnInit, OnChanges {
         }
 
         return of({id: null, data, collectionId});
+      })
+    );
+  }
+
+  private observeDataValues() {
+    const documentDataValues$ = combineLatest([
+      this.store$.pipe(select(selectConstraintData)),
+      this.collection$,
+      this.document$,
+    ]).pipe(
+      map(([constraintData, collection, document]) =>
+        (collection?.attributes || []).reduce<Record<string, DataValue>>(
+          (dataValues, attribute) => ({
+            ...dataValues,
+            [attribute.id]: attribute?.constraint?.createDataValue(document?.data?.[attribute.id], constraintData),
+          }),
+          {}
+        )
+      )
+    );
+
+    this.documentDataValues$ = combineLatest([documentDataValues$, this.dataValues$]).pipe(
+      tap(([documentDataValues, dataValues]) => this.formValidation.setDataValues(documentDataValues, dataValues)),
+      map(([documentDataValues, dataValues]) => mergeMapData(documentDataValues, dataValues))
+    );
+  }
+
+  private observeFormLinkData() {
+    const collectionId$ = this.collection$.pipe(
+      map(collection => collection?.id),
+      filter(id => !!id),
+      distinctUntilChanged()
+    );
+    const collections$ = combineLatest([this.config$, this.linkTypes$, collectionId$]).pipe(
+      switchMap(([config, allLinkTypes, collectionId]) => {
+        const linkTypeIds = collectLinkIdsFromFormConfig(config);
+        const linkTypes = allLinkTypes.filter(linkType => linkTypeIds.includes(linkType.id));
+        const otherCollectionIds = linkTypes
+          .map(linkType => getOtherLinkedCollectionId(linkType, collectionId))
+          .filter(id => !!id);
+        return this.store$.pipe(select(selectCollectionsByIds(otherCollectionIds)));
+      })
+    );
+    this.linkData$ = combineLatest([this.config$, this.linkTypes$, this.view$, collectionId$, collections$]).pipe(
+      map(([config, allLinkTypes, view, collectionId, allCollections]) => {
+        return collectLinkConfigsFromFormConfig(config).reduce<Record<string, FormLinkData>>((linkDataMap, config) => {
+          const linkType = allLinkTypes.find(lt => lt.id === config.linkTypeId);
+          if (linkType) {
+            const otherCollectionId = getOtherLinkedCollectionId(linkType, collectionId);
+            const otherCollection = allCollections.find(collection => collection.id === otherCollectionId);
+            if (otherCollection) {
+              linkDataMap[linkType.id] = {view, linkType, collection: otherCollection, selectedDocumentIds: []};
+            }
+          }
+
+          return linkDataMap;
+        }, {});
       })
     );
   }

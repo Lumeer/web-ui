@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, Output, SimpleChanges, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {
   FormAttributeCellConfig,
   FormCell,
@@ -25,13 +25,17 @@ import {
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {DataValue} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
 import {FormError} from '../../validation/form-validation';
+import {FormLinkData} from '../../model/form-link-data';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'form-view-cell',
@@ -47,10 +51,10 @@ export class FormViewCellComponent implements OnChanges {
   public collection: Collection;
 
   @Input()
-  public collectionLinkTypes: LinkType[];
+  public dataValues: Record<string, DataValue>;
 
   @Input()
-  public dataValues: Record<string, DataValue>;
+  public linkValues: Record<string, FormLinkData>;
 
   @Input()
   public documentId: string;
@@ -61,10 +65,14 @@ export class FormViewCellComponent implements OnChanges {
   @Output()
   public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
 
+  @Output()
+  public linkValueChange = new EventEmitter<{linkTypeId: string; documentIds: string[]}>();
+
   public readonly type = FormCellType;
   public readonly dataInputConfiguration: DataInputConfiguration = {
     common: {allowRichText: true, skipValidation: true},
     files: {saveInMemory: true},
+    select: {wrapItems: true},
   };
 
   public editing$ = new BehaviorSubject(false);
@@ -72,13 +80,26 @@ export class FormViewCellComponent implements OnChanges {
   public attribute: Attribute;
   public dataValue: DataValue;
   public cursor: DataCursor;
+  public linkData: FormLinkData;
+  public linkMulti: boolean;
   public mandatory: boolean;
+
+  public linkDocuments$: Observable<DocumentModel[]>;
+
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cell) {
       this.initVariables();
     }
-    if (changes.cell || changes.dataValues || changes.collection || changes.documentOd) {
+    if (
+      changes.cell ||
+      changes.dataValues ||
+      changes.collection ||
+      changes.documentId ||
+      changes.linkValues ||
+      changes.collectionLinkTypes
+    ) {
       this.initDataVariables();
     }
   }
@@ -87,6 +108,9 @@ export class FormViewCellComponent implements OnChanges {
     switch (this.cell?.type) {
       case FormCellType.Attribute:
         this.initAttributeDataVariables();
+        break;
+      case FormCellType.Link:
+        this.initLinkDataVariables();
         break;
     }
   }
@@ -97,6 +121,21 @@ export class FormViewCellComponent implements OnChanges {
     this.attribute = findAttribute(this.collection?.attributes, config?.attributeId);
     this.dataValue = this.dataValues?.[this.attribute?.id];
     this.cursor = {attributeId: this.attribute?.id, collectionId: this.collection?.id, documentId: this.documentId};
+  }
+
+  private initLinkDataVariables() {
+    const config = <FormLinkCellConfig>this.cell?.config;
+
+    this.linkMulti = !config.maxLinks || config.maxLinks > 1;
+    this.linkData = this.linkValues?.[config?.linkTypeId];
+    if (this.linkData?.collection) {
+      const query = {stems: [{collectionId: this.linkData.collection.id, filters: config.filters}]};
+      this.linkDocuments$ = this.store$.pipe(
+        select(selectDocumentsByCollectionAndQuery(this.linkData.collection.id, query, this.linkData.view))
+      );
+    } else {
+      this.linkDocuments$ = of([]);
+    }
   }
 
   private initVariables() {
@@ -122,7 +161,7 @@ export class FormViewCellComponent implements OnChanges {
     this.mandatory = config?.minLinks > 0;
   }
 
-  public onDataInputClick(event: MouseEvent) {
+  public onElementClick(event: MouseEvent) {
     if (!this.editing$.value) {
       this.editing$.next(true);
     }
@@ -138,5 +177,13 @@ export class FormViewCellComponent implements OnChanges {
 
   public onCancelEditing() {
     this.editing$.next(false);
+  }
+
+  public onSelectedDocumentIdsChange(documentIds: string[]) {
+    this.editing$.next(false);
+
+    if (this.linkData?.linkType) {
+      this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, documentIds});
+    }
   }
 }

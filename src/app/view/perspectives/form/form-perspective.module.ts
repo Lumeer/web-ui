@@ -62,6 +62,7 @@ import {IsFormViewVisiblePipe} from './pipes/is-form-view-visible.pipe';
 import {FormErrorsBySectionPipe} from './pipes/form-errors-by-section.pipe';
 import {FormErrorsByRowPipe} from './pipes/form-errors-by-row.pipe';
 import {FormErrorsByCellPipe} from './pipes/form-errors-by-cell.pipe';
+import {FormViewCellLinkComponent} from './content/view/row/cell/link/form-view-cell-link.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import {FormErrorsByCellPipe} from './pipes/form-errors-by-cell.pipe';
     FormErrorsBySectionPipe,
     FormErrorsByRowPipe,
     FormErrorsByCellPipe,
+    FormViewCellLinkComponent,
   ],
   imports: [
     CommonModule,

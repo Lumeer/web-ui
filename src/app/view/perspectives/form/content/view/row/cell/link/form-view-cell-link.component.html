@@ -1,0 +1,44 @@
+<div class="d-flex align-items-center h-100 p-1 flex-wrap" #wrapperElement
+     *ngIf="selectedDocuments$ | async as selectedOptions"
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
+
+  <ng-container *ngIf="multi || readonly">
+
+    <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
+        <span class="select-tag ml-1"
+              [class.ml-1]="first"
+              [class.ml-2]="!first"
+              [style.background]="option.background"
+              [style.color]="option.background | contrastColor"
+              [spellcheck]="false"
+              [innerHTML]="option.displayValue || option.value">
+        </span>
+    </ng-container>
+
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+
+    <input #textInput
+           [(ngModel)]="text"
+           (focus)="onFocused()"
+           (blur)="onBlur()"
+           [class.ml-1]="selectedOptions?.length > 0"
+           [spellcheck]="false"
+           class="border-0 bg-transparent link-input"
+           type="text">
+
+    <options-dropdown [options]="dropdownOptions | filterDropdownOptions:text"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [multiSelect]="multi"
+                      [highlightedText]="text"
+                      [selectedValues]="multi ? (selectedOptions | dropdownOptionsValues) : []"
+                      [firstItemActive]="!multi && text?.length > 0"
+                      (selectOption)="onSelect($event)">
+    </options-dropdown>
+
+  </ng-container>
+
+</div>

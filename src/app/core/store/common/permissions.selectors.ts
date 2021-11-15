@@ -364,6 +364,9 @@ export const selectDataByCustomQuery = (view: View, query: Query) =>
       )
   );
 
+export const selectDocumentsByCustomQuerySorted = (view: View, query: Query) =>
+  createSelector(selectDocumentsAndLinksByCustomQuerySorted(view, query), data => data.documents);
+
 export const selectDocumentsAndLinksByCustomQuerySorted = (view: View, query: Query) =>
   createSelector(
     selectDocumentsByViewAndReadPermission(view),

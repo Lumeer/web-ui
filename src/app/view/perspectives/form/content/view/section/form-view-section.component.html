@@ -9,9 +9,9 @@
                [class.mt-3]="!first || title || description"
                [row]="row"
                [dataValues]="dataValues"
+               [linkValues]="linkValues"
                [collection]="collection"
                [documentId]="documentId"
-               [collectionLinkTypes]="collectionLinkTypes"
                [formErrors]="formErrors | formErrorsByRow:row.id"
                (attributeValueChange)="attributeValueChange.emit($event)">
 </form-view-row>
