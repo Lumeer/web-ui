@@ -34,7 +34,7 @@ export class FormEditorCellAttributeActionsComponent {
   public configChange = new EventEmitter<FormAttributeCellConfig>();
 
   public toggleMandatory() {
-    const mandatory = !this.config?.mandatory;
-    this.configChange.emit({...this.config, mandatory});
+    const mandatory = !this.config?.attribute?.mandatory;
+    this.configChange.emit({...this.config, attribute: {...this.config?.attribute, mandatory}});
   }
 }

@@ -31,7 +31,6 @@ import {
   SelectItem2Model,
 } from '../../../../../../../shared/select/select-item2/select-item2.model';
 import {AttributesResourceType} from '../../../../../../../core/model/resource';
-import {objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {COLOR_GRAY700} from '../../../../../../../core/constants';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 
@@ -71,7 +70,7 @@ export class FormEditorCellComponent implements OnChanges {
     if (changes.cell || changes.collection || changes.usedAttributesIds || changes.usedLinkTypeIds) {
       this.items = this.mapItems();
     }
-    if (changes.cell || objectChanged(changes.collection)) {
+    if (changes.cell || changes.collection) {
       this.selectedItemPath = this.mapSelectedItem();
     }
   }

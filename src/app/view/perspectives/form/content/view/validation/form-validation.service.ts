@@ -42,6 +42,7 @@ import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 import {arraySubtract} from '../../../../../../shared/utils/array.utils';
 import {debounceTime, map} from 'rxjs/operators';
 import Big from 'big.js';
+import {mergeAttributeOverride} from '../../../../../../shared/utils/attribute.utils';
 
 @Injectable()
 export class FormValidationService {
@@ -141,8 +142,9 @@ export class FormValidationService {
     const errors: FormPartialError[] = [];
 
     const dataValue = this.getDataValue(config.attributeId);
+    const attribute = mergeAttributeOverride(this.attributesMap?.[config.attributeId], config.attribute);
 
-    if (config.mandatory) {
+    if (attribute?.mandatory) {
       const formattedValue = dataValue?.format() || '';
       if (!formattedValue) {
         errors.push({
@@ -154,7 +156,7 @@ export class FormValidationService {
     }
 
     if (dataValue && !dataValue.isValid()) {
-      const validationError = this.invalidDataValueError(dataValue, config);
+      const validationError = this.invalidDataValueError(dataValue, attribute);
       if (validationError) {
         errors.push(validationError);
       } else {
@@ -171,8 +173,8 @@ export class FormValidationService {
     return {type: FormViewErrorType.Validation, title, display: true};
   }
 
-  private invalidDataValueError(dataValue: DataValue, config: FormAttributeCellConfig): FormPartialError {
-    const constraint = this.attributesMap?.[config.attributeId]?.constraint;
+  private invalidDataValueError(dataValue: DataValue, attribute: Attribute): FormPartialError {
+    const constraint = attribute?.constraint;
     switch (constraint?.type) {
       case ConstraintType.Text:
         return this.invalidTextValueError(<TextConstraint>constraint);

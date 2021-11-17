@@ -29,6 +29,7 @@ export interface Attribute {
 
   constraint?: Constraint;
   function?: AttributeFunction;
+  mandatory?: boolean;
 
   usageCount?: number;
   intermediate?: boolean;

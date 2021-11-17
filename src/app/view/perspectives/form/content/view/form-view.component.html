@@ -1,9 +1,9 @@
-<ng-container *ngIf="document$ | async as document">
+<ng-container *ngIf="{document: document$ | async, collection: collection$ | async} as data">
 
   <preview-results class="mb-4 d-block"
                    *ngIf="mode === modeType.Update"
-                   [selectedCollection]="collection"
-                   [selectedDocument]="document"
+                   [selectedCollection]="data.collection"
+                   [selectedDocument]="data.document"
                    [attributesSettings]="attributesSettings"
                    [query]="query"
                    [view]="view"
@@ -11,7 +11,7 @@
                    (selectDocument)="selectDocument($event)">
   </preview-results>
 
-  <ng-container *ngIf="mode | isFormViewVisible:document">
+  <ng-container *ngIf="mode | isFormViewVisible:data.document">
 
     <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
                        class="d-block card p-3 shadow-light"
@@ -19,16 +19,16 @@
                        [dataValues]="documentDataValues$ | async"
                        [linkValues]="linkData$ | async"
                        [section]="section"
-                       [collection]="collection"
-                       [documentId]="document?.id"
+                       [collection]="data.collection"
+                       [documentId]="data.document?.id"
                        [formErrors]="(validation$ | async)?.errors | formErrorsBySection:section.id"
                        (attributeValueChange)="onAttributeValueChange($event)"
                        (linkValueChange)="onLinkValueChange($event)">
     </form-view-section>
 
     <form-view-submit class="mt-4"
-                      [canDelete]="document | dataResourceIsDeletable:collection:collectionPermissions:(currentUser$ | async):(constraintData$ | async)"
-                      [document]="document"
+                      [canDelete]="data.document | dataResourceIsDeletable:data.collection:collectionPermissions:(currentUser$ | async):(constraintData$ | async)"
+                      [document]="data.document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"
                       [deleting]="performingDelete$ | async"

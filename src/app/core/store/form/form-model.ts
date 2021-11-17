@@ -20,6 +20,7 @@
 import {AttributesResourceType} from '../../model/resource';
 import {CollectionAttributeFilter} from '../navigation/query/query';
 import {RowLayoutType} from '../../../shared/layout/row-layout/row-layout';
+import {Attribute} from '../collections/collection';
 
 export interface FormModel {
   id: string;
@@ -83,7 +84,7 @@ export interface FormAttributeCellConfig {
   attributeId?: string;
   resourceId?: string;
   resourceType?: AttributesResourceType;
-  mandatory?: boolean;
+  attribute?: Partial<Attribute>;
 }
 
 export interface FormLinkCellConfig {

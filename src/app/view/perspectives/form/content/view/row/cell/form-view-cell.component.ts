@@ -46,6 +46,7 @@ import {select, Store} from '@ngrx/store';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/store/common/permissions.selectors';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
+import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'form-view-cell',
@@ -95,6 +96,8 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public mandatory: boolean;
   public showBorder: boolean;
 
+  public dataIsValid: boolean;
+
   public linkDocuments$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
 
@@ -105,9 +108,6 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.cell) {
-      this.initVariables();
-    }
     if (
       changes.cell ||
       changes.dataValues ||
@@ -134,10 +134,16 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   private initAttributeDataVariables() {
     const config = <FormAttributeCellConfig>this.cell?.config;
 
-    this.attribute = findAttribute(this.collection?.attributes, config?.attributeId);
+    this.attribute = mergeAttributeOverride(
+      findAttribute(this.collection?.attributes, config?.attributeId),
+      config?.attribute
+    );
     this.dataValue = this.dataValues?.[this.attribute?.id];
     this.cursor = {attributeId: this.attribute?.id, collectionId: this.collection?.id, documentId: this.documentId};
     this.showBorder = !(this.attribute?.constraint?.type === ConstraintType.Boolean);
+
+    this.dataIsValid = !!this.attribute?.constraint;
+    this.mandatory = this.attribute?.mandatory;
   }
 
   private initLinkDataVariables() {
@@ -154,28 +160,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
       this.linkDocuments$ = of([]);
     }
     this.showBorder = true;
-  }
-
-  private initVariables() {
-    switch (this.cell?.type) {
-      case FormCellType.Attribute:
-        this.initAttributeVariables();
-        break;
-      case FormCellType.Link:
-        this.initLinkVariables();
-        break;
-    }
-  }
-
-  private initAttributeVariables() {
-    const config = <FormAttributeCellConfig>this.cell?.config;
-
-    this.mandatory = config?.mandatory;
-  }
-
-  private initLinkVariables() {
-    const config = <FormLinkCellConfig>this.cell?.config;
-
+    this.dataIsValid = !!this.linkData?.linkType;
     this.mandatory = config?.minLinks > 0;
   }
 

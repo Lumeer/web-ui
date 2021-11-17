@@ -1,34 +1,36 @@
-<div class="text-truncate font-weight-bold" [class.required]="mandatory">{{cell?.title}}</div>
+<ng-container *ngIf="dataIsValid">
+  <div class="text-truncate font-weight-bold" [class.required]="mandatory">{{cell?.title}}</div>
 
-<div *ngIf="cell?.type === type.Attribute"
-     class="data-input mt-1 cursor-pointer d-flex"
-     [class.with-border]="showBorder"
-     (click)="onElementClick($event)">
-  <data-input class="w-100 d-block"
-              [constraint]="attribute?.constraint"
-              [dataValue]="dataValue"
-              [readonly]="!(editing$ | async)"
-              [editableInReadonly]="true"
-              [cursor]="cursor"
-              [configuration]="dataInputConfiguration"
-              [focus]="true"
-              (save)="onValueSave($event)"
-              (cancel)="onCancelEditing()">
-  </data-input>
-</div>
-<form-view-cell-link *ngIf="cell?.type === type.Link" class="data-input with-border mt-1 cursor-pointer d-flex align-items-center"
-                     [multi]="linkMulti"
-                     [readonly]="!(editing$ | async)"
-                     [linkType]="linkData?.linkType"
-                     [collection]="linkData?.collection"
-                     [documents]="linkDocuments$ | async"
-                     [constraintData]="constraintData$ | async"
-                     [linkDocumentIds]="linkData?.linkDocumentIds"
-                     [removedDocumentIds]="linkData?.removedDocumentIds"
-                     [addedDocumentIds]="linkData?.addedDocumentIds"
-                     (selectedDataChange)="onSelectedDocumentIdsChange($event)"
-                     (click)="onElementClick($event)"
-                     (cancel)="onCancelEditing()">
-</form-view-cell-link>
-<div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>
-<div class="text-muted small mt-1">{{cell?.description}}</div>
+  <div *ngIf="cell?.type === type.Attribute"
+       class="data-input mt-1 cursor-pointer d-flex"
+       [class.with-border]="showBorder"
+       (click)="onElementClick($event)">
+    <data-input class="w-100 d-block"
+                [constraint]="attribute?.constraint"
+                [dataValue]="dataValue"
+                [readonly]="!(editing$ | async)"
+                [editableInReadonly]="true"
+                [cursor]="cursor"
+                [configuration]="dataInputConfiguration"
+                [focus]="true"
+                (save)="onValueSave($event)"
+                (cancel)="onCancelEditing()">
+    </data-input>
+  </div>
+  <form-view-cell-link *ngIf="cell?.type === type.Link" class="data-input with-border mt-1 cursor-pointer d-flex align-items-center"
+                       [multi]="linkMulti"
+                       [readonly]="!(editing$ | async)"
+                       [linkType]="linkData?.linkType"
+                       [collection]="linkData?.collection"
+                       [documents]="linkDocuments$ | async"
+                       [constraintData]="constraintData$ | async"
+                       [linkDocumentIds]="linkData?.linkDocumentIds"
+                       [removedDocumentIds]="linkData?.removedDocumentIds"
+                       [addedDocumentIds]="linkData?.addedDocumentIds"
+                       (selectedDataChange)="onSelectedDocumentIdsChange($event)"
+                       (click)="onElementClick($event)"
+                       (cancel)="onCancelEditing()">
+  </form-view-cell-link>
+  <div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>
+  <div class="text-muted small mt-1">{{cell?.description}}</div>
+</ng-container>

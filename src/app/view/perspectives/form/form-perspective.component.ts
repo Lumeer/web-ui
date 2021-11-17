@@ -33,6 +33,7 @@ import {AppState} from '../../../core/store/app.state';
 import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectLinkTypesByViewAndCollectionIdWithCollections} from '../../../core/store/common/permissions.selectors';
+import {checkOrTransformFormConfig} from './form-utils';
 
 @Component({
   selector: 'form-perspective',
@@ -69,7 +70,7 @@ export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfi
     collections: Collection[],
     linkTypes: LinkType[]
   ): FormConfig {
-    return config;
+    return checkOrTransformFormConfig(config, query, collections, linkTypes);
   }
 
   protected configChanged(perspectiveId: string, config: FormConfig) {

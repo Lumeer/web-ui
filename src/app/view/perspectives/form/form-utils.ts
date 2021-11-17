@@ -19,13 +19,56 @@
 
 import {
   FormAttributeCellConfig,
+  FormButtonsConfig,
   FormCell,
   FormCellType,
   FormConfig,
   FormLinkCellConfig,
+  FormMode,
   FormRow,
+  FormSection,
 } from '../../../core/store/form/form-model';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {Query} from '../../../core/store/navigation/query/query';
+import {Collection} from '../../../core/store/collections/collection';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {COLOR_SUCCESS} from '../../../core/constants';
+import {generateId} from '../../../shared/utils/resource.utils';
+
+export function checkOrTransformFormConfig(
+  config: FormConfig,
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): FormConfig {
+  return {
+    mode: config?.mode || FormMode.Build,
+    sections: formSectionsDefaultConfig(config?.sections),
+    buttons: formButtonsDefaultConfig(config?.buttons),
+  };
+}
+
+function formSectionsDefaultConfig(sections: FormSection[]): FormSection[] {
+  if ((sections || []).length === 0) {
+    return [{id: generateId(), rows: []}];
+  }
+  return sections;
+}
+
+function formButtonsDefaultConfig(config: FormButtonsConfig): FormButtonsConfig {
+  return {
+    create: config?.create || {
+      title: $localize`:@@perspective.form.editor.buttons.create.title.default:Create Record`,
+      color: COLOR_SUCCESS,
+      icon: 'far fa-plus-circle',
+    },
+    update: config?.update || {
+      title: $localize`:@@perspective.form.editor.buttons.update.title.default:Update Record`,
+      color: COLOR_SUCCESS,
+      icon: 'far fa-pencil',
+    },
+  };
+}
 
 export function filterValidFormCells(cells: FormCell[]): FormCell[] {
   return (cells || []).filter(cell => isFormCellValid(cell));

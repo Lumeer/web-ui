@@ -47,6 +47,7 @@ import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/mode
 import {User} from '../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
 import {objectChanged} from '../../../../../shared/utils/common.utils';
+import {filterVisibleAttributesBySettings} from '../../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'form-view',
@@ -117,9 +118,11 @@ export class FormViewComponent implements OnInit, OnChanges {
     if (changes.resourcesPermissions || objectChanged(changes.collection)) {
       this.collectionPermissions = this.resourcesPermissions?.collections?.[this.collection?.id];
     }
-    if (changes.collection) {
-      this.collection$.next(this.collection);
-      this.formValidation.setCollection(this.collection);
+    if (changes.collection || changes.attributesSettings) {
+      const attributes = filterVisibleAttributesBySettings(this.collection, this.attributesSettings?.collections);
+      const updatedCollection = {...this.collection, attributes};
+      this.collection$.next(updatedCollection);
+      this.formValidation.setCollection(updatedCollection);
     }
     if (changes.config) {
       this.config$.next(this.config);
@@ -289,15 +292,41 @@ export class FormViewComponent implements OnInit, OnChanges {
     this.performingAction$.next(true);
 
     const additionalData = createDocumentRequestAdditionalData(
-      this.collection,
+      this.collection$.value,
       this.dataValues$.value,
-      this.selectedLinkData$.value
+      this.filterSelectedLinkData(this.selectedLinkData$.value)
     );
+    const updatedDocument = this.checkDocumentData(document);
     if (document.id) {
-      this.updateDocument(document, additionalData);
+      this.updateDocument(updatedDocument, additionalData);
     } else {
-      this.createDocument(document, additionalData);
+      this.createDocument(updatedDocument, additionalData);
     }
+  }
+
+  private checkDocumentData(document: DocumentModel): DocumentModel {
+    // attributes can be deleted or hidden when user is filling the form
+    const data = {...document.data};
+    const currentAttributesIds = (this.collection$.value?.attributes || []).map(attribute => attribute.id);
+    for (const attributeId of Object.keys(data)) {
+      if (!currentAttributesIds.includes(attributeId)) {
+        delete data[attributeId];
+      }
+    }
+
+    return {...document, data};
+  }
+
+  private filterSelectedLinkData(data: Record<string, FormLinkSelectedData>): Record<string, FormLinkSelectedData> {
+    // link types can be deleted when user is filling the form
+    const linkTypeIds = (this.linkTypes$.value || []).map(linkType => linkType.id);
+    return Object.keys(data).reduce((resultData, linkTypeId) => {
+      if (linkTypeIds.includes(linkTypeId)) {
+        resultData[linkTypeId] = data[linkTypeId];
+      }
+
+      return resultData;
+    }, {});
   }
 
   private createDocument(document: DocumentModel, data: DocumentAdditionalDataRequest) {

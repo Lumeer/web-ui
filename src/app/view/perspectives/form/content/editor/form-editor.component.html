@@ -2,7 +2,7 @@
                      class="d-block card shadow-light"
                      [class.mt-3]="!first"
                      [section]="section"
-                     [collection]="collection"
+                     [collection]="collectionWithFilteredAttributes"
                      [collectionLinkTypes]="collectionLinkTypes"
                      [sectionIds]="sectionIds"
                      [usedAttributeIds]="usedAttributeIds"
@@ -19,6 +19,7 @@
   </button>
 </div>
 
-<form-editor-buttons class="mt-5" [buttons]="config?.buttons"
+<form-editor-buttons class="mt-5"
+                     [buttons]="config?.buttons"
                      (buttonsChange)="onButtonsChange($event)">
 </form-editor-buttons>
