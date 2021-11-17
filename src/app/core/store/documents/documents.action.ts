@@ -339,7 +339,14 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.DELETE;
 
     public constructor(
-      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        nextAction?: Action;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 
@@ -347,7 +354,14 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
     public constructor(
-      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        nextAction?: Action;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 

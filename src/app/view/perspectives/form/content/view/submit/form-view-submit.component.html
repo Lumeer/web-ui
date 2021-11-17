@@ -1,9 +1,17 @@
-<button class="btn text-truncate text-nowrap"
-        [style.background]="button?.color"
-        [disabled]="!valid || loading"
-        [style.color]="button?.color | contrastColor" (click)="submit.emit()">
-  <span *ngIf="loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
-  <i *ngIf="button?.icon" [ngClass]="button?.icon"></i>
-  <ng-container *ngIf="button?.title && button?.icon || !button?.title && !button?.icon">&nbsp;</ng-container>
-  <span *ngIf="button?.title">{{button?.title}}</span>
-</button>
+<div class="d-flex align-items-center"
+     [class.justify-content-end]="!canDelete"
+     [class.justify-content-between]="canDelete">
+  <i *ngIf="canDelete"
+     class="fal fa-trash-alt text-danger clickable delete-icon" (click)="onDelete()"
+     [class.clickable]="!deleting && !loading"></i>
+
+  <button class="btn text-truncate text-nowrap"
+          [style.background]="button?.color"
+          [disabled]="!valid || loading || deleting"
+          [style.color]="button?.color | contrastColor" (click)="submit.emit()">
+    <span *ngIf="loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+    <i *ngIf="button?.icon" [ngClass]="button?.icon"></i>
+    <ng-container *ngIf="button?.title && button?.icon || !button?.title && !button?.icon">&nbsp;</ng-container>
+    <span *ngIf="button?.title">{{button?.title}}</span>
+  </button>
+</div>

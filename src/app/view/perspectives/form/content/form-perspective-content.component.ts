@@ -18,14 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormConfig} from '../../../../core/store/form/form-model';
+import {FormConfig, FormMode} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {BehaviorSubject} from 'rxjs';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {FormMode} from './mode/form-mode';
 
 @Component({
   selector: 'form-perspective-content',
@@ -62,9 +60,7 @@ export class FormPerspectiveContentComponent {
 
   public readonly mode = FormMode;
 
-  public mode$ = new BehaviorSubject<FormMode>(null);
-
   public onModeChange(mode: FormMode) {
-    this.mode$.next(mode);
+    this.configChange.next({...this.config, mode});
   }
 }

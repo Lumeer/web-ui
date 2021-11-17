@@ -34,7 +34,7 @@ import {
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
-import {ConstraintData, DataValue} from '@lumeer/data-filters';
+import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
@@ -93,6 +93,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public linkData: FormLinkData;
   public linkMulti: boolean;
   public mandatory: boolean;
+  public showBorder: boolean;
 
   public linkDocuments$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
@@ -136,6 +137,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     this.attribute = findAttribute(this.collection?.attributes, config?.attributeId);
     this.dataValue = this.dataValues?.[this.attribute?.id];
     this.cursor = {attributeId: this.attribute?.id, collectionId: this.collection?.id, documentId: this.documentId};
+    this.showBorder = !(this.attribute?.constraint?.type === ConstraintType.Boolean);
   }
 
   private initLinkDataVariables() {
@@ -151,6 +153,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     } else {
       this.linkDocuments$ = of([]);
     }
+    this.showBorder = true;
   }
 
   private initVariables() {

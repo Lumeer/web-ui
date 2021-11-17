@@ -19,64 +19,78 @@
 
 import {Injectable} from '@angular/core';
 import {FormError, FormValidation, FormViewErrorType} from './form-validation';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {
   FormAttributeCellConfig,
   FormCell,
   FormCellType,
   FormConfig,
   FormLinkCellConfig,
+  FormMode,
 } from '../../../../../../core/store/form/form-model';
-import {DataValue} from '@lumeer/data-filters';
+import {
+  ConstraintType,
+  DataValue,
+  DateTimeConstraint,
+  NumberConstraint,
+  PercentageConstraint,
+  TextConstraint,
+} from '@lumeer/data-filters';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
-import {FormMode} from '../../mode/form-mode';
 import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
-import {FormLinkData} from '../model/form-link-data';
+import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 import {arraySubtract} from '../../../../../../shared/utils/array.utils';
+import {debounceTime, map} from 'rxjs/operators';
+import Big from 'big.js';
 
 @Injectable()
 export class FormValidationService {
   public validation$: Observable<FormValidation>;
 
-  private formValidation$ = new BehaviorSubject<FormValidation>({errors: []});
+  private revalidateSubject$ = new Subject();
 
   private mode: FormMode;
   private config: FormConfig;
   private attributesMap: Record<string, Attribute>;
   private documentDataValues: Record<string, DataValue> = {};
-  private dataValues: Record<string, DataValue> = {};
+  private userDataValues: Record<string, DataValue> = {};
   private linkData: Record<string, FormLinkData> = {};
+  private userLinkData: Record<string, FormLinkSelectedData> = {};
 
   constructor() {
-    this.validation$ = this.formValidation$.asObservable();
+    this.validation$ = this.revalidateSubject$.pipe(
+      debounceTime(50),
+      map(() => this.validate())
+    );
   }
 
   public setMode(mode: FormMode) {
     if (this.mode !== mode) {
       this.mode = mode;
-      this.revalidate();
+      this.checkValidation();
     }
   }
 
   public setConfig(config: FormConfig) {
     this.config = config;
-    this.revalidate();
+    this.checkValidation();
   }
 
   public setCollection(collection: Collection) {
     this.attributesMap = objectsByIdMap(collection?.attributes || []);
-    this.revalidate();
+    this.checkValidation();
   }
 
   public setDataValues(documentDataValues: Record<string, DataValue>, dataValues: Record<string, DataValue>) {
     this.documentDataValues = documentDataValues || {};
-    this.dataValues = dataValues || {};
-    this.revalidate();
+    this.userDataValues = dataValues || {};
+    this.checkValidation();
   }
 
-  public setLinkData(data: Record<string, FormLinkData>) {
+  public setLinkData(data: Record<string, FormLinkData>, selectedLinkData: Record<string, FormLinkSelectedData>) {
     this.linkData = data;
-    this.revalidate();
+    this.userLinkData = selectedLinkData;
+    this.checkValidation();
   }
 
   private get isCreating(): boolean {
@@ -87,13 +101,16 @@ export class FormValidationService {
     return this.mode === FormMode.Update;
   }
 
-  private revalidate() {
+  private checkValidation() {
     if (!this.isAllDataDefined()) {
       return;
     }
 
-    const validationErrors: FormError[] = [];
-    for (const section of this.config.sections || []) {
+    this.revalidateSubject$.next(null);
+  }
+
+  private validate(): FormValidation {
+    const errors = (this.config.sections || []).reduce((errors, section) => {
       for (const row of section.rows || []) {
         for (const cell of row.cells || []) {
           const cellErrors = this.formCellValidationErrors(cell);
@@ -103,12 +120,12 @@ export class FormValidationService {
             rowId: row.id,
             cellId: cell.id,
           }));
-          validationErrors.push(...cellValidationErrors);
+          errors.push(...cellValidationErrors);
         }
       }
-    }
-
-    this.formValidation$.next({errors: validationErrors});
+      return errors;
+    }, []);
+    return {errors};
   }
 
   private formCellValidationErrors(cell: FormCell): FormPartialError[] {
@@ -137,45 +154,174 @@ export class FormValidationService {
     }
 
     if (dataValue && !dataValue.isValid()) {
-      errors.push({
-        type: FormViewErrorType.Validation,
-        title: $localize`:@@perspective.form.view.validation.attribute.invalid:Value is not valid`,
-        display: true,
-      });
+      const validationError = this.invalidDataValueError(dataValue, config);
+      if (validationError) {
+        errors.push(validationError);
+      } else {
+        errors.push(
+          this.validationError($localize`:@@perspective.form.view.validation.attribute.invalid:Value is not valid.`)
+        );
+      }
     }
 
     return errors;
   }
 
+  private validationError(title: string): FormPartialError {
+    return {type: FormViewErrorType.Validation, title, display: true};
+  }
+
+  private invalidDataValueError(dataValue: DataValue, config: FormAttributeCellConfig): FormPartialError {
+    const constraint = this.attributesMap?.[config.attributeId]?.constraint;
+    switch (constraint?.type) {
+      case ConstraintType.Text:
+        return this.invalidTextValueError(<TextConstraint>constraint);
+      case ConstraintType.Number:
+        return this.invalidNumberValueError(<NumberConstraint>constraint, dataValue);
+      case ConstraintType.Percentage:
+        return this.invalidPercentageValueError(<PercentageConstraint>constraint, dataValue);
+      case ConstraintType.DateTime:
+        return this.invalidDateValueError(<DateTimeConstraint>constraint, dataValue);
+    }
+
+    return null;
+  }
+
+  private invalidTextValueError(constraint: TextConstraint): FormPartialError {
+    const textConfig = constraint.config || {};
+    if (textConfig.minLength === textConfig.maxLength) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.text.length:Number of characters must be ${textConfig.minLength}.`
+      );
+    } else if (textConfig.minLength > 0 && textConfig.maxLength > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.text.range:Number of characters must be from range ${textConfig.minLength}-${textConfig.maxLength}`
+      );
+    } else if (textConfig.minLength > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.text.minimum:Number of characters must be greater than ${textConfig.minLength}.`
+      );
+    } else if (textConfig.maxLength > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.text.maximum:Number of characters must be lower than ${textConfig.maxLength}.`
+      );
+    }
+  }
+
+  private invalidNumberValueError(constraint: NumberConstraint, dataValue: DataValue): FormPartialError {
+    const numberConfig = constraint.config || {};
+    const minValue = numberConfig.minValue;
+    const maxValue = numberConfig.maxValue;
+    const minFormatted = dataValue.copy(minValue).format();
+    const maxFormatted = dataValue.copy(maxValue).format();
+    const zero = Big(0);
+    if (minValue?.gt(zero) && maxValue?.gt(zero) && minValue?.eq(maxValue)) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.length:Value must be ${minFormatted}.`
+      );
+    } else if (minValue?.gt(zero) && maxValue?.gt(zero)) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.range:Value must be from range ${minFormatted} - ${maxFormatted}`
+      );
+    } else if (minValue?.gt(zero)) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.minimum:Value must be greater than ${minFormatted}.`
+      );
+    } else if (maxValue?.gt(zero)) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.maximum:Value must be lower than ${maxFormatted}.`
+      );
+    }
+    return null;
+  }
+
+  private invalidPercentageValueError(constraint: PercentageConstraint, dataValue: DataValue): FormPartialError {
+    const numberConfig = constraint.config || {};
+    const minValue = numberConfig.minValue;
+    const maxValue = numberConfig.maxValue;
+    const minFormatted = dataValue.copy(minValue ? minValue / 100 : minValue).format();
+    const maxFormatted = dataValue.copy(maxValue ? maxValue / 100 : maxValue).format();
+    if (minValue > 0 && maxValue > 0 && minValue === maxValue) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.length:Value must be ${minFormatted}.`
+      );
+    } else if (minValue > 0 && maxValue > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.range:Value must be from range ${minFormatted} - ${maxFormatted}`
+      );
+    } else if (minValue > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.minimum:Value must be greater than ${minFormatted}.`
+      );
+    } else if (maxValue > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.numeric.maximum:Value must be lower than ${maxFormatted}.`
+      );
+    }
+    return null;
+  }
+
+  private invalidDateValueError(constraint: DateTimeConstraint, dataValue: DataValue): FormPartialError {
+    const numberConfig = constraint.config;
+    const minValue = numberConfig?.minValue && numberConfig?.minValue.getTime();
+    const maxValue = numberConfig?.maxValue && numberConfig?.maxValue.getTime();
+    const minFormatted = dataValue.copy(numberConfig?.minValue).format();
+    const maxFormatted = dataValue.copy(numberConfig?.maxValue).format();
+    if (minValue > 0 && maxValue > 0 && minValue === maxValue) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.date.length:Date must be ${minFormatted}.`
+      );
+    } else if (minValue > 0 && maxValue > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.date.range:Date must be from range ${minFormatted} - ${maxFormatted}`
+      );
+    } else if (minValue > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.date.minimum:Date must be greater than ${minFormatted}.`
+      );
+    } else if (maxValue > 0) {
+      return this.validationError(
+        $localize`:@@perspective.form.view.validation.attribute.date.maximum:Date must be lower than ${maxFormatted}.`
+      );
+    }
+    return null;
+  }
+
   private getDataValue(attributeId: string): DataValue {
     if (this.isCreating) {
-      return this.dataValues?.[attributeId];
+      return this.userDataValues?.[attributeId];
     }
-    return this.documentDataValues?.[attributeId] || this.dataValues?.[attributeId];
+    return this.documentDataValues?.[attributeId] || this.userDataValues?.[attributeId];
   }
 
   private linkCellFormErrors(config: FormLinkCellConfig): FormPartialError[] {
     const errors: FormPartialError[] = [];
 
     const linkData = this.linkData?.[config.linkTypeId];
+    const userLinkData = this.userLinkData?.[config.linkTypeId];
 
     if (config.minLinks > 0 || config.maxLinks > 0) {
       const selectedIds = [
         ...arraySubtract(linkData?.linkDocumentIds, linkData?.removedDocumentIds),
         ...(linkData?.addedDocumentIds || []),
       ];
-
-      if (selectedIds.length < (config.minLinks || Number.MIN_SAFE_INTEGER)) {
+      if (config.minLinks === config.maxLinks && selectedIds.length !== config.minLinks) {
         errors.push({
           type: FormViewErrorType.Validation,
-          title: $localize`:@@perspective.form.view.validation.link.minimum:Number of links should be greater than ${config.minLinks}.`,
-          display: true,
+          title: $localize`:@@perspective.form.view.validation.link.exact:Number of links must be ${config.minLinks}.`,
+          display: this.isCreating ? !!userLinkData : true,
+        });
+      } else if (selectedIds.length < (config.minLinks || Number.MIN_SAFE_INTEGER)) {
+        errors.push({
+          type: FormViewErrorType.Validation,
+          title: $localize`:@@perspective.form.view.validation.link.minimum:Number of links must be greater than ${config.minLinks}.`,
+          display: this.isCreating ? !!userLinkData : true,
         });
       } else if (selectedIds.length > (config.maxLinks || Number.MAX_SAFE_INTEGER)) {
         errors.push({
           type: FormViewErrorType.Validation,
-          title: $localize`:@@perspective.form.view.validation.link.maximum:Number of links should be lower than ${config.minLinks}.`,
-          display: true,
+          title: $localize`:@@perspective.form.view.validation.link.maximum:Number of links must be lower than ${config.maxLinks}.`,
+          display: this.isCreating ? !!userLinkData : true,
         });
       }
     }

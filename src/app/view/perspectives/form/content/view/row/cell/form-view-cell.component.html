@@ -1,8 +1,10 @@
 <div class="text-truncate font-weight-bold" [class.required]="mandatory">{{cell?.title}}</div>
 
 <div *ngIf="cell?.type === type.Attribute"
-     class="data-input mt-1 px-1 cursor-pointer" (click)="onElementClick($event)">
-  <data-input class="w-100 h-100"
+     class="data-input mt-1 cursor-pointer d-flex"
+     [class.with-border]="showBorder"
+     (click)="onElementClick($event)">
+  <data-input class="w-100 d-block"
               [constraint]="attribute?.constraint"
               [dataValue]="dataValue"
               [readonly]="!(editing$ | async)"
@@ -14,7 +16,7 @@
               (cancel)="onCancelEditing()">
   </data-input>
 </div>
-<form-view-cell-link *ngIf="cell?.type === type.Link" class="form-control p-0 mt-1 cursor-pointer"
+<form-view-cell-link *ngIf="cell?.type === type.Link" class="data-input with-border mt-1 cursor-pointer d-flex align-items-center"
                      [multi]="linkMulti"
                      [readonly]="!(editing$ | async)"
                      [linkType]="linkData?.linkType"

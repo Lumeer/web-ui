@@ -18,10 +18,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
+import {FormConfig, FormMode, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {DataValue} from '@lumeer/data-filters';
+import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../../../core/store/app.state';
 import {BehaviorSubject, combineLatest, Observable, of, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -33,7 +33,6 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../../core/store/views/view';
 import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
-import {FormMode} from '../mode/form-mode';
 import {createDocumentRequestAdditionalData} from '../../../../../core/store/documents/document.utils';
 import {FormValidationService} from './validation/form-validation.service';
 import {FormValidation} from './validation/form-validation';
@@ -44,6 +43,10 @@ import {getOtherLinkedCollectionId} from '../../../../../shared/utils/link-type.
 import {selectCollectionsByIds} from '../../../../../core/store/collections/collections.state';
 import {selectLinkInstancesByTypesAndDocuments} from '../../../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedDocumentId} from '../../../../../core/store/link-instances/link.instance';
+import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
+import {User} from '../../../../../core/store/users/user';
+import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
+import {objectChanged} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'form-view',
@@ -71,6 +74,9 @@ export class FormViewComponent implements OnInit, OnChanges {
   public attributesSettings: AttributesSettings;
 
   @Input()
+  public resourcesPermissions: ResourcesPermissions;
+
+  @Input()
   public mode: FormMode.Create | FormMode.Update;
 
   public readonly modeType = FormMode;
@@ -79,6 +85,8 @@ export class FormViewComponent implements OnInit, OnChanges {
   public document$: Observable<DocumentModel>;
   public validation$: Observable<FormValidation>;
   public linkData$: Observable<Record<string, FormLinkData>>;
+  public currentUser$: Observable<User>;
+  public constraintData$: Observable<ConstraintData>;
 
   public view$ = new BehaviorSubject<View>(null);
   public config$ = new BehaviorSubject<FormConfig>(null);
@@ -89,10 +97,15 @@ export class FormViewComponent implements OnInit, OnChanges {
   public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
   public selectedLinkData$ = new BehaviorSubject<Record<string, FormLinkSelectedData>>({});
   public performingAction$ = new BehaviorSubject(false);
+  public performingDelete$ = new BehaviorSubject(false);
+
+  public collectionPermissions: AllowedPermissions;
 
   constructor(private store$: Store<AppState>, private formValidation: FormValidationService) {}
 
   public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.validation$ = this.formValidation.validation$;
 
     this.observeDocument();
@@ -101,6 +114,9 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resourcesPermissions || objectChanged(changes.collection)) {
+      this.collectionPermissions = this.resourcesPermissions?.collections?.[this.collection?.id];
+    }
     if (changes.collection) {
       this.collection$.next(this.collection);
       this.formValidation.setCollection(this.collection);
@@ -146,11 +162,7 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   private observeDataValues() {
-    const documentDataValues$ = combineLatest([
-      this.store$.pipe(select(selectConstraintData)),
-      this.collection$,
-      this.document$,
-    ]).pipe(
+    const documentDataValues$ = combineLatest([this.constraintData$, this.collection$, this.document$]).pipe(
       map(([constraintData, collection, document]) =>
         (collection?.attributes || []).reduce<Record<string, DataValue>>(
           (dataValues, attribute) => ({
@@ -246,13 +258,14 @@ export class FormViewComponent implements OnInit, OnChanges {
           );
         }
       ),
-      tap(linkData => this.formValidation.setLinkData(linkData))
+      tap(linkData => this.formValidation.setLinkData(linkData, this.selectedLinkData$.value))
     );
   }
 
   public onAttributeValueChange(data: {attributeId: string; dataValue: DataValue}) {
-    const newData = {...this.data$.value, [data.attributeId]: data.dataValue.serialize()};
-    const newDataValues = {...this.dataValues$.value, [data.attributeId]: data.dataValue};
+    const serializedValue = data.dataValue.serialize();
+    const newData = {...this.data$.value, [data.attributeId]: serializedValue};
+    const newDataValues = {...this.dataValues$.value, [data.attributeId]: data.dataValue.copy(serializedValue)};
 
     this.data$.next(newData);
     this.dataValues$.next(newDataValues);
@@ -324,7 +337,27 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   public selectDocument(document: DocumentModel) {
-    this.selectedDocumentId$.next(document.id);
+    if (this.selectedDocumentId$.value !== document.id) {
+      this.selectedDocumentId$.next(document.id);
+      this.clearData();
+    }
+  }
+
+  public onDelete() {
+    this.performingDelete$.next(true);
+
+    this.store$.dispatch(
+      new DocumentsAction.DeleteConfirm({
+        collectionId: this.collection.id,
+        documentId: this.selectedDocumentId$.value,
+        onSuccess: () => {
+          this.clearData();
+          this.performingDelete$.next(false);
+        },
+        onFailure: () => this.performingDelete$.next(false),
+        workspace: {viewId: this.view?.id},
+      })
+    );
   }
 }
 

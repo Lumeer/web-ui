@@ -17,16 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 export function minMaxValidator(minControlName: string, maxControlName: string): ValidatorFn {
   return (form: FormGroup): ValidationErrors | null => {
     const minControl = form.get(minControlName);
     const maxControl = form.get(maxControlName);
 
-    const min = minControl && minControl.value !== null ? Number(minControl.value) : NaN;
-    const max = maxControl && maxControl.value !== null ? Number(maxControl.value) : NaN;
+    const min = isValueDefined(minControl) ? Number(minControl.value) : NaN;
+    const max = isValueDefined(maxControl) ? Number(maxControl.value) : NaN;
 
     return !isNaN(min) && !isNaN(max) && min > max ? {minMaxInvalid: true} : null;
   };
+}
+
+function isValueDefined(control: AbstractControl): boolean {
+  return control && control.value !== null && control.value !== '';
 }

@@ -26,7 +26,8 @@ import {FormValidation} from '../validation/form-validation';
   selector: 'form-view-submit',
   templateUrl: './form-view-submit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex justify-content-center'},
+  styleUrls: ['./form-view-submit.component.scss'],
+  host: {class: 'd-block'},
 })
 export class FormViewSubmitComponent implements OnChanges {
   @Input()
@@ -39,10 +40,19 @@ export class FormViewSubmitComponent implements OnChanges {
   public loading: boolean;
 
   @Input()
+  public deleting: boolean;
+
+  @Input()
   public validation: FormValidation;
+
+  @Input()
+  public canDelete: boolean;
 
   @Output()
   public submit = new EventEmitter();
+
+  @Output()
+  public delete = new EventEmitter();
 
   public button: FormButtonConfig;
   public valid: boolean;
@@ -62,5 +72,12 @@ export class FormViewSubmitComponent implements OnChanges {
     } else {
       this.button = this.buttons?.create;
     }
+  }
+
+  public onDelete() {
+    if (this.deleting || this.loading) {
+      return;
+    }
+    this.delete.emit();
   }
 }

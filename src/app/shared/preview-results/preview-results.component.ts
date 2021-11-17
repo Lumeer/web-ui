@@ -139,7 +139,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   private checkAfterLoadedDocument(documents: DocumentModel[], loaded: boolean) {
-    if (this.initialSelectDocument && loaded && documents.length && !this.selectedDocument?.id) {
+    if (this.initialSelectDocument && loaded && documents.length) {
       setTimeout(() => this.selectDocument.emit(documents[0]));
     }
   }

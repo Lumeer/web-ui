@@ -6,12 +6,12 @@
 
 <form-mode [collection]="collection"
            [canManageConfig]="canManageConfig"
-           [selectedMode]="mode$ | async"
+           [selectedMode]="config?.mode"
            [resourcesPermissions]="permissions"
            (modeChange)="onModeChange($event)">
 </form-mode>
 
-<ng-container [ngSwitch]="mode$ | async">
+<ng-container [ngSwitch]="config?.mode">
 
   <form-editor *ngSwitchCase="mode.Build"
                class="d-block mt-3 mb-6"
@@ -29,6 +29,7 @@
              [view]="view"
              [mode]="mode.Create"
              [attributesSettings]="attributesSettings"
+             [resourcesPermissions]="permissions"
              [collectionLinkTypes]="collectionLinkTypes">
   </form-view>
 

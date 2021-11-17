@@ -18,8 +18,8 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {FormMode} from '../content/mode/form-mode';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {FormMode} from '../../../../core/store/form/form-model';
 
 @Pipe({
   name: 'isFormViewVisible',

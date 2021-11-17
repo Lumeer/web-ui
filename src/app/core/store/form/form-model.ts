@@ -29,6 +29,13 @@ export interface FormModel {
 export interface FormConfig {
   sections?: FormSection[];
   buttons?: FormButtonsConfig;
+  mode?: FormMode;
+}
+
+export enum FormMode {
+  Build = 'build',
+  Create = 'create',
+  Update = 'update',
 }
 
 export interface FormButtonsConfig {

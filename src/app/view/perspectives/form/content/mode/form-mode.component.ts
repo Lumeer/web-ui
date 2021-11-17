@@ -18,10 +18,10 @@
  */
 
 import {Component, OnChanges, ChangeDetectionStrategy, Input, SimpleChanges, EventEmitter, Output} from '@angular/core';
-import {FormMode} from './form-mode';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {objectChanged} from '../../../../../shared/utils/common.utils';
+import {FormMode} from '../../../../../core/store/form/form-model';
 
 @Component({
   selector: 'form-mode',

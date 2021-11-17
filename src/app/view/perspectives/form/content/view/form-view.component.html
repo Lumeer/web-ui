@@ -21,16 +21,19 @@
                        [section]="section"
                        [collection]="collection"
                        [documentId]="document?.id"
-                       [formErrors]="(validation$ | async).errors | formErrorsBySection:section.id"
+                       [formErrors]="(validation$ | async)?.errors | formErrorsBySection:section.id"
                        (attributeValueChange)="onAttributeValueChange($event)"
                        (linkValueChange)="onLinkValueChange($event)">
     </form-view-section>
 
     <form-view-submit class="mt-4"
+                      [canDelete]="document | dataResourceIsDeletable:collection:collectionPermissions:(currentUser$ | async):(constraintData$ | async)"
                       [document]="document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"
+                      [deleting]="performingDelete$ | async"
                       [validation]="validation$ | async"
+                      (delete)="onDelete()"
                       (submit)="onSubmit()">
     </form-view-submit>
 

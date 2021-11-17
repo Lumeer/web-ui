@@ -670,9 +670,13 @@ export class DocumentsEffects {
                 actions.push(payload.nextAction);
               }
 
+              actions.push(...createCallbackActions(payload.onSuccess));
+
               return actions;
             }),
-            catchError(error => of(new DocumentsAction.DeleteFailure({error})))
+            catchError(error =>
+              of(new DocumentsAction.DeleteFailure({error}), ...createCallbackActions(action.payload.onFailure))
+            )
           );
       })
     )

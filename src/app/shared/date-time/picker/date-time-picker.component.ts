@@ -149,7 +149,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   private emitDateChange() {
     const saveDate = this.getSaveDate();
-    if (this.value?.getTime() !== saveDate?.getTime()) {
+    if (this.value && saveDate && this.value.getTime() !== saveDate.getTime()) {
       this.valueChange.emit(this.getSaveDate());
     }
   }

@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {FormMode} from '../content/mode/form-mode';
+import {FormMode} from '../../../../core/store/form/form-model';
 
 @Pipe({
   name: 'formModeIcon',
