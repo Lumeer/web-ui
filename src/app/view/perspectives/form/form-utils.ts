@@ -29,11 +29,12 @@ import {
   FormSection,
 } from '../../../core/store/form/form-model';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {COLOR_SUCCESS} from '../../../core/constants';
 import {generateId} from '../../../shared/utils/resource.utils';
+import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
 
 export function checkOrTransformFormConfig(
   config: FormConfig,
@@ -42,6 +43,7 @@ export function checkOrTransformFormConfig(
   linkTypes: LinkType[]
 ): FormConfig {
   return {
+    collectionId: getBaseCollectionIdFromQuery(query),
     mode: config?.mode || FormMode.Build,
     sections: formSectionsDefaultConfig(config?.sections),
     buttons: formButtonsDefaultConfig(config?.buttons),
@@ -68,6 +70,17 @@ function formButtonsDefaultConfig(config: FormButtonsConfig): FormButtonsConfig 
       icon: 'far fa-pencil',
     },
   };
+}
+
+export function formViewConfigLinkQueries(config: FormConfig): Query[] {
+  return collectLinkConfigsFromFormConfig(config).reduce<Query[]>((queries, linkConfig) => {
+    if (linkConfig.collectionId) {
+      const stem: QueryStem = {collectionId: linkConfig.collectionId, filters: linkConfig.filters};
+      queries.push({stems: [stem]});
+    }
+
+    return queries;
+  }, []);
 }
 
 export function filterValidFormCells(cells: FormCell[]): FormCell[] {

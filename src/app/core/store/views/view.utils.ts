@@ -52,6 +52,8 @@ import {DashboardTab} from '../../model/dashboard-tab';
 import {addDefaultDashboardTabsIfNotPresent} from '../../../shared/utils/dashboard.utils';
 import {SearchConfig} from '../searches/search';
 import {AllowedPermissions} from '../../model/allowed-permissions';
+import {formViewConfigLinkQueries} from '../../../view/perspectives/form/form-utils';
+import {FormConfig} from '../form/form-model';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -105,6 +107,25 @@ export function isPerspectiveConfigChanged(
       return isDetailConfigChanged(viewConfig, perspectiveConfig, collectionsMap, linkTypesMap);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
+  }
+}
+
+export function viewAdditionalQueries(perspective: Perspective, perspectiveConfig: ViewConfig): Query[] {
+  return getPerspectiveSavedPerspectives(perspective).reduce(
+    (queries, savedPerspective) => [
+      ...queries,
+      ...perspectiveAdditionalQueries(savedPerspective, perspectiveConfig?.[savedPerspective]),
+    ],
+    []
+  );
+}
+
+export function perspectiveAdditionalQueries(perspective: Perspective, config: PerspectiveConfig): Query[] {
+  switch (perspective) {
+    case Perspective.Form:
+      return formViewConfigLinkQueries(config as FormConfig);
+    default:
+      return [];
   }
 }
 

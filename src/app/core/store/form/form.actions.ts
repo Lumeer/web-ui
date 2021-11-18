@@ -24,9 +24,6 @@ export const add = createAction('[Form] Add', props<{model: FormModel}>());
 
 export const remove = createAction('[Form] Remove', props<{id: string}>());
 
-export const setConfig = createAction(
-  '[Form] Set Config',
-  props<{id: string; config: Partial<FormConfig>}>()
-);
+export const setConfig = createAction('[Form] Set Config', props<{id: string; config: FormConfig}>());
 
 export const clear = createAction('[Form] Clear');

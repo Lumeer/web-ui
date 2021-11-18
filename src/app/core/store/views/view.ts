@@ -37,6 +37,7 @@ export interface View extends Resource {
   perspective?: Perspective;
   query?: Query;
   config?: ViewConfig;
+  additionalQueries?: Query[];
   settings?: ViewSettings;
   authorCollectionsRoles?: Record<string, RoleType[]>;
   authorLinkTypesRoles?: Record<string, RoleType[]>;

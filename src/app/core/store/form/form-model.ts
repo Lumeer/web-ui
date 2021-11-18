@@ -28,9 +28,10 @@ export interface FormModel {
 }
 
 export interface FormConfig {
-  sections?: FormSection[];
-  buttons?: FormButtonsConfig;
-  mode?: FormMode;
+  collectionId: string;
+  sections: FormSection[];
+  buttons: FormButtonsConfig;
+  mode: FormMode;
 }
 
 export enum FormMode {
@@ -89,6 +90,7 @@ export interface FormAttributeCellConfig {
 
 export interface FormLinkCellConfig {
   linkTypeId?: string;
+  collectionId?: string;
   attributeId?: string;
   minLinks?: number;
   maxLinks?: number;

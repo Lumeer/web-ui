@@ -41,6 +41,7 @@ import {
   getViewColor,
   getViewIcon,
   isViewConfigChanged,
+  viewAdditionalQueries,
 } from './view.utils';
 import {selectSearchConfig, selectSearchesDictionary} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
@@ -152,6 +153,12 @@ export const selectPerspectiveConfig = createSelector(
     [Perspective.Detail]: detailConfig,
     [Perspective.Form]: formConfig,
   })
+);
+
+export const selectViewAdditionalQueries = createSelector(
+  selectPerspective,
+  selectPerspectiveConfig,
+  (perspective, config) => viewAdditionalQueries(perspective, config)
 );
 
 export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);

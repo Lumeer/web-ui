@@ -33,6 +33,7 @@ import {
 import {AttributesResourceType} from '../../../../../../../core/model/resource';
 import {COLOR_GRAY700} from '../../../../../../../core/constants';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
+import {getOtherLinkedCollectionId} from '../../../../../../../shared/utils/link-type.utils';
 
 @Component({
   selector: 'form-editor-cell',
@@ -215,9 +216,12 @@ export class FormEditorCellComponent implements OnChanges {
 
   private onSelectLink(item: SelectItem2Model) {
     const copyConfig = this.cell?.type === FormCellType.Link ? this.cell?.config : {};
+    const linkType = this.collectionLinkTypes?.find(lt => lt.id === item.id);
+    const otherCollectionId = getOtherLinkedCollectionId(linkType, this.collection?.id);
     const config: FormLinkCellConfig = {
       ...copyConfig,
-      linkTypeId: item.id,
+      linkTypeId: linkType.id,
+      collectionId: otherCollectionId,
     };
     const title = this.checkSelectedItemTitle(item);
     const newCell: FormCell = {...this.cell, title, config, type: FormCellType.Link};

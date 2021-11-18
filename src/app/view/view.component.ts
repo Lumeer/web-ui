@@ -32,6 +32,7 @@ import {ViewsAction} from '../core/store/views/views.action';
 import {
   selectCurrentView,
   selectPerspectiveConfig,
+  selectViewAdditionalQueries,
   selectViewByCode,
   selectViewQuery,
 } from '../core/store/views/views.state';
@@ -137,9 +138,10 @@ export class ViewComponent implements OnInit {
       this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCurrentView)),
       this.store$.pipe(select(selectSaveViewSettings)),
+      this.store$.pipe(select(selectViewAdditionalQueries)),
     ])
       .pipe(take(1))
-      .subscribe(([config, perspective, viewByName, query, currentView, settings]) => {
+      .subscribe(([config, perspective, viewByName, query, currentView, settings, additionalQueries]) => {
         const view: View = {
           ...currentView,
           query,
@@ -147,6 +149,7 @@ export class ViewComponent implements OnInit {
           config: createViewSaveConfig(perspective, config, currentView),
           settings,
           perspective,
+          additionalQueries,
         };
 
         if (this.viewWithNameAlreadyExists(viewByName, view, currentView?.name)) {
