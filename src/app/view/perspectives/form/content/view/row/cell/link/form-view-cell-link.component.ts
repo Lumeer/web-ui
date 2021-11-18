@@ -52,6 +52,9 @@ export class FormViewCellLinkComponent implements OnChanges {
   public multi: boolean;
 
   @Input()
+  public displayAttributeId: string;
+
+  @Input()
   public linkType: LinkType;
 
   @Input()
@@ -114,7 +117,7 @@ export class FormViewCellLinkComponent implements OnChanges {
     }
 
     let optionsChanged = false;
-    if (changes.documents || changes.collection || changes.constraintData) {
+    if (changes.documents || changes.collection || changes.constraintData || changes.displayAttributeId) {
       this.createOptions();
       optionsChanged = true;
     }
@@ -143,11 +146,13 @@ export class FormViewCellLinkComponent implements OnChanges {
   }
 
   private createOptions() {
-    const attributeId = getDefaultAttributeId(this.collection);
-    const constraint = findAttribute(this.collection?.attributes, attributeId)?.constraint || new UnknownConstraint();
+    const attribute =
+      findAttribute(this.collection?.attributes, this.displayAttributeId) ||
+      findAttribute(this.collection?.attributes, getDefaultAttributeId(this.collection));
+    const constraint = attribute?.constraint || new UnknownConstraint();
     this.dropdownOptions = (this.documents || []).map(document => ({
       value: document.id,
-      displayValue: constraint.createDataValue(document.data?.[attributeId], this.constraintData).format(),
+      displayValue: constraint.createDataValue(document.data?.[attribute.id], this.constraintData).format(),
       background: shadeColor(this.collection?.color, 0.5),
       icons: [this.collection?.icon],
       iconColors: [this.collection?.color],

@@ -71,9 +71,6 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   @Input()
   public attributesSettings: AttributesSettings;
 
-  @Input()
-  public initialSelectDocument: boolean;
-
   @Output()
   public selectCollection = new EventEmitter<Collection>();
 
@@ -132,16 +129,9 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
       map(([documents, loaded]) => ({
         loaded,
         documents,
-      })),
-      tap(({loaded, documents}) => this.checkAfterLoadedDocument(documents, loaded))
+      }))
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQueryWithoutLinks(this.view, this.query)));
-  }
-
-  private checkAfterLoadedDocument(documents: DocumentModel[], loaded: boolean) {
-    if (this.initialSelectDocument && loaded && documents.length) {
-      setTimeout(() => this.selectDocument.emit(documents[0]));
-    }
   }
 
   public setActiveCollection(collection: Collection) {

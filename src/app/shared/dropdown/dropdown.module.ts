@@ -30,6 +30,7 @@ import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropd
 import {GroupDropdownOptionsPipe} from './pipes/group-dropdown-options.pipe';
 import {DropdownDirective} from './dropdown.directive';
 import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
+import {SelectItemsDropdownOptionsPipe} from './pipes/select-items-dropdown-options.pipe';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],
@@ -41,6 +42,7 @@ import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
     ReverseArrayByDropdownPositionPipe,
     GroupDropdownOptionsPipe,
     DropdownOptionsValuesPipe,
+    SelectItemsDropdownOptionsPipe,
   ],
   exports: [
     DropdownComponent,
@@ -49,6 +51,7 @@ import {DropdownOptionsValuesPipe} from './pipes/dropdown-options-values.pipe';
     FilterDropdownOptionsPipe,
     ReverseArrayByDropdownPositionPipe,
     DropdownOptionsValuesPipe,
+    SelectItemsDropdownOptionsPipe,
   ],
 })
 export class DropdownModule {}

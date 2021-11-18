@@ -46,7 +46,10 @@ export class FormViewSubmitComponent implements OnChanges {
   public validation: FormValidation;
 
   @Input()
-  public canDelete: boolean;
+  public deletable: boolean;
+
+  @Input()
+  public editable: boolean;
 
   @Output()
   public submit = new EventEmitter();
@@ -79,5 +82,12 @@ export class FormViewSubmitComponent implements OnChanges {
       return;
     }
     this.delete.emit();
+  }
+
+  public onSubmit() {
+    if (this.deleting || this.loading || !this.valid || !this.editable) {
+      return;
+    }
+    this.submit.emit();
   }
 }

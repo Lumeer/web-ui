@@ -1,4 +1,4 @@
-<ng-container *ngIf="linkType$ | async as linkType">
+<ng-container *ngIf="{linkType: linkType$ | async, otherCollection: otherCollection$ | async} as data ">
   <span class="text-primary text-nowrap clickable small range-element text-truncate"
         tooltip="Minimum and maximum number of links"
         i18n-tooltip="@@perspective.form.editor.row.cell.actions.range.tooltip"
@@ -11,19 +11,39 @@
                             (minLinksChange)="onMinLinksChange($event)"
                             (maxLinksChange)="onMaxLinksChange($event)">
   </form-link-range-dropdown>
-  <span class="ml-2 text-primary clickable" #settingsElement (click)="settings.toggle()"
-        tooltip="Query"
-        i18n-tooltip="@@perspective.form.editor.row.cell.actions.query">
-    <i class="far fa-line-columns"></i>
-  </span>
 
-  <form-link-attributes-settings-dropdown #settings
-                                          [origin]="settingsElement"
-                                          [linkType]="linkType"
-                                          [collection]="otherCollection$ | async"
-                                          [settings]="attributeSettings$ | async"
-                                          (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
-  </form-link-attributes-settings-dropdown>
+  <ng-container *ngIf="data.otherCollection?.attributes?.length">
+    <span class="ml-2 text-primary clickable" #displayedElement (click)="displayedDropdown.toggle()"
+          tooltip="Displayed attribute"
+          i18n-tooltip="@@perspective.form.editor.row.cell.actions.displayed.tooltip">
+      <i class="fas fa-check-circle"></i>
+    </span>
+
+    <options-dropdown #displayedDropdown
+                      [options]="data.otherCollection | attributesSelectItems | selectItemsDropdownOptions"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [showSelection]="true"
+                      [firstItemActive]="false"
+                      [origin]="displayedElement"
+                      [selectedValues]="data.otherCollection | linkCollectionDisplayedAttribute:config"
+                      (selectOption)="onSelectDisplayedOption($event)">
+    </options-dropdown>
+  </ng-container>
+
+  <ng-container *ngIf="false">
+    <span class="ml-2 text-primary clickable" #settingsElement (click)="settings.toggle()">
+      <i class="far fa-line-columns"></i>
+    </span>
+
+    <form-link-attributes-settings-dropdown #settings
+                                            [origin]="settingsElement"
+                                            [linkType]="data.linkType"
+                                            [collection]="data.otherCollection"
+                                            [settings]="attributeSettings$ | async"
+                                            (attributeSettingsChanged)="onAttributesSettingsChanged($event)">
+    </form-link-attributes-settings-dropdown>
+  </ng-container>
 
   <div class="ml-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()"
        tooltip="Filter"
@@ -35,7 +55,7 @@
   </div>
   <resource-filters-dropdown #filters
                              [origin]="filtersElement"
-                             [resource]="otherCollection$ | async"
+                             [resource]="data.otherCollection"
                              [resourceType]="resourceType.Collection"
                              [filters]="config?.filters"
                              (filtersChange)="onFiltersChanged($event)">

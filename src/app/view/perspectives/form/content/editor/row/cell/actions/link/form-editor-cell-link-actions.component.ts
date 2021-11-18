@@ -42,6 +42,7 @@ import {getOtherLinkedCollectionId} from '../../../../../../../../../shared/util
 import {selectCollectionById} from '../../../../../../../../../core/store/collections/collections.state';
 import {CollectionAttributeFilter} from '../../../../../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../../../../../core/model/resource';
+import {DropdownOption} from '../../../../../../../../../shared/dropdown/options/dropdown-option';
 
 @Component({
   selector: 'form-editor-cell-link-actions',
@@ -106,6 +107,11 @@ export class FormEditorCellLinkActionsComponent implements OnInit, OnChanges {
 
   public onMaxLinksChange(maxLinks: number) {
     const newConfig = {...this.config, maxLinks};
+    this.configChange.emit(newConfig);
+  }
+
+  public onSelectDisplayedOption(option: DropdownOption) {
+    const newConfig = {...this.config, attributeId: option.value};
     this.configChange.emit(newConfig);
   }
 }

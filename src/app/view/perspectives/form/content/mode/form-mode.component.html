@@ -4,7 +4,7 @@
           [ngClass]="selectedMode === mode ? 'btn-success' : 'btn-outline-success'"
           class="btn badge-pill mx-2 px-4 mt-2"
           (click)="modeChange.emit(mode)">
-    <i class="mr-1" [ngClass]="mode | formModeIcon"></i>&nbsp;<span i18n="@@perspective.form.view.mode">{mode, select, build {Build The Form} create {Create New Record} update {Update Record}}</span></button>
+    <i class="mr-1" [ngClass]="mode | formModeIcon"></i>&nbsp;<span i18n="@@perspective.form.view.mode">{mode, select, build {Build the Form} create {Create New Record} update {Update Record}}</span></button>
 </div>
 
 <ng-template #empty>

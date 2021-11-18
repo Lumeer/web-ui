@@ -6,6 +6,7 @@
                   [linkValues]="linkValues"
                   [collection]="collection"
                   [documentId]="documentId"
+                  [editable]="editable"
                   [formErrors]="formErrors | formErrorsByCell:cell.id"
                   (attributeValueChange)="attributeValueChange.emit($event)"
                   (linkValueChange)="linkValueChange.emit($event)">

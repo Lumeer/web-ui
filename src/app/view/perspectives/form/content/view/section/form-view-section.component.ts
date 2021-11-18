@@ -46,6 +46,9 @@ export class FormViewSectionComponent implements OnChanges {
   public documentId: string;
 
   @Input()
+  public editable: boolean;
+
+  @Input()
   public formErrors: FormError[];
 
   @Output()

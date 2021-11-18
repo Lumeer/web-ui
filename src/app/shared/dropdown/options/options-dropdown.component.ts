@@ -84,6 +84,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public multiSelect: boolean;
 
   @Input()
+  public showSelection: boolean;
+
+  @Input()
   public minWidth: number;
 
   @Input()

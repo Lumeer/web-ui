@@ -1,0 +1,8 @@
+<preview-results-table [dataResources]="documents$ | async"
+                       [selectedId]="documentId"
+                       [attributesSettings]="attributesSettings"
+                       [view]="view"
+                       [resource]="collection"
+                       [constraintData]="constraintData"
+                       (selectDataResource)="setActiveDocument($event)">
+</preview-results-table>

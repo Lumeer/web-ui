@@ -64,6 +64,8 @@ import {FormErrorsByRowPipe} from './pipes/form-errors-by-row.pipe';
 import {FormErrorsByCellPipe} from './pipes/form-errors-by-cell.pipe';
 import {FormViewCellLinkComponent} from './content/view/row/cell/link/form-view-cell-link.component';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
+import {LinkCollectionDisplayedAttributePipe} from './pipes/link-collection-displayed-attribute.pipe';
+import {FormDocumentsChooseComponent} from './content/view/choose/form-documents-choose.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +96,8 @@ import {PresenterModule} from '../../../shared/presenter/presenter.module';
     FormErrorsByRowPipe,
     FormErrorsByCellPipe,
     FormViewCellLinkComponent,
+    LinkCollectionDisplayedAttributePipe,
+    FormDocumentsChooseComponent,
   ],
   imports: [
     CommonModule,

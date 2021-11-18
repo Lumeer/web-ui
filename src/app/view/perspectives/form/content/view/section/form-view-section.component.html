@@ -12,6 +12,7 @@
                [linkValues]="linkValues"
                [collection]="collection"
                [documentId]="documentId"
+               [editable]="editable"
                [formErrors]="formErrors | formErrorsByRow:row.id"
                (attributeValueChange)="attributeValueChange.emit($event)"
                (linkValueChange)="linkValueChange.emit($event)">

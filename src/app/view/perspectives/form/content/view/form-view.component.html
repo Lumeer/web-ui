@@ -1,15 +1,15 @@
-<ng-container *ngIf="{document: document$ | async, collection: collection$ | async} as data">
+<ng-container *ngIf="{document: document$ | async, collection: collection$ | async, currentUser: currentUser$ | async, constraintData: constraintData$ | async} as data">
 
-  <preview-results class="mb-4 d-block"
-                   *ngIf="mode === modeType.Update"
-                   [selectedCollection]="data.collection"
-                   [selectedDocument]="data.document"
-                   [attributesSettings]="attributesSettings"
-                   [query]="query"
-                   [view]="view"
-                   [initialSelectDocument]="true"
-                   (selectDocument)="selectDocument($event)">
-  </preview-results>
+  <form-documents-choose class="mb-4 d-block"
+                         *ngIf="mode === modeType.Update"
+                         [collection]="data.collection"
+                         [documentId]="data.document?.id"
+                         [attributesSettings]="attributesSettings"
+                         [constraintData]="data.constraintData"
+                         [query]="query"
+                         [view]="view"
+                         (selectDocument)="selectDocument($event)">
+  </form-documents-choose>
 
   <ng-container *ngIf="mode | isFormViewVisible:data.document">
 
@@ -21,13 +21,15 @@
                        [section]="section"
                        [collection]="data.collection"
                        [documentId]="data.document?.id"
+                       [editable]="data.document | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
                        [formErrors]="(validation$ | async)?.errors | formErrorsBySection:section.id"
                        (attributeValueChange)="onAttributeValueChange($event)"
                        (linkValueChange)="onLinkValueChange($event)">
     </form-view-section>
 
     <form-view-submit class="mt-4"
-                      [canDelete]="data.document | dataResourceIsDeletable:data.collection:collectionPermissions:(currentUser$ | async):(constraintData$ | async)"
+                      [editable]="data.document | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
+                      [deletable]="data.document | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
                       [document]="data.document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"

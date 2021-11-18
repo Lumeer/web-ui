@@ -89,6 +89,7 @@ export interface FormAttributeCellConfig {
 
 export interface FormLinkCellConfig {
   linkTypeId?: string;
+  attributeId?: string;
   minLinks?: number;
   maxLinks?: number;
   filters?: CollectionAttributeFilter[];

@@ -71,6 +71,9 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public documentId: string;
 
   @Input()
+  public editable: boolean;
+
+  @Input()
   public formErrors: FormError[];
 
   @Output()
@@ -93,6 +96,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public cursor: DataCursor;
   public linkData: FormLinkData;
   public linkMulti: boolean;
+  public linkAttributeId: string;
   public mandatory: boolean;
   public showBorder: boolean;
 
@@ -150,6 +154,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     const config = <FormLinkCellConfig>this.cell?.config;
 
     this.linkMulti = !config.maxLinks || config.maxLinks > 1;
+    this.linkAttributeId = config.attributeId;
     this.linkData = this.linkValues?.[config?.linkTypeId];
     if (this.linkData?.collection) {
       const query = {stems: [{collectionId: this.linkData.collection.id, filters: config.filters}]};
@@ -165,7 +170,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   }
 
   public onElementClick(event: MouseEvent) {
-    if (!this.editing$.value) {
+    if (!this.editing$.value && this.editable) {
       this.editing$.next(true);
     }
   }
