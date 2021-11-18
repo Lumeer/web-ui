@@ -27,14 +27,7 @@ import {IsLayoutSelectedPipe} from './row-layout/is-layout-selected.pipe';
 
 @NgModule({
   imports: [CommonModule, DropdownModule],
-  declarations: [
-    RowLayoutDropdownComponent,
-    LayoutTemplateColumnsPipe,
-    IsLayoutSelectedPipe
-  ],
-  exports: [
-    RowLayoutDropdownComponent,
-  ],
+  declarations: [RowLayoutDropdownComponent, LayoutTemplateColumnsPipe, IsLayoutSelectedPipe],
+  exports: [RowLayoutDropdownComponent],
 })
-export class LayoutModule {
-}
+export class LayoutModule {}

@@ -24,8 +24,7 @@ import {selectWorkspace} from '../navigation/navigation.state';
 import {DEFAULT_PERSPECTIVE_ID} from '../../../view/perspectives/perspective';
 import {FormModel} from './form-model';
 
-export interface FormsState extends EntityState<FormModel> {
-}
+export interface FormsState extends EntityState<FormModel> {}
 
 export const formsAdapter = createEntityAdapter<FormModel>({selectId: model => model.id});
 
@@ -35,10 +34,7 @@ export const selectFormsState = (state: AppState) => state.forms;
 export const selectFormsDictionary = createSelector(selectFormsState, formsAdapter.getSelectors().selectEntities);
 export const selectFormById = id => createSelector(selectFormsDictionary, models => models[id]);
 
-export const selectFormId = createSelector(
-  selectWorkspace,
-  workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID
-);
+export const selectFormId = createSelector(selectWorkspace, workspace => workspace?.viewCode || DEFAULT_PERSPECTIVE_ID);
 
 export const selectForm = createSelector(selectFormsDictionary, selectFormId, (map, id) => map[id]);
 export const selectFormConfig = createSelector(selectForm, detail => detail?.config);

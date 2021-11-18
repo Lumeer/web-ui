@@ -22,12 +22,10 @@ import {FormCell} from '../../../../core/store/form/form-model';
 import {filterValidFormCells} from '../form-utils';
 
 @Pipe({
-  name: 'filterValidCells'
+  name: 'filterValidCells',
 })
 export class FilterValidCellsPipe implements PipeTransform {
-
   public transform(cells: FormCell[]): FormCell[] {
     return filterValidFormCells(cells);
   }
-
 }

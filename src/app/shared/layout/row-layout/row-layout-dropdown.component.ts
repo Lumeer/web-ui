@@ -26,10 +26,9 @@ import {defaultRowLayouts, RowLayoutType} from './row-layout';
   selector: 'row-layout-dropdown',
   templateUrl: './row-layout-dropdown.component.html',
   styleUrls: ['./row-layout-dropdown.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RowLayoutDropdownComponent {
-
   @Input()
   public selectedLayout: RowLayoutType;
 

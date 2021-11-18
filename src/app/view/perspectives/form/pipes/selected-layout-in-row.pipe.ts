@@ -21,12 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {FormRow, FormRowLayoutType} from '../../../../core/store/form/form-model';
 
 @Pipe({
-  name: 'selectedLayoutInRow'
+  name: 'selectedLayoutInRow',
 })
 export class SelectedLayoutInRowPipe implements PipeTransform {
-
   public transform(row: FormRow): FormRowLayoutType {
     return row?.cells?.map(row => row.span).filter(span => !!span) || [];
   }
-
 }
