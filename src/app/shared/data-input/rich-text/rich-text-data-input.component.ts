@@ -42,7 +42,6 @@ import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {DataInputModalService} from '../data-input-modal.service';
 import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
-import QuillType from 'quill';
 
 @Component({
   selector: 'rich-text-data-input',
