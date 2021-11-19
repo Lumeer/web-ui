@@ -42,6 +42,7 @@ import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 import {DataInputModalService} from '../data-input-modal.service';
 import {ConstraintType, DataValue, TextDataValue} from '@lumeer/data-filters';
+import QuillType from 'quill';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -100,6 +101,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private modalSubscription = new Subscription();
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private pasteValueAfterEditorCreation: boolean;
 
   public readonly modules = {
     toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
@@ -108,11 +110,13 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   constructor(private modalService: DataInputModalService, private renderer: Renderer2, private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
+    let valueSet = false;
     if (changes.readonly && !this.readonly && this.focus) {
       this.addKeyDownListener();
       this.initValue();
+      valueSet = true;
     }
-    if (changes.value && this.value) {
+    if (!valueSet && changes.value && this.value) {
       this.initValue();
     }
     this.refreshBackgroundClass(this.value);
@@ -133,14 +137,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private initValue() {
-    const text = this.value.format();
+    this.text = this.value.format();
     if (isNotNullOrUndefined(this.value.inputValue)) {
-      setTimeout(() => {
-        const textToPaste = unescapeHtml(text);
-        this.textEditor?.quillEditor?.clipboard.dangerouslyPasteHTML(textToPaste);
-      });
-    } else {
-      this.text = text;
+      this.pasteValueAfterEditorCreation = true;
     }
     this.valid = this.value.isValid();
     this.isMultiline = numberOfPTags(this.text) > 1;
@@ -193,7 +192,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onEditorCreated(editor: any) {
-    editor.setSelection(Number.MAX_SAFE_INTEGER);
+    this.checkPasteValue();
+    editor.setSelection(Number.MAX_SAFE_INTEGER, 1);
 
     const isMultiLine = editor.root.childElementCount > 1;
     if (isMultiLine) {
@@ -206,6 +206,19 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     }
 
     this.preventEnterInEditor(editor);
+  }
+
+  private checkPasteValue() {
+    if (this.pasteValueAfterEditorCreation) {
+      const text = this.value.format();
+      const textToPaste = unescapeHtml(text);
+      const editor = this.textEditor?.quillEditor;
+      const value = editor?.clipboard.convert(textToPaste);
+      editor?.setContents(value);
+      setTimeout(() => editor?.setSelection(Number.MAX_SAFE_INTEGER, 1));
+    }
+
+    this.pasteValueAfterEditorCreation = false;
   }
 
   private preventEnterInEditor(editor: any) {
