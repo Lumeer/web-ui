@@ -31,12 +31,15 @@ import {Workspace} from '../../store/navigation/workspace';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {RuleDto} from '../../dto/rule.dto';
+import {correlationIdHeaderBackup} from '../../rest/interceptors/correlation-id.http-interceptor';
+import {AppIdService} from '../../service/app-id.service';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {
   constructor(
     protected httpClient: HttpClient,
     protected store$: Store<AppState>,
+    private appId: AppIdService,
     private configurationService: ConfigurationService
   ) {
     super(httpClient, store$);
@@ -128,7 +131,15 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
   }
 
   public runRule(collectionId: string, ruleId: string): Observable<any> {
-    return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/rule/${ruleId}`, {});
+    return this.httpClient.post(
+      `${this.apiPrefix()}/${collectionId}/rule/${ruleId}`,
+      {},
+      {
+        headers: {
+          [correlationIdHeaderBackup]: this.appId.getAppId(),
+        },
+      }
+    );
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
