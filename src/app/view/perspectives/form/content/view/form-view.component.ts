@@ -48,6 +48,7 @@ import {User} from '../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
 import {objectChanged} from '../../../../../shared/utils/common.utils';
 import {filterVisibleAttributesBySettings} from '../../../../../shared/utils/attribute.utils';
+import {uniqueValues} from '../../../../../shared/utils/array.utils';
 
 @Component({
   selector: 'form-view',
@@ -241,8 +242,8 @@ export class FormViewComponent implements OnInit, OnChanges {
                   const linkInstances = allLinkInstances.filter(
                     linkInstance => linkInstance.linkTypeId === linkType.id
                   );
-                  const linkDocumentIds = linkInstances.map(linkInstance =>
-                    getOtherLinkedDocumentId(linkInstance, documentId)
+                  const linkDocumentIds = uniqueValues(
+                    linkInstances.map(linkInstance => getOtherLinkedDocumentId(linkInstance, documentId))
                   );
                   linkDataMap[linkType.id] = {
                     view,

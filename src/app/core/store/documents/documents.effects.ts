@@ -227,7 +227,6 @@ export class DocumentsEffects {
             mergeMap(
               ({document, createdAttachments, deletedAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
                 return [
-                  ...createCallbackActions(onSuccess, document.id),
                   new DocumentsAction.UpdateSuccess({document, originalDocument}),
                   new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
                   new FileAttachmentsAction.RemoveSuccess({fileIds: deletedAttachments}),
@@ -235,10 +234,11 @@ export class DocumentsEffects {
                     linkInstances: createdLinkInstances,
                     removedLinkInstancesIds,
                   }),
+                  ...createCallbackActions(onSuccess, document.id),
                 ];
               }
             ),
-            catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.UpdateFailure({error})))
+            catchError(error => of(new DocumentsAction.UpdateFailure({error}), ...createCallbackActions(onFailure)))
           );
       })
     )

@@ -74,8 +74,12 @@ function formButtonsDefaultConfig(config: FormButtonsConfig): FormButtonsConfig 
 
 export function formViewConfigLinkQueries(config: FormConfig): Query[] {
   return collectLinkConfigsFromFormConfig(config).reduce<Query[]>((queries, linkConfig) => {
-    if (linkConfig.collectionId) {
-      const stem: QueryStem = {collectionId: linkConfig.collectionId, filters: linkConfig.filters};
+    if (linkConfig.collectionId && linkConfig.linkTypeId) {
+      const stem: QueryStem = {
+        collectionId: linkConfig.collectionId,
+        linkTypeIds: [linkConfig.linkTypeId],
+        filters: linkConfig.filters,
+      };
       queries.push({stems: [stem]});
     }
 

@@ -143,11 +143,22 @@ export class FormViewCellComponent implements OnInit, OnChanges {
       config?.attribute
     );
     this.dataValue = this.dataValues?.[this.attribute?.id];
-    this.cursor = {attributeId: this.attribute?.id, collectionId: this.collection?.id, documentId: this.documentId};
+    this.checkCursor();
     this.showBorder = !(this.attribute?.constraint?.type === ConstraintType.Boolean);
 
     this.dataIsValid = !!this.attribute?.constraint;
     this.mandatory = this.attribute?.mandatory;
+  }
+
+  private checkCursor() {
+    if (
+      !this.cursor ||
+      this.cursor.attributeId !== this.attribute?.id ||
+      this.cursor?.collectionId !== this.collection?.id ||
+      this.cursor?.documentId !== this.documentId
+    ) {
+      this.cursor = {attributeId: this.attribute?.id, collectionId: this.collection?.id, documentId: this.documentId};
+    }
   }
 
   private initLinkDataVariables() {

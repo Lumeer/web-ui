@@ -77,7 +77,7 @@ export class FormDocumentsChooseComponent implements OnChanges {
   }
 
   private checkAfterLoadedDocument(documents: DocumentModel[]) {
-    if (documents.length && (!this.documentId || documents.some(doc => doc.id === this.documentId))) {
+    if (documents.length && (!this.documentId || !documents.some(doc => doc.id === this.documentId))) {
       setTimeout(() => this.selectDocument.emit(documents[0]));
     }
   }

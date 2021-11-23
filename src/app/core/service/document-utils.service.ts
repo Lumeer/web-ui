@@ -169,10 +169,10 @@ export class DocumentUtilsService {
               results
                 .filter(result => !!result)
                 .reduce((map, result) => {
-                  if (map[result.attributeId]) {
-                    map[result.attributeId].push(result);
+                  if (!map[result.attributeId]) {
+                    map[result.attributeId] = [];
                   }
-                  map[result.attributeId] = [result];
+                  map[result.attributeId].push(result);
                   return map;
                 }, {})
             )
