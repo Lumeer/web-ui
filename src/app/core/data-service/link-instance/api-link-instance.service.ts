@@ -29,17 +29,14 @@ import {AppState} from '../../store/app.state';
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {AppIdService} from '../../service/app-id.service';
 import {DocumentLinksDto} from '../../dto/document-links.dto';
 import {ConfigurationService} from '../../../configuration/configuration.service';
-import {correlationIdHeader, correlationIdHeaderBackup} from '../../rest/interceptors/correlation-id.http-interceptor';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
   constructor(
     private httpClient: HttpClient,
     protected store$: Store<AppState>,
-    private appId: AppIdService,
     private configurationService: ConfigurationService
   ) {
     super(store$);
@@ -69,10 +66,7 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
 
   public createLinkInstance(linkInstance: LinkInstanceDto, workspace?: Workspace): Observable<LinkInstanceDto> {
     return this.httpClient.post<LinkInstanceDto>(this.apiPrefix(workspace), linkInstance, {
-      headers: {
-        ...this.workspaceHeaders(workspace),
-        [correlationIdHeaderBackup]: this.appId.getAppId(),
-      },
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
@@ -82,10 +76,7 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
     workspace?: Workspace
   ): Observable<LinkInstanceDto> {
     return this.httpClient.patch<LinkInstanceDto>(`${this.apiPrefix(workspace, linkInstanceId)}/data`, data, {
-      headers: {
-        ...this.workspaceHeaders(workspace),
-        [correlationIdHeader]: this.appId.getAppId(),
-      },
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
@@ -94,10 +85,7 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
       `${this.apiPrefix(workspace, linkInstanceDto.id)}/data`,
       linkInstanceDto.data,
       {
-        headers: {
-          ...this.workspaceHeaders(workspace),
-          [correlationIdHeader]: this.appId.getAppId(),
-        },
+        headers: {...this.workspaceHeaders(workspace)},
       }
     );
   }
@@ -105,10 +93,7 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   public deleteLinkInstance(id: string, workspace?: Workspace): Observable<string> {
     return this.httpClient
       .delete(this.apiPrefix(workspace, id), {
-        headers: {
-          ...this.workspaceHeaders(workspace),
-          [correlationIdHeader]: this.appId.getAppId(),
-        },
+        headers: {...this.workspaceHeaders(workspace)},
       })
       .pipe(map(() => id));
   }
@@ -131,9 +116,7 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   ): Observable<any> {
     return this.httpClient.post<any>(
       `${this.apiPrefix(workspace, linkTypeId, linkInstanceId)}/rule/${attributeId}?actionName=${actionName || ''}`,
-      {
-        correlationId: this.appId.getAppId(),
-      },
+      {},
       {
         headers: {...this.workspaceHeaders(workspace)},
       }

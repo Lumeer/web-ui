@@ -414,7 +414,7 @@ export class PusherService implements OnDestroy {
 
   private bindPrintEvents() {
     this.channel.bind('PrintRequest', data => {
-      if (data.correlationId === this.appId.getAppId()) {
+      if (this.isCurrentAppTab(data)) {
         const a = document.createElement('a');
         a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
           data.object.projectCode
@@ -427,7 +427,7 @@ export class PusherService implements OnDestroy {
     });
 
     this.channel.bind('TextPrintRequest', data => {
-      if (data.correlationId === this.appId.getAppId()) {
+      if (this.isCurrentAppTab(data)) {
         this.printService.setContent(data.object.text);
         const a = document.createElement('a');
         a.href = `${this.locationStrategy.getBaseHref()}print/${data.object.organizationCode}/${
@@ -441,7 +441,7 @@ export class PusherService implements OnDestroy {
 
   private bindNavigateEvents() {
     this.channel.bind('NavigationRequest', data => {
-      if (this.isCurrentWorkspace(data) && data.correlationId === this.appId.getAppId()) {
+      if (this.isCurrentWorkspace(data) && this.isCurrentAppTab(data)) {
         this.store$.pipe(select(selectViewById(data.object.viewId)), take(1)).subscribe(view => {
           if (view) {
             const encodedQuery = convertQueryModelToString(view.query);
@@ -487,7 +487,7 @@ export class PusherService implements OnDestroy {
   private bindSendEmailEvents() {
     // SendEmailRequest
     this.channel.bind('SendEmailRequest', data => {
-      if (data.correlationId === this.appId.getAppId()) {
+      if (this.isCurrentAppTab(data)) {
         const a = document.createElement('a');
         a.href = `mailto:${encodeURIComponent(data.object.email)}?subject=${encodeURIComponent(
           data.object.subject
@@ -942,43 +942,41 @@ export class PusherService implements OnDestroy {
 
   private bindUserMessageEvents() {
     this.channel.bind('UserMessageRequest:create', data => {
-      if (this.isCurrentWorkspace(data)) {
-        if (data.correlationId === this.appId.getAppId()) {
-          switch (data.object?.type) {
-            case 'SUCCESS':
-              this.notificationService.confirm(
-                data.object?.message,
-                this.userNotificationTitle.success,
-                [this.dismissButton],
-                'success'
-              );
-              break;
-            case 'INFO':
-              this.notificationService.confirm(
-                data.object?.message,
-                this.userNotificationTitle.info,
-                [this.dismissButton],
-                'info'
-              );
-              break;
-            case 'WARNING':
-              this.notificationService.confirm(
-                data.object?.message,
-                this.userNotificationTitle.warning,
-                [this.dismissButton],
-                'warning'
-              );
-              break;
-            case 'ERROR':
-            default:
-              this.notificationService.confirm(
-                data.object?.message,
-                this.userNotificationTitle.error,
-                [this.dismissButton],
-                'danger'
-              );
-              break;
-          }
+      if (this.isCurrentWorkspace(data) && this.isCurrentAppTab(data)) {
+        switch (data.object?.type) {
+          case 'SUCCESS':
+            this.notificationService.confirm(
+              data.object?.message,
+              this.userNotificationTitle.success,
+              [this.dismissButton],
+              'success'
+            );
+            break;
+          case 'INFO':
+            this.notificationService.confirm(
+              data.object?.message,
+              this.userNotificationTitle.info,
+              [this.dismissButton],
+              'info'
+            );
+            break;
+          case 'WARNING':
+            this.notificationService.confirm(
+              data.object?.message,
+              this.userNotificationTitle.warning,
+              [this.dismissButton],
+              'warning'
+            );
+            break;
+          case 'ERROR':
+          default:
+            this.notificationService.confirm(
+              data.object?.message,
+              this.userNotificationTitle.error,
+              [this.dismissButton],
+              'danger'
+            );
+            break;
         }
       }
     });
@@ -1052,6 +1050,10 @@ export class PusherService implements OnDestroy {
 
   private isCurrentWorkspace(data: any): boolean {
     return this.isCurrentOrganization(data) && data.projectId === this.getCurrentProjectId();
+  }
+
+  private isCurrentAppTab(data: any): boolean {
+    return data.appId === this.appId.getAppId();
   }
 
   private isCurrentOrganization(data: any): boolean {
