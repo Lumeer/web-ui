@@ -101,6 +101,6 @@ import {TableCellAffectedPipe} from './pipes/table-cell-affected.pipe';
     FilterBuilderModule,
     FilterPreviewModule,
   ],
-  exports: [TableComponent],
+  exports: [TableComponent, TableItemSizeDirective],
 })
 export class TableModule {}

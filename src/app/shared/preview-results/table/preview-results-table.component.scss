@@ -12,18 +12,20 @@ tbody {
 
 .sticky-header {
   position: sticky;
-  top: -1px;
   background: white;
   z-index: 1; // otherwise checkboxes in the body are shown over the header when scrolling down
 }
 
+.table-fixed {
+  table-layout: fixed;
+}
+
 th,
 td {
-  max-width: 20rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 2em;
+  height: 32px;
   vertical-align: middle;
 }
 
@@ -37,10 +39,6 @@ td {
 
 tr.active {
   background-color: $light;
-}
-
-.table-responsive {
-  resize: vertical;
 }
 
 .h-10em {

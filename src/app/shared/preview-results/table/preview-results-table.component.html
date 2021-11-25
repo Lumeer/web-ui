@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col text-right" *ngIf="{index : scrolledIndex$ | async} as data">
+    <strong>{{data.index + 1}}&mdash;{{data.index + (numVisibleRows$ | async)}}</strong>
+    &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
+  </div>
+</div>
+<div class="position-relative table-wrapper" [class.h-10em]="resizeable" [id]="resource.id">
+  <preview-results-alternative-header *ngIf="hasData"
+                                      [columns]="columns">
+  </preview-results-alternative-header>
+  <cdk-virtual-scroll-viewport class="overflow-auto h-100" #table
+                               [lmrItemSize]="32"
+                               [headerHeight]="32"
+                               [baseOffset]="-1"
+                               [columns]="columns">
+    <table class="table lmr-table table-sm" [class.table-fixed]="hasData" id="preview-results-table">
+      <thead>
+      <tr #tableRow>
+        <th class="sticky-header"
+            *ngFor="let column of columns; trackBy:trackByAttribute; let idx = index"
+            [style.background-color]="column.color"
+            [style.width.px]="hasData ? column.width : null"
+            [style.font-weight]="column.bold ? 'bold' : 'normal'"
+            scope="col"
+            title="{{column.name}}">{{column.name}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="!hasData">
+        <td [attr.colspan]="resource.attributes.length" class="text-center font-weight-bold">
+          <h4 class="pt-3" i18n="@@shared.preview.results.noResults">No records found.</h4>
+        </td>
+      </tr>
+      <tr *cdkVirtualFor="let dataResource of dataResources; trackBy:trackByDataResource"
+          class="clickable-row" #tableRow
+          id="preview-result-row-{{dataResource.id || dataResource.correlationId}}"
+          [class.active]="(dataResource.id || dataResource.correlationId) === selectedId"
+          (click)="activate(dataResource)">
+        <td *ngFor="let column of columns"
+            [style.width.px]="hasData ? column.width : null">
+          <data-input-preview [constraint]="column.constraint"
+                              [configuration]="configuration"
+                              [cursor]="dataResource | dataCursor : column.id:view?.id"
+                              [dataValue]="dataResource?.data[column.id] | dataValue:column.constraint:constraintData">
+          </data-input-preview>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </cdk-virtual-scroll-viewport>
+</div>
+<div *ngIf="resizeable && hasData" resizer class="lmr-resizer mb-3 w-100"
+     tagName="lmr-table"
+     [minHeight]="100"
+     [reference]="resource.id"
+     (onResize)="onTableResize(table, $event)"
+     i18n-title="@@perspective.workflow.table.resize"
+     title="Resize table">
+  <i class="fal fa-grip-lines"></i>
+</div>

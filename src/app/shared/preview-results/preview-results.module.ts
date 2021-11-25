@@ -21,15 +21,33 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PipesModule} from '../pipes/pipes.module';
 import {PreviewResultsComponent} from './preview-results.component';
-import {PreviewResultsTableComponent} from './preview-results-table/preview-results-table.component';
-import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
+import {PreviewResultsTableComponent} from './table/preview-results-table.component';
+import {PreviewResultsTabsComponent} from './tabs/preview-results-tabs.component';
 import {DataInputModule} from '../data-input/data-input.module';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
 import {PresenterModule} from '../presenter/presenter.module';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {TableModule} from '../table/table.module';
+import {PreviewResultsAlternativeHeaderComponent} from './table/header/preview-results-alternative-header.component';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, PipesModule, WarningMessageModule, PresenterModule],
-  declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    PipesModule,
+    WarningMessageModule,
+    PresenterModule,
+    ScrollingModule,
+    TableModule,
+    DirectivesModule,
+  ],
+  declarations: [
+    PreviewResultsComponent,
+    PreviewResultsTableComponent,
+    PreviewResultsTabsComponent,
+    PreviewResultsAlternativeHeaderComponent,
+  ],
   exports: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
 })
 export class PreviewResultsModule {}

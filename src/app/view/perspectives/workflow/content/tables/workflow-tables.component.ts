@@ -68,7 +68,6 @@ import {WorkflowPerspectiveConfiguration} from '../../../perspective-configurati
 @Component({
   selector: 'workflow-tables',
   templateUrl: './workflow-tables.component.html',
-  styleUrls: ['./workflow-tables.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowTablesComponent implements OnChanges {

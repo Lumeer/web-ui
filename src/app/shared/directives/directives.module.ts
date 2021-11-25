@@ -28,6 +28,7 @@ import {PercentageDirective} from './percentage.directive';
 import {IntegerDirective} from './integer.directive';
 import {AutoSizeInputDirective} from './autosize-input.directive';
 import {ClickOutsideDirective} from './click-outside.directive';
+import {ResizerDirective} from './resizer.directive';
 
 @NgModule({
   imports: [CommonModule],
@@ -40,6 +41,7 @@ import {ClickOutsideDirective} from './click-outside.directive';
     IntegerDirective,
     AutoSizeInputDirective,
     ClickOutsideDirective,
+    ResizerDirective,
   ],
   exports: [
     NgVarDirective,
@@ -50,6 +52,7 @@ import {ClickOutsideDirective} from './click-outside.directive';
     IntegerDirective,
     AutoSizeInputDirective,
     ClickOutsideDirective,
+    ResizerDirective,
   ],
 })
 export class DirectivesModule {}

@@ -301,6 +301,20 @@ typeahead-container {
   }
 }
 
+.lmr-resizer {
+  height: 15px;
+  background: $gray-200;
+  cursor: ns-resize;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: $gray-400;
+  }
+}
+
 .form-control.multiline {
   height: auto;
   min-height: calc(1.5em + 0.75rem + 2px);

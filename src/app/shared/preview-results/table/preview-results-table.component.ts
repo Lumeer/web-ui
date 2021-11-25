@@ -25,22 +25,27 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   QueryList,
   SimpleChanges,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
-import {ConstraintData} from '@lumeer/data-filters';
+import {Constraint, ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings, View} from '../../../core/store/views/view';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {shadeColor} from '../../utils/html-modifier';
 import {filterVisibleAttributesBySettings} from '../../utils/attribute.utils';
-
-const PAGE_SIZE = 100;
+import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'preview-results-table',
@@ -48,7 +53,7 @@ const PAGE_SIZE = 100;
   styleUrls: ['./preview-results-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
+export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public dataResources: DataResource[];
 
@@ -76,6 +81,9 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   @Output()
   public selectDataResource = new EventEmitter<DataResource>();
 
+  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  public viewPort: CdkVirtualScrollViewport;
+
   @ViewChild('table', {static: true, read: ElementRef})
   public tableElement: ElementRef;
 
@@ -89,21 +97,47 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
     action: {center: true},
   };
 
-  public page = 0;
-  public attributes: Attribute[];
-  public color: string;
+  public columns: PreviewResultsColumn[];
+  public hasData: boolean;
+  public scrolledIndex$: Observable<number>;
+  public numVisibleRows$ = new BehaviorSubject(0);
 
-  public readonly pageSize = PAGE_SIZE;
+  private subscriptions = new Subscription();
+
+  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef) {}
+
+  public ngOnInit() {
+    this.subscriptions.add(this.subscribeHorizontalScrolling());
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resource || changes.attributesSettings) {
-      this.attributes = filterVisibleAttributesBySettings(this.resource, this.attributesSettings?.collections);
-      this.color = this.createColor();
+      this.createColumns();
     }
     if (changes.dataResources && changes.selectedId && this.dataResources && this.selectedId) {
-      this.countPageForDataResource(this.selectedId);
       setTimeout(() => this.scrollToCurrentRow());
     }
+    if (changes.dataResources) {
+      this.hasData = (this.dataResources || []).length > 0;
+    }
+  }
+
+  private createColumns() {
+    const color = this.createColor();
+    const attributes = filterVisibleAttributesBySettings(this.resource, this.attributesSettings?.collections);
+    const defaultAttributeId =
+      getAttributesResourceType(this.resource) === AttributesResourceType.Collection
+        ? getDefaultAttributeId(this.resource)
+        : null;
+
+    this.columns = attributes.map(attribute => ({
+      id: attribute.id,
+      name: attribute.name,
+      color,
+      width: 120,
+      constraint: attribute.constraint,
+      bold: attribute.id === defaultAttributeId,
+    }));
   }
 
   private createColor(): string {
@@ -114,28 +148,31 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
     return null;
   }
 
+  private subscribeHorizontalScrolling(): Subscription {
+    return this.scrollDispatcher
+      .scrolled()
+      .pipe(filter(scrollable => !!scrollable && this.isScrollableInsideComponent(scrollable)))
+      .subscribe((scrollable: CdkScrollable) => {
+        const left = scrollable.measureScrollOffset('left');
+
+        Array.from(this.scrollDispatcher.scrollContainers.keys())
+          .filter(
+            otherScrollable => otherScrollable !== scrollable && otherScrollable.measureScrollOffset('left') !== left
+          )
+          .forEach(otherScrollable => otherScrollable.scrollTo({left}));
+      });
+  }
+
+  private isScrollableInsideComponent(scrollable: CdkScrollable): boolean {
+    return this.element.nativeElement.contains(scrollable.getElementRef().nativeElement);
+  }
+
   public activate(dataResource: DataResource) {
     this.selectDataResource.emit(dataResource);
-    this.countPageForDataResource(dataResource.id);
   }
 
-  private countPageForDataResource(dataResourceId: string) {
-    const index = this.dataResources.findIndex(doc => doc.id === dataResourceId);
-    if (index !== -1) {
-      this.countPage(index);
-    }
-  }
-
-  private countPage(index: number) {
-    this.page = Math.floor(index / PAGE_SIZE);
-  }
-
-  public selectPage(page: number) {
-    this.page = page;
-  }
-
-  public trackByAttribute(index: number, attribute: Attribute): string {
-    return attribute.correlationId || attribute.id;
+  public trackByAttribute(index: number, column: PreviewResultsColumn): string {
+    return column.id;
   }
 
   public trackByDataResource(index: number, dataResource: DataResource): string {
@@ -144,6 +181,10 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
 
   public ngAfterViewInit() {
     this.scrollToCurrentRow();
+
+    this.scrolledIndex$ = this.viewPort.scrolledIndexChange;
+    this.viewPort.checkViewportSize();
+    this.checkNumVisibleRows();
   }
 
   private scrollToCurrentRow() {
@@ -163,4 +204,26 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
       }
     }
   }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  public onTableResize(viewport: CdkVirtualScrollViewport, height: number) {
+    viewport.checkViewportSize();
+    this.checkNumVisibleRows();
+  }
+
+  private checkNumVisibleRows() {
+    this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / 32) - 1);
+  }
+}
+
+export interface PreviewResultsColumn {
+  id: string;
+  constraint: Constraint;
+  width: number;
+  name: string;
+  color: string;
+  bold?: boolean;
 }

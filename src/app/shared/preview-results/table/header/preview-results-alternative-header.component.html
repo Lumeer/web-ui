@@ -1,0 +1,10 @@
+<div class="d-flex flex-nowrap invisible-scroll-y" cdkScrollable>
+  <div *ngFor="let column of columns; trackBy:trackByColumn"
+       class="header-cell table-cell"
+       [style.background]="column.color"
+       [class.font-weight-bold]="column.bold"
+       [style.height.px]="32"
+       [style.width.px]="column.width"
+       [style.min-width.px]="column.width">{{column.name}}</div>
+  <div class="empty-cell"></div>
+</div>
