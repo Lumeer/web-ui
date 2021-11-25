@@ -30,6 +30,7 @@ import {filterStemsForCollection} from '../../../../../../core/store/navigation/
 import {selectDocumentsByCollectionAndQuery} from '../../../../../../core/store/common/permissions.selectors';
 import {objectChanged} from '../../../../../../shared/utils/common.utils';
 import {tap} from 'rxjs/operators';
+import {FormConfig} from '../../../../../../core/store/form/form-model';
 
 @Component({
   selector: 'form-documents-choose',
@@ -37,6 +38,9 @@ import {tap} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormDocumentsChooseComponent implements OnChanges {
+  @Input()
+  public config: FormConfig;
+
   @Input()
   public collection: Collection;
 
@@ -57,6 +61,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
 
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public configChange = new EventEmitter<FormConfig>();
 
   public documents$: Observable<DocumentModel[]>;
 
@@ -84,5 +91,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
 
   public setActiveDocument(document: DocumentModel) {
     this.selectDocument.emit(document);
+  }
+
+  public onTableHeightChange(tableHeight: number) {
+    this.configChange.emit({...this.config, tableHeight});
   }
 }

@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {FormConfig, FormMode, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -78,8 +87,8 @@ export class FormViewComponent implements OnInit, OnChanges {
   @Input()
   public resourcesPermissions: ResourcesPermissions;
 
-  @Input()
-  public mode: FormMode.Create | FormMode.Update;
+  @Output()
+  public configChange = new EventEmitter<FormConfig>();
 
   public readonly modeType = FormMode;
 
@@ -134,10 +143,6 @@ export class FormViewComponent implements OnInit, OnChanges {
     }
     if (changes.collectionLinkTypes) {
       this.linkTypes$.next(this.collectionLinkTypes || []);
-    }
-    if (changes.mode && this.mode !== changes.mode.previousValue) {
-      this.clearData();
-      this.formValidation.setMode(this.mode);
     }
   }
 

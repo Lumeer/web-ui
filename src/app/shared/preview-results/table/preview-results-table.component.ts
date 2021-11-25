@@ -78,6 +78,9 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   @Input()
   public resizeable = true;
 
+  @Input()
+  public tableHeight: number;
+
   @Output()
   public selectDataResource = new EventEmitter<DataResource>();
 
@@ -89,6 +92,9 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
 
   @ViewChildren('tableRow')
   public rowsElements: QueryList<ElementRef>;
+
+  @Output()
+  public tableHeightChange = new EventEmitter<number>();
 
   public readonly configuration: DataInputConfiguration = {
     common: {inline: true},
@@ -145,7 +151,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
       const color = (<Collection>this.resource)?.color;
       return shadeColor(color, 0.5);
     }
-    return null;
+    return 'white';
   }
 
   private subscribeHorizontalScrolling(): Subscription {
@@ -184,7 +190,15 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
 
     this.scrolledIndex$ = this.viewPort.scrolledIndexChange;
     this.viewPort.checkViewportSize();
-    this.checkNumVisibleRows();
+    if (this.tableHeight) {
+      this.checkNumVisibleRows();
+    } else {
+      this.checkNumVisibleRowsAfterDelay();
+    }
+  }
+
+  private checkNumVisibleRowsAfterDelay() {
+    setTimeout(() => this.checkNumVisibleRows());
   }
 
   private scrollToCurrentRow() {
@@ -212,6 +226,8 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   public onTableResize(viewport: CdkVirtualScrollViewport, height: number) {
     viewport.checkViewportSize();
     this.checkNumVisibleRows();
+
+    this.tableHeightChange.emit(height);
   }
 
   private checkNumVisibleRows() {

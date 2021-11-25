@@ -47,6 +47,7 @@ export function checkOrTransformFormConfig(
     mode: config?.mode || FormMode.Build,
     sections: formSectionsDefaultConfig(config?.sections),
     buttons: formButtonsDefaultConfig(config?.buttons),
+    tableHeight: config?.tableHeight || 200,
   };
 }
 

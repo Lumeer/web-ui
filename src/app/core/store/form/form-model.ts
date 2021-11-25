@@ -32,12 +32,12 @@ export interface FormConfig {
   sections: FormSection[];
   buttons: FormButtonsConfig;
   mode: FormMode;
+  tableHeight: number;
 }
 
 export enum FormMode {
   Build = 'build',
-  Create = 'create',
-  Update = 'update',
+  CreateUpdate = 'createUpdate',
 }
 
 export interface FormButtonsConfig {

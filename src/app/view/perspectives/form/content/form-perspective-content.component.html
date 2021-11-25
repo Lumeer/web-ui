@@ -22,28 +22,16 @@
                (configChange)="configChange.emit($event)">
   </form-editor>
 
-  <form-view *ngSwitchCase="mode.Create"
+  <form-view *ngSwitchCase="mode.CreateUpdate"
              class="d-block mt-3 mb-6"
              [config]="config"
              [collection]="collection"
              [query]="query"
              [view]="view"
-             [mode]="mode.Create"
              [attributesSettings]="attributesSettings"
              [resourcesPermissions]="permissions"
-             [collectionLinkTypes]="collectionLinkTypes">
-  </form-view>
-
-  <form-view *ngSwitchCase="mode.Update"
-             class="d-block mt-3 mb-6"
-             [config]="config"
-             [collection]="collection"
-             [query]="query"
-             [view]="view"
-             [mode]="mode.Update"
-             [attributesSettings]="attributesSettings"
-             [resourcesPermissions]="permissions"
-             [collectionLinkTypes]="collectionLinkTypes">
+             [collectionLinkTypes]="collectionLinkTypes"
+             (configChange)="configChange.emit($event)">
   </form-view>
 
 </ng-container>

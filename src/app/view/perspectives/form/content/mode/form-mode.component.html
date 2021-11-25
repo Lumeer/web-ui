@@ -1,11 +1,12 @@
-<div class="d-flex justify-content-center flex-wrap" *ngIf="modes?.length; else empty">
+<ng-container *ngIf="modes?.length; else empty">
+  <div *ngIf="modes.length > 1" class="d-flex justify-content-end">
 
-  <button *ngFor="let mode of modes"
-          [ngClass]="selectedMode === mode ? 'btn-success' : 'btn-outline-success'"
-          class="btn badge-pill mx-2 px-4 mt-2"
-          (click)="modeChange.emit(mode)">
-    <i class="mr-1" [ngClass]="mode | formModeIcon"></i>&nbsp;<span i18n="@@perspective.form.view.mode">{mode, select, build {Build the Form} create {Create New Record} update {Update Record}}</span></button>
-</div>
+    <toggle-checkbox [checked]="selectedMode === mode.Build"
+                     icon="fas fa-ruler-triangle"
+                     label="Designer mode" (checkedChange)="onCheckedModeChange($event)">
+    </toggle-checkbox>
+  </div>
+</ng-container>
 
 <ng-template #empty>
 

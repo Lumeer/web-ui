@@ -26,7 +26,6 @@ import {
   FormCellType,
   FormConfig,
   FormLinkCellConfig,
-  FormMode,
 } from '../../../../../../core/store/form/form-model';
 import {
   ConstraintType,
@@ -50,7 +49,6 @@ export class FormValidationService {
 
   private revalidateSubject$ = new Subject();
 
-  private mode: FormMode;
   private config: FormConfig;
   private attributesMap: Record<string, Attribute>;
   private documentDataValues: Record<string, DataValue> = {};
@@ -63,13 +61,6 @@ export class FormValidationService {
       debounceTime(50),
       map(() => this.validate())
     );
-  }
-
-  public setMode(mode: FormMode) {
-    if (this.mode !== mode) {
-      this.mode = mode;
-      this.checkValidation();
-    }
   }
 
   public setConfig(config: FormConfig) {
@@ -95,11 +86,7 @@ export class FormValidationService {
   }
 
   private get isCreating(): boolean {
-    return this.mode === FormMode.Create;
-  }
-
-  private get isUpdating(): boolean {
-    return this.mode === FormMode.Update;
+    return false; // TODO
   }
 
   private checkValidation() {
@@ -332,7 +319,7 @@ export class FormValidationService {
   }
 
   private isAllDataDefined(): boolean {
-    if (!this.attributesMap || !this.config || !this.mode) {
+    if (!this.attributesMap || !this.config) {
       return false;
     }
     return true;

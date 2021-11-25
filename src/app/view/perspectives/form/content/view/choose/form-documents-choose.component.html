@@ -4,5 +4,7 @@
                        [view]="view"
                        [resource]="collection"
                        [constraintData]="constraintData"
+                       [tableHeight]="config?.tableHeight"
+                       (tableHeightChange)="onTableHeightChange($event)"
                        (selectDataResource)="setActiveDocument($event)">
 </preview-results-table>

@@ -18,6 +18,7 @@ tbody {
 
 .table-fixed {
   table-layout: fixed;
+  width: min-content;
 }
 
 th,
@@ -39,8 +40,4 @@ td {
 
 tr.active {
   background-color: $light;
-}
-
-.h-10em {
-  height: 10em;
 }

@@ -4,7 +4,7 @@
     &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
   </div>
 </div>
-<div class="position-relative table-wrapper" [class.h-10em]="resizeable" [id]="resource.id">
+<div class="position-relative table-wrapper" [id]="resource.id" [style.height.px]="tableHeight">
   <preview-results-alternative-header *ngIf="hasData"
                                       [columns]="columns">
   </preview-results-alternative-header>

@@ -57,8 +57,6 @@ import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {FormViewSubmitComponent} from './content/view/submit/form-view-submit.component';
 import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
 import {FormModeComponent} from './content/mode/form-mode.component';
-import {FormModeIconPipe} from './pipes/form-mode-icon.pipe';
-import {IsFormViewVisiblePipe} from './pipes/is-form-view-visible.pipe';
 import {FormErrorsBySectionPipe} from './pipes/form-errors-by-section.pipe';
 import {FormErrorsByRowPipe} from './pipes/form-errors-by-row.pipe';
 import {FormErrorsByCellPipe} from './pipes/form-errors-by-cell.pipe';
@@ -90,8 +88,6 @@ import {FormDocumentsChooseComponent} from './content/view/choose/form-documents
     FormViewCellComponent,
     FormViewSubmitComponent,
     FormModeComponent,
-    FormModeIconPipe,
-    IsFormViewVisiblePipe,
     FormErrorsBySectionPipe,
     FormErrorsByRowPipe,
     FormErrorsByCellPipe,

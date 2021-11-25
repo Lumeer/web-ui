@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnChanges, ChangeDetectionStrategy, Input, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {objectChanged} from '../../../../../shared/utils/common.utils';
@@ -44,6 +44,7 @@ export class FormModeComponent implements OnChanges {
   @Output()
   public modeChange = new EventEmitter<FormMode>();
 
+  public readonly mode = FormMode;
   public modes: FormMode[];
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -59,15 +60,13 @@ export class FormModeComponent implements OnChanges {
       newModes.push(FormMode.Build);
     }
     const permissions = this.resourcesPermissions?.collections?.[this.collection?.id];
-    if (permissions?.rolesWithView?.DataContribute) {
-      newModes.push(FormMode.Create);
-    }
     if (
       permissions?.rolesWithView?.DataContribute ||
       permissions?.rolesWithView?.DataWrite ||
-      permissions?.rolesWithView?.DataRead
+      permissions?.rolesWithView?.DataRead ||
+      this.canManageConfig
     ) {
-      newModes.push(FormMode.Update);
+      newModes.push(FormMode.CreateUpdate);
     }
     this.modes = newModes;
   }
@@ -76,6 +75,14 @@ export class FormModeComponent implements OnChanges {
     if (!this.modes.includes(this.selectedMode) && this.modes.length > 0) {
       this.selectedMode = this.modes[0];
       this.modeChange.emit(this.selectedMode);
+    }
+  }
+
+  public onCheckedModeChange(checked: boolean) {
+    if (checked) {
+      this.modeChange.emit(FormMode.Build);
+    } else {
+      this.modeChange.emit(FormMode.CreateUpdate);
     }
   }
 }

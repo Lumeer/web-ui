@@ -1,21 +1,21 @@
 <ng-container *ngIf="{document: document$ | async, collection: collection$ | async, currentUser: currentUser$ | async, constraintData: constraintData$ | async} as data">
 
   <form-documents-choose class="mb-4 d-block"
-                         *ngIf="mode === modeType.Update"
                          [collection]="data.collection"
                          [documentId]="data.document?.id"
                          [attributesSettings]="attributesSettings"
                          [constraintData]="data.constraintData"
                          [query]="query"
                          [view]="view"
+                         [config]="config"
+                         (configChange)="configChange.emit($event)"
                          (selectDocument)="selectDocument($event)">
   </form-documents-choose>
 
-  <ng-container *ngIf="mode | isFormViewVisible:data.document">
+  <ng-container *ngIf="data.document">
 
-    <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index; let first = first"
-                       class="d-block card p-3 shadow-light"
-                       [class.mt-3]="mode === modeType.Update || !first"
+    <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index;"
+                       class="d-block card p-3 mt-3 shadow-light"
                        [dataValues]="documentDataValues$ | async"
                        [linkValues]="linkData$ | async"
                        [section]="section"

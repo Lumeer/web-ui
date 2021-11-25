@@ -35,6 +35,9 @@ export class ToggleCheckboxComponent {
   @Input()
   public disabled: boolean;
 
+  @Input()
+  public icon: string;
+
   @Output()
   public checkedChange = new EventEmitter<boolean>();
 
