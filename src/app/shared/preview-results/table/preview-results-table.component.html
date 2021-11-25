@@ -12,10 +12,11 @@
                                [lmrItemSize]="32"
                                [headerHeight]="32"
                                [baseOffset]="-1"
-                               [columns]="columns">
+                               [columns]="columns"
+                               (scrolledIndexChange)="onScrolledIndexChange($event)">
     <table class="table lmr-table table-sm" [class.table-fixed]="hasData" id="preview-results-table">
       <thead>
-      <tr #tableRow>
+      <tr>
         <th class="sticky-header"
             *ngFor="let column of columns; trackBy:trackByAttribute; let idx = index"
             [style.background-color]="column.color"
@@ -32,8 +33,7 @@
         </td>
       </tr>
       <tr *cdkVirtualFor="let dataResource of dataResources; trackBy:trackByDataResource"
-          class="clickable-row" #tableRow
-          id="preview-result-row-{{dataResource.id || dataResource.correlationId}}"
+          class="clickable-row"
           [class.active]="(dataResource.id || dataResource.correlationId) === selectedId"
           (click)="activate(dataResource)">
         <td *ngFor="let column of columns"
@@ -49,6 +49,7 @@
     </table>
   </cdk-virtual-scroll-viewport>
 </div>
+<ng-content></ng-content>
 <div *ngIf="resizeable && hasData" resizer class="lmr-resizer mb-3 w-100"
      tagName="lmr-table"
      [minHeight]="100"

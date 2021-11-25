@@ -28,10 +28,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  QueryList,
   SimpleChanges,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
@@ -87,12 +85,6 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   public viewPort: CdkVirtualScrollViewport;
 
-  @ViewChild('table', {static: true, read: ElementRef})
-  public tableElement: ElementRef;
-
-  @ViewChildren('tableRow')
-  public rowsElements: QueryList<ElementRef>;
-
   @Output()
   public tableHeightChange = new EventEmitter<number>();
 
@@ -108,6 +100,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   public scrolledIndex$: Observable<number>;
   public numVisibleRows$ = new BehaviorSubject(0);
 
+  private scrolledIndex: number;
   private subscriptions = new Subscription();
 
   constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef) {}
@@ -202,21 +195,18 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   }
 
   private scrollToCurrentRow() {
-    if (this.selectedId && this.rowsElements && this.tableElement) {
-      const id = `preview-result-row-${this.selectedId}`;
-      const index = this.rowsElements.toArray().findIndex(elem => elem.nativeElement.id === id);
-      if (index > 0) {
-        const rowElement = this.rowsElements.toArray()[index - 1]; // because of sticky header
-        if (
-          rowElement.nativeElement.offsetTop >
-          this.tableElement.nativeElement.scrollTop + this.tableElement.nativeElement.clientHeight
-        ) {
-          this.tableElement.nativeElement.scrollTop = rowElement.nativeElement.offsetTop;
-        } else if (rowElement.nativeElement.offsetTop < this.tableElement.nativeElement.scrollTop) {
-          this.tableElement.nativeElement.scrollTop = rowElement.nativeElement.offsetTop;
-        }
+    if (this.selectedId) {
+      const index = (this.dataResources || []).findIndex(
+        dataResource => this.selectedId === (dataResource.id || dataResource.correlationId)
+      );
+      if (index > 0 && !this.isIndexVisible(index)) {
+        this.viewPort?.scrollToIndex(index, 'smooth');
       }
     }
+  }
+
+  private isIndexVisible(index: number): boolean {
+    return this.scrolledIndex <= index && this.scrolledIndex + this.numVisibleRows$.value >= index;
   }
 
   public ngOnDestroy() {
@@ -232,6 +222,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
 
   private checkNumVisibleRows() {
     this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / 32) - 1);
+  }
+
+  public onScrolledIndexChange(index: number) {
+    this.scrolledIndex = index;
   }
 }
 

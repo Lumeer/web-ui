@@ -1,5 +1,5 @@
 <preview-results-table [dataResources]="documents$ | async"
-                       [selectedId]="documentId"
+                       [selectedId]="document?.id || document?.correlationId"
                        [attributesSettings]="attributesSettings"
                        [view]="view"
                        [resource]="collection"
@@ -7,4 +7,9 @@
                        [tableHeight]="config?.tableHeight"
                        (tableHeightChange)="onTableHeightChange($event)"
                        (selectDataResource)="setActiveDocument($event)">
+  <div class="d-flex align-items-center h-100">
+    <button class="btn btn-link px-0 small h-100" (click)="onAddNewRow.emit()"><i
+      class="fas fa-plus-circle mr-2"></i><span
+      i18n="@@perspective.workflow.row.new">Add new row</span></button>
+  </div>
 </preview-results-table>

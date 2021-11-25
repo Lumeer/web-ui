@@ -23,13 +23,13 @@ import {ConstraintData} from '@lumeer/data-filters';
 import {AttributesSettings, View} from '../../../../../../core/store/views/view';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {Query} from '../../../../../../core/store/navigation/query/query';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {filterStemsForCollection} from '../../../../../../core/store/navigation/query/query.util';
 import {selectDocumentsByCollectionAndQuery} from '../../../../../../core/store/common/permissions.selectors';
 import {objectChanged} from '../../../../../../shared/utils/common.utils';
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {FormConfig} from '../../../../../../core/store/form/form-model';
 
 @Component({
@@ -45,7 +45,7 @@ export class FormDocumentsChooseComponent implements OnChanges {
   public collection: Collection;
 
   @Input()
-  public documentId: string;
+  public document: DocumentModel;
 
   @Input()
   public constraintData: ConstraintData;
@@ -60,6 +60,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
   public query: Query;
 
   @Output()
+  public onAddNewRow = new EventEmitter();
+
+  @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
   @Output()
@@ -67,24 +70,41 @@ export class FormDocumentsChooseComponent implements OnChanges {
 
   public documents$: Observable<DocumentModel[]>;
 
+  public currentDocument$ = new BehaviorSubject<DocumentModel>(null);
+
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.collection) || changes.query || changes.view) {
       this.subscribeToDocuments();
     }
+    if (changes.document) {
+      this.currentDocument$.next(this.document);
+    }
   }
 
   private subscribeToDocuments() {
     const collectionQuery = filterStemsForCollection(this.collection.id, this.query);
-    this.documents$ = this.store$.pipe(
-      select(selectDocumentsByCollectionAndQuery(this.collection.id, collectionQuery, this.view)),
+    this.documents$ = combineLatest([
+      this.store$.pipe(select(selectDocumentsByCollectionAndQuery(this.collection.id, collectionQuery, this.view))),
+      this.currentDocument$,
+    ]).pipe(
+      map(([documents, currentDocument]) => {
+        if (currentDocument?.correlationId && !currentDocument?.id) {
+          return [...documents, currentDocument];
+        }
+        return [...documents];
+      }),
       tap(documents => this.checkAfterLoadedDocument(documents))
     );
   }
 
   private checkAfterLoadedDocument(documents: DocumentModel[]) {
-    if (documents.length && (!this.documentId || !documents.some(doc => doc.id === this.documentId))) {
+    if (
+      documents.length &&
+      (!this.document ||
+        !documents.some(doc => (doc.id || doc.correlationId) === (this.document.id || this.document.correlationId)))
+    ) {
       setTimeout(() => this.selectDocument.emit(documents[0]));
     }
   }

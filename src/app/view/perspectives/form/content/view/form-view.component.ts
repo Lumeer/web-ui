@@ -58,6 +58,9 @@ import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/use
 import {objectChanged} from '../../../../../shared/utils/common.utils';
 import {filterVisibleAttributesBySettings} from '../../../../../shared/utils/attribute.utils';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
+import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
+import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
+import {CommonAction} from '../../../../../core/store/common/common.action';
 
 @Component({
   selector: 'form-view',
@@ -103,7 +106,7 @@ export class FormViewComponent implements OnInit, OnChanges {
   public config$ = new BehaviorSubject<FormConfig>(null);
   public collection$ = new BehaviorSubject<Collection>(null);
   public linkTypes$ = new BehaviorSubject<LinkType[]>([]);
-  public selectedDocumentId$ = new BehaviorSubject<string>(null);
+  public selectedDocumentIds$ = new BehaviorSubject<{id?: string; correlationId?: string}>({});
   public data$ = new BehaviorSubject<DataResourceData>({});
   public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
   public selectedLinkData$ = new BehaviorSubject<Record<string, FormLinkSelectedData>>({});
@@ -151,21 +154,24 @@ export class FormViewComponent implements OnInit, OnChanges {
       map(collection => collection.id),
       distinctUntilChanged()
     );
-    this.document$ = combineLatest([this.selectedDocumentId$, this.data$, collectionId$]).pipe(
-      switchMap(([documentId, data, collectionId]) => {
-        if (documentId) {
+    this.document$ = combineLatest([this.selectedDocumentIds$, this.data$, collectionId$]).pipe(
+      switchMap(([ids, data, collectionId]) => {
+        if (ids?.correlationId) {
+          return of({id: null, correlationId: ids.correlationId, data, collectionId});
+        }
+        if (ids?.id) {
           return this.store$.pipe(
-            select(selectDocumentById(documentId)),
+            select(selectDocumentById(ids.id)),
             map(document => {
               if (document) {
                 return {...document, data: mergeMapData(document.data, data)};
               }
-              return {id: null, data, collectionId};
+              return null;
             })
           );
         }
 
-        return of({id: null, data, collectionId});
+        return of(null);
       })
     );
   }
@@ -221,52 +227,36 @@ export class FormViewComponent implements OnInit, OnChanges {
       this.linkTypes$,
       this.view$,
       this.selectedLinkData$,
-      this.selectedDocumentId$,
+      this.selectedDocumentIds$,
       linkInstances$,
       collectionId$,
       collections$,
     ]).pipe(
-      map(
-        ([
-          config,
-          allLinkTypes,
-          view,
-          selectedLinkData,
-          documentId,
-          allLinkInstances,
-          collectionId,
-          allCollections,
-        ]) => {
-          return collectLinkConfigsFromFormConfig(config).reduce<Record<string, FormLinkData>>(
-            (linkDataMap, config) => {
-              const linkType = allLinkTypes.find(lt => lt.id === config.linkTypeId);
-              if (linkType) {
-                const otherCollectionId = getOtherLinkedCollectionId(linkType, collectionId);
-                const otherCollection = allCollections.find(collection => collection.id === otherCollectionId);
-                if (otherCollection) {
-                  const linkInstances = allLinkInstances.filter(
-                    linkInstance => linkInstance.linkTypeId === linkType.id
-                  );
-                  const linkDocumentIds = uniqueValues(
-                    linkInstances.map(linkInstance => getOtherLinkedDocumentId(linkInstance, documentId))
-                  );
-                  linkDataMap[linkType.id] = {
-                    view,
-                    linkType,
-                    collection: otherCollection,
-                    linkInstances,
-                    linkDocumentIds,
-                    ...selectedLinkData[linkType.id],
-                  };
-                }
-              }
+      map(([config, allLinkTypes, view, selectedLinkData, ids, allLinkInstances, collectionId, allCollections]) => {
+        return collectLinkConfigsFromFormConfig(config).reduce<Record<string, FormLinkData>>((linkDataMap, config) => {
+          const linkType = allLinkTypes.find(lt => lt.id === config.linkTypeId);
+          if (linkType) {
+            const otherCollectionId = getOtherLinkedCollectionId(linkType, collectionId);
+            const otherCollection = allCollections.find(collection => collection.id === otherCollectionId);
+            if (otherCollection) {
+              const linkInstances = allLinkInstances.filter(linkInstance => linkInstance.linkTypeId === linkType.id);
+              const linkDocumentIds = uniqueValues(
+                linkInstances.map(linkInstance => getOtherLinkedDocumentId(linkInstance, ids?.id))
+              );
+              linkDataMap[linkType.id] = {
+                view,
+                linkType,
+                collection: otherCollection,
+                linkInstances,
+                linkDocumentIds,
+                ...selectedLinkData[linkType.id],
+              };
+            }
+          }
 
-              return linkDataMap;
-            },
-            {}
-          );
-        }
-      ),
+          return linkDataMap;
+        }, {});
+      }),
       tap(linkData => this.formValidation.setLinkData(linkData, this.selectedLinkData$.value))
     );
   }
@@ -341,8 +331,9 @@ export class FormViewComponent implements OnInit, OnChanges {
         document,
         data,
         workspace: {viewId: this.view?.id},
-        onSuccess: () => {
+        onSuccess: documentId => {
           this.clearData();
+          this.selectedDocumentIds$.next({id: documentId});
           this.performingAction$.next(false);
         },
         onFailure: () => this.performingAction$.next(false),
@@ -371,28 +362,67 @@ export class FormViewComponent implements OnInit, OnChanges {
     this.selectedLinkData$.next({});
   }
 
-  public selectDocument(document: DocumentModel) {
-    if (this.selectedDocumentId$.value !== document.id) {
-      this.selectedDocumentId$.next(document.id);
-      this.clearData();
+  public onSelectDocument(document: DocumentModel) {
+    if (this.selectedDocumentIds$.value.id !== document.id) {
+      if (this.userEnteredData()) {
+        const title = $localize`:@@perspective.form.view.submit.warning.data.title:Unconfirmed changes`;
+        const message = $localize`:@@perspective.form.view.submit.warning.data.message:There are some changes in form that was not saved. Are you sure to select document?`;
+        const yesTitle = $localize`:@@perspective.form.view.submit.warning.data.yes:Select`;
+        const noTitle = $localize`:@@perspective.form.view.submit.warning.data.no:Do nothing`;
+        this.store$.dispatch(
+          new NotificationsAction.Confirm({
+            title,
+            message,
+            yesTitle,
+            noTitle,
+            action: new CommonAction.ExecuteCallback({callback: () => this.selectDocument(document)}),
+            type: 'warning',
+          })
+        );
+      } else {
+        this.selectDocument(document);
+      }
     }
   }
 
-  public onDelete() {
-    this.performingDelete$.next(true);
+  private selectDocument(document: DocumentModel) {
+    this.selectedDocumentIds$.next({id: document.id});
+    this.formValidation.setDocumentId(document.id);
+    this.clearData();
+  }
 
-    this.store$.dispatch(
-      new DocumentsAction.DeleteConfirm({
-        collectionId: this.collection.id,
-        documentId: this.selectedDocumentId$.value,
-        onSuccess: () => {
-          this.clearData();
-          this.performingDelete$.next(false);
-        },
-        onFailure: () => this.performingDelete$.next(false),
-        workspace: {viewId: this.view?.id},
-      })
-    );
+  private userEnteredData(): boolean {
+    return Object.keys(this.dataValues$.value).length > 0 || Object.keys(this.selectedLinkData$.value).length > 0;
+  }
+
+  public onAddNewDocument() {
+    const correlationId = generateCorrelationId();
+    this.selectedDocumentIds$.next({correlationId});
+    this.formValidation.setDocumentId(null);
+    this.clearData();
+  }
+
+  public onDelete() {
+    const {id} = this.selectedDocumentIds$.value;
+    if (id) {
+      this.performingDelete$.next(true);
+
+      this.store$.dispatch(
+        new DocumentsAction.DeleteConfirm({
+          collectionId: this.collection.id,
+          documentId: id,
+          onSuccess: () => {
+            this.clearData();
+            this.performingDelete$.next(false);
+          },
+          onFailure: () => this.performingDelete$.next(false),
+          workspace: {viewId: this.view?.id},
+        })
+      );
+    } else {
+      this.selectedDocumentIds$.next({});
+      this.clearData();
+    }
   }
 }
 

@@ -49,6 +49,7 @@ export class FormValidationService {
 
   private revalidateSubject$ = new Subject();
 
+  private documentId: string;
   private config: FormConfig;
   private attributesMap: Record<string, Attribute>;
   private documentDataValues: Record<string, DataValue> = {};
@@ -85,8 +86,13 @@ export class FormValidationService {
     this.checkValidation();
   }
 
+  public setDocumentId(documentId: string) {
+    this.documentId = documentId;
+    this.checkValidation();
+  }
+
   private get isCreating(): boolean {
-    return false; // TODO
+    return !this.documentId;
   }
 
   private checkValidation() {

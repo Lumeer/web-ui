@@ -34,8 +34,8 @@ export class NotificationsEffects {
       this.actions$.pipe(
         ofType<NotificationsAction.Confirm>(NotificationsActionType.CONFIRM),
         tap(action => {
-          const yesButtonText = $localize`:@@button.yes:Yes`;
-          const noButtonText = $localize`:@@button.no:No`;
+          const yesButtonText = action.payload.yesTitle || $localize`:@@button.yes:Yes`;
+          const noButtonText = action.payload.noTitle || $localize`:@@button.no:No`;
           const yesButton = {text: yesButtonText, action: () => this.store$.dispatch(action.payload.action)};
           const noButton = {text: noButtonText};
 

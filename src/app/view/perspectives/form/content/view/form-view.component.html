@@ -2,14 +2,15 @@
 
   <form-documents-choose class="mb-4 d-block"
                          [collection]="data.collection"
-                         [documentId]="data.document?.id"
+                         [document]="data.document"
                          [attributesSettings]="attributesSettings"
                          [constraintData]="data.constraintData"
                          [query]="query"
                          [view]="view"
                          [config]="config"
                          (configChange)="configChange.emit($event)"
-                         (selectDocument)="selectDocument($event)">
+                         (onAddNewRow)="onAddNewDocument()"
+                         (selectDocument)="onSelectDocument($event)">
   </form-documents-choose>
 
   <ng-container *ngIf="data.document">
@@ -29,7 +30,7 @@
 
     <form-view-submit class="mt-4"
                       [editable]="data.document | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
-                      [deletable]="data.document | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
+                      [deletable]="!data.document.id || (data.document | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData)"
                       [document]="data.document"
                       [buttons]="config?.buttons"
                       [loading]="performingAction$ | async"
