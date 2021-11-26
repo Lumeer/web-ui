@@ -2,8 +2,9 @@
   <div *ngIf="modes.length > 1" class="d-flex justify-content-end">
 
     <toggle-checkbox [checked]="selectedMode === mode.Build"
-                     icon="fas fa-ruler-triangle"
-                     label="Designer mode" (checkedChange)="onCheckedModeChange($event)">
+                     label="Designer mode"
+                     i
+                     (checkedChange)="onCheckedModeChange($event)">
     </toggle-checkbox>
   </div>
 </ng-container>

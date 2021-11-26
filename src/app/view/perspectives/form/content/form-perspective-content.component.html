@@ -1,9 +1,3 @@
-<div class="mx-3 mb-3 text-center" *ngIf="collection">
-  <i [style.color]="collection.color" aria-hidden="true" class="{{collection.icon}} fa-fw"></i>&nbsp;
-  <b>{{collection.name}}</b>&nbsp;
-  <span>Form View</span>
-</div>
-
 <form-mode [collection]="collection"
            [canManageConfig]="canManageConfig"
            [selectedMode]="config?.mode"

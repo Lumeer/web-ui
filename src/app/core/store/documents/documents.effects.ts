@@ -693,6 +693,7 @@ export class DocumentsEffects {
           title,
           message,
           action: new DocumentsAction.Delete(action.payload),
+          noAction: new CommonAction.ExecuteCallback({callback: () => action.payload.onCancel?.()}),
           type: 'danger',
         });
       })

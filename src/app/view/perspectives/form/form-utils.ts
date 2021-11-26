@@ -35,6 +35,8 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {COLOR_SUCCESS} from '../../../core/constants';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query/query.util';
+import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
+import {AttributesResourceType} from '../../../core/model/resource';
 
 export function checkOrTransformFormConfig(
   config: FormConfig,
@@ -42,18 +44,44 @@ export function checkOrTransformFormConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): FormConfig {
+  let currentConfig = config;
+  const collectionId = getBaseCollectionIdFromQuery(query);
+  const currentCollectionId = currentConfig?.collectionId || collectionId;
+  if (currentCollectionId !== collectionId) {
+    currentConfig = null;
+  }
+
   return {
-    collectionId: getBaseCollectionIdFromQuery(query),
-    mode: config?.mode || FormMode.Build,
-    sections: formSectionsDefaultConfig(config?.sections),
-    buttons: formButtonsDefaultConfig(config?.buttons),
-    tableHeight: config?.tableHeight || 200,
+    collectionId,
+    mode: currentConfig?.mode || FormMode.Build,
+    sections: formSectionsDefaultConfig(currentConfig?.sections, query, collections),
+    buttons: formButtonsDefaultConfig(currentConfig?.buttons),
+    tableHeight: currentConfig?.tableHeight || 200,
   };
 }
 
-function formSectionsDefaultConfig(sections: FormSection[]): FormSection[] {
+function formSectionsDefaultConfig(sections: FormSection[], query: Query, collections: Collection[]): FormSection[] {
   if ((sections || []).length === 0) {
-    return [{id: generateId(), rows: []}];
+    const baseCollectionId = getBaseCollectionIdFromQuery(query);
+    const baseCollection = collections.find(collection => collection.id === baseCollectionId);
+    if (baseCollection) {
+      const defaultCells: FormCell[] = [];
+      const defaultAttribute = findAttribute(baseCollection?.attributes, getDefaultAttributeId(baseCollection));
+      if (defaultAttribute) {
+        defaultCells.push({
+          id: generateId(),
+          type: FormCellType.Attribute,
+          title: defaultAttribute.name,
+          span: 1,
+          config: {
+            attributeId: defaultAttribute.id,
+            resourceId: baseCollection.id,
+            resourceType: AttributesResourceType.Collection,
+          },
+        });
+      }
+      return [{id: generateId(), rows: [{id: generateId(), cells: defaultCells}]}];
+    }
   }
   return sections;
 }

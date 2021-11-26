@@ -360,6 +360,7 @@ export namespace DocumentsAction {
         nextAction?: Action;
         workspace?: Workspace;
         onSuccess?: () => void;
+        onCancel?: () => void;
         onFailure?: () => void;
       }
     ) {}

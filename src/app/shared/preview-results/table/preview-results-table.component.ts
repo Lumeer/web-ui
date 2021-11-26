@@ -199,14 +199,14 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
       const index = (this.dataResources || []).findIndex(
         dataResource => this.selectedId === (dataResource.id || dataResource.correlationId)
       );
-      if (index > 0 && !this.isIndexVisible(index)) {
+      if (index >= 0 && !this.isIndexVisible(index)) {
         this.viewPort?.scrollToIndex(index, 'smooth');
       }
     }
   }
 
   private isIndexVisible(index: number): boolean {
-    return this.scrolledIndex <= index && this.scrolledIndex + this.numVisibleRows$.value >= index;
+    return this.scrolledIndex <= index && this.scrolledIndex + this.numVisibleRows$.value > index;
   }
 
   public ngOnDestroy() {
@@ -221,7 +221,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   }
 
   private checkNumVisibleRows() {
-    this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / 32) - 1);
+    this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / 32) - 2);
   }
 
   public onScrolledIndexChange(index: number) {

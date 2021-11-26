@@ -1,13 +1,15 @@
 <input-box class="d-block mt-1 mx-2"
            innerClass="font-weight-bold"
-           placeholder="Section title"
+           placeholder="Add section title or keep blank for no title"
+           i18n-placeholder="@@perspective.form.editor.section.title"
            [canStayEmpty]="true"
            [initialValue]="section?.title"
            (newValue)="onNewTitle($event)">
 </input-box>
 
 <input-box class="d-block mt-1 mx-2"
-           placeholder="Section description"
+           placeholder="Add instructions for filling this section or leave empty"
+           i18n-placeholder="@@perspective.form.editor.section.description"
            [initialValue]="section?.description"
            [color]="descriptionColor"
            [canStayEmpty]="true"
@@ -38,7 +40,7 @@
 <div class="d-flex justify-content-between px-3 mb-2">
   <button #buttonElement class="btn btn-link px-0" (click)="layout.toggle()">
     <i class="far fa-plus mr-2"></i>
-    <span i18n="@@perspective.form.editor.row.action.add">Add a Row</span>
+    <span i18n="@@perspective.form.editor.row.action.add">Add a Form Row</span>
   </button>
 
 

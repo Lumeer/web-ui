@@ -68,8 +68,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<FormConfig>();
 
-  public documents$: Observable<DocumentModel[]>;
+  public addingNewRow: boolean;
 
+  public documents$: Observable<DocumentModel[]>;
   public currentDocument$ = new BehaviorSubject<DocumentModel>(null);
 
   constructor(private store$: Store<AppState>) {}
@@ -80,6 +81,7 @@ export class FormDocumentsChooseComponent implements OnChanges {
     }
     if (changes.document) {
       this.currentDocument$.next(this.document);
+      this.addingNewRow = this.document && !this.document.id;
     }
   }
 

@@ -363,7 +363,10 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   public onSelectDocument(document: DocumentModel) {
-    if (this.selectedDocumentIds$.value.id !== document.id) {
+    const selectedId = this.selectedDocumentIds$.value.id || this.selectedDocumentIds$.value.correlationId;
+    const documentId = document.id || document.correlationId;
+
+    if (selectedId !== documentId) {
       if (this.userEnteredData()) {
         const title = $localize`:@@perspective.form.view.submit.warning.data.title:Unconfirmed changes`;
         const message = $localize`:@@perspective.form.view.submit.warning.data.message:There are some changes in form that was not saved. Are you sure to select document?`;
@@ -386,7 +389,11 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   private selectDocument(document: DocumentModel) {
-    this.selectedDocumentIds$.next({id: document.id});
+    if (document.id) {
+      this.selectedDocumentIds$.next({id: document.id});
+    } else {
+      this.selectedDocumentIds$.next({correlationId: document.correlationId});
+    }
     this.formValidation.setDocumentId(document.id);
     this.clearData();
   }
@@ -416,6 +423,7 @@ export class FormViewComponent implements OnInit, OnChanges {
             this.performingDelete$.next(false);
           },
           onFailure: () => this.performingDelete$.next(false),
+          onCancel: () => this.performingDelete$.next(false),
           workspace: {viewId: this.view?.id},
         })
       );

@@ -1,11 +1,17 @@
-<form-editor-button [button]="buttons?.create"
-                    buttonLabel="Create Button"
-                    i18n-buttonLabel="@@perspective.form.editor.buttons.create.label"
-                    (buttonChange)="onCreateButtonChange($event)">
-</form-editor-button>
+<div class="text-muted text-center mt-4 mb-2" i18n="@@perspective.form.editor.buttons.description">Configure form buttons for adding a new record and for updating an existing record</div>
 
-<form-editor-button [button]="buttons?.update"
-                    buttonLabel="Update Button"
-                    i18n-buttonLabel="@@perspective.form.editor.buttons.update.label"
-                    (buttonChange)="onUpdateButtonChange($event)">
-</form-editor-button>
+<div class="buttons">
+  <form-editor-button class="d-block py-2"
+                      [button]="buttons?.create"
+                      buttonLabel="Create Button"
+                      i18n-buttonLabel="@@perspective.form.editor.buttons.create.label"
+                      (buttonChange)="onCreateButtonChange($event)">
+  </form-editor-button>
+
+  <form-editor-button class="d-block py-2"
+                      [button]="buttons?.update"
+                      buttonLabel="Update Button"
+                      i18n-buttonLabel="@@perspective.form.editor.buttons.update.label"
+                      (buttonChange)="onUpdateButtonChange($event)">
+  </form-editor-button>
+</div>

@@ -1,9 +1,11 @@
 <div class="d-flex align-items-center"
      [class.justify-content-end]="!deletable"
      [class.justify-content-between]="deletable">
-  <i *ngIf="deletable"
-     class="fal fa-trash-alt text-danger clickable delete-icon" (click)="onDelete()"
-     [class.clickable]="!deleting && !loading"></i>
+  <button *ngIf="deletable" class="btn btn-link btn-delete text-danger"
+          (click)="onDelete()"
+          [disabled]="deleting || loading">
+    <i class="fal fa-trash-alt"></i>&nbsp;<span i18n="@@perspective.form.view.submit.delete">Delete record</span>
+  </button>
 
   <button class="btn text-truncate text-nowrap"
           [style.background]="button?.color"

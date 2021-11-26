@@ -43,6 +43,7 @@ export namespace NotificationsAction {
         message: string;
         action: Action;
         type: string;
+        noAction?: Action;
         yesFirst?: boolean;
         yesTitle?: string;
         noTitle?: string;
