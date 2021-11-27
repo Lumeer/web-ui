@@ -41,9 +41,11 @@ import {shadeColor} from '../../utils/html-modifier';
 import {filterVisibleAttributesBySettings} from '../../utils/attribute.utils';
 import {getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+
+const ROW_HEIGHT = 32;
 
 @Component({
   selector: 'preview-results-table',
@@ -119,6 +121,12 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     if (changes.dataResources) {
       this.hasData = (this.dataResources || []).length > 0;
     }
+    if (changes.tableHeight) {
+      setTimeout(() => {
+        this.viewPort?.checkViewportSize();
+        this.checkNumVisibleRows();
+      });
+    }
   }
 
   private createColumns() {
@@ -156,7 +164,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
 
         Array.from(this.scrollDispatcher.scrollContainers.keys())
           .filter(
-            otherScrollable => otherScrollable !== scrollable && otherScrollable.measureScrollOffset('left') !== left
+            otherScrollable =>
+              otherScrollable !== scrollable &&
+              this.isScrollableInsideComponent(otherScrollable) &&
+              otherScrollable.measureScrollOffset('left') !== left
           )
           .forEach(otherScrollable => otherScrollable.scrollTo({left}));
       });
@@ -181,7 +192,10 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   public ngAfterViewInit() {
     this.scrollToCurrentRow();
 
-    this.scrolledIndex$ = this.viewPort.scrolledIndexChange;
+    this.scrolledIndex$ = this.viewPort.elementScrolled().pipe(
+      map(() => this.viewPort.measureScrollOffset('top') / ROW_HEIGHT),
+      tap(scrolledIndex => (this.scrolledIndex = scrolledIndex))
+    );
     this.viewPort.checkViewportSize();
     if (this.tableHeight) {
       this.checkNumVisibleRows();
@@ -206,7 +220,9 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   }
 
   private isIndexVisible(index: number): boolean {
-    return this.scrolledIndex <= index && this.scrolledIndex + this.numVisibleRows$.value > index;
+    const fromIndex = Math.floor(this.scrolledIndex);
+    const to = Math.ceil(this.scrolledIndex + this.numVisibleRows$.value);
+    return fromIndex <= index && to > index;
   }
 
   public ngOnDestroy() {
@@ -221,11 +237,9 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   }
 
   private checkNumVisibleRows() {
-    this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / 32) - 2);
-  }
-
-  public onScrolledIndexChange(index: number) {
-    this.scrolledIndex = index;
+    if (this.viewPort) {
+      this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / ROW_HEIGHT) - 2);
+    }
   }
 }
 

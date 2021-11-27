@@ -1,15 +1,18 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1:1; else notDisplayable">
-  <form-perspective-content class="container-fluid d-block col-12 col-lg-11 col-xl-10 col-xxl-9"
-                            [config]="config$ | async"
-                            [collection]="basicCollection$ | async"
-                            [collectionLinkTypes]="collectionLinkTypes$ | async"
-                            [query]="query$ | async"
-                            [view]="currentView$ | async"
-                            [attributesSettings]="(viewSettings$ | async)?.attributes"
-                            [canManageConfig]="canManageConfig$ | async"
-                            [permissions]="permissions$ | async"
-                            (configChange)="onConfigChanged($event)">
-  </form-perspective-content>
+  <div class="h-100 overflow-y-auto">
+    <form-perspective-content class="d-block"
+                              [ngClass]="perspectiveConfiguration?.additionalSpace ? 'container-fluid col-12 col-lg-11 col-xl-10 col-xxl-9' : 'px-2'"
+                              [config]="config$ | async"
+                              [collection]="basicCollection$ | async"
+                              [collectionLinkTypes]="collectionLinkTypes$ | async"
+                              [query]="query$ | async"
+                              [view]="currentView$ | async"
+                              [attributesSettings]="(viewSettings$ | async)?.attributes"
+                              [canManageConfig]="canManageConfig$ | async"
+                              [permissions]="permissions$ | async"
+                              (configChange)="onConfigChanged($event)">
+    </form-perspective-content>
+  </div>
 </ng-container>
 
 <ng-template #notDisplayable>

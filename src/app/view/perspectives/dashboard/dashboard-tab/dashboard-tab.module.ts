@@ -43,6 +43,7 @@ import {SearchCollectionsModule} from '../search-collections/search-collections.
 import {SearchAllModule} from '../search-all/search-all.module';
 import {DashboardNotesComponent} from './content/row/notes/dashboard-notes.component';
 import {QuillModule} from 'ngx-quill';
+import {FormPerspectiveModule} from '../../form/form-perspective.module';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import {QuillModule} from 'ngx-quill';
     SearchCollectionsModule,
     SearchAllModule,
     QuillModule,
+    FormPerspectiveModule,
   ],
   declarations: [
     PerspectivePreviewComponent,

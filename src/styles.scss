@@ -46,6 +46,10 @@ a.disabled {
   cursor: default;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 // TODO should not be needed
 ul {
   list-style-type: none;

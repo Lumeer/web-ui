@@ -42,6 +42,11 @@
                    [perspectiveConfiguration]="perspectiveConfiguration?.map">
   </map-perspective>
 
+  <form-perspective *ngSwitchCase="perspective.Form"
+                    [view]="view"
+                    [perspectiveConfiguration]="perspectiveConfiguration?.form">
+  </form-perspective>
+
   <detail-perspective *ngSwitchCase="perspective.Detail"
                       class="d-block p-2"
                       [view]="view"

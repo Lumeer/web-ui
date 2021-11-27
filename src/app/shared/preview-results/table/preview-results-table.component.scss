@@ -1,5 +1,8 @@
 @import '../../../../styles/variables';
 
+$data-height: 32px;
+$data-padding: 5px;
+
 thead {
   font-size: small;
   color: $primary;
@@ -26,8 +29,15 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 32px;
+  height: $data-height;
   vertical-align: middle;
+  padding: $data-padding;
+
+  data-input-preview {
+    display: block;
+    height: $data-height - 2 * ($data-padding + 1);
+    max-height: $data-height - 2 * ($data-padding + 1);
+  }
 }
 
 .clickable-row {

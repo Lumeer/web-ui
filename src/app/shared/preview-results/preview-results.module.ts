@@ -30,6 +30,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {TableModule} from '../table/table.module';
 import {PreviewResultsAlternativeHeaderComponent} from './table/header/preview-results-alternative-header.component';
 import {DirectivesModule} from '../directives/directives.module';
+import {PreviewRangeStringPipe} from './table/pipes/preview-range-string.pipe';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import {DirectivesModule} from '../directives/directives.module';
     PreviewResultsTableComponent,
     PreviewResultsTabsComponent,
     PreviewResultsAlternativeHeaderComponent,
+    PreviewRangeStringPipe,
   ],
   exports: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
 })

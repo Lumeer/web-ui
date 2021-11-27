@@ -66,4 +66,8 @@ export class FormEditorButtonComponent implements OnChanges {
       title: this.title,
     });
   }
+
+  public revertTitle() {
+    this.title = this.button?.title;
+  }
 }

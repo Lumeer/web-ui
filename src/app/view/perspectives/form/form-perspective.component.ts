@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {FormConfig} from '../../../core/store/form/form-model';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -34,13 +34,18 @@ import {getBaseCollectionIdFromQuery} from '../../../core/store/navigation/query
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectLinkTypesByViewAndCollectionIdWithCollections} from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformFormConfig} from './form-utils';
+import {defaultFormPerspectiveConfiguration, FormPerspectiveConfiguration} from '../perspective-configuration';
 
 @Component({
   selector: 'form-perspective',
   templateUrl: './form-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-block h-100'},
 })
 export class FormPerspectiveComponent extends DataPerspectiveDirective<FormConfig> implements OnInit {
+  @Input()
+  public perspectiveConfiguration: FormPerspectiveConfiguration = defaultFormPerspectiveConfiguration;
+
   public basicCollection$: Observable<Collection>;
   public collectionLinkTypes$: Observable<LinkType[]>;
 

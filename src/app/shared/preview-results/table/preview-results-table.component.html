@@ -1,8 +1,6 @@
-<div class="row">
-  <div class="col text-right" *ngIf="{index : scrolledIndex$ | async} as data">
-    <strong>{{data.index + 1}}&mdash;{{data.index + (numVisibleRows$ | async)}}</strong>
-    &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
-  </div>
+<div class="text-right" *ngIf="{index : scrolledIndex$ | async} as data">
+  <strong>{{data.index | previewRangeString:(numVisibleRows$ | async):dataResources.length}}</strong>
+  &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{dataResources.length}}
 </div>
 <div class="position-relative table-wrapper" [id]="resource.id" [style.height.px]="tableHeight">
   <preview-results-alternative-header *ngIf="hasData"
@@ -12,8 +10,7 @@
                                [lmrItemSize]="32"
                                [headerHeight]="32"
                                [baseOffset]="-1"
-                               [columns]="columns"
-                               (scrolledIndexChange)="onScrolledIndexChange($event)">
+                               [columns]="columns">
     <table class="table lmr-table table-sm" [class.table-fixed]="hasData" id="preview-results-table">
       <thead>
       <tr>
