@@ -172,7 +172,7 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
         const parent = el.parentElement;
         let baseOffset = this.baseOffset || 0;
         if (this.stickyPositions.has(parent)) {
-          baseOffset = this.stickyPositions.get(parent) + this.baseOffset;
+          baseOffset += this.stickyPositions.get(parent);
         }
         el.style.top = `-${-baseOffset + offset}px`;
       });

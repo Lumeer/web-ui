@@ -20,7 +20,7 @@
 import {User} from '../../core/store/users/user';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
-import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
+import {getAllCollectionIdsFromView, getAllLinkTypeIdsFromView} from '../../core/store/navigation/query/query.util';
 import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
 import {View} from '../../core/store/views/view';
 import {Collection} from '../../core/store/collections/collection';
@@ -116,7 +116,7 @@ export function userPermissionsInCollection(
   const roleTypes = userRoleTypesInResource(organization, project, collection, user);
   if (currentView != null) {
     const viewRoleTypes = userRoleTypesInResource(organization, project, currentView, user);
-    const collectionIds = getAllCollectionIdsFromQuery(currentView.query, linkTypes);
+    const collectionIds = getAllCollectionIdsFromView(currentView, linkTypes);
     if (collectionIds.includes(collection.id)) {
       const authorRoleTypes = currentView.authorCollectionsRoles?.[collection.id];
       const roleTypesWithView = arrayIntersection(viewRoleTypes, authorRoleTypes);
@@ -143,7 +143,7 @@ export function userPermissionsInLinkType(
   const roleTypes = userRoleTypesInLinkType(organization, project, linkType, collections, user);
   if (currentView != null) {
     const viewRoleTypes = userRoleTypesInResource(organization, project, currentView, user);
-    const linkTypeIds = getAllLinkTypeIdsFromQuery(currentView.query);
+    const linkTypeIds = getAllLinkTypeIdsFromView(currentView);
     if (linkTypeIds.includes(linkType.id)) {
       const authorRoleTypes = currentView.authorLinkTypesRoles?.[linkType.id];
       const roleTypesWithView = arrayIntersection(viewRoleTypes, authorRoleTypes);

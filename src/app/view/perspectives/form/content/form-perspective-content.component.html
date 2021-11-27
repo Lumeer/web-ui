@@ -1,11 +1,9 @@
-<form-mode [collection]="collection"
-           [canManageConfig]="canManageConfig"
-           [selectedMode]="config?.mode"
-           [resourcesPermissions]="permissions"
+<form-mode [modes]="modes"
+           [selectedMode]="selectedMode"
            (modeChange)="onModeChange($event)">
 </form-mode>
 
-<ng-container [ngSwitch]="config?.mode">
+<ng-container [ngSwitch]="selectedMode">
 
   <form-editor *ngSwitchCase="mode.Build"
                class="d-block mt-3 mb-6"

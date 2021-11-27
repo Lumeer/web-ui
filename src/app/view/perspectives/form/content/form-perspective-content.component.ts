@@ -17,20 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {FormConfig, FormMode} from '../../../../core/store/form/form-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../core/store/views/view';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
+import {objectChanged} from '../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'form-perspective-content',
   templateUrl: './form-perspective-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPerspectiveContentComponent {
+export class FormPerspectiveContentComponent implements OnChanges {
   @Input()
   public config: FormConfig;
 
@@ -59,6 +60,42 @@ export class FormPerspectiveContentComponent {
   public configChange = new EventEmitter<FormConfig>();
 
   public readonly mode = FormMode;
+
+  public selectedMode: FormMode;
+  public modes: FormMode[];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (objectChanged(changes.collection) || changes.permissions || changes.canManageConfig) {
+      this.checkModes();
+    }
+    this.checkSelectedMode();
+  }
+
+  private checkModes() {
+    const newModes = [];
+    if (this.canManageConfig) {
+      newModes.push(FormMode.Build);
+    }
+    const permissions = this.permissions?.collections?.[this.collection?.id];
+    if (
+      permissions?.rolesWithView?.DataContribute ||
+      permissions?.rolesWithView?.DataWrite ||
+      permissions?.rolesWithView?.DataRead ||
+      this.canManageConfig
+    ) {
+      newModes.push(FormMode.CreateUpdate);
+    }
+    this.modes = newModes;
+  }
+
+  private checkSelectedMode() {
+    if (!this.modes.includes(this.selectedMode) && this.modes.length > 0) {
+      this.selectedMode = this.modes[0];
+      this.onModeChange(this.selectedMode);
+    } else if (this.modes.length === 0) {
+      this.selectedMode = null;
+    }
+  }
 
   public onModeChange(mode: FormMode) {
     this.configChange.next({...this.config, mode});

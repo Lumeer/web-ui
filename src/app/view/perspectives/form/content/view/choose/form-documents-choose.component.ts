@@ -31,6 +31,7 @@ import {selectDocumentsByCollectionAndQuery} from '../../../../../../core/store/
 import {objectChanged} from '../../../../../../shared/utils/common.utils';
 import {map, tap} from 'rxjs/operators';
 import {FormConfig} from '../../../../../../core/store/form/form-model';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'form-documents-choose',
@@ -52,6 +53,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
 
   @Input()
   public attributesSettings: AttributesSettings;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Input()
   public view: View;
@@ -102,11 +106,11 @@ export class FormDocumentsChooseComponent implements OnChanges {
   }
 
   private checkAfterLoadedDocument(documents: DocumentModel[]) {
-    if (
-      documents.length &&
-      (!this.document ||
-        !documents.some(doc => (doc.id || doc.correlationId) === (this.document.id || this.document.correlationId)))
-    ) {
+    const hasDocumentsAndNotSelected = !this.document && documents.length > 0;
+    const isSelectedButNotFound =
+      this.document &&
+      !documents.some(doc => (doc.id || doc.correlationId) === (this.document.id || this.document.correlationId));
+    if (hasDocumentsAndNotSelected || isSelectedButNotFound) {
       setTimeout(() => this.selectDocument.emit(documents[0]));
     }
   }

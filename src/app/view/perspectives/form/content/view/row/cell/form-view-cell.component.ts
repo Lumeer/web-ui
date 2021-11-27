@@ -138,7 +138,6 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     ) {
       this.initDataVariables();
     }
-    // console.log('fbc', this.editing, this.cell.id, changes);
   }
 
   private initDataVariables() {
@@ -201,7 +200,9 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   }
 
   public onElementClick(event: MouseEvent) {
-    this.editStart.emit();
+    if (this.editable) {
+      this.editStart.emit();
+    }
   }
 
   public onValueSave(dataValue: DataValue, action?: DataInputSaveAction) {

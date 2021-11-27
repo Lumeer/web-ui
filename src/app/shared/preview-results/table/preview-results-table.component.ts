@@ -121,7 +121,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     if (changes.dataResources) {
       this.hasData = (this.dataResources || []).length > 0;
     }
-    if (changes.tableHeight) {
+    if (changes.tableHeight || changes.dataResources) {
       setTimeout(() => {
         this.viewPort?.checkViewportSize();
         this.checkNumVisibleRows();
@@ -238,7 +238,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
 
   private checkNumVisibleRows() {
     if (this.viewPort) {
-      this.numVisibleRows$.next(Math.ceil(this.viewPort.getViewportSize() / ROW_HEIGHT) - 2);
+      this.numVisibleRows$.next(this.viewPort.getViewportSize() / ROW_HEIGHT - 1);
     }
   }
 }

@@ -23,6 +23,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -32,7 +33,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable, of, switchMap} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {DocumentModel, DocumentAdditionalDataRequest} from '../../../../../core/store/documents/document.model';
@@ -71,7 +72,7 @@ import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-s
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FormValidationService, FormStateService],
 })
-export class FormViewComponent implements OnInit, OnChanges {
+export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public config: FormConfig;
 
@@ -100,6 +101,7 @@ export class FormViewComponent implements OnInit, OnChanges {
 
   public documentDataValues$: Observable<Record<string, DataValue>>;
   public document$: Observable<DocumentModel>;
+  public originalDocument$: Observable<DocumentModel>;
   public validation$: Observable<FormValidation>;
   public linkData$: Observable<Record<string, FormLinkData>>;
   public currentUser$: Observable<User>;
@@ -119,6 +121,8 @@ export class FormViewComponent implements OnInit, OnChanges {
 
   public collectionPermissions: AllowedPermissions;
 
+  private subscriptions = new Subscription();
+
   constructor(
     private store$: Store<AppState>,
     private formValidation: FormValidationService,
@@ -131,6 +135,7 @@ export class FormViewComponent implements OnInit, OnChanges {
     this.validation$ = this.formValidation.validation$;
     this.editedCell$ = this.formState.editedCell$;
 
+    this.subscribeIds();
     this.observeDocument();
     this.observeDataValues();
     this.observeFormLinkData();
@@ -160,6 +165,10 @@ export class FormViewComponent implements OnInit, OnChanges {
     }
   }
 
+  private subscribeIds() {
+    this.subscriptions.add(this.selectedDocumentIds$.subscribe(ids => this.formValidation.setDocumentId(ids?.id)));
+  }
+
   private observeDocument() {
     const collectionId$ = this.collection$.pipe(
       map(collection => collection.id),
@@ -182,6 +191,14 @@ export class FormViewComponent implements OnInit, OnChanges {
           );
         }
 
+        return of(null);
+      })
+    );
+    this.originalDocument$ = this.selectedDocumentIds$.pipe(
+      switchMap(ids => {
+        if (ids?.id) {
+          return this.store$.pipe(select(selectDocumentById(ids.id)));
+        }
         return of(null);
       })
     );
@@ -402,7 +419,7 @@ export class FormViewComponent implements OnInit, OnChanges {
 
   public onSelectDocument(document: DocumentModel) {
     const selectedId = this.selectedDocumentIds$.value.id || this.selectedDocumentIds$.value.correlationId;
-    const documentId = document.id || document.correlationId;
+    const documentId = document?.id || document?.correlationId;
 
     if (selectedId !== documentId) {
       if (this.userEnteredData()) {
@@ -427,12 +444,13 @@ export class FormViewComponent implements OnInit, OnChanges {
   }
 
   private selectDocument(document: DocumentModel) {
-    if (document.id) {
+    if (document?.id) {
       this.selectedDocumentIds$.next({id: document.id});
-    } else {
+    } else if (document?.correlationId) {
       this.selectedDocumentIds$.next({correlationId: document.correlationId});
+    } else {
+      this.selectedDocumentIds$.next({});
     }
-    this.formValidation.setDocumentId(document.id);
     this.clearData();
   }
 
@@ -443,7 +461,6 @@ export class FormViewComponent implements OnInit, OnChanges {
   public onAddNewDocument() {
     const correlationId = generateCorrelationId();
     this.selectedDocumentIds$.next({correlationId});
-    this.formValidation.setDocumentId(null);
     this.clearData();
   }
 
@@ -469,6 +486,10 @@ export class FormViewComponent implements OnInit, OnChanges {
       this.selectedDocumentIds$.next({});
       this.clearData();
     }
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }
 

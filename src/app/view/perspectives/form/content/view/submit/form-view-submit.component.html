@@ -8,8 +8,9 @@
   </button>
 
   <button class="btn text-truncate text-nowrap"
+          *ngIf="editable"
           [style.background]="button?.color"
-          [disabled]="!valid || !editable || loading || deleting"
+          [disabled]="!valid  || loading || deleting"
           [style.color]="button?.color | contrastColor" (click)="onSubmit()">
     <span *ngIf="loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
     <i *ngIf="button?.icon" [ngClass]="button?.icon"></i>

@@ -17,10 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
-import {objectChanged} from '../../../../../shared/utils/common.utils';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormMode} from '../../../../../core/store/form/form-model';
 
 @Component({
@@ -28,55 +25,17 @@ import {FormMode} from '../../../../../core/store/form/form-model';
   templateUrl: './form-mode.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormModeComponent implements OnChanges {
+export class FormModeComponent {
+  @Input()
+  public modes: FormMode[];
+
   @Input()
   public selectedMode: FormMode;
-
-  @Input()
-  public collection: Collection;
-
-  @Input()
-  public resourcesPermissions: ResourcesPermissions;
-
-  @Input()
-  public canManageConfig: boolean;
 
   @Output()
   public modeChange = new EventEmitter<FormMode>();
 
   public readonly mode = FormMode;
-  public modes: FormMode[];
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (objectChanged(changes.collection) || changes.resourcesPermissions || changes.canManageConfig) {
-      this.checkModes();
-    }
-    this.checkSelectedMode();
-  }
-
-  private checkModes() {
-    const newModes = [];
-    if (this.canManageConfig) {
-      newModes.push(FormMode.Build);
-    }
-    const permissions = this.resourcesPermissions?.collections?.[this.collection?.id];
-    if (
-      permissions?.rolesWithView?.DataContribute ||
-      permissions?.rolesWithView?.DataWrite ||
-      permissions?.rolesWithView?.DataRead ||
-      this.canManageConfig
-    ) {
-      newModes.push(FormMode.CreateUpdate);
-    }
-    this.modes = newModes;
-  }
-
-  private checkSelectedMode() {
-    if (!this.modes.includes(this.selectedMode) && this.modes.length > 0) {
-      this.selectedMode = this.modes[0];
-      this.modeChange.emit(this.selectedMode);
-    }
-  }
 
   public onCheckedModeChange(checked: boolean) {
     if (checked) {

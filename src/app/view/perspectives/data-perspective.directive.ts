@@ -145,9 +145,18 @@ export abstract class DataPerspectiveDirective<T>
     this.subscriptions.add(
       combineLatest([this.currentViewId$, this.query$]).subscribe(([viewId, query]) => this.fetchData(query, viewId))
     );
+
+    const viewAdditionalQueries$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.additionalQueries);
+        }
+        return this.store$.pipe(select(selectViewAdditionalQueries));
+      })
+    );
     this.subscriptions.add(
-      combineLatest([this.currentViewId$, this.store$.pipe(select(selectViewAdditionalQueries))]).subscribe(
-        ([viewId, queries]) => queries.forEach(query => this.fetchData(query, viewId))
+      combineLatest([this.currentViewId$, viewAdditionalQueries$]).subscribe(([viewId, queries]) =>
+        queries.forEach(query => this.fetchData(query, viewId))
       )
     );
   }

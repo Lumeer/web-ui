@@ -50,7 +50,7 @@ import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
-import {AttributesSettings, ResourceAttributeSettings} from '../../views/view';
+import {AttributesSettings, ResourceAttributeSettings, View} from '../../views/view';
 import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
@@ -292,11 +292,31 @@ export function areFiltersEqual(f1: AttributeFilter, f2: AttributeFilter): boole
   return deepObjectsEquals(f1, f2);
 }
 
+export function getAllLinkTypeIdsFromView(view: View): string[] {
+  const linkTypeIds = getAllLinkTypeIdsFromQuery(view?.query);
+  return uniqueValues(
+    (view.additionalQueries || []).reduce((ids, query) => {
+      ids.push(...getAllLinkTypeIdsFromQuery(query));
+      return ids;
+    }, linkTypeIds)
+  );
+}
+
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
   return (query?.stems || []).reduce((ids, stem) => {
     (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
     return ids;
   }, []);
+}
+
+export function getAllCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
+  const linkTypeIds = getAllCollectionIdsFromQuery(view?.query, linkTypes);
+  return uniqueValues(
+    (view.additionalQueries || []).reduce((ids, query) => {
+      ids.push(...getAllCollectionIdsFromQuery(query, linkTypes));
+      return ids;
+    }, linkTypeIds)
+  );
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
