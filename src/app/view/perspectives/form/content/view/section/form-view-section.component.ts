@@ -23,6 +23,8 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {DataValue} from '@lumeer/data-filters';
 import {FormError} from '../validation/form-validation';
 import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
+import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
+import {FormCoordinates} from '../model/form-coordinates';
 
 @Component({
   selector: 'form-view-section',
@@ -49,13 +51,34 @@ export class FormViewSectionComponent implements OnChanges {
   public editable: boolean;
 
   @Input()
+  public editedCell: FormCoordinates;
+
+  @Input()
   public formErrors: FormError[];
 
   @Output()
-  public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
+  public attributeValueChange = new EventEmitter<{
+    attributeId: string;
+    dataValue: DataValue;
+    rowId: string;
+    cellId: string;
+    action?: DataInputSaveAction;
+  }>();
 
   @Output()
-  public linkValueChange = new EventEmitter<{linkTypeId: string; selectedData: FormLinkSelectedData}>();
+  public linkValueChange = new EventEmitter<{
+    linkTypeId: string;
+    selectedData: FormLinkSelectedData;
+    rowId: string;
+    cellId: string;
+    action?: DataInputSaveAction;
+  }>();
+
+  @Output()
+  public editStart = new EventEmitter<{rowId: string; cellId: string}>();
+
+  @Output()
+  public editCancel = new EventEmitter<{rowId: string; cellId: string}>();
 
   public title: string;
   public description: string;
@@ -69,5 +92,27 @@ export class FormViewSectionComponent implements OnChanges {
 
   public trackByRow(index: number, row: FormRow): string {
     return row.id;
+  }
+
+  public onAttributeValueChange(
+    data: {attributeId: string; dataValue: DataValue; action?: DataInputSaveAction; cellId: string},
+    rowId: string
+  ) {
+    this.attributeValueChange.emit({...data, rowId});
+  }
+
+  public onLinkValueChange(
+    data: {linkTypeId: string; selectedData: FormLinkSelectedData; action?: DataInputSaveAction; cellId: string},
+    rowId: string
+  ) {
+    this.linkValueChange.emit({...data, rowId});
+  }
+
+  public onEditCancel(rowId: string, cellId: string) {
+    this.editCancel.emit({rowId, cellId});
+  }
+
+  public onEditStart(rowId: string, cellId: string) {
+    this.editStart.emit({rowId, cellId});
   }
 }

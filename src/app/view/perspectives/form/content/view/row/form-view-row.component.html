@@ -7,9 +7,12 @@
                   [collection]="collection"
                   [documentId]="documentId"
                   [editable]="editable"
+                  [editing]="editedCell | formCellIsEdited:sectionId:row.id:cell.id"
                   [formErrors]="formErrors | formErrorsByCell:cell.id"
-                  (attributeValueChange)="attributeValueChange.emit($event)"
-                  (linkValueChange)="linkValueChange.emit($event)">
+                  (attributeValueChange)="onAttributeValueChange($event, cell.id)"
+                  (linkValueChange)="onLinkValueChange($event, cell.id)"
+                  (editCancel)="onEditCancel(cell.id)"
+                  (editStart)="onEditStart(cell.id)">
   </form-view-cell>
 
 </div>

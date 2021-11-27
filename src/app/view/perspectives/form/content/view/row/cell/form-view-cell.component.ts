@@ -34,9 +34,9 @@ import {
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
-import {ConstraintData, ConstraintType, DataValue} from '@lumeer/data-filters';
+import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {DataCursor} from '../../../../../../../shared/data-input/data-cursor';
 import {FormError} from '../../validation/form-validation';
@@ -47,6 +47,7 @@ import {DocumentModel} from '../../../../../../../core/store/documents/document.
 import {selectDocumentsByCollectionAndQuery} from '../../../../../../../core/store/common/permissions.selectors';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {mergeAttributeOverride} from '../../../../../../../shared/utils/attribute.utils';
+import {DataInputSaveAction} from '../../../../../../../shared/data-input/data-input-save-action';
 
 @Component({
   selector: 'form-view-cell',
@@ -74,13 +75,30 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public editable: boolean;
 
   @Input()
+  public editing: boolean;
+
+  @Input()
   public formErrors: FormError[];
 
   @Output()
-  public attributeValueChange = new EventEmitter<{attributeId: string; dataValue: DataValue}>();
+  public attributeValueChange = new EventEmitter<{
+    attributeId: string;
+    dataValue: DataValue;
+    action?: DataInputSaveAction;
+  }>();
 
   @Output()
-  public linkValueChange = new EventEmitter<{linkTypeId: string; selectedData: FormLinkSelectedData}>();
+  public linkValueChange = new EventEmitter<{
+    linkTypeId: string;
+    selectedData: FormLinkSelectedData;
+    action?: DataInputSaveAction;
+  }>();
+
+  @Output()
+  public editStart = new EventEmitter();
+
+  @Output()
+  public editCancel = new EventEmitter();
 
   public readonly type = FormCellType;
   public readonly dataInputConfiguration: DataInputConfiguration = {
@@ -88,8 +106,6 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     files: {saveInMemory: true},
     select: {wrapItems: true},
   };
-
-  public editing$ = new BehaviorSubject(false);
 
   public attribute: Attribute;
   public dataValue: DataValue;
@@ -122,6 +138,7 @@ export class FormViewCellComponent implements OnInit, OnChanges {
     ) {
       this.initDataVariables();
     }
+    // console.log('fbc', this.editing, this.cell.id, changes);
   }
 
   private initDataVariables() {
@@ -142,11 +159,14 @@ export class FormViewCellComponent implements OnInit, OnChanges {
       findAttribute(this.collection?.attributes, config?.attributeId),
       config?.attribute
     );
+    if (this.attribute) {
+      this.attribute = {...this.attribute, constraint: this.attribute.constraint || new UnknownConstraint()};
+    }
     this.dataValue = this.dataValues?.[this.attribute?.id];
     this.checkCursor();
     this.showBorder = !(this.attribute?.constraint?.type === ConstraintType.Boolean);
 
-    this.dataIsValid = !!this.attribute?.constraint;
+    this.dataIsValid = !!this.attribute;
     this.mandatory = this.attribute?.mandatory;
   }
 
@@ -181,28 +201,22 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   }
 
   public onElementClick(event: MouseEvent) {
-    if (!this.editing$.value && this.editable) {
-      this.editing$.next(true);
-    }
+    this.editStart.emit();
   }
 
-  public onValueSave(dataValue: DataValue) {
-    this.editing$.next(false);
-
+  public onValueSave(dataValue: DataValue, action?: DataInputSaveAction) {
     if (this.attribute) {
-      this.attributeValueChange.emit({attributeId: this.attribute.id, dataValue});
+      this.attributeValueChange.emit({attributeId: this.attribute.id, dataValue, action});
     }
   }
 
   public onCancelEditing() {
-    this.editing$.next(false);
+    this.editCancel.emit();
   }
 
-  public onSelectedDocumentIdsChange(selectedData: FormLinkSelectedData) {
-    this.editing$.next(false);
-
+  public onSelectedDocumentIdsChange(selectedData: FormLinkSelectedData, action?: DataInputSaveAction) {
     if (this.linkData?.linkType) {
-      this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, selectedData});
+      this.linkValueChange.emit({linkTypeId: this.linkData.linkType.id, selectedData, action});
     }
   }
 }

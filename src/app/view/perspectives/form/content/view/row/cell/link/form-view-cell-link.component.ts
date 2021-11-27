@@ -40,6 +40,10 @@ import {arraySubtract, uniqueValues} from '../../../../../../../../shared/utils/
 import {HtmlModifier, isElementActive, shadeColor} from '../../../../../../../../shared/utils/html-modifier';
 import {keyboardEventCode, KeyCode} from '../../../../../../../../shared/key-code';
 import {FormLinkSelectedData} from '../../../model/form-link-data';
+import {
+  DataInputSaveAction,
+  keyboardEventInputSaveAction,
+} from '../../../../../../../../shared/data-input/data-input-save-action';
 
 @Component({
   selector: 'form-view-cell-link',
@@ -79,7 +83,7 @@ export class FormViewCellLinkComponent implements OnChanges {
   public readonly: boolean;
 
   @Output()
-  public selectedDataChange = new EventEmitter<FormLinkSelectedData>();
+  public selectedDataChange = new EventEmitter<{data: FormLinkSelectedData; action: DataInputSaveAction}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -213,9 +217,9 @@ export class FormViewCellLinkComponent implements OnChanges {
     if (this.preventSave) {
       this.preventSave = false;
     } else if (this.multi) {
-      this.saveValue();
+      this.saveValue(DataInputSaveAction.Blur);
     } else if (this.dropdown?.getActiveOption()) {
-      this.saveValue(this.dropdown.getActiveOption());
+      this.saveValue(DataInputSaveAction.Blur, this.dropdown.getActiveOption());
     }
   }
 
@@ -233,22 +237,22 @@ export class FormViewCellLinkComponent implements OnChanges {
       this.dropdown?.resetActiveOption();
     } else {
       this.preventSaveAndBlur();
-      this.saveValue(option);
+      this.saveValue(DataInputSaveAction.Select, option);
     }
   }
 
-  private saveValue(activeOption?: DropdownOption) {
+  private saveValue(action: DataInputSaveAction, activeOption?: DropdownOption) {
     if (this.multi) {
       const options = [...this.selectedDocuments$.value, activeOption].filter(option => !!option);
       const ids = uniqueValues(options.map(option => option.value));
-      this.emitDataChange(ids);
+      this.emitDataChange(ids, action);
       this.preventSaveAndBlur();
       return;
     }
 
     if (activeOption || !this.text) {
       const ids = [activeOption?.value].filter(id => !!id);
-      this.emitDataChange(ids);
+      this.emitDataChange(ids, action);
       this.preventSaveAndBlur();
     } else {
       this.onCancel();
@@ -257,8 +261,8 @@ export class FormViewCellLinkComponent implements OnChanges {
     this.resetSearchInput();
   }
 
-  private emitDataChange(documentIds: string[]) {
-    this.selectedDataChange.emit(checkAddedAndRemovedDocumentIds(documentIds, this.linkDocumentIds));
+  private emitDataChange(documentIds: string[], action: DataInputSaveAction) {
+    this.selectedDataChange.emit({data: checkAddedAndRemovedDocumentIds(documentIds, this.linkDocumentIds), action});
   }
 
   private onCancel() {
@@ -290,11 +294,12 @@ export class FormViewCellLinkComponent implements OnChanges {
 
         event.preventDefault();
 
+        const action = keyboardEventInputSaveAction(event);
         if (this.multi && keyboardEventCode(event) !== KeyCode.Tab && selectedOption) {
           event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
         } else {
-          this.saveValue(selectedOption);
+          this.saveValue(action, selectedOption);
         }
         return;
       case KeyCode.Escape:

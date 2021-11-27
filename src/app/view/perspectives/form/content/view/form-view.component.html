@@ -24,8 +24,11 @@
                        [documentId]="data.document?.id"
                        [editable]="data.document | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
                        [formErrors]="(validation$ | async)?.errors | formErrorsBySection:section.id"
-                       (attributeValueChange)="onAttributeValueChange($event)"
-                       (linkValueChange)="onLinkValueChange($event)">
+                       (attributeValueChange)="onAttributeValueChange($event, section.id)"
+                       (editCancel)="onEditCancel($event, section.id)"
+                       (editStart)="onEditStart($event, section.id)"
+                       [editedCell]="editedCell$ | async"
+                       (linkValueChange)="onLinkValueChange($event, section.id)">
     </form-view-section>
 
     <form-view-submit class="mt-4"

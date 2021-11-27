@@ -61,12 +61,15 @@ import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {CommonAction} from '../../../../../core/store/common/common.action';
+import {FormStateService} from './service/form-state.service';
+import {FormCoordinates} from './model/form-coordinates';
+import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 
 @Component({
   selector: 'form-view',
   templateUrl: './form-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FormValidationService],
+  providers: [FormValidationService, FormStateService],
 })
 export class FormViewComponent implements OnInit, OnChanges {
   @Input()
@@ -101,6 +104,7 @@ export class FormViewComponent implements OnInit, OnChanges {
   public linkData$: Observable<Record<string, FormLinkData>>;
   public currentUser$: Observable<User>;
   public constraintData$: Observable<ConstraintData>;
+  public editedCell$: Observable<FormCoordinates>;
 
   public view$ = new BehaviorSubject<View>(null);
   public config$ = new BehaviorSubject<FormConfig>(null);
@@ -115,12 +119,17 @@ export class FormViewComponent implements OnInit, OnChanges {
 
   public collectionPermissions: AllowedPermissions;
 
-  constructor(private store$: Store<AppState>, private formValidation: FormValidationService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private formValidation: FormValidationService,
+    private formState: FormStateService
+  ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.validation$ = this.formValidation.validation$;
+    this.editedCell$ = this.formState.editedCell$;
 
     this.observeDocument();
     this.observeDataValues();
@@ -136,10 +145,12 @@ export class FormViewComponent implements OnInit, OnChanges {
       const updatedCollection = {...this.collection, attributes};
       this.collection$.next(updatedCollection);
       this.formValidation.setCollection(updatedCollection);
+      this.formState.setCollection(updatedCollection);
     }
     if (changes.config) {
       this.config$.next(this.config);
       this.formValidation.setConfig(this.config);
+      this.formState.setConfig(this.config);
     }
     if (changes.view) {
       this.view$.next(this.view);
@@ -257,11 +268,19 @@ export class FormViewComponent implements OnInit, OnChanges {
           return linkDataMap;
         }, {});
       }),
-      tap(linkData => this.formValidation.setLinkData(linkData, this.selectedLinkData$.value))
+      tap(linkData => {
+        this.formValidation.setLinkData(linkData, this.selectedLinkData$.value);
+        this.formState.setLinkData(linkData);
+      })
     );
   }
 
-  public onAttributeValueChange(data: {attributeId: string; dataValue: DataValue}) {
+  public onAttributeValueChange(
+    data: {attributeId: string; dataValue: DataValue; rowId: string; cellId: string; action?: DataInputSaveAction},
+    sectionId: string
+  ) {
+    this.formState.onValueSave({sectionId, rowId: data.rowId, cellId: data.cellId}, data.action);
+
     const serializedValue = data.dataValue.serialize();
     const newData = {...this.data$.value, [data.attributeId]: serializedValue};
     const newDataValues = {...this.dataValues$.value, [data.attributeId]: data.dataValue.copy(serializedValue)};
@@ -270,10 +289,29 @@ export class FormViewComponent implements OnInit, OnChanges {
     this.dataValues$.next(newDataValues);
   }
 
-  public onLinkValueChange(data: {linkTypeId: string; selectedData: FormLinkSelectedData}) {
+  public onLinkValueChange(
+    data: {
+      linkTypeId: string;
+      selectedData: FormLinkSelectedData;
+      rowId: string;
+      cellId: string;
+      action?: DataInputSaveAction;
+    },
+    sectionId: string
+  ) {
+    this.formState.onValueSave({sectionId, rowId: data.rowId, cellId: data.cellId}, data.action);
+
     const newData = {...this.selectedLinkData$.value, [data.linkTypeId]: data.selectedData};
 
     this.selectedLinkData$.next(newData);
+  }
+
+  public onEditCancel(data: {rowId: string; cellId: string}, sectionId: string) {
+    this.formState.onEditCancel({...data, sectionId});
+  }
+
+  public onEditStart(data: {rowId: string; cellId: string}, sectionId: string) {
+    this.formState.onEditStart({...data, sectionId});
   }
 
   public trackBySection(index: number, section: FormSection): string {
