@@ -31,7 +31,13 @@ import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/mode
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {areArraysSame, createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {
+  areArraysSame,
+  arraySubtract,
+  createRange,
+  isArraySubset,
+  uniqueValues,
+} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
@@ -293,13 +299,18 @@ export function areFiltersEqual(f1: AttributeFilter, f2: AttributeFilter): boole
 }
 
 export function getAllLinkTypeIdsFromView(view: View): string[] {
-  const linkTypeIds = getAllLinkTypeIdsFromQuery(view?.query);
-  return uniqueValues(
-    (view.additionalQueries || []).reduce((ids, query) => {
+  return uniqueValues([...getAdditionalLinkTypeIdsFromView(view), ...getAllLinkTypeIdsFromQuery(view?.query)]);
+}
+
+export function getAdditionalLinkTypeIdsFromView(view: View): string[] {
+  const linkTypeIds = uniqueValues(
+    (view?.additionalQueries || []).reduce((ids, query) => {
       ids.push(...getAllLinkTypeIdsFromQuery(query));
       return ids;
-    }, linkTypeIds)
+    }, [])
   );
+  const queryLinkTypes = getAllLinkTypeIdsFromQuery(view.query);
+  return arraySubtract(linkTypeIds, queryLinkTypes);
 }
 
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
@@ -310,13 +321,21 @@ export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
 }
 
 export function getAllCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
-  const linkTypeIds = getAllCollectionIdsFromQuery(view?.query, linkTypes);
-  return uniqueValues(
-    (view.additionalQueries || []).reduce((ids, query) => {
+  return uniqueValues([
+    ...getAdditionalCollectionIdsFromView(view, linkTypes),
+    ...getAllCollectionIdsFromQuery(view?.query, linkTypes),
+  ]);
+}
+
+export function getAdditionalCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
+  const collectionIds = uniqueValues(
+    (view?.additionalQueries || []).reduce((ids, query) => {
       ids.push(...getAllCollectionIdsFromQuery(query, linkTypes));
       return ids;
-    }, linkTypeIds)
+    }, [])
   );
+  const queryCollectionIds = getAllLinkTypeIdsFromQuery(view.query);
+  return arraySubtract(collectionIds, queryCollectionIds);
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {

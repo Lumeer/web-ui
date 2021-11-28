@@ -20,7 +20,12 @@
 import {User} from '../../core/store/users/user';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
-import {getAllCollectionIdsFromView, getAllLinkTypeIdsFromView} from '../../core/store/navigation/query/query.util';
+import {
+  getAdditionalCollectionIdsFromView,
+  getAdditionalLinkTypeIdsFromView,
+  getAllCollectionIdsFromView,
+  getAllLinkTypeIdsFromView,
+} from '../../core/store/navigation/query/query.util';
 import {AllowedPermissions, AllowedPermissionsMap, ResourcesPermissions} from '../../core/model/allowed-permissions';
 import {View} from '../../core/store/views/view';
 import {Collection} from '../../core/store/collections/collection';
@@ -40,6 +45,7 @@ import {
   userCanEditDataResource,
   userCanReadDataResource,
 } from '@lumeer/data-filters';
+import {Perspective} from '../../view/perspectives/perspective';
 
 export function userPermissionsInOrganization(organization: Organization, user: User): AllowedPermissions {
   return {roles: roleTypesToMap(userRoleTypesInOrganization(organization, user))};
@@ -115,9 +121,15 @@ export function userPermissionsInCollection(
   }
   const roleTypes = userRoleTypesInResource(organization, project, collection, user);
   if (currentView != null) {
-    const viewRoleTypes = userRoleTypesInResource(organization, project, currentView, user);
-    const collectionIds = getAllCollectionIdsFromView(currentView, linkTypes);
-    if (collectionIds.includes(collection.id)) {
+    const viewRoleTypes = userCollectionRoleTypesInView(
+      organization,
+      project,
+      currentView,
+      collection,
+      linkTypes,
+      user
+    );
+    if (getAllCollectionIdsFromView(currentView, linkTypes).includes(collection.id)) {
       const authorRoleTypes = currentView.authorCollectionsRoles?.[collection.id];
       const roleTypesWithView = arrayIntersection(viewRoleTypes, authorRoleTypes);
       return {
@@ -127,6 +139,25 @@ export function userPermissionsInCollection(
     }
   }
   return {roles: roleTypesToMap(roleTypes), rolesWithView: roleTypesToMap(roleTypes)};
+}
+
+function userCollectionRoleTypesInView(
+  organization: Organization,
+  project: Project,
+  view: View,
+  collection: Collection,
+  linkTypes: LinkType[],
+  user: User
+): RoleType[] {
+  const viewRoleTypes = userRoleTypesInResource(organization, project, view, user);
+  const additionalIds = getAdditionalCollectionIdsFromView(view, linkTypes);
+  if (view.perspective == Perspective.Form && additionalIds.includes(collection.id)) {
+    if (arrayIntersection([RoleType.DataContribute, RoleType.DataWrite], viewRoleTypes).length > 0) {
+      viewRoleTypes.push(RoleType.DataRead);
+    }
+  }
+
+  return uniqueValues(viewRoleTypes);
 }
 
 export function userPermissionsInLinkType(
@@ -142,7 +173,7 @@ export function userPermissionsInLinkType(
   }
   const roleTypes = userRoleTypesInLinkType(organization, project, linkType, collections, user);
   if (currentView != null) {
-    const viewRoleTypes = userRoleTypesInResource(organization, project, currentView, user);
+    const viewRoleTypes = userLinkTypeRoleTypesInView(organization, project, currentView, linkType, user);
     const linkTypeIds = getAllLinkTypeIdsFromView(currentView);
     if (linkTypeIds.includes(linkType.id)) {
       const authorRoleTypes = currentView.authorLinkTypesRoles?.[linkType.id];
@@ -154,6 +185,24 @@ export function userPermissionsInLinkType(
     }
   }
   return {roles: roleTypesToMap(roleTypes), rolesWithView: roleTypesToMap(roleTypes)};
+}
+
+function userLinkTypeRoleTypesInView(
+  organization: Organization,
+  project: Project,
+  view: View,
+  linkType: LinkType,
+  user: User
+): RoleType[] {
+  const viewRoleTypes = userRoleTypesInResource(organization, project, view, user);
+  const additionalIds = getAdditionalLinkTypeIdsFromView(view);
+  if (view.perspective == Perspective.Form && additionalIds.includes(linkType.id)) {
+    if (arrayIntersection([RoleType.DataContribute, RoleType.DataWrite], viewRoleTypes).length > 0) {
+      viewRoleTypes.push(RoleType.DataRead);
+    }
+  }
+
+  return uniqueValues(viewRoleTypes);
 }
 
 export function userPermissionsInView(

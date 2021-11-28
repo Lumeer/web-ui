@@ -62,13 +62,17 @@ export class FormPerspectiveContentComponent implements OnChanges {
   public readonly mode = FormMode;
 
   public selectedMode: FormMode;
-  public modes: FormMode[];
+  public modes: FormMode[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
+    let modesChanged = false;
     if (objectChanged(changes.collection) || changes.permissions || changes.canManageConfig) {
       this.checkModes();
+      modesChanged = true;
     }
-    this.checkSelectedMode();
+    if (modesChanged || changes.config) {
+      this.checkSelectedMode();
+    }
   }
 
   private checkModes() {
@@ -89,10 +93,11 @@ export class FormPerspectiveContentComponent implements OnChanges {
   }
 
   private checkSelectedMode() {
-    if (!this.modes.includes(this.selectedMode) && this.modes.length > 0) {
+    if (this.modes.includes(this.config?.mode || this.selectedMode)) {
+      this.selectedMode = this.config?.mode || this.selectedMode;
+    } else if (this.modes.length > 0) {
       this.selectedMode = this.modes[0];
-      this.onModeChange(this.selectedMode);
-    } else if (this.modes.length === 0) {
+    } else {
       this.selectedMode = null;
     }
   }
