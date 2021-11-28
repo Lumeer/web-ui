@@ -196,11 +196,11 @@ export class FormValidationService {
       );
     } else if (textConfig.minLength > 0) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.text.minimum:Number of characters must be greater than ${textConfig.minLength}.`
+        $localize`:@@perspective.form.view.validation.attribute.text.minimum:Number of characters must be at least ${textConfig.minLength}.`
       );
     } else if (textConfig.maxLength > 0) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.text.maximum:Number of characters must be lower than ${textConfig.maxLength}.`
+        $localize`:@@perspective.form.view.validation.attribute.text.maximum:Number of characters must be at most ${textConfig.maxLength}.`
       );
     }
   }
@@ -222,11 +222,11 @@ export class FormValidationService {
       );
     } else if (minValue?.gt(zero)) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.numeric.minimum:Value must be greater than ${minFormatted}.`
+        $localize`:@@perspective.form.view.validation.attribute.numeric.minimum:Value must be equal to or greater than ${minFormatted}.`
       );
     } else if (maxValue?.gt(zero)) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.numeric.maximum:Value must be lower than ${maxFormatted}.`
+        $localize`:@@perspective.form.view.validation.attribute.numeric.maximum:Value must be equal to or lower than ${maxFormatted}.`
       );
     }
     return null;
@@ -248,11 +248,11 @@ export class FormValidationService {
       );
     } else if (minValue > 0) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.numeric.minimum:Value must be greater than ${minFormatted}.`
+        $localize`:@@perspective.form.view.validation.attribute.numeric.minimum:Value must be equal to or greater than ${minFormatted}.`
       );
     } else if (maxValue > 0) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.numeric.maximum:Value must be lower than ${maxFormatted}.`
+        $localize`:@@perspective.form.view.validation.attribute.numeric.maximum:Value must be equal to or lower than ${maxFormatted}.`
       );
     }
     return null;
@@ -274,11 +274,11 @@ export class FormValidationService {
       );
     } else if (minValue > 0) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.date.minimum:Date must be greater than ${minFormatted}.`
+        $localize`:@@perspective.form.view.validation.attribute.date.minimum:Date must be on or later than ${minFormatted}.`
       );
     } else if (maxValue > 0) {
       return this.validationError(
-        $localize`:@@perspective.form.view.validation.attribute.date.maximum:Date must be lower than ${maxFormatted}.`
+        $localize`:@@perspective.form.view.validation.attribute.date.maximum:Date must be on or earlier than ${maxFormatted}.`
       );
     }
     return null;
@@ -311,13 +311,13 @@ export class FormValidationService {
       } else if (selectedIds.length < (config.minLinks || Number.MIN_SAFE_INTEGER)) {
         errors.push({
           type: FormViewErrorType.Validation,
-          title: $localize`:@@perspective.form.view.validation.link.minimum:Number of links must be greater than ${config.minLinks}.`,
+          title: $localize`:@@perspective.form.view.validation.link.minimum:Number of links must be equal to or greater than ${config.minLinks}.`,
           display: this.isCreating ? !!userLinkData : true,
         });
       } else if (selectedIds.length > (config.maxLinks || Number.MAX_SAFE_INTEGER)) {
         errors.push({
           type: FormViewErrorType.Validation,
-          title: $localize`:@@perspective.form.view.validation.link.maximum:Number of links must be lower than ${config.maxLinks}.`,
+          title: $localize`:@@perspective.form.view.validation.link.maximum:Number of links must be equal to or lower than ${config.maxLinks}.`,
           display: this.isCreating ? !!userLinkData : true,
         });
       }

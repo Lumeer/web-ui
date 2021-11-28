@@ -1,6 +1,6 @@
 <input-box class="d-block mt-1 mx-2"
            innerClass="font-weight-bold"
-           placeholder="Add section title or keep blank for no title"
+           placeholder="Add a section title or leave blank for no title"
            i18n-placeholder="@@perspective.form.editor.section.title"
            [canStayEmpty]="true"
            [fontSizeRem]="1.171875"
@@ -9,7 +9,7 @@
 </input-box>
 
 <input-box class="d-block mt-1 mx-2"
-           placeholder="Add instructions for filling this section or leave empty"
+           placeholder="Add instructions for filling this section or leave blank"
            i18n-placeholder="@@perspective.form.editor.section.description"
            [initialValue]="section?.description"
            [color]="descriptionColor"
@@ -47,7 +47,7 @@
 
   <button class="btn btn-link text-danger px-0" (click)="delete.emit()">
     <i class="far fa-trash-alt mr-2"></i>
-    <span i18n="@@perspective.form.editor.row.action.delete">Delete a Section</span>
+    <span i18n="@@perspective.form.editor.section.action.delete">Remove This Section</span>
   </button>
 </div>
 

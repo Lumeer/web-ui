@@ -12,11 +12,14 @@
                     class="cursor-pointer">
   </form-editor-cell>
 
-  <i class="far fa-columns text-primary clickable" #columnsIcon (click)="layout.toggle()"></i>
+  <i class="far fa-columns text-primary clickable" #columnsIcon
+     i18n-title="@@perspective.form.editor.row.action.layout"
+     title="Change the row layout"
+     (click)="layout.toggle()"></i>
 
   <i class="fal fa-trash-alt text-danger clickable"
      i18n-title="@@perspective.form.editor.row.action.delete"
-     title="Delete a Row"
+     title="Remove this row"
      (click)="delete.emit()"></i>
 
   <row-layout-dropdown #layout

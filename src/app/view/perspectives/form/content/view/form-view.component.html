@@ -17,7 +17,7 @@
   <ng-container *ngIf="data.document">
 
     <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index;"
-                       class="d-block card p-3 mt-3 shadow-light"
+                       class="d-block card p-3 mt-4 shadow-light"
                        [dataValues]="documentDataValues$ | async"
                        [linkValues]="linkData$ | async"
                        [section]="section"

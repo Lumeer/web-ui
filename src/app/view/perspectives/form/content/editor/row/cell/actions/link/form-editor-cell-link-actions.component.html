@@ -14,7 +14,7 @@
 
   <ng-container *ngIf="data.otherCollection?.attributes?.length">
     <span class="ml-2 text-primary clickable" #displayedElement (click)="displayedDropdown.toggle()"
-          tooltip="Displayed attribute"
+          tooltip="Attribute used to represent the linked record"
           i18n-tooltip="@@perspective.form.editor.row.cell.actions.displayed.tooltip">
       <i class="fas fa-check-circle"></i>
     </span>
@@ -46,7 +46,7 @@
   </ng-container>
 
   <div class="ml-2 cursor-pointer filters-icon" #filtersElement (click)="filters.toggle()"
-       tooltip="Filter"
+       tooltip="Configure filtering of records that are possible to link"
        i18n-tooltip="@@perspective.form.editor.row.cell.actions.filter">
     <span class="text-primary clickable">
       <i class="far fa-filter"></i>

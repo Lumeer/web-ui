@@ -424,9 +424,9 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
     if (selectedId !== documentId) {
       if (this.userEnteredData()) {
         const title = $localize`:@@perspective.form.view.submit.warning.data.title:Unconfirmed changes`;
-        const message = $localize`:@@perspective.form.view.submit.warning.data.message:There are some changes in form that was not saved. Are you sure to select document?`;
-        const yesTitle = $localize`:@@perspective.form.view.submit.warning.data.yes:Select`;
-        const noTitle = $localize`:@@perspective.form.view.submit.warning.data.no:Do nothing`;
+        const message = $localize`:@@perspective.form.view.submit.warning.data.message:There are some changes in form that was not saved. Are you sure to select another record?`;
+        const yesTitle = $localize`:@@perspective.form.view.submit.warning.data.yes:Yes, Select Record`;
+        const noTitle = $localize`:@@perspective.form.view.submit.warning.data.no:No, Keep Editing`;
         this.store$.dispatch(
           new NotificationsAction.Confirm({
             title,

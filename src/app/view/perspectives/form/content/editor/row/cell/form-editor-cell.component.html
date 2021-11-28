@@ -1,5 +1,5 @@
 <div class="title-row mb-1">
-  <input-box placeholder="Title"
+  <input-box placeholder="Field title"
              innerClass="font-weight-bold"
              i18n-placeholder="@@perspective.form.editor.row.cell.title"
              [canStayEmpty]="false"
@@ -20,14 +20,14 @@
               [removable]="true"
               [displayValue]="displayValue.LastChild"
               bordered="true"
-              emptyValue="Select"
+              emptyValue="Select input field"
               i18n-emptyValue="@@perspective.form.editor.row.cell.select.empty"
               (selectPath)="onSelectPath($event)"
               (remove)="onRemovePath()">
 </select-item2>
 
 <input-box class="d-block mt-1"
-           placeholder="Description"
+           placeholder="Add a description for this input field or leave blank for no description"
            i18n-placeholder="@@perspective.form.editor.row.cell.description"
            [fontSizeRem]="0.8"
            [color]="descriptionColor"

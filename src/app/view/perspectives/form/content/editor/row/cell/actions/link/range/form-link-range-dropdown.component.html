@@ -6,13 +6,13 @@
           (onClose)="onClose()">
 
   <div class="card p-2 overflow-auto">
-    <label class="d-block" i18n="@@perspective.form.editor.row.cell.actions.range.minimum">Minimum links</label>
+    <label class="d-block" i18n="@@perspective.form.editor.row.cell.actions.range.minimum">Minimal links count</label>
     <input class="form-control d-inline-block w-auto mw-100" type="number" integer
            [(ngModel)]="minLinksValue"
            [maxValue]="maxLinksValue"
            (blur)="onMinValueBlur()">
 
-    <label class="d-block mt-1" i18n="@@perspective.form.editor.row.cell.actions.range.maximum">Maximum links</label>
+    <label class="d-block mt-1" i18n="@@perspective.form.editor.row.cell.actions.range.maximum">Maximal links count</label>
     <input class="form-control d-inline-block w-auto mw-100" type="number" integer
            [(ngModel)]="maxLinksValue"
            [minValue]="minLinksValue"

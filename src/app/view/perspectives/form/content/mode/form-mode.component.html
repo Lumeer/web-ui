@@ -2,7 +2,9 @@
   <div *ngIf="modes.length > 1" class="d-flex justify-content-end">
 
     <toggle-checkbox [checked]="selectedMode === mode.Build"
-                     label="Designer mode"
+                     label="Designer Mode"
+                     tooltip="Active designer mode allows you to change the form fields and layout"
+                     i18n-tooltip="@@perspective.form.view.mode.designer.tooltip"
                      (checkedChange)="onCheckedModeChange($event)">
     </toggle-checkbox>
   </div>
