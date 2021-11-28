@@ -1,9 +1,9 @@
 <form-mode [modes]="modes"
-           [selectedMode]="selectedMode"
+           [selectedMode]="currentMode"
            (modeChange)="onModeChange($event)">
 </form-mode>
 
-<ng-container [ngSwitch]="selectedMode">
+<ng-container [ngSwitch]="currentMode">
 
   <form-editor *ngSwitchCase="mode.Build"
                class="d-block mt-3 mb-6"

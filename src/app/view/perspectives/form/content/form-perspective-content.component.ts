@@ -61,7 +61,9 @@ export class FormPerspectiveContentComponent implements OnChanges {
 
   public readonly mode = FormMode;
 
-  public selectedMode: FormMode;
+  private selectedMode: FormMode; // user selected mode
+
+  public currentMode: FormMode;
   public modes: FormMode[] = [];
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -93,16 +95,17 @@ export class FormPerspectiveContentComponent implements OnChanges {
   }
 
   private checkSelectedMode() {
-    if (this.modes.includes(this.config?.mode || this.selectedMode)) {
-      this.selectedMode = this.config?.mode || this.selectedMode;
+    if (this.modes.includes(this.currentMode || this.config?.mode)) {
+      this.currentMode = this.currentMode || this.config?.mode;
     } else if (this.modes.length > 0) {
-      this.selectedMode = this.modes[0];
+      this.currentMode = this.modes[0];
     } else {
-      this.selectedMode = null;
+      this.currentMode = null;
     }
   }
 
   public onModeChange(mode: FormMode) {
+    this.currentMode = mode;
     this.configChange.next({...this.config, mode});
   }
 }

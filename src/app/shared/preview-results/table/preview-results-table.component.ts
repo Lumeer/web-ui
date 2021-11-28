@@ -23,6 +23,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -46,6 +47,7 @@ import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 const ROW_HEIGHT = 32;
+const COLUMN_WIDTH = 120;
 
 @Component({
   selector: 'preview-results-table',
@@ -96,11 +98,13 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     user: {allowCenterOnlyIcon: true},
     action: {center: true},
   };
+  public readonly rowHeight = ROW_HEIGHT;
 
   public columns: PreviewResultsColumn[];
   public hasData: boolean;
   public scrolledIndex$: Observable<number>;
   public numVisibleRows$ = new BehaviorSubject(0);
+  public columnWidth$ = new BehaviorSubject<number>(null);
 
   private scrolledIndex: number;
   private subscriptions = new Subscription();
@@ -114,6 +118,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.resource || changes.attributesSettings) {
       this.createColumns();
+      this.checkColumnWidth();
     }
     if (changes.dataResources && changes.selectedId && this.dataResources && this.selectedId) {
       setTimeout(() => this.scrollToCurrentRow());
@@ -141,7 +146,7 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
       id: attribute.id,
       name: attribute.name,
       color,
-      width: 120,
+      width: COLUMN_WIDTH,
       constraint: attribute.constraint,
       bold: attribute.id === defaultAttributeId,
     }));
@@ -202,6 +207,15 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     } else {
       this.checkNumVisibleRowsAfterDelay();
     }
+    this.checkColumnWidth();
+  }
+
+  public checkColumnWidth() {
+    const elementWidth = this.viewPort?.elementRef?.nativeElement?.clientWidth || 0;
+    const columns = this.columns?.length || 0;
+    if (elementWidth && columns) {
+      this.columnWidth$.next(Math.max(COLUMN_WIDTH, elementWidth / columns));
+    }
   }
 
   private checkNumVisibleRowsAfterDelay() {
@@ -223,6 +237,11 @@ export class PreviewResultsTableComponent implements OnInit, OnChanges, AfterVie
     const fromIndex = Math.floor(this.scrolledIndex);
     const to = Math.ceil(this.scrolledIndex + this.numVisibleRows$.value);
     return fromIndex <= index && to > index;
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.checkColumnWidth();
   }
 
   public ngOnDestroy() {

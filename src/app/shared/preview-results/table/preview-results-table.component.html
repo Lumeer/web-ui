@@ -4,11 +4,13 @@
 </div>
 <div class="position-relative table-wrapper" [id]="resource.id" [style.height.px]="tableHeight">
   <preview-results-alternative-header *ngIf="hasData"
-                                      [columns]="columns">
+                                      [columns]="columns"
+                                      [columnWidth]="columnWidth$ | async"
+                                      [columnHeight]="rowHeight">
   </preview-results-alternative-header>
   <cdk-virtual-scroll-viewport class="overflow-auto h-100" #table
-                               [lmrItemSize]="32"
-                               [headerHeight]="32"
+                               [lmrItemSize]="rowHeight"
+                               [headerHeight]="rowHeight"
                                [baseOffset]="-1"
                                [columns]="columns">
     <table class="table lmr-table table-sm" [class.table-fixed]="hasData" id="preview-results-table">
@@ -17,7 +19,7 @@
         <th class="sticky-header"
             *ngFor="let column of columns; trackBy:trackByAttribute; let idx = index"
             [style.background-color]="column.color"
-            [style.width.px]="hasData ? column.width : null"
+            [style.width.px]="hasData ? (columnWidth$ | async) || column.width : null"
             [style.font-weight]="column.bold ? 'bold' : 'normal'"
             scope="col"
             title="{{column.name}}">{{column.name}}</th>
@@ -34,7 +36,7 @@
           [class.active]="(dataResource.id || dataResource.correlationId) === selectedId"
           (click)="activate(dataResource)">
         <td *ngFor="let column of columns"
-            [style.width.px]="hasData ? column.width : null">
+            [style.width.px]="hasData ? (columnWidth$ | async) || column.width : null">
           <data-input-preview [constraint]="column.constraint"
                               [configuration]="configuration"
                               [cursor]="dataResource | dataCursor : column.id:view?.id"

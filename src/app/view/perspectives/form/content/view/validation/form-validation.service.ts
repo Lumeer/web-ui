@@ -128,6 +128,8 @@ export class FormValidationService {
         return this.attributeCellFormErrors(<FormAttributeCellConfig>cell.config || {});
       case FormCellType.Link:
         return this.linkCellFormErrors(<FormLinkCellConfig>cell.config || {});
+      default:
+        return [];
     }
   }
 

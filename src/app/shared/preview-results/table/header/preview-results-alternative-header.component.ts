@@ -31,6 +31,12 @@ export class PreviewResultsAlternativeHeaderComponent {
   @Input()
   public columns: PreviewResultsColumn[];
 
+  @Input()
+  public columnWidth: number;
+
+  @Input()
+  public columnHeight: number;
+
   public trackByColumn(index: number, column: PreviewResultsColumn): string {
     return column.id;
   }
