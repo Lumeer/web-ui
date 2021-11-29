@@ -6,5 +6,9 @@
            [id]="id" #toggleElement>
     <span class="slider round" (click)="$event.stopPropagation()"></span>
   </label>
-  <span class="pl-2 cursor-pointer user-select-none" (click)="!disabled && toggleElement.click()">{{label}}</span>
+  <i *ngIf="icon" class="pl-3 cursor-pointer" [ngClass]="icon" (click)="!disabled && toggleElement.click()"></i>
+  <span class=" cursor-pointer user-select-none"
+        [class.pl-1]="icon"
+        [class.pl-2]="!icon"
+        (click)="!disabled && toggleElement.click()">{{label}}</span>
 </div>

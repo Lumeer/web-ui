@@ -1,0 +1,20 @@
+<div class="d-flex align-items-center"
+     [class.justify-content-end]="!deletable"
+     [class.justify-content-between]="deletable">
+  <button *ngIf="deletable" class="btn btn-link btn-delete text-danger"
+          (click)="onDelete()"
+          [disabled]="deleting || loading">
+    <i class="fal fa-trash-alt"></i>&nbsp;<span i18n="@@perspective.form.view.submit.delete">Delete This Record</span>
+  </button>
+
+  <button class="btn text-truncate text-nowrap"
+          *ngIf="editable"
+          [style.background]="button?.color"
+          [disabled]="!valid  || loading || deleting"
+          [style.color]="button?.color | contrastColor" (click)="onSubmit()">
+    <span *ngIf="loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+    <i *ngIf="button?.icon" [ngClass]="button?.icon"></i>
+    <ng-container *ngIf="button?.title && button?.icon || !button?.title && !button?.icon">&nbsp;</ng-container>
+    <span *ngIf="button?.title">{{button?.title}}</span>
+  </button>
+</div>

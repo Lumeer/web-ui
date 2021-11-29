@@ -18,10 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {SelectItem2Model} from './select-item2.model';
+import {SelectedItemDisplayValue, SelectItem2Model} from './select-item2.model';
 import {preventEvent} from '../../utils/common.utils';
 import {MenuItem} from '../../menu/model/menu-item';
 import {convertMenuItemsPath} from '../../menu/model/menu-utils';
+import {OverlayContainer} from '@angular/cdk/overlay';
 
 @Component({
   selector: 'select-item2',
@@ -48,6 +49,15 @@ export class SelectItem2Component implements OnChanges {
   @Input()
   public showAsLink = true;
 
+  @Input()
+  public bordered: boolean;
+
+  @Input()
+  public displayValue: SelectedItemDisplayValue;
+
+  @Input()
+  public stopEventsPropagation: boolean;
+
   @Output()
   public selectPath = new EventEmitter<SelectItem2Model[]>();
 
@@ -55,6 +65,10 @@ export class SelectItem2Component implements OnChanges {
   public remove = new EventEmitter();
 
   public menuItems: MenuItem[];
+
+  private mouseDownListener: any;
+
+  constructor(private overlayContainer: OverlayContainer) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.items) {
@@ -79,6 +93,22 @@ export class SelectItem2Component implements OnChanges {
     const path = convertMenuItemsPath<SelectItem2Model>(menuItemsPath, this.items);
     if (path.length) {
       this.selectPath.emit(path);
+    }
+  }
+
+  public onMenuOpened() {
+    if (this.stopEventsPropagation) {
+      this.mouseDownListener = event => {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      };
+      this.overlayContainer?.getContainerElement()?.addEventListener('mousedown', this.mouseDownListener);
+    }
+  }
+
+  public onMenuClosed() {
+    if (this.mouseDownListener) {
+      this.overlayContainer?.getContainerElement()?.removeEventListener('mousedown', this.mouseDownListener);
     }
   }
 }

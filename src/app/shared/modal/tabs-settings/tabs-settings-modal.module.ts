@@ -31,10 +31,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {DashboardRowsSettingsComponent} from './content/tab-settings/rows-settings/dashboard-rows-settings.component';
 import {DashboardCellSettingsComponent} from './content/tab-settings/cell-settings/dashboard-cell-settings.component';
 import {DashboardRowSettingsComponent} from './content/tab-settings/rows-settings/row-settings/dashboard-row-settings.component';
-import {DashboardRowLayoutComponent} from './content/tab-settings/rows-settings/row-layout/dashboard-row-layout.component';
 import {DropdownModule} from '../../dropdown/dropdown.module';
-import {LayoutTemplateColumnsPipe} from './pipes/layout-template-columns.pipe';
-import {IsLayoutSelectedInRowPipe} from './pipes/is-layout-selected-in-row.pipe';
+import {SelectedLayoutInRowPipe} from './pipes/selected-layout-in-row.pipe';
 import {FilterValidCellsPipe} from './pipes/filter-valid-cells.pipe';
 import {FindCellByCoordinatesPipe} from './pipes/find-cell-by-coordinates.pipe';
 import {SelectModule} from '../../select/select.module';
@@ -48,20 +46,19 @@ import {PickerModule} from '../../picker/picker.module';
 import {IsTabSelectedPipe} from './pipes/is-tab-selected.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {TabsSettingsSecondaryInfoPipe} from './pipes/tabs-settings-secondary-info.pipe';
+import {LayoutModule} from '../../layout/layout.module';
 
 @NgModule({
   declarations: [
     TabsSettingsModalComponent,
     TabsSettingsContentComponent,
-    IsLayoutSelectedInRowPipe,
+    SelectedLayoutInRowPipe,
     IsTabDefaultPipe,
     DashboardTabBadgeComponent,
     DashboardTabSettingsComponent,
     DashboardRowsSettingsComponent,
     DashboardCellSettingsComponent,
     DashboardRowSettingsComponent,
-    DashboardRowLayoutComponent,
-    LayoutTemplateColumnsPipe,
     FilterValidCellsPipe,
     FindCellByCoordinatesPipe,
     DashboardViewConfigComponent,
@@ -83,6 +80,7 @@ import {TabsSettingsSecondaryInfoPipe} from './pipes/tabs-settings-secondary-inf
     PipesModule,
     PickerModule,
     TooltipModule,
+    LayoutModule,
   ],
   exports: [FilterValidCellsPipe],
 })

@@ -24,6 +24,7 @@ export interface DataInputConfiguration {
   user?: UserDataInputConfiguration;
   action?: ActionDataInputConfiguration;
   select?: SelectDataInputConfiguration;
+  files?: FileDataInputConfiguration;
 }
 
 export interface CommonDataInputConfiguration {
@@ -57,4 +58,8 @@ export interface UserDataInputConfiguration {
 
 export interface SelectDataInputConfiguration {
   wrapItems?: boolean;
+}
+
+export interface FileDataInputConfiguration {
+  saveInMemory?: boolean;
 }

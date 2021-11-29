@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -51,7 +52,7 @@ import {ColumnFilter} from '../../../../model/table-column';
   styleUrls: ['./cell-filter-builder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CellFilterBuilderComponent implements OnChanges {
+export class CellFilterBuilderComponent implements OnChanges, AfterViewInit {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -108,6 +109,8 @@ export class CellFilterBuilderComponent implements OnChanges {
   public selectedIndex = 0;
   public filterAttribute: Attribute;
 
+  public visible$: Observable<boolean>;
+
   constructor(private constraintDataService: ConstraintDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -122,6 +125,10 @@ export class CellFilterBuilderComponent implements OnChanges {
     if (changes.filters) {
       setTimeout(() => this.dropdown?.updatePosition());
     }
+  }
+
+  public ngAfterViewInit() {
+    this.visible$ = this.dropdown?.isOpen$();
   }
 
   public toggle() {

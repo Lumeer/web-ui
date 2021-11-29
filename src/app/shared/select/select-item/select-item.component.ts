@@ -125,6 +125,7 @@ function createDropdownOptions(items: SelectItemModel[]): DropdownOption[] {
     value: item.id,
     displayValue: item.value,
     icons: item.icons,
+    classList: item.classList,
     iconColors: item.iconColors,
   }));
 }

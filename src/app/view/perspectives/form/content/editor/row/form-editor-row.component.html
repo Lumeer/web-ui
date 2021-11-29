@@ -1,0 +1,32 @@
+<div class="form-editor-row pt-2 pb-1" [style.grid-template-columns]="templateColumns">
+
+  <ng-content></ng-content>
+
+  <form-editor-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
+                    [cell]="cell"
+                    [collection]="collection"
+                    [collectionLinkTypes]="collectionLinkTypes"
+                    [usedAttributeIds]="usedAttributeIds"
+                    [usedLinkTypeIds]="usedLinkTypeIds"
+                    (cellChange)="onCellChange($event, index)"
+                    class="cursor-pointer">
+  </form-editor-cell>
+
+  <i class="far fa-columns text-primary clickable" #columnsIcon
+     i18n-title="@@perspective.form.editor.row.action.layout"
+     title="Change the row layout"
+     (click)="layout.toggle()"></i>
+
+  <i class="fal fa-trash-alt text-danger clickable"
+     i18n-title="@@perspective.form.editor.row.action.delete"
+     title="Remove this row"
+     (click)="delete.emit()"></i>
+
+  <row-layout-dropdown #layout
+                       [origin]="columnsIcon"
+                       [showSelection]="true"
+                       [selectedLayout]="row | selectedLayoutInRow"
+                       (layoutSelected)="onLayoutSelected($event)">
+  </row-layout-dropdown>
+
+</div>

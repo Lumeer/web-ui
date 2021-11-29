@@ -22,7 +22,6 @@ import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 import {takeWhile, tap} from 'rxjs/operators';
 import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
 import {TABLE_ROW_HEIGHT} from '../model/table-model';
-import {TableColumn} from '../model/table-column';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 
 export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemSizeDirective) {
@@ -38,6 +37,7 @@ const defaults = {
   footerHeight: TABLE_ROW_HEIGHT,
   footerEnabled: false,
   buffer: 1,
+  hasAlternativeHeader: true,
 };
 
 @Directive({
@@ -73,7 +73,13 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
   public disabled: boolean;
 
   @Input()
-  public columns: TableColumn[];
+  public columns: any[];
+
+  @Input()
+  public hasAlternativeHeader = defaults.hasAlternativeHeader;
+
+  @Input()
+  public baseOffset: number;
 
   private alive = true;
   private stickyOffset: number;
@@ -113,19 +119,23 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
   private onScrollChange(end: boolean) {
     const parentElement = this.scrollStrategy.viewport.elementRef.nativeElement.parentElement;
     const alternativeHeader = parentElement.querySelector('.alternative-header');
-    if (end) {
-      alternativeHeader.classList.remove('visible');
-    } else {
-      alternativeHeader.classList.add('visible');
+    if (this.hasAlternativeHeader && alternativeHeader) {
+      if (end) {
+        alternativeHeader.classList.remove('visible');
+      } else {
+        alternativeHeader.classList.add('visible');
+      }
     }
 
-    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector).forEach(el => {
-      if (end) {
-        el.classList.remove('hidden');
-      } else {
-        el.classList.add('hidden');
-      }
-    });
+    if (this.hasAlternativeHeader) {
+      this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector).forEach(el => {
+        if (end) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -160,9 +170,9 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
       .querySelectorAll(stickyHeaderSelector)
       .forEach((el: HTMLElement) => {
         const parent = el.parentElement;
-        let baseOffset = 0;
+        let baseOffset = this.baseOffset || 0;
         if (this.stickyPositions.has(parent)) {
-          baseOffset = this.stickyPositions.get(parent);
+          baseOffset += this.stickyPositions.get(parent);
         }
         el.style.top = `-${-baseOffset + offset}px`;
       });

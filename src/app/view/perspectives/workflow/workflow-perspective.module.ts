@@ -33,7 +33,7 @@ import {WorkflowToolbarComponent} from './content/tables/toolbar/workflow-toolba
 import {SelectModule} from '../../../shared/select/select.module';
 import {WorkflowSelectedItemPipe} from './pipes/workflow-selected-item.pipe';
 import {FilterStemTablesPipe} from './pipes/filter-stem-tables.pipe';
-import {ResizerDirective} from './content/tables/resizer.directive';
+import {ResizerDirective} from '../../../shared/directives/resizer.directive';
 import {WorkflowContentComponent} from './content/workflow-content.component';
 import {ResizableSidebarModule} from '../../../shared/resizable-sidebar/resizable-sidebar.module';
 import {WorkflowSidebarComponent} from './content/sidebar/workflow-sidebar.component';
@@ -44,6 +44,7 @@ import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
 import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
 import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.pipe';
+import {DirectivesModule} from '../../../shared/directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,6 @@ import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.
     WorkflowToolbarComponent,
     WorkflowSelectedItemPipe,
     FilterStemTablesPipe,
-    ResizerDirective,
     WorkflowContentComponent,
     WorkflowSidebarComponent,
     WorkflowTablesIdsPipe,
@@ -69,6 +69,7 @@ import {FilterUniqueStemsConfigsPipe} from './pipes/filter-unique-stems-configs.
     WarningMessageModule,
     InputModule,
     SelectModule,
+    DirectivesModule,
     ResizableSidebarModule,
     DataResourceModule,
     SettingsModule,

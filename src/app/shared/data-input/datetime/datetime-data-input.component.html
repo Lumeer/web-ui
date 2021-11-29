@@ -2,7 +2,7 @@
        [readonly]="readonly"
        [title]="value | formatDataValueTitle"
        [value]="readonly ? (value | formatDataValue  | unescapeHtml) : (value | formatDataValueForEdit)"
-       [class.invalid-value]="!(value | isDataValueValid)"
+       [class.invalid-value]="commonConfiguration?.skipValidation ? false : !(value | isDataValueValid)"
        (input)="onInput($event)"
        (blur)="!readonly && onBlur()"
        (focus)="!readonly && onFocus()"

@@ -31,7 +31,13 @@ import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/mode
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {areArraysSame, createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {
+  areArraysSame,
+  arraySubtract,
+  createRange,
+  isArraySubset,
+  uniqueValues,
+} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Attribute, Collection, CollectionPurposeType} from '../../collections/collection';
@@ -50,7 +56,7 @@ import {normalizeQueryStem} from './query.converter';
 import {CollectionQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/collection.query-item';
 import {FulltextQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
 import {LinkQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link.query-item';
-import {AttributesSettings, ResourceAttributeSettings} from '../../views/view';
+import {AttributesSettings, ResourceAttributeSettings, View} from '../../views/view';
 import {isAttributeVisibleInResourceSettings} from '../../../../shared/utils/attribute.utils';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
@@ -292,11 +298,44 @@ export function areFiltersEqual(f1: AttributeFilter, f2: AttributeFilter): boole
   return deepObjectsEquals(f1, f2);
 }
 
+export function getAllLinkTypeIdsFromView(view: View): string[] {
+  return uniqueValues([...getAdditionalLinkTypeIdsFromView(view), ...getAllLinkTypeIdsFromQuery(view?.query)]);
+}
+
+export function getAdditionalLinkTypeIdsFromView(view: View): string[] {
+  const linkTypeIds = uniqueValues(
+    (view?.additionalQueries || []).reduce((ids, query) => {
+      ids.push(...getAllLinkTypeIdsFromQuery(query));
+      return ids;
+    }, [])
+  );
+  const queryLinkTypes = getAllLinkTypeIdsFromQuery(view.query);
+  return arraySubtract(linkTypeIds, queryLinkTypes);
+}
+
 export function getAllLinkTypeIdsFromQuery(query: Query): string[] {
   return (query?.stems || []).reduce((ids, stem) => {
     (stem.linkTypeIds || []).forEach(linkTypeId => !ids.includes(linkTypeId) && ids.push(linkTypeId));
     return ids;
   }, []);
+}
+
+export function getAllCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
+  return uniqueValues([
+    ...getAdditionalCollectionIdsFromView(view, linkTypes),
+    ...getAllCollectionIdsFromQuery(view?.query, linkTypes),
+  ]);
+}
+
+export function getAdditionalCollectionIdsFromView(view: View, linkTypes: LinkType[]): string[] {
+  const collectionIds = uniqueValues(
+    (view?.additionalQueries || []).reduce((ids, query) => {
+      ids.push(...getAllCollectionIdsFromQuery(query, linkTypes));
+      return ids;
+    }, [])
+  );
+  const queryCollectionIds = getAllLinkTypeIdsFromQuery(view.query);
+  return arraySubtract(collectionIds, queryCollectionIds);
 }
 
 export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]): string[] {
@@ -312,6 +351,10 @@ export function getAllCollectionIdsFromQuery(query: Query, linkTypes: LinkType[]
 
 export function getBaseCollectionIdsFromQuery(query: Query): string[] {
   return query?.stems?.map(stem => stem.collectionId) || [];
+}
+
+export function getBaseCollectionIdFromQuery(query: Query): string {
+  return query?.stems?.[0]?.collectionId;
 }
 
 export function isQuerySubset(superset: Query, subset: Query, excludeLinksTypes?: boolean): boolean {

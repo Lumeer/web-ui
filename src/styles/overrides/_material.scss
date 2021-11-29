@@ -130,6 +130,10 @@ button.mat-menu-item {
   &:active:not(.prevent-click) {
     color: white !important;
     background: $primary !important;
+
+    .mat-menu-submenu-icon {
+      color: white !important;
+    }
   }
 
   &.active:hover {

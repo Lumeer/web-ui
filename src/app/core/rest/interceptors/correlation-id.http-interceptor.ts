@@ -22,13 +22,14 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {isBackendUrl} from '../../api/api.utils';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {AppIdService} from '../../service/app-id.service';
 
 export const correlationIdHeader = 'X-Lumeer-Correlation-Id';
-export const correlationIdHeaderBackup = 'X-Lumeer-Correlation-Id-2';
+export const appIdHeader = 'X-Lumeer-App-Id';
 
 @Injectable()
 export class CorrelationIdHttpInterceptor implements HttpInterceptor {
-  constructor(private configurationService: ConfigurationService) {}
+  constructor(private configurationService: ConfigurationService, private appId: AppIdService) {}
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!isBackendUrl(request.url, this.configurationService.getConfiguration())) {
@@ -37,11 +38,17 @@ export class CorrelationIdHttpInterceptor implements HttpInterceptor {
 
     if (request.body?.correlationId) {
       const requestClone = request.clone({
-        setHeaders: {[correlationIdHeader]: request.body.correlationId},
+        setHeaders: {
+          [correlationIdHeader]: request.body.correlationId,
+          [appIdHeader]: this.appId.getAppId(),
+        },
       });
       return next.handle(requestClone);
     }
 
-    return next.handle(request);
+    const requestClone = request.clone({
+      setHeaders: {[appIdHeader]: this.appId.getAppId()},
+    });
+    return next.handle(requestClone);
   }
 }

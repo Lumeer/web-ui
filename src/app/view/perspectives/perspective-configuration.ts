@@ -28,6 +28,7 @@ export interface PerspectiveConfiguration {
   detail?: DetailPerspectiveConfiguration;
   search?: SearchPerspectiveConfiguration;
   table?: TablePerspectiveConfiguration;
+  form?: FormPerspectiveConfiguration;
 }
 
 interface PerspectiveWithSidebarConfiguration {
@@ -112,5 +113,13 @@ export interface TablePerspectiveConfiguration {
 }
 
 export const defaultTablePerspectiveConfiguration: TablePerspectiveConfiguration = {
+  additionalSpace: true,
+};
+
+export interface FormPerspectiveConfiguration {
+  additionalSpace?: boolean;
+}
+
+export const defaultFormPerspectiveConfiguration: FormPerspectiveConfiguration = {
   additionalSpace: true,
 };

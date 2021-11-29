@@ -20,6 +20,7 @@ body {
 
 .bg-dark {
   background-color: $success !important;
+
   &.navbar-dark .navbar-nav {
     .nav-link:focus,
     .nav-link:hover,
@@ -57,6 +58,7 @@ body {
   &:hover {
     transform: scale(1.4, 1.4);
   }
+
   transition: transform 0.15s ease-in-out;
 }
 
@@ -122,6 +124,7 @@ body {
 .text-attribute.bg-dark {
   color: $gray-300;
 }
+
 .bg-dark > .text-attribute {
   color: $gray-300;
 }
@@ -337,10 +340,12 @@ table {
   &.table-fit {
     @include table-auto-width;
     table-layout: auto !important;
+
     thead th,
     tfoot th {
       @include table-auto-width;
     }
+
     tbody td,
     tfoot td {
       @include table-auto-width;
@@ -455,8 +460,7 @@ div[contenteditable='true'].form-control {
   background-image: none;
   border-color: $gray-500;
 
-  &:active,
-  &[aria-expanded='true'] {
+  &:active {
     border-color: $primary;
   }
 }

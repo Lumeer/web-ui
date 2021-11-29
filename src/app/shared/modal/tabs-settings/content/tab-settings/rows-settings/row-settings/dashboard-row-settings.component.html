@@ -15,12 +15,12 @@
        title="Delete a Row"
        (click)="delete.emit()"></i>
 
-    <dashboard-row-layout #layout
-                          [origin]="columnsIcon"
-                          [showSelection]="true"
-                          [row]="row"
-                          (layoutSelected)="onLayoutSelected($event)">
-    </dashboard-row-layout>
+    <row-layout-dropdown #layout
+                         [origin]="columnsIcon"
+                         [showSelection]="true"
+                         [selectedLayout]="row | selectedLayoutInRow"
+                         (layoutSelected)="onLayoutSelected($event)">
+    </row-layout-dropdown>
   </ng-container>
 </div>
 

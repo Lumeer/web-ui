@@ -27,7 +27,6 @@ import {
   SimpleChanges,
   EventEmitter,
 } from '@angular/core';
-import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DashboardTab, defaultDashboardTabs, TabType} from '../../../../core/model/dashboard-tab';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
@@ -35,6 +34,7 @@ import {generateId} from '../../../utils/resource.utils';
 import {View} from '../../../../core/store/views/view';
 import {SelectItemModel} from '../../../select/select-item/select-item.model';
 import {createViewSelectItems} from '../../../../core/store/views/view.utils';
+import {moveItemInArray} from '../../../utils/array.utils';
 
 @Component({
   selector: 'tabs-settings-content',
@@ -162,8 +162,7 @@ export class TabsSettingsContentComponent implements OnInit, OnChanges {
     if (this.draggedTab) {
       const previousIndex = this.tabs$.value.findIndex(t => t.id === this.draggedTab.id);
       const currentIndex = this.tabs$.value.findIndex(t => t.id === tab.id);
-      const tabs = [...this.tabs$.value];
-      moveItemInArray(tabs, previousIndex, currentIndex);
+      const tabs = moveItemInArray(this.tabs$.value, previousIndex, currentIndex);
       this.setTabs(tabs);
     }
   }

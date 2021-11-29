@@ -46,12 +46,12 @@ import {View, ViewSettings} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
 import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
 import {ResourcesPermissions} from '../../../../core/model/allowed-permissions';
-import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 import {ConstraintData, DocumentsAndLinksData} from '@lumeer/data-filters';
 import {User} from '../../../../core/store/users/user';
 import {KanbanPerspectiveConfiguration} from '../../perspective-configuration';
+import {moveItemInArray} from '../../../../shared/utils/array.utils';
 
 interface Data {
   collections: Collection[];
@@ -217,14 +217,12 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private handleDataColumnsMove(event: {previousIndex: number; currentIndex: number}) {
-    const columns = [...this.data$.value.columns];
-    moveItemInArray(columns, event.previousIndex, event.currentIndex);
+    const columns = moveItemInArray(this.data$.value.columns, event.previousIndex, event.currentIndex);
     this.data$.next({...this.data$.value, columns});
   }
 
   private handleConfigColumnsMove(event: {previousIndex: number; currentIndex: number}) {
-    const columns = [...this.config.columns];
-    moveItemInArray(columns, event.previousIndex, event.currentIndex);
+    const columns = moveItemInArray(this.config.columns, event.previousIndex, event.currentIndex);
     this.onConfigChanged({...this.config, columns});
   }
 

@@ -1,15 +1,20 @@
 <ng-container *ngIf="{selectedItem: selectedPath | getSelectedItems:items } as data">
-  <button class="btn text-decoration-none px-0 d-flex align-items-center flex-nowrap w-100"
+  <button class="btn text-decoration-none align-items-center w-100 main-content"
           type="button"
           [disabled]="disabled"
+          [class.px-0]="!bordered"
+          [class.btn-outline-gray-600]="bordered"
           [class.btn-link]="showAsLink"
+          [class.justify-content-between]="bordered"
           [matMenuTriggerFor]="menu.childMenu"
-          [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'">
+          [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
+          (menuOpened)="onMenuOpened()"
+          (menuClosed)="onMenuClosed()">
 
     <select-item-row *ngIf="data.selectedItem; else empty"
-                     class="mr-2"
+                     class="mr-2 w-100"
                      [item]="data.selectedItem"
-                     [displayChildren]="true"
+                     [displayValue]="displayValue"
                      [disabled]="disabled"
                      [removable]="removable"
                      (remove)="remove.emit()">
@@ -19,7 +24,7 @@
   </button>
 
   <ng-template #empty>
-    <span class="empty-text text-truncate mr-2" [title]="emptyValue">{{emptyValue}}</span>
+    <span class="empty-text text-truncate mr-2 text-left" [title]="emptyValue">{{emptyValue}}</span>
     <i class="fas fa-caret-down empty-text"></i>
   </ng-template>
 

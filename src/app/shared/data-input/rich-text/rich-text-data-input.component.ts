@@ -60,10 +60,6 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
-  @HostBinding('class.multiline')
-  public multilineMode: boolean;
-
-  @Input()
   public value: TextDataValue;
 
   @Input()
@@ -87,6 +83,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @HostBinding('class.bg-danger-light')
   public invalidBackground = false;
 
+  @HostBinding('class.multiline')
+  public multilineMode: boolean;
+
   @ViewChild(QuillEditorComponent)
   public textEditor: QuillEditorComponent;
 
@@ -94,7 +93,6 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   public text = '';
   public valid = true;
-  public isMultiline = true;
 
   private modalRef: BsModalRef;
   private modalSubscription = new Subscription();
@@ -141,7 +139,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       this.pasteValueAfterEditorCreation = true;
     }
     this.valid = this.value.isValid();
-    this.isMultiline = numberOfPTags(this.text) > 1;
+    this.multilineMode = numberOfPTags(this.text) > 1;
   }
 
   private refreshBackgroundClass(value: DataValue) {
@@ -184,7 +182,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public contentChanged(event: ContentChange) {
-    this.text = event.html;
+    this.text = event.html || '';
     const newValue = this.value.parseInput(this.text);
     this.valueChange.emit(newValue);
     this.refreshBackgroundClass(newValue);

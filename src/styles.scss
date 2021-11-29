@@ -46,6 +46,10 @@ a.disabled {
   cursor: default;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 // TODO should not be needed
 ul {
   list-style-type: none;
@@ -301,6 +305,20 @@ typeahead-container {
   }
 }
 
+.lmr-resizer {
+  height: 15px;
+  background: $gray-200;
+  cursor: ns-resize;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: $gray-400;
+  }
+}
+
 .form-control.multiline {
   height: auto;
   min-height: calc(1.5em + 0.75rem + 2px);
@@ -436,6 +454,14 @@ modal-container {
   white-space: nowrap;
   line-height: 0.9rem;
   border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow-light;
   padding: 0.25rem 0.5rem;
+}
+
+.shadow-default {
+  box-shadow: $shadow-default;
+}
+
+.shadow-light {
+  box-shadow: $shadow-light;
 }

@@ -50,10 +50,15 @@ export class MenuComponent {
       this.itemSelected.emit(item);
       this.pathSelected.emit([item]);
     }
+    this.close();
   }
 
   public onSelectChild(item: MenuItem, path: MenuItem[]) {
     this.itemSelected.emit(path[path.length - 1]);
     this.pathSelected.emit([item, ...path]);
+  }
+
+  public close() {
+    this.childMenu?.closed.emit('click');
   }
 }

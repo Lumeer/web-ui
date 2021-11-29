@@ -1,0 +1,30 @@
+@import '~src/styles/variables';
+
+:host {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.range-element {
+  max-width: 4rem;
+}
+
+.filters-icon {
+  position: relative;
+
+  .number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -0.4rem;
+    right: -0.4rem;
+    background: $success;
+    color: white;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.6rem;
+  }
+}

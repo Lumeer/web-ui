@@ -132,7 +132,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
 
         event.preventDefault();
 
-        if (!this.commonConfiguration.skipValidation && input && !dataValue.isValid()) {
+        if (!this.commonConfiguration?.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
@@ -181,7 +181,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.durationInput.nativeElement.value);
-      if (this.commonConfiguration.skipValidation || dataValue.isValid()) {
+      if (this.commonConfiguration?.skipValidation || dataValue.isValid()) {
         this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();

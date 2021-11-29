@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 import {Collection} from '../../../../core/store/collections/collection';
@@ -33,7 +33,7 @@ import {composeViewSettingsLinkTypeCollectionId} from '../../settings.util';
   styleUrls: ['./attributes-settings-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributesSettingsContentComponent {
+export class AttributesSettingsContentComponent implements OnChanges {
   @Input()
   public attributesResourcesData: AttributesResourceData[];
 
@@ -42,6 +42,16 @@ export class AttributesSettingsContentComponent {
 
   @Output()
   public settingsChanged = new EventEmitter<AttributesSettings>();
+
+  public firstNonEmptyAttributesIndex: number;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.attributesResourcesData) {
+      this.firstNonEmptyAttributesIndex = (this.attributesResourcesData || []).findIndex(
+        data => data.resource?.attributes?.length
+      );
+    }
+  }
 
   public onResourceSettingsChanged(
     settingsOrder: ResourceAttributeSettings[],

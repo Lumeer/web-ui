@@ -29,7 +29,7 @@ import {Query} from '../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {ViewsAction} from '../../core/store/views/views.action';
-import {selectCurrentView, selectSidebarOpened} from '../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened, selectViewAdditionalQueries} from '../../core/store/views/views.state';
 import {distinctUntilChanged, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {View, ViewSettings} from '../../core/store/views/view';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
@@ -71,6 +71,7 @@ export abstract class DataPerspectiveDirective<T>
   public viewSettings$: Observable<ViewSettings>;
   public currentUser$: Observable<User>;
   public currentView$: Observable<View>;
+  public currentViewId$: Observable<string>;
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
 
@@ -125,6 +126,10 @@ export abstract class DataPerspectiveDirective<T>
         return this.store$.pipe(select(selectCurrentView));
       })
     );
+    this.currentViewId$ = this.currentView$.pipe(
+      map(view => view?.id),
+      distinctUntilChanged()
+    );
 
     this.query$ = this.overrideView$.pipe(
       switchMap(view => {
@@ -138,13 +143,21 @@ export abstract class DataPerspectiveDirective<T>
 
   private subscribeToQuery() {
     this.subscriptions.add(
-      combineLatest([
-        this.currentView$.pipe(
-          map(view => view?.id),
-          distinctUntilChanged()
-        ),
-        this.query$,
-      ]).subscribe(([viewId, query]) => this.fetchData(query, viewId))
+      combineLatest([this.currentViewId$, this.query$]).subscribe(([viewId, query]) => this.fetchData(query, viewId))
+    );
+
+    const viewAdditionalQueries$ = this.overrideView$.pipe(
+      switchMap(view => {
+        if (view) {
+          return of(view.additionalQueries);
+        }
+        return this.store$.pipe(select(selectViewAdditionalQueries));
+      })
+    );
+    this.subscriptions.add(
+      combineLatest([this.currentViewId$, viewAdditionalQueries$]).subscribe(([viewId, queries]) =>
+        queries.forEach(query => this.fetchData(query, viewId))
+      )
     );
   }
 

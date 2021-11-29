@@ -13,10 +13,10 @@
           *ngIf="selectedCollection"
           [dataResources]="data.documentsData.documents"
           [selectedId]="selectedDocument?.id"
-          [loaded]="data.documentsData.loaded"
           [attributesSettings]="attributesSettings"
           [view]="view"
           [resource]="selectedCollection"
+          [tableHeight]="250"
           [constraintData]="constraintData$ | async"
           (selectDataResource)="setActiveDocument($event)">
         </preview-results-table>

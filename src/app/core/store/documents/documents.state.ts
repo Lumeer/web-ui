@@ -75,6 +75,9 @@ export const selectDocumentsByIds = (ids: string[]) =>
 export const selectDocumentsByCollectionId = (collectionId: string) =>
   createSelector(selectAllDocuments, documents => documents.filter(doc => doc.collectionId === collectionId));
 
+export const selectDocumentsByCollectionIds = (collectionIds: string[]) =>
+  createSelector(selectAllDocuments, documents => documents.filter(doc => collectionIds.includes(doc.collectionId)));
+
 const selectPendingDocumentDataUpdates = createSelector(selectDocumentsState, state => state.pendingDataUpdates);
 
 export const selectPendingDocumentDataUpdatesByCorrelationId = (correlationId: string) =>

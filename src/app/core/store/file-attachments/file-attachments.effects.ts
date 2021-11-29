@@ -47,11 +47,11 @@ export class FileAttachmentsEffects {
         const path = createFileApiPath(workspace, action.payload.fileAttachment);
         const dto = convertFileAttachmentModelToDto(action.payload.fileAttachment, workspace);
 
-        return this.attachmentsService.createFile(path, dto).pipe(
-          map(file => convertFileAttachmentDtoToModel(file, true)),
-          mergeMap(fileAttachment => [
-            new FileAttachmentsAction.CreateSuccess({fileAttachment}),
-            ...createCallbackActions(action.payload.onSuccess, fileAttachment),
+        return this.attachmentsService.createFiles(path, [dto]).pipe(
+          map(files => files.map(file => convertFileAttachmentDtoToModel(file, true))),
+          mergeMap(fileAttachments => [
+            new FileAttachmentsAction.CreateSuccess({fileAttachments}),
+            ...createCallbackActions(action.payload.onSuccess, fileAttachments[0]),
           ]),
           catchError(error => emitErrorActions(error, action.payload.onFailure))
         );
@@ -66,7 +66,10 @@ export class FileAttachmentsEffects {
       mergeMap(([action, workspace]) => {
         const {fileId, onSuccess, onFailure} = action.payload;
         return this.attachmentsService.removeFile(workspace, fileId).pipe(
-          mergeMap(() => [new FileAttachmentsAction.RemoveSuccess({fileId}), ...createCallbackActions(onSuccess)]),
+          mergeMap(() => [
+            new FileAttachmentsAction.RemoveSuccess({fileIds: [fileId]}),
+            ...createCallbackActions(onSuccess),
+          ]),
           catchError(error => emitErrorActions(error, onFailure))
         );
       })

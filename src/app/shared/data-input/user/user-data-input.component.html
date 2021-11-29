@@ -29,7 +29,7 @@
         *ngFor="let user of data.selectedUsers; trackBy:trackByUser; let first = first; let last = last">
 
         <span data-test="user-data-input"
-              [class.invalid-value]="!commonConfiguration.skipValidation && !(user | userIsValid:users:value.config:data.selectedUsers.length)"
+              [class.invalid-value]="!commonConfiguration?.skipValidation && !(user | userIsValid:users:value.config:data.selectedUsers.length)"
               [class.ml-2]="first"
               class="d-inline-block user">
           {{user.name || user.email}}

@@ -39,11 +39,11 @@ export class DashboardRowSettingsComponent implements OnChanges {
   @Input()
   public editable: boolean;
 
-  @Output()
-  public rowChange = new EventEmitter<DashboardRow>();
-
   @Input()
   public selectedColumn: number;
+
+  @Output()
+  public rowChange = new EventEmitter<DashboardRow>();
 
   @Output()
   public delete = new EventEmitter();

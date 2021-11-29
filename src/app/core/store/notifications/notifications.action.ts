@@ -38,7 +38,16 @@ export namespace NotificationsAction {
     public readonly type = NotificationsActionType.CONFIRM;
 
     public constructor(
-      public payload: {title: string; message: string; action: Action; type: string; yesFirst?: boolean}
+      public payload: {
+        title: string;
+        message: string;
+        action: Action;
+        type: string;
+        noAction?: Action;
+        yesFirst?: boolean;
+        yesTitle?: string;
+        noTitle?: string;
+      }
     ) {}
   }
 

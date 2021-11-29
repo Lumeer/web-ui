@@ -21,8 +21,12 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {Collection} from '../../core/store/collections/collection';
 
 export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: string): string {
-  const collectionIds = linkType && linkType.collectionIds;
-  return collectionIds[0] === collectionId ? collectionIds[1] : collectionIds[0];
+  const collectionIds = linkType?.collectionIds || [];
+  return collectionIds[0] === collectionId
+    ? collectionIds[1]
+    : collectionIds[1] === collectionId
+    ? collectionIds[0]
+    : null;
 }
 
 export function mapLinkTypeCollections(linkType: LinkType, collectionsMap: Record<string, Collection>): LinkType {

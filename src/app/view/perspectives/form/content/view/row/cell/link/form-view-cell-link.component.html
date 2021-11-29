@@ -1,0 +1,46 @@
+<div class="d-flex align-items-center h-100 pb-1 pr-2 flex-wrap" #wrapperElement
+     *ngIf="selectedDocuments$ | async as selectedOptions"
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
+
+  <ng-container *ngIf="multi || readonly">
+
+    <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption">
+        <span class="select-tag ml-2 mt-1"
+              [style.background]="option.background"
+              [style.color]="option.background | contrastColor"
+              [spellcheck]="false">
+            <icons-presenter *ngIf="option.icons && option.iconColors"
+                             [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
+                             [colors]="option.iconColors"
+                             [icons]="option.icons">
+          </icons-presenter>
+          <span [innerHTML]="option.displayValue || option.value"></span>
+        </span>
+    </ng-container>
+
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+
+    <input #textInput
+           [(ngModel)]="text"
+           (focus)="onFocused()"
+           (blur)="onBlur()"
+           [spellcheck]="false"
+           class="border-0 bg-transparent link-input ml-2 mt-1"
+           type="text">
+
+    <options-dropdown [options]="dropdownOptions | filterDropdownOptions:text"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [multiSelect]="multi"
+                      [highlightedText]="text"
+                      [selectedValues]="multi ? (selectedOptions | dropdownOptionsValues) : []"
+                      [firstItemActive]="!multi && text?.length > 0"
+                      (selectOption)="onSelect($event)">
+    </options-dropdown>
+
+  </ng-container>
+
+</div>

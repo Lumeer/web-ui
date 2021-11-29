@@ -1,0 +1,48 @@
+<ng-container *ngIf="dataIsValid">
+  <div class="text-truncate font-weight-bold" [class.required]="mandatory">{{cell?.title}}</div>
+
+  <div *ngIf="cell?.type === type.Attribute"
+       class="data-input mt-1 d-flex x"
+       [class.cursor-pointer]="editable"
+       [class.with-border]="showBorder"
+       (click)="onElementClick($event)">
+    <ng-container
+      *ngIf="attribute | dataInputEditInfo:dataValue:editable:editing as dataInputInfo">
+      <data-input class="w-100 d-block"
+                  *ngIf="dataInputInfo.showDataInput"
+                  [constraint]="attribute?.constraint"
+                  [dataValue]="dataValue"
+                  [readonly]="!editing || !editable"
+                  [editableInReadonly]="editable"
+                  [cursor]="cursor"
+                  [configuration]="dataInputConfiguration"
+                  [focus]="true"
+                  (saveAction)="onValueSave($event.dataValue, $event.action)"
+                  (cancel)="onCancelEditing()">
+      </data-input>
+      <div class="d-flex align-items-center html-input px-1"
+           *ngIf="!dataInputInfo.showDataInput"
+           [innerHTML]="dataValue | previewDataValue | safeHtml">
+      </div>
+    </ng-container>
+
+  </div>
+  <form-view-cell-link *ngIf="cell?.type === type.Link" class="data-input with-border mt-1 d-flex align-items-center"
+                       [class.cursor-pointer]="editable"
+                       [multi]="linkMulti"
+                       [displayAttributeId]="linkAttributeId"
+                       [readonly]="!editing || !editable"
+                       [linkType]="linkData?.linkType"
+                       [collection]="linkData?.collection"
+                       [documents]="linkDocuments$ | async"
+                       [constraintData]="constraintData$ | async"
+                       [linkDocumentIds]="linkData?.linkDocumentIds"
+                       [removedDocumentIds]="linkData?.removedDocumentIds"
+                       [addedDocumentIds]="linkData?.addedDocumentIds"
+                       (selectedDataChange)="onSelectedDocumentIdsChange($event.data, $event.action)"
+                       (click)="onElementClick($event)"
+                       (cancel)="onCancelEditing()">
+  </form-view-cell-link>
+  <div *ngFor="let error of formErrors" class="text-danger small mt-1">{{error.title}}</div>
+  <div class="text-muted small mt-1">{{cell?.description}}</div>
+</ng-container>

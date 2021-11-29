@@ -26,11 +26,12 @@
          data-test="select-item-option"
          tabindex>
 
-        <i *ngIf="multiSelect" class="fa-fw far mr-2"
+        <i *ngIf="showSelection || multiSelect" class="fa-fw far mr-2"
            [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : 'fa-none'">
         </i>
 
         <div class="option d-inline-block"
+             [ngClass]="option.classList"
              [style.background]="option.background"
              [style.border-color]="option.border"
              [class.option-background]="!!option.background"

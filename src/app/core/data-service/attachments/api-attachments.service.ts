@@ -28,12 +28,16 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 export class ApiAttachmentsService implements AttachmentsService {
   constructor(private http: HttpClient, private configurationService: ConfigurationService) {}
 
-  public createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto> {
-    return this.http.post<FileAttachmentDto>(this.filesUrl(path), file);
+  public createFiles(path: FileApiPath, files: FileAttachmentDto[]): Observable<FileAttachmentDto[]> {
+    return this.http.post<FileAttachmentDto[]>(this.filesUrl(path), files);
   }
 
   public removeFile(path: Partial<FileApiPath>, fileId: string): Observable<any> {
     return this.http.delete(`${this.filesUrl(path)}/${fileId}`);
+  }
+
+  public removeFiles(path: Partial<FileApiPath>, ids: string[]): Observable<any> {
+    return this.http.delete(`${this.filesUrl(path)}/multiple`, {body: {ids}});
   }
 
   public getFilesByCollection(path: FileApiPath): Observable<FileAttachmentDto[]> {

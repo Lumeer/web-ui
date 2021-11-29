@@ -1,0 +1,49 @@
+<ng-container *ngIf="{document: document$ | async, originalDocument: originalDocument$ | async, collection: collection$ | async, currentUser: currentUser$ | async, constraintData: constraintData$ | async} as data">
+
+  <form-documents-choose class="mb-4 d-block"
+                         [collection]="data.collection"
+                         [document]="data.document"
+                         [attributesSettings]="attributesSettings"
+                         [constraintData]="data.constraintData"
+                         [permissions]="collectionPermissions"
+                         [query]="query"
+                         [view]="view"
+                         [config]="config"
+                         (configChange)="configChange.emit($event)"
+                         (onAddNewRow)="onAddNewDocument()"
+                         (selectDocument)="onSelectDocument($event)">
+  </form-documents-choose>
+
+  <ng-container *ngIf="data.document">
+
+    <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index;"
+                       class="d-block card p-3 mt-4 shadow-light"
+                       [dataValues]="documentDataValues$ | async"
+                       [linkValues]="linkData$ | async"
+                       [section]="section"
+                       [collection]="data.collection"
+                       [documentId]="data.document?.id"
+                       [editable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
+                       [formErrors]="(validation$ | async)?.errors | formErrorsBySection:section.id"
+                       (attributeValueChange)="onAttributeValueChange($event, section.id)"
+                       (editCancel)="onEditCancel($event, section.id)"
+                       (editStart)="onEditStart($event, section.id)"
+                       [editedCell]="editedCell$ | async"
+                       (linkValueChange)="onLinkValueChange($event, section.id)">
+    </form-view-section>
+
+    <form-view-submit class="mt-4"
+                      [editable]="data.originalDocument | dataResourceIsWritable:data.collection:collectionPermissions:data.currentUser:data.constraintData"
+                      [deletable]="!data.document.id || (data.originalDocument | dataResourceIsDeletable:data.collection:collectionPermissions:data.currentUser:data.constraintData)"
+                      [document]="data.document"
+                      [buttons]="config?.buttons"
+                      [loading]="performingAction$ | async"
+                      [deleting]="performingDelete$ | async"
+                      [validation]="validation$ | async"
+                      (delete)="onDelete()"
+                      (submit)="onSubmit()">
+    </form-view-submit>
+
+  </ng-container>
+
+</ng-container>

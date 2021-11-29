@@ -1,15 +1,15 @@
 <dropdown [origin]="origin"
-          [minHeight]="(files?.length || 0) * 30 + 60"
+          [minHeight]="(filesAttachments?.length + files?.length || 0) * 30 + 60"
           [minWidth]="uploadProgress ? 300 : 100"
           [positions]="dropdownPositions"
           [pushOnScreen]="true"
           [showBackdrop]="false">
   <div class="card p-3"
        (click)="onClick($event)">
-    <table *ngIf="files?.length > 0"
+    <table *ngIf="filesAttachments?.length > 0 || files?.length > 0"
            class="table table-sm">
       <tbody>
-      <tr *ngFor="let file of files; index as fileIndex">
+      <tr *ngFor="let file of filesAttachments; index as fileIndex">
         <td [class.border-top-0]="fileIndex === 0"
             [class.text-secondary]="file.uploading">
           {{ file.fileName }}
@@ -17,7 +17,20 @@
         <td [class.border-top-0]="fileIndex === 0"
             class="text-right">
           <i *ngIf="!file.uploading"
-             (click)="onRemove(file.id)"
+             (click)="onRemoveFileAttachment(file.id)"
+             title="Delete file"
+             i18n-title="@@files.dropdown.button.delete"
+             class="far fa-trash-alt text-danger cursor-pointer">
+          </i>
+        </td>
+      </tr>
+      <tr *ngFor="let file of files; index as fileIndex">
+        <td [class.border-top-0]="fileIndex === 0 && !filesAttachments?.length">
+          {{ file.name }}
+        </td>
+        <td [class.border-top-0]="fileIndex === 0 && !filesAttachments?.length"
+            class="text-right">
+          <i (click)="onRemoveFile(fileIndex)"
              title="Delete file"
              i18n-title="@@files.dropdown.button.delete"
              class="far fa-trash-alt text-danger cursor-pointer">

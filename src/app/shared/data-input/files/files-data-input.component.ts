@@ -31,8 +31,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import {FileApiService} from '../../../core/service/file-api.service';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {FileAttachment, FileAttachmentType} from '../../../core/store/file-attachments/file-attachment.model';
@@ -43,6 +43,7 @@ import {keyboardEventCode, KeyCode} from '../../key-code';
 import {preventEvent} from '../../utils/common.utils';
 import {FilesDataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../core/store/app.state';
+import {FileDataInputConfiguration} from '../data-input-configuration';
 
 @Component({
   selector: 'files-data-input',
@@ -63,6 +64,9 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   @Input()
   public value: FilesDataValue;
 
+  @Input()
+  public configuration: FileDataInputConfiguration;
+
   @Output()
   public save = new EventEmitter<FilesDataValue>();
 
@@ -75,6 +79,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   public fileAttachments$: Observable<FileAttachment[]>;
 
   public uploadProgress$ = new BehaviorSubject<number>(null);
+  public removedFilesIds$ = new BehaviorSubject<string[]>([]);
 
   private cursor$ = new BehaviorSubject<DataCursor>(null);
 
@@ -90,10 +95,13 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   ) {}
 
   public ngOnInit() {
-    this.fileAttachments$ = this.cursor$.pipe(
-      switchMap(cursor => {
+    this.fileAttachments$ = combineLatest([this.cursor$, this.removedFilesIds$]).pipe(
+      switchMap(([cursor, removedFilesIds]) => {
         if (cursor && !!(cursor.documentId || cursor.linkInstanceId)) {
-          return this.store$.pipe(select(selectFileAttachmentsByDataCursor(cursor)));
+          return this.store$.pipe(
+            select(selectFileAttachmentsByDataCursor(cursor)),
+            map(files => files.filter(file => !removedFilesIds.includes(file.id)))
+          );
         } else {
           return of([]);
         }
@@ -112,6 +120,9 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
       ) {
         this.createFile(this.preparedFile);
       }
+    }
+    if (changes.value) {
+      this.removedFilesIds$.next(this.value?.removedFiles || []);
     }
     if (changes.readonly) {
       if (this.readonly) {
@@ -147,7 +158,11 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   public onAdd(file: File) {
-    if (isDataCursorEntityInitialized(this.cursor)) {
+    if (this.configuration?.saveInMemory) {
+      const value = this.value.copy();
+      value.addFileInMemory(file);
+      this.save.emit(value);
+    } else if (isDataCursorEntityInitialized(this.cursor)) {
       this.createFile(file);
     } else {
       this.preparedFile = file;
@@ -222,18 +237,32 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     );
   }
 
-  public onRemove(fileId: string, fileAttachments: FileAttachment[]) {
-    const message = $localize`:@@file.attachment.delete.confirm.message:Do you really want to permanently delete this file?`;
-    const title = $localize`:@@file.attachment.delete.confirm.title:Delete file?`;
+  public onRemoveFile(index: number) {
+    const value = this.value.copy();
+    value.removeFileInMemory(index);
 
-    this.notificationService.confirmYesOrNo(message, title, 'danger', () => {
-      this.removeFileAttachment(fileId);
-      this.removeFileNameFromData(fileId, fileAttachments);
-    });
+    this.save.emit(value);
+  }
+
+  public onRemoveFileAttachment(fileId: string, fileAttachments: FileAttachment[]) {
+    if (this.configuration?.saveInMemory) {
+      const value = this.value.copy();
+      value.removeFile(fileId);
+
+      this.save.emit(value);
+    } else {
+      const message = $localize`:@@file.attachment.delete.confirm.message:Do you really want to permanently delete this file?`;
+      const title = $localize`:@@file.attachment.delete.confirm.title:Delete file?`;
+
+      this.notificationService.confirmYesOrNo(message, title, 'danger', () => {
+        this.removeFileAttachment(fileId);
+        this.removeFileNameFromData(fileId, fileAttachments);
+      });
+    }
   }
 
   private addFileNameToData(fileName: string) {
-    const formattedValue = this.value && this.value.format();
+    const formattedValue = this.value?.format();
     const value = !formattedValue || formattedValue.endsWith(fileName) ? fileName : `${formattedValue},${fileName}`;
     const dataValue = this.value.copy(value);
     this.save.emit(dataValue);

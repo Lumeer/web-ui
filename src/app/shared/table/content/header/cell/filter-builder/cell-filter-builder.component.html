@@ -51,6 +51,7 @@
                               [selectedCondition]="filters[selectedIndex].condition"
                               [selectedValues]="filters[selectedIndex].conditionValues"
                               [constraintData]="constraintData$ | async"
+                              [visible]="visible$ | async"
                               [editable]="editable"
                               (finishEditing)="onFinishEditing()"
                               (valueChange)="onValueChange($event)">

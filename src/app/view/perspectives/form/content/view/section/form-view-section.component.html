@@ -1,0 +1,23 @@
+<div *ngIf="title"
+     class="font-weight-bold h5">{{title}}</div>
+<div *ngIf="description"
+     class="text-muted small"
+     [class.mt-1]="title">{{description}}</div>
+
+<form-view-row *ngFor="let row of section?.rows; let index = index; trackBy:trackByRow; let first = first"
+               class="d-block"
+               [class.mt-3]="!first || title || description"
+               [sectionId]="section.id"
+               [row]="row"
+               [dataValues]="dataValues"
+               [linkValues]="linkValues"
+               [collection]="collection"
+               [documentId]="documentId"
+               [editable]="editable"
+               [editedCell]="editedCell"
+               [formErrors]="formErrors | formErrorsByRow:row.id"
+               (attributeValueChange)="onAttributeValueChange($event, row.id)"
+               (linkValueChange)="onLinkValueChange($event, row.id)"
+               (editStart)="onEditStart(row.id, $event.cellId)"
+               (editCancel)="onEditCancel(row.id, $event.cellId)">
+</form-view-row>

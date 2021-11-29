@@ -40,7 +40,10 @@ import {ConfigurationService} from '../../../../configuration/configuration.serv
 })
 export class FilesDropdownComponent implements AfterViewInit {
   @Input()
-  public files: FileAttachment[];
+  public filesAttachments: FileAttachment[];
+
+  @Input()
+  public files: File[];
 
   @Input()
   public origin: ElementRef | HTMLElement;
@@ -52,7 +55,10 @@ export class FilesDropdownComponent implements AfterViewInit {
   public add = new EventEmitter<File>();
 
   @Output()
-  public remove = new EventEmitter<string>();
+  public removeFileAttachment = new EventEmitter<string>();
+
+  @Output()
+  public removeFile = new EventEmitter<number>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -109,8 +115,12 @@ export class FilesDropdownComponent implements AfterViewInit {
     );
   }
 
-  public onRemove(fileId: string) {
-    this.remove.emit(fileId);
+  public onRemoveFileAttachment(fileId: string) {
+    this.removeFileAttachment.emit(fileId);
+  }
+
+  public onRemoveFile(index: number) {
+    this.removeFile.emit(index);
   }
 
   public onCancel() {

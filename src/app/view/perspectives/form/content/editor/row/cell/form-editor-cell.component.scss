@@ -1,0 +1,5 @@
+.title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+  align-items: center;
+}

@@ -62,8 +62,9 @@
             (rowLinkedDocumentSelect)="onRowLinkedDocumentSelect($event)">
           </lmr-table>
 
-          <div resizer class="resizer d-flex align-items-center justify-content-center"
+          <div resizer class="lmr-resizer"
                *ngIf="table.rows.length || table.newRow; else emptyTable"
+               tagName="lmr-table"
                [reference]="table.id"
                [class.mb-5]="perspectiveConfiguration?.additionalSpace || !last"
                [style.width]="'min(100%, ' + table.width + 'px)'"

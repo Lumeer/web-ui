@@ -1,0 +1,12 @@
+<div class="d-flex flex-nowrap invisible-scroll-y" cdkScrollable>
+  <div *ngFor="let column of columns; trackBy:trackByColumn"
+       class="header-cell table-cell text-truncate"
+       [style.background]="column.color"
+       [class.font-weight-bold]="column.bold"
+       [style.height.px]="columnHeight"
+       [style.width.px]="columnWidth || column.width"
+       [style.min-width.px]="columnWidth || column.width">
+    <div class="text-truncate">{{column.name}}</div>
+  </div>
+  <div class="empty-cell"></div>
+</div>

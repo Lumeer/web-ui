@@ -1,0 +1,9 @@
+<i *ngIf="config?.attribute?.mandatory" class="fas fa-asterisk text-danger"
+   tooltip="This input is mandatory" i18n-tooltip="@@perspective.form.editor.row.cell.actions.mandatory"
+   (click)="toggleMandatory()">
+</i>
+
+<i *ngIf="!config?.attribute?.mandatory" class="fal fa-asterisk text-secondary"
+   tooltip="This input is optional" i18n-tooltip="@@perspective.form.editor.row.cell.actions.optional"
+   (click)="toggleMandatory()">
+</i>

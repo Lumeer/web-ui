@@ -299,7 +299,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     const inputIsEmail = isEmailValid(this.name.trim());
     if (activeOption || !this.name) {
       this.saveValueByOption(action, activeOption);
-    } else if ((this.commonConfiguration.skipValidation || this.value.config?.externalUsers) && inputIsEmail) {
+    } else if ((this.commonConfiguration?.skipValidation || this.value.config?.externalUsers) && inputIsEmail) {
       if (this.multi) {
         const newUsers = [...this.selectedUsers$.value, {email: this.name.trim()}];
         this.saveTeamsAndUsers(this.selectedTeams$.value, newUsers, action);

@@ -33,6 +33,6 @@ export class AttributeTitlePipe implements PipeTransform {
           : `${attribute.name}: ${attribute.description}`
         : attribute.name;
     }
-    return backupValue;
+    return backupValue || '';
   }
 }

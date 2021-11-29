@@ -9,3 +9,8 @@
   color: $primary;
   opacity: 1;
 }
+
+.main-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) min-content;
+}

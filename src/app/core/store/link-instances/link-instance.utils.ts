@@ -30,6 +30,10 @@ export function isDocumentInLinkInstance(linkInstance: LinkInstance, documentId:
   return linkInstance.documentIds?.some(id => id === documentId);
 }
 
+export function isAnyDocumentInLinkInstance(linkInstance: LinkInstance, documentIds: string[]): boolean {
+  return documentIds.includes(linkInstance.documentIds?.[0]) || documentIds.includes(linkInstance.documentIds?.[1]);
+}
+
 export function findLinkInstanceByDocumentId(linkInstances: LinkInstance[], documentId: string): LinkInstance {
   return linkInstances.find(linkInstance => isDocumentInLinkInstance(linkInstance, documentId));
 }

@@ -1,0 +1,53 @@
+@import '../../../../styles/variables';
+
+$data-height: 32px;
+$data-padding: 5px;
+
+thead {
+  font-size: small;
+  color: $primary;
+  font-style: italic;
+}
+
+tbody {
+  font-size: small;
+}
+
+.sticky-header {
+  position: sticky;
+  background: white;
+  z-index: 1; // otherwise checkboxes in the body are shown over the header when scrolling down
+}
+
+.table-fixed {
+  table-layout: fixed;
+  width: min-content;
+}
+
+th,
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: $data-height;
+  vertical-align: middle;
+  padding: $data-padding;
+
+  data-input-preview {
+    display: block;
+    height: $data-height - 2 * ($data-padding + 1);
+    max-height: $data-height - 2 * ($data-padding + 1);
+  }
+}
+
+.clickable-row {
+  cursor: pointer;
+
+  &:hover:not(.active) {
+    background-color: $gray-100;
+  }
+}
+
+tr.active {
+  background-color: $light;
+}

@@ -1,0 +1,11 @@
+@import '~src/styles/variables';
+
+.form-view-row {
+  display: grid;
+  grid-gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.html-input ::ng-deep * {
+  margin: 0;
+}

@@ -1,0 +1,44 @@
+<ng-container *ngIf="{filter: filter$ | async, attribute: attribute$ | async} as data">
+  <div class="d-flex flex-wrap align-items-center text-truncate" (click)="data.attribute && onFilterClick()">
+
+    <select-item2 class="pl-2 pr-1"
+                  [class.flex-grow-1]="!data.attribute"
+                  [removable]="false"
+                  [disabled]="false"
+                  [stopEventsPropagation]="true"
+                  emptyValue="Select attribute"
+                  [items]="attributeSelectItems"
+                  (click)="$event.stopPropagation()"
+                  [selectedPath]="[data.attribute?.id]"
+                  (selectPath)="onAttributeSelect($event)">
+    </select-item2>
+
+    <filter-preview *ngIf="data.attribute"
+                    class="m-2 flex-grow-1"
+                    [attribute]="data.attribute"
+                    [condition]="data.filter.condition"
+                    [conditionValues]="data.filter.conditionValues">
+    </filter-preview>
+
+    <i class="fal fa-times p-2 delete-icon" (click)="onRemove()"></i>
+
+  </div>
+
+  <filter-builder-content *ngIf="inline && data.attribute && (inlineFilterOpened$ | async)"
+                          [constraintData]="constraintData$ | async"
+                          [selectedCondition]="data.filter.condition"
+                          [selectedValues]="data.filter.conditionValues"
+                          [attribute]="data.attribute"
+                          [visible]="true"
+                          (valueChange)="onValueChange($event)"
+                          (finishEditing)="onInlineFinishedEditing()">
+  </filter-builder-content>
+
+  <filter-builder *ngIf="!inline && data.attribute"
+                  [origin]="element"
+                  [condition]="data.filter.condition"
+                  [attribute]="data.attribute"
+                  [conditionValues]="data.filter.conditionValues"
+                  (valueChange)="onValueChange($event)">
+  </filter-builder>
+</ng-container>

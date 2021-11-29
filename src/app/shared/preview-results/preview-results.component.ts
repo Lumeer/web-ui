@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
-import {distinctUntilChanged, map} from 'rxjs/operators';
+import {distinctUntilChanged, map, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {

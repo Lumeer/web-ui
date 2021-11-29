@@ -29,7 +29,7 @@ import {parseSelectTranslation} from '../utils/translation.utils';
 export class PerspectiveNamePipe implements PipeTransform {
   public transform(perspective: string): string {
     return parseSelectTranslation(
-      $localize`:@@view.perspective.name:{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}`,
+      $localize`:@@view.perspective.name:{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} form {Form}}`,
       {perspective}
     );
   }

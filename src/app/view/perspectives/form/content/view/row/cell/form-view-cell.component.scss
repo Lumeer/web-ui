@@ -1,0 +1,25 @@
+@import '~src/styles/variables';
+
+.required:after {
+  content: '*';
+  color: $danger;
+}
+
+.data-input {
+  min-height: 40px;
+
+  &.with-border {
+    border: 1px solid $gray-300;
+    border-radius: 0.25rem;
+  }
+
+  &:not(.with-border)::ng-deep {
+    boolean-data-input {
+      padding: 0 !important;
+    }
+  }
+
+  &.editing {
+    border: 1px solid $success;
+  }
+}

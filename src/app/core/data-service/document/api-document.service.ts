@@ -28,8 +28,7 @@ import {AppState} from '../../store/app.state';
 import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {AppIdService} from '../../service/app-id.service';
-import {correlationIdHeader, correlationIdHeaderBackup} from '../../rest/interceptors/correlation-id.http-interceptor';
+import {correlationIdHeader} from '../../rest/interceptors/correlation-id.http-interceptor';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 
 @Injectable()
@@ -37,7 +36,6 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   constructor(
     private httpClient: HttpClient,
     protected store$: Store<AppState>,
-    private appId: AppIdService,
     private configurationService: ConfigurationService
   ) {
     super(store$);
@@ -53,7 +51,6 @@ export class ApiDocumentService extends BaseService implements DocumentService {
       {
         headers: {
           ...this.workspaceHeaders(workspace),
-          [correlationIdHeaderBackup]: this.appId.getAppId(),
         },
       }
     );
@@ -86,10 +83,7 @@ export class ApiDocumentService extends BaseService implements DocumentService {
         })}/${document.id}/data`,
         document.data,
         {
-          headers: {
-            ...this.workspaceHeaders(workspace),
-            [correlationIdHeader]: this.appId.getAppId(),
-          },
+          headers: {...this.workspaceHeaders(workspace)},
         }
       )
       .pipe(
@@ -104,10 +98,7 @@ export class ApiDocumentService extends BaseService implements DocumentService {
       `${this.apiPrefix({...workspace, collectionId: document.collectionId})}/${document.id}/data`,
       document.data,
       {
-        headers: {
-          ...this.workspaceHeaders(workspace),
-          [correlationIdHeader]: this.appId.getAppId(),
-        },
+        headers: {...this.workspaceHeaders(workspace)},
       }
     );
   }
@@ -146,10 +137,7 @@ export class ApiDocumentService extends BaseService implements DocumentService {
     return this.httpClient.delete(`${this.apiPrefix({...workspace, collectionId})}/${documentId}`, {
       observe: 'response',
       responseType: 'text',
-      headers: {
-        ...this.workspaceHeaders(workspace),
-        [correlationIdHeader]: this.appId.getAppId(),
-      },
+      headers: {...this.workspaceHeaders(workspace)},
     });
   }
 
@@ -239,10 +227,7 @@ export class ApiDocumentService extends BaseService implements DocumentService {
         ...workspace,
         collectionId,
       })}/${documentId}/rule/${attributeId}?actionName=${actionName || ''}`,
-      {
-        correlationId: this.appId.getAppId(),
-        actionName,
-      },
+      {actionName},
       {headers: {...this.workspaceHeaders(workspace)}}
     );
   }

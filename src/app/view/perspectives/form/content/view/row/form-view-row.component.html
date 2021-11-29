@@ -1,0 +1,18 @@
+<div class="form-view-row" [style.grid-template-columns]="templateColumns">
+
+  <form-view-cell *ngFor="let cell of row.cells | filterValidCells; let index = index; trackBy:trackByCell"
+                  [cell]="cell"
+                  [dataValues]="dataValues"
+                  [linkValues]="linkValues"
+                  [collection]="collection"
+                  [documentId]="documentId"
+                  [editable]="editable"
+                  [editing]="editedCell | formCellIsEdited:sectionId:row.id:cell.id"
+                  [formErrors]="formErrors | formErrorsByCell:cell.id"
+                  (attributeValueChange)="onAttributeValueChange($event, cell.id)"
+                  (linkValueChange)="onLinkValueChange($event, cell.id)"
+                  (editCancel)="onEditCancel(cell.id)"
+                  (editStart)="onEditStart(cell.id)">
+  </form-view-cell>
+
+</div>

@@ -3,12 +3,18 @@
                           [fileAttachment]="file">
   </file-attachment-button>
 
+  <file-button *ngFor="let file of value?.filesInMemory"
+               [file]="file">
+  </file-button>
+
   <files-dropdown *ngIf="!readonly || (uploadProgress$ | async)"
-                  [files]="data.files"
+                  [filesAttachments]="data.files"
+                  [files]="value?.filesInMemory"
                   [origin]="element"
                   [uploadProgress]="uploadProgress$ | async"
                   (add)="onAdd($event)"
-                  (remove)="onRemove($event, data.files)"
+                  (removeFileAttachment)="onRemoveFileAttachment($event, data.files)"
+                  (removeFile)="onRemoveFile($event)"
                   (cancel)="onCancel()">
   </files-dropdown>
   <input #hiddenInput

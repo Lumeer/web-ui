@@ -97,6 +97,10 @@ const viewRoutes: Routes = [
           import('./perspectives/workflow/workflow-perspective.module').then(m => m.WorkflowPerspectiveModule),
       },
       {
+        path: Perspective.Form,
+        loadChildren: () => import('./perspectives/form/form-perspective.module').then(m => m.FormPerspectiveModule),
+      },
+      {
         path: Perspective.Table,
         loadChildren: () => import('./perspectives/table/table-perspective.module').then(m => m.TablePerspectiveModule),
       },

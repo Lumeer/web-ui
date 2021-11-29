@@ -30,12 +30,16 @@ import {ConfigurationService} from '../../../configuration/configuration.service
 export class PublicAttachmentsService implements AttachmentsService {
   constructor(private http: HttpClient, private configurationService: ConfigurationService) {}
 
-  public createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto> {
-    return of({...file, id: generateId()});
+  public createFiles(path: FileApiPath, files: FileAttachmentDto[]): Observable<FileAttachmentDto[]> {
+    return of(files.map(file => ({...file, id: generateId()})));
   }
 
   public removeFile(path: Partial<FileApiPath>, fileId: string): Observable<any> {
     return of(fileId);
+  }
+
+  public removeFiles(path: Partial<FileApiPath>, fileIds: string[]): Observable<any> {
+    return of(fileIds);
   }
 
   public getFilesByCollection(path: FileApiPath): Observable<FileAttachmentDto[]> {

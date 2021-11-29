@@ -53,6 +53,8 @@ import {ConstraintType} from '@lumeer/data-filters';
 import {checkLoadedDataQueryPayload, shouldLoadByDataQuery} from '../utils/data-query-payload';
 import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
+import {DocumentUtilsService} from '../../service/document-utils.service';
+import {selectWorkspaceWithIds} from '../common/common.selectors';
 
 @Injectable()
 export class DocumentsEffects {
@@ -169,6 +171,75 @@ export class DocumentsEffects {
             );
           })
         );
+      })
+    )
+  );
+
+  public createWithData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DocumentsAction.CreateWithAdditionalData>(DocumentsActionType.CREATE_WITH_ADDITIONAL_DATA),
+      withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
+      mergeMap(([action, workspace]) => {
+        const {document: currentDocument, data, onSuccess, onFailure} = action.payload;
+        const documentDto = convertDocumentModelToDto(currentDocument);
+        const finalWorkspace = {...workspace, ...action.payload.workspace};
+        const correlationId = currentDocument.correlationId;
+
+        return this.documentUtilsService
+          .createWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
+          .pipe(
+            mergeMap(({document, createdAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
+              return [
+                new DocumentsAction.CreateSuccess({document}),
+                new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
+                new LinkInstancesAction.SetDocumentLinksSuccess({
+                  linkInstances: createdLinkInstances,
+                  removedLinkInstancesIds,
+                }),
+                ...createCallbackActions(onSuccess, document.id),
+              ];
+            }),
+            catchError(error =>
+              of(new DocumentsAction.CreateFailure({correlationId, error}), ...createCallbackActions(onFailure))
+            )
+          );
+      })
+    )
+  );
+
+  public updateWithData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<DocumentsAction.UpdateWithAdditionalData>(DocumentsActionType.UPDATE_WITH_ADDITIONAL_DATA),
+      withLatestFrom(
+        this.store$.pipe(select(selectWorkspaceWithIds)),
+        this.store$.pipe(select(selectDocumentsDictionary))
+      ),
+      mergeMap(([action, workspace, documentsMap]) => {
+        const {document: currentDocument, data, onSuccess, onFailure} = action.payload;
+        const documentDto = convertDocumentModelToDto(currentDocument);
+        const finalWorkspace = {...workspace, ...action.payload.workspace};
+        const correlationId = currentDocument.correlationId;
+        const originalDocument = documentsMap[currentDocument.id];
+
+        return this.documentUtilsService
+          .updateWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
+          .pipe(
+            mergeMap(
+              ({document, createdAttachments, deletedAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
+                return [
+                  new DocumentsAction.UpdateSuccess({document, originalDocument}),
+                  new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
+                  new FileAttachmentsAction.RemoveSuccess({fileIds: deletedAttachments}),
+                  new LinkInstancesAction.SetDocumentLinksSuccess({
+                    linkInstances: createdLinkInstances,
+                    removedLinkInstancesIds,
+                  }),
+                  ...createCallbackActions(onSuccess, document.id),
+                ];
+              }
+            ),
+            catchError(error => of(new DocumentsAction.UpdateFailure({error}), ...createCallbackActions(onFailure)))
+          );
       })
     )
   );
@@ -442,8 +513,16 @@ export class DocumentsEffects {
         const documentDto = convertDocumentModelToDto(action.payload.document);
         return this.documentService.updateDocumentData(documentDto, action.payload.workspace).pipe(
           map(dto => convertDocumentDtoToModel(dto)),
-          map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
-          catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
+          mergeMap(document => [
+            new DocumentsAction.UpdateSuccess({document, originalDocument}),
+            ...createCallbackActions(action.payload.onSuccess),
+          ]),
+          catchError(error =>
+            of(
+              new DocumentsAction.UpdateFailure({error, originalDocument}),
+              ...createCallbackActions(action.payload.onFailure)
+            )
+          )
         );
       })
     )
@@ -591,9 +670,13 @@ export class DocumentsEffects {
                 actions.push(payload.nextAction);
               }
 
+              actions.push(...createCallbackActions(payload.onSuccess));
+
               return actions;
             }),
-            catchError(error => of(new DocumentsAction.DeleteFailure({error})))
+            catchError(error =>
+              of(new DocumentsAction.DeleteFailure({error}), ...createCallbackActions(action.payload.onFailure))
+            )
           );
       })
     )
@@ -610,6 +693,7 @@ export class DocumentsEffects {
           title,
           message,
           action: new DocumentsAction.Delete(action.payload),
+          noAction: new CommonAction.ExecuteCallback({callback: () => action.payload.onCancel?.()}),
           type: 'danger',
         });
       })
@@ -655,6 +739,7 @@ export class DocumentsEffects {
   constructor(
     private actions$: Actions,
     private documentService: DocumentService,
+    private documentUtilsService: DocumentUtilsService,
     private linkInstanceService: LinkInstanceService,
     private collectionService: CollectionService,
     private searchService: SearchService,

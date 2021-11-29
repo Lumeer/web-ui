@@ -37,7 +37,7 @@ export class HtmlModifier {
 }
 
 export function setCursorAtDataInputEnd(element: HTMLInputElement, dataValue: DataValue) {
-  const value = dataValue.editValue() || '';
+  const value = dataValue?.editValue() || '';
   element.setSelectionRange(value.length, value.length);
   element.focus();
 }

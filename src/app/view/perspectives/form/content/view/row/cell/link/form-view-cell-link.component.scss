@@ -1,0 +1,11 @@
+.link-input {
+  min-width: 50px;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[readonly] {
+  cursor: inherit;
+}

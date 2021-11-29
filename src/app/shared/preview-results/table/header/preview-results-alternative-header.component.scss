@@ -1,0 +1,19 @@
+:host {
+  position: absolute;
+  z-index: 4;
+  left: 0.5px;
+  visibility: hidden;
+}
+
+.header-cell {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-style: italic;
+  padding: 0.3rem;
+}
+
+.empty-cell {
+  width: 2rem;
+  min-width: 2rem;
+}

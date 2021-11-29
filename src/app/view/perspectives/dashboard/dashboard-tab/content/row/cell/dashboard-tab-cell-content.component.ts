@@ -63,6 +63,7 @@ export class DashboardTabCellContentComponent implements OnChanges {
     gantt: {},
     workflow: {showSidebar: true},
     detail: {},
+    form: {},
   };
 
   public computedType: DashboardCellType;

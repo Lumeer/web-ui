@@ -30,3 +30,15 @@ export interface DocumentMetaData {
   originalDocumentId?: string;
   parentId?: string;
 }
+
+export interface DocumentAdditionalDataRequest {
+  createFilesMap?: Record<string, File[]>;
+  deleteFilesMap?: Record<string, string[]>;
+
+  linkDocumentIdsChangeMap?: Record<string, DocumentIdsData>;
+}
+
+export interface DocumentIdsData {
+  removedDocumentIds: string[];
+  addedDocumentIds: string[];
+}

@@ -41,6 +41,7 @@ import {
   getViewColor,
   getViewIcon,
   isViewConfigChanged,
+  viewAdditionalQueries,
 } from './view.utils';
 import {selectSearchConfig, selectSearchesDictionary} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
@@ -51,6 +52,7 @@ import {sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource
 import {addDefaultDashboardTabsIfNotPresent, isViewValidForDashboard} from '../../../shared/utils/dashboard.utils';
 import {SearchConfig} from '../searches/search';
 import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {selectFormConfig} from '../form/form.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -119,10 +121,16 @@ const selectConfigs1 = createSelector(
   })
 );
 
-const selectConfigs2 = createSelector(selectWorkflowConfig, selectDetailConfig, (workflowConfig, detailConfig) => ({
-  workflowConfig,
-  detailConfig,
-}));
+const selectConfigs2 = createSelector(
+  selectWorkflowConfig,
+  selectDetailConfig,
+  selectFormConfig,
+  (workflowConfig, detailConfig, formConfig) => ({
+    workflowConfig,
+    detailConfig,
+    formConfig,
+  })
+);
 
 export const selectPerspectiveConfig = createSelector(
   selectPerspective,
@@ -131,7 +139,7 @@ export const selectPerspectiveConfig = createSelector(
   (
     perspective,
     {tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig},
-    {workflowConfig, detailConfig}
+    {workflowConfig, detailConfig, formConfig}
   ) => ({
     [Perspective.Map]: mapConfig,
     [Perspective.Table]: tableConfig,
@@ -143,7 +151,14 @@ export const selectPerspectiveConfig = createSelector(
     [Perspective.Search]: searchConfig,
     [Perspective.Workflow]: workflowConfig,
     [Perspective.Detail]: detailConfig,
+    [Perspective.Form]: formConfig,
   })
+);
+
+export const selectViewAdditionalQueries = createSelector(
+  selectPerspective,
+  selectPerspectiveConfig,
+  (perspective, config) => viewAdditionalQueries(perspective, config)
 );
 
 export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);

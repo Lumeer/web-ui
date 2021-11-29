@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
-import {DocumentMetaData, DocumentModel} from './document.model';
+import {DocumentAdditionalDataRequest, DocumentMetaData, DocumentModel} from './document.model';
 import {LinkInstance} from '../link-instances/link.instance';
 import {DataQuery} from '../../model/data-query';
 import {DataQueryPayload} from '../utils/data-query-payload';
@@ -36,6 +36,9 @@ export enum DocumentsActionType {
   CREATE_WITH_LINK = '[Documents] Create With Link',
   CREATE_SUCCESS = '[Documents] Create :: Success',
   CREATE_FAILURE = '[Documents] Create :: Failure',
+
+  CREATE_WITH_ADDITIONAL_DATA = '[Documents] Create With Additional Data',
+  UPDATE_WITH_ADDITIONAL_DATA = '[Documents] Update With Additional Data',
 
   CREATE_CHAIN = '[Documents] Create Chain',
   CREATE_CHAIN_SUCCESS = '[Documents] Create Chain :: Success',
@@ -125,6 +128,34 @@ export namespace DocumentsAction {
         onFailure?: () => void;
         afterSuccess?: (document: DocumentModel) => void;
         workspace?: Workspace;
+      }
+    ) {}
+  }
+
+  export class CreateWithAdditionalData implements Action {
+    public readonly type = DocumentsActionType.CREATE_WITH_ADDITIONAL_DATA;
+
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        data: DocumentAdditionalDataRequest;
+        workspace?: Workspace;
+        onSuccess?: (documentId: string) => void;
+        onFailure?: () => void;
+      }
+    ) {}
+  }
+
+  export class UpdateWithAdditionalData implements Action {
+    public readonly type = DocumentsActionType.UPDATE_WITH_ADDITIONAL_DATA;
+
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        data: DocumentAdditionalDataRequest;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
       }
     ) {}
   }
@@ -225,14 +256,27 @@ export namespace DocumentsAction {
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: {document: DocumentModel; workspace?: Workspace}) {}
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class UpdateDataInternal implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA_INTERNAL;
 
     public constructor(
-      public payload: {document: DocumentModel; originalDocument?: DocumentModel; workspace?: Workspace}
+      public payload: {
+        document: DocumentModel;
+        originalDocument?: DocumentModel;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 
@@ -295,7 +339,14 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.DELETE;
 
     public constructor(
-      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        nextAction?: Action;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 
@@ -303,7 +354,15 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
     public constructor(
-      public payload: {collectionId: string; documentId: string; nextAction?: Action; workspace?: Workspace}
+      public payload: {
+        collectionId: string;
+        documentId: string;
+        nextAction?: Action;
+        workspace?: Workspace;
+        onSuccess?: () => void;
+        onCancel?: () => void;
+        onFailure?: () => void;
+      }
     ) {}
   }
 

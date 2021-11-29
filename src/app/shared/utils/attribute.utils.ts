@@ -314,3 +314,11 @@ export function isAttributeVisibleInResourceSettings(
 ): boolean {
   return !(resourceSettings || []).some(setting => setting.attributeId === attributeId && setting.hidden);
 }
+
+export function mergeAttributeOverride(attribute: Attribute, override: Partial<Attribute>): Attribute {
+  if (!attribute || !override) {
+    return attribute;
+  }
+
+  return {...attribute, mandatory: attribute.mandatory || override?.mandatory};
+}
