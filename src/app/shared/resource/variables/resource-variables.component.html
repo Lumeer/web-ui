@@ -1,0 +1,10 @@
+<resource-variable-header></resource-variable-header>
+<resource-variable-row *ngFor="let variable of variables$ | async; trackBy: trackByVariable; let index = index"
+                       class="mt-1"
+                       [variable]="variable"
+                       (delete)="onDelete(index)"
+                       (variableChange)="onChange($event, index)">
+</resource-variable-row>
+<button class="btn btn-link px-0 small" (click)="onAdd()"><i
+  class="fas fa-plus-circle mr-2"></i><span
+  i18n="@@resource.variables.new.variable">Add new variable</span></button>

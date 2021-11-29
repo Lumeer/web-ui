@@ -18,10 +18,10 @@
  */
 
 import {NgModule} from '@angular/core';
-import {DatePipe} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {WorkspaceRoutingModule} from './workspace-routing.module';
-import {SharedModule} from '../shared/shared.module';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
@@ -50,16 +50,31 @@ import {ProjectTabGuard} from './project/project-tab.guard';
 import {ProjectUploadComponent} from './project/upload/project-upload.component';
 import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
 import {SelectionListsModule} from '../shared/lists/selection/selection-lists.module';
+import {ProjectVariablesComponent} from './project/variables/project-variables.component';
+import {ResourceModuleModule} from '../shared/resource/resource-module.module';
+import {SelectModule} from '../shared/select/select.module';
+import {PipesModule} from '../shared/pipes/pipes.module';
+import {TopPanelModule} from '../shared/top-panel/top-panel.module';
+import {SequencesModule} from '../shared/sequences/sequences.module';
+import {SliderModule} from '../shared/slider/slider.module';
 
 @NgModule({
   imports: [
-    SharedModule,
+    CommonModule,
+    ResourceModuleModule,
     WorkspaceRoutingModule,
     UsersModule,
     DirectivesModule,
     BsDatepickerModule,
     TeamsModule,
     SelectionListsModule,
+    SelectModule,
+    PipesModule,
+    ReactiveFormsModule,
+    TopPanelModule,
+    SequencesModule,
+    SliderModule,
+    FormsModule,
   ],
   declarations: [
     OrganizationDetailComponent,
@@ -80,6 +95,7 @@ import {SelectionListsModule} from '../shared/lists/selection/selection-lists.mo
     ProjectTeamsComponent,
     ProjectUploadComponent,
     ProjectSelectionListsComponent,
+    ProjectVariablesComponent,
   ],
   exports: [],
   providers: [
@@ -91,4 +107,5 @@ import {SelectionListsModule} from '../shared/lists/selection/selection-lists.mo
     DatePipe,
   ],
 })
-export class WorkspaceModule {}
+export class WorkspaceModule {
+}
