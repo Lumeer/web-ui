@@ -57,7 +57,6 @@ import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/mode
 import {User} from '../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
 import {objectChanged} from '../../../../../shared/utils/common.utils';
-import {filterVisibleAttributesBySettings} from '../../../../../shared/utils/attribute.utils';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
@@ -112,6 +111,7 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   public config$ = new BehaviorSubject<FormConfig>(null);
   public collection$ = new BehaviorSubject<Collection>(null);
   public linkTypes$ = new BehaviorSubject<LinkType[]>([]);
+  public createdDocuments$ = new BehaviorSubject<string[]>([]);
   public selectedDocumentIds$ = new BehaviorSubject<{id?: string; correlationId?: string}>({});
   public data$ = new BehaviorSubject<DataResourceData>({});
   public dataValues$ = new BehaviorSubject<Record<string, DataValue>>({});
@@ -145,12 +145,10 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.resourcesPermissions || objectChanged(changes.collection)) {
       this.collectionPermissions = this.resourcesPermissions?.collections?.[this.collection?.id];
     }
-    if (changes.collection || changes.attributesSettings) {
-      const attributes = filterVisibleAttributesBySettings(this.collection, this.attributesSettings?.collections);
-      const updatedCollection = {...this.collection, attributes};
-      this.collection$.next(updatedCollection);
-      this.formValidation.setCollection(updatedCollection);
-      this.formState.setCollection(updatedCollection);
+    if (changes.collection) {
+      this.collection$.next(this.collection);
+      this.formValidation.setCollection(this.collection);
+      this.formState.setCollection(this.collection);
     }
     if (changes.config) {
       this.config$.next(this.config);
@@ -388,6 +386,7 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
         workspace: {viewId: this.view?.id},
         onSuccess: documentId => {
           this.clearData();
+          this.createdDocuments$.next([...this.createdDocuments$.value, documentId]);
           this.selectedDocumentIds$.next({id: documentId});
           this.performingAction$.next(false);
         },

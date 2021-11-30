@@ -290,6 +290,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.saveValue(DataInputSaveAction.Blur);
     } else if (this.dropdown?.getActiveOption()) {
       this.saveValue(DataInputSaveAction.Blur, this.dropdown.getActiveOption());
+    } else {
+      this.cancel.emit();
     }
   }
 

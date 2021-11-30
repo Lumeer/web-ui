@@ -34,6 +34,7 @@ import {filterValidFormCells} from '../../../form-utils';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {FormLinkData} from '../model/form-link-data';
+import {ConstraintType} from '@lumeer/data-filters';
 
 @Injectable()
 export class FormStateService {
@@ -63,13 +64,12 @@ export class FormStateService {
 
   public onValueSave(coordinate: FormCoordinates, action: DataInputSaveAction) {
     switch (action) {
-      case DataInputSaveAction.Blur:
-        this.clearEditedCell();
-        break;
       case DataInputSaveAction.Enter:
       case DataInputSaveAction.Tab:
         this.editNextCell(coordinate);
         break;
+      default:
+        this.clearEditedCell();
     }
   }
 
@@ -137,7 +137,11 @@ export class FormStateService {
 
   private attributeCellHasValidData(cell: FormCell): boolean {
     const config = <FormAttributeCellConfig>cell.config || {};
-    return !!findAttribute(this.collection?.attributes, config?.attributeId);
+    const attribute = findAttribute(this.collection?.attributes, config?.attributeId);
+    if (!attribute) {
+      return false;
+    }
+    return attribute.constraint?.type !== ConstraintType.Boolean;
   }
 
   private linkCellHasValidData(cell: FormCell): boolean {

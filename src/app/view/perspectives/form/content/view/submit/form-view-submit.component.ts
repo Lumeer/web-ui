@@ -26,7 +26,6 @@ import {FormValidation} from '../validation/form-validation';
   selector: 'form-view-submit',
   templateUrl: './form-view-submit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./form-view-submit.component.scss'],
   host: {class: 'd-block'},
 })
 export class FormViewSubmitComponent implements OnChanges {
