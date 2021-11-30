@@ -32,6 +32,7 @@ import {objectChanged} from '../../../../../../shared/utils/common.utils';
 import {map, tap} from 'rxjs/operators';
 import {FormConfig} from '../../../../../../core/store/form/form-model';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 
 @Component({
   selector: 'form-documents-choose',
@@ -47,6 +48,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
 
   @Input()
   public document: DocumentModel;
+
+  @Input()
+  public createdDocuments: string[];
 
   @Input()
   public constraintData: ConstraintData;
@@ -80,7 +84,7 @@ export class FormDocumentsChooseComponent implements OnChanges {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (objectChanged(changes.collection) || changes.query || changes.view) {
+    if (objectChanged(changes.collection) || changes.query || changes.view || changes.createdDocuments) {
       this.subscribeToDocuments();
     }
     if (changes.document) {
@@ -93,13 +97,16 @@ export class FormDocumentsChooseComponent implements OnChanges {
     const collectionQuery = filterStemsForCollection(this.collection.id, this.query);
     this.documents$ = combineLatest([
       this.store$.pipe(select(selectDocumentsByCollectionAndQuery(this.collection.id, collectionQuery, this.view))),
+      this.store$.pipe(select(selectDocumentsByIds(this.createdDocuments || []))),
       this.currentDocument$,
     ]).pipe(
-      map(([documents, currentDocument]) => {
+      map(([documents, createdDocuments, currentDocument]) => {
+        const documentsIds = documents.map(document => document.id);
+        const additionalDocuments = createdDocuments.filter(document => !documentsIds.includes(document.id));
         if (currentDocument?.correlationId && !currentDocument?.id) {
-          return [...documents, currentDocument];
+          return [...documents, ...additionalDocuments, currentDocument];
         }
-        return [...documents];
+        return [...documents, ...additionalDocuments];
       }),
       tap(documents => this.checkAfterLoadedDocument(documents))
     );
