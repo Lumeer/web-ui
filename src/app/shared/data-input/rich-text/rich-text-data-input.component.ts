@@ -190,6 +190,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   public onEditorCreated(editor: any) {
     this.checkPasteValue();
+    // we need to handle blur this way because method from quill api is not triggered on button or href click
+    editor.root.addEventListener('blur', () => this.onBlur());
     editor.setSelection(Number.MAX_SAFE_INTEGER, 1);
 
     const isMultiLine = editor.root.childElementCount > 1;
