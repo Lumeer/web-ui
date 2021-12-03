@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Resource} from '../../../core/model/resource';
 import {ResourceType} from '../../../core/model/resource-type';
-
-export interface ResourceVariable {
-  id: string;
-  key: string;
-  value: any;
-  type: 'string';
-  secure?: boolean;
-}
+import {ResourceVariable} from '../../../core/store/resource-variables/resource-variable';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import * as ResourceVariableActions from '../../../core/store/resource-variables/resource-variables.actions';
+import {Observable} from 'rxjs';
+import {objectChanged} from '../../utils/common.utils';
+import {selectResourceVariablesByResourceType} from '../../../core/store/resource-variables/resource-variables.state';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {take} from 'rxjs/operators';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Component({
   selector: 'resource-variables',
@@ -36,30 +37,53 @@ export interface ResourceVariable {
   styleUrls: ['./resource-variables.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceVariablesComponent {
+export class ResourceVariablesComponent implements OnChanges {
   @Input()
   public resource: Resource;
 
   @Input()
   public resourceType: ResourceType;
 
-  public variables$ = new BehaviorSubject<ResourceVariable[]>([]);
+  public variables$: Observable<ResourceVariable[]>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (objectChanged(changes.resource) || changes.resourceType) {
+      this.observeVariables();
+    }
+  }
+
+  private observeVariables() {
+    this.variables$ = this.store$.pipe(
+      select(selectResourceVariablesByResourceType(this.resource?.id, this.resourceType))
+    );
+  }
 
   public onDelete(variable: ResourceVariable) {
-    const variables = [...this.variables$.value];
-    const index = variables.findIndex(v => v.id === variable.id);
-    variables.splice(index, 1);
-    this.variables$.next(variables);
+    this.store$.dispatch(ResourceVariableActions.deleteConfirm({id: variable.id}));
   }
 
   public onChange(variable: ResourceVariable) {
-    const variables = [...this.variables$.value];
-    const index = variables.findIndex(v => v.id === variable.id);
-    variables[index] = variable;
-    this.variables$.next(variables);
+    this.store$.dispatch(ResourceVariableActions.update({variable}));
   }
 
   public onAddVariable(variable: ResourceVariable) {
-    this.variables$.next([variable, ...this.variables$.value]);
+    this.store$.pipe(select(selectWorkspaceWithIds), take(1)).subscribe(workspace => {
+      this.store$.dispatch(
+        ResourceVariableActions.create({variable: this.addWorkspaceToVariable(variable, workspace)})
+      );
+    });
+  }
+
+  private addWorkspaceToVariable(variable: ResourceVariable, workspace: Workspace): ResourceVariable {
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        return variable;
+      case ResourceType.Project:
+        return {...variable, organizationId: workspace.organizationId};
+      default:
+        return {...variable, organizationId: workspace.organizationId, projectId: workspace.projectId};
+    }
   }
 }

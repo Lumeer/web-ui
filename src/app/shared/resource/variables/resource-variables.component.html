@@ -1,4 +1,8 @@
-<resource-variable-header (addVariable)="onAddVariable($event)"></resource-variable-header>
+<resource-variable-header
+  [resourceType]="resourceType"
+  [resourceId]="resource.id"
+  (addVariable)="onAddVariable($event)">
+</resource-variable-header>
 <resource-variables-table class="d-block mt-4"
                           [variables]="variables$ | async"
                           [resource]="resource"

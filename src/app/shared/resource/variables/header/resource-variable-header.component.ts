@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {ResourceVariable} from '../resource-variables.component';
 import {generateId} from '../../../utils/resource.utils';
+import {ResourceVariable, ResourceVariableType} from '../../../../core/store/resource-variables/resource-variable';
+import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
   selector: 'resource-variable-header',
@@ -29,6 +30,12 @@ import {generateId} from '../../../utils/resource.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceVariableHeaderComponent {
+  @Input()
+  public resourceId: string;
+
+  @Input()
+  public resourceType: ResourceType;
+
   @Output()
   public addVariable = new EventEmitter<ResourceVariable>();
 
@@ -42,8 +49,10 @@ export class ResourceVariableHeaderComponent {
       id: generateId(),
       key: this.key.trim(),
       value: this.value,
-      type: 'string',
+      type: ResourceVariableType.String,
       secure: this.secured$.value,
+      resourceId: this.resourceId,
+      resourceType: this.resourceType,
     });
     this.clearForm();
   }

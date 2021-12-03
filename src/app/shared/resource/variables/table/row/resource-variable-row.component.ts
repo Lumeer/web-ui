@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ResourceVariable} from '../../resource-variables.component';
 import {TRIM_REGEX} from '../../../../input/input-box/input-box.component';
+import {ResourceVariable} from '../../../../../core/store/resource-variables/resource-variable';
 
 @Component({
   selector: 'resource-variable-row',

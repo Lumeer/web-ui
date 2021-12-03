@@ -68,6 +68,9 @@ import {ApiSelectionListsService} from './selection-lists/api-selection-lists.se
 import {DashboardDataService} from './dashboard-data/dashboard-data.service';
 import {PublicDashboardDataService} from './dashboard-data/public-dashboard-data.service';
 import {ApiDashboardDataService} from './dashboard-data/api-dashboard-data.service';
+import {ResourceVariablesService} from './resource-variables/resource-variables.service';
+import {PublicResourceVariablesService} from './resource-variables/public-resource-variables.service';
+import {ApiResourceVariablesService} from './resource-variables/api-resource-variables.service';
 
 @NgModule({
   declarations: [],
@@ -136,6 +139,10 @@ import {ApiDashboardDataService} from './dashboard-data/api-dashboard-data.servi
     {
       provide: DashboardDataService,
       useClass: configuration.publicView ? PublicDashboardDataService : ApiDashboardDataService,
+    },
+    {
+      provide: ResourceVariablesService,
+      useClass: configuration.publicView ? PublicResourceVariablesService : ApiResourceVariablesService,
     },
   ],
 })

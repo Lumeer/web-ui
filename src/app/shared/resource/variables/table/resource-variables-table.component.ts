@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {Resource} from '../../../../core/model/resource';
-import {ResourceVariable} from '../resource-variables.component';
+import {ResourceVariable} from '../../../../core/store/resource-variables/resource-variable';
 
 @Component({
   selector: 'resource-variables-table',
