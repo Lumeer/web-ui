@@ -17,27 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Project} from '../../../core/store/projects/project';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
-import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
-import {ResourceType} from '../../../core/model/resource-type';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Resource} from '../../../../core/model/resource';
+import {ResourceVariable} from '../resource-variables.component';
 
 @Component({
-  selector: 'project-variables',
-  templateUrl: './project-variables.component.html',
+  selector: 'resource-variables-table',
+  templateUrl: './resource-variables-table.component.html',
+  styleUrls: ['./resource-variables-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectVariablesComponent implements OnInit {
-  public readonly resourceType = ResourceType.Project;
+export class ResourceVariablesTableComponent {
+  @Input()
+  public resource: Resource;
 
-  public project$: Observable<Project>;
+  @Input()
+  public variables: ResourceVariable[];
 
-  constructor(private store$: Store<AppState>) {}
+  @Output()
+  public deleteVariable = new EventEmitter<ResourceVariable>();
 
-  public ngOnInit() {
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+  @Output()
+  public changeVariable = new EventEmitter<ResourceVariable>();
+
+  public searchString = '';
+
+  public trackByVariable(index: number, variable: ResourceVariable): string {
+    return variable.id;
   }
 }

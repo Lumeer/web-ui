@@ -23,8 +23,14 @@ import {ResourceHeaderComponent} from './header/resource-header.component';
 import {PickerModule} from '../picker/picker.module';
 import {InputModule} from '../input/input.module';
 import {ResourceVariablesComponent} from './variables/resource-variables.component';
-import { ResourceVariableRowComponent } from './variables/row/resource-variable-row.component';
-import { ResourceVariableHeaderComponent } from './variables/header/resource-variable-header.component';
+import {ResourceVariableRowComponent} from './variables/table/row/resource-variable-row.component';
+import {ResourceVariableHeaderComponent} from './variables/header/resource-variable-header.component';
+import {FormsModule} from '@angular/forms';
+import {IsNewVariableValidPipe} from './variables/pipes/is-new-variable-valid.pipe';
+import {ResourceVariablesTableComponent} from './variables/table/resource-variables-table.component';
+import {PipesModule} from '../pipes/pipes.module';
+import {FilterResourceVariablesPipe} from './variables/pipes/filter-resource-variables.pipe';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -32,12 +38,11 @@ import { ResourceVariableHeaderComponent } from './variables/header/resource-var
     ResourceVariablesComponent,
     ResourceVariableRowComponent,
     ResourceVariableHeaderComponent,
+    IsNewVariableValidPipe,
+    ResourceVariablesTableComponent,
+    FilterResourceVariablesPipe,
   ],
-  imports: [CommonModule, PickerModule, InputModule],
-  exports: [
-    ResourceHeaderComponent,
-    ResourceVariablesComponent,
-  ],
+  imports: [CommonModule, PickerModule, InputModule, FormsModule, PipesModule, TooltipModule],
+  exports: [ResourceHeaderComponent, ResourceVariablesComponent],
 })
-export class ResourceModuleModule {
-}
+export class ResourceModuleModule {}

@@ -1,3 +1,25 @@
-<label>Key</label>
-<label>Value</label>
-<div>&nbsp;</div>
+<input class="form-control"
+       type="text"
+       placeholder="Name"
+       i18n-placeholder="@@resource.variables.header.name"
+       [(ngModel)]="key"/>
+<input class="form-control" #valueElement
+       [type]="(secured$ | async) ? 'password' : 'text'"
+       placeholder="Value"
+       i18n-placeholder="@@resource.variables.header.value"
+       (keydown.enter)="submit.click(); valueElement.blur()"
+       [(ngModel)]="value"/>
+<div class="d-flex justify-content-between align-items-center">
+  <toggle-checkbox label="Secured"
+                   [checked]="secured$ | async"
+                   (checkedChange)="secured$.next($event)">
+  </toggle-checkbox>
+
+  <button type="button" #submit
+          class="btn btn-sm btn-primary text-nowrap ml-2"
+          [disabled]="!(key | isNewVariableValid:value)"
+          (click)="onAddVariable()">
+    <i class="fas fa-plus mr-0 mr-md-2"></i>
+    <span class="font-weight-bold d-md-inline d-none" i18n="@@resource.variables.add.button">Create variable</span>
+  </button>
+</div>

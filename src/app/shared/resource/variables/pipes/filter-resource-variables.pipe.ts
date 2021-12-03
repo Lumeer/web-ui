@@ -19,24 +19,20 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {removeAccentFromString} from '@lumeer/data-filters';
-import {DropdownOption} from '../../dropdown/options/dropdown-option';
-import {User} from '../../../core/store/users/user';
-import {sortObjectsByScore} from '../../utils/common.utils';
+import {ResourceVariable} from '../resource-variables.component';
 
 @Pipe({
-  name: 'filterUsers',
+  name: 'filterResourceVariables',
 })
-export class FilterUsersPipe implements PipeTransform {
-  public transform(users: User[], text: string): DropdownOption[] {
+export class FilterResourceVariablesPipe implements PipeTransform {
+  public transform(variables: ResourceVariable[], text: string): ResourceVariable[] {
     const textWithoutAccent = removeAccentFromString(text);
-    const filteredUsersOptions = (users || [])
-      .filter(user => removeAccentFromString(user.name || user.email).includes(textWithoutAccent))
-      .map(user => ({
-        gravatar: user.email,
-        value: user.id,
-        displayValue: user.name || user.email,
-      }));
-
-    return sortObjectsByScore<DropdownOption>(filteredUsersOptions, text, ['displayValue', 'value']);
+    return (variables || []).filter(variable => {
+      let valueIncludesText = false;
+      if (!variable.secure) {
+        valueIncludesText = removeAccentFromString(variable.value).includes(textWithoutAccent);
+      }
+      return valueIncludesText || removeAccentFromString(variable.key).includes(textWithoutAccent);
+    });
   }
 }

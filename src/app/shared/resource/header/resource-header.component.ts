@@ -17,13 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {Resource} from '../../../core/model/resource';
 import {IconColorPickerComponent} from '../../picker/icon-color/icon-color-picker.component';
 import {parseSelectTranslation} from '../../utils/translation.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {TRIM_REGEX} from '../../input/input-box/input-box.component';
 
 @Component({
   selector: 'resource-header',
@@ -31,7 +42,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
   styleUrls: ['./resource-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceHeaderComponent implements OnInit {
+export class ResourceHeaderComponent implements OnInit, OnChanges {
   @Input()
   public resourceType: ResourceType;
 
@@ -66,13 +77,44 @@ export class ResourceHeaderComponent implements OnInit {
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public isDuplicate: boolean;
-
   public deleteTitle: string;
+  public codeVisible: boolean;
+  public firstLinePlaceholder: string;
+  public secondLinePlaceholder: string;
+  public firstLineValue: string;
+  public secondLineValue: string;
+  public firstLineFilter: RegExp;
+  public secondLineFilter: RegExp;
 
   private shouldEmitFirstLine: boolean;
 
   public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resource) {
+      this.checkValues();
+    }
+  }
+
+  private checkValues() {
+    this.codeVisible = this.hasVisibleCode();
+    if (this.codeVisible) {
+      this.firstLinePlaceholder = this.getCodePlaceholder();
+      this.secondLinePlaceholder = this.getNamePlaceholder();
+      this.firstLineValue = this.resource.code;
+      this.secondLineValue = this.resource.name;
+      this.firstLineFilter = /[^_0-9A-Za-z]/g;
+      this.secondLineFilter = TRIM_REGEX;
+    } else {
+      this.firstLinePlaceholder = this.getNamePlaceholder();
+      this.secondLinePlaceholder = null;
+      this.firstLineValue = this.resource.name;
+      this.secondLineValue = null;
+      this.firstLineFilter = /\./g;
+      this.secondLineFilter = /\./g;
+    }
   }
 
   public onBack() {
@@ -124,50 +166,12 @@ export class ResourceHeaderComponent implements OnInit {
     this.descriptionChange.emit(description);
   }
 
-  public firstLinePlaceholder(): string {
-    if (this.hasVisibleCode()) {
-      return this.getCodePlaceholder();
-    } else {
-      return this.getNamePlaceholder();
-    }
-  }
-
-  public secondLinePlaceholder(): string {
-    if (this.hasVisibleCode()) {
-      return this.getNamePlaceholder();
-    }
-    return null;
-  }
-
-  public firstLineValue(): string {
-    if (this.hasVisibleCode()) {
-      return this.resource.code;
-    } else {
-      return this.resource.name;
-    }
-  }
-
-  public secondLineValue(): string {
-    if (this.hasVisibleCode()) {
-      return this.resource.name;
-    }
-    return null;
-  }
-
   public getCodePlaceholder(): string {
     return $localize`:@@resource.postit.code:Set code`;
   }
 
   public getNamePlaceholder(): string {
     return $localize`:@@resource.postit.name:Fill in name`;
-  }
-
-  public getFilter(): RegExp {
-    if (this.hasVisibleCode()) {
-      return /[^_0-9A-Za-z]/g;
-    } else {
-      return /\./g;
-    }
   }
 
   public togglePicker() {

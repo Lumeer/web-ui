@@ -18,16 +18,16 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {ResourceVariable} from '../resource-variables.component';
+import {ResourceVariable} from '../../resource-variables.component';
+import {TRIM_REGEX} from '../../../../input/input-box/input-box.component';
 
 @Component({
   selector: 'resource-variable-row',
   templateUrl: './resource-variable-row.component.html',
   styleUrls: ['./resource-variable-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceVariableRowComponent {
-
   @Input()
   public variable: ResourceVariable;
 
@@ -37,8 +37,22 @@ export class ResourceVariableRowComponent {
   @Output()
   public variableChange = new EventEmitter<ResourceVariable>();
 
-  public toggleHidden() {
-    const variable: ResourceVariable = {...this.variable, hidden: !this.variable.hidden};
-    this.variableChange.emit(variable);
+  public readonly secureTooltip: string;
+  public readonly unsecureTooltip: string;
+  public readonly keyFilter = TRIM_REGEX;
+
+  constructor() {
+    this.secureTooltip = $localize`:@@resource.variables.row.secure:Secured`;
+    this.unsecureTooltip = $localize`:@@resource.variables.row.unsecure:Unsecured`;
+  }
+
+  public onNewKey(key: string) {
+    this.variableChange.emit({...this.variable, key});
+  }
+
+  public onNewValue(value: string) {
+    if (value) {
+      this.variableChange.emit({...this.variable, value});
+    }
   }
 }

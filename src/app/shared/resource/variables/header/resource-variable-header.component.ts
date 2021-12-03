@@ -17,20 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {ResourceVariable} from '../resource-variables.component';
+import {generateId} from '../../../utils/resource.utils';
 
 @Component({
   selector: 'resource-variable-header',
   templateUrl: './resource-variable-header.component.html',
   styleUrls: ['./resource-variable-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceVariableHeaderComponent implements OnInit {
+export class ResourceVariableHeaderComponent {
+  @Output()
+  public addVariable = new EventEmitter<ResourceVariable>();
 
-  constructor() {
+  public key: string = '';
+  public value: string = '';
+
+  public secured$ = new BehaviorSubject(false);
+
+  public onAddVariable() {
+    this.addVariable.emit({
+      id: generateId(),
+      key: this.key.trim(),
+      value: this.value,
+      type: 'string',
+      secure: this.secured$.value,
+    });
+    this.clearForm();
   }
 
-  ngOnInit(): void {
+  private clearForm() {
+    this.key = '';
+    this.value = '';
   }
-
 }

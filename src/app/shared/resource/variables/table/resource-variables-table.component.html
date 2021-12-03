@@ -1,0 +1,29 @@
+<div class="header" [style.background-color]="resource?.color | lightenColor:.5">
+  <div class="p-2 font-weight-bold" i18n="@@resource.variables.header.name">Name</div>
+  <div class="value">
+    <div class="font-weight-bold p-2 text-nowrap" i18n="@@resource.variables.header.value">Value</div>
+    <div class="input-group input-group-sm">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="search-variable"><i class="fas fa-search"></i></span>
+      </div>
+      <input id="variableSearch" class="form-control mr-1" type="search"
+             placeholder="Search variable..."
+             inputmode="search"
+             i18n-placeholder="@@resource.variables.header.search.placeholder"
+             title="Search for variables" i18n-title="@@resource.variables.header.search.title"
+             aria-describedby="search-variable"
+             [(ngModel)]="searchString">
+    </div>
+  </div>
+  <div>
+    <i class="fa fa-fw fa-none ml-1"></i>
+    <i class="fa fa-fw fa-none ml-1"></i>
+  </div>
+</div>
+
+<resource-variable-row *ngFor="let variable of variables | filterResourceVariables:searchString; trackBy: trackByVariable; let index = index"
+                       class="py-1 variable-row"
+                       [variable]="variable"
+                       (delete)="deleteVariable.emit(variable)"
+                       (variableChange)="changeVariable.emit($event)">
+</resource-variable-row>

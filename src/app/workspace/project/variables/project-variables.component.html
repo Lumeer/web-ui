@@ -1,1 +1,7 @@
-<resource-variables class="d-block mt-4 pb-6"></resource-variables>
+<h4 class="mt-4" i18n="@@projects.tab.variables.title">Create new variable</h4>
+<div i18n="@@projects.tab.variables.description">These variables can be accessed by all users that have <b>XXX</b> role in project. You can use variables in blockly rules or functions.</div>
+
+<resource-variables class="d-block mt-3 pb-6"
+                    [resource]="project$ | async"
+                    [resourceType]="resourceType">
+</resource-variables>

@@ -19,46 +19,47 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {generateId} from '../../utils/resource.utils';
+import {Resource} from '../../../core/model/resource';
+import {ResourceType} from '../../../core/model/resource-type';
 
 export interface ResourceVariable {
   id: string;
   key: string;
   value: any;
   type: 'string';
-  hidden?: boolean;
+  secure?: boolean;
 }
 
 @Component({
   selector: 'resource-variables',
   templateUrl: './resource-variables.component.html',
   styleUrls: ['./resource-variables.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceVariablesComponent {
+  @Input()
+  public resource: Resource;
 
   @Input()
-  public variables: ResourceVariable[];
+  public resourceType: ResourceType;
 
   public variables$ = new BehaviorSubject<ResourceVariable[]>([]);
 
-  public onAdd() {
-    this.variables$.next([...this.variables$.value, {id: generateId(), key: '', value: '', type: 'string'}]);
-  }
-
-  public onDelete(index: number) {
+  public onDelete(variable: ResourceVariable) {
     const variables = [...this.variables$.value];
+    const index = variables.findIndex(v => v.id === variable.id);
     variables.splice(index, 1);
     this.variables$.next(variables);
   }
 
-  public trackByVariable(index: number, variable: ResourceVariable): string {
-    return variable.id;
-  }
-
-  public onChange(variable: ResourceVariable, index: number) {
+  public onChange(variable: ResourceVariable) {
     const variables = [...this.variables$.value];
+    const index = variables.findIndex(v => v.id === variable.id);
     variables[index] = variable;
     this.variables$.next(variables);
+  }
+
+  public onAddVariable(variable: ResourceVariable) {
+    this.variables$.next([variable, ...this.variables$.value]);
   }
 }
