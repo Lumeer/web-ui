@@ -107,5 +107,4 @@ import {SliderModule} from '../shared/slider/slider.module';
     DatePipe,
   ],
 })
-export class WorkspaceModule {
-}
+export class WorkspaceModule {}
