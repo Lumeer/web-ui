@@ -21,14 +21,18 @@ import {ResourceVariableDto} from '../../dto/resource-variable.dto';
 import {ResourceVariable, ResourceVariableType, resourceVariableTypesMap} from './resource-variable';
 import {resourceTypesMap} from '../../model/resource-type';
 
-export function convertResourceVariableDtoToModel(dto: ResourceVariableDto): ResourceVariable {
+export function convertResourceVariableDtoToModel(dto: ResourceVariableDto, value?: any): ResourceVariable {
   return {
     ...dto,
     type: resourceVariableTypesMap[dto.type] || ResourceVariableType.String,
-    resourceType: resourceTypesMap[dto.resourceType],
+    resourceType: resourceTypesMap[dto.resourceType?.toLowerCase()],
+    value: value || dto.value,
   };
 }
 
 export function convertResourceVariableModelToDto(model: ResourceVariable): ResourceVariableDto {
-  return {...model};
+  return {
+    ...model,
+    resourceType: model.resourceType?.toUpperCase(),
+  };
 }

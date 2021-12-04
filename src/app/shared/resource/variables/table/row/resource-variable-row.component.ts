@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {TRIM_REGEX} from '../../../../input/input-box/input-box.component';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {InputBoxComponent, TRIM_REGEX} from '../../../../input/input-box/input-box.component';
 import {ResourceVariable} from '../../../../../core/store/resource-variables/resource-variable';
+import {NotificationService} from '../../../../../core/notifications/notification.service';
 
 @Component({
   selector: 'resource-variable-row',
@@ -31,27 +32,46 @@ export class ResourceVariableRowComponent {
   @Input()
   public variable: ResourceVariable;
 
+  @Input()
+  public otherKeys: string[];
+
   @Output()
   public delete = new EventEmitter();
 
   @Output()
   public variableChange = new EventEmitter<ResourceVariable>();
 
+  @ViewChild('nameInput')
+  public inputBoxComponent: InputBoxComponent;
+
   public readonly secureTooltip: string;
   public readonly unsecureTooltip: string;
   public readonly keyFilter = TRIM_REGEX;
 
-  constructor() {
+  constructor(private notificationService: NotificationService) {
     this.secureTooltip = $localize`:@@resource.variables.row.secure:Secured`;
     this.unsecureTooltip = $localize`:@@resource.variables.row.unsecure:Unsecured`;
   }
 
   public onNewKey(key: string) {
+    if (this.variable.key === key) {
+      return;
+    }
+    if (this.otherKeys?.includes(key)) {
+      this.inputBoxComponent?.setValue(this.variable.key);
+      this.showDuplicateWarning(key);
+      return;
+    }
     this.variableChange.emit({...this.variable, key});
   }
 
+  private showDuplicateWarning(key: string) {
+    const warning = $localize`:@@resource.variables.validation.duplication.name:Name '${key}' already exists.`;
+    this.notificationService.warning(warning);
+  }
+
   public onNewValue(value: string) {
-    if (value) {
+    if (value && value !== this.variable.value) {
       this.variableChange.emit({...this.variable, value});
     }
   }

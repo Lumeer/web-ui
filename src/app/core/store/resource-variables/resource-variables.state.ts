@@ -23,6 +23,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {ResourceType} from '../../model/resource-type';
+import {reversedArray} from '../../../shared/utils/array.utils';
 
 export interface ResourceVariablesState extends EntityState<ResourceVariable> {
   loadedProjects: string[];
@@ -57,23 +58,29 @@ export const selectResourceVariablesByResourceType = (resourceId: string, resour
   createSelector(selectWorkspaceWithIds, selectAllResourceVariables, (workspace, variables) => {
     switch (resourceType) {
       case ResourceType.Organization:
-        return variables.filter(
-          variable => variable.resourceType === ResourceType.Organization && variable.resourceId === resourceId
+        return reversedArray(
+          variables.filter(
+            variable => variable.resourceType === ResourceType.Organization && variable.resourceId === resourceId
+          )
         );
       case ResourceType.Project:
-        return variables.filter(
-          variable =>
-            variable.organizationId === workspace.organizationId &&
-            variable.resourceType === ResourceType.Project &&
-            variable.resourceId === resourceId
+        return reversedArray(
+          variables.filter(
+            variable =>
+              variable.organizationId === workspace.organizationId &&
+              variable.resourceType === ResourceType.Project &&
+              variable.resourceId === resourceId
+          )
         );
       default:
-        return variables.filter(
-          variable =>
-            variable.organizationId === workspace.organizationId &&
-            variable.projectId === workspace.projectId &&
-            variable.resourceType === resourceType &&
-            variable.resourceId === resourceId
+        return reversedArray(
+          variables.filter(
+            variable =>
+              variable.organizationId === workspace.organizationId &&
+              variable.projectId === workspace.projectId &&
+              variable.resourceType === resourceType &&
+              variable.resourceId === resourceId
+          )
         );
     }
   });

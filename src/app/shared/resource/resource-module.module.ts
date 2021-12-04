@@ -26,11 +26,11 @@ import {ResourceVariablesComponent} from './variables/resource-variables.compone
 import {ResourceVariableRowComponent} from './variables/table/row/resource-variable-row.component';
 import {ResourceVariableHeaderComponent} from './variables/header/resource-variable-header.component';
 import {FormsModule} from '@angular/forms';
-import {IsNewVariableValidPipe} from './variables/pipes/is-new-variable-valid.pipe';
 import {ResourceVariablesTableComponent} from './variables/table/resource-variables-table.component';
 import {PipesModule} from '../pipes/pipes.module';
 import {FilterResourceVariablesPipe} from './variables/pipes/filter-resource-variables.pipe';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {ResourceVariablesKeysPipe} from './variables/pipes/resource-variables-keys.pipe';
 
 @NgModule({
   declarations: [
@@ -38,9 +38,9 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     ResourceVariablesComponent,
     ResourceVariableRowComponent,
     ResourceVariableHeaderComponent,
-    IsNewVariableValidPipe,
     ResourceVariablesTableComponent,
     FilterResourceVariablesPipe,
+    ResourceVariablesKeysPipe,
   ],
   imports: [CommonModule, PickerModule, InputModule, FormsModule, PipesModule, TooltipModule],
   exports: [ResourceHeaderComponent, ResourceVariablesComponent],

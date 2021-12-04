@@ -186,6 +186,7 @@ export class InputBoxComponent implements OnInit, OnChanges {
   public onFocus() {
     if (this.secure) {
       this.mCurrentValue = this.initialValue || '';
+      this.inputElement.textContent = this.mCurrentValue;
     }
     this.focus.emit(this.mCurrentValue);
     this.addFocusToInputParent();

@@ -29,6 +29,13 @@ export const getSuccess = createAction(
   props<{variables: ResourceVariable[]; workspace: Workspace}>()
 );
 
+export const getOne = createAction('[ResourceVariables] Get One', props<{id: string; workspace: Workspace}>());
+
+export const getOneSuccess = createAction(
+  '[ResourceVariables] Get One :: Success',
+  props<{variable: ResourceVariable}>()
+);
+
 export const getFailure = createAction('[ResourceVariables] Get :: Failure', props<{error: any}>());
 
 export const create = createAction('[ResourceVariables] Create', props<{variable: ResourceVariable}>());
@@ -52,9 +59,9 @@ export const updateFailure = createAction(
   props<{error: any; variable: ResourceVariable}>()
 );
 
-export const deleteConfirm = createAction('[ResourceVariables] Delete Confirm', props<{id: string}>());
+export const deleteConfirm = createAction('[ResourceVariables] Delete Confirm', props<{variable: ResourceVariable}>());
 
-export const deleteVariable = createAction('[ResourceVariables] Delete', props<{id: string}>());
+export const deleteVariable = createAction('[ResourceVariables] Delete', props<{variable: ResourceVariable}>());
 
 export const deleteSuccess = createAction('[ResourceVariables] Delete :: Success', props<{id: string}>());
 

@@ -21,15 +21,13 @@ import {Injectable} from '@angular/core';
 
 import {BaseService} from '../../rest/base.service';
 import {ResourceVariablesService} from './resource-variables.service';
-import {SelectionListDto} from '../../dto/selection-list.dto';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Workspace} from '../../store/navigation/workspace';
 import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
 import {ConfigurationService} from '../../../configuration/configuration.service';
 import {ResourceVariableDto} from '../../dto/resource-variable.dto';
-import {generateId} from '../../../shared/utils/resource.utils';
 
 @Injectable()
 export class ApiResourceVariablesService extends BaseService implements ResourceVariablesService {
@@ -42,37 +40,29 @@ export class ApiResourceVariablesService extends BaseService implements Resource
   }
 
   public create(dto: ResourceVariableDto): Observable<ResourceVariableDto> {
-    return of({...dto, id: generateId()});
+    return this.httpClient.post<ResourceVariableDto>(this.apiPrefix({organizationId: dto.organizationId}), dto);
   }
 
-  public delete(id: string): Observable<string> {
-    return of(id);
+  public delete(organizationId: string, id: string): Observable<string> {
+    return this.httpClient.delete<any>(this.apiPrefix({organizationId}, id));
   }
 
   public get(organizationId: string, projectId: string): Observable<ResourceVariableDto[]> {
-    return of([]);
+    return this.httpClient.get<ResourceVariableDto[]>(`${this.apiPrefix({organizationId})}/projects/${projectId}`);
   }
 
   public update(id: string, dto: ResourceVariableDto): Observable<ResourceVariableDto> {
-    return of(dto);
+    return this.httpClient.put<ResourceVariableDto>(this.apiPrefix({organizationId: dto.organizationId}, id), dto);
   }
 
-  public getOne(id: string): Observable<SelectionListDto> {
-    return of(null);
+  public getOne(organizationId: string, id: string): Observable<ResourceVariableDto> {
+    return this.httpClient.get<ResourceVariableDto>(this.apiPrefix({organizationId}, id));
   }
 
-  private apiPrefix(workspace?: Workspace, listId?: string): string {
+  private apiPrefix(workspace?: Workspace, variableId?: string): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     return `${this.configurationService.getConfiguration().apiUrl}/rest/organizations/${organizationId}/variables${
-      listId ? `/${listId}` : ''
+      variableId ? `/${variableId}` : ''
     }`;
-  }
-
-  private projectApiPrefix(workspace?: Workspace): string {
-    const organizationId = this.getOrCurrentOrganizationId(workspace);
-    const projectId = this.getOrCurrentProjectId(workspace);
-    return `${
-      this.configurationService.getConfiguration().apiUrl
-    }/rest/organizations/${organizationId}/variables/projects/${projectId}`;
   }
 }

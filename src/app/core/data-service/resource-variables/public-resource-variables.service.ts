@@ -21,7 +21,6 @@ import {Injectable} from '@angular/core';
 
 import {BaseService} from '../../rest/base.service';
 import {ResourceVariablesService} from './resource-variables.service';
-import {SelectionListDto} from '../../dto/selection-list.dto';
 import {Observable, of} from 'rxjs';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {ResourceVariableDto} from '../../dto/resource-variable.dto';
@@ -44,7 +43,7 @@ export class PublicResourceVariablesService extends BaseService implements Resou
     return of(dto);
   }
 
-  public getOne(id: string): Observable<SelectionListDto> {
+  public getOne(id: string): Observable<ResourceVariableDto> {
     return of(null);
   }
 }

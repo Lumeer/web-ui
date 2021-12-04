@@ -24,6 +24,7 @@
 <resource-variable-row *ngFor="let variable of variables | filterResourceVariables:searchString; trackBy: trackByVariable; let index = index"
                        class="py-1 variable-row"
                        [variable]="variable"
+                       [otherKeys]="variables | resourceVariablesKeys:variable.key"
                        (delete)="deleteVariable.emit(variable)"
                        (variableChange)="changeVariable.emit($event)">
 </resource-variable-row>

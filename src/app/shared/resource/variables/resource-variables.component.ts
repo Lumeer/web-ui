@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Resource} from '../../../core/model/resource';
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceVariable} from '../../../core/store/resource-variables/resource-variable';
@@ -30,6 +30,7 @@ import {selectResourceVariablesByResourceType} from '../../../core/store/resourc
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {take} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {Project} from '../../../core/store/projects/project';
 
 @Component({
   selector: 'resource-variables',
@@ -58,10 +59,22 @@ export class ResourceVariablesComponent implements OnChanges {
     this.variables$ = this.store$.pipe(
       select(selectResourceVariablesByResourceType(this.resource?.id, this.resourceType))
     );
+
+    let workspace: Workspace = {};
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        workspace = {organizationId: this.resource?.id};
+        break;
+      case ResourceType.Project:
+        const project = <Project>this.resource;
+        workspace = {organizationId: project.organizationId, projectId: project.id};
+        break;
+    }
+    this.store$.dispatch(ResourceVariableActions.get({workspace}));
   }
 
   public onDelete(variable: ResourceVariable) {
-    this.store$.dispatch(ResourceVariableActions.deleteConfirm({id: variable.id}));
+    this.store$.dispatch(ResourceVariableActions.deleteConfirm({variable}));
   }
 
   public onChange(variable: ResourceVariable) {

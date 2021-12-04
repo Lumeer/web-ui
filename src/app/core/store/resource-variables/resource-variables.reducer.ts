@@ -29,6 +29,9 @@ export const resourceVariablesReducer = createReducer(
       loadedProjects: [...state.loadedProjects, action.workspace.projectId],
     })
   ),
+  on(ResourceVariableActions.getOneSuccess, (state, action) =>
+    resourceVariablesAdapter.upsertOne(action.variable, state)
+  ),
   on(ResourceVariableActions.updateSuccess, (state, action) =>
     resourceVariablesAdapter.upsertOne(action.variable, state)
   ),

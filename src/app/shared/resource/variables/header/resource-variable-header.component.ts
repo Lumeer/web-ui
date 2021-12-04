@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {generateId} from '../../../utils/resource.utils';
 import {ResourceVariable, ResourceVariableType} from '../../../../core/store/resource-variables/resource-variable';
@@ -29,7 +29,10 @@ import {ResourceType} from '../../../../core/model/resource-type';
   styleUrls: ['./resource-variable-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceVariableHeaderComponent {
+export class ResourceVariableHeaderComponent implements OnChanges {
+  @Input()
+  public currentKeys: string[];
+
   @Input()
   public resourceId: string;
 
@@ -42,7 +45,16 @@ export class ResourceVariableHeaderComponent {
   public key: string = '';
   public value: string = '';
 
+  public duplicate: boolean;
+  public valid: boolean;
+
   public secured$ = new BehaviorSubject(false);
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentKeys) {
+      this.checkValid(this.key, this.value);
+    }
+  }
 
   public onAddVariable() {
     this.addVariable.emit({
@@ -60,5 +72,22 @@ export class ResourceVariableHeaderComponent {
   private clearForm() {
     this.key = '';
     this.value = '';
+  }
+
+  public onKeyChange(key: string) {
+    this.checkValid(key, this.value);
+  }
+
+  public onValueChange(value: string) {
+    this.checkValid(this.key, value);
+  }
+
+  private checkValid(key: string, value: string) {
+    const keyTrimmed = (key || '').trim();
+    this.duplicate = (this.currentKeys || []).some(k => k === keyTrimmed);
+
+    const valueTrimmed = (value || '').trim();
+
+    this.valid = (keyTrimmed || '').trim().length > 0 && (valueTrimmed || '').length > 0 && !this.duplicate;
   }
 }

@@ -1,4 +1,4 @@
-<input-box placeholder="Name"
+<input-box placeholder="Name" #nameInput
            i18n-placeholder="@@resource.variables.header.name"
            [canStayEmpty]="false"
            [maxLines]="1"
@@ -17,7 +17,7 @@
 </input-box>
 <div class="d-flex align-items-center">
   <i class="fa-fw"
-     [ngClass]="variable.secure ? 'far fa-lock-alt' : 'far fa-lock-open-alt'"
+     [ngClass]="variable.secure ? 'fas fa-lock-alt' : 'far fa-lock-open-alt'"
      [tooltip]="variable.secure ? secureTooltip : unsecureTooltip"></i>
   <i class="fal fa-trash-alt text-danger clickable ml-2" (click)="delete.emit()"></i>
 </div>

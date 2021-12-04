@@ -18,7 +18,6 @@
  */
 
 import {Observable} from 'rxjs';
-import {SelectionListDto} from '../../dto/selection-list.dto';
 import {ResourceVariableDto} from '../../dto/resource-variable.dto';
 
 export abstract class ResourceVariablesService {
@@ -26,9 +25,9 @@ export abstract class ResourceVariablesService {
 
   public abstract update(id: string, dto: ResourceVariableDto): Observable<ResourceVariableDto>;
 
-  public abstract delete(id: string): Observable<string>;
+  public abstract delete(organizationId: string, id: string): Observable<string>;
 
-  public abstract getOne(id: string): Observable<SelectionListDto>;
+  public abstract getOne(organizationId: string, id: string): Observable<ResourceVariableDto>;
 
   public abstract get(organizationId: string, projectId: string): Observable<ResourceVariableDto[]>;
 }

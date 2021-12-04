@@ -58,13 +58,26 @@ export class ResourceVariablesEffects {
     )
   );
 
+  public getOne$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ResourceVariableActions.getOne),
+      mergeMap(action =>
+        this.service.getOne(action.workspace.organizationId, action.id).pipe(
+          map(dto => convertResourceVariableDtoToModel(dto)),
+          map(variable => ResourceVariableActions.getOneSuccess({variable})),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
+
   public create$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ResourceVariableActions.create),
       mergeMap(action => {
         const variableDto = convertResourceVariableModelToDto(action.variable);
         return this.service.create(variableDto).pipe(
-          map(dto => convertResourceVariableDtoToModel(dto)),
+          map(dto => convertResourceVariableDtoToModel(dto, action.variable.value)),
           mergeMap(variable => [ResourceVariableActions.createSuccess({variable})]),
           catchError(error => of(ResourceVariableActions.createFailure({error})))
         );
@@ -121,7 +134,7 @@ export class ResourceVariablesEffects {
         return new NotificationsAction.Confirm({
           title,
           message,
-          action: ResourceVariableActions.deleteVariable({id: action.id}),
+          action: ResourceVariableActions.deleteVariable({variable: action.variable}),
           type: 'danger',
         });
       })
@@ -133,10 +146,10 @@ export class ResourceVariablesEffects {
       ofType(ResourceVariableActions.deleteVariable),
       withLatestFrom(this.store$.pipe(select(selectResourceVariablesDictionary))),
       mergeMap(([action, variablesMap]) => {
-        this.store$.dispatch(ResourceVariableActions.deleteSuccess({id: action.id}));
-        const currentVariable = variablesMap[action.id];
+        this.store$.dispatch(ResourceVariableActions.deleteSuccess({id: action.variable.id}));
+        const currentVariable = variablesMap[action.variable.id];
 
-        return this.service.delete(action.id).pipe(
+        return this.service.delete(action.variable.organizationId, action.variable.id).pipe(
           mergeMap(() => EMPTY),
           catchError(error => of(ResourceVariableActions.deleteFailure({error, variable: currentVariable})))
         );

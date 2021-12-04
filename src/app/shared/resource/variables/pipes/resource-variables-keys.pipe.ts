@@ -18,12 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {ResourceVariable} from '../../../../core/store/resource-variables/resource-variable';
 
 @Pipe({
-  name: 'isNewVariableValid',
+  name: 'resourceVariablesKeys',
 })
-export class IsNewVariableValidPipe implements PipeTransform {
-  public transform(key: string, value: string): boolean {
-    return (key || '').trim().length > 0 && (value || '').length > 0;
+export class ResourceVariablesKeysPipe implements PipeTransform {
+  public transform(variables: ResourceVariable[], excludeKey?: string): string[] {
+    return (variables || []).map(variable => variable.key).filter(key => !excludeKey || key !== excludeKey);
   }
 }
