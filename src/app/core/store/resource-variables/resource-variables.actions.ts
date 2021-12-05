@@ -22,7 +22,7 @@ import {createAction, props} from '@ngrx/store';
 import {ResourceVariable} from './resource-variable';
 import {Workspace} from '../navigation/workspace';
 
-export const get = createAction('[ResourceVariables] Get', props<{workspace: Workspace}>());
+export const get = createAction('[ResourceVariables] Get', props<{workspace: Workspace; force?: boolean}>());
 
 export const getSuccess = createAction(
   '[ResourceVariables] Get :: Success',

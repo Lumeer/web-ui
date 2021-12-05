@@ -912,6 +912,16 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(ResourceVariableActions.deleteSuccess({id: data.id}));
       }
     });
+    this.channel.bind('ResourceVariable:reload', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          ResourceVariableActions.get({
+            force: true,
+            workspace: {organizationId: data.organizationId, projectId: data.projectId},
+          })
+        );
+      }
+    });
   }
 
   private checkIfUserGainedTeam(team: Team, isCurrentOrganization: boolean) {

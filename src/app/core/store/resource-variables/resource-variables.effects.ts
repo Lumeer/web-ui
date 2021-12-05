@@ -36,7 +36,7 @@ export class ResourceVariablesEffects {
     this.actions$.pipe(
       ofType(ResourceVariableActions.get),
       withLatestFrom(this.store$.pipe(select(selectResourceVariablesLoadedProjects))),
-      filter(([action, loadedProjects]) => !loadedProjects.includes(action.workspace.projectId)),
+      filter(([action, loadedProjects]) => action.force || !loadedProjects.includes(action.workspace.projectId)),
       mergeMap(([action]) =>
         this.service.get(action.workspace.organizationId, action.workspace.projectId).pipe(
           map(dtos => dtos.map(dto => convertResourceVariableDtoToModel(dto))),
