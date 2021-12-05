@@ -4,6 +4,7 @@
          placeholder="Name"
          i18n-placeholder="@@resource.variables.header.name"
          (ngModelChange)="onKeyChange($event)"
+         (keydown.enter)="valueElement.focus()"
          [(ngModel)]="key"/>
   <input class="form-control" #valueElement
          [type]="(secured$ | async) ? 'password' : 'text'"

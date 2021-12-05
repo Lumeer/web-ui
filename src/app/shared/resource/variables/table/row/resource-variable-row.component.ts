@@ -66,7 +66,7 @@ export class ResourceVariableRowComponent {
   }
 
   private showDuplicateWarning(key: string) {
-    const warning = $localize`:@@resource.variables.validation.duplication.name:Name '${key}' already exists.`;
+    const warning = $localize`:@@resource.variables.validation.duplication.name:Variable with name '${key}' already exists.`;
     this.notificationService.warning(warning);
   }
 
