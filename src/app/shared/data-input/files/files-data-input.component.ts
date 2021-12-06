@@ -44,12 +44,15 @@ import {preventEvent} from '../../utils/common.utils';
 import {FilesDataValue} from '@lumeer/data-filters';
 import {AppState} from '../../../core/store/app.state';
 import {FileDataInputConfiguration} from '../data-input-configuration';
+import {FileDownloadService} from './file-download.service';
+import {createFileAttachmentUniqueName} from '../../../core/store/file-attachments/file-attachment.utils';
 
 @Component({
   selector: 'files-data-input',
   templateUrl: './files-data-input.component.html',
   styleUrls: ['./files-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [FileDownloadService],
 })
 export class FilesDataInputComponent implements OnInit, OnChanges {
   @Input()
@@ -179,6 +182,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
       attributeId: this.cursor.attributeId,
       attachmentType: this.cursor.collectionId ? FileAttachmentType.Document : FileAttachmentType.Link,
       fileName: file.name,
+      uniqueName: createFileAttachmentUniqueName(file.name),
     };
 
     this.store$.dispatch(
@@ -210,7 +214,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   private onSuccess(fileAttachment: FileAttachment) {
     this.showSuccessNotification();
     this.store$.dispatch(new FileAttachmentsAction.SetUploading({fileId: fileAttachment.id, uploading: false}));
-    this.addFileNameToData(fileAttachment.fileName);
+    this.addFileNameToData(fileAttachment.uniqueName);
   }
 
   private showSuccessNotification() {
@@ -262,8 +266,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   private addFileNameToData(fileName: string) {
-    const formattedValue = this.value?.format();
-    const value = !formattedValue || formattedValue.endsWith(fileName) ? fileName : `${formattedValue},${fileName}`;
+    const serializedValue = this.value?.serialize();
+    const value = serializedValue ? `${serializedValue},${fileName}` : fileName;
     const dataValue = this.value.copy(value);
     this.save.emit(dataValue);
   }
@@ -271,7 +275,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   private removeFileNameFromData(fileId: string, fileAttachments: FileAttachment[]) {
     const value = fileAttachments
       .filter(file => file.id !== fileId)
-      .map(file => file.fileName)
+      .map(file => file.uniqueName)
       .join(',');
     const dataValue = this.value.copy(value);
     this.save.emit(dataValue);

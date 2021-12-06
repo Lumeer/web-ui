@@ -12,7 +12,7 @@
       <tr *ngFor="let file of filesAttachments; index as fileIndex">
         <td [class.border-top-0]="fileIndex === 0"
             [class.text-secondary]="file.uploading">
-          {{ file.fileName }}
+          <div [class.btn]="!file.uploading" [class.btn-link]="!file.uploading" class="p-0" (click)="onAttachmentClick(file)">{{ file.fileName }}</div>
         </td>
         <td [class.border-top-0]="fileIndex === 0"
             class="text-right">
@@ -26,7 +26,7 @@
       </tr>
       <tr *ngFor="let file of files; index as fileIndex">
         <td [class.border-top-0]="fileIndex === 0 && !filesAttachments?.length">
-          {{ file.name }}
+          <div class="btn btn-link p-0" (click)="onFileClick(file)">{{ file.name }}</div>
         </td>
         <td [class.border-top-0]="fileIndex === 0 && !filesAttachments?.length"
             class="text-right">

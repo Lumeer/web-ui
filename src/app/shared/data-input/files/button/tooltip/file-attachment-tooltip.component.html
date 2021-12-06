@@ -1,0 +1,14 @@
+<div class="text-left">
+  <div class="font-weight-bold">{{fileAttachment.fileName}}</div>
+  <div *ngIf="createdBy" class="d-flex align-items-center mt-2">
+    <img ngxGravatar
+         [email]="createdBy.email"
+         [size]="avatarSize"
+         [style.min-width.px]="avatarSize"
+         [style.min-height.px]="avatarSize">
+    <span class="pl-1">{{createdBy.name || createdBy.email}}</span>
+  </div>
+  <div *ngIf="fileAttachment.creationDate | isDateValid"
+       class="font-italic small"
+       [class.mt-2]="!createdBy">{{fileAttachment.creationDate | fromNow}}</div>
+</div>

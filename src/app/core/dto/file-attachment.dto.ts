@@ -25,7 +25,10 @@ export interface FileAttachmentDto {
   documentId: string;
   attributeId: string;
   fileName: string;
+  uniqueName: string;
   attachmentType: string;
   presignedUrl?: string;
   size?: string;
+  createdBy?: string;
+  creationDate?: number;
 }

@@ -44,6 +44,7 @@ import {
   convertLinkInstanceDtoToModel,
   convertLinkInstanceModelToDto,
 } from '../store/link-instances/link-instance.converter';
+import {createFileAttachmentUniqueName} from '../store/file-attachments/file-attachment.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -378,6 +379,7 @@ function collectFilesAndAttachments(
         attributeId,
         attachmentType: FileAttachmentType.Document,
         fileName: file.name,
+        uniqueName: createFileAttachmentUniqueName(file.name),
       }));
 
       result.fileAttachments.push(...fileAttachments);

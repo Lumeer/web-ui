@@ -76,6 +76,7 @@ import {RouterModule} from '@angular/router';
 import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
 import {UsersAndTeamsNamesPipe} from './user/pipes/users-and-teams-names.pipe';
 import {FileButtonComponent} from './files/file-button/file-button.component';
+import {FileAttachmentTooltipComponent} from './files/button/tooltip/file-attachment-tooltip.component';
 
 @NgModule({
   imports: [
@@ -140,6 +141,7 @@ import {FileButtonComponent} from './files/file-button/file-button.component';
     ViewsIdsPipe,
     ViewDataInputComponent,
     FileButtonComponent,
+    FileAttachmentTooltipComponent,
   ],
   exports: [
     DataInputComponent,
