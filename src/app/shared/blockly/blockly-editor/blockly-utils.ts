@@ -27,6 +27,7 @@ import {shadeColor} from '../../utils/html-modifier';
 import {BlocklyComponent} from './blocks/blockly-component';
 import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
 import {View} from '../../../core/store/views/view';
+import {ConstraintType} from '@lumeer/data-filters';
 
 declare var Blockly: any;
 
@@ -108,6 +109,7 @@ export class BlocklyUtils {
   public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly PRINT_ATTRIBUTE = 'print_attribute';
   public static readonly PRINT_TEXT = 'print_text';
+  public static readonly GENERATE_PDF = 'generate_pdf';
   public static readonly SEND_EMAIL = 'send_email';
   public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
   public static readonly NAVIGATE_TO_VIEW_BY_ID = 'navigate_to_view_by_id';
@@ -320,6 +322,23 @@ export class BlocklyUtils {
         }
       }
 
+      // generate PDF attribute
+      if (block.type === BlocklyUtils.GENERATE_PDF) {
+        if (children && children.length > 1) {
+          const child = children[1];
+          const childOutputType = this.getOutputConnectionCheck(child);
+
+          if (
+            childOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+            childOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)
+          ) {
+            const value = block.getField('ATTR').getValue();
+            this.setterAndGetterOutputType(block, child, true);
+            block.getField('ATTR').setValue(value);
+          }
+        }
+      }
+
       // link instance getters and setters
       if (block.type === BlocklyUtils.GET_LINK_ATTRIBUTE || block.type === BlocklyUtils.SET_LINK_ATTRIBUTE) {
         if (children && children.length > 0) {
@@ -424,7 +443,8 @@ export class BlocklyUtils {
       if (
         parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
         parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE ||
-        (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+        (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) ||
+        (parentBlock.type === BlocklyUtils.GENERATE_PDF && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
       ) {
         const linkType = this.getLinkType(blockOutputType.split('_')[0]);
         attributes = linkType.attributes;
@@ -432,26 +452,34 @@ export class BlocklyUtils {
         parentBlock.type === BlocklyUtils.GET_ATTRIBUTE ||
         parentBlock.type === BlocklyUtils.SET_ATTRIBUTE ||
         (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE &&
-          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
+          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) ||
+        (parentBlock.type === BlocklyUtils.GENERATE_PDF && blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
       ) {
         const collection = this.getCollection(blockOutputType.split('_')[0]);
         attributes = collection.attributes;
-        defaultAttributeId = collection.defaultAttributeId;
+
+        if (parentBlock.type !== BlocklyUtils.GENERATE_PDF) {
+          // for PDF block, we filter out only File attributes, which rarely is the default attr.
+          defaultAttributeId = collection.defaultAttributeId;
+        }
       }
 
       let defaultValue = '',
         defaultText = '';
       attributes.forEach(attribute => {
-        options.push([attribute.name, attribute.id]);
-        if (attribute.id === defaultAttributeId) {
-          defaultValue = attribute.id;
-          defaultText = attribute.name;
+        // for PDF generator keep only attributes of type file
+        if (parentBlock.type !== BlocklyUtils.GENERATE_PDF || attribute.constraint.type === ConstraintType.Files) {
+          options.push([attribute.name, attribute.id]);
+          if (attribute.id === defaultAttributeId) {
+            defaultValue = attribute.id;
+            defaultText = attribute.name;
+          }
         }
       });
 
-      if (!defaultValue && attributes && attributes.length > 0) {
-        defaultValue = attributes[0].id;
-        defaultText = attributes[0].name;
+      if (!defaultValue && options && options.length > originalLength) {
+        defaultValue = options[originalLength][1];
+        defaultText = options[originalLength][0];
       }
 
       parentBlock.getField('ATTR').setValue(defaultValue);

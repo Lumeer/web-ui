@@ -104,6 +104,7 @@ import {GetDocumentCreatedAuthorBlocklyComponent} from './blocks/get-document-cr
 import {GetDocumentUpdatedAuthorBlocklyComponent} from './blocks/get-document-updated-author-blockly-component';
 import {CurrentTeamsBlocklyComponent} from './blocks/current-teams-blockly-component';
 import {IsUserInTeamBlocklyComponent} from './blocks/is-user-in-team-blockly-component';
+import {GeneratePdfBlocklyComponent} from './blocks/generate-pdf-blockly-component';
 
 declare var Blockly: any;
 
@@ -238,6 +239,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetDocumentUpdatedAuthorBlocklyComponent(this.blocklyUtils),
       new CurrentTeamsBlocklyComponent(this.blocklyUtils),
       new IsUserInTeamBlocklyComponent(this.blocklyUtils),
+      new GeneratePdfBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
@@ -651,7 +653,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             }
           }
 
-          if (block.type === BlocklyUtils.PRINT_ATTRIBUTE) {
+          if (block.type === BlocklyUtils.PRINT_ATTRIBUTE || block.type === BlocklyUtils.GENERATE_PDF) {
             const link = block.getInput('DOCUMENT');
 
             if (link.connection && link.connection.targetConnection) {
@@ -843,8 +845,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
 
-      // populate attributes in print block
-      if (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE) {
+      // populate attributes in print block and in generate PDF block
+      if (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE || parentBlock.type === BlocklyUtils.GENERATE_PDF) {
         if (
           blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX) ||
           blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)
@@ -915,6 +917,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
               (isNullOrUndefined(parentBlock.getInput('LINK').connection) ||
                 parentBlock.getInput('LINK').connection.targetConnection === null)) ||
             (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE &&
+              (isNullOrUndefined(parentBlock.getInput('DOCUMENT').connection) ||
+                parentBlock.getInput('DOCUMENT').connection.targetConnection === null)) ||
+            (parentBlock.type === BlocklyUtils.GENERATE_PDF &&
               (isNullOrUndefined(parentBlock.getInput('DOCUMENT').connection) ||
                 parentBlock.getInput('DOCUMENT').connection.targetConnection === null))
           ) {
