@@ -17,18 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpErrorResponse} from '@angular/common/http';
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {saveAs} from 'file-saver';
-import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {FileApiService} from '../../../../core/service/file-api.service';
-import {NotificationService} from '../../../../core/notifications/notification.service';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {BehaviorSubject, Observable, switchMap} from 'rxjs';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
-import {FileAttachmentsAction} from '../../../../core/store/file-attachments/file-attachments.action';
+import {FileDownloadService} from '../file-download.service';
+import {objectChanged} from '../../../utils/common.utils';
 import {AppState} from '../../../../core/store/app.state';
-import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {select, Store} from '@ngrx/store';
+import {User} from '../../../../core/store/users/user';
+import {distinctUntilChanged, filter} from 'rxjs/operators';
+import {selectUserById} from '../../../../core/store/users/users.state';
 
 @Component({
   selector: 'file-attachment-button',
@@ -36,89 +34,35 @@ import {ConfigurationService} from '../../../../configuration/configuration.serv
   styleUrls: ['./file-attachment-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileAttachmentButtonComponent {
+export class FileAttachmentButtonComponent implements OnInit, OnChanges {
   @Input()
   public fileAttachment: FileAttachment;
 
-  public downloading$ = new BehaviorSubject(false);
+  public downloading$: Observable<boolean>;
+  public createdByUser$: Observable<User>;
 
-  constructor(
-    private fileApiService: FileApiService,
-    private notificationService: NotificationService,
-    private store$: Store<AppState>,
-    private configurationService: ConfigurationService
-  ) {}
+  private createdBy$ = new BehaviorSubject(null);
+
+  constructor(private downloadService: FileDownloadService, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.createdByUser$ = this.createdBy$.pipe(
+      distinctUntilChanged(),
+      filter(id => !!id),
+      switchMap(id => this.store$.pipe(select(selectUserById(id))))
+    );
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (objectChanged(changes.fileAttachment)) {
+      this.downloading$ = this.downloadService.isDownloading$(this.fileAttachment);
+    }
+    if (changes.fileAttachment) {
+      this.createdBy$.next(this.fileAttachment.createdBy);
+    }
+  }
 
   public onClick() {
-    if (this.downloading$.getValue() || this.fileAttachment.uploading) {
-      return;
-    }
-
-    this.downloading$.next(true);
-
-    if (
-      this.fileAttachment.refreshTime &&
-      this.fileAttachment.refreshTime.getTime() +
-        this.configurationService.getConfiguration().presignedUrlTimeout * 1000 >
-        Date.now()
-    ) {
-      this.downloadFileAttachment(this.fileAttachment);
-      return;
-    }
-
-    this.store$.dispatch(
-      new FileAttachmentsAction.Get({
-        ...this.fileAttachment,
-        onSuccess: files => this.onRefreshUrlSuccess(files),
-        onFailure: error => this.onRefreshUrlFailure(error),
-      })
-    );
-  }
-
-  private onRefreshUrlSuccess(fileAttachments: FileAttachment[]) {
-    const fileAttachment = fileAttachments.find(file => file.id === this.fileAttachment.id);
-    this.downloadFileAttachment(fileAttachment);
-  }
-
-  private onRefreshUrlFailure(error: HttpErrorResponse) {
-    this.showErrorNotification(error);
-    this.downloading$.next(false);
-  }
-
-  private downloadFileAttachment(fileAttachment: FileAttachment) {
-    this.fileApiService
-      .downloadFile(fileAttachment.presignedUrl)
-      .pipe(catchError(error => this.onDownloadFileFailure(error)))
-      .subscribe(response => this.onDownloadFileSuccess(response.body));
-  }
-
-  private onDownloadFileFailure(error: HttpErrorResponse): Observable<never> {
-    this.showErrorNotification(error);
-
-    this.downloading$.next(false);
-    return EMPTY;
-  }
-
-  private onDownloadFileSuccess(file: Blob) {
-    saveAs(file, this.fileAttachment.fileName);
-    this.downloading$.next(false);
-  }
-
-  private showErrorNotification(error: HttpErrorResponse) {
-    if (error?.status === 404) {
-      this.showFileNotExistNotification();
-    } else {
-      this.showDownloadErrorNotification();
-    }
-  }
-
-  private showDownloadErrorNotification() {
-    this.notificationService.error(
-      $localize`:@@file.attachment.download.failure:Could not download the file attachment. Please try again later.`
-    );
-  }
-
-  private showFileNotExistNotification() {
-    this.notificationService.error($localize`:@@file.attachment.not.exist:Could not find the file attachment.`);
+    this.downloadService.download(this.fileAttachment);
   }
 }

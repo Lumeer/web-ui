@@ -27,9 +27,12 @@ export interface FileAttachment {
   linkInstanceId?: string;
   attributeId: string;
   fileName: string;
+  uniqueName: string;
   attachmentType: FileAttachmentType;
   presignedUrl?: string;
   size?: string;
+  createdBy?: string;
+  creationDate?: Date;
 
   uploading?: boolean;
   refreshTime?: Date;

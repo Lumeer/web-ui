@@ -32,6 +32,7 @@ import {FileAttachment} from '../../../../core/store/file-attachments/file-attac
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {ConfigurationService} from '../../../../configuration/configuration.service';
+import {FileDownloadService} from '../file-download.service';
 
 @Component({
   selector: 'files-dropdown',
@@ -75,7 +76,7 @@ export class FilesDropdownComponent implements AfterViewInit {
     DropdownPosition.TopEnd,
   ];
 
-  constructor(private configurationService: ConfigurationService) {}
+  constructor(private configurationService: ConfigurationService, private downloadService: FileDownloadService) {}
 
   public ngAfterViewInit() {
     this.dropdown.open();
@@ -131,5 +132,13 @@ export class FilesDropdownComponent implements AfterViewInit {
     if (this.dropdown) {
       this.dropdown.close();
     }
+  }
+
+  public onAttachmentClick(file: FileAttachment) {
+    this.downloadService.download(file);
+  }
+
+  public onFileClick(file: File) {
+    this.downloadService.downloadFile(file);
   }
 }

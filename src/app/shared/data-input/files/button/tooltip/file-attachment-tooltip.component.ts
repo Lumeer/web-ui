@@ -17,22 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {FileDownloadService} from '../file-download.service';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {FileAttachment} from '../../../../../core/store/file-attachments/file-attachment.model';
+import {User} from '../../../../../core/store/users/user';
+import {isDateValid} from '../../../../utils/common.utils';
 
 @Component({
-  selector: 'file-button',
-  templateUrl: './file-button.component.html',
-  styleUrls: ['./file-button.component.scss'],
+  selector: 'file-attachment-tooltip',
+  templateUrl: './file-attachment-tooltip.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileButtonComponent {
+export class FileAttachmentTooltipComponent implements OnChanges {
   @Input()
-  public file: File;
+  public fileAttachment: FileAttachment;
 
-  constructor(private downloadService: FileDownloadService) {}
+  @Input()
+  public createdBy: User;
 
-  public onClick() {
-    this.downloadService.downloadFile(this.file);
+  public avatarSize = 15;
+  public isDateValid: boolean;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.fileAttachment) {
+      this.isDateValid = isDateValid(this.fileAttachment.creationDate);
+    }
   }
 }

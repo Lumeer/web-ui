@@ -19,8 +19,13 @@
 
 import {FileAttachment} from './file-attachment.model';
 import {FileApiPath} from '../../data-service/attachments/attachments.service';
+import {generateId} from '../../../shared/utils/resource.utils';
 
 export function getFileTypeIcon(fileName: string): string {
+  if (!fileName) {
+    return 'fa-file';
+  }
+
   if (fileName.match(/^.+\.(txt|log)$/)) {
     return 'fa-file-alt';
   }
@@ -62,6 +67,14 @@ export function getFileTypeIcon(fileName: string): string {
   }
 
   return 'fa-file';
+}
+
+export function createFileAttachmentUniqueName(name: string): string {
+  const suffixIndex = name.lastIndexOf('.');
+  if (suffixIndex !== -1) {
+    return `${name.substring(0, suffixIndex)}_${generateId()}${name.substring(suffixIndex)}`;
+  }
+  return `${name}_${generateId()}`;
 }
 
 export function fileAttachmentHasApiPath(attachment: FileAttachment, path: FileApiPath): boolean {
