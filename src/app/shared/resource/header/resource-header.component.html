@@ -18,20 +18,20 @@
   <input-box
     class="flex-grow-1 px-2"
     [style.width.px]="1"
-    [initialValue]="firstLineValue()"
+    [initialValue]="firstLineValue"
     [color]="resource.color"
     [canStayEmpty]="false"
     [emitAllChanges]="true"
     [fontSizeRem]="2"
     [maxLines]="1"
     [editable]="permissions?.roles?.Manage"
-    [maxLength]="hasVisibleCode() ? 5 : undefined"
-    [title]="firstLineValue()"
+    [maxLength]="codeVisible ? 5 : undefined"
+    [title]="firstLineValue"
     (blur)="onFirstLineBlur()"
     (focus)="onFirstLineFocus()"
-    [placeholder]="firstLinePlaceholder()"
+    [placeholder]="firstLinePlaceholder"
     (newValue)="onNewFirstLine($event)"
-    [filter]="getFilter()">
+    [filter]="firstLineFilter">
   </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
@@ -51,17 +51,18 @@
   This {resourceType, select, organization {code} project {code} collection {name}} is already taken. Try another one!
 </small>
 
-<div class="col mr-auto py-2 px-0"
-     *ngIf="hasVisibleCode()">
+<div class="col mr-auto py-2 px-0" *ngIf="codeVisible">
   <input-box
-    [initialValue]="secondLineValue()"
+    [initialValue]="secondLineValue"
     [color]="resource.color"
     [canStayEmpty]="true"
     [fontSizeRem]="1.5"
     [editable]="permissions?.roles?.Manage"
     [maxLines]="1"
-    [title]="secondLineValue()"
-    [placeholder]="secondLinePlaceholder()"
+    [filter]="secondLineFilter"
+    [filterAllChanges]="false"
+    [title]="secondLineValue"
+    [placeholder]="secondLinePlaceholder"
     (newValue)="onNewSecondLine($event)">
   </input-box>
 

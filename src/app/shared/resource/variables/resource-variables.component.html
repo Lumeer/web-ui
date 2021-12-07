@@ -1,0 +1,14 @@
+<ng-container *ngIf="variables$ | async as variables">
+  <resource-variable-header
+    [currentKeys]="variables | resourceVariablesKeys"
+    [resourceType]="resourceType"
+    [resourceId]="resource.id"
+    (addVariable)="onAddVariable($event)">
+  </resource-variable-header>
+  <resource-variables-table class="d-block mt-4"
+                            [variables]="variables"
+                            [resource]="resource"
+                            (changeVariable)="onChange($event)"
+                            (deleteVariable)="onDelete($event)">
+  </resource-variables-table>
+</ng-container>

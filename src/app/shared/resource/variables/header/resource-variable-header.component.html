@@ -1,0 +1,33 @@
+<div class="variable-form">
+  <input class="form-control"
+         type="text"
+         placeholder="Name"
+         i18n-placeholder="@@resource.variables.header.name"
+         (ngModelChange)="onKeyChange($event)"
+         (keydown.enter)="valueElement.focus()"
+         [(ngModel)]="key"/>
+  <input class="form-control" #valueElement
+         [type]="(secured$ | async) ? 'password' : 'text'"
+         placeholder="Value"
+         i18n-placeholder="@@resource.variables.header.value"
+         (ngModelChange)="onValueChange($event)"
+         (keydown.enter)="valid && submit.click(); valid &&  valueElement.blur()"
+         [(ngModel)]="value"/>
+  <div class="d-flex justify-content-between align-items-center">
+    <toggle-checkbox label="Secured"
+                     [checked]="secured$ | async"
+                     (checkedChange)="secured$.next($event)">
+    </toggle-checkbox>
+
+    <button type="button" #submit
+            class="btn btn-sm btn-primary text-nowrap ml-2"
+            [disabled]="!valid"
+            (click)="onAddVariable()">
+      <i class="fas fa-plus mr-0 mr-md-2"></i>
+      <span class="font-weight-bold d-md-inline d-none" i18n="@@resource.variables.add.button">Create variable</span>
+    </button>
+  </div>
+</div>
+<div *ngIf="duplicate" class="small text-danger mt-1" i18n="@@resource.variables.validation.duplicate">
+  Name already exists.
+</div>

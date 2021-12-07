@@ -76,6 +76,12 @@
            class="nav-link"
            i18n="@@project.settings.tab.selection">Selection Lists</a>
       </li>
+      <li role="presentation" class="nav-item" *ngIf="data.permissions?.roles?.TechConfig">
+        <a [routerLink]="'variables'"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@project.settings.tab.variables">Variables</a>
+      </li>
     </ul>
     <router-outlet></router-outlet>
   </div>

@@ -1,0 +1,23 @@
+<input-box placeholder="Name" #nameInput
+           i18n-placeholder="@@resource.variables.header.name"
+           [canStayEmpty]="false"
+           [maxLines]="1"
+           [filter]="keyFilter"
+           [filterAllChanges]="false"
+           [initialValue]="variable.key"
+           (newValue)="onNewKey($event)">
+</input-box>
+<input-box placeholder="Value"
+           i18n-placeholder="@@resource.variables.header.value"
+           [canStayEmpty]="false"
+           [maxLines]="1"
+           [secure]="variable.secure"
+           [initialValue]="variable.value"
+           (newValue)="onNewValue($event)">
+</input-box>
+<div class="d-flex align-items-center">
+  <i class="fa-fw"
+     [ngClass]="variable.secure ? 'fas fa-lock-alt' : 'far fa-lock-open-alt'"
+     [tooltip]="variable.secure ? secureTooltip : unsecureTooltip"></i>
+  <i class="fal fa-trash-alt text-danger clickable ml-2" (click)="delete.emit()"></i>
+</div>
