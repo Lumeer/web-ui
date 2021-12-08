@@ -1,16 +1,17 @@
-@import '../../../../../styles/variables';
+@import '~src/styles/variables';
 
 .header {
   display: grid;
-  grid-template-columns: 1fr 2fr min-content;
+  grid-template-columns: 1fr 2fr auto;
+  grid-gap: 0.5rem;
 
-  .roles {
+  .value {
     display: grid;
     grid-template-columns: auto minmax(100px, max-content);
     align-items: center;
   }
 }
 
-.user:not(:last-child) {
+.variable-row:not(:last-child) {
   border-bottom: 1px solid $gray-200;
 }

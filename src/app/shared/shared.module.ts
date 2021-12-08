@@ -62,6 +62,7 @@ import {ProgressModule} from './progress/progress.module';
 import {HintBoxModule} from './hint-box/hint-box.module';
 import {LayoutModule} from './layout/layout.module';
 import {FiltersModule} from './filters/filters.module';
+import {ResourceModuleModule} from './resource/resource-module.module';
 
 @NgModule({
   imports: [
@@ -106,8 +107,9 @@ import {FiltersModule} from './filters/filters.module';
     HintBoxModule,
     LayoutModule,
     FiltersModule,
+    ResourceModuleModule,
   ],
-  declarations: [ResourceHeaderComponent, TourComponent],
+  declarations: [TourComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -121,7 +123,6 @@ import {FiltersModule} from './filters/filters.module';
     PipesModule,
     TagModule,
     InputModule,
-    ResourceHeaderComponent,
     DataResourceModule,
     PreviewResultsModule,
     LinksModule,
@@ -153,6 +154,7 @@ import {FiltersModule} from './filters/filters.module';
     HintBoxModule,
     LayoutModule,
     FiltersModule,
+    ResourceModuleModule,
   ],
 })
 export class SharedModule {}

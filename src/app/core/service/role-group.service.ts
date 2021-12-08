@@ -282,7 +282,7 @@ export class RoleGroupService {
 
   private projectRoleTitle(type: RoleType): string {
     return parseSelectTranslation(
-      $localize`:@@project.permission.role.title:{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences and Public Access}}`,
+      $localize`:@@project.permission.role.title:{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Settings}}`,
       {type}
     );
   }
@@ -324,7 +324,7 @@ export class RoleGroupService {
         if (transitive) {
           return $localize`:@@project.permission.transitive.role.tooltip.TechConfig:A user can add, modify, and delete automations on all tables and link types in this project.`;
         }
-        return $localize`:@@project.permission.role.tooltip.TechConfig:A user can manage sequences and publish project.`;
+        return $localize`:@@project.permission.role.tooltip.TechConfig:A user can manage sequences, selection lists, variables and can publish this project.`;
       case RoleType.DataRead:
         return $localize`:@@project.permission.transitive.role.tooltip.DataRead:A user can read all data in all tables and views in this project.`;
       case RoleType.DataWrite:

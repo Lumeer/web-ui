@@ -43,6 +43,7 @@ import {RoleType} from '../core/model/role-type';
 import {ProjectTabGuard} from './project/project-tab.guard';
 import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
 import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
+import {ProjectVariablesComponent} from './project/variables/project-variables.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -83,6 +84,11 @@ const workspaceRoutes: Routes = [
       {
         path: 'selection',
         component: ProjectSelectionListsComponent,
+        data: {role: RoleType.TechConfig},
+      },
+      {
+        path: 'variables',
+        component: ProjectVariablesComponent,
         data: {role: RoleType.TechConfig},
       },
       {

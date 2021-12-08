@@ -1021,17 +1021,98 @@
                 <target>Nastavte kód</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">158</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">170</context></context-group></trans-unit>
             <trans-unit id="resource.postit.name" datatype="html">
                 <source>Fill in name</source>
                 <target>Zadejte název</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">162</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">174</context></context-group></trans-unit><trans-unit id="resource.settings.deleteResource.title" datatype="html">
         <source>Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</source>
         <target>Trvale odstranit {resourceType, select, organization {tuto organizaci} project {tento projekt} collection {tuto tabulku} link {toto propojení} view {tento pohled} document {tento záznam}}</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">188</context></context-group></trans-unit><trans-unit id="b48267a331c5cfb5c645992767dbffb6b2a42670" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">192</context></context-group></trans-unit><trans-unit id="resource.variables.placeholder.name" datatype="html">
+        <source>Variable Name</source><target>Název proměnné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.header.name" datatype="html">
+        <source>Name</source><target>Název</target>
+        
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="resource.variables.header.value" datatype="html">
+        <source>Value</source><target>Hodnota</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.add.button" datatype="html">
+        <source>Create variable</source><target>Vytvořit proměnnou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.validation.duplicate" datatype="html">
+        <source> This variable name already exists.
+</source><target> Proměnná s tímto názvem již existuje.
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.variables.existing.title" datatype="html">
+        <source>Existing variables</source><target>Existující proměnné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/resource-variables.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.header.search.placeholder" datatype="html">
+        <source>Search variable...</source><target>Vyhledat proměnnou...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.header.search.title" datatype="html">
+        <source>Search for variables</source><target>Vyhledat proměnné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.header.value.remove.tooltip" datatype="html">
+        <source>Remove this variable</source><target>Odstranit tuto proměnnou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.row.secure" datatype="html">
+        <source>Secured</source><target>Utajená</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.row.unsecure" datatype="html">
+        <source>Unsecured</source><target>Viditelná</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.validation.duplication.name" datatype="html">
+        <source>Variable with name '<x id="PH" equiv-text="key"/>' already exists.</source><target>Proměnná s názvem '<x id="PH" equiv-text="key"/>' již existuje.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit><trans-unit id="b48267a331c5cfb5c645992767dbffb6b2a42670" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization Rights} project {Project Rights} collection {Table Rights} view {View Rights} link_type {Link Type Rights}}</source>
         <target>{VAR_SELECT, select, organization {Práva v organizaci} project {Práva v projektu} collection {Práva v tabulce} view {Práva v pohledu} link_type {Práva v propojení}}</target>
         <context-group purpose="location">
@@ -1638,16 +1719,16 @@
         <target>Potvrzením této akce přijdete o oprávnění spravovat uživatele a týmy a nebudete moci toto nastavení vrátit zpět.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">175</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="teams.list.lost.permissions.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">175</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="teams.list.lost.permissions.title" datatype="html">
         <source>Be careful, there is risk of losing access.</source>
         <target>Buďte opatrní, hrozí, že ztratíte přístup.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">176</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit><trans-unit id="teams.list.lost.permissions.confirm" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">176</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="teams.list.lost.permissions.confirm" datatype="html">
         <source>Save anyway</source><target>Přesto uložit</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">177</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="team.description.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">177</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit><trans-unit id="team.description.placeholder" datatype="html">
         <source>Enter '<x id="INTERPOLATION" equiv-text="{{team.name}}"/>' description</source><target>Zadejte popis týmu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team/team.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="team.actions.remove" datatype="html">
@@ -1690,7 +1771,7 @@
                 <target state="final">Zadejte popis</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/content/attribute-description-content.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="default" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/content/attribute-description-content.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="default" datatype="html">
         <source>Default</source><target>Výchozí</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="select.constraint.items.date.format" datatype="html">
@@ -1807,13 +1888,13 @@
                 <target state="translated">Nelze načíst záznamy</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="documents.create.success" datatype="html">
-        <source>Document was successfully created.</source><target state="new">Document was successfully created.</target>
+        <source>A record was successfully created.</source><target>Záznam byl úspěšně vytvořen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
           <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit><trans-unit id="documents.update.success" datatype="html">
-        <source>Document was successfully updated.</source><target state="new">Document was successfully updated.</target>
+        <source>The record was successfully updated.</source><target>Záznam byl úspěšně upraven.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
           <context context-type="linenumber">231</context>
@@ -1940,16 +2021,16 @@
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.success" datatype="html">
         <source>Success</source><target>Úspěch</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">119</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source><target>Informace</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">120</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source><target>Upozornění</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source><target>Chyba</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="template.create.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="template.create.error" datatype="html">
         <source>I am sorry, something went wrong.</source><target>Je mi líto, něco se pokazilo.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/redirect.component.ts</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
@@ -2611,6 +2692,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
           <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit><trans-unit id="project.settings.tab.variables" datatype="html">
+        <source>Variables</source><target>Proměnné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit><trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source><target>Všechny ukázkové záznamy budou trvale odstraněny z projektu. Napište TRVALE VYČISTIT pro pokračování.</target>
@@ -3527,7 +3614,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">125</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">127</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="organization.permission.role.title" datatype="html">
         <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Organization Users} ProjectContribute {Create Projects}}</source>
         <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v organizaci} ProjectContribute {Vytvářet projekty}}</target>
 
@@ -3608,8 +3695,8 @@
         <target>Uživatel může měnit filtry a dotazy ve všech pohledech ve všech projektech v této organizaci.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">279</context></context-group></trans-unit><trans-unit id="project.permission.role.title" datatype="html">
-        <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences and Public Access}}</source>
-        <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v projektu} TechConfig {Spravovat sekvence a veřejný přístup}}</target>
+        <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Settings}}</source>
+        <target>{type, select, Read {Přidat se} Manage {Spravovat} UserConfig {Spravovat uživatele v projektu} TechConfig {Spravovat nastavení}}</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">285</context></context-group></trans-unit><trans-unit id="organization.permission.transitive.role.organization.title" datatype="html">
         <source>{type, select, Read {Join Everything} Manage {Manage Everything} UserConfig {Manage All Users} DataRead {Read Everything} DataWrite {Write Everywhere} DataDelete {Delete Everywhere} DataContribute {Contribute Everywhere} LinkContribute {Create Link Types Everywhere} ViewContribute {Create Views Everywhere} CollectionContribute {Create Tables Everywhere} CommentContribute {Comment on Anything} AttributeEdit {Manage Table and Link Columns} TechConfig {Manage Automations} QueryConfig {Manage View Queries Everywhere} PerspectiveConfig {Configure Views Everywhere}}</source>
@@ -3683,8 +3770,8 @@
         <target>Uživatel může vytvářet, upravovat a odstraňovat automatizace ve všech tabulkách a typech propojení v tomto projektu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">325</context></context-group></trans-unit><trans-unit id="project.permission.role.tooltip.TechConfig" datatype="html">
-        <source>A user can manage sequences and publish project.</source>
-        <target>Uživatel může spravovat sekvence a publikovat projekt.</target>
+        <source>A user can manage sequences, selection lists, variables and can publish this project.</source>
+        <target>Uživatel může spravovat sekvence, seznamy s výběrem hodnot, proměnné a může publikovat projekt.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/service/role-group.service.ts</context><context context-type="linenumber">327</context></context-group></trans-unit><trans-unit id="project.permission.transitive.role.tooltip.PerspectiveConfig" datatype="html">
         <source>A user can manage visual view configurations of all views in this project.</source>
@@ -3880,7 +3967,43 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="resourceComment.delete.fail" datatype="html">
         <source>Could not delete the comment</source><target>Nemohl jsem smazat komentář</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">178</context></context-group></trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">178</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
+        <source>Could not read variables</source><target>Nemohl jsem načíst proměnné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.create.fail" datatype="html">
+        <source>Could not create variable</source><target>Nemohl jsem vytvořit proměnnou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.update.fail" datatype="html">
+        <source>Could not update variable</source><target>Nemohl jsem upravit proměnnou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.delete.confirm.title" datatype="html">
+        <source>Delete variable</source><target>Smazat proměnnou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.variables.delete.confirm.message" datatype="html">
+        <source>Do you really want to delete this variable?</source><target>Chcete skutečně smazat tuto proměnnou?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.variables.delete.fail" datatype="html">
+        <source>Could not delete variable</source><target>Nemohl jsem smazat proměnnou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+      </trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
         <source>Could not read selection lists</source><target>Nemohl jsem načíst seznamy hodnot</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
@@ -3933,7 +4056,7 @@
                 <source>Write text here...</source>
                 <target>Zde vložte text...</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context><context context-type="linenumber">193</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context><context context-type="linenumber">212</context></context-group></trans-unit>
             <trans-unit id="user.add.placeholder" datatype="html">
                 <source>Type email to invite another user</source>
                 <target>Zadejte e-mail kolegů, které chcete pozvat</target>
@@ -4011,7 +4134,20 @@
       )"/> MB).</source>
         <target>Velikost souboru je nad maximální povolenou hranicí (<x id="size" equiv-text="size.toFixed(0)"/> MB).</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="projects.tab.variables.title" datatype="html">
+        <source>Create a new variable</source><target>Vytvoření nové proměnné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.variables.description" datatype="html">
+        <source>You can use these variables in automations to consistently use the same notification email address, constants, or to store email server credentials for example. These variables can be accessed by all users that have the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>Manage Settings<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> right in the project.</source>
+        <target>Tyto proměnné můžete využít v automatizacích na ukládání konstant, nebo abyste všude používali stejný email, případně k ukládání hesel k emailovému serveru. Tyto proměnné mohou upravovat všichni uživatelé s právem <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>Spravovat nastavení<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> v aktuálním projektu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
 
 
             <trans-unit id="collection.document.icon.set" datatype="html">
@@ -4868,7 +5004,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/lists/selection/content/modal/selection-list-modal.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-description/attribute-description-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/data-resources-detail/data-resources-detail-modal.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/embedded-link/embedded-link-modal.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modify-document-links/modify-document-links-modal.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/tabs-settings/tabs-settings-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/text-input/text-input-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/user-settings/user-settings-modal.component.html</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/share/share-view-modal.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/color/color-choose.component.ts</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource-comments/new-comment/new-comment.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/teams/team-list/team-list.component.ts</context><context context-type="linenumber">178</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">135</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>

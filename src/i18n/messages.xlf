@@ -451,7 +451,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
@@ -1524,35 +1524,35 @@
         <source>Success</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.info" datatype="html">
         <source>Information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.warning" datatype="html">
         <source>Warning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rules.blockly.action.message.error" datatype="html">
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="button.ok" datatype="html">
         <source>OK</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
@@ -1700,7 +1700,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="project.permission.role.title" datatype="html">
-        <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Sequences and Public Access}}</source>
+        <source>{type, select, Read {Join} Manage {Manage} UserConfig {Manage Project Users} TechConfig {Manage Settings}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">285</context>
@@ -1770,7 +1770,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="project.permission.role.tooltip.TechConfig" datatype="html">
-        <source>A user can manage sequences and publish project.</source>
+        <source>A user can manage sequences, selection lists, variables and can publish this project.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/role-group.service.ts</context>
           <context context-type="linenumber">327</context>
@@ -2268,14 +2268,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="documents.create.success" datatype="html">
-        <source>Document was successfully created.</source>
+        <source>A record was successfully created.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
           <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="documents.update.success" datatype="html">
-        <source>Document was successfully updated.</source>
+        <source>The record was successfully updated.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
           <context context-type="linenumber">231</context>
@@ -2665,6 +2665,48 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context>
           <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.get.fail" datatype="html">
+        <source>Could not read variables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.create.fail" datatype="html">
+        <source>Could not create variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.update.fail" datatype="html">
+        <source>Could not update variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.delete.confirm.title" datatype="html">
+        <source>Delete variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="document.variables.delete.confirm.message" datatype="html">
+        <source>Do you really want to delete this variable?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.delete.fail" datatype="html">
+        <source>Could not delete variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
+          <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selection.lists.get.fail" datatype="html">
@@ -4161,7 +4203,7 @@
         <source>Write text here...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inviteUser.dialog.readOnlyNoAccess.title2" datatype="html">
@@ -4446,7 +4488,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dialog.attribute.description.title" datatype="html">
@@ -6543,21 +6585,118 @@
         <source>Set code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.postit.name" datatype="html">
         <source>Fill in name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.settings.deleteResource.title" datatype="html">
         <source>Permanently remove this {resourceType, select, organization {organization} project {project} collection {table} link {link} view {view} document {record}}</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/header/resource-header.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.placeholder.name" datatype="html">
+        <source>Variable Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.header.value" datatype="html">
+        <source>Value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.add.button" datatype="html">
+        <source>Create variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.validation.duplicate" datatype="html">
+        <source> This variable name already exists.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projects.tab.variables.existing.title" datatype="html">
+        <source>Existing variables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/resource-variables.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.header.name" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.header.search.placeholder" datatype="html">
+        <source>Search variable...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.header.search.title" datatype="html">
+        <source>Search for variables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/resource-variables-table.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.header.value.remove.tooltip" datatype="html">
+        <source>Remove this variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.row.secure" datatype="html">
+        <source>Secured</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.row.unsecure" datatype="html">
+        <source>Unsecured</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.variables.validation.duplication.name" datatype="html">
+        <source>Variable with name &apos;<x id="PH" equiv-text="key"/>&apos; already exists.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.ts</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b48267a331c5cfb5c645992767dbffb6b2a42670" datatype="html">
@@ -6891,7 +7030,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.list.lost.permissions.title" datatype="html">
@@ -6902,7 +7041,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teams.list.lost.permissions.confirm" datatype="html">
@@ -6913,7 +7052,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user-list/user-list.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="team.description.placeholder" datatype="html">
@@ -10785,6 +10924,13 @@
           <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="project.settings.tab.variables" datatype="html">
+        <source>Variables</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="project.deleteSamples.dialog.description" datatype="html">
         <source>All sample project records will be permanently deleted. Type PERMANENTLY CLEAN to proceed.</source>
         <context-group purpose="location">
@@ -11003,6 +11149,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/upload/project-upload.component.ts</context>
           <context context-type="linenumber">63,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projects.tab.variables.title" datatype="html">
+        <source>Create a new variable</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="projects.tab.variables.description" datatype="html">
+        <source>You can use these variables in automations to consistently use the same notification email address, constants, or to store email server credentials for example. These variables can be accessed by all users that have the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Manage Settings<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> right in the project.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/variables/project-variables.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
     </body>
