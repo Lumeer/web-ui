@@ -6044,7 +6044,14 @@
         <source>Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</source>
         <target>Naformátuje čas jako objekt nebo v milisekundách (Unixový čas) pomocí daného formátu a jazyku. Výsledek je řetězec.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-date-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getAttributeBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-date-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.generatePdfBlock" datatype="html">
+        <source>Generates PDF from the given HTML string and saves it as a file to the given attribute.</source>
+        <target>Vytvoří PDF ze vstupního HTML a uloží jej jako soubor do vybraného atributu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/generate-pdf-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getAttributeBlock" datatype="html">
         <source>Gets the value of an attribute in the given record.</source>
         <target>Vrátí hodnotu daného sloupce v daném záznamu.</target>
 
