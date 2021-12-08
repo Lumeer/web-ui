@@ -29,6 +29,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {selectResourceVariablesDictionary, selectResourceVariablesLoadedProjects} from './resource-variables.state';
 import {ResourceVariablesService} from '../../data-service/resource-variables/resource-variables.service';
 import {convertResourceVariableDtoToModel, convertResourceVariableModelToDto} from './resource-variable.converter';
+import {createCallbackActions} from '../utils/store.utils';
 
 @Injectable()
 export class ResourceVariablesEffects {
@@ -78,7 +79,10 @@ export class ResourceVariablesEffects {
         const variableDto = convertResourceVariableModelToDto(action.variable);
         return this.service.create(variableDto).pipe(
           map(dto => convertResourceVariableDtoToModel(dto, action.variable.value)),
-          mergeMap(variable => [ResourceVariableActions.createSuccess({variable})]),
+          mergeMap(variable => [
+            ...createCallbackActions(action.onSuccess, variable.id),
+            ResourceVariableActions.createSuccess({variable}),
+          ]),
           catchError(error => of(ResourceVariableActions.createFailure({error})))
         );
       })

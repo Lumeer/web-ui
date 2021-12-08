@@ -58,30 +58,28 @@ export const selectResourceVariablesByResourceType = (resourceId: string, resour
   createSelector(selectWorkspaceWithIds, selectAllResourceVariables, (workspace, variables) => {
     switch (resourceType) {
       case ResourceType.Organization:
-        return reversedArray(
-          variables.filter(
-            variable => variable.resourceType === ResourceType.Organization && variable.resourceId === resourceId
-          )
-        );
+        return variables
+          .filter(variable => variable.resourceType === ResourceType.Organization && variable.resourceId === resourceId)
+          .sort((a, b) => a.id.localeCompare(b.id));
       case ResourceType.Project:
-        return reversedArray(
-          variables.filter(
+        return variables
+          .filter(
             variable =>
               variable.organizationId === workspace.organizationId &&
               variable.resourceType === ResourceType.Project &&
               variable.resourceId === resourceId
           )
-        );
+          .sort((a, b) => a.id.localeCompare(b.id));
       default:
-        return reversedArray(
-          variables.filter(
+        return variables
+          .filter(
             variable =>
               variable.organizationId === workspace.organizationId &&
               variable.projectId === workspace.projectId &&
               variable.resourceType === resourceType &&
               variable.resourceId === resourceId
           )
-        );
+          .sort((a, b) => a.id.localeCompare(b.id));
     }
   });
 

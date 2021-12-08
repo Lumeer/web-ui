@@ -38,7 +38,13 @@ export const getOneSuccess = createAction(
 
 export const getFailure = createAction('[ResourceVariables] Get :: Failure', props<{error: any}>());
 
-export const create = createAction('[ResourceVariables] Create', props<{variable: ResourceVariable}>());
+export const create = createAction(
+  '[ResourceVariables] Create',
+  props<{
+    variable: ResourceVariable;
+    onSuccess?: (id) => void;
+  }>()
+);
 
 export const createSuccess = createAction(
   '[ResourceVariables] Create :: Success',

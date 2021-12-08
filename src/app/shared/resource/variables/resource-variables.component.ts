@@ -28,14 +28,13 @@ import {Observable} from 'rxjs';
 import {objectChanged} from '../../utils/common.utils';
 import {selectResourceVariablesByResourceType} from '../../../core/store/resource-variables/resource-variables.state';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {take} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Project} from '../../../core/store/projects/project';
 
 @Component({
   selector: 'resource-variables',
   templateUrl: './resource-variables.component.html',
-  styleUrls: ['./resource-variables.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceVariablesComponent implements OnChanges {
@@ -47,6 +46,8 @@ export class ResourceVariablesComponent implements OnChanges {
 
   public variables$: Observable<ResourceVariable[]>;
 
+  public createdVariables: string[] = [];
+
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -57,7 +58,8 @@ export class ResourceVariablesComponent implements OnChanges {
 
   private observeVariables() {
     this.variables$ = this.store$.pipe(
-      select(selectResourceVariablesByResourceType(this.resource?.id, this.resourceType))
+      select(selectResourceVariablesByResourceType(this.resource?.id, this.resourceType)),
+      map(variables => this.sortVariables(variables))
     );
 
     let workspace: Workspace = {};
@@ -73,6 +75,14 @@ export class ResourceVariablesComponent implements OnChanges {
     this.store$.dispatch(ResourceVariableActions.get({workspace}));
   }
 
+  private sortVariables(variables: ResourceVariable[]): ResourceVariable[] {
+    return variables.sort((a, b) => {
+      const aIndex = this.createdVariables.findIndex(variableId => variableId === a.id);
+      const bIndex = this.createdVariables.findIndex(variableId => variableId === b.id);
+      return aIndex > bIndex ? -1 : aIndex < bIndex ? 1 : 0;
+    });
+  }
+
   public onDelete(variable: ResourceVariable) {
     this.store$.dispatch(ResourceVariableActions.deleteConfirm({variable}));
   }
@@ -84,9 +94,16 @@ export class ResourceVariablesComponent implements OnChanges {
   public onAddVariable(variable: ResourceVariable) {
     this.store$.pipe(select(selectWorkspaceWithIds), take(1)).subscribe(workspace => {
       this.store$.dispatch(
-        ResourceVariableActions.create({variable: this.addWorkspaceToVariable(variable, workspace)})
+        ResourceVariableActions.create({
+          variable: this.addWorkspaceToVariable(variable, workspace),
+          onSuccess: id => this.onVariableCreated(id),
+        })
       );
     });
+  }
+
+  private onVariableCreated(id: string) {
+    this.createdVariables.push(id);
   }
 
   private addWorkspaceToVariable(variable: ResourceVariable, workspace: Workspace): ResourceVariable {
