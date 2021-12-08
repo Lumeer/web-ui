@@ -283,29 +283,17 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.form.view.submit.warning.data.title" datatype="html">
         <source>Unconfirmed changes</source><target state="final">Unconfirmed changes</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">426</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">425</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.message" datatype="html">
         <source>There are some changes in form that was not saved. Are you sure to select another record?</source><target state="final">There are some changes in form that was not saved. Are you sure to select another record?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">427</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">426</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.yes" datatype="html">
         <source>Yes, Select Record</source><target state="final">Yes, Select Record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">428</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">427</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.warning.data.no" datatype="html">
         <source>No, Keep Editing</source><target state="final">No, Keep Editing</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context>
-          <context context-type="linenumber">429</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.form.view.submit.delete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/form/content/view/form-view.component.ts</context><context context-type="linenumber">428</context></context-group></trans-unit><trans-unit id="perspective.form.view.submit.delete" datatype="html">
         <source>Delete This Record</source><target state="final">Delete This Record</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/form/content/view/submit/form-view-submit.component.html</context>
@@ -3520,43 +3508,55 @@
       <trans-unit id="documents.get.fail" datatype="html">
         <source>Could not get records</source><target state="final">Could not get records</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">132</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="documents.create.success" datatype="html">
+        <source>Document was successfully created.</source><target state="final">Document was successfully created.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit><trans-unit id="documents.update.success" datatype="html">
+        <source>Document was successfully updated.</source><target state="final">Document was successfully updated.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
+          <context context-type="linenumber">231</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="document.create.serviceLimits" datatype="html">
         <source>You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</source><target state="final">You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">310</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">314</context></context-group></trans-unit>
       <trans-unit id="document.create.fail" datatype="html">
         <source>Could not create the record</source><target state="final">Could not create the record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">313</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">317</context></context-group></trans-unit>
       <trans-unit id="document.add.favorite.fail" datatype="html">
         <source>Could not add the record to favorites</source><target state="final">Could not add the record to favorites</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">429</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">433</context></context-group></trans-unit>
       <trans-unit id="document.remove.favorite.fail" datatype="html">
         <source>Could not remove the record from favorites</source><target state="final">Could not remove the record from favorites</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">461</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">465</context></context-group></trans-unit>
       <trans-unit id="document.update.fail" datatype="html">
         <source>Could not update the record</source><target state="final">Could not update the record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">472</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">476</context></context-group></trans-unit>
       <trans-unit id="document.delete.dialog.title" datatype="html">
         <source>Delete record</source><target state="final">Delete record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">689</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">693</context></context-group></trans-unit>
       <trans-unit id="document.delete.dialog.message" datatype="html">
         <source>Do you really want to delete this record?</source><target state="final">Do you really want to delete this record?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">690</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">694</context></context-group></trans-unit>
       <trans-unit id="document.delete.fail" datatype="html">
         <source>Could not delete the record</source><target state="final">Could not delete the record</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">708</context></context-group></trans-unit><trans-unit id="dataResource.runRule.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">712</context></context-group></trans-unit><trans-unit id="dataResource.runRule.fail" datatype="html">
         <source>Could not run the selected automation</source><target state="final">Could not run the selected rule</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">733</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">466</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">737</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context><context context-type="linenumber">466</context></context-group></trans-unit>
       <trans-unit id="groups.get.fail" datatype="html">
         <source>Could not get groups</source><target state="final">Could not get groups</target>
 
@@ -4197,7 +4197,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-currency-blockly-component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="blockly.tooltip.formatDateBlock" datatype="html">
         <source>Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</source><target state="final">Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-date-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getAttributeBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-date-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.generatePdfBlock" datatype="html">
+        <source>Generates PDF from the given HTML string and saves it as a file to the given attribute.</source><target state="final">Generates PDF from the given HTML string and saves it as a file to the given attribute.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/generate-pdf-blockly-component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.getAttributeBlock" datatype="html">
         <source>Gets the value of an attribute in the given record.</source><target state="final">Gets the value of an attribute in the given record.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-attribute-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.getChildDocumentsBlock" datatype="html">
@@ -4408,25 +4414,25 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context><context context-type="linenumber">105</context></context-group></trans-unit><trans-unit id="file.attachment.download.failure" datatype="html">
         <source>Could not download the file attachment. Please try again later.</source><target state="final">Could not download the file attachment. Please try again later.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/button/file-attachment-button.component.ts</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="file.attachment.not.exist" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/file-download.service.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="file.attachment.not.exist" datatype="html">
         <source>Could not find the file attachment.</source><target state="final">Could not find the file attachment.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/button/file-attachment-button.component.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="file.upload.max.size.error" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/file-download.service.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="file.upload.max.size.error" datatype="html">
         <source>Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</source><target state="final">Cannot process files bigger than <x id="size" equiv-text="size"/> MB. Please upload smaller file.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="file.attachment.upload.success" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/dropdown/files-dropdown.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="file.attachment.upload.success" datatype="html">
         <source>The file is successfully saved.</source><target state="final">The file is successfully saved.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">217</context></context-group></trans-unit><trans-unit id="file.attachment.upload.failure" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">221</context></context-group></trans-unit><trans-unit id="file.attachment.upload.failure" datatype="html">
         <source>Could not save the file. Please try again later.</source><target state="final">Could not save the file. Please try again later.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">236</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">240</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.message" datatype="html">
         <source>Do you really want to permanently delete this file?</source><target state="final">Do you really want to permanently delete this file?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">254</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">258</context></context-group></trans-unit><trans-unit id="file.attachment.delete.confirm.title" datatype="html">
         <source>Delete file?</source><target state="final">Delete file?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">255</context></context-group></trans-unit><trans-unit id="dataResource.detail.attribute.remove.confirm" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-input/files/files-data-input.component.ts</context><context context-type="linenumber">259</context></context-group></trans-unit><trans-unit id="dataResource.detail.attribute.remove.confirm" datatype="html">
         <source>Are you sure you want to delete this row?</source><target state="final">Are you sure you want to delete this row?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">212</context></context-group></trans-unit><trans-unit id="function.create.serviceLimits" datatype="html">

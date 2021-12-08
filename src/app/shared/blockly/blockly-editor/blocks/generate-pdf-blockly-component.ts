@@ -29,7 +29,7 @@ export class GeneratePdfBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.generatePdfBlock:Generates PDF from the given HTML string and saves it as a file attachment to the given attribute.`;
+    this.tooltip = $localize`:@@blockly.tooltip.generatePdfBlock:Generates PDF from the given HTML string and saves it as a file to the given attribute.`;
   }
 
   public getVisibility(): MasterBlockType[] {
