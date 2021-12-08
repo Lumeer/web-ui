@@ -19,5 +19,8 @@
   <i class="fa-fw"
      [ngClass]="variable.secure ? 'fas fa-lock-alt' : 'far fa-lock-open-alt'"
      [tooltip]="variable.secure ? secureTooltip : unsecureTooltip"></i>
-  <i class="fal fa-trash-alt text-danger clickable ml-2" (click)="delete.emit()"></i>
+  <i class="fal fa-trash-alt text-danger clickable ml-2"
+     tooltip="Remove this variable"
+     i18n-tooltip="@@resource.variables.header.value.remove.tooltip"
+     (click)="delete.emit()"></i>
 </div>

@@ -1,8 +1,8 @@
 <div class="variable-form">
   <input class="form-control"
          type="text"
-         placeholder="Name"
-         i18n-placeholder="@@resource.variables.header.name"
+         placeholder="Variable Name"
+         i18n-placeholder="@@resource.variables.placeholder.name"
          (ngModelChange)="onKeyChange($event)"
          (keydown.enter)="valueElement.focus()"
          [(ngModel)]="key"/>
@@ -29,5 +29,5 @@
   </div>
 </div>
 <div *ngIf="duplicate" class="small text-danger mt-1" i18n="@@resource.variables.validation.duplicate">
-  Name already exists.
+  This variable name already exists.
 </div>

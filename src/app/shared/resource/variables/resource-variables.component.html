@@ -5,7 +5,8 @@
     [resourceId]="resource.id"
     (addVariable)="onAddVariable($event)">
   </resource-variable-header>
-  <resource-variables-table class="d-block mt-4"
+  <h4 class="mt-4" i18n="@@projects.tab.variables.existing.title">Existing variables</h4>
+  <resource-variables-table class="d-block mt-2"
                             [variables]="variables"
                             [resource]="resource"
                             (changeVariable)="onChange($event)"
