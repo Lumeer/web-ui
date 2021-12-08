@@ -33,7 +33,6 @@ export const selectionListsAdapter = createEntityAdapter<SelectionList>({
 
 export const initialSelectionListsState: SelectionListsState = selectionListsAdapter.getInitialState({
   loadedForOrganizationId: null,
-  loadedForProjects: [],
 });
 
 export const selectSelectionListsState = (state: AppState) => state.selectionLists;

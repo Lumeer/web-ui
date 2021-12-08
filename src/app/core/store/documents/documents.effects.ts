@@ -189,7 +189,7 @@ export class DocumentsEffects {
           .createWithAdditionalData(documentDto, finalWorkspace, data, correlationId)
           .pipe(
             mergeMap(({document, createdAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
-              const message = $localize`:@@documents.create.success:Document was successfully created.`;
+              const message = $localize`:@@documents.create.success:A record was successfully created.`;
               return [
                 new DocumentsAction.CreateSuccess({document}),
                 new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),
@@ -228,7 +228,7 @@ export class DocumentsEffects {
           .pipe(
             mergeMap(
               ({document, createdAttachments, deletedAttachments, createdLinkInstances, removedLinkInstancesIds}) => {
-                const message = $localize`:@@documents.update.success:Document was successfully updated.`;
+                const message = $localize`:@@documents.update.success:The record was successfully updated.`;
                 return [
                   new DocumentsAction.UpdateSuccess({document, originalDocument}),
                   new FileAttachmentsAction.CreateSuccess({fileAttachments: createdAttachments}),

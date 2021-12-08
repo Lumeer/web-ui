@@ -61,6 +61,7 @@ import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {View} from '../store/views/view';
 import * as DashboardDataActions from '../store/dashboard-data/dashboard-data.actions';
+import * as ResourceVariableActions from '../store/resource-variables/resource-variables.actions';
 import {convertDefaultViewConfigDtoToModel, convertViewDtoToModel} from '../store/views/view.converter';
 import {ViewsAction} from '../store/views/views.action';
 import {selectViewById, selectViewsDictionary} from '../store/views/views.state';
@@ -88,6 +89,7 @@ import {selectTeamById} from '../store/teams/teams.state';
 import {convertSelectionListDtoToModel} from '../store/selection-lists/selection-list.converter';
 import {SelectionListsAction} from '../store/selection-lists/selection-lists.action';
 import {convertDashboardDataDtoToModel} from '../store/dashboard-data/dashboard-data.converter';
+import {convertResourceVariableDtoToModel} from '../store/resource-variables/resource-variable.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -182,6 +184,7 @@ export class PusherService implements OnDestroy {
     this.bindNavigateEvents();
     this.bindSendEmailEvents();
     this.bindSelectionListEvents();
+    this.bindResourceVariablesEvents();
     this.bindDashboardDataEvents();
   }
 
@@ -872,6 +875,50 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentOrganization(data)) {
         this.store$.dispatch(
           new SelectionListsAction.GetByProject({organizationId: data.organizationId, projectId: data.projectId})
+        );
+      }
+    });
+  }
+
+  private bindResourceVariablesEvents() {
+    this.channel.bind('ResourceVariable:create', data => {
+      if (this.isCurrentOrganization(data) && !this.isCurrentAppTab(data)) {
+        const variable = convertResourceVariableDtoToModel(data.object);
+        this.store$.dispatch(ResourceVariableActions.createSuccess({variable}));
+      }
+    });
+    this.channel.bind('ResourceVariable:create:ALT', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          ResourceVariableActions.getOne({workspace: {organizationId: data.organizationId}, id: data.id})
+        );
+      }
+    });
+    this.channel.bind('ResourceVariable:update', data => {
+      if (this.isCurrentOrganization(data) && !this.isCurrentAppTab(data)) {
+        const variable = convertResourceVariableDtoToModel(data.object);
+        this.store$.dispatch(ResourceVariableActions.updateSuccess({variable}));
+      }
+    });
+    this.channel.bind('ResourceVariable:update:ALT', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          ResourceVariableActions.getOne({workspace: {organizationId: data.organizationId}, id: data.id})
+        );
+      }
+    });
+    this.channel.bind('ResourceVariable:remove', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(ResourceVariableActions.deleteSuccess({id: data.id}));
+      }
+    });
+    this.channel.bind('ResourceVariable:reload', data => {
+      if (this.isCurrentOrganization(data)) {
+        this.store$.dispatch(
+          ResourceVariableActions.get({
+            force: true,
+            workspace: {organizationId: data.organizationId, projectId: data.projectId},
+          })
         );
       }
     });

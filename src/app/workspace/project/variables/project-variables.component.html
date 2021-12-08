@@ -1,0 +1,7 @@
+<h4 class="mt-4" i18n="@@projects.tab.variables.title">Create a new variable</h4>
+<div i18n="@@projects.tab.variables.description">You can use these variables in automations to consistently use the same notification email address, constants, or to store email server credentials for example. These variables can be accessed by all users that have the <b>Manage Settings</b> right in the project.</div>
+
+<resource-variables class="d-block mt-3 pb-6"
+                    [resource]="project$ | async"
+                    [resourceType]="resourceType">
+</resource-variables>

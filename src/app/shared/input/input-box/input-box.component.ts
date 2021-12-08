@@ -29,12 +29,15 @@ import {
   ViewChild,
 } from '@angular/core';
 
+export const TRIM_REGEX = /^[\s]+|[\s]+$/gi;
+
 const DEFAULT_FONT_SIZE = 1;
 const DEFAULT_MAX_LINES = -1;
 const DEFAULT_LINE_HEIGHT = 1.5;
 const DEFAULT_PADDING_H = 0.5;
 const DEFAULT_PADDING_V = 0.375;
-const warningStyle = ['border', 'border-danger', 'rounded'];
+const SECURE_VALUE = '••••••';
+const WARNING_STYLE = ['border', 'border-danger', 'rounded'];
 
 @Component({
   selector: 'input-box',
@@ -60,7 +63,9 @@ export class InputBoxComponent implements OnInit, OnChanges {
   @Input() public textAttribute: boolean;
   @Input() public innerClass: string = '';
   @Input() public filter: RegExp;
+  @Input() public filterAllChanges = true;
   @Input() public maxLength = 0;
+  @Input() public secure: boolean;
 
   @Output() public focus: EventEmitter<string> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
@@ -83,6 +88,17 @@ export class InputBoxComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     this.computeProperties();
+    if (changes.initialValue || changes.secure) {
+      this.checkCurrentValue();
+    }
+  }
+
+  private checkCurrentValue() {
+    if (this.secure) {
+      this.mCurrentValue = SECURE_VALUE;
+    } else {
+      this.mCurrentValue = this.initialValue?.toString()?.trim() || '';
+    }
   }
 
   public get inputElement(): HTMLDivElement {
@@ -90,7 +106,6 @@ export class InputBoxComponent implements OnInit, OnChanges {
   }
 
   private computeProperties() {
-    this.mCurrentValue = (this.initialValue && this.initialValue.toString().trim()) || '';
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
@@ -113,7 +128,6 @@ export class InputBoxComponent implements OnInit, OnChanges {
   }
 
   public onNewValue(value: string) {
-    const oldValue = value;
     value = this.filterValue(value);
 
     if (this.maxLength && value.length > this.maxLength) {
@@ -123,21 +137,22 @@ export class InputBoxComponent implements OnInit, OnChanges {
     this.blur.emit();
     this.removeFocusFromInputParent();
 
-    if (value !== this.mCurrentValue) {
-      const element = this.input.nativeElement;
-
+    const element = this.input.nativeElement;
+    if (this.secure) {
+      this.mCurrentValue = SECURE_VALUE;
+      this.newValue.emit(value);
+      element.textContent = SECURE_VALUE;
+    } else if (value !== this.mCurrentValue) {
       if (value.length === 0 && !this.canStayEmpty) {
         this.emptyValue.emit();
         element.textContent = this.mCurrentValue;
       } else {
         this.mCurrentValue = value;
         this.newValue.emit(value);
-        const caret = this.getCaret(element);
         element.textContent = value;
-        if (oldValue.length !== value.length) {
-          this.setCaret(element, caret - (oldValue.length - value.length));
-        }
       }
+    } else {
+      element.textContent = value;
     }
   }
 
@@ -169,6 +184,10 @@ export class InputBoxComponent implements OnInit, OnChanges {
   }
 
   public onFocus() {
+    if (this.secure) {
+      this.mCurrentValue = this.initialValue || '';
+      this.inputElement.textContent = this.mCurrentValue;
+    }
     this.focus.emit(this.mCurrentValue);
     this.addFocusToInputParent();
   }
@@ -182,11 +201,11 @@ export class InputBoxComponent implements OnInit, OnChanges {
   }
 
   public setWarningBorder() {
-    this.inputElement.classList.add(...warningStyle);
+    this.inputElement.classList.add(...WARNING_STYLE);
   }
 
   public removeWarningBorder() {
-    this.inputElement.classList.remove(...warningStyle);
+    this.inputElement.classList.remove(...WARNING_STYLE);
   }
 
   private defaultPlaceholder() {
@@ -194,7 +213,7 @@ export class InputBoxComponent implements OnInit, OnChanges {
   }
 
   public onInterimNewValue(textContent: string | null) {
-    let value = this.filterValue(textContent);
+    let value = this.filterAllChanges ? this.filterValue(textContent) : textContent;
 
     if (this.maxLength && value.length > this.maxLength) {
       value = value.substring(0, this.maxLength);
