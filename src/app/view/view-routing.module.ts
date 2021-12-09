@@ -36,6 +36,7 @@ import {DocumentRedirectComponent} from '../core/components/document-redirect.co
 import {GroupsGuard} from '../core/guards/data/groups.guard';
 import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {DashboardDataGuard} from '../core/guards/data/dashboard-data.guard';
+import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
 
 const viewRoutes: Routes = [
   {
@@ -51,6 +52,7 @@ const viewRoutes: Routes = [
       groups: GroupsGuard,
       defaultConfigs: ViewDefaultConfigsGuard,
       dashboardData: DashboardDataGuard,
+      variables: ResourceVariablesGuard,
     },
     component: ViewComponent,
     children: [
