@@ -460,4 +460,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   public onDescriptionEdit() {
     this.modalService.showAttributeDescription(this.attribute.id, this.collection?.id, this.linkType?.id);
   }
+
+  public onLockSettings() {
+    this.modalService.showAttributeLock(this.attribute.id, this.collection?.id, this.linkType?.id);
+  }
 }

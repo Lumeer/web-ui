@@ -69,6 +69,9 @@ export class TableColumnContextMenuComponent {
   public configure = new EventEmitter();
 
   @Output()
+  public lockSettings = new EventEmitter();
+
+  @Output()
   public edit = new EventEmitter();
 
   @Output()
@@ -105,10 +108,6 @@ export class TableColumnContextMenuComponent {
 
   public addPreviousColumn() {
     this.add.emit(false);
-  }
-
-  public onSort(descending: boolean) {
-    // TODO
   }
 
   public onCopyName() {

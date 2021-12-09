@@ -5,25 +5,6 @@
 </div>
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
-    <button *ngIf="false && cursor.partIndex === 0"
-            [disabled]="!canManageConfig"
-            mat-menu-item
-            (click)="onClick($event); onSort(false)">
-      <i class="fa fa-fw fa-sort-alpha-down mr-1"
-         aria-hidden="true">
-      </i>
-      <span i18n="@@table.header.menu.sort.ascending">Sort ascending</span>
-    </button>
-    <button *ngIf="false && cursor.partIndex === 0"
-            [disabled]="!canManageConfig"
-            mat-menu-item
-            (click)="onClick($event); onSort(true)">
-      <i class="fa fa-fw fa-sort-alpha-up mr-1"
-         aria-hidden="true">
-      </i>
-      <span i18n="@@table.header.menu.sort.descending">Sort descending</span>
-    </button>
-    <hr class="my-2" *ngIf="false && cursor.partIndex === 0">
     <button mat-menu-item
             [disabled]="!allowedPermissions?.roles?.AttributeEdit"
             (click)="onClick($event); edit.emit()"
@@ -57,6 +38,14 @@
               (click)="onClick($event); descriptionEdit.emit()">
         <i class="fa fa-fw fa-file-edit mr-1" aria-hidden="true"></i>
         <span i18n="@@table.header.menu.editDescription">Edit description...</span>
+      </button>
+      <button mat-menu-item
+              [disabled]="!allowedPermissions?.roles?.AttributeEdit"
+              (click)="onClick($event); lockSettings.emit()">
+        <i class="fa fa-fw fa-lock-open mr-1"
+           aria-hidden="true">
+        </i>
+        <span i18n="@@table.header.menu.lockSettings">Lock settings</span>
       </button>
       <button *ngIf="!defaultAttribute"
               mat-menu-item

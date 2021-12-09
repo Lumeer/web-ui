@@ -26,7 +26,7 @@ import {SelectionListComponent} from './content/list/selection-list.component';
 import {SelectionListsContentComponent} from './content/selection-lists-content.component';
 import {SelectionListModalComponent} from './content/modal/selection-list-modal.component';
 import {ModalWrapperModule} from '../../modal/wrapper/modal-wrapper.module';
-import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-type-modal.module';
+import {AttributeTypeModalModule} from '../../modal/attribute/type/attribute-type-modal.module';
 import {SelectionListModalContentComponent} from './content/modal/content/selection-list-modal-content.component';
 import {PipesModule} from '../../pipes/pipes.module';
 

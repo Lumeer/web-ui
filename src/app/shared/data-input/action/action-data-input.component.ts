@@ -59,7 +59,7 @@ import {
   ConstraintData,
   createDataValuesMap,
 } from '@lumeer/data-filters';
-import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute-type/form/constraint-config/action/action-constraint.utils';
+import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute/type/form/constraint-config/action/action-constraint.utils';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {Attribute} from '../../../core/store/collections/collection';
 import {Workspace} from '../../../core/store/navigation/workspace';

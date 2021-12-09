@@ -1,0 +1,27 @@
+@import 'src/styles/variables';
+
+.style-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 0.5rem;
+
+  .card {
+    cursor: pointer;
+    position: relative;
+
+    .indicator {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.35rem;
+    }
+
+    &.active {
+      background: lighten($success, 60%);
+      box-shadow: $shadow-default;
+    }
+
+    &:hover {
+      box-shadow: $shadow-default;
+    }
+  }
+}
