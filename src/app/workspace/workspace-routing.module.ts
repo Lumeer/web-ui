@@ -44,6 +44,7 @@ import {ProjectTabGuard} from './project/project-tab.guard';
 import {ProjectSelectionListsComponent} from './project/selection/project-selection-lists.component';
 import {SelectionListsGuard} from '../core/guards/selection-lists.guard';
 import {ProjectVariablesComponent} from './project/variables/project-variables.component';
+import {ResourceVariablesGuard} from '../core/guards/data/resource-variables.guard';
 
 const workspaceRoutes: Routes = [
   {
@@ -59,6 +60,7 @@ const workspaceRoutes: Routes = [
       views: ViewsGuard,
       limits: ServiceLimitsGuard,
       linkTypes: LinkTypesGuard,
+      variables: ResourceVariablesGuard,
     },
     children: [
       {

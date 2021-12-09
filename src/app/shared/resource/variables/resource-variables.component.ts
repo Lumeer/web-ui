@@ -30,7 +30,6 @@ import {selectResourceVariablesByResourceType} from '../../../core/store/resourc
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {map, take} from 'rxjs/operators';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {Project} from '../../../core/store/projects/project';
 
 @Component({
   selector: 'resource-variables',
@@ -61,18 +60,6 @@ export class ResourceVariablesComponent implements OnChanges {
       select(selectResourceVariablesByResourceType(this.resource?.id, this.resourceType)),
       map(variables => this.sortVariables(variables))
     );
-
-    let workspace: Workspace = {};
-    switch (this.resourceType) {
-      case ResourceType.Organization:
-        workspace = {organizationId: this.resource?.id};
-        break;
-      case ResourceType.Project:
-        const project = <Project>this.resource;
-        workspace = {organizationId: project.organizationId, projectId: project.id};
-        break;
-    }
-    this.store$.dispatch(ResourceVariableActions.get({workspace}));
   }
 
   private sortVariables(variables: ResourceVariable[]): ResourceVariable[] {
