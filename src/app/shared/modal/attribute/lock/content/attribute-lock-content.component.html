@@ -1,5 +1,17 @@
-<constraint-conditions-form [attribute]="attribute"
+<div class="d-inline-flex switch-wrapper p-1">
+  <div class="px-3 cursor-pointer mr-1" (click)="editable$.next(true)"
+       [ngClass]="(editable$ | async) ? 'badge badge-lg badge-success' : ''">Always editable
+  </div>
+  <div class="px-3 cursor-pointer ml-1" (click)="editable$.next(false)"
+       [ngClass]="(editable$ | async) ? '' : 'badge badge-lg badge-success'">Always locked
+  </div>
+</div>
+
+<constraint-conditions-form class="d-block mt-4"
+                            [attribute]="attribute"
                             [resource]="resource"
                             [filtersArray]="filtersControl"
+                            label="Exceptions"
+                            buttonLabel="Add exception"
                             [equation]="">
 </constraint-conditions-form>

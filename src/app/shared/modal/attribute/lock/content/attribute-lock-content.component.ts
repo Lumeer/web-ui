@@ -21,6 +21,7 @@ import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'attribute-lock-content',
@@ -36,6 +37,8 @@ export class AttributeLockContentComponent implements OnInit {
   public attribute: Attribute;
 
   public form: FormGroup;
+
+  public editable$ = new BehaviorSubject(true);
 
   constructor(private fb: FormBuilder) {}
 

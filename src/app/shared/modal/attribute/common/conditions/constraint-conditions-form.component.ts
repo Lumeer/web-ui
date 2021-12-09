@@ -60,6 +60,12 @@ export class ConstraintConditionsFormComponent implements OnChanges {
   @Input()
   public attribute: Attribute;
 
+  @Input()
+  public label: string;
+
+  @Input()
+  public buttonLabel: string;
+
   public attributeSelectItems: SelectItem2Model[];
 
   public ngOnChanges(changes: SimpleChanges) {
