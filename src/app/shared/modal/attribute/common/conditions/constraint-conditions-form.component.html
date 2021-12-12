@@ -1,4 +1,4 @@
-<label>{{label}}</label>
+<label *ngIf="label">{{label}}</label>
 
 <div *ngFor="let group of filtersArray?.controls; let first = first; let index = index">
   <constraint-condition-form class="d-block"

@@ -126,8 +126,8 @@ export class ConstraintConditionsFormComponent implements OnChanges {
 
 export function createActionEquationFromFormArray(filtersArray: FormArray): AttributeFilterEquation {
   const filters = <{[key in ConstraintFiltersFormControl]: any}[]>filtersArray.value;
-  const equations: AttributeFilterEquation[] = filters
-    ?.filter(fil => fil.attribute && areConditionValuesDefined(fil.condition, fil.values, fil.constraintType))
+  const equations: AttributeFilterEquation[] = (filters || [])
+    .filter(fil => fil.attribute && areConditionValuesDefined(fil.condition, fil.values, fil.constraintType))
     .map(fil => {
       const numConditionValues = conditionTypeNumberOfInputs(fil.condition);
       const conditionValues = fil.values?.slice(0, numConditionValues) || [];
@@ -136,6 +136,6 @@ export function createActionEquationFromFormArray(filtersArray: FormArray): Attr
         operator: fil.operator,
       };
     });
-  const operator = equations?.length === 1 ? EquationOperator.And : equations?.[0]?.operator;
+  const operator = equations.length === 1 ? EquationOperator.And : equations[0]?.operator;
   return {equations, operator};
 }

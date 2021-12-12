@@ -36,7 +36,7 @@
     </button>
   </div>
 
-  <div *ngIf="!(type | isOrganizationType) && canManageDetail" class="text-center">
+  <div *ngIf="!(type | isOrganizationType) && canManageDetail" class="text-center mt-2">
     <button (click)="goToProjectSettings('users')" class="btn btn-primary btn-sm">
       <i class="fas fa-cog mr-1"></i>
       <span i18n="@@resource.detail.organization.configure">Configure</span>

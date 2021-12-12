@@ -215,7 +215,7 @@ export class ModalService {
     workspace?: Workspace
   ): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId, workspace};
-    return this.showStaticDialog(initialState, AttributeLockModalComponent);
+    return this.showStaticDialog(initialState, AttributeLockModalComponent, 'modal-lg');
   }
 
   public showStaticDialog(

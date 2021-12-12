@@ -27,9 +27,13 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {AttributeLockModalComponent} from './attribute-lock-modal.component';
 import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
 import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
+import {DataInputModule} from '../../../data-input/data-input.module';
+import {AttributeLockExceptionGroupComponent} from './content/exception-group/attribute-lock-exception-group.component';
+import {BoxModule} from '../../../box/box.module';
+import {SelectModule} from '../../../select/select.module';
 
 @NgModule({
-  declarations: [AttributeLockModalComponent, AttributeLockContentComponent],
+  declarations: [AttributeLockModalComponent, AttributeLockContentComponent, AttributeLockExceptionGroupComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -38,6 +42,9 @@ import {AttributeLockContentComponent} from './content/attribute-lock-content.co
     PipesModule,
     TooltipModule,
     AttributeCommonModalModule,
+    DataInputModule,
+    BoxModule,
+    SelectModule,
   ],
   exports: [AttributeLockModalComponent],
 })

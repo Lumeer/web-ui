@@ -1,0 +1,28 @@
+<div class="small text-muted">#{{index + 1}}</div>
+
+<select-item2 class="d-inline-block"
+              [items]="typeItems"
+              [selectedPath]="[typeControl.value]"
+              [removable]="false"
+              (selectPath)="onTypePathSelected($event)">
+</select-item2>
+
+<user-data-input *ngIf="typeControl.value === type.UsersAndTeams"
+                 class="w-100 form-control p-0 mt-2 cursor-pointer"
+                 [value]="userDataValue$ | async"
+                 [focus]="true"
+                 [readonly]="!(editing$ | async)"
+                 (click)="onClick()"
+                 (cancel)="onCancel()"
+                 (save)="onSave($event)">
+</user-data-input>
+
+<constraint-conditions-form class="d-block mt-1"
+                            [attribute]="attribute"
+                            [resource]="resource"
+                            [filtersArray]="filtersControl"
+                            buttonLabel="Add exception"
+                            [equation]="exceptionGroup?.equation">
+</constraint-conditions-form>
+
+<i class="fal fa-trash-alt delete-icon text-danger clickable" (click)="delete.emit()"></i>

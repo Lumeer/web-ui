@@ -34,7 +34,6 @@ import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
 import {PreviewResultsModule} from './preview-results/preview-results.module';
-import {ResourceHeaderComponent} from './resource/header/resource-header.component';
 import {SelectModule} from './select/select.module';
 import {TagModule} from './tag/tag.module';
 import {SearchBoxModule} from './top-panel/search-box/search-box.module';
@@ -59,7 +58,7 @@ import {MenuModule} from './menu/menu.module';
 import {ButtonModule} from './button/button.module';
 import {LoadingModule} from './loading/loading.module';
 import {ProgressModule} from './progress/progress.module';
-import {HintBoxModule} from './hint-box/hint-box.module';
+import {BoxModule} from './box/box.module';
 import {LayoutModule} from './layout/layout.module';
 import {FiltersModule} from './filters/filters.module';
 import {ResourceModuleModule} from './resource/resource-module.module';
@@ -104,7 +103,7 @@ import {ResourceModuleModule} from './resource/resource-module.module';
     MenuModule,
     ButtonModule,
     ProgressModule,
-    HintBoxModule,
+    BoxModule,
     LayoutModule,
     FiltersModule,
     ResourceModuleModule,
@@ -151,7 +150,7 @@ import {ResourceModuleModule} from './resource/resource-module.module';
     MenuModule,
     ButtonModule,
     ProgressModule,
-    HintBoxModule,
+    BoxModule,
     LayoutModule,
     FiltersModule,
     ResourceModuleModule,

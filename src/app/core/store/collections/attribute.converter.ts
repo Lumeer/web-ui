@@ -19,8 +19,20 @@
 
 import {createConstraint} from '../../../shared/utils/constraint/create-constraint';
 import {convertToBig} from '../../../shared/utils/data.utils';
-import {AttributeDto, AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
-import {Attribute, AttributeFunction} from './collection';
+import {
+  AttributeDto,
+  AttributeFunctionDto,
+  AttributeLockDto,
+  AttributeLockExceptionGroupDto,
+  ConstraintDto,
+} from '../../dto/attribute.dto';
+import {
+  Attribute,
+  AttributeFunction,
+  AttributeLock,
+  AttributeLockExceptionGroup,
+  AttributeLockGroupType,
+} from './collection';
 import {
   Constraint,
   ConstraintConfig,
@@ -32,6 +44,10 @@ import {
   UnknownConstraint,
 } from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../shared/picker/colors';
+import {
+  convertAttributeFilterEquationToDto,
+  convertAttributeFilterEquationToModel,
+} from '../../dto/attribute-filter-equation.dto';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {
@@ -40,8 +56,26 @@ export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: st
     description: dto.description,
     constraint: convertAttributeConstraintDtoToModel(dto.constraint),
     function: convertAttributeFunctionDtoToModel(dto.function),
+    lock: convertAttributeLockDtoToModel(dto.lock),
     usageCount: dto.usageCount,
     correlationId: correlationId,
+  };
+}
+
+export function convertAttributeLockDtoToModel(dto: AttributeLockDto): AttributeLock {
+  return (
+    dto && {
+      locked: dto.locked,
+      exceptionGroups: (dto.exceptionGroups || []).map(group => convertAttributeLockGroupDtoToModel(group)),
+    }
+  );
+}
+
+export function convertAttributeLockGroupDtoToModel(dto: AttributeLockExceptionGroupDto): AttributeLockExceptionGroup {
+  return {
+    type: <AttributeLockGroupType>dto.type,
+    typeValue: dto.typeValue,
+    equation: convertAttributeFilterEquationToModel(dto.equation),
   };
 }
 
@@ -52,6 +86,26 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
     description: model.description,
     constraint: convertAttributeConstraintModelToDto(model.constraint),
     function: convertAttributeFunctionModelToDto(model.function),
+    lock: convertAttributeLockModelToDto(model.lock),
+  };
+}
+
+export function convertAttributeLockModelToDto(model: AttributeLock): AttributeLockDto {
+  return (
+    model && {
+      locked: model.locked,
+      exceptionGroups: (model.exceptionGroups || []).map(group => convertAttributeLockGroupModelToDto(group)),
+    }
+  );
+}
+
+export function convertAttributeLockGroupModelToDto(
+  model: AttributeLockExceptionGroup
+): AttributeLockExceptionGroupDto {
+  return {
+    type: model.type?.toString(),
+    typeValue: model.typeValue,
+    equation: convertAttributeFilterEquationToDto(model.equation),
   };
 }
 

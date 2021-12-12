@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {AttributesResource} from '../../../../../core/model/resource';
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs';
+import {
+  Attribute,
+  AttributeLockExceptionGroup,
+  AttributeLockGroupType,
+} from '../../../../../core/store/collections/collection';
+import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'attribute-lock-content',
@@ -38,17 +41,36 @@ export class AttributeLockContentComponent implements OnInit {
 
   public form: FormGroup;
 
-  public editable$ = new BehaviorSubject(true);
-
   constructor(private fb: FormBuilder) {}
 
   public ngOnInit() {
     this.form = this.fb.group({
+      locked: this.attribute?.lock?.locked,
+      groups: this.fb.array((this.attribute?.lock?.exceptionGroups || []).map(group => this.createGroupControl(group))),
+    });
+  }
+
+  private createGroupControl(group?: AttributeLockExceptionGroup): FormGroup {
+    return this.fb.group({
+      type: group?.type || AttributeLockGroupType.Everyone,
+      typeValue: group?.typeValue,
       filters: this.fb.array([]),
     });
   }
 
-  public get filtersControl(): FormArray {
-    return <FormArray>this.form.controls.filters;
+  public get lockedControl(): AbstractControl {
+    return this.form.controls.locked;
+  }
+
+  public get groupsControl(): FormArray {
+    return <FormArray>this.form.controls.groups;
+  }
+
+  public onAddGroup() {
+    this.groupsControl.push(this.createGroupControl());
+  }
+
+  public onDeleteGroup(index: number) {
+    this.groupsControl.removeAt(index);
   }
 }

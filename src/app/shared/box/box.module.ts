@@ -17,38 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeFilterEquationDto} from './attribute-filter-equation.dto';
+import {NgModule} from '@angular/core';
+import {HintBoxModule} from './hint/hint-box.module';
+import {InfoBoxComponent} from './info/info-box.component';
 
-export interface AttributeDto {
-  id?: string;
-  name: string;
-  constraint?: ConstraintDto;
-  description?: string;
-  function?: AttributeFunctionDto;
-  lock?: AttributeLockDto;
-  usageCount?: number;
-}
-
-export interface ConstraintDto {
-  type: string;
-  config: any;
-}
-
-export interface AttributeFunctionDto {
-  js?: string;
-  xml?: string;
-  errorReport?: string;
-  timestamp?: number;
-  editable?: boolean;
-}
-
-export interface AttributeLockDto {
-  locked?: boolean;
-  exceptionGroups: AttributeLockExceptionGroupDto[];
-}
-
-export interface AttributeLockExceptionGroupDto {
-  type?: string;
-  typeValue?: string[];
-  equation?: AttributeFilterEquationDto;
-}
+@NgModule({
+  imports: [HintBoxModule],
+  exports: [HintBoxModule, InfoBoxComponent],
+  declarations: [InfoBoxComponent],
+})
+export class BoxModule {}

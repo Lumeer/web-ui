@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {HintBoxComponent} from './hint-box.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 
-@NgModule({
-  declarations: [HintBoxComponent],
-  imports: [CommonModule],
-  exports: [HintBoxComponent],
+@Component({
+  selector: 'info-box',
+  templateUrl: './info-box.component.html',
+  styleUrls: ['./info-box.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HintBoxModule {}
+export class InfoBoxComponent {}

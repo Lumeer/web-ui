@@ -19,11 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {selectCurrentUser} from '../../core/store/users/users.state';
+import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {UsersAction} from '../../core/store/users/users.action';
+import {UsersAction} from '../../../core/store/users/users.action';
 import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({

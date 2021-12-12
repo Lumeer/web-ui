@@ -31,7 +31,6 @@ import {findAttribute} from '../../../../core/store/collections/collection.util'
 import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
 
 @Component({
-  selector: 'attribute-lock',
   templateUrl: './attribute-lock-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
