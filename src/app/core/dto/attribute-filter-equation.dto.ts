@@ -34,7 +34,7 @@ export function convertAttributeFilterEquationToDto(equation: AttributeFilterEqu
   return (
     equation && {
       equations: (equation.equations || []).map(eq => convertAttributeFilterEquationToDto(eq)).filter(eq => !!eq),
-      operator: equation.operator?.toString(),
+      operator: String(equation.operator),
       filter: convertAttributeFilterModelToDto(equation.filter),
     }
   );

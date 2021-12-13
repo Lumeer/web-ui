@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {Attribute, AttributeLock, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
@@ -29,6 +29,10 @@ import {selectCollectionById} from '../../../../core/store/collections/collectio
 import {map} from 'rxjs/operators';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
+import {AttributeDescriptionContentComponent} from '../description/content/attribute-description-content.component';
+import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
 
 @Component({
   templateUrl: './attribute-lock-modal.component.html',
@@ -46,6 +50,9 @@ export class AttributeLockModalComponent implements OnInit {
 
   @Input()
   public workspace: Workspace;
+
+  @ViewChild(AttributeLockContentComponent)
+  public contentComponent: AttributeLockContentComponent;
 
   public collection$: Observable<Collection>;
   public linkType$: Observable<LinkType>;
@@ -67,7 +74,45 @@ export class AttributeLockModalComponent implements OnInit {
     }
   }
 
-  public onSubmit() {}
+  public onSubmit() {
+    this.contentComponent?.onSubmit();
+  }
+
+  public onLockChange(lock: AttributeLock, attribute: Attribute) {
+    this.performingAction$.next(true);
+    const newAttribute = {...attribute, lock};
+    if (this.collectionId) {
+      this.updateCollectionAttribute(this.collectionId, newAttribute);
+    } else if (this.linkTypeId) {
+      this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
+    }
+  }
+
+  private updateCollectionAttribute(collectionId: string, attribute: Attribute) {
+    this.store$.dispatch(
+      new CollectionsAction.ChangeAttribute({
+        collectionId,
+        attributeId: attribute.id,
+        attribute,
+        workspace: this.workspace,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
+
+  private updateLinkTypeAttribute(linkTypeId: string, attribute: Attribute) {
+    this.store$.dispatch(
+      new LinkTypesAction.UpdateAttribute({
+        linkTypeId,
+        attributeId: attribute.id,
+        attribute,
+        workspace: this.workspace,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
 
   public hideDialog() {
     this.bsModalRef.hide();

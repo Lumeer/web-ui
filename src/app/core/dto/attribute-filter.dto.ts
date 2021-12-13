@@ -53,11 +53,13 @@ export function convertLinkAttributeFilterDtoToModel(dto: LinkAttributeFilterDto
 }
 
 export function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFilter {
-  return {
-    attributeId: dto.attributeId,
-    condition: <ConditionType>dto.condition,
-    conditionValues: (dto.conditionValues || []).map(item => ({value: item.value, type: item.type})),
-  };
+  return (
+    dto && {
+      attributeId: dto.attributeId,
+      condition: <ConditionType>dto.condition,
+      conditionValues: (dto.conditionValues || []).map(item => ({value: item.value, type: item.type})),
+    }
+  );
 }
 
 export function convertCollectionAttributeFilterModelToDto(
@@ -77,9 +79,11 @@ export function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter)
 }
 
 export function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
-  return {
-    attributeId: model.attributeId,
-    condition: model.condition,
-    conditionValues: (model.conditionValues || []).map(item => ({value: item.value, type: item.type})),
-  };
+  return (
+    model && {
+      attributeId: model.attributeId,
+      condition: model.condition,
+      conditionValues: (model.conditionValues || []).map(item => ({value: item.value, type: item.type})),
+    }
+  );
 }

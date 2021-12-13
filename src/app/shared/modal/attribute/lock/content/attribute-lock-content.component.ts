@@ -17,14 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {
   Attribute,
+  AttributeLock,
   AttributeLockExceptionGroup,
   AttributeLockGroupType,
 } from '../../../../../core/store/collections/collection';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {createRange} from '../../../../utils/array.utils';
+import {createActionEquationFromFormArray} from '../../common/conditions/constraint-conditions-form.component';
 
 @Component({
   selector: 'attribute-lock-content',
@@ -39,6 +42,9 @@ export class AttributeLockContentComponent implements OnInit {
   @Input()
   public attribute: Attribute;
 
+  @Output()
+  public lockChange = new EventEmitter<AttributeLock>();
+
   public form: FormGroup;
 
   constructor(private fb: FormBuilder) {}
@@ -51,9 +57,9 @@ export class AttributeLockContentComponent implements OnInit {
   }
 
   private createGroupControl(group?: AttributeLockExceptionGroup): FormGroup {
-    return this.fb.group({
-      type: group?.type || AttributeLockGroupType.Everyone,
-      typeValue: group?.typeValue,
+    return new FormGroup({
+      type: this.fb.control(group?.type || AttributeLockGroupType.Everyone),
+      typeValue: this.fb.control(group?.typeValue),
       filters: this.fb.array([]),
     });
   }
@@ -64,6 +70,28 @@ export class AttributeLockContentComponent implements OnInit {
 
   public get groupsControl(): FormArray {
     return <FormArray>this.form.controls.groups;
+  }
+
+  public onSubmit() {
+    const exceptionGroups: AttributeLockExceptionGroup[] = createRange(0, this.groupsControl.length).reduce<
+      AttributeLockExceptionGroup[]
+    >((groups, index) => {
+      const group = this.groupsControl.at(index) as FormGroup;
+      const filtersArray = group.controls.filters as FormArray;
+
+      const equation = createActionEquationFromFormArray(filtersArray);
+      if (equation.equations.length > 0) {
+        groups.push({
+          type: group.value.type,
+          typeValue: group.value.typeValue,
+          equation,
+        });
+      }
+      return groups;
+    }, []);
+    const locked = this.lockedControl.value;
+
+    this.lockChange.emit({locked, exceptionGroups});
   }
 
   public onAddGroup() {

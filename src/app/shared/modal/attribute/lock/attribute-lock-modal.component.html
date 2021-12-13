@@ -18,7 +18,8 @@
   <div class="body" *ngIf="data.attribute; else notFound">
     <attribute-lock-content class="p-3 d-block"
                             [resource]="data.collection || data.linkType"
-                            [attribute]="data.attribute">
+                            [attribute]="data.attribute"
+                            (lockChange)="onLockChange($event, data.attribute)">
     </attribute-lock-content>
   </div>
 
