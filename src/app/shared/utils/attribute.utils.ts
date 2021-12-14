@@ -322,3 +322,7 @@ export function mergeAttributeOverride(attribute: Attribute, override: Partial<A
 
   return {...attribute, mandatory: attribute.mandatory || override?.mandatory};
 }
+
+export function isUsedConstraintAttribute(attribute: Attribute, type: ConstraintType): boolean {
+  return attribute?.usageCount > 0 && attribute.constraint?.type === type;
+}
