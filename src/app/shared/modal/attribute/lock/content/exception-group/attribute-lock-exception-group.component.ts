@@ -42,6 +42,9 @@ import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.
 })
 export class AttributeLockExceptionGroupComponent implements OnInit {
   @Input()
+  public locked: boolean;
+
+  @Input()
   public group: FormGroup;
 
   @Input()
@@ -52,9 +55,6 @@ export class AttributeLockExceptionGroupComponent implements OnInit {
 
   @Input()
   public attribute: Attribute;
-
-  @Input()
-  public index: number;
 
   @Output()
   public delete = new EventEmitter();
@@ -68,8 +68,16 @@ export class AttributeLockExceptionGroupComponent implements OnInit {
 
   constructor(private store$: Store<AppState>) {
     this.typeItems = [
-      {id: AttributeLockGroupType.Everyone, value: 'Everyone', icons: ['fas fa-users']},
-      {id: AttributeLockGroupType.UsersAndTeams, value: 'Users/Teams', icons: ['fas fa-user-cog']},
+      {
+        id: AttributeLockGroupType.Everyone,
+        value: $localize`:@@resource.attribute.lock.group.type.everyone:Everyone`,
+        icons: ['fas fa-users'],
+      },
+      {
+        id: AttributeLockGroupType.UsersAndTeams,
+        value: $localize`:@@resource.attribute.lock.group.type.users:Users and Teams`,
+        icons: ['fas fa-user-cog'],
+      },
     ];
   }
 

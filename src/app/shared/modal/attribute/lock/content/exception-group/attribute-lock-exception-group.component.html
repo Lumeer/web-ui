@@ -1,5 +1,3 @@
-<div class="small text-muted">#{{index + 1}}</div>
-
 <select-item2 class="d-inline-block"
               [items]="typeItems"
               [selectedPath]="[typeControl.value]"
@@ -12,17 +10,27 @@
                  [value]="userDataValue$ | async"
                  [focus]="true"
                  [readonly]="!(editing$ | async)"
+                 placeholder="Select Users and Teams"
+                 i18n-placeholder="@@resource.attribute.lock.group.type.users.placeholder"
                  (click)="onClick()"
                  (cancel)="onCancel()"
                  (save)="onSave($event)">
 </user-data-input>
+
+<div class="font-italic mb-2-5" [ngClass]="typeControl.value === type.UsersAndTeams ? 'mt-2' : 'mt-1'">
+  <span *ngIf="locked" i18n="@@resource.attribute.lock.group.divider.locked">can edit when</span>
+  <span *ngIf="!locked" i18n="@@resource.attribute.lock.group.divider.editable">can not edit when</span>
+</div>
 
 <constraint-conditions-form class="d-block mt-1"
                             [attribute]="attribute"
                             [resource]="resource"
                             [filtersArray]="filtersControl"
                             buttonLabel="Add exception"
+                            i18n-buttonLabel="@@resource.attribute.lock.group.exception.add"
                             [equation]="exceptionGroup?.equation">
 </constraint-conditions-form>
 
-<i class="fal fa-trash-alt delete-icon text-danger clickable" (click)="delete.emit()"></i>
+<i class="fal fa-trash-alt delete-icon text-danger clickable"
+   tooltip="Delete whole group"
+   i18n-tooltip="@@resource.attribute.lock.group.action.delete" (click)="delete.emit()"></i>

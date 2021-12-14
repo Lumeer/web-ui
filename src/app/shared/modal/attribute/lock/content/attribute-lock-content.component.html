@@ -1,34 +1,36 @@
 <div class="d-inline-flex switch-wrapper p-1">
-  <div class="px-3 cursor-pointer mr-1 text-nowrap" (click)="lockedControl.setValue(false)"
-       [ngClass]="lockedControl.value ? '' :'badge badge-lg badge-success'">
-    <i class="far fa-lock-open mr-2"></i><span>Always editable</span>
+  <div class="px-3 py-2 cursor-pointer mr-1 d-flex align-items-center badge-lg" (click)="lockedControl.setValue(false)"
+       [ngClass]="lockedControl.value ? '' :'badge badge-success'">
+    <i class="far fa-lock-open mr-2"></i><span i18n="@@resource.attribute.lock.editable">Always editable</span>
   </div>
-  <div class="px-3 cursor-pointer ml-1 text-nowrap" (click)="lockedControl.setValue(true)"
-       [ngClass]="lockedControl.value ?  'badge badge-lg badge-success' : ''">
-    <i class="far fa-lock mr-2"></i><span>Always locked</span>
+  <div class="px-3 py-2 cursor-pointer ml-1 d-flex align-items-center badge-lg" (click)="lockedControl.setValue(true)"
+       [ngClass]="lockedControl.value ?  'badge badge-success' : ''">
+    <i class="far fa-lock mr-2"></i><span i18n="@@resource.attribute.lock.locked">Always locked</span>
   </div>
 </div>
 
 <info-box class="mt-3">
-  <div class="text-info" *ngIf="lockedControl.value">
+  <div class="text-info" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
     Attribute will be locked for everyone. You can add multiple exceptions to enable editing for certain users and by defined filters.
   </div>
 
-  <div class="text-info" *ngIf="!lockedControl.value">
+  <div class="text-info" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
     Attribute will be editable for everyone. You can add multiple exceptions to disable editing for certain users and by defined filters.
   </div>
 
-  <button *ngIf="groupsControl.length === 0" class="btn btn-sm btn-outline-primary mt-2" (click)="onAddGroup()">Add exception group</button>
+  <button *ngIf="groupsControl.length === 0" class="btn btn-sm btn-outline-primary mt-2"
+          (click)="onAddGroup()" i18n="@@resource.attribute.lock.action.add">Add exception group</button>
 </info-box>
 
 <attribute-lock-exception-group *ngFor="let group of groupsControl?.controls; let index = index;"
                                 class="d-block mt-3"
-                                [index]="index"
                                 [group]="group"
+                                [locked]="lockedControl.value"
                                 [resource]="resource"
                                 [attribute]="attribute"
                                 [exceptionGroup]="attribute.lock?.exceptionGroups && attribute.lock?.exceptionGroups[index]"
                                 (delete)="onDeleteGroup(index)">
 </attribute-lock-exception-group>
 
-<button *ngIf="groupsControl.length > 0" class="btn btn-sm btn-outline-primary mt-3" (click)="onAddGroup()">Add exception group</button>
+<button *ngIf="groupsControl.length > 0" class="btn btn-sm btn-outline-primary mt-3"
+        (click)="onAddGroup()" i18n="@@resource.attribute.lock.action.add">Add exception group</button>

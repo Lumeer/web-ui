@@ -4,6 +4,8 @@
      [class.justify-content-center]="onlyIcon && configuration?.allowCenterOnlyIcon"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
+  <div class="text-muted px-1" *ngIf="readonly && placeholder && !data.selectedUsers.length && !data.selectedTeams.length">{{placeholder}}</div>
+
   <ng-container *ngIf="multi || readonly">
 
     <div *ngFor="let team of data.selectedTeams; trackBy: trackByTeam"
