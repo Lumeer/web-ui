@@ -60,6 +60,8 @@ import {PercentageConstraintConfigStyleComponent} from './form/constraint-config
 import {ProgressModule} from '../../../progress/progress.module';
 import {ViewConstraintConfigFormComponent} from './form/constraint-config/view/view-constraint-config-form.component';
 import {AttributeCommonModalModule} from '../common/attribute-common-modal.module';
+import {AttributeLockModalModule} from '../lock/attribute-lock-modal.module';
+import {AttributeLockPreviewComponent} from './form/constraint-config/action/lock-preview/attribute-lock-preview.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +90,7 @@ import {AttributeCommonModalModule} from '../common/attribute-common-modal.modul
     ActionConstraintConfirmationFormComponent,
     PercentageConstraintConfigStyleComponent,
     ViewConstraintConfigFormComponent,
+    AttributeLockPreviewComponent,
   ],
   imports: [
     CommonModule,
@@ -107,6 +110,7 @@ import {AttributeCommonModalModule} from '../common/attribute-common-modal.modul
     InputModule,
     ProgressModule,
     AttributeCommonModalModule,
+    AttributeLockModalModule,
   ],
   exports: [AttributeTypeModalComponent, SelectConstraintOptionsFormComponent],
 })

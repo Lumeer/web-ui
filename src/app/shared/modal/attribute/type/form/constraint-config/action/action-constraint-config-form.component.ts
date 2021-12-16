@@ -18,15 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild} from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../../utils/form.utils';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
 import {COLOR_SUCCESS} from '../../../../../../../core/constants';
@@ -35,8 +27,7 @@ import {Rule, RuleType} from '../../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
 import {AttributesResource} from '../../../../../../../core/model/resource';
 import {IconColorPickerComponent} from '../../../../../../picker/icon-color/icon-color-picker.component';
-import {RoleType} from '../../../../../../../core/model/role-type';
-import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {Attribute, AttributeLock} from '../../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ActionConstraintConfig, ConstraintType} from '@lumeer/data-filters';
 
@@ -51,6 +42,9 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
 
   @Input()
   public form: FormGroup;
+
+  @Input()
+  public lockControl: FormControl;
 
   @Input()
   public resource: AttributesResource;
@@ -85,10 +79,6 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     return <FormControl>this.form.controls[ActionConstraintFormControl.Rule];
   }
 
-  public get roleControl(): FormControl {
-    return <FormControl>this.form.controls[ActionConstraintFormControl.Role];
-  }
-
   public get titleUserControl(): FormControl {
     return <FormControl>this.form.controls[ActionConstraintFormControl.TitleUser];
   }
@@ -99,10 +89,6 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
 
   public get iconControl(): FormControl {
     return <FormControl>this.form.controls[ActionConstraintFormControl.Icon];
-  }
-
-  public get filtersControl(): FormArray {
-    return <FormArray>this.form.controls[ActionConstraintFormControl.Filters];
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -130,15 +116,9 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   }
 
   private createForm() {
-    this.addPermissionsForm();
     this.addButtonForms();
     this.addConfirmationForms();
     this.addRuleForm();
-    this.addConditionsForm();
-  }
-
-  private addPermissionsForm() {
-    this.form.addControl(ActionConstraintFormControl.Role, new FormControl(this.config?.role || RoleType.Read));
   }
 
   private addButtonForms() {
@@ -181,10 +161,6 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
     return this.config?.rule && this.rules?.find(r => r.id === this.config.rule);
   }
 
-  private addConditionsForm() {
-    this.form.addControl(ActionConstraintFormControl.Filters, new FormArray([]));
-  }
-
   public ngOnDestroy() {
     this.subscription.unsubscribe();
   }
@@ -202,6 +178,10 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   public onIconColorRemove() {
     this.colorControl.setValue(null);
     this.iconControl.setValue(null);
+  }
+
+  public onLockChange(lock: AttributeLock) {
+    this.lockControl?.setValue(lock);
   }
 }
 

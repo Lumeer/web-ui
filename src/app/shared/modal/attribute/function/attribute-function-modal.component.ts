@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {Attribute, AttributeFunction, Collection} from '../../../../core/store/collections/collection';
+import {Attribute, AttributeFunction, AttributeLock, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -154,15 +154,21 @@ export class AttributeFunctionModalComponent implements OnInit {
         ...attribute.function,
         js: this.form.value.js,
         xml: this.form.value.xml,
-        editable: this.form.value.editable,
       },
+      lock: this.createInitialLockIfNeeded(attribute),
     };
     if (this.collectionId) {
       this.updateCollectionAttribute(this.collectionId, newAttribute);
-    }
-    if (this.linkTypeId) {
+    } else if (this.linkTypeId) {
       this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
     }
+  }
+
+  private createInitialLockIfNeeded(attribute: Attribute): AttributeLock {
+    if (attribute.lock) {
+      return attribute.lock;
+    }
+    return {locked: true, exceptionGroups: []};
   }
 
   private updateCollectionAttribute(collectionId: string, attribute: Attribute) {

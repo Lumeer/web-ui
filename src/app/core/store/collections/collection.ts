@@ -44,7 +44,6 @@ export interface AttributeFunction {
   xml?: string;
   errorReport?: string;
   timestamp?: number;
-  editable?: boolean;
   dryRun?: boolean;
   dryRunResult?: string;
   recursive?: boolean;

@@ -52,7 +52,6 @@ import {AttributesResource} from '../../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Constraint, ConstraintConfig, ConstraintType, SelectConstraintConfig} from '@lumeer/data-filters';
 import {ViewConstraintFormControl} from './constraint-config/view/view-constraint-form-control';
-import {createActionEquationFromFormArray} from '../../common/conditions/constraint-conditions-form.component';
 import {isUsedConstraintAttribute} from '../../../../utils/attribute.utils';
 
 @Component({
@@ -76,6 +75,7 @@ export class AttributeTypeFormComponent implements OnChanges {
   public form = new FormGroup({
     type: new FormControl(),
     config: new FormGroup({}),
+    lock: new FormControl(),
   });
 
   constructor(private notificationService: NotificationService) {}
@@ -109,7 +109,8 @@ export class AttributeTypeFormComponent implements OnChanges {
     const config = this.createConstraintConfig(type);
     const constraint: Constraint = type ? createConstraint(type, config) : null;
     const attributeFunction: AttributeFunction = constraint.allowEditFunction ? this.attribute?.function : null;
-    return {...this.attribute, constraint, function: attributeFunction};
+    const lock = this.lockControl.value;
+    return {...this.attribute, constraint, function: attributeFunction, lock: lock || this.attribute.lock};
   }
 
   private createConstraintConfig(type: ConstraintType): ConstraintConfig {
@@ -198,10 +199,6 @@ export class AttributeTypeFormComponent implements OnChanges {
           icon: this.configForm.get(ActionConstraintFormControl.Icon).value,
           background: this.configForm.get(ActionConstraintFormControl.Background).value,
           rule: this.configForm.get(ActionConstraintFormControl.Rule).value,
-          role: this.configForm.get(ActionConstraintFormControl.Role).value,
-          equation: createActionEquationFromFormArray(
-            this.configForm.get(ActionConstraintFormControl.Filters) as FormArray
-          ),
           requiresConfirmation,
           confirmationTitle: requiresConfirmation
             ? this.configForm.get(ActionConstraintFormControl.ConfirmationTitle).value?.trim()
@@ -275,5 +272,9 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   public get configForm(): AbstractControl {
     return this.form.get('config');
+  }
+
+  public get lockControl(): AbstractControl {
+    return this.form.get('lock');
   }
 }

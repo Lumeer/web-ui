@@ -19,7 +19,7 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {Attribute, AttributeLock, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -31,7 +31,6 @@ import {findAttribute} from '../../../../core/store/collections/collection.util'
 import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {AttributeDescriptionContentComponent} from '../description/content/attribute-description-content.component';
 import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
 
 @Component({
@@ -51,6 +50,12 @@ export class AttributeLockModalComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public overrideLock: AttributeLock;
+
+  @Input()
+  public handleSubmit: boolean;
+
   @ViewChild(AttributeLockContentComponent)
   public contentComponent: AttributeLockContentComponent;
 
@@ -58,19 +63,28 @@ export class AttributeLockModalComponent implements OnInit {
   public linkType$: Observable<LinkType>;
   public attribute$: Observable<Attribute>;
 
+  public onSubmit$ = new Subject<AttributeLock>();
   public performingAction$ = new BehaviorSubject(false);
+  public overrideLock$ = new BehaviorSubject<AttributeLock>(null);
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.overrideLock$.next(this.overrideLock);
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
-      this.attribute$ = this.collection$.pipe(
-        map(collection => findAttribute(collection?.attributes, this.attributeId))
+      this.attribute$ = combineLatest([this.collection$, this.overrideLock$]).pipe(
+        map(([collection, overrideLock]) =>
+          checkOverrideLock(findAttribute(collection?.attributes, this.attributeId), overrideLock)
+        )
       );
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
-      this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
+      this.attribute$ = combineLatest([this.linkType$, this.overrideLock$]).pipe(
+        map(([linkType, overrideLock]) =>
+          checkOverrideLock(findAttribute(linkType?.attributes, this.attributeId), overrideLock)
+        )
+      );
     }
   }
 
@@ -79,12 +93,17 @@ export class AttributeLockModalComponent implements OnInit {
   }
 
   public onLockChange(lock: AttributeLock, attribute: Attribute) {
-    this.performingAction$.next(true);
-    const newAttribute = {...attribute, lock};
-    if (this.collectionId) {
-      this.updateCollectionAttribute(this.collectionId, newAttribute);
-    } else if (this.linkTypeId) {
-      this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
+    if (this.handleSubmit) {
+      this.onSubmit$.next(lock);
+      this.hideDialog();
+    } else {
+      this.performingAction$.next(true);
+      const newAttribute = {...attribute, lock};
+      if (this.collectionId) {
+        this.updateCollectionAttribute(this.collectionId, newAttribute);
+      } else if (this.linkTypeId) {
+        this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
+      }
     }
   }
 
@@ -117,4 +136,8 @@ export class AttributeLockModalComponent implements OnInit {
   public hideDialog() {
     this.bsModalRef.hide();
   }
+}
+
+function checkOverrideLock(attribute: Attribute, lock: AttributeLock): Attribute {
+  return {...attribute, lock: lock || attribute.lock};
 }

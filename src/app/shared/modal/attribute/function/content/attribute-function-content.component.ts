@@ -62,7 +62,6 @@ export class AttributeFunctionContentComponent implements OnInit {
       xml: this.attributeFunction?.xml,
       dryRun: this.attributeFunction?.dryRun,
       recursive: this.attributeFunction?.recursive,
-      editable: this.attribute?.function?.editable || false,
     });
   }
 }

@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {AttributesResource} from '../../../../../../core/model/resource';
@@ -39,6 +39,9 @@ export class ConstraintConfigFormComponent implements OnChanges {
 
   @Input()
   public form: FormGroup;
+
+  @Input()
+  public lockControl: FormControl;
 
   @Input()
   public type: ConstraintType;

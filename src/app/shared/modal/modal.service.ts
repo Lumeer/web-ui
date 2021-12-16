@@ -59,6 +59,7 @@ import {userHasRoleInOrganization} from '../utils/permission.utils';
 import {RoleType} from '../../core/model/role-type';
 import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
+import {AttributeLock} from '../../core/store/collections/collection';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -212,9 +213,11 @@ export class ModalService {
     attributeId: string,
     collectionId: string,
     linkTypeId?: string,
+    handleSubmit = false,
+    overrideLock?: AttributeLock,
     workspace?: Workspace
   ): BsModalRef {
-    const initialState = {attributeId, collectionId, linkTypeId, workspace};
+    const initialState = {attributeId, collectionId, linkTypeId, workspace, overrideLock, handleSubmit};
     return this.showStaticDialog(initialState, AttributeLockModalComponent, 'modal-lg');
   }
 
@@ -238,7 +241,7 @@ export class ModalService {
     collectionId: string,
     linkTypeId?: string,
     workspace?: Workspace
-  ) {
+  ): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId, workspace};
     return this.showStaticDialog(initialState, AttributeDescriptionModalComponent);
   }

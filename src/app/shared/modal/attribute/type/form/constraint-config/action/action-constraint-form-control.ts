@@ -23,8 +23,6 @@ export enum ActionConstraintFormControl {
   TitleUser = 'titleUser',
   Background = 'background',
   Rule = 'rule',
-  Role = 'role',
-  Filters = 'filters',
   RequiresConfirmation = 'requiresConfirmation',
   ConfirmationTitle = 'confirmationTitle',
 }

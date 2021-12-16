@@ -1,0 +1,11 @@
+<div class="d-block card p-2 cursor-pointer" (click)="onClick()">
+  <div class="d-inline-flex align-items-center badge badge-sm badge-success px-2 py-1">
+    <i class="far fa-lock-open mr-2" [ngClass]="lock.locked ? 'fa-lock' : 'fa-lock-open'"></i>
+    <span *ngIf="!lock.locked" i18n="@@constraint.action.lock.disabled">Always disabled</span>
+    <span *ngIf="lock.locked" i18n="@@constraint.action.lock.enabled">Always enabled</span>
+  </div>
+
+  <div class="font-italic">
+    <span i18n="@@constraint.action.lock.preview.exceptions">{filters.length, plural, =0 {without exceptions} one {1 exception} few {{{filters.length}} exceptions} other {{{filters.length}} exceptions}}</span>
+  </div>
+</div>

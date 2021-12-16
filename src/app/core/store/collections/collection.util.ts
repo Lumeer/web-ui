@@ -98,7 +98,8 @@ export function isAttributeEditableWithQuery(
 }
 
 function isAttributeEditable(attribute: Attribute): boolean {
-  return !attribute || !attribute.function || !attribute.function.js || attribute.function.editable;
+  // TODO locked conditions
+  return !attribute || !attribute.function || !attribute.function.js || !attribute.lock?.locked;
 }
 
 export function getDefaultAttributeId(collection: Collection): string {

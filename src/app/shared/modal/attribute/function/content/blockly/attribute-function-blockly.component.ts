@@ -124,10 +124,6 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
     return this.form.controls.xml;
   }
 
-  public get editableControl(): AbstractControl {
-    return this.form.controls.editable;
-  }
-
   public get dryRunControl(): AbstractControl {
     return this.form.controls.dryRun;
   }

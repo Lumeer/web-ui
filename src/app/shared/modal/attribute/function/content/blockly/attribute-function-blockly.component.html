@@ -1,12 +1,5 @@
 <div class="d-flex pb-2">
   <div class="flex-grow-1 text-right">
-    <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="isFunction">
-      <input class="custom-control-input" type="checkbox" [checked]="editableControl.value"
-             (change)="editableControl.patchValue($event.target.checked)" id="editable">
-      <label class="custom-control-label" for="editable" i18n="@@dialog.attribute.function.editable">
-        Allow manual value overwrite
-      </label>
-    </div>
     <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="!isFunction">
       <input class="custom-control-input" type="checkbox" [checked]="recursiveControl.value"
              (change)="recursiveControl.patchValue($event.target.checked)" id="recursive">

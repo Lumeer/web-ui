@@ -19,21 +19,14 @@
     </select-item>
   </div>
 
-  <action-constraint-permissions-form class="d-block mt-4"
-                                      [role]="roleControl.value"
-                                      [roleControl]="roleControl">
-  </action-constraint-permissions-form>
-
-  <constraint-conditions-form class="d-block mt-4"
-                              [filtersArray]="filtersControl"
-                              [equation]="config?.equation"
-                              [resource]="resource"
-                              label="Conditions"
-                              i18n-label="@@constraint.action.conditions.label"
-                              buttonLabel="Add condition"
-                              i18n-buttonLabel="@@constraint.action.conditions.new"
-                              [attribute]="attribute">
-  </constraint-conditions-form>
+  <div class="form-group mt-4 mb-0">
+    <label i18n="@@constraint.action.lock.label">Enabled/disabled configuration</label>
+    <attribute-lock-preview [attribute]="attribute"
+                            [resource]="resource"
+                            [overrideLock]="lockControl.value"
+                            (lockChange)="onLockChange($event)">
+    </attribute-lock-preview>
+  </div>
 
   <div class="form-group mt-4 mb-0">
     <label [for]="formControlName.TitleUser"
