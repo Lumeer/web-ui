@@ -1236,7 +1236,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="attribute.type.label" datatype="html">
         <source> Type </source><target state="final"> Type </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="constraint.files.modify.constraint.title" datatype="html">
+        <source>Delete all files?</source><target state="final">Delete all files?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">288</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.files.modify.constraint.message" datatype="html">
+        <source>Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</source><target state="final">Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context>
+          <context context-type="linenumber">289</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target state="final">All day event</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
@@ -3943,41 +3955,23 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context><context context-type="linenumber">178</context></context-group></trans-unit><trans-unit id="resource.variables.get.fail" datatype="html">
         <source>Could not read variables</source><target state="final">Could not read variables</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.variables.create.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="resource.variables.create.fail" datatype="html">
         <source>Could not create variable</source><target state="final">Could not create variable</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.variables.update.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="resource.variables.update.fail" datatype="html">
         <source>Could not update variable</source><target state="final">Could not update variable</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
-          <context context-type="linenumber">121</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.variables.delete.confirm.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="resource.variables.delete.confirm.title" datatype="html">
         <source>Delete variable</source><target state="final">Delete variable</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
-          <context context-type="linenumber">131</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.variables.delete.confirm.message" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">135</context></context-group></trans-unit><trans-unit id="document.variables.delete.confirm.message" datatype="html">
         <source>Do you really want to delete this variable?</source><target state="final">Do you really want to delete this variable?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
-          <context context-type="linenumber">132</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.variables.delete.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="resource.variables.delete.fail" datatype="html">
         <source>Could not delete variable</source><target state="final">Could not delete variable</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context>
-          <context context-type="linenumber">165</context>
-        </context-group>
-      </trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/resource-variables/resource-variables.effects.ts</context><context context-type="linenumber">169</context></context-group></trans-unit><trans-unit id="selection.lists.get.fail" datatype="html">
         <source>Could not read selection lists</source><target state="final">Could not read selection lists</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/selection-lists/selection-lists.effects.ts</context>
@@ -4419,12 +4413,12 @@
         <source>Do you really want to revert the latest changes?</source><target state="final">Do you really want to revert the latest changes?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/detail/activity/resource-activity.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
-        <source>Remove options</source><target state="final">Remove options</target>
+        <source>Remove options?</source><target state="final">Remove options?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">273</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">294</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.message" datatype="html">
         <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source><target state="final">You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">274</context></context-group></trans-unit><trans-unit id="constraint.action.title.default" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">295</context></context-group></trans-unit><trans-unit id="constraint.action.title.default" datatype="html">
         <source>Action</source><target state="final">Action</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/action/action-constraint-config-form.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="constraint.action.confirmation.placeholder" datatype="html">

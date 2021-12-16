@@ -285,13 +285,13 @@ export class AttributeTypeFormComponent implements OnChanges {
   }
 
   private showFilesConstraintChangePrompt(attribute: Attribute) {
-    const title = $localize`:@@constraint.files.modify.constraint.title:Remove files`;
-    const message = $localize`:@@constraint.files.modify.constraint.message:Changing constraint type from 'File attachment' will remove all uploaded attachments in column. Do you want to proceed?`;
+    const title = $localize`:@@constraint.files.modify.constraint.title:Delete all files?`;
+    const message = $localize`:@@constraint.files.modify.constraint.message:Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }
 
   private showSelectValueChangePrompt(attribute: Attribute) {
-    const title = $localize`:@@constraint.select.modify.value.title:Remove options`;
+    const title = $localize`:@@constraint.select.modify.value.title:Remove options?`;
     const message = $localize`:@@constraint.select.modify.value.message:You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }
