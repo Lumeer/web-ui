@@ -34,7 +34,6 @@ import {PercentageConstraintFormControl} from './constraint-config/percentage/pe
 import {SelectConstraintFormControl} from './constraint-config/select/select-constraint-form-control';
 import {
   isSelectConstraintOptionValueRemoved,
-  isUsedSelectConstraintAttribute,
   parseSelectOptionsFromForm,
 } from './constraint-config/select/select-constraint.utils';
 import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
@@ -65,6 +64,7 @@ import {
   SelectConstraintConfig,
 } from '@lumeer/data-filters';
 import {ViewConstraintFormControl} from './constraint-config/view/view-constraint-form-control';
+import {isUsedConstraintAttribute} from '../../../utils/attribute.utils';
 
 @Component({
   selector: 'attribute-type-form',
@@ -245,32 +245,53 @@ export class AttributeTypeFormComponent implements OnChanges {
   }
 
   private confirmAndSave(attribute: Attribute) {
-    if (attribute.constraint?.type === ConstraintType.Select) {
-      this.confirmAndSaveSelect(attribute);
-      return;
+    if (this.checkWarningBeforeSave(attribute)) {
+      this.attributeChange.emit(attribute);
     }
-
-    this.attributeChange.emit(attribute);
   }
 
-  private confirmAndSaveSelect(attribute: Attribute) {
-    if (!isUsedSelectConstraintAttribute(this.attribute)) {
-      this.attributeChange.emit(attribute);
-      return;
+  private checkWarningBeforeSave(attribute: Attribute): boolean {
+    if (this.shouldWarnAboutDeletedFiles(attribute)) {
+      this.showFilesConstraintChangePrompt(attribute);
+      return false;
     }
+    switch (attribute.constraint?.type) {
+      case ConstraintType.Select:
+        return this.checkWarningBeforeSaveSelect(attribute);
+      default:
+        return true;
+    }
+  }
 
+  private shouldWarnAboutDeletedFiles(attribute: Attribute): boolean {
+    return (
+      isUsedConstraintAttribute(this.attribute, ConstraintType.Files) &&
+      attribute.constraint.type !== ConstraintType.Files
+    );
+  }
+
+  private checkWarningBeforeSaveSelect(attribute: Attribute): boolean {
     const previousConfig = this.attribute.constraint.config as SelectConstraintConfig;
     const nextConfig = attribute.constraint.config as SelectConstraintConfig;
 
-    if (isSelectConstraintOptionValueRemoved(previousConfig, nextConfig)) {
+    if (
+      isUsedConstraintAttribute(this.attribute, ConstraintType.Select) &&
+      isSelectConstraintOptionValueRemoved(previousConfig, nextConfig)
+    ) {
       this.showSelectValueChangePrompt(attribute);
-    } else {
-      this.attributeChange.emit(attribute);
+      return false;
     }
+    return true;
+  }
+
+  private showFilesConstraintChangePrompt(attribute: Attribute) {
+    const title = $localize`:@@constraint.files.modify.constraint.title:Delete all files?`;
+    const message = $localize`:@@constraint.files.modify.constraint.message:Changing the constraint type from 'File attachment' will permanently remove all attachments in this column. Do you want to proceed?`;
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }
 
   private showSelectValueChangePrompt(attribute: Attribute) {
-    const title = $localize`:@@constraint.select.modify.value.title:Remove options`;
+    const title = $localize`:@@constraint.select.modify.value.title:Remove options?`;
     const message = $localize`:@@constraint.select.modify.value.message:You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?`;
     this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }

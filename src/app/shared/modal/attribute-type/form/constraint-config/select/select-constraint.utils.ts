@@ -17,17 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../../../../core/store/collections/collection';
-import {ConstraintType, SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
-import {FormArray, FormGroup} from '@angular/forms';
-import {SelectConstraintFormControl} from './select-constraint-form-control';
+import {SelectConstraintConfig, SelectConstraintOption} from '@lumeer/data-filters';
+import {FormArray} from '@angular/forms';
 import {escapeHtml} from '../../../../../utils/common.utils';
-
-export function isUsedSelectConstraintAttribute(attribute: Attribute): boolean {
-  return (
-    attribute && attribute.usageCount > 0 && attribute.constraint && attribute.constraint.type === ConstraintType.Select
-  );
-}
 
 export function isSelectConstraintOptionValueRemoved(
   previousConfig: SelectConstraintConfig,
