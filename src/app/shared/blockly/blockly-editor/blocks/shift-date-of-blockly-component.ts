@@ -39,7 +39,7 @@ export class ShiftDateOfBlocklyComponent extends BlocklyComponent {
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
+    return [MasterBlockType.Rule, MasterBlockType.Link, MasterBlockType.Function];
   }
 
   public registerBlock(workspace: any) {

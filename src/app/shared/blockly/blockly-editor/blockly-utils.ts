@@ -32,8 +32,8 @@ import {ConstraintType} from '@lumeer/data-filters';
 declare var Blockly: any;
 
 export const enum MasterBlockType {
+  Rule = 'Rule',
   Function = 'Function',
-  Value = 'Value',
   Link = 'Link',
 }
 
@@ -111,9 +111,12 @@ export class BlocklyUtils {
   public static readonly PRINT_TEXT = 'print_text';
   public static readonly GENERATE_PDF = 'generate_pdf';
   public static readonly SEND_EMAIL = 'send_email';
+  public static readonly SEND_SMTP_EMAIL = 'send_smtp_email';
   public static readonly NAVIGATE_TO_VIEW = 'navigate_to_view';
   public static readonly NAVIGATE_TO_VIEW_BY_ID = 'navigate_to_view_by_id';
   public static readonly SHARE_VIEW = 'share_view';
+  public static readonly GET_RESOURCE_VARIABLE = 'get_resource_variable';
+  public static readonly GET_SMTP_CONFIGURATION = 'get_smtp_configuration';
   public static readonly STRING_REPLACE = 'string_replace';
   public static readonly LOOP_BREAK = 'loop_break';
   public static readonly LOOP_CONTINUE = 'loop_continue';
@@ -339,6 +342,23 @@ export class BlocklyUtils {
         }
       }
 
+      // send SMTP email attribute
+      if (block.type === BlocklyUtils.SEND_SMTP_EMAIL) {
+        if (children && children.length > 3) {
+          const child = children[3];
+          const childOutputType = this.getOutputConnectionCheck(child);
+
+          if (
+            childOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX) ||
+            childOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)
+          ) {
+            const value = block.getField('ATTR').getValue();
+            this.setterAndGetterOutputType(block, child, true);
+            block.getField('ATTR').setValue(value);
+          }
+        }
+      }
+
       // link instance getters and setters
       if (block.type === BlocklyUtils.GET_LINK_ATTRIBUTE || block.type === BlocklyUtils.SET_LINK_ATTRIBUTE) {
         if (children && children.length > 0) {
@@ -444,7 +464,8 @@ export class BlocklyUtils {
         parentBlock.type === BlocklyUtils.GET_LINK_ATTRIBUTE ||
         parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE ||
         (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) ||
-        (parentBlock.type === BlocklyUtils.GENERATE_PDF && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
+        (parentBlock.type === BlocklyUtils.GENERATE_PDF && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX)) ||
+        (parentBlock.type === BlocklyUtils.SEND_SMTP_EMAIL && blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX))
       ) {
         const linkType = this.getLinkType(blockOutputType.split('_')[0]);
         attributes = linkType.attributes;
@@ -453,13 +474,16 @@ export class BlocklyUtils {
         parentBlock.type === BlocklyUtils.SET_ATTRIBUTE ||
         (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE &&
           blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) ||
-        (parentBlock.type === BlocklyUtils.GENERATE_PDF && blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
+        (parentBlock.type === BlocklyUtils.GENERATE_PDF &&
+          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) ||
+        (parentBlock.type === BlocklyUtils.SEND_SMTP_EMAIL &&
+          blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX))
       ) {
         const collection = this.getCollection(blockOutputType.split('_')[0]);
         attributes = collection.attributes;
 
-        if (parentBlock.type !== BlocklyUtils.GENERATE_PDF) {
-          // for PDF block, we filter out only File attributes, which rarely is the default attr.
+        if (parentBlock.type !== BlocklyUtils.GENERATE_PDF && parentBlock.type !== BlocklyUtils.SEND_SMTP_EMAIL) {
+          // for PDF block and send SMTP block, we filter out only File attributes, which rarely is the default attr.
           defaultAttributeId = collection.defaultAttributeId;
         }
       }
@@ -467,8 +491,11 @@ export class BlocklyUtils {
       let defaultValue = '',
         defaultText = '';
       attributes.forEach(attribute => {
-        // for PDF generator keep only attributes of type file
-        if (parentBlock.type !== BlocklyUtils.GENERATE_PDF || attribute.constraint.type === ConstraintType.Files) {
+        // for the PDF generator block and the send SMTP block keep only attributes of type file
+        if (
+          (parentBlock.type !== BlocklyUtils.GENERATE_PDF && parentBlock.type !== BlocklyUtils.SEND_SMTP_EMAIL) ||
+          attribute.constraint.type === ConstraintType.Files
+        ) {
           options.push([attribute.name, attribute.id]);
           if (attribute.id === defaultAttributeId) {
             defaultValue = attribute.id;
@@ -741,7 +768,7 @@ export class BlocklyUtils {
     xmlList.push(
       Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_ATTRIBUTE + '"></block></xml>').firstChild
     );
-    if (this.masterType === MasterBlockType.Function) {
+    if (this.masterType === MasterBlockType.Rule) {
       xmlList.push(
         Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.SET_ATTRIBUTE + '"></block></xml>').firstChild
       );
@@ -925,7 +952,7 @@ export class BlocklyUtils {
     xmlList.push(
       Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.GET_LINK_ATTRIBUTE + '"></block></xml>').firstChild
     );
-    if (this.masterType === MasterBlockType.Function) {
+    if (this.masterType === MasterBlockType.Rule) {
       xmlList.push(
         Blockly.Xml.textToDom('<xml><block type="' + BlocklyUtils.SET_LINK_ATTRIBUTE + '"></block></xml>').firstChild
       );

@@ -19,47 +19,60 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {COLOR_CYAN} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class IsBooleanBlocklyComponent extends BlocklyComponent {
+export class GetVariableBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
+  private variableOptions = [];
 
-  public constructor(public blocklyUtils: BlocklyUtils) {
+  public constructor(public blocklyUtils: BlocklyUtils, private variables: string[]) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.isBoolean:Returns true if the input is a boolean.`;
+    variables.forEach(variable => this.variableOptions.push([variable.replace(/ /g, '\u00A0'), variable]));
+
+    if (this.variableOptions.length === 0) {
+      this.variableOptions.push(['?', '']);
+    }
+
+    this.tooltip = $localize`:@@blockly.tooltip.getVariableBlock:Gets the value of a project variable (including hidden secured variables).`;
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Rule, MasterBlockType.Link, MasterBlockType.Function];
+    return [MasterBlockType.Rule, MasterBlockType.Function, MasterBlockType.Link];
   }
 
   public registerBlock(workspace: any) {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.IS_BOOLEAN] = {
+    Blockly.Blocks[BlocklyUtils.GET_RESOURCE_VARIABLE] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.IS_BOOLEAN,
-          message0: '%{BKY_BLOCK_IS_BOOLEAN}', // is boolean %1
+          type: BlocklyUtils.GET_RESOURCE_VARIABLE,
+          message0: 'get value of project variable %1', //'%{BKY_BLOCK_GET_RESOURCE_VARIABLE}', // get value of project variable %1
           args0: [
             {
-              type: 'input_value',
-              name: 'VAR',
+              type: 'field_dropdown',
+              name: 'VARIABLE_NAME',
+              options: this_.variableOptions,
             },
           ],
           output: '',
-          colour: 210, // blockly logic
+          colour: COLOR_CYAN,
           tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.IS_BOOLEAN] = function (block) {
-      const val = Blockly.JavaScript.valueToCode(block, 'VAR', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+    Blockly.JavaScript[BlocklyUtils.GET_RESOURCE_VARIABLE] = function (block) {
+      const variableId = block.getFieldValue('VARIABLE_NAME') || null;
 
-      const code = `(typeof (${val}) === 'boolean')`;
+      if (!variableId) {
+        return '';
+      }
+
+      const code = this_.blocklyUtils.getLumeerVariable() + `.getVariable('${variableId}')`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

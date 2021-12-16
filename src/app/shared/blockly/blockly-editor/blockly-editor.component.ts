@@ -105,6 +105,9 @@ import {GetDocumentUpdatedAuthorBlocklyComponent} from './blocks/get-document-up
 import {CurrentTeamsBlocklyComponent} from './blocks/current-teams-blockly-component';
 import {IsUserInTeamBlocklyComponent} from './blocks/is-user-in-team-blockly-component';
 import {GeneratePdfBlocklyComponent} from './blocks/generate-pdf-blockly-component';
+import {GetVariableBlocklyComponent} from './blocks/get-variable-blockly-component';
+import {GetSmtpConfigurationBlocklyComponent} from './blocks/get-smtp-configuration-blockly-component';
+import {SendSmtpEmailBlocklyComponent} from './blocks/send-smtp-email-blockly-component';
 
 declare var Blockly: any;
 
@@ -120,6 +123,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   public linkTypes: LinkType[] = [];
+
+  @Input()
+  public variableNames: string[] = [];
 
   @Input()
   public views: View[] = [];
@@ -143,7 +149,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   public toolbox: string = '';
 
   @Input()
-  public masterType: MasterBlockType = MasterBlockType.Function;
+  public masterType: MasterBlockType = MasterBlockType.Rule;
 
   @Output()
   public onJsUpdate = new EventEmitter<string>();
@@ -240,6 +246,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new CurrentTeamsBlocklyComponent(this.blocklyUtils),
       new IsUserInTeamBlocklyComponent(this.blocklyUtils),
       new GeneratePdfBlocklyComponent(this.blocklyUtils),
+      new GetVariableBlocklyComponent(this.blocklyUtils, this.variableNames),
+      new GetSmtpConfigurationBlocklyComponent(this.blocklyUtils),
+      new SendSmtpEmailBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
@@ -344,7 +353,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       this.blocklyUtils.ensureTypeChecks(this.workspace);
     } else {
       // initiate empty state
-      if (this.masterType === MasterBlockType.Function) {
+      if (this.masterType === MasterBlockType.Rule) {
         const containerBlock = this.workspace.newBlock(BlocklyUtils.STATEMENT_CONTAINER);
         containerBlock.setDeletable(false);
         containerBlock.initSvg();
@@ -377,7 +386,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         }
       }
     });
-    if (this.masterType === MasterBlockType.Function) {
+    if (this.masterType === MasterBlockType.Rule) {
       this.workspace.createVariable('lumeerActionName', null, null);
     }
     setTimeout(() => {
@@ -395,7 +404,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     const attributeName = this.attribute ? this.attribute.name : collection ? collection.name : linkType.name;
 
     const this_ = this;
-    if (this.masterType === MasterBlockType.Function) {
+    if (this.masterType === MasterBlockType.Rule) {
       if (collection) {
         Blockly.Blocks[BlocklyUtils.STATEMENT_CONTAINER] = {
           init: function () {
@@ -475,9 +484,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       this.blocklyUtils
         .getComponents()
-        .filter(component => component.getVisibility().indexOf(MasterBlockType.Function) >= 0)
+        .filter(component => component.getVisibility().indexOf(MasterBlockType.Rule) >= 0)
         .forEach(component => component.registerBlock(this.workspace));
-    } else if (this.masterType === MasterBlockType.Value || this.masterType === MasterBlockType.Link) {
+    } else if (this.masterType === MasterBlockType.Function || this.masterType === MasterBlockType.Link) {
       if (collection) {
         Blockly.Blocks[BlocklyUtils.VALUE_CONTAINER] = {
           init: function () {
@@ -592,7 +601,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         .getComponents()
         .filter(
           component =>
-            component.getVisibility().indexOf(MasterBlockType.Value) >= 0 ||
+            component.getVisibility().indexOf(MasterBlockType.Function) >= 0 ||
             component.getVisibility().indexOf(MasterBlockType.Link) >= 0
         )
         .forEach(component => component.registerBlock(this.workspace));
@@ -653,7 +662,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             }
           }
 
-          if (block.type === BlocklyUtils.PRINT_ATTRIBUTE || block.type === BlocklyUtils.GENERATE_PDF) {
+          if (
+            block.type === BlocklyUtils.PRINT_ATTRIBUTE ||
+            block.type === BlocklyUtils.GENERATE_PDF ||
+            block.type === BlocklyUtils.SEND_SMTP_EMAIL
+          ) {
             const link = block.getInput('DOCUMENT');
 
             if (link.connection && link.connection.targetConnection) {
@@ -846,7 +859,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       }
 
       // populate attributes in print block and in generate PDF block
-      if (parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE || parentBlock.type === BlocklyUtils.GENERATE_PDF) {
+      if (
+        parentBlock.type === BlocklyUtils.PRINT_ATTRIBUTE ||
+        parentBlock.type === BlocklyUtils.GENERATE_PDF ||
+        parentBlock.type === BlocklyUtils.SEND_SMTP_EMAIL
+      ) {
         if (
           blockOutputType.endsWith(BlocklyUtils.LINK_VAR_SUFFIX) ||
           blockOutputType.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)
@@ -921,6 +938,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 parentBlock.getInput('DOCUMENT').connection.targetConnection === null)) ||
             (parentBlock.type === BlocklyUtils.GENERATE_PDF &&
               (isNullOrUndefined(parentBlock.getInput('DOCUMENT').connection) ||
+                parentBlock.getInput('DOCUMENT').connection.targetConnection === null)) ||
+            (parentBlock.type === BlocklyUtils.SEND_SMTP_EMAIL &&
+              (isNullOrUndefined(parentBlock.getInput('DOCUMENT').connection) ||
                 parentBlock.getInput('DOCUMENT').connection.targetConnection === null))
           ) {
             this.blocklyUtils.resetOptions(parentBlock, 'ATTR');
@@ -966,7 +986,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     if (this.blocklyUtils.emptyJs(js)) {
       js = '';
     } else {
-      if (this.masterType === MasterBlockType.Value && js.indexOf('var thisRecord;') < 0) {
+      if (this.masterType === MasterBlockType.Function && js.indexOf('var thisRecord;') < 0) {
         js = 'var thisRecord;\n' + js;
       }
 
