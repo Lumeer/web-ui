@@ -23,13 +23,13 @@ import {COLOR_CYAN} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class GeneratePdfBlocklyComponent extends BlocklyComponent {
+export class SendSmtpEmailBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.generatePdfBlock:Generates PDF from the given HTML string and saves it as a file to the given attribute.`;
+    this.tooltip = $localize`:@@blockly.tooltip.sendSmtpEmailBlock:Sends an email using your custom SMTP server.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -39,16 +39,25 @@ export class GeneratePdfBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any) {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.GENERATE_PDF] = {
+    Blockly.Blocks[BlocklyUtils.SEND_SMTP_EMAIL] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.GENERATE_PDF,
-          lastDummyAlign0: 'RIGHT',
-          message0: '%{BKY_BLOCK_GENERATE_PDF}', // generate PDF from HTML %1 save it to %2 in record %3 with file name %4 overwrite existing %5
+          type: BlocklyUtils.SEND_SMTP_EMAIL,
+          message0: '%{BKY_BLOCK_SEND_SMTP_EMAIL}', // send email to address(es) %1 with subject %2 body %3 attachments from %4 in %5 using from name %6 and SMTP configuration %7
           args0: [
             {
               type: 'input_value',
-              name: 'HTML',
+              name: 'EMAIL',
+              align: 'RIGHT',
+            },
+            {
+              type: 'input_value',
+              name: 'SUBJECT',
+              align: 'RIGHT',
+            },
+            {
+              type: 'input_value',
+              name: 'BODY',
               align: 'RIGHT',
             },
             {
@@ -63,13 +72,14 @@ export class GeneratePdfBlocklyComponent extends BlocklyComponent {
             },
             {
               type: 'input_value',
-              name: 'FILENAME',
+              name: 'FROM',
               align: 'RIGHT',
             },
             {
-              type: 'field_checkbox',
-              name: 'OVERWRITE',
-              checked: true,
+              type: 'input_value',
+              name: 'SMTP_CONFIG',
+              check: 'SMTP',
+              align: 'RIGHT',
             },
           ],
           inputsInline: false,
@@ -81,30 +91,19 @@ export class GeneratePdfBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GENERATE_PDF] = function (block) {
-      const value_html = Blockly.JavaScript.valueToCode(block, 'HTML', Blockly.JavaScript.ORDER_ATOMIC) || null;
-      const dropdown_attr = block.getFieldValue('ATTR');
-      const value_document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ATOMIC) || null;
-      const value_filename = Blockly.JavaScript.valueToCode(block, 'FILENAME', Blockly.JavaScript.ORDER_ATOMIC) || null;
-      const checkbox_overwrite = block.getFieldValue('OVERWRITE') == 'TRUE';
 
-      if (!value_html || !value_document || !value_filename) {
-        return '';
-      }
+    Blockly.JavaScript[BlocklyUtils.SEND_SMTP_EMAIL] = function (block) {
+      const value_email = Blockly.JavaScript.valueToCode(block, 'EMAIL', Blockly.JavaScript.ORDER_ATOMIC);
+      const value_subject = Blockly.JavaScript.valueToCode(block, 'SUBJECT', Blockly.JavaScript.ORDER_ATOMIC);
+      const value_body = Blockly.JavaScript.valueToCode(block, 'BODY', Blockly.JavaScript.ORDER_ATOMIC);
+      const dropdown_attr = block.getFieldValue('ATTR');
+      const value_document = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ATOMIC);
+      const value_from = Blockly.JavaScript.valueToCode(block, 'FROM', Blockly.JavaScript.ORDER_ATOMIC);
+      const value_smtp_config = Blockly.JavaScript.valueToCode(block, 'SMTP_CONFIG', Blockly.JavaScript.ORDER_ATOMIC);
 
       return (
         this_.blocklyUtils.getLumeerVariable() +
-        '.writePdf(' +
-        value_document +
-        ", '" +
-        dropdown_attr +
-        "', " +
-        value_filename +
-        ', ' +
-        checkbox_overwrite +
-        ', ' +
-        value_html +
-        ');\n'
+        `.sendEmail(${value_email}, ${value_from}, ${value_subject}, ${value_body}, ${value_document}, '${dropdown_attr}', ${value_smtp_config});\n`
       );
     };
   }

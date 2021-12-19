@@ -28,7 +28,7 @@ export abstract class GetDocumentPropertyAbstractBlocklyComponent extends Blockl
   protected thisType = '';
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
+    return [MasterBlockType.Rule, MasterBlockType.Link, MasterBlockType.Function];
   }
 
   public getDocumentVariablesXml(workspace: any): string {

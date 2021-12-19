@@ -33,7 +33,7 @@ export class GetSiblingsBlocklyComponent extends LinkDocumentsNoReturnBlocklyCom
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function];
+    return [MasterBlockType.Rule, MasterBlockType.Link];
   }
 
   public registerBlock(workspace: any) {

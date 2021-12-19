@@ -19,17 +19,16 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_GREEN} from '../../../../core/constants';
 
 declare var Blockly: any;
 
-export class GetAttributeBlocklyComponent extends BlocklyComponent {
+export class ReplacePatternBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.getAttributeBlock:Gets the value of an attribute in the given record.`;
+    this.tooltip = $localize`:@@blockly.tooltip.replacePatternBlock:Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of \${pattern_name}.`;
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -39,39 +38,47 @@ export class GetAttributeBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any) {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.GET_ATTRIBUTE] = {
+    Blockly.Blocks[BlocklyUtils.REPLACE_PATTERN] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.GET_ATTRIBUTE,
-          message0: '%{BKY_BLOCK_GET_ATTRIBUTE}', // get %1 of %2
+          type: BlocklyUtils.REPLACE_PATTERN,
+          message0: '%{BKY_BLOCK_REPLACE_PATTERN}', // in text or HTML %1 replace patterns %2 patterns are split using %3
           args0: [
             {
-              type: 'field_dropdown',
-              name: 'ATTR',
-              options: [['?', '?']],
+              type: 'input_value',
+              name: 'TEXT',
+              align: 'RIGHT',
             },
             {
               type: 'input_value',
-              name: 'DOCUMENT',
+              name: 'PATTERNS',
+              align: 'RIGHT',
+            },
+            {
+              type: 'input_value',
+              name: 'SPLITTER',
+              check: 'String',
+              align: 'RIGHT',
             },
           ],
-          output: '',
-          colour: COLOR_GREEN,
+          output: null,
+          colour: '%{BKY_TEXTS_HUE}',
           tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.GET_ATTRIBUTE] = function (block) {
-      const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
-      const attrId = block.getFieldValue('ATTR');
+    Blockly.JavaScript[BlocklyUtils.REPLACE_PATTERN] = function (block) {
+      const value_text = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC) || '';
+      const value_patterns = Blockly.JavaScript.valueToCode(block, 'PATTERNS', Blockly.JavaScript.ORDER_ATOMIC) || '';
+      const value_splitter = Blockly.JavaScript.valueToCode(block, 'SPLITTER', Blockly.JavaScript.ORDER_ATOMIC) || ':';
 
-      if (!argument0) {
+      if (!value_text) {
         return '';
       }
 
       const code =
-        this_.blocklyUtils.getLumeerVariable() + '.getDocumentAttribute(' + argument0 + ", '" + attrId + "')";
+        this_.blocklyUtils.getLumeerVariable() + `.formatTemplate(${value_text}, ${value_patterns}, ${value_splitter})`;
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

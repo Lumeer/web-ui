@@ -51,6 +51,9 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
   public views: View[];
 
   @Input()
+  public variableNames: string[];
+
+  @Input()
   public collection: Collection;
 
   @Input()
@@ -82,7 +85,7 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
     if (this.collection) {
       if (this.isFunction) {
         this.variables = [{name: 'thisRecord', collectionId: this.collection.id} as RuleVariable];
-        this.masterType = MasterBlockType.Value;
+        this.masterType = MasterBlockType.Function;
       } else {
         this.variables = [
           {name: 'oldRecord', collectionId: this.collection.id},
@@ -107,7 +110,7 @@ export class AttributeFunctionBlocklyComponent implements OnChanges {
       this.toolbox = BLOCKLY_VALUE_TOOLBOX;
       this.debugButtons = BLOCKLY_VALUE_BUTTONS;
     } else {
-      this.masterType = MasterBlockType.Function;
+      this.masterType = MasterBlockType.Rule;
       this.toolbox = BLOCKLY_FUNCTION_TOOLBOX;
       this.debugButtons = BLOCKLY_FUNCTION_BUTTONS;
     }

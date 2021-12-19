@@ -19,7 +19,6 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_PINK} from '../../../../core/constants';
 
 declare var Blockly: any;
 
@@ -33,7 +32,7 @@ export class LoopContinueBlocklyComponent extends BlocklyComponent {
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function];
+    return [MasterBlockType.Rule, MasterBlockType.Link];
   }
 
   public registerBlock(workspace: any) {

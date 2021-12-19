@@ -39,6 +39,9 @@ export class AttributeFunctionContentComponent implements OnInit {
   public views: View[];
 
   @Input()
+  public variableNames: string[];
+
+  @Input()
   public collection: Collection;
 
   @Input()

@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {COLOR_PRIMARY, COLOR_SUCCESS} from '../../../../core/constants';
+import {COLOR_SUCCESS} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkDocumentsNoReturnBlocklyComponent} from './link-documents-no-return-blockly-component';
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
 import {BlocklyComponent} from './blockly-component';
 
@@ -36,7 +34,7 @@ export class GetHierarchySiblingsBlocklyComponent extends BlocklyComponent {
   }
 
   public getVisibility(): MasterBlockType[] {
-    return [MasterBlockType.Function];
+    return [MasterBlockType.Rule, MasterBlockType.Link];
   }
 
   public registerBlock(workspace: any) {
