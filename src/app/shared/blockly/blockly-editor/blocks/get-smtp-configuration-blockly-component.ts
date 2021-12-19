@@ -46,8 +46,7 @@ export class GetSmtpConfigurationBlocklyComponent extends BlocklyComponent {
         this.jsonInit({
           type: BlocklyUtils.GET_SMTP_CONFIGURATION,
           lastDummyAlign0: 'RIGHT',
-          message0:
-            'get SMTP configuration with host %1 port %2 user %3 password %4 message author (from) %5 security %6', //'%{BKY_BLOCK_GET_SMTP_CONFFIGURATION}', // get SMTP configuration with host %1 port %2 user %3 password %4 message author (from) %5 security %6
+          message0: '%{BKY_BLOCK_GET_SMTP_CONFIGURATION}', // get SMTP configuration with host %1 port %2 user %3 password %4 from email %5 and security %6
           args0: [
             {
               type: 'input_value',

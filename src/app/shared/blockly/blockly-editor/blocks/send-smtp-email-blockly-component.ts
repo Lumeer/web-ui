@@ -43,8 +43,7 @@ export class SendSmtpEmailBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.SEND_SMTP_EMAIL,
-          message0:
-            'send email to address(es) %1 with subject %2 body %3 attachments from %4 in %5 using from name %6 and SMTP configuration %7', //'%{BKY_BLOCK_SEND_SMTP_EMAIL}', // send email to address(es) %1 with subject %2 body %3 attachments from %4 in %5 using from name %6 and SMTP configuration %7
+          message0: '%{BKY_BLOCK_SEND_SMTP_EMAIL}', // send email to address(es) %1 with subject %2 body %3 attachments from %4 in %5 using from name %6 and SMTP configuration %7
           args0: [
             {
               type: 'input_value',

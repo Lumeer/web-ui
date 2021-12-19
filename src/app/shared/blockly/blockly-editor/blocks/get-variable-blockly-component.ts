@@ -50,7 +50,7 @@ export class GetVariableBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GET_RESOURCE_VARIABLE,
-          message0: 'get value of project variable %1', //'%{BKY_BLOCK_GET_RESOURCE_VARIABLE}', // get value of project variable %1
+          message0: '%{BKY_BLOCK_GET_RESOURCE_VARIABLE}', // get value of project variable %1
           args0: [
             {
               type: 'field_dropdown',
