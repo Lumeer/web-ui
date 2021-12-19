@@ -9,26 +9,28 @@
   </div>
 </div>
 
-<info-box class="mt-3">
-  <div class="text-info" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
-    Attribute will be locked for everyone. You can add multiple exceptions to enable editing for certain users and by defined filters.
-  </div>
+<div class="alert alert-light mt-3 px-3" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
+  Attribute will be locked for everyone. You can add multiple exceptions to enable editing for certain users and by defined filters.
+</div>
 
-  <div class="text-info" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
-    Attribute will be editable for everyone. You can add multiple exceptions to disable editing for certain users and by defined filters.
-  </div>
+<div class="alert alert-light mt-3 px-3" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
+  Attribute will be editable for everyone. You can add multiple exceptions to disable editing for certain users and by defined filters.
+</div>
 
-</info-box>
+<ng-container *ngFor="let group of groupsControl?.controls; let index = index; let last = last">
 
-<attribute-lock-exception-group *ngFor="let group of groupsControl?.controls; let index = index;"
-                                class="d-block mt-3"
-                                [group]="group"
-                                [locked]="lockedControl.value"
-                                [resource]="resource"
-                                [attribute]="attribute"
-                                [exceptionGroup]="attribute.lock?.exceptionGroups && attribute.lock?.exceptionGroups[index]"
-                                (delete)="onDeleteGroup(index)">
-</attribute-lock-exception-group>
+  <attribute-lock-exception-group class="d-block mt-3"
+                                  [group]="group"
+                                  [locked]="lockedControl.value"
+                                  [resource]="resource"
+                                  [attribute]="attribute"
+                                  [exceptionGroup]="attribute.lock?.exceptionGroups && attribute.lock?.exceptionGroups[index]"
+                                  (delete)="onDeleteGroup(index)">
+  </attribute-lock-exception-group>
+
+  <div *ngIf="!last" class="text-muted text-center mt-3" i18n="@@or">Or</div>
+</ng-container>
 
 <button class="btn btn-sm btn-outline-primary mt-3"
-        (click)="onAddGroup()" i18n="@@resource.attribute.lock.action.add">Add Exception Set</button>
+        (click)="onAddGroup()" i18n="@@resource.attribute.lock.action.add">Add Exception Set
+</button>

@@ -161,17 +161,17 @@ export class WorkflowTablesMenuService {
           group: 0,
         },
         {
-          id: HeaderMenuId.Description,
-          title: this.translateHeaderMenuItem(HeaderMenuId.Description),
-          disabled: !permissions?.roles?.AttributeEdit,
-          icons: ['fa fa-file-edit'],
-          group: 1,
-        },
-        {
           id: HeaderMenuId.Lock,
           title: this.translateHeaderMenuItem(HeaderMenuId.Lock),
           disabled: !permissions?.roles?.AttributeEdit,
           icons: ['fa fa-lock-open'],
+          group: 0,
+        },
+        {
+          id: HeaderMenuId.Description,
+          title: this.translateHeaderMenuItem(HeaderMenuId.Description),
+          disabled: !permissions?.roles?.AttributeEdit,
+          icons: ['fa fa-file-edit'],
           group: 1,
         }
       );
@@ -270,7 +270,7 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Description:
         return $localize`:@@table.header.menu.editDescription:Edit description...`;
       case HeaderMenuId.Lock:
-        return $localize`:@@table.header.menu.lockSettings:Lock settings...`;
+        return $localize`:@@table.header.menu.lockSettings:Locking...`;
       case HeaderMenuId.Rule:
         return $localize`:@@table.header.menu.editAutomation:Edit automation...`;
       case HeaderMenuId.Displayed:

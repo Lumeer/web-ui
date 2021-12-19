@@ -45,16 +45,14 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {filterAttributesByFilters, isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
+import {isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
 import {
   ActionConstraintConfig,
   ActionDataValue,
   AttributeLock,
   AttributeLockFiltersStats,
-  collectAttributeLockFilters,
   computeAttributeLockStats,
   ConstraintData,
-  createDataValuesMap,
 } from '@lumeer/data-filters';
 import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute/type/form/constraint-config/action/action-constraint.utils';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
@@ -125,7 +123,7 @@ export class ActionDataInputComponent implements OnChanges {
     }
     if (changes.cursor) {
       this.loading$ = this.bindLoading$().pipe(tap(loading => (this.loading = loading)));
-      this.stats$ = this.bindStats$().pipe(tap(stats => (this.enabled = stats?.satisfy)));
+      this.stats$ = this.bindStats$().pipe(tap(stats => (this.enabled = !stats?.disabled)));
     }
     this.title = this.value?.config?.title;
     this.icon = this.value?.config?.icon;

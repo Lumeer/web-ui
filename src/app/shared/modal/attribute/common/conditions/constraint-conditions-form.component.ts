@@ -114,6 +114,10 @@ export class ConstraintConditionsFormComponent implements OnChanges {
 
   public onRemoveFilter(index: number) {
     this.filtersArray.removeAt(index);
+
+    if (this.filtersArray.length === 1) {
+      this.onOperatorSelect(EquationOperator.And);
+    }
   }
 
   public onOperatorSelect(operator: EquationOperator) {

@@ -19,16 +19,9 @@
     </select-item>
   </div>
 
-  <div class="form-group mt-4 mb-0">
-    <label i18n="@@constraint.action.lock.label">Enabled/disabled configuration</label>
-    <attribute-lock-preview [attribute]="attribute"
-                            [resource]="resource"
-                            [overrideLock]="lockControl.value"
-                            (lockChange)="onLockChange($event)">
-    </attribute-lock-preview>
-  </div>
+  <div class="mt-3 mb-0 btn btn-link px-0" i18n="@@constraint.action.lock.label" (click)="configureLock()">Configure when enabled...</div>
 
-  <div class="form-group mt-4 mb-0">
+  <div class="form-group mt-3 mb-0">
     <label [for]="formControlName.TitleUser"
            i18n="@@constraint.action.title.label">Button Design</label>
     <input class="form-control"

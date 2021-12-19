@@ -33,7 +33,7 @@ import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.
 import {FilterBuilderComponent} from '../../../../../builder/filter-builder/filter-builder.component';
 import {findAttribute} from '../../../../../../core/store/collections/collection.util';
 import {Observable} from 'rxjs';
-import {distinctUntilChanged, startWith} from 'rxjs/operators';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 import {
   ConditionType,
   ConditionValue,
@@ -106,7 +106,8 @@ export class ConstraintConditionFormComponent implements OnInit {
 
   public ngOnInit() {
     this.operatorValue$ = this.operatorControl.valueChanges.pipe(
-      startWith(this.operatorControl.value),
+      startWith(''),
+      map(() => this.operatorControl.value),
       distinctUntilChanged()
     );
   }

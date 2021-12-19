@@ -1,7 +1,7 @@
 <div class="d-inline-flex align-items-center px-2 py-1">
   <i class="fas fa-lock-open mr-2" [ngClass]="lock?.locked ? 'fa-lock color-danger' : 'fa-lock-open color-success'"></i>
   <span *ngIf="lock?.locked" i18n="@@constraint.action.lock.disabled.short">Always locked</span>&nbsp;<span *ngIf="lock?.locked && stats.filtersStats?.length" i18n="@@constraint.action.lock.disabled.short.until">until</span>
-  <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Always editable unless</span>&nbsp;<span *ngIf="!lock?.locked && stats.filtersStats?.length" i18n="@@constraint.action.lock.enabled.short.unless">unless</span>
+  <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Always editable</span>&nbsp;<span *ngIf="!lock?.locked && stats.filtersStats?.length" i18n="@@constraint.action.lock.enabled.short.unless">unless</span>
 </div>
 <ng-container *ngIf="stats.filtersStats?.length">
   <div class="content-grid mt-2">

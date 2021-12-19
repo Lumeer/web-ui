@@ -29,11 +29,12 @@
 .lock-icon {
   position: absolute;
   display: inline-flex;
+  align-items: center;
+  height: calc(100% - 3px);
   right: 2px;
-  bottom: 2px;
-  padding: 0.25rem;
+  padding-right: 0.25rem;
+  padding-left: 0.35rem;
   background: white;
-  border-radius: 1rem;
   z-index: 10;
 }
 
