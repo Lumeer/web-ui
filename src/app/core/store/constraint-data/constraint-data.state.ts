@@ -23,10 +23,7 @@ import {AppState} from '../app.state';
 import {selectAllUsers, selectCurrentUserForWorkspace} from '../users/users.state';
 import {selectAllViews} from '../views/views.state';
 import {selectTeamsForWorkspace} from '../teams/teams.state';
-import {
-  selectSelectionListsByProjectSorted,
-  selectSelectionListsByWorkspace,
-} from '../selection-lists/selection-lists.state';
+import {selectSelectionListsByWorkspace} from '../selection-lists/selection-lists.state';
 
 export type ConstraintDataState = Partial<ConstraintData>;
 

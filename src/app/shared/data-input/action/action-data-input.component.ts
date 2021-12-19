@@ -29,16 +29,12 @@ import {
 } from '@angular/core';
 import {DataCursor} from '../data-cursor';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
-import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
+import {combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
-import {
-  selectCollectionPermissions,
-  selectLinkTypePermissions,
-} from '../../../core/store/user-permissions/user-permissions.state';
-import {delay, filter, map, switchMap, tap} from 'rxjs/operators';
+import {delay, map, switchMap, tap} from 'rxjs/operators';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {
   selectLinkInstanceActionExecutedTime,
@@ -49,13 +45,14 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {filterAttributesByFilters} from '../../utils/attribute.utils';
+import {filterAttributesByFilters, isAttributeLockEnabledByStats} from '../../utils/attribute.utils';
 import {
-  actionButtonEnabledStats,
-  ActionButtonFiltersStats,
   ActionConstraintConfig,
   ActionDataValue,
+  AttributeLock,
+  AttributeLockFiltersStats,
+  collectAttributeLockFilters,
+  computeAttributeLockStats,
   ConstraintData,
   createDataValuesMap,
 } from '@lumeer/data-filters';
@@ -63,17 +60,14 @@ import {actionConstraintConfirmationPlaceholder} from '../../modal/attribute/typ
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {Attribute} from '../../../core/store/collections/collection';
 import {Workspace} from '../../../core/store/navigation/workspace';
-import {selectViewById} from '../../../core/store/views/views.state';
-import {
-  selectCollectionPermissionsByView,
-  selectLinkTypePermissionsByView,
-} from '../../../core/store/common/permissions.selectors';
 
 const loadingTime = 2000;
 
-export type ActionButtonFiltersStatsWithData = ActionButtonFiltersStats & {
+export type ActionButtonFiltersStatsWithData = AttributeLockFiltersStats & {
   constraintData?: ConstraintData;
   attributesMap?: Record<string, Attribute>;
+  lock: AttributeLock;
+  disabled: boolean;
 };
 
 @Component({
@@ -102,9 +96,6 @@ export class ActionDataInputComponent implements OnChanges {
   @Input()
   public workspace: Workspace;
 
-  @Input()
-  public permissions: AllowedPermissions;
-
   @Output()
   public cancel = new EventEmitter();
 
@@ -113,8 +104,6 @@ export class ActionDataInputComponent implements OnChanges {
 
   public stats$: Observable<ActionButtonFiltersStatsWithData>;
   public loading$: Observable<boolean>;
-  public config$ = new BehaviorSubject<ActionConstraintConfig>(null);
-  public overridePermissions$ = new BehaviorSubject<AllowedPermissions>(null);
 
   public title: string;
   public icon: string;
@@ -137,12 +126,6 @@ export class ActionDataInputComponent implements OnChanges {
     if (changes.cursor) {
       this.loading$ = this.bindLoading$().pipe(tap(loading => (this.loading = loading)));
       this.stats$ = this.bindStats$().pipe(tap(stats => (this.enabled = stats?.satisfy)));
-    }
-    if (changes.config) {
-      this.config$.next(this.config);
-    }
-    if (changes.permissions) {
-      this.overridePermissions$.next(this.permissions);
     }
     this.title = this.value?.config?.title;
     this.icon = this.value?.config?.icon;
@@ -180,96 +163,53 @@ export class ActionDataInputComponent implements OnChanges {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
-        this.selectCollectionPermissions$(this.cursor.collectionId),
-        this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
-        filter(([, , , config]) => !!config),
-        map(([collection, document, permissions, config, constraintData]) =>
-          this.checkEnabled(collection, document, permissions, config, constraintData)
+        map(([collection, document, constraintData]) =>
+          this.checkEnabled(collection, document, this.cursor.attributeId, constraintData)
         )
       );
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
-        this.selectLinkTypePermissions$(this.cursor.linkTypeId),
-        this.config$.asObservable(),
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
-        filter(([, , , config]) => !!config),
-        map(([linkType, linkInstance, permissions, config, constraintData]) =>
-          this.checkEnabled(linkType, linkInstance, permissions, config, constraintData)
+        map(([linkType, linkInstance, constraintData]) =>
+          this.checkEnabled(linkType, linkInstance, this.cursor.attributeId, constraintData)
         )
       );
     }
 
-    return of({});
-  }
-
-  private selectCollectionPermissions$(collectionId: string): Observable<AllowedPermissions> {
-    return this.overridePermissions$.pipe(
-      switchMap(overridePermissions => {
-        if (overridePermissions) {
-          return of(overridePermissions);
-        }
-        if (this.cursor?.viewId) {
-          return this.store$.pipe(
-            select(selectViewById(this.cursor.viewId)),
-            switchMap(view => this.store$.pipe(select(selectCollectionPermissionsByView(view, collectionId))))
-          );
-        }
-        return this.store$.pipe(select(selectCollectionPermissions(collectionId)));
-      })
-    );
-  }
-
-  private selectLinkTypePermissions$(linkTypeId: string): Observable<AllowedPermissions> {
-    return this.overridePermissions$.pipe(
-      switchMap(overridePermissions => {
-        if (overridePermissions) {
-          return of(overridePermissions);
-        }
-        if (this.cursor?.viewId) {
-          return this.store$.pipe(
-            select(selectViewById(this.cursor.viewId)),
-            switchMap(view => this.store$.pipe(select(selectLinkTypePermissionsByView(view, linkTypeId))))
-          );
-        }
-        return this.store$.pipe(select(selectLinkTypePermissions(linkTypeId)));
-      })
-    );
+    return of({
+      lock: {locked: true, exceptionGroups: []},
+      disabled: true,
+    });
   }
 
   private checkEnabled(
     resource: AttributesResource,
     dataResource: DataResource,
-    permissions: AllowedPermissions,
-    config: ActionConstraintConfig,
+    attributeId: string,
     constraintData?: ConstraintData
   ): ActionButtonFiltersStatsWithData {
     if (!resource || !dataResource) {
-      return {};
+      return {
+        lock: {locked: true, exceptionGroups: []},
+        disabled: true,
+      };
     }
-    const filters = config.equation?.equations?.map(eq => eq.filter) || [];
-    const dataValues = createDataValuesMap(
-      dataResource.data,
-      filterAttributesByFilters(resource.attributes, filters),
-      constraintData
-    );
+
     const attributesMap = objectsByIdMap(resource.attributes);
+    const attribute = attributesMap[attributeId];
+    const stats = computeAttributeLockStats(dataResource, resource, attribute.lock, constraintData);
+    const lock = attribute?.lock || {locked: false, exceptionGroups: []};
     return {
-      ...actionButtonEnabledStats(
-        dataResource,
-        dataValues,
-        resource,
-        attributesMap,
-        permissions,
-        config,
-        constraintData
-      ),
+      ...stats,
       attributesMap,
       constraintData,
+      lock,
+      disabled: !isAttributeLockEnabledByStats(lock, stats),
     };
   }
 

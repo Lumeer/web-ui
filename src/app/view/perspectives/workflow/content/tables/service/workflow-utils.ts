@@ -23,7 +23,7 @@ import {AllowedPermissions, ResourcesPermissions} from '../../../../../../core/m
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
-import {AttributesResourceType} from '../../../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
 import {
@@ -35,7 +35,7 @@ import {
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
@@ -43,10 +43,11 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {sortDataObjectsByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
-import {objectValues} from '../../../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
 import {ConstraintData} from '@lumeer/data-filters';
+import {isAttributeEditable} from '../../../../../../shared/utils/attribute.utils';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -82,7 +83,7 @@ export function createRowData(
       if (column.attribute) {
         const pendingRowUpdate = pendingColumnValues?.[column.id]?.find(pending => pending.row.id === row.id);
         const currentValue =
-          pendingRowUpdate?.value || (overrideColumn?.id === column.id ? value : row.data[column.id]);
+          pendingRowUpdate?.value || (overrideColumn?.id === column.id ? value : row.cellsMap[column.id].data);
         if (column.collectionId) {
           result.data[column.attribute.id] = currentValue;
         } else if (column.linkTypeId) {
@@ -100,7 +101,7 @@ export function createEmptyNewRow(tableId: string): TableRow {
   return {
     id,
     tableId,
-    data: null,
+    cellsMap: {},
     correlationId: id,
     height: TABLE_ROW_HEIGHT,
     documentEditable: true,
@@ -264,22 +265,35 @@ export function createRowObjectsFromAggregated(
   return sortDataObjectsByViewSettings(objects, collection, linkType, viewSettings?.attributes, constraintData, false);
 }
 
-export function createRowValues(data: Record<string, any>, columnIdsMap: Record<string, string>): Record<string, any> {
-  return Object.keys(data || {}).reduce((rowData, attributeId) => {
-    if (columnIdsMap[attributeId]) {
-      rowData[columnIdsMap[attributeId]] = data[attributeId];
-    }
-    return rowData;
+export function createTableRowCellsMapForResource(
+  object: DataResource,
+  columns: TableColumn[],
+  resource: AttributesResource,
+  constraintData: ConstraintData,
+  overrideData?: Record<string, any>
+): TableRowCellsMap {
+  return (columns || []).reduce<TableRowCellsMap>((cellsMap, column) => {
+    const data = isNotNullOrUndefined(overrideData?.[column.id])
+      ? overrideData[column.id]
+      : object.data?.[column.attribute?.id];
+    const editable = isAttributeEditable(resource, object, column.attribute, constraintData);
+    cellsMap[column.id] = {data, editable};
+    return cellsMap;
   }, {});
 }
 
-export function createColumnIdsMap(columns: TableColumn[]): Record<string, string> {
-  return columns.reduce((idsMap, column) => {
-    if (column.attribute) {
-      idsMap[column.attribute.id] = column.id;
-    }
-    return idsMap;
-  }, {});
+export function createTableRowCellsMapForAttribute(
+  attribute: Attribute,
+  data: any,
+  columns: TableColumn[]
+): TableRowCellsMap {
+  const column = columns.find(c => c.attribute.id === attribute.id);
+  return {
+    [column.id]: {
+      data,
+      editable: false,
+    },
+  };
 }
 
 export function createPendingColumnValuesByRow(pendingValues: Record<string, PendingRowUpdate[]>): Record<string, any> {

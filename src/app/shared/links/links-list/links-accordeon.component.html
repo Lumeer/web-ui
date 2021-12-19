@@ -1,5 +1,5 @@
 <ng-container *ngIf="linkTypes?.length > 0; else noLinkTypes">
-  <accordion *ngIf="{collections: collections$ | async} as data">
+  <accordion *ngIf="{collections: collections$ | async, constraintData: constraintData$ | async} as data">
     <accordion-group *ngFor="let linkType of linkTypes; trackBy:trackById"
                      panelClass="lmr-accordion"
                      [isOpen]="!(collapsedLinkTypes | includes:linkType.id)"
@@ -36,6 +36,7 @@
           [collectionPermissions]="permissions?.collections && permissions?.collections[otherCollection.id]"
           [linkTypePermissions]="permissions?.linkTypes && permissions?.linkTypes[linkType.id]"
           [query]="query$ | async"
+          [constraintData]="data.constraintData"
           [allowSelect]="allowSelectDocument"
           [allowUnlink]="true"
           [viewId]="viewId"

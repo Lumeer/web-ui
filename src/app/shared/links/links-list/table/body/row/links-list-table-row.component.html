@@ -4,7 +4,8 @@
     <td class="table-border"
         *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.data || {} : row.document?.data || {})[column.attribute.id] | dataValue:column.attribute?.constraint:constraintData,
           editing: data.columnEditing === index, focused: data.columnFocused === index,
-          editable: column.linkTypeId ? linkEditable : documentEditable} as columnData"
+          editable: (column.linkTypeId ? linkType : collection) | isAttributeEditable:(column.linkTypeId ? row.linkInstance : row.document): column.attribute:constraintData,
+          editableByPermissions: column.linkTypeId ? linkEditable : documentEditable} as columnData"
         [style.width.px]="column.width"
         [class.focused]="columnData.focused"
         [class.editing]="columnData.editing && !column?.attribute?.constraint?.isDirectlyEditable"
@@ -14,13 +15,13 @@
         (click)="onDataInputFocus(index, $event)"
         (dblclick)="onDataInputDblClick(index, $event)">
       <ng-container
-        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:(column.editable && columnData.editable):columnData.editing as dataInputInfo">
+        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:(columnData.editable && columnData.editableByPermissions):columnData.editing as dataInputInfo">
         <data-input *ngIf="column.linkTypeId"
                     [constraint]="column.attribute?.constraint"
                     [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id:viewId)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
-                    [editableInReadonly]="column.editable && columnData.editable"
+                    [editableInReadonly]="columnData.editable && columnData.editableByPermissions"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
                     [readonly]="dataInputInfo.readonly"
@@ -36,7 +37,7 @@
                     [cursor]="row.document && (row.document | dataCursor : column.attribute.id:viewId)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
-                    [editableInReadonly]="column.editable && columnData.editable"
+                    [editableInReadonly]="columnData.editable && columnData.editableByPermissions"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
                     [readonly]="dataInputInfo.readonly"
@@ -69,14 +70,14 @@
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"
-    [collectionId]="collectionId"
+    [collectionId]="collection?.id"
     [viewId]="viewId"
     [excludedDocumentIds]="row.document?.id ? [row.document.id] : []"
     [columns]="columns | documentHintsColumns"
     [offsetLeft]="columns | calculateHintsOffset"
     [linkedDocumentId]="documentId"
     [linkInstanceId]="row.linkInstance?.id"
-    [linkTypeId]="linkTypeId"
+    [linkTypeId]="linkType?.id"
     [constraintData]="constraintData"
     [origin]="element"
     (useHint)="onUseHint()"

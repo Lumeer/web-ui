@@ -1,0 +1,26 @@
+<div class="d-inline-flex align-items-center badge badge-sm badge-success px-2 py-1">
+  <i class="far fa-lock-open mr-2" [ngClass]="lock?.locked ? 'fa-lock' : 'fa-lock-open'"></i>
+  <span *ngIf="lock?.locked" i18n="@@constraint.action.lock.disabled.short">Disabled</span>
+  <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Enabled</span>
+</div>
+<ng-container *ngIf="stats.filtersStats?.length">
+  <div class="mt-2 font-italic" i18n="@@constraint.action.lock.exceptions">Exceptions:</div>
+  <div class="content-grid mt-2">
+    <ng-container *ngFor="let stat of stats.filtersStats">
+      <ng-container *ngIf="attributesMap && attributesMap[stat.filter.attributeId] as attribute">
+        <div class="text-left pr-2 text-truncate">{{attribute.name}}</div>
+        <div class="text-left text-truncate">
+          <attribute-filter-lock-preview [constraintData]="constraintData"
+                                         [attribute]="attribute"
+                                         [condition]="stat.filter.condition"
+                                         [conditionValues]="stat.filter.conditionValues">
+          </attribute-filter-lock-preview>
+        </div>
+        <div class="text-left pl-2">
+          <i class="fas fa-check-circle"
+             [ngClass]="stat.satisfy ? 'text-success fa-check-circle' : 'text-danger fa-times-circle'"></i>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>

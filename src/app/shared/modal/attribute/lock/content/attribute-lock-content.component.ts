@@ -19,15 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
 import {AttributesResource} from '../../../../../core/model/resource';
-import {
-  Attribute,
-  AttributeLock,
-  AttributeLockExceptionGroup,
-  AttributeLockGroupType,
-} from '../../../../../core/store/collections/collection';
+import {Attribute} from '../../../../../core/store/collections/collection';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {createRange} from '../../../../utils/array.utils';
 import {createActionEquationFromFormArray} from '../../common/conditions/constraint-conditions-form.component';
+import {AttributeLock, AttributeLockExceptionGroup, AttributeLockGroupType} from '@lumeer/data-filters';
 
 @Component({
   selector: 'attribute-lock-content',

@@ -31,7 +31,7 @@
       [permissions]="allowedPermissions"
       [cursor]="dataResource | dataCursor : row.attribute?.id:viewId"
       [constraintData]="constraintData"
-      [readonly]="!dataPermissions?.edit || !(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
+      [readonly]="!dataPermissions?.edit || !(resource | isAttributeEditable :dataResource: row.attribute: constraintData)"
       [unusedAttributes]="unusedAttributes"
       [editableKey]="editableKeys"
       (newValue)="onNewValue($event, row, index)"

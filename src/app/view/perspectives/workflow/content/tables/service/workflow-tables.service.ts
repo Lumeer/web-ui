@@ -167,6 +167,9 @@ export class WorkflowTablesService {
       case HeaderMenuId.Rule:
         this.dataService.showAttributeFunction(column);
         break;
+      case HeaderMenuId.Lock:
+        this.dataService.showAttributeLock(column);
+        break;
       case HeaderMenuId.Delete:
         this.deleteColumn(column);
         break;

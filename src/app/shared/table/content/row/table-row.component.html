@@ -1,9 +1,9 @@
 <ng-container *ngFor="let group of columnGroups; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: group.column && (row.data[group.column.id] | dataValue:group.column?.attribute?.constraint:constraintData),
+    *ngIf="{dataValue: group.column && (row.cellsMap[group.column.id].data | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
-    editable: group.column?.editable && (group.column?.collectionId ? (row.documentEditable || row.canSuggest) : row.linkEditable),
+    editable: row.cellsMap[group.column.id].editable && (group.column?.collectionId ? (row.documentEditable || row.canSuggest) : row.linkEditable),
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container

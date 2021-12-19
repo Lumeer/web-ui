@@ -6,7 +6,7 @@
                   [linkValues]="linkValues"
                   [collection]="collection"
                   [documentId]="documentId"
-                  [editable]="editable"
+                  [editable]="documentEditable && (cell | formCellIsEditable:originalDocument:collection:constraintData)"
                   [editing]="editedCell | formCellIsEdited:sectionId:row.id:cell.id"
                   [formErrors]="formErrors | formErrorsByCell:cell.id"
                   (attributeValueChange)="onAttributeValueChange($event, cell.id)"

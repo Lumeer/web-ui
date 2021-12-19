@@ -26,5 +26,4 @@ export interface LinkColumn {
   collectionId?: string;
   color?: string;
   bold?: boolean;
-  editable: boolean;
 }

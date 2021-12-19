@@ -38,7 +38,7 @@ import {
   objectsByIdMap,
   objectValues,
 } from '../../../../../../shared/utils/common.utils';
-import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow, TableRowCell, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {moveItemInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
@@ -229,7 +229,8 @@ export class WorkflowTablesStateService {
   public setEditedCell(cell: TableCell, inputValue?: any) {
     const column = this.findTableColumn(cell.tableId, cell.columnId);
     const row = this.findTableRow(cell.tableId, cell.rowId);
-    if (canEditCell(cell, column, row)) {
+    const rowCell = row?.cellsMap?.[column.id];
+    if (canEditCell(cell, column, rowCell, row)) {
       this.selectedCell$.next(null);
       this.editedCell$.next({...cell, inputValue});
     }
@@ -259,6 +260,11 @@ export class WorkflowTablesStateService {
   public findTableRow(tableId: string, rowId: string): TableRow {
     const table = this.tables.find(t => t.id === tableId);
     return table?.rows.find(row => row.id === rowId);
+  }
+
+  public findTableRowCell(tableId: string, rowId: string, columnId: string): TableRowCell {
+    const table = this.tables.find(t => t.id === tableId);
+    return table?.rows.find(row => row.id === rowId)?.cellsMap?.[columnId];
   }
 
   public findColumnResourcesByColumn(column: TableColumn): {collection: Collection; linkType: LinkType} {
@@ -458,8 +464,8 @@ export class WorkflowTablesStateService {
     this.setRowProperty(row.tableId, row.id, {creating: true, [`data.${column.id}`]: value});
   }
 
-  public startRowCreating(row: TableRow, data: Record<string, any>, documentId: string) {
-    this.setRowProperty(row.tableId, row.id, {creating: true, data, documentId});
+  public startRowCreating(row: TableRow, cellsMap: TableRowCellsMap, documentId: string) {
+    this.setRowProperty(row.tableId, row.id, {creating: true, cellsMap, documentId});
   }
 
   public endRowCreating(row: TableRow) {
@@ -552,7 +558,7 @@ function cellsAreSame(c1: TableCell, c2: TableCell): boolean {
   return columnAndTableAreSame;
 }
 
-function canEditCell(cell: TableCell, column: TableColumn, row?: TableRow): boolean {
+function canEditCell(cell: TableCell, column: TableColumn, rowCell: TableRowCell, row: TableRow): boolean {
   if (column.hidden) {
     return false;
   }
@@ -560,7 +566,7 @@ function canEditCell(cell: TableCell, column: TableColumn, row?: TableRow): bool
     return column.permissions?.roles?.AttributeEdit && !column.creating;
   } else if (cell.type === TableCellType.Body) {
     const rowEditable = column.collectionId ? row?.documentEditable : row?.linkEditable;
-    return column.editable && rowEditable;
+    return rowCell?.editable && rowEditable;
   }
   return false;
 }

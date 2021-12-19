@@ -17,16 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {ActionButtonFiltersStatsWithData} from '../action-data-input.component';
+import {Pipe, PipeTransform} from '@angular/core';
+import {AttributesResource, DataResource} from '../../core/model/resource';
+import {Attribute} from '../../core/store/collections/collection';
+import {ConstraintData} from '@lumeer/data-filters';
+import {isAttributeEditable} from '../utils/attribute.utils';
 
-@Component({
-  selector: 'action-filters-tooltip',
-  templateUrl: './action-filters-tooltip.component.html',
-  styleUrls: ['./action-filters-tooltip.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'isAttributeEditable',
 })
-export class ActionFiltersTooltipComponent {
-  @Input()
-  public stats: ActionButtonFiltersStatsWithData;
+export class IsAttributeEditablePipe implements PipeTransform {
+  public transform(
+    resource: AttributesResource,
+    dataResource: DataResource,
+    attribute: Attribute,
+    constraintData: ConstraintData
+  ): boolean {
+    return isAttributeEditable(resource, dataResource, attribute, constraintData);
+  }
 }

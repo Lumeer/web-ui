@@ -44,6 +44,9 @@ import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {Action} from '@ngrx/store';
 import {DataResourcePermissions} from '../../../../../../core/model/data-resource-permissions';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {isAttributeEditable} from '../../../../../utils/attribute.utils';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -71,10 +74,10 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentPermissions: DataResourcePermissions;
 
   @Input()
-  public linkTypeId: string;
+  public linkType: LinkType;
 
   @Input()
-  public collectionId: string;
+  public collection: Collection;
 
   @Input()
   public documentId: string;
@@ -226,16 +229,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return constraint.createDataValue(initialValue, this.constraintData);
   }
 
-  private isColumnEditable(index: number): boolean {
-    const column = this.columns[index];
-    if (column.linkTypeId) {
-      return column.editable && this.linkEditable;
-    } else if (column.collectionId) {
-      return column.editable && this.documentEditable;
-    }
-    return false;
-  }
-
   private columnValue(index: number): any {
     const column = this.columns[index];
     if (column?.collectionId) {
@@ -280,9 +273,31 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   private canPatchColumnData(index: number): boolean {
     const column = this.columns[index];
     if (column.linkTypeId) {
-      return column.editable && this.linkPermissions?.edit;
+      return (
+        isAttributeEditable(this.linkType, this.row.linkInstance, column.attribute, this.constraintData) &&
+        this.linkPermissions?.edit
+      );
     } else if (column.collectionId) {
-      return column.editable && this.documentPermissions?.edit;
+      return (
+        isAttributeEditable(this.collection, this.row.document, column.attribute, this.constraintData) &&
+        this.documentPermissions?.edit
+      );
+    }
+    return false;
+  }
+
+  private isColumnEditable(index: number): boolean {
+    const column = this.columns[index];
+    if (column.linkTypeId) {
+      return (
+        isAttributeEditable(this.linkType, this.row.linkInstance, column.attribute, this.constraintData) &&
+        this.linkEditable
+      );
+    } else if (column.collectionId) {
+      return (
+        isAttributeEditable(this.collection, this.row.document, column.attribute, this.constraintData) &&
+        this.documentEditable
+      );
     }
     return false;
   }

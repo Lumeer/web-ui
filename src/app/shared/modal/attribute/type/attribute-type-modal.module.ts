@@ -50,7 +50,6 @@ import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/l
 import {ActionConstraintConfigFormComponent} from './form/constraint-config/action/action-constraint-config-form.component';
 import {FilterPreviewModule} from '../../../builder/filter-preview/filter-preview.module';
 import {FilterBuilderModule} from '../../../builder/filter-builder/filter-builder.module';
-import {ActionConstraintPermissionsFormComponent} from './form/constraint-config/action/permissions/action-constraint-permissions-form.component';
 import {CollectionSettingsPathPipe} from './form/constraint-config/action/pipes/collection-settings-path.pipe';
 import {RouterModule} from '@angular/router';
 import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
@@ -84,7 +83,6 @@ import {AttributeLockPreviewComponent} from './form/constraint-config/action/loc
     AttributeTypeModalComponent,
     LinkConstraintConfigFormComponent,
     ActionConstraintConfigFormComponent,
-    ActionConstraintPermissionsFormComponent,
     CollectionSettingsPathPipe,
     ActionConstraintConfigEmptyComponent,
     ActionConstraintConfirmationFormComponent,

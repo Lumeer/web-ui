@@ -25,7 +25,7 @@ export interface TableRow {
   height: number;
   creating?: boolean;
   documentId?: string;
-  data?: Record<string, any>; // columnId -> string
+  cellsMap?: TableRowCellsMap; // columnId -> string
   linkInstanceId?: string;
   linkedDocumentId?: string; // used for newly created row
   correlationId?: string;
@@ -35,4 +35,11 @@ export interface TableRow {
   canSuggest: boolean;
   documentMenuItems: MenuItem[];
   linkMenuItems: MenuItem[];
+}
+
+export type TableRowCellsMap = Record<string, TableRowCell>;
+
+export interface TableRowCell {
+  data: any;
+  editable: boolean;
 }

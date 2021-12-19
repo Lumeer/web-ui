@@ -11,7 +11,7 @@
                           [permissions]="permissions"
                           [cursor]="dataResource | dataCursor:row.attribute?.id:view?.id"
                           [constraintData]="constraintData"
-                          [readonly]="!data.writable || !(data.resource | resourceAttributeEditable : row.id: permissions: query)"
+                          [readonly]="!data.writable || !(data.resource | isAttributeEditable :dataResource: row.attribute:constraintData)"
                           [unusedAttributes]="unusedAttributes$ | async"
                           [preventEventBubble]="preventEventBubble"
                           [workspace]="workspace"

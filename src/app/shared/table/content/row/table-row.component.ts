@@ -164,9 +164,9 @@ export class TableRowComponent implements OnInit, OnChanges {
 
   private isColumnEditable(column: TableColumn): boolean {
     if (column?.collectionId) {
-      return column.editable && this.row?.documentEditable;
+      return this.row.cellsMap?.[column.id]?.editable && this.row?.documentEditable;
     } else if (column?.linkTypeId) {
-      return column.editable && this.row?.linkEditable;
+      return this.row.cellsMap?.[column.id]?.editable && this.row?.linkEditable;
     }
     return false;
   }
@@ -198,9 +198,9 @@ export class TableRowComponent implements OnInit, OnChanges {
   private columnValue(column: TableColumn): any {
     if (column?.attribute) {
       if (column?.collectionId) {
-        return this.row.data?.[column.id];
+        return this.row.cellsMap?.[column.id]?.data;
       } else if (column?.linkTypeId) {
-        return this.row.data?.[column.id];
+        return this.row.cellsMap?.[column.id]?.data;
       }
     }
     return null;

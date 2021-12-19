@@ -38,7 +38,6 @@ import {KeyCode} from '../key-code';
 import {DataInputSaveAction} from './data-input-save-action';
 import {Constraint, ConstraintType, DataValue} from '@lumeer/data-filters';
 import {Workspace} from '../../core/store/navigation/workspace';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
 
 @Component({
   selector: 'data-input',
@@ -79,9 +78,6 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   @Input()
   public workspace: Workspace;
-
-  @Input()
-  public permissions: AllowedPermissions;
 
   @Output()
   public valueChange = new EventEmitter<DataValue>();

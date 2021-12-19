@@ -23,14 +23,15 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
-import {UserConstraintType, UserDataValue} from '@lumeer/data-filters';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {AttributesResource} from '../../../../../../core/model/resource';
 import {
-  Attribute,
   AttributeLockExceptionGroup,
   AttributeLockGroupType,
-} from '../../../../../../core/store/collections/collection';
+  UserConstraintType,
+  UserDataValue,
+} from '@lumeer/data-filters';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {Attribute} from '../../../../../../core/store/collections/collection';
 import {deepArrayEquals} from '../../../../../utils/array.utils';
 import {SelectItem2Model} from '../../../../../select/select-item2/select-item2.model';
 

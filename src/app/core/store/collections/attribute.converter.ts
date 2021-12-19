@@ -26,13 +26,7 @@ import {
   AttributeLockExceptionGroupDto,
   ConstraintDto,
 } from '../../dto/attribute.dto';
-import {
-  Attribute,
-  AttributeFunction,
-  AttributeLock,
-  AttributeLockExceptionGroup,
-  AttributeLockGroupType,
-} from './collection';
+import {Attribute, AttributeFunction} from './collection';
 import {
   Constraint,
   ConstraintConfig,
@@ -42,6 +36,9 @@ import {
   SelectConstraintConfig,
   SelectConstraintOption,
   UnknownConstraint,
+  AttributeLock,
+  AttributeLockExceptionGroup,
+  AttributeLockGroupType,
 } from '@lumeer/data-filters';
 import {selectDefaultPalette} from '../../../shared/picker/colors';
 import {

@@ -18,9 +18,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {Attribute, AttributeFunction, AttributeLock, Collection} from '../../../../core/store/collections/collection';
+import {Attribute, AttributeFunction, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -40,7 +41,6 @@ import {LinkTypesAction} from '../../../../core/store/link-types/link-types.acti
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {DialogType} from '../../dialog-type';
-import {FormControl, FormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../../core/model/resource';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {selectResourceVariablesByResourceType} from '../../../../core/store/resource-variables/resource-variables.state';
@@ -49,6 +49,7 @@ import {attributeHasEditableFunction, attributeHasFunction, attributeRuleFunctio
 import {BlocklyRule, Rule} from '../../../../core/model/rule';
 import {View} from '../../../../core/store/views/view';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {AttributeLock} from '@lumeer/data-filters';
 
 @Component({
   selector: 'attribute-function-dialog',

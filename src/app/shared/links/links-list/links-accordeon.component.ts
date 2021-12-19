@@ -32,6 +32,8 @@ import {selectAllCollections} from '../../../core/store/collections/collections.
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {preventEvent} from '../../utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {ConstraintData} from '@lumeer/data-filters';
 
 @Component({
   selector: 'links-accordeon',
@@ -116,12 +118,14 @@ export class LinksAccordeonComponent implements OnInit {
 
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
+  public constraintData$: Observable<ConstraintData>;
 
   public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public onSetLinks(event: MouseEvent, linkType: LinkType) {

@@ -18,11 +18,12 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {HintBoxModule} from './hint/hint-box.module';
 import {InfoBoxComponent} from './info/info-box.component';
 
 @NgModule({
-  imports: [HintBoxModule],
+  imports: [CommonModule, HintBoxModule],
   exports: [HintBoxModule, InfoBoxComponent],
   declarations: [InfoBoxComponent],
 })

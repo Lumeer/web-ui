@@ -33,11 +33,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {QueryAttribute, queryAttributePermissions} from '../../../core/model/query-attribute';
 import {deepObjectCopy, objectsByIdMap} from '../common.utils';
 import {AllowedPermissions, ResourcesPermissions} from '../../../core/model/allowed-permissions';
-import {
-  findAttributeConstraint,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../core/store/collections/collection.util';
+import {findAttribute, findAttributeConstraint} from '../../../core/store/collections/collection.util';
 import {
   ColorConstraint,
   Constraint,
@@ -50,6 +46,7 @@ import {
 } from '@lumeer/data-filters';
 import {View} from '../../../core/store/views/view';
 import {getViewColor} from '../../../core/store/views/view.utils';
+import {isAttributeEditable} from '../attribute.utils';
 
 export interface DataObjectInfo<T> {
   objectDataResources: Record<DataObjectInfoKey, DataResource>;
@@ -234,19 +231,15 @@ export class DataObjectAggregator<T> {
     return null;
   }
 
-  public isAttributeEditable(model: QueryAttribute): boolean {
+  public isAttributeEditable(model: QueryAttribute, dataResource: DataResource): boolean {
     if (model && model.resourceType === AttributesResourceType.Collection) {
       const collection = this.collectionsMap[model.resourceId];
-      return (
-        collection &&
-        isCollectionAttributeEditable(model.attributeId, collection, this.attributePermissions(model), this.query)
-      );
+      const attribute = findAttribute(collection?.attributes, model.attributeId);
+      return attribute && isAttributeEditable(collection, dataResource, attribute, this.constraintData);
     } else if (model && model.resourceType === AttributesResourceType.LinkType) {
       const linkType = this.linkTypesMap[model.resourceId];
-      return (
-        linkType &&
-        isLinkTypeAttributeEditable(model.attributeId, linkType, this.attributePermissions(model), this.query)
-      );
+      const attribute = findAttribute(linkType?.attributes, model.attributeId);
+      return attribute && isAttributeEditable(linkType, dataResource, attribute, this.constraintData);
     }
 
     return false;

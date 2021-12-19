@@ -13,7 +13,7 @@
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="{editable: editable && (data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)} as dataInputData">
+    *ngIf="{editable: editable && (resource | isAttributeEditable:(document || linkInstance):data.attribute:constraintData)} as dataInputData">
     <ng-container
       *ngIf="data.attribute | dataInputEditInfo:data.dataValue:dataInputData.editable: (editing$ | async) as dataInputInfo">
 

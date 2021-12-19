@@ -27,9 +27,9 @@ import {Rule, RuleType} from '../../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../../select/select-item/select-item.model';
 import {AttributesResource} from '../../../../../../../core/model/resource';
 import {IconColorPickerComponent} from '../../../../../../picker/icon-color/icon-color-picker.component';
-import {Attribute, AttributeLock} from '../../../../../../../core/store/collections/collection';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {ActionConstraintConfig, ConstraintType} from '@lumeer/data-filters';
+import {ActionConstraintConfig, ConstraintType, AttributeLock} from '@lumeer/data-filters';
 
 @Component({
   selector: 'action-constraint-config-form',

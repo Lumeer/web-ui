@@ -20,7 +20,7 @@
 import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {Attribute, AttributeLock, Collection} from '../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
@@ -32,6 +32,7 @@ import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-typ
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {AttributeLockContentComponent} from './content/attribute-lock-content.component';
+import {AttributeLock} from '@lumeer/data-filters';
 
 @Component({
   templateUrl: './attribute-lock-modal.component.html',

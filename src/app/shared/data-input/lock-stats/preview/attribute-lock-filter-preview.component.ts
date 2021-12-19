@@ -19,16 +19,16 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {ConditionType, ConditionValue, ConstraintData} from '@lumeer/data-filters';
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {DataInputConfiguration} from '../../../data-input-configuration';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 
 @Component({
-  selector: 'action-filter-preview',
-  templateUrl: '../../../../builder/filter-preview/filter-preview.component.html',
+  selector: 'attribute-filter-lock-preview',
+  templateUrl: 'attribute-lock-filter-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-inline-flex text-truncate text-nowrap align-items-center'},
 })
-export class ActionFilterPreviewComponent {
+export class AttributeLockFilterPreviewComponent {
   @Input()
   public condition: ConditionType;
 

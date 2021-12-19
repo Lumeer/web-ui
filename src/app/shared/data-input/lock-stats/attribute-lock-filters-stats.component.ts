@@ -18,26 +18,26 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {RoleType} from '../../../../../../../../core/model/role-type';
-import {ActionRole} from '@lumeer/data-filters';
+import {ActionButtonFiltersStatsWithData} from '../../data-input/action/action-data-input.component';
+import {AttributeLock, ConstraintData} from '@lumeer/data-filters';
+import {Attribute} from '../../../core/store/collections/collection';
 
 @Component({
-  selector: 'action-constraint-permissions-form',
-  templateUrl: './action-constraint-permissions-form.component.html',
-  styleUrls: ['../../../../../../../../../styles/custom/_user-roles.scss'],
+  selector: 'attribute-lock-filters-stats',
+  templateUrl: './attribute-lock-filters-stats.component.html',
+  styleUrls: ['./attribute-lock-filters-stats.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActionConstraintPermissionsFormComponent {
+export class AttributeLockFiltersStatsComponent {
   @Input()
-  public role: RoleType;
+  public lock: AttributeLock;
 
   @Input()
-  public roleControl: FormControl;
+  public stats: ActionButtonFiltersStatsWithData;
 
-  public readonly actionRoles = Object.values(ActionRole);
+  @Input()
+  public attributesMap: Record<string, Attribute>;
 
-  public selectRole(role: RoleType) {
-    this.roleControl.setValue(role);
-  }
+  @Input()
+  public constraintData: ConstraintData;
 }

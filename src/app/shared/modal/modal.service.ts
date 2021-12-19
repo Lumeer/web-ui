@@ -19,6 +19,8 @@
 
 import {Injectable, TemplateRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
+import {NavigationExtras} from '@angular/router';
+
 import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
 import {AttributeTypeModalComponent} from './attribute/type/attribute-type-modal.component';
 import {AppState} from '../../core/store/app.state';
@@ -42,7 +44,6 @@ import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-li
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
-import {NavigationExtras} from '@angular/router';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
 import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
@@ -59,7 +60,7 @@ import {userHasRoleInOrganization} from '../utils/permission.utils';
 import {RoleType} from '../../core/model/role-type';
 import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
 import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
-import {AttributeLock} from '../../core/store/collections/collection';
+import {AttributeLock} from '@lumeer/data-filters';
 
 type Options = ModalOptions & {initialState: any};
 

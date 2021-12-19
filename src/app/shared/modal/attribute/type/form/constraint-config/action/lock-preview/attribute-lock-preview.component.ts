@@ -18,11 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Attribute, AttributeLock} from '../../../../../../../../core/store/collections/collection';
+import {Attribute} from '../../../../../../../../core/store/collections/collection';
 import {ModalService} from '../../../../../../modal.service';
 import {AttributesResource, AttributesResourceType} from '../../../../../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../../../../utils/resource.utils';
-import {AttributeFilter} from '@lumeer/data-filters/dist/model/attribute-filter';
+import {AttributeFilter, AttributeLock} from '@lumeer/data-filters';
 
 @Component({
   selector: 'attribute-lock-preview',
