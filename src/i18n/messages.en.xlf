@@ -4305,7 +4305,13 @@
       </trans-unit><trans-unit id="blockly.tooltip.readDocumentsBlock" datatype="html">
         <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</source><target state="final">Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
+        <source>Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</source><target state="final">Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/replace-pattern-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
         <source>Opens a new email using the system default email application.</source><target state="final">Opens a new email using the system default email application.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/send-email-blockly-component.ts</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="blockly.tooltip.sendSmtpEmailBlock" datatype="html">

@@ -28,7 +28,7 @@ export class ReplacePatternBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils) {
     super(blocklyUtils);
 
-    this.tooltip = $localize`:@@blockly.tooltip.replacePatternBlock:Replaces patterns specified as an array, hash map, object, or string in a given string. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of \${pattern_name}`;
+    this.tooltip = $localize`:@@blockly.tooltip.replacePatternBlock:Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of \${pattern_name}.`;
   }
 
   public getVisibility(): MasterBlockType[] {

@@ -6265,7 +6265,13 @@
 					<target>A kiválasztott nézetből visszaküldött rekordok olvasása. Ha több táblázatot vagy linket használ, csak az első táblázat rekordjai kerülnek vissza. Legfeljebb
 						<x id="limit" equiv-text="{{limit}}"/>
 						rekord kerül visszaadásra.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
+        <source>Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</source><target state="new">Replaces patterns specified as an array, hash map, object, or string in a given string. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/replace-pattern-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="blockly.tooltip.sendEmailBlock">
 					<source>Opens a new email using the system default email application.</source>
 					<target>Új e-mailt nyit meg a rendszer alapértelmezett e-mail alkalmazásával.</target>

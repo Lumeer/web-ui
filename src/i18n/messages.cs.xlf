@@ -6121,7 +6121,14 @@
         <source>Read records returned from the selected view. If there are multiple tables or links used, only records from the first table are returned. At most <x id="limit" equiv-text="limit"/> records are returned.</source>
         <target>Načte záznamy z daného pohledu. Pokud pohled obsahuje více tabulek, nebo vazeb, vrátí záznamy jen z první tabulky. Vrátí nejvýše <x id="limit" equiv-text="{{limit}}"/> záznamů.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/read-documents-blockly-component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="blockly.tooltip.replacePatternBlock" datatype="html">
+        <source>Replaces patterns specified as an array, hash map, object, or string in a given text or HTML. When patterns are in an array or in a string (only one can be used in a string), the pattern name and value are separated by the given splitter. Patterns need to appear in the form of ${pattern_name}.</source>
+        <target>Nahradí vzorky z pole, hash mapy, objektu, nebo řetězce v daném textu nebo HTML. Pokud jsou vzorky v poli nebo řetězci (v řetězci může být jen jeden vzorek), jsou vzorky rozděleny pomocí uvedeného rozdělovače. Vzorky se v textu musí vysytovat ve formátu ${název_vzorku}.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/replace-pattern-blockly-component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.sendEmailBlock" datatype="html">
         <source>Opens a new email using the system default email application.</source>
         <target>Otevře nový email pomocí výchozí emailové aplikace.</target>
 
