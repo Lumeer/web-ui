@@ -23,7 +23,6 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {ResourceType} from '../../model/resource-type';
-import {reversedArray} from '../../../shared/utils/array.utils';
 
 export interface ResourceVariablesState extends EntityState<ResourceVariable> {
   loadedProjects: string[];
@@ -52,6 +51,21 @@ export const selectAllResourceVariables = createSelector(
 export const selectResourceVariablesDictionary = createSelector(
   selectResourceVariablesState,
   resourceVariablesAdapter.getSelectors().selectEntities
+);
+
+export const selectResourceVariablesKeysByCurrentProject = createSelector(
+  selectWorkspaceWithIds,
+  selectAllResourceVariables,
+  (workspace, variables) =>
+    variables
+      .filter(
+        variable =>
+          variable.organizationId === workspace.organizationId &&
+          variable.resourceType === ResourceType.Project &&
+          variable.resourceId === workspace.projectId
+      )
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .map(variable => variable.key)
 );
 
 export const selectResourceVariablesByResourceType = (resourceId: string, resourceType: ResourceType) =>

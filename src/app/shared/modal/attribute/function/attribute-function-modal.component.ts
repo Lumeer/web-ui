@@ -26,7 +26,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
-import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {
   selectReadableCollections,
@@ -42,10 +42,13 @@ import {CollectionsAction} from '../../../../core/store/collections/collections.
 import {keyboardEventCode, KeyCode} from '../../../key-code';
 import {DialogType} from '../../dialog-type';
 import {AttributesResource} from '../../../../core/model/resource';
-import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {selectResourceVariablesByResourceType} from '../../../../core/store/resource-variables/resource-variables.state';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {attributeHasEditableFunction, attributeHasFunction, attributeRuleFunction, findAttributeRule} from '../../../utils/attribute.utils';
+import {selectResourceVariablesKeysByCurrentProject} from '../../../../core/store/resource-variables/resource-variables.state';
+import {
+  attributeHasEditableFunction,
+  attributeHasFunction,
+  attributeRuleFunction,
+  findAttributeRule,
+} from '../../../utils/attribute.utils';
 import {BlocklyRule, Rule} from '../../../../core/model/rule';
 import {View} from '../../../../core/store/views/view';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -97,17 +100,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   public ngOnInit() {
     this.collections$ = this.store$.pipe(select(selectReadableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
-    this.variableNames$ = this.store$.pipe(
-      select(selectProjectByWorkspace),
-      switchMap(project => {
-        return this.store$.pipe(
-          select(selectResourceVariablesByResourceType(project.id, ResourceType.Project)),
-          map(resourceVariables => {
-            return resourceVariables.map(variable => variable.key);
-          })
-        );
-      })
-    );
+    this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(
