@@ -587,7 +587,7 @@ function areDatesValid(start: string, end: string, endConstraint: Constraint): b
 }
 
 function isDateValidRange(dateString: string): boolean {
-  const startDate = parseDateTimeByConstraint(dateString, null); // TODO
+  const startDate = parseDateTimeByConstraint(dateString, null);
   const momentDate = startDate && moment(startDate);
   return isDateValid(startDate) && momentDate.year() > 1970 && momentDate.year() < 2200;
 }

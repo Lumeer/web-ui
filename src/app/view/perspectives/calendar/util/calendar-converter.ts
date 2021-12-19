@@ -191,6 +191,18 @@ export class CalendarConverter {
           formattedGroups,
         };
 
+        const durationEditable =
+          interval.end &&
+          stemConfig.end &&
+          endEditable &&
+          userCanEditDataResource(
+            endDataResource,
+            endResource,
+            endPermission,
+            this.constraintData?.currentUser,
+            this.constraintData
+          );
+
         const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
         const eventGroupId = groupId(item);
         const event: CalendarEvent = {
@@ -204,6 +216,7 @@ export class CalendarConverter {
           allDay,
           startEditable:
             startEditable &&
+            durationEditable &&
             userCanEditDataResource(
               startDataResource,
               startResource,
@@ -211,17 +224,7 @@ export class CalendarConverter {
               this.constraintData?.currentUser,
               this.constraintData
             ),
-          durationEditable:
-            interval.end &&
-            stemConfig.end &&
-            endEditable &&
-            userCanEditDataResource(
-              endDataResource,
-              endResource,
-              endPermission,
-              this.constraintData?.currentUser,
-              this.constraintData
-            ),
+          durationEditable,
           extendedProps,
           resourceIds,
         };
