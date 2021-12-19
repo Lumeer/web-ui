@@ -129,7 +129,7 @@ export function extractAttributeParentName(name: string): string {
   return name && splitAttributeName(name).parentName;
 }
 
-export function splitAttributeName(name: string): { parentName: string; lastName: string } {
+export function splitAttributeName(name: string): {parentName: string; lastName: string} {
   const parts = name.split('.');
   if (parts.length === 1) {
     return {parentName: null, lastName: name};
@@ -202,8 +202,8 @@ export function renameChildAttributes(
 export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttribute: Attribute): Attribute[] {
   return oldAttribute
     ? attributes.filter(
-      attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
-    )
+        attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
+      )
     : attributes;
 }
 
