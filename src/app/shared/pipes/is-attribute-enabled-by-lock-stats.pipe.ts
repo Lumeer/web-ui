@@ -17,26 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {AttributeLock, AttributeLockFiltersStats, ConstraintData} from '@lumeer/data-filters';
-import {Attribute} from '../../../core/store/collections/collection';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Attribute} from '../../core/store/collections/collection';
+import {AttributeLockFiltersStats} from '@lumeer/data-filters';
+import {isAttributeLockEnabledByLockStats} from '../utils/attribute.utils';
 
-@Component({
-  selector: 'attribute-lock-filters-stats',
-  templateUrl: './attribute-lock-filters-stats.component.html',
-  styleUrls: ['./attribute-lock-filters-stats.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'isAttributeEnabledByLockStats',
 })
-export class AttributeLockFiltersStatsComponent {
-  @Input()
-  public lock: AttributeLock;
-
-  @Input()
-  public stats: AttributeLockFiltersStats;
-
-  @Input()
-  public attributesMap: Record<string, Attribute>;
-
-  @Input()
-  public constraintData: ConstraintData;
+export class IsAttributeEnabledByLockStatsPipe implements PipeTransform {
+  public transform(attribute: Attribute, stats: AttributeLockFiltersStats): boolean {
+    return isAttributeLockEnabledByLockStats(attribute?.lock, stats);
+  }
 }

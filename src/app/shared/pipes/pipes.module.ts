@@ -106,6 +106,9 @@ import {ViewLinkPipe} from './view-link.pipe';
 import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {IsProjectTypePipe} from './is-project-type.pipe';
+import {AttributeLockStatsPipe} from './attribute-lock-stats.pipe';
+import {IsAttributeEnabledByLockStatsPipe} from './is-attribute-enabled-by-lock-stats.pipe';
+import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -143,6 +146,8 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
     IsAttributeEditablePipe,
+    AttributeLockStatsPipe,
+    IsAttributeEnabledByLockStatsPipe,
     ConstraintTypeIconPipe,
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
@@ -170,6 +175,7 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
+    ResourceAttributesMapPipe,
     CleanQueryAttributePipe,
     QueryStemAttributesSelectItemsPipe,
     QueryStemResourcesSelectItemsPipe,
@@ -232,6 +238,8 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
     IsAttributeEditablePipe,
+    AttributeLockStatsPipe,
+    IsAttributeEnabledByLockStatsPipe,
     ConstraintTypeIconPipe,
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
@@ -259,6 +267,7 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
+    ResourceAttributesMapPipe,
     CleanQueryAttributePipe,
     QueryStemAttributesSelectItemsPipe,
     QueryStemResourcesSelectItemsPipe,

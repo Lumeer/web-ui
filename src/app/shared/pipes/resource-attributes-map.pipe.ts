@@ -17,26 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {AttributeLock, AttributeLockFiltersStats, ConstraintData} from '@lumeer/data-filters';
-import {Attribute} from '../../../core/store/collections/collection';
+import {Pipe, PipeTransform} from '@angular/core';
+import {AttributesResource} from '../../core/model/resource';
+import {Attribute} from '../../core/store/collections/collection';
+import {objectsByIdMap} from '../utils/common.utils';
 
-@Component({
-  selector: 'attribute-lock-filters-stats',
-  templateUrl: './attribute-lock-filters-stats.component.html',
-  styleUrls: ['./attribute-lock-filters-stats.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'resourceAttributesMap',
 })
-export class AttributeLockFiltersStatsComponent {
-  @Input()
-  public lock: AttributeLock;
-
-  @Input()
-  public stats: AttributeLockFiltersStats;
-
-  @Input()
-  public attributesMap: Record<string, Attribute>;
-
-  @Input()
-  public constraintData: ConstraintData;
+export class ResourceAttributesMapPipe implements PipeTransform {
+  public transform(resource: AttributesResource): Record<string, Attribute> {
+    return objectsByIdMap(resource?.attributes);
+  }
 }

@@ -26,6 +26,17 @@
   }
 }
 
+.lock-icon {
+  position: absolute;
+  display: inline-flex;
+  right: 2px;
+  bottom: 2px;
+  padding: 0.25rem;
+  background: white;
+  border-radius: 1rem;
+  z-index: 10;
+}
+
 ::ng-deep p {
   margin-bottom: 0;
   line-height: 1.5rem;

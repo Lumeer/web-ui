@@ -13,9 +13,9 @@
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="{editable: editable && (resource | isAttributeEditable:(document || linkInstance):data.attribute:constraintData)} as dataInputData">
+    *ngIf="{lockStats: (resource | attributeLockStats:(document || linkInstance):data.attribute:constraintData)} as dataInputData">
     <ng-container
-      *ngIf="data.attribute | dataInputEditInfo:data.dataValue:dataInputData.editable: (editing$ | async) as dataInputInfo">
+      *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editable: (editing$ | async):dataInputData.lockStats as dataInputInfo">
 
       <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
            [innerHTML]="data.dataValue | previewDataValue | safeHtml"
@@ -34,7 +34,7 @@
                   [focus]="true"
                   [configuration]="configuration"
                   [readonly]="dataInputInfo.readonly"
-                  [editableInReadonly]="dataInputData.editable"
+                  [editableInReadonly]="dataInputInfo.editable"
                   (valueChange)="onValueChange($event)"
                   (save)="onValueSave($event)"
                   (cancel)="onCancelEditing()"
@@ -43,9 +43,24 @@
                   [ngClass]="data.attribute?.constraint?.type | lowercase"
                   [class.mr-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
                   [class.ml-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
-                  [class.cursor-default]="!dataInputData.editable"
+                  [class.cursor-default]="!dataInputInfo.editable"
                   data-test="table-data-input">
       </data-input>
+
+      <div *ngIf="(mouseEntered$ | async) && dataInputInfo.showLockStats && !(data.attribute | isAttributeEnabledByLockStats:dataInputData.lockStats)"
+           @enterAnimation
+           class="lock-icon cursor-pointer"
+           [tooltip]="statsTooltip" containerClass="bigger-tooltip">
+        <i class="fas fa-sm fa-lock"></i>
+
+        <ng-template #statsTooltip>
+          <attribute-lock-filters-stats [lock]="data.attribute?.lock"
+                                        [stats]="dataInputData.lockStats"
+                                        [constraintData]="constraintData"
+                                        [attributesMap]="resource | resourceAttributesMap">
+          </attribute-lock-filters-stats>
+        </ng-template>
+      </div>
 
     </ng-container>
   </ng-container>

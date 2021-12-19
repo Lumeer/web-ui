@@ -84,12 +84,19 @@ import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
 import {View} from '../../../../../../../core/store/views/view';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {AttributesResource} from '../../../../../../../core/model/resource';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'table-data-cell',
   templateUrl: './table-data-cell.component.html',
   styleUrls: ['./table-data-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('enterAnimation', [
+      transition(':enter', [style({opacity: 0}), animate('200ms ease-in-out', style({opacity: 1}))]),
+      transition(':leave', [style({opacity: 1}), animate('200ms ease-in-out', style({opacity: 0}))]),
+    ]),
+  ],
 })
 export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -166,6 +173,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public tableBorderBottom = true;
 
   public editing$ = new BehaviorSubject(false);
+  public mouseEntered$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
   public dataValue$: Observable<DataValue>;
 
@@ -429,6 +437,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedSubscriptions.unsubscribe();
     this.affectedSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
+  }
+
+  @HostListener('mouseenter')
+  public onMouseEnter() {
+    this.mouseEntered$.next(true);
+  }
+
+  @HostListener('mouseleave')
+  public onMouseLeave() {
+    this.mouseEntered$.next(false);
   }
 
   @HostListener('click', ['$event'])

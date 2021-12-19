@@ -45,7 +45,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {filterAttributesByFilters, isAttributeLockEnabledByStats} from '../../utils/attribute.utils';
+import {filterAttributesByFilters, isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
 import {
   ActionConstraintConfig,
   ActionDataValue,
@@ -209,7 +209,7 @@ export class ActionDataInputComponent implements OnChanges {
       attributesMap,
       constraintData,
       lock,
-      disabled: !isAttributeLockEnabledByStats(lock, stats),
+      disabled: !isAttributeLockEnabledByLockStats(lock, stats),
     };
   }
 

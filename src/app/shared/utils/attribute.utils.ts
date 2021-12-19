@@ -337,10 +337,10 @@ export function isAttributeEditable(
   constraintData: ConstraintData
 ): boolean {
   const stats = computeAttributeLockStats(dataResource, resource, attribute?.lock, constraintData);
-  return isAttributeLockEnabledByStats(attribute?.lock, stats);
+  return isAttributeLockEnabledByLockStats(attribute?.lock, stats);
 }
 
-export function isAttributeLockEnabledByStats(lock: AttributeLock, stats: AttributeLockFiltersStats): boolean {
+export function isAttributeLockEnabledByLockStats(lock: AttributeLock, stats: AttributeLockFiltersStats): boolean {
   if (lock?.locked) {
     return stats?.satisfy;
   }
