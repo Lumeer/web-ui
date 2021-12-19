@@ -43,6 +43,7 @@ export class GeneratePdfBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.GENERATE_PDF,
+          lastDummyAlign0: 'RIGHT',
           message0: '%{BKY_BLOCK_GENERATE_PDF}', // generate PDF from HTML %1 save it to %2 in record %3 with file name %4 overwrite existing %5
           args0: [
             {
