@@ -118,6 +118,7 @@ export class BlocklyUtils {
   public static readonly GET_RESOURCE_VARIABLE = 'get_resource_variable';
   public static readonly GET_SMTP_CONFIGURATION = 'get_smtp_configuration';
   public static readonly STRING_REPLACE = 'string_replace';
+  public static readonly REPLACE_PATTERN = 'replace_pattern';
   public static readonly LOOP_BREAK = 'loop_break';
   public static readonly LOOP_CONTINUE = 'loop_continue';
   public static readonly BLOCK_COMMENT = 'block_comment';

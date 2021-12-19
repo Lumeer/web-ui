@@ -108,6 +108,7 @@ import {GeneratePdfBlocklyComponent} from './blocks/generate-pdf-blockly-compone
 import {GetVariableBlocklyComponent} from './blocks/get-variable-blockly-component';
 import {GetSmtpConfigurationBlocklyComponent} from './blocks/get-smtp-configuration-blockly-component';
 import {SendSmtpEmailBlocklyComponent} from './blocks/send-smtp-email-blockly-component';
+import {ReplacePatternBlocklyComponent} from './blocks/replace-pattern-blockly-component';
 
 declare var Blockly: any;
 
@@ -249,6 +250,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetVariableBlocklyComponent(this.blocklyUtils, this.variableNames),
       new GetSmtpConfigurationBlocklyComponent(this.blocklyUtils),
       new SendSmtpEmailBlocklyComponent(this.blocklyUtils),
+      new ReplacePatternBlocklyComponent(this.blocklyUtils),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
