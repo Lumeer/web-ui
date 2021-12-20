@@ -43,3 +43,7 @@ export function convertViewCursorToString(cursor: ViewCursor): string {
 export function convertStringToViewCursor(cursor: string): ViewCursor {
   return prolongViewCursor(parseShortenedViewCursor(decodeQueryParam(cursor)));
 }
+
+export function viewCursorsAreSame(c1: ViewCursor, c2: ViewCursor): boolean {
+  return convertViewCursorToString(c1) === convertViewCursorToString(c2);
+}
