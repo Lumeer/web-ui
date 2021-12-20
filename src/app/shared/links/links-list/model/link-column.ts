@@ -20,6 +20,7 @@
 import {Attribute} from '../../../../core/store/collections/collection';
 
 export interface LinkColumn {
+  id: string;
   width: number;
   attribute: Attribute;
   linkTypeId?: string;

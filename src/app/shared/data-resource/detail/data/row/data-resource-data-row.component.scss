@@ -1,21 +1,15 @@
 @import '../../../../../../styles/variables';
 
 :host::ng-deep {
-  .button-remove,
-  .button-config,
-  .button-function {
+  .row-hover-button {
     opacity: 0;
     transition: opacity $animation-color-duration;
   }
+}
 
-  &:hover,
-  &:focus,
-  &:active {
-    .button-remove,
-    .button-config,
-    .button-function {
-      opacity: 1;
-    }
+:host:hover::ng-deep {
+  .row-hover-button {
+    opacity: 1;
   }
 }
 

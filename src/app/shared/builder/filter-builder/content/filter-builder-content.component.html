@@ -19,7 +19,7 @@
                 *ngIf="attributeWithoutLock | dataInputEditInfo:dataValues[column]:editable: ((editing$ | async) === column) as dataInputInfo"
                 [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
                 [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
-                [class.editing]="!attribute.constraint?.isDirectlyEditable && dataInputInfo.editing"
+                [class.editing]="dataInputInfo.editing"
                 [class.cursor-pointer]="dataInputInfo.editable"
                 [constraint]="attribute.constraint"
                 [dataValue]="dataValues[column]"

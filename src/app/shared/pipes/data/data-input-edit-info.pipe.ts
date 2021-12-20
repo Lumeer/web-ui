@@ -68,7 +68,7 @@ export class DataInputEditInfoPipe implements PipeTransform {
       hasValue,
       showDataInput: forceDataInput || !readonly || (!asText && hasValue),
       additionalMargin: constraint.type === ConstraintType.Select,
-      editing,
+      editing: editing && editable && !attribute?.constraint?.isDirectlyEditable,
       showLockStats,
     };
   }

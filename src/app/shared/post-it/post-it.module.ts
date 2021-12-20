@@ -30,6 +30,7 @@ import {InputModule} from '../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {PostItLayoutTypeClassPipe} from './pipes/post-it-layout-type-class.pipe';
 import {DirectivesModule} from '../directives/directives.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,16 @@ import {DirectivesModule} from '../directives/directives.module';
     DataResourceFavoritePipe,
     PostItLayoutTypeClassPipe,
   ],
-  imports: [CommonModule, DataInputModule, PipesModule, PresenterModule, DirectivesModule, InputModule, DragDropModule],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    PipesModule,
+    PresenterModule,
+    DirectivesModule,
+    InputModule,
+    DragDropModule,
+    TooltipModule,
+  ],
   exports: [PostItComponent],
 })
 export class PostItModule {}

@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {DataRowComponent} from '../../data/data-row-component';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DataRow} from '../../data/data-row.service';
@@ -27,13 +36,21 @@ import {BehaviorSubject} from 'rxjs';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 import {PostItLayoutType} from '../post-it-layout-type';
-import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {
+  AttributeLockFiltersStats,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {animateOpacityEnterLeave} from '../../animations';
 
 @Component({
   selector: 'post-it-row',
   templateUrl: './post-it-row.component.html',
   styleUrls: ['./post-it-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [animateOpacityEnterLeave],
 })
 export class PostItRowComponent implements DataRowComponent, OnChanges {
   @Input()
@@ -53,6 +70,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   @Input()
   public unusedAttributes: Attribute[];
+
+  @Input()
+  public lockStats: AttributeLockFiltersStats;
 
   @Input()
   public layoutType: PostItLayoutType;
@@ -80,6 +100,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true, delaySaveAction: true}};
 
+  public mouseEntered$ = new BehaviorSubject(false);
   public keyFocused$ = new BehaviorSubject(false);
   public keyEditing$ = new BehaviorSubject(false);
   public keyDataValue: DataValue;
@@ -271,5 +292,15 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   public onValueEdit(value: DataValue) {
     this.editedValue = value;
+  }
+
+  @HostListener('mouseenter')
+  public onMouseEnter() {
+    this.mouseEntered$.next(true);
+  }
+
+  @HostListener('mouseleave')
+  public onMouseLeave() {
+    this.mouseEntered$.next(false);
   }
 }

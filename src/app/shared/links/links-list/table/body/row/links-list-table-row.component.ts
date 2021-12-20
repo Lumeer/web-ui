@@ -47,12 +47,14 @@ import {DataResourcePermissions} from '../../../../../../core/model/data-resourc
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {isAttributeEditable} from '../../../../../utils/attribute.utils';
+import {animateOpacityEnterLeave} from '../../../../../animations';
 
 @Component({
   selector: '[links-list-table-row]',
   templateUrl: './links-list-table-row.component.html',
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [animateOpacityEnterLeave],
 })
 export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
   @Input()
@@ -140,6 +142,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public columnEditing$ = new BehaviorSubject<number>(null);
   public columnFocused$ = new BehaviorSubject<number>(null);
   public suggesting$ = new BehaviorSubject<DataValue>(null);
+  public mouseHoverColumnId$ = new BehaviorSubject(null);
 
   public creatingNewLink: boolean;
   public canSuggest: boolean;
@@ -329,7 +332,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public trackByColumn(index: number, column: LinkColumn): string {
-    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
+    return column.id;
   }
 
   public ngOnDestroy() {
@@ -373,6 +376,16 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     if (this.suggestions && this.suggestions.isSelected()) {
       this.suggestions.useSelection();
       this.endRowEditing();
+    }
+  }
+
+  public onMouseEnter(columnId: string) {
+    this.mouseHoverColumnId$.next(columnId);
+  }
+
+  public onMouseLeave(columnId: string) {
+    if (this.mouseHoverColumnId$.value === columnId) {
+      this.mouseHoverColumnId$.next(null);
     }
   }
 }

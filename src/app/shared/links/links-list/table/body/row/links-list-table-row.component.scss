@@ -54,3 +54,15 @@ td.affected:not(.editing) {
     opacity: 0;
   }
 }
+
+.lock-icon {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  top: 1px;
+  height: calc(100% - 2px);
+  right: 0;
+  padding: 0 0.35rem;
+  background: white;
+  z-index: 3;
+}

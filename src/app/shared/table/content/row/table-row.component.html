@@ -15,7 +15,7 @@
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
-          [class.editing]="dataInputInfo.editing && !group.column?.attribute?.constraint?.isDirectlyEditable"
+          [class.editing]="dataInputInfo.editing"
           [class.affected]="editedCell | tableCellAffected:group.column:cellType:row"
           [class.cursor-pointer]="dataInputInfo.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"

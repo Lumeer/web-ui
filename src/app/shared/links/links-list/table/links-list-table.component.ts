@@ -208,9 +208,10 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.linkType?.attributes, setting.attributeId);
         const width = setting.width || columnWidth;
+        const id = `${this.linkType.id}:${attribute.id}`;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
-        ) || {attribute, width, linkTypeId: this.linkType.id};
+        ) || {id, attribute, width, linkTypeId: this.linkType.id};
         columns.push({...column, attribute, width});
         return columns;
       }, []);
@@ -225,9 +226,11 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
         const width = setting.width || columnWidth;
+        const id = `${this.collection.id}:${attribute.id}`;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
         ) || {
+          id,
           attribute,
           width,
           collectionId: this.collection.id,

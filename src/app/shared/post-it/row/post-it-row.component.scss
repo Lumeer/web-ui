@@ -55,3 +55,20 @@
 .data-input-readonly {
   max-height: 200px;
 }
+
+.data-input-wrapper {
+  position: relative;
+
+  .lock-icon {
+    box-sizing: border-box;
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    top: 0.27rem;
+    height: calc(100% - 0.6rem);
+    right: 3px;
+    padding: 0 0.25rem;
+    background: white;
+    z-index: 10;
+  }
+}

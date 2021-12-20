@@ -38,8 +38,15 @@ import {DataRowComponent} from '../../../../data/data-row-component';
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
-import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {
+  AttributeLockFiltersStats,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
+import {isAttributeLockEnabledByLockStats} from '../../../../utils/attribute.utils';
 
 @Component({
   selector: 'data-resource-data-row',
@@ -62,6 +69,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public lockStats: AttributeLockFiltersStats;
 
   @Input()
   public readonly: boolean;
@@ -133,7 +143,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
       this.keyDataValue = this.createKeyDataValue();
       this.dataValue = this.createDataValue();
     }
-    this.editable = this.isEditable();
+    this.editable = !this.readonly;
   }
 
   private createKeyDataValue(value?: any): DataValue {
@@ -203,7 +213,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   public onDataInputDblClick(event: MouseEvent) {
-    if (!this.editing$.value) {
+    if (!this.editing$.value && this.isEditable()) {
       event.preventDefault();
       this.onEdit.emit(1);
     }
@@ -240,7 +250,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isEditable(): boolean {
-    return !this.readonly;
+    return !this.readonly && isAttributeLockEnabledByLockStats(this.row?.attribute?.lock, this.lockStats);
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
