@@ -18,6 +18,7 @@
  */
 
 import {MenuItem} from '../../menu/model/menu-item';
+import {AttributeLockFiltersStats} from '@lumeer/data-filters';
 
 export interface TableRow {
   id: string;
@@ -42,4 +43,5 @@ export type TableRowCellsMap = Record<string, TableRowCell>;
 export interface TableRowCell {
   data: any;
   editable: boolean;
+  lockStats: AttributeLockFiltersStats;
 }

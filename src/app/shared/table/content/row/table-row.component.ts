@@ -49,12 +49,14 @@ import {MenuItem} from '../../../menu/model/menu-item';
 import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
 import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {initForceTouch} from '../../../utils/html-modifier';
+import {animateOpacityEnterLeave} from '../../../animations';
 
 @Component({
   selector: '[table-row]',
   templateUrl: './table-row.component.html',
   styleUrls: ['./table-row.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [animateOpacityEnterLeave],
 })
 export class TableRowComponent implements OnInit, OnChanges {
   @Input()
@@ -126,6 +128,7 @@ export class TableRowComponent implements OnInit, OnChanges {
   public suggestedColumn: TableColumn;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
+  public mouseHoverColumnId$ = new BehaviorSubject(null);
 
   constructor(public element: ElementRef) {}
 
@@ -329,5 +332,15 @@ export class TableRowComponent implements OnInit, OnChanges {
     }
     this.suggesting$.next(null);
     this.suggestedColumn = null;
+  }
+
+  public onMouseEnter(columnId: string) {
+    this.mouseHoverColumnId$.next(columnId);
+  }
+
+  public onMouseLeave(columnId: string) {
+    if (this.mouseHoverColumnId$.value === columnId) {
+      this.mouseHoverColumnId$.next(null);
+    }
   }
 }

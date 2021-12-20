@@ -76,6 +76,7 @@ export class FilterBuilderContentComponent implements OnChanges {
 
   public editing$ = new BehaviorSubject(-1);
 
+  public attributeWithoutLock: Attribute;
   public numInputs: number;
   public ngForIndexes: number[];
   public focused$ = new BehaviorSubject({column: 0, row: 0});
@@ -90,6 +91,7 @@ export class FilterBuilderContentComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute) {
       this.createItems();
+      this.attributeWithoutLock = {...this.attribute, lock: null};
     }
     if (changes.attribute || changes.selectedValues || changes.constraintData) {
       this.dataValues = this.createDataValues();

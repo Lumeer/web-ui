@@ -4,9 +4,9 @@
   <span *ngIf="!lock?.locked" i18n="@@constraint.action.lock.enabled.short">Always editable</span>&nbsp;<span *ngIf="!lock?.locked && stats.filtersStats?.length" i18n="@@constraint.action.lock.enabled.short.unless">unless</span>
 </div>
 <ng-container *ngIf="stats.filtersStats?.length">
-  <div class="content-grid mt-2">
+  <div class="content-grid mt-2" *ngIf="{attributesMap: attributesMap$ | async} as data">
     <ng-container *ngFor="let stat of stats.filtersStats">
-      <ng-container *ngIf="attributesMap && attributesMap[stat.filter.attributeId] as attribute">
+      <ng-container *ngIf="data.attributesMap && data.attributesMap[stat.filter.attributeId] as attribute">
         <div class="text-left pr-2 text-truncate">{{attribute.name}}</div>
         <div class="text-left text-truncate">
           <attribute-filter-lock-preview [constraintData]="constraintData"
@@ -17,7 +17,7 @@
         </div>
         <div class="text-left pl-2">
           <i class="fas"
-             [ngClass]="stat.satisfy != !lock?.locked ? 'text-success fa-check-circle' : 'text-danger fa-times-circle'"></i>
+             [ngClass]="stat.satisfy !== !lock?.locked ? 'text-success fa-check-circle' : 'text-danger fa-times-circle'"></i>
         </div>
       </ng-container>
     </ng-container>

@@ -46,8 +46,8 @@ import {resourceAttributeSettings} from '../../../../../../shared/settings/setti
 import {isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
-import {ConstraintData} from '@lumeer/data-filters';
-import {isAttributeEditable} from '../../../../../../shared/utils/attribute.utils';
+import {computeAttributeLockStats, ConstraintData} from '@lumeer/data-filters';
+import {isAttributeLockEnabledByLockStats} from '../../../../../../shared/utils/attribute.utils';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -276,8 +276,9 @@ export function createTableRowCellsMapForResource(
     const data = isNotNullOrUndefined(overrideData?.[column.id])
       ? overrideData[column.id]
       : object.data?.[column.attribute?.id];
-    const editable = isAttributeEditable(resource, object, column.attribute, constraintData);
-    cellsMap[column.id] = {data, editable};
+    const lockStats = computeAttributeLockStats(object, resource, column.attribute?.lock, constraintData);
+    const editable = isAttributeLockEnabledByLockStats(column.attribute?.lock, lockStats);
+    cellsMap[column.id] = {data, lockStats, editable};
     return cellsMap;
   }, {});
 }
@@ -291,6 +292,7 @@ export function createTableRowCellsMapForAttribute(
   return {
     [column.id]: {
       data,
+      lockStats: null,
       editable: false,
     },
   };

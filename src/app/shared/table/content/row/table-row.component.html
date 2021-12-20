@@ -3,23 +3,26 @@
   <ng-container
     *ngIf="{dataValue: group.column && (row.cellsMap[group.column.id].data | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
-    editable: row.cellsMap[group.column.id].editable && (group.column?.collectionId ? (row.documentEditable || row.canSuggest) : row.linkEditable),
+    cell: row.cellsMap[group.column.id],
+    editable: (group.column?.collectionId ? (row.documentEditable || row.canSuggest) : row.linkEditable),
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
-      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:data.editable:data.editing as dataInputInfo">
+      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:data.editable:data.editing:data.cell.lockStats as dataInputInfo">
       <td class="table-cell position-relative"
           [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
-          [class.editing]="data.editing && !group.column?.attribute?.constraint?.isDirectlyEditable"
+          [class.editing]="dataInputInfo.editing && !group.column?.attribute?.constraint?.isDirectlyEditable"
           [class.affected]="editedCell | tableCellAffected:group.column:cellType:row"
-          [class.cursor-pointer]="data.editable"
+          [class.cursor-pointer]="dataInputInfo.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"
           (dblclick)="onDataInputDblClick(group.column, $event)"
+          (mouseenter)="onMouseEnter(group.column?.id)"
+          (mouseleave)="onMouseLeave(group.column?.id)"
           (contextmenu)="onContextMenu(group.column?.id, $event)">
         <data-input
           *ngIf="group.column && dataInputInfo.showDataInput"
@@ -27,9 +30,9 @@
           [constraint]="group.column.attribute?.constraint"
           [cursor]="row | tableRowDataCursor:group.column:viewId"
           [style.height.px]="row.height - 1"
-          [editableInReadonly]="data.editable"
+          [editableInReadonly]="dataInputInfo.editable"
           [style.max-height.px]="row.height - 1"
-          [dataValue]="(editedValue | isNotNullOrUndefined) && data.editing ? editedValue : data.dataValue"
+          [dataValue]="(editedValue | isNotNullOrUndefined) && dataInputInfo.editing ? editedValue : data.dataValue"
           [focus]="true"
           [readonly]="dataInputInfo.readonly"
           [configuration]="configuration"
@@ -42,15 +45,33 @@
              *ngIf="group.column && !dataInputInfo.showDataInput"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
-        <div class="detail-trigger small pl-1 pr-1 cursor-pointer"
-             *ngIf="row.documentId && !data.editing && group.column && group.column.id === detailColumnId"
-             [class.has-comments]="row.commentsCount"
-             (click)="onDetailClick($event)"
-             (dblclick)="$event.preventDefault(); $event.stopPropagation()">
-          <span class="detail-text btn-link pl-1 mr-2">Detail&nbsp;&gt;</span>
-          <comments-count *ngIf="row.commentsCount" [count]="row.commentsCount">
-          </comments-count>
-        </div>
+        <ng-container *ngIf="{
+        showDetail: row.documentId && !dataInputInfo.editing && group.column && group.column.id === detailColumnId,
+        showLock: group.column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(group.column?.attribute | isAttributeEnabledByLockStats:data.cell.lockStats)
+        } as hoverData">
+          <div *ngIf="hoverData.showDetail" class="detail-trigger small pl-1 pr-1 cursor-pointer"
+               [class.has-comments]="row.commentsCount"
+               [class.has-lock]="hoverData.showLock"
+               (click)="onDetailClick($event)"
+               (dblclick)="$event.preventDefault(); $event.stopPropagation()">
+            <span class="detail-text btn-link pl-1 mr-2">Detail&nbsp;&gt;</span>
+            <comments-count *ngIf="row.commentsCount" [count]="row.commentsCount">
+            </comments-count>
+          </div>
+          <div *ngIf="hoverData.showLock" class="lock-icon cursor-pointer" @enterAnimation
+               [tooltip]="statsTooltip" containerClass="bigger-tooltip">
+            <i class="fas fa-sm fa-lock"></i>
+
+            <ng-template #statsTooltip>
+              <attribute-lock-filters-stats [lock]="group.column?.attribute?.lock"
+                                            [stats]="data.cell.lockStats"
+                                            [constraintData]="constraintData"
+                                            [collectionId]="group.column?.collectionId"
+                                            [linkTypeId]="group.column?.linkTypeId">
+              </attribute-lock-filters-stats>
+            </ng-template>
+          </div>
+        </ng-container>
       </td>
     </ng-container>
   </ng-container>

@@ -34,7 +34,13 @@ import {
   FormLinkCellConfig,
 } from '../../../../../../../core/store/form/form-model';
 import {Attribute, Collection} from '../../../../../../../core/store/collections/collection';
-import {ConstraintData, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {
+  AttributeLockFiltersStats,
+  ConstraintData,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
 import {Observable, of} from 'rxjs';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
@@ -78,7 +84,13 @@ export class FormViewCellComponent implements OnInit, OnChanges {
   public editing: boolean;
 
   @Input()
+  public lockStats: AttributeLockFiltersStats;
+
+  @Input()
   public formErrors: FormError[];
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public attributeValueChange = new EventEmitter<{

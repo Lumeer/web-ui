@@ -7,6 +7,13 @@
 
 .data-input {
   min-height: 40px;
+  position: relative;
+
+  &:hover {
+    .lock-icon {
+      opacity: 1;
+    }
+  }
 
   &.with-border {
     border: 1px solid $gray-300;
@@ -21,5 +28,18 @@
 
   &.editing {
     border: 1px solid $success;
+  }
+
+  .lock-icon {
+    opacity: 0;
+    transition: opacity $animation-color-duration;
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    right: 2px;
+    padding: 0 0.5rem;
+    background: white;
+    z-index: 10;
   }
 }

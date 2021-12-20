@@ -21,25 +21,24 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {FormAttributeCellConfig, FormCell, FormCellType} from '../../../../core/store/form/form-model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
-import {ConstraintData} from '@lumeer/data-filters';
-import {isAttributeEditable} from '../../../../shared/utils/attribute.utils';
+import {AttributeLockFiltersStats, computeAttributeLockStats, ConstraintData} from '@lumeer/data-filters';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 
 @Pipe({
-  name: 'formCellIsEditable',
+  name: 'formCellLockStats',
 })
-export class FormCellIsEditablePipe implements PipeTransform {
+export class FormCellLockStatsPipe implements PipeTransform {
   public transform(
     cell: FormCell,
     document: DocumentModel,
     collection: Collection,
     constraintData: ConstraintData
-  ): boolean {
+  ): AttributeLockFiltersStats {
     if (cell?.type === FormCellType.Attribute) {
       const config = <FormAttributeCellConfig>cell.config;
       const attribute = findAttribute(collection?.attributes, config?.attributeId);
-      return isAttributeEditable(collection, document, attribute, constraintData);
+      return computeAttributeLockStats(document, collection, attribute?.lock, constraintData);
     }
-    return true;
+    return null;
   }
 }

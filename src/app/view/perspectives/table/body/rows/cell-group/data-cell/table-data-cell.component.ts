@@ -85,18 +85,14 @@ import {View} from '../../../../../../../core/store/views/view';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {AttributesResource} from '../../../../../../../core/model/resource';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
 
 @Component({
   selector: 'table-data-cell',
   templateUrl: './table-data-cell.component.html',
   styleUrls: ['./table-data-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [
-    trigger('enterAnimation', [
-      transition(':enter', [style({opacity: 0}), animate('200ms ease-in-out', style({opacity: 1}))]),
-      transition(':leave', [style({opacity: 1}), animate('200ms ease-in-out', style({opacity: 0}))]),
-    ]),
-  ],
+  animations: [animateOpacityEnterLeave],
 })
 export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

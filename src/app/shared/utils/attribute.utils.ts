@@ -342,7 +342,7 @@ export function isAttributeEditable(
 
 export function isAttributeLockEnabledByLockStats(lock: AttributeLock, stats: AttributeLockFiltersStats): boolean {
   if (lock?.locked) {
-    return stats?.satisfy;
+    return !!stats?.satisfy;
   }
   return !stats?.satisfy;
 }
