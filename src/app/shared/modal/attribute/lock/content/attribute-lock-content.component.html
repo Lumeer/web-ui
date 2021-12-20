@@ -10,11 +10,11 @@
 </div>
 
 <div class="alert alert-light mt-3 px-3" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
-  Attribute will be locked for everyone. You can add multiple exceptions to enable editing for certain users and by defined filters.
+  Attribute will be locked for everyone (even for users with access rights). You can add multiple exceptions to enable editing for certain users based on other values and conditions.
 </div>
 
 <div class="alert alert-light mt-3 px-3" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
-  Attribute will be editable for everyone. You can add multiple exceptions to disable editing for certain users and by defined filters.
+  Attribute will be editable for everyone (with access rights). You can add multiple exceptions to disable editing for certain users based on other values and conditions.
 </div>
 
 <ng-container *ngFor="let group of groupsControl?.controls; let index = index; let last = last">
