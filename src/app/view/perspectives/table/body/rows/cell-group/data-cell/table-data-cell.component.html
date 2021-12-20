@@ -39,7 +39,7 @@
                   (save)="onValueSave($event)"
                   (cancel)="onCancelEditing()"
                   (enterInvalid)="onEnterInvalid()"
-                  class="d-block h-100"
+                  class="d-block h-100 data-input"
                   [ngClass]="data.attribute?.constraint?.type | lowercase"
                   [class.mr-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
                   [class.ml-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"

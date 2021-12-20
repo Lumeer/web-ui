@@ -99,8 +99,13 @@ export class DataResourcesEffects {
   public getTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType<DataResourcesAction.GetTasks>(DataResourcesActionType.GET_TASKS),
-      map(action =>
-        checkLoadedDataQueryPayload(action.payload, this.configurationService.getConfiguration().publicView)
+      withLatestFrom(this.store$.pipe(select(selectResourcesPermissions))),
+      map(([action, permissions]) =>
+        checkLoadedDataQueryPayload(
+          action.payload,
+          this.configurationService.getConfiguration().publicView,
+          permissions
+        )
       ),
       withLatestFrom(
         this.store$.pipe(select(selectTasksQueries)),

@@ -84,7 +84,6 @@ import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
 import {View} from '../../../../../../../core/store/views/view';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
 import {AttributesResource} from '../../../../../../../core/model/resource';
-import {animate, style, transition, trigger} from '@angular/animations';
 import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
 
 @Component({
@@ -117,10 +116,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public canManageConfig: boolean;
 
   @Input()
-  @HostBinding('class.selected')
-  public selected: boolean;
-
-  @Input()
   public table: TableModel;
 
   @Input()
@@ -147,11 +142,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public affect = new EventEmitter();
 
-  @ViewChild(TableDataCellMenuComponent)
-  public menuComponent: TableDataCellMenuComponent;
-
-  @ViewChild(DocumentHintsComponent)
-  public suggestions: DocumentHintsComponent;
+  @Input()
+  @HostBinding('class.selected')
+  public selected: boolean;
 
   @HostBinding('class.affected')
   public affected: boolean;
@@ -167,6 +160,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @HostBinding('class.table-border-bottom')
   public tableBorderBottom = true;
+
+  @ViewChild(TableDataCellMenuComponent)
+  public menuComponent: TableDataCellMenuComponent;
+
+  @ViewChild(DocumentHintsComponent)
+  public suggestions: DocumentHintsComponent;
 
   public editing$ = new BehaviorSubject(false);
   public mouseEntered$ = new BehaviorSubject(false);

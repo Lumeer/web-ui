@@ -59,7 +59,7 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
     return this.store$.pipe(select(selectCurrentView));
   }
 
-  protected getDefaultConfig(): T {
+  protected getDefaultConfig(query: Query): T {
     return null;
   }
 
@@ -120,7 +120,9 @@ export abstract class ViewConfigPerspectiveComponent<T> implements OnInit, OnDes
             map(config => ({perspectiveId, config}))
           );
         }
-        return this.checkPerspectiveConfig(perspectiveId, view, this.getDefaultConfig());
+        return this.checkPerspectiveConfig(perspectiveId, null, this.getDefaultConfig(view.query)).pipe(
+          map(config => ({perspectiveId, config}))
+        );
       })
     );
   }

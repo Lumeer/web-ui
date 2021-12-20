@@ -102,7 +102,7 @@ export function isDataQueryLoaded(
   query: DataQuery,
   loadedQueries: DataQuery[],
   publicView: boolean,
-  permissions?: ResourcesPermissions
+  permissions: ResourcesPermissions
 ): boolean {
   const savedQuery = checkLoadedDataQuery(query, permissions || {collections: {}, linkTypes: {}}, publicView);
   return loadedQueries.some(

@@ -24,6 +24,7 @@ import {selectViewDataQuery} from '../view-settings/view-settings.state';
 import {isDataQueryLoaded} from '../utils/data-query-payload';
 import {configuration} from '../../../../environments/configuration';
 import {Query} from '../navigation/query/query';
+import {selectResourcesPermissions} from '../user-permissions/user-permissions.state';
 
 export interface DataResourcesState {
   queries: DataQuery[];
@@ -55,17 +56,25 @@ export const selectTasksLoadingQueries = createSelector(selectDataResourcesState
 export const selectCurrentQueryDataResourcesLoaded = createSelector(
   selectDataResourcesQueries,
   selectViewDataQuery,
-  (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries, configuration.publicView)
+  selectResourcesPermissions,
+  (queries, currentQuery, permissions) =>
+    isDataQueryLoaded(currentQuery, queries, configuration.publicView, permissions)
 );
 
 export const selectCurrentQueryTasksLoaded = createSelector(
   selectTasksQueries,
   selectViewDataQuery,
-  (queries, currentQuery) => isDataQueryLoaded(currentQuery, queries, configuration.publicView)
+  selectResourcesPermissions,
+  (queries, currentQuery, permissions) =>
+    isDataQueryLoaded(currentQuery, queries, configuration.publicView, permissions)
 );
 
 export const selectQueryTasksLoaded = (currentQuery: Query) =>
-  createSelector(selectTasksQueries, queries => isDataQueryLoaded(currentQuery, queries, configuration.publicView));
+  createSelector(selectTasksQueries, selectResourcesPermissions, (queries, permissions) =>
+    isDataQueryLoaded(currentQuery, queries, configuration.publicView, permissions)
+  );
 
 export const selectQueryDataResourcesLoaded = (query: DataQuery) =>
-  createSelector(selectDataResourcesQueries, queries => isDataQueryLoaded(query, queries, configuration.publicView));
+  createSelector(selectDataResourcesQueries, selectResourcesPermissions, (queries, permissions) =>
+    isDataQueryLoaded(query, queries, configuration.publicView, permissions)
+  );
