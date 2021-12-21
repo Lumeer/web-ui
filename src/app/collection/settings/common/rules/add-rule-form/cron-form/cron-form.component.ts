@@ -35,10 +35,7 @@ import {
   selectViewsByRead,
 } from '../../../../../../core/store/common/permissions.selectors';
 import {View} from '../../../../../../core/store/views/view';
-import {selectProjectByWorkspace} from '../../../../../../core/store/projects/projects.state';
-import {map, switchMap} from 'rxjs/operators';
-import {selectResourceVariablesByResourceType} from '../../../../../../core/store/resource-variables/resource-variables.state';
-import {ResourceType} from '../../../../../../core/model/resource-type';
+import {selectResourceVariablesKeysByCurrentProject} from '../../../../../../core/store/resource-variables/resource-variables.state';
 
 @Component({
   selector: 'cron-form',
@@ -103,17 +100,8 @@ export class CronFormComponent implements OnInit {
     this.collections$ = this.store$.pipe(select(selectContributeAndWritableCollections));
     this.views$ = this.store$.pipe(select(selectViewsByRead));
     this.linkTypes$ = this.store$.pipe(select(selectContributeAndWritableLinkTypes));
-    this.variableNames$ = this.store$.pipe(
-      select(selectProjectByWorkspace),
-      switchMap(project => {
-        return this.store$.pipe(
-          select(selectResourceVariablesByResourceType(project.id, ResourceType.Project)),
-          map(resourceVariables => {
-            return resourceVariables.map(variable => variable.key);
-          })
-        );
-      })
-    );
+    this.variableNames$ = this.store$.pipe(select(selectResourceVariablesKeysByCurrentProject));
+
     if (this.collection) {
       this.variables = [{name: 'records', collectionId: this.collection.id, list: true}];
     }

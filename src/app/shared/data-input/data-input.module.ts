@@ -65,9 +65,7 @@ import {LinkDataInputComponent} from './link/link-data-input.component';
 import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.component';
 import {ActionDataInputComponent} from './action/action-data-input.component';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {ActionFiltersTooltipComponent} from './action/tooltip/action-filters-tooltip.component';
 import {FilterBuilderPipesModule} from '../builder/pipes/filter-builder-pipes.module';
-import {ActionFilterPreviewComponent} from './action/tooltip/preview/action-filter-preview.component';
 import {ProgressModule} from '../progress/progress.module';
 import {ViewDataInputComponent} from './view/view-data-input.component';
 import {FilterViewsPipe} from './view/pipes/filter-views.pipe';
@@ -77,6 +75,8 @@ import {FilterValidViewsPipe} from './view/pipes/filter-valid-views.pipe';
 import {UsersAndTeamsNamesPipe} from './user/pipes/users-and-teams-names.pipe';
 import {FileButtonComponent} from './files/file-button/file-button.component';
 import {FileAttachmentTooltipComponent} from './files/button/tooltip/file-attachment-tooltip.component';
+import {AttributeLockFiltersStatsComponent} from './lock-stats/attribute-lock-filters-stats.component';
+import {AttributeLockFilterPreviewComponent} from './lock-stats/preview/attribute-lock-filter-preview.component';
 
 @NgModule({
   imports: [
@@ -134,8 +134,8 @@ import {FileAttachmentTooltipComponent} from './files/button/tooltip/file-attach
     LinkDataInputComponent,
     LinkInputDropdownComponent,
     ActionDataInputComponent,
-    ActionFiltersTooltipComponent,
-    ActionFilterPreviewComponent,
+    AttributeLockFiltersStatsComponent,
+    AttributeLockFilterPreviewComponent,
     FilterViewsPipe,
     FilterValidViewsPipe,
     ViewsIdsPipe,
@@ -158,6 +158,7 @@ import {FileAttachmentTooltipComponent} from './files/button/tooltip/file-attach
     FilterUsersPipe,
     ActionDataInputComponent,
     ViewDataInputComponent,
+    AttributeLockFiltersStatsComponent,
   ],
 })
 export class DataInputModule {}

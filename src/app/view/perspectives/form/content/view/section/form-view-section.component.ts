@@ -20,11 +20,12 @@
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {FormRow, FormSection} from '../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {DataValue} from '@lumeer/data-filters';
+import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {FormError} from '../validation/form-validation';
 import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {FormCoordinates} from '../model/form-coordinates';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'form-view-section',
@@ -48,7 +49,13 @@ export class FormViewSectionComponent implements OnChanges {
   public documentId: string;
 
   @Input()
-  public editable: boolean;
+  public documentEditable: boolean;
+
+  @Input()
+  public originalDocument: DocumentModel;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public editedCell: FormCoordinates;

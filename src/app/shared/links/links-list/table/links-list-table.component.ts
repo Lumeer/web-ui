@@ -35,12 +35,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkColumn} from '../model/link-column';
-import {
-  findAttribute,
-  getDefaultAttributeId,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../../core/store/collections/collection.util';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
@@ -59,7 +54,6 @@ import {selectDocumentById, selectDocumentsByIds} from '../../../../core/store/d
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
-import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {AttributesSettings} from '../../../../core/store/views/view';
 import {
   composeViewSettingsLinkTypeCollectionId,
@@ -124,6 +118,9 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
   @Input()
   public visible: boolean;
 
+  @Input()
+  public constraintData: ConstraintData;
+
   @ViewChild('tableWrapper')
   public tableWrapperComponent: ElementRef;
 
@@ -163,7 +160,6 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
   public columns$ = new BehaviorSubject<LinkColumn[]>([]);
 
   public rows$: Observable<LinkRow[]>;
-  public constraintData$: Observable<ConstraintData>;
   public currentUser$: Observable<User>;
 
   private stickyColumnWidth: number;
@@ -171,7 +167,6 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
   }
 
@@ -183,7 +178,8 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
       changes.query ||
       changes.permissions ||
       changes.attributesSettings ||
-      changes.ignoreSettingsOnReadPermission
+      changes.ignoreSettingsOnReadPermission ||
+      changes.constraintData
     ) {
       this.mergeColumns();
     }
@@ -211,12 +207,12 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.linkType?.attributes, setting.attributeId);
-        const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.linkTypePermissions, this.query);
         const width = setting.width || columnWidth;
+        const id = `${this.linkType.id}:${attribute.id}`;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
-        ) || {attribute, width, linkTypeId: this.linkType.id, editable};
-        columns.push({...column, attribute, editable, width});
+        ) || {id, attribute, width, linkTypeId: this.linkType.id};
+        columns.push({...column, attribute, width});
         return columns;
       }, []);
   }
@@ -229,24 +225,19 @@ export class LinksListTableComponent implements OnInit, OnChanges, AfterViewInit
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {
         const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
-        const editable = isCollectionAttributeEditable(
-          attribute.id,
-          this.collection,
-          this.collectionPermissions,
-          this.query
-        );
         const width = setting.width || columnWidth;
+        const id = `${this.collection.id}:${attribute.id}`;
         const column: LinkColumn = (this.columns$.value || []).find(
           c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
         ) || {
+          id,
           attribute,
           width,
           collectionId: this.collection.id,
           color: this.collection.color,
           bold: attribute.id === defaultAttributeId,
-          editable,
         };
-        columns.push({...column, attribute, editable, width});
+        columns.push({...column, attribute, width});
         return columns;
       }, []);
   }

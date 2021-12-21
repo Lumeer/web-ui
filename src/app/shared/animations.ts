@@ -41,6 +41,11 @@ export const animateOpacityFromUp = trigger('animateOpacityFromUp', [
   ]),
 ]);
 
+export const animateOpacityEnterLeave = trigger('enterAnimation', [
+  transition(':enter', [style({opacity: 0}), animate('200ms ease-in-out', style({opacity: 1}))]),
+  transition(':leave', [style({opacity: 1}), animate('200ms ease-in-out', style({opacity: 0}))]),
+]);
+
 export const animateVisible = trigger('animateVisible', [
   state('in', style({opacity: 1})),
   transition('void => *', [animate(500, keyframes([style({opacity: 0}), style({opacity: 1})]))]),

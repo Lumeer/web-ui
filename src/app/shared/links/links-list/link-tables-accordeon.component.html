@@ -1,4 +1,4 @@
-<accordion *ngIf="{documentByCollection: documentByCollectionMap$ | async, collections: collections$ | async} as data">
+<accordion *ngIf="{documentByCollection: documentByCollectionMap$ | async, collections: collections$ | async, constraintData: constraintData$ | async} as data">
   <accordion-group *ngFor="let collection of data.collections; trackBy:trackById"
                    panelClass="lmr-accordion"
                    [isOpen]="!(collapsedCollections | includes:collection.id)"
@@ -30,6 +30,7 @@
         [allowSelect]="allowSelectDocument"
         [allowUnlink]="false"
         [allowCreate]="false"
+        [constraintData]="data.constraintData"
         [preventEventBubble]="preventEventBubble"
         [attributesSettings]="attributesSettings"
         (detail)="onSelectDocument($event)"

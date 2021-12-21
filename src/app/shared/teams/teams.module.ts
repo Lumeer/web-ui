@@ -34,7 +34,7 @@ import {RolesModule} from '../roles/roles.module';
 import {RouterModule} from '@angular/router';
 import {TeamTableComponent} from './team-list/table/team-table.component';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {HintBoxModule} from '../hint-box/hint-box.module';
+import {BoxModule} from '../box/box.module';
 
 @NgModule({
   declarations: [
@@ -56,7 +56,7 @@ import {HintBoxModule} from '../hint-box/hint-box.module';
     RolesModule,
     RouterModule,
     TooltipModule,
-    HintBoxModule,
+    BoxModule,
   ],
   exports: [TeamsComponent, TeamTableComponent],
 })

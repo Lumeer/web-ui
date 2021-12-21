@@ -246,7 +246,7 @@ export function generateDocumentDataByQuery(
   constraintData: ConstraintData,
   setupAllAttributes = true
 ): Record<string, any> {
-  const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
+  const collectionId = query?.stems?.[0].collectionId;
   const collection = collectionId && (collections || []).find(coll => coll.id === collectionId);
   if (collection) {
     return generateDocumentDataByResourceQuery(collection, query, constraintData, setupAllAttributes);

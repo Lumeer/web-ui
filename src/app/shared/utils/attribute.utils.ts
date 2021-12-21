@@ -23,6 +23,11 @@ import {objectsByIdMap, objectValues} from './common.utils';
 import {
   ActionConstraintConfig,
   AttributeFilter,
+  AttributeLock,
+  AttributeLockFiltersStats,
+  collectAttributeLockFilters,
+  computeAttributeLockStats,
+  ConstraintData,
   ConstraintType,
   SelectConstraint,
   SelectConstraintConfig,
@@ -32,7 +37,7 @@ import {
   ViewConstraintConfig,
 } from '@lumeer/data-filters';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
-import {AttributesResource} from '../../core/model/resource';
+import {AttributesResource, DataResource} from '../../core/model/resource';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
@@ -247,10 +252,8 @@ export function filterAttributesByFilters(attributes: Attribute[], filters: Attr
         attrs.push(attribute);
       }
       if (attribute?.constraint?.type === ConstraintType.Action) {
-        const config = <ActionConstraintConfig>attribute.constraint.config;
-        const configFilters = config?.equation?.equations?.map(eq => eq.filter) || [];
         attrs.push(
-          ...configFilters
+          ...collectAttributeLockFilters(attribute.lock)
             .filter(configFilter => !!attributesMap[configFilter.attributeId])
             .map(configFilter => attributesMap[configFilter.attributeId])
         );
@@ -325,4 +328,21 @@ export function mergeAttributeOverride(attribute: Attribute, override: Partial<A
 
 export function isUsedConstraintAttribute(attribute: Attribute, type: ConstraintType): boolean {
   return attribute?.usageCount > 0 && attribute.constraint?.type === type;
+}
+
+export function isAttributeEditable(
+  resource: AttributesResource,
+  dataResource: DataResource,
+  attribute: Attribute,
+  constraintData: ConstraintData
+): boolean {
+  const stats = computeAttributeLockStats(dataResource, resource, attribute?.lock, constraintData);
+  return isAttributeLockEnabledByLockStats(attribute?.lock, stats);
+}
+
+export function isAttributeLockEnabledByLockStats(lock: AttributeLock, stats: AttributeLockFiltersStats): boolean {
+  if (lock?.locked) {
+    return !!stats?.satisfy;
+  }
+  return !stats?.satisfy;
 }

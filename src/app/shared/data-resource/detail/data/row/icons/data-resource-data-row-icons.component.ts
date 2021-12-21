@@ -20,7 +20,8 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {DataRow} from '../../../../../data/data-row.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {ConstraintType} from '@lumeer/data-filters';
+import {AttributeLockFiltersStats, ConstraintData, ConstraintType} from '@lumeer/data-filters';
+import {DataCursor} from '../../../../../data-input/data-cursor';
 
 @Component({
   selector: 'data-resource-data-row-icons',
@@ -33,6 +34,18 @@ export class DataResourceDataRowIconsComponent implements OnChanges {
 
   @Input()
   public permissions: AllowedPermissions;
+
+  @Input()
+  public lockStats: AttributeLockFiltersStats;
+
+  @Input()
+  public showLockStats: boolean;
+
+  @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
+  public cursor: DataCursor;
 
   @Output()
   public attributeTypeClick = new EventEmitter();

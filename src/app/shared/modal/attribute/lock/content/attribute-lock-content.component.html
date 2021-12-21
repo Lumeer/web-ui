@@ -1,0 +1,36 @@
+<div class="d-inline-flex switch-wrapper p-1">
+  <div class="px-3 py-3 cursor-pointer mr-1 d-flex align-items-center badge" (click)="lockedControl.setValue(false)"
+       [ngClass]="lockedControl.value ? '' :'badge badge-success'">
+    <i class="far fa-lock-open mr-2"></i><span i18n="@@resource.attribute.lock.editable">Always editable</span>
+  </div>
+  <div class="px-3 py-3 cursor-pointer ml-1 d-flex align-items-center badge" (click)="lockedControl.setValue(true)"
+       [ngClass]="lockedControl.value ?  'badge badge-danger' : ''">
+    <i class="far fa-lock mr-2"></i><span i18n="@@resource.attribute.lock.locked">Always locked</span>
+  </div>
+</div>
+
+<div class="text-muted my-4" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
+  Attribute will be locked for everyone (even for users with access rights). You can add multiple exceptions to enable editing for certain users based on other values and conditions.
+</div>
+
+<div class="text-muted my-4" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
+  Attribute will be editable for everyone (with access rights). You can add multiple exceptions to disable editing for certain users based on other values and conditions.
+</div>
+
+<ng-container *ngFor="let group of groupsControl?.controls; let index = index; let last = last">
+
+  <attribute-lock-exception-group class="d-block mt-3"
+                                  [group]="group"
+                                  [locked]="lockedControl.value"
+                                  [resource]="resource"
+                                  [attribute]="attribute"
+                                  [exceptionGroup]="attribute.lock?.exceptionGroups && attribute.lock?.exceptionGroups[index]"
+                                  (delete)="onDeleteGroup(index)">
+  </attribute-lock-exception-group>
+
+  <div *ngIf="!last" class="text-muted text-center mt-3" i18n="@@or">Or</div>
+</ng-container>
+
+<button class="btn btn-sm btn-outline-primary mt-3"
+        (click)="onAddGroup()" i18n="@@resource.attribute.lock.action.add">Add Exception Set
+</button>

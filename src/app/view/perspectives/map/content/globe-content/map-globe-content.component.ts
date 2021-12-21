@@ -57,7 +57,7 @@ import {
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AppState} from '../../../../../core/store/app.state';
 import {ConfigurationService} from '../../../../../configuration/configuration.service';
-import {addressDefaultFields} from '../../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
+import {addressDefaultFields} from '../../../../../shared/modal/attribute/type/form/constraint-config/address/address-constraint.constants';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {findAttribute} from '../../../../../core/store/collections/collection.util';
 import {Query} from '../../../../../core/store/navigation/query/query';

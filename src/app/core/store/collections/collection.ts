@@ -19,7 +19,7 @@
 
 import {Resource} from '../../model/resource';
 import {Rule} from '../../model/rule';
-import {Constraint} from '@lumeer/data-filters';
+import {Constraint, AttributeLock} from '@lumeer/data-filters';
 import {RoleType} from '../../model/role-type';
 
 export interface Attribute {
@@ -29,6 +29,7 @@ export interface Attribute {
 
   constraint?: Constraint;
   function?: AttributeFunction;
+  lock?: AttributeLock;
   mandatory?: boolean;
 
   usageCount?: number;
@@ -42,7 +43,6 @@ export interface AttributeFunction {
   xml?: string;
   errorReport?: string;
   timestamp?: number;
-  editable?: boolean;
   dryRun?: boolean;
   dryRunResult?: string;
   recursive?: boolean;

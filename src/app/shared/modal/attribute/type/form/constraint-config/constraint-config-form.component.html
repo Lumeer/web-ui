@@ -1,0 +1,63 @@
+<ng-container [ngSwitch]="type">
+  <address-constraint-config-form *ngSwitchCase="constraintTypes.Address"
+                                  [config]="config"
+                                  [form]="form">
+  </address-constraint-config-form>
+
+  <coordinates-constraint-config-form *ngSwitchCase="constraintTypes.Coordinates"
+                                      [config]="config"
+                                      [form]="form">
+  </coordinates-constraint-config-form>
+
+  <datetime-constraint-config-form *ngSwitchCase="constraintTypes.DateTime"
+                                   [config]="config"
+                                   [form]="form">
+  </datetime-constraint-config-form>
+
+  <duration-constraint-config-form *ngSwitchCase="constraintTypes.Duration"
+                                   [config]="config"
+                                   [form]="form">
+  </duration-constraint-config-form>
+
+  <number-constraint-config-form *ngSwitchCase="constraintTypes.Number"
+                                 [config]="config"
+                                 [form]="form">
+  </number-constraint-config-form>
+
+  <percentage-constraint-config-form *ngSwitchCase="constraintTypes.Percentage"
+                                     [config]="config"
+                                     [form]="form">
+  </percentage-constraint-config-form>
+
+  <select-constraint-config-form *ngSwitchCase="constraintTypes.Select"
+                                 [config]="config"
+                                 [attribute]="attribute"
+                                 [resource]="resource"
+                                 [form]="form">
+  </select-constraint-config-form>
+
+  <text-constraint-config-form *ngSwitchCase="constraintTypes.Text"
+                               [config]="config"
+                               [form]="form">
+  </text-constraint-config-form>
+
+  <user-constraint-config-form *ngSwitchCase="constraintTypes.User"
+                               [config]="config"
+                               [form]="form">
+  </user-constraint-config-form>
+
+
+  <view-constraint-config-form *ngSwitchCase="constraintTypes.View"
+                               [config]="config"
+                               [form]="form">
+  </view-constraint-config-form>
+
+  <action-constraint-config-form *ngSwitchCase="constraintTypes.Action"
+                                 [config]="config"
+                                 [form]="form"
+                                 [permissions]="permissions"
+                                 [resource]="resource"
+                                 [lockControl]="lockControl"
+                                 [attribute]="attribute">
+  </action-constraint-config-form>
+</ng-container>

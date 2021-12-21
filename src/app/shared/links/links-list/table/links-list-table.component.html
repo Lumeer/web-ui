@@ -1,6 +1,6 @@
 <div class="overflow-auto" #tableWrapper>
   <table class="table position-relative"
-         *ngIf="{columns: columns$ | async, constraintData: constraintData$ | async} as data">
+         *ngIf="{columns: columns$ | async} as data">
     <thead links-list-table-header
            [columns]="data.columns"
            [collectionPermissions]="collectionPermissions"
@@ -14,8 +14,8 @@
            [collectionPermissions]="collectionPermissions"
            [linkTypePermissions]="linkTypePermissions"
            [columns]="data.columns"
-           [constraintData]="data.constraintData"
-           [rows]="rows$ | async | sortLinkRows:collection:linkType:attributesSettings:data.constraintData"
+           [constraintData]="constraintData"
+           [rows]="rows$ | async | sortLinkRows:collection:linkType:attributesSettings:constraintData"
            [linkType]="linkType"
            [collection]="collection"
            [document]="document"

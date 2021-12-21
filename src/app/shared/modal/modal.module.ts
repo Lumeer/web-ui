@@ -21,8 +21,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ModalWrapperModule} from './wrapper/modal-wrapper.module';
 import {CreateResourceModalModule} from './create-resource/create-resource-modal.module';
-import {AttributeTypeModalModule} from './attribute-type/attribute-type-modal.module';
-import {AttributeFunctionModalModule} from './attribute-function/attribute-function-modal.module';
 import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
 import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
 import {CreateLinkModalModule} from './create-link/create-link-modal.module';
@@ -37,21 +35,19 @@ import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
 import {UserSettingsModalModule} from './user-settings/user-settings-modal.module';
-import {AttributeDescriptionModalModule} from './attribute-description/attribute-description-modal.module';
 import {ModifyDocumentLinksModalModule} from './modify-document-links/modify-document-links-modal.module';
 import {ViewModalModule} from './view-modal/view-modal.module';
 import {TextInputModalModule} from './text-input/text-input-modal.module';
 import {DataResourcesDetailModalModule} from './data-resources-detail/data-resources-detail-modal.module';
 import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.module';
+import {AttributeModalModule} from './attribute/attribute-modal.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ModalWrapperModule,
     CreateResourceModalModule,
-    AttributeTypeModalModule,
-    AttributeFunctionModalModule,
-    AttributeDescriptionModalModule,
+    AttributeModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
@@ -75,9 +71,6 @@ import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.modul
   exports: [
     ModalWrapperModule,
     CreateResourceModalModule,
-    AttributeTypeModalModule,
-    AttributeFunctionModalModule,
-    AttributeDescriptionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
     CreateLinkModalModule,
@@ -97,6 +90,7 @@ import {TabsSettingsModalModule} from './tabs-settings/tabs-settings-modal.modul
     ViewModalModule,
     DataResourcesDetailModalModule,
     TabsSettingsModalModule,
+    AttributeModalModule,
   ],
 })
 export class ModalModule {}

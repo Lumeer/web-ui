@@ -1,0 +1,15 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.content-grid {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(auto, 120px) minmax(0, 1fr) min-content;
+
+  .larger-column {
+    grid-column: 1 / 3;
+  }
+}

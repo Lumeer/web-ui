@@ -19,7 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
-import {Constraint, ConstraintType, DataValue, UnknownConstraint} from '@lumeer/data-filters';
+import {
+  AttributeLockFiltersStats,
+  Constraint,
+  ConstraintType,
+  DataValue,
+  UnknownConstraint,
+} from '@lumeer/data-filters';
+import {isAttributeLockEnabledByLockStats} from '../../utils/attribute.utils';
 
 @Pipe({
   name: 'dataInputEditInfo',
@@ -29,12 +36,22 @@ export class DataInputEditInfoPipe implements PipeTransform {
     attribute: Attribute,
     dataValue: DataValue,
     editable: boolean,
-    editing: boolean
-  ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; additionalMargin: boolean; editing: boolean} {
+    editing: boolean,
+    lockStats?: AttributeLockFiltersStats
+  ): {
+    readonly: boolean;
+    editable: boolean;
+    hasValue: boolean;
+    showDataInput: boolean;
+    showLockStats: boolean;
+    additionalMargin: boolean;
+    editing: boolean;
+  } {
     const constraint: Constraint = attribute?.constraint || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
-    const readonly = !editable || !editing;
+    const editableAndNotLocked = editable && isAttributeLockEnabledByLockStats(attribute?.lock, lockStats);
+    const readonly = !editableAndNotLocked || !editing;
 
     let forceDataInput;
     if ([ConstraintType.Action, ConstraintType.Files, ConstraintType.Text].includes(constraint.type)) {
@@ -42,12 +59,17 @@ export class DataInputEditInfoPipe implements PipeTransform {
     } else if (constraint.type === ConstraintType.Percentage) {
       forceDataInput = !asText;
     }
+
+    const showLockStats = constraint.type !== ConstraintType.Action;
+
     return {
       readonly,
+      editable: editableAndNotLocked,
       hasValue,
       showDataInput: forceDataInput || !readonly || (!asText && hasValue),
       additionalMargin: constraint.type === ConstraintType.Select,
-      editing,
+      editing: editing && editable && !attribute?.constraint?.isDirectlyEditable,
+      showLockStats,
     };
   }
 }

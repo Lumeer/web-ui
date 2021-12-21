@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CollectionAttributeFilterDto, LinkAttributeFilterDto} from './attribute-filter.dto';
+
 export interface QueryDto {
   stems?: QueryStemDto[];
   fulltexts?: string[];
@@ -36,19 +38,4 @@ export interface QueryStemDto {
 export interface ConditionValueDto {
   type?: any;
   value?: any;
-}
-
-export interface AttributeFilterDto {
-  condition: string;
-  attributeId: string;
-  value?: any;
-  conditionValues: ConditionValueDto[];
-}
-
-export interface CollectionAttributeFilterDto extends AttributeFilterDto {
-  collectionId: string;
-}
-
-export interface LinkAttributeFilterDto extends AttributeFilterDto {
-  linkTypeId: string;
 }

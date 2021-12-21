@@ -27,7 +27,17 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
 import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  mergeMap,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectNavigatingToOtherWorkspace, selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissionsMap} from '../../../core/model/allowed-permissions';
@@ -46,7 +56,7 @@ import {
   queryIsEmpty,
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
+import {ViewCursor, viewCursorsAreSame} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {selectViewDataQuery, selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
@@ -127,7 +137,10 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
         if (view) {
           return this.overrideCursor$.asObservable();
         }
-        return this.store$.pipe(select(selectViewCursor));
+        return this.store$.pipe(
+          select(selectViewCursor),
+          distinctUntilChanged((a, b) => viewCursorsAreSame(a, b))
+        );
       })
     );
     this.settingsQuery$ = this.currentView$.pipe(
@@ -164,8 +177,10 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private initSelection() {
-    this.selected$ = combineLatest([this.currentView$, this.viewCursor$, this.selectQueryAndCollections$()]).pipe(
-      switchMap(([view, cursor, {query, collections}]) => {
+    this.selected$ = combineLatest([this.currentView$, this.viewCursor$, this.query$]).pipe(
+      debounceTime(10),
+      switchMap(([view, cursor, query]) => this.appendCollectionsToData(view, cursor, query)),
+      switchMap(({view, cursor, query, collections}) => {
         return this.selectCollectionByCursor$(cursor, query, view).pipe(
           switchMap(({collection}) => {
             if (collection || collections[0]) {
@@ -182,14 +197,14 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
     );
   }
 
-  private selectQueryAndCollections$(): Observable<{query: Query; collections: Collection[]}> {
-    return combineLatest([this.query$, this.currentView$]).pipe(
-      switchMap(([query, view]) =>
-        this.store$.pipe(
-          select(selectCollectionsByCustomQueryWithoutLinks(view, query)),
-          map(collections => ({query: modifyDetailPerspectiveQuery(query, collections), collections}))
-        )
-      )
+  private appendCollectionsToData(
+    view: View,
+    cursor: ViewCursor,
+    query: Query
+  ): Observable<{view: View; cursor: ViewCursor; query: Query; collections: Collection[]}> {
+    return this.store$.pipe(
+      select(selectCollectionsByCustomQueryWithoutLinks(view, query)),
+      map(collections => ({view, cursor, query: modifyDetailPerspectiveQuery(query, collections), collections}))
     );
   }
 
@@ -216,7 +231,8 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
           return {collection};
         }
         return {};
-      })
+      }),
+      distinctUntilChanged((a, b) => a.collection?.id === b.collection?.id)
     );
   }
 
@@ -227,7 +243,6 @@ export class DetailPerspectiveComponent implements OnInit, OnChanges, OnDestroy 
     view: View
   ): Observable<{collection?: Collection; document?: DocumentModel}> {
     const collectionQuery = filterStemsForCollection(collection.id, query);
-
     return this.store$.pipe(
       select(selectQueryDocumentsLoaded(collectionQuery)),
       tap(loaded => {

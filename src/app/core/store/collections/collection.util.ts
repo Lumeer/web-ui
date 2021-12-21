@@ -17,12 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AllowedPermissions} from '../../model/allowed-permissions';
 import {LinkType} from '../link-types/link.type';
-import {Query} from '../navigation/query/query';
-import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
-import {AttributeFilter, ConditionType, Constraint, ConstraintType} from '@lumeer/data-filters';
+import {Constraint, ConstraintType} from '@lumeer/data-filters';
 import {safeGetRandomIcon} from '../../../shared/picker/icons';
 import * as Colors from '../../../shared/picker/colors';
 
@@ -35,70 +32,6 @@ export function createEmptyCollection(): Collection {
     description: '',
     attributes: [],
   };
-}
-
-export function isCollectionAttributeEditable(
-  attributeId: string,
-  collection: Collection,
-  permissions: AllowedPermissions,
-  query?: Query
-): boolean {
-  const attribute = attributeId && (collection?.attributes || []).find(attr => attr.id === attributeId);
-  return isAttributeEditable(attribute) && !isCollectionAttributeLockedByQuery(query, collection, attributeId);
-}
-
-export function isCollectionAttributeLockedByQuery(query: Query, collection: Collection, attributeId: string): boolean {
-  if (!query) {
-    return false;
-  }
-
-  const collectionFilters = getQueryFiltersForCollection(query, collection.id);
-  return isAttributeLockedByFilters(collectionFilters, attributeId);
-}
-
-function isAttributeLockedByFilters(filters: AttributeFilter[], attributeId: string): boolean {
-  return filters
-    .filter(filter => filter.attributeId === attributeId)
-    .some(filter => filter.condition === ConditionType.Equals);
-}
-
-export function isLinkTypeAttributeEditable(
-  attributeId: string,
-  linkType: LinkType,
-  permissions: AllowedPermissions,
-  query?: Query
-): boolean {
-  const attribute = attributeId && (linkType?.attributes || []).find(attr => attr.id === attributeId);
-  return isAttributeEditable(attribute) && !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId);
-}
-
-export function isLinkTypeAttributeLockedByQuery(query: Query, linkType: LinkType, attributeId: string): boolean {
-  if (!query) {
-    return false;
-  }
-
-  const linkFilters = getQueryFiltersForLinkType(query, linkType.id);
-  return isAttributeLockedByFilters(linkFilters, attributeId);
-}
-
-// parentId can be linkTypeId or collectionId
-export function isAttributeEditableWithQuery(
-  attribute: Attribute,
-  parentId: string,
-  permissions: AllowedPermissions,
-  query: Query
-): boolean {
-  const filters = [...getQueryFiltersForCollection(query, parentId), ...getQueryFiltersForLinkType(query, parentId)];
-
-  if (!attribute) {
-    return true;
-  }
-
-  return isAttributeEditable(attribute) && !isAttributeLockedByFilters(filters, attribute.id);
-}
-
-function isAttributeEditable(attribute: Attribute): boolean {
-  return !attribute || !attribute.function || !attribute.function.js || attribute.function.editable;
 }
 
 export function getDefaultAttributeId(collection: Collection): string {

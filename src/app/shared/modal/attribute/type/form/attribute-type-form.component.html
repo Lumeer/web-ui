@@ -1,0 +1,22 @@
+<form [formGroup]="form">
+  <div class="form-group">
+    <label i18n="@@attribute.type.label">
+      Type
+    </label>
+    <attribute-type-select [type]="typeControl.value"
+                           (typeChange)="typeControl.setValue($event)"
+                           class="d-block"
+                           data-test="attribute-type-select">
+    </attribute-type-select>
+  </div>
+
+  <constraint-config-form [config]="attribute.constraint?.type === typeControl.value ? attribute.constraint?.config : null"
+                          [form]="configForm"
+                          [resource]="resource"
+                          [attribute]="attribute"
+                          [type]="typeControl.value"
+                          [lockControl]="lockControl"
+                          [permissions]="permissions"
+                          class="d-block mt-3">
+  </constraint-config-form>
+</form>

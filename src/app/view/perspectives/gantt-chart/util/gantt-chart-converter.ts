@@ -296,7 +296,6 @@ export class GanttChartConverter {
     stemConfig: GanttChartStemConfig,
     dataObjectsInfo: DataObjectInfo<GanttSwimlane>[]
   ): GanttTask[] {
-    const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
     const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
     const nameResource = this.dataObjectAggregator.getResource(stemConfig.name);
@@ -306,11 +305,7 @@ export class GanttChartConverter {
     const progressResource = this.dataObjectAggregator.getResource(stemConfig.progress);
 
     const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
-
-    const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
     const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
-
-    const progressEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.progress);
     const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
 
     const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
@@ -433,6 +428,13 @@ export class GanttChartConverter {
         endPermission,
         this.constraintData?.currentUser,
         this.constraintData
+      );
+
+      const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end, endDataResource);
+      const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start, startDataResource);
+      const progressEditable = this.dataObjectAggregator.isAttributeEditable(
+        stemConfig.progress,
+        progressDataResources[0]
       );
 
       const names = isArray(name) ? name : [name];
@@ -585,7 +587,7 @@ function areDatesValid(start: string, end: string, endConstraint: Constraint): b
 }
 
 function isDateValidRange(dateString: string): boolean {
-  const startDate = parseDateTimeByConstraint(dateString, null); // TODO
+  const startDate = parseDateTimeByConstraint(dateString, null);
   const momentDate = startDate && moment(startDate);
   return isDateValid(startDate) && momentDate.year() > 1970 && momentDate.year() < 2200;
 }

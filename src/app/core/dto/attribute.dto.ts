@@ -17,12 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributeFilterEquationDto} from './attribute-filter-equation.dto';
+
 export interface AttributeDto {
   id?: string;
   name: string;
   constraint?: ConstraintDto;
   description?: string;
   function?: AttributeFunctionDto;
+  lock?: AttributeLockDto;
   usageCount?: number;
 }
 
@@ -36,5 +39,15 @@ export interface AttributeFunctionDto {
   xml?: string;
   errorReport?: string;
   timestamp?: number;
-  editable?: boolean;
+}
+
+export interface AttributeLockDto {
+  locked?: boolean;
+  exceptionGroups: AttributeLockExceptionGroupDto[];
+}
+
+export interface AttributeLockExceptionGroupDto {
+  type?: string;
+  typeValue?: string[];
+  equation?: AttributeFilterEquationDto;
 }

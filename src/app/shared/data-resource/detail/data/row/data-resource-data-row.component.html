@@ -29,35 +29,39 @@
   </div>
 </ng-template>
 
-<div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center"
-     *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async) as dataInputInfo">
-  <data-input class="h-100 w-100 p-1 data-input value"
-              [constraint]="row.attribute?.constraint"
-              [cursor]="cursor"
-              [dataValue]="dataValue"
-              [focus]="true"
-              [configuration]="configuration"
-              [readonly]="dataInputInfo.readonly"
-              [editableInReadonly]="editable"
-              [workspace]="workspace"
-              [permissions]="permissions"
-              [preventEventBubble]="preventEventBubble"
-              (save)="onNewValue($event)"
-              (dblclick)="onDataInputDblClick($event)"
-              (cancel)="onDataInputCancel()"
-              (click)="onValueFocus()"
-              (valueChange)="onValueEdit($event)"
-              (clickOutside)="onDataInputCancel()"
-              [class.editing]="(editing$ | async) && !row.attribute?.constraint?.isDirectlyEditable"
-              [class.cursor-pointer]="!dataInputInfo.readonly"
-              [class.read-only]="dataInputInfo.readonly">
-  </data-input>
-</div>
+<ng-container *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async):lockStats as dataInputInfo">
+  <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+    <data-input class="h-100 w-100 p-1 data-input value"
+                [constraint]="row.attribute?.constraint"
+                [cursor]="cursor"
+                [dataValue]="dataValue"
+                [focus]="true"
+                [configuration]="configuration"
+                [readonly]="dataInputInfo.readonly"
+                [editableInReadonly]="dataInputInfo.editable"
+                [workspace]="workspace"
+                [preventEventBubble]="preventEventBubble"
+                (save)="onNewValue($event)"
+                (dblclick)="onDataInputDblClick($event)"
+                (cancel)="onDataInputCancel()"
+                (click)="onValueFocus()"
+                (valueChange)="onValueEdit($event)"
+                (clickOutside)="onDataInputCancel()"
+                [class.editing]="dataInputInfo.editing"
+                [class.cursor-pointer]="!dataInputInfo.readonly"
+                [class.read-only]="dataInputInfo.readonly">
+    </data-input>
+  </div>
 
-<data-resource-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center"
-                              [row]="row"
-                              [permissions]="permissions"
-                              (delete)="deleteRow.emit()"
-                              (attributeFunctionClick)="attributeFunctionClick.emit()"
-                              (attributeTypeClick)="attributeTypeClick.emit()">
-</data-resource-data-row-icons>
+  <data-resource-data-row-icons class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center"
+                                [row]="row"
+                                [lockStats]="lockStats"
+                                [showLockStats]="dataInputInfo.showLockStats"
+                                [permissions]="permissions"
+                                [constraintData]="constraintData"
+                                [cursor]="cursor"
+                                (delete)="deleteRow.emit()"
+                                (attributeFunctionClick)="attributeFunctionClick.emit()"
+                                (attributeTypeClick)="attributeTypeClick.emit()">
+  </data-resource-data-row-icons>
+</ng-container>

@@ -31,7 +31,7 @@ import {
 import {FormConfig, FormMode, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {ConstraintData, DataValue} from '@lumeer/data-filters';
+import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
 import {AppState} from '../../../../../core/store/app.state';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription, switchMap} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -43,7 +43,10 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {AttributesSettings, View} from '../../../../../core/store/views/view';
 import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
-import {createDocumentRequestAdditionalData} from '../../../../../core/store/documents/document.utils';
+import {
+  createDocumentRequestAdditionalData,
+  generateDocumentDataByQuery,
+} from '../../../../../core/store/documents/document.utils';
 import {FormValidationService} from './validation/form-validation.service';
 import {FormValidation} from './validation/form-validation';
 import {FormLinkData, FormLinkSelectedData} from './model/form-link-data';
@@ -56,7 +59,7 @@ import {getOtherLinkedDocumentId} from '../../../../../core/store/link-instances
 import {AllowedPermissions, ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
 import {User} from '../../../../../core/store/users/user';
 import {selectCurrentUserForWorkspace} from '../../../../../core/store/users/users.state';
-import {objectChanged} from '../../../../../shared/utils/common.utils';
+import {objectChanged, objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {generateCorrelationId} from '../../../../../shared/utils/resource.utils';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
@@ -121,6 +124,7 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
 
   public collectionPermissions: AllowedPermissions;
 
+  private constraintData: ConstraintData;
   private subscriptions = new Subscription();
 
   constructor(
@@ -130,7 +134,10 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.constraintData$ = this.store$.pipe(
+      select(selectConstraintData),
+      tap(constraintData => (this.constraintData = constraintData))
+    );
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
     this.validation$ = this.formValidation.validation$;
     this.editedCell$ = this.formState.editedCell$;
@@ -410,9 +417,9 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  public clearData() {
-    this.data$.next({});
-    this.dataValues$.next({});
+  public clearData(data: Record<string, any> = {}, dataValues: Record<string, DataValue> = {}) {
+    this.data$.next(data);
+    this.dataValues$.next(dataValues);
     this.selectedLinkData$.next({});
   }
 
@@ -460,7 +467,19 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   public onAddNewDocument() {
     const correlationId = generateCorrelationId();
     this.selectedDocumentIds$.next({correlationId});
-    this.clearData();
+    const {data, dataValues} = this.generateNewDocumentData();
+    this.clearData(data, dataValues);
+  }
+
+  private generateNewDocumentData(): {data: Record<string, any>; dataValues: Record<string, DataValue>} {
+    const data = generateDocumentDataByQuery(this.query, [this.collection], this.constraintData, false);
+    const attributesMap = objectsByIdMap(this.collection?.attributes);
+    const dataValues = Object.keys(data).reduce((values, attributeId) => {
+      const constraint = attributesMap?.[attributeId]?.constraint || new UnknownConstraint();
+      values[attributeId] = constraint.createDataValue(data[attributeId], this.constraintData);
+      return values;
+    }, {});
+    return {data, dataValues};
   }
 
   public onDelete() {

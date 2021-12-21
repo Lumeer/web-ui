@@ -40,7 +40,6 @@ import {AllowedPermissions} from '../../../../../../../core/model/allowed-permis
 import {NotificationService} from '../../../../../../../core/notifications/notification.service';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
-import {isAttributeEditableWithQuery} from '../../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {
   selectAllCollections,
@@ -56,11 +55,7 @@ import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
-import {
-  findTableRow,
-  getTableColumnWidth,
-  getTableElementFromInnerElement,
-} from '../../../../../../../core/store/tables/table.utils';
+import {findTableRow, getTableColumnWidth} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
 import {
   selectAffected,
@@ -71,7 +66,7 @@ import {
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, keyboardEventCode, KeyCode} from '../../../../../../../shared/key-code';
-import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
+import {isAttributeConstraintType, isAttributeEditable} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {
@@ -88,12 +83,15 @@ import {DataResourcePermissions} from '../../../../../../../core/model/data-reso
 import {initForceTouch} from '../../../../../../../shared/utils/html-modifier';
 import {View} from '../../../../../../../core/store/views/view';
 import {Workspace} from '../../../../../../../core/store/navigation/workspace';
+import {AttributesResource} from '../../../../../../../core/model/resource';
+import {animateOpacityEnterLeave} from '../../../../../../../shared/animations';
 
 @Component({
   selector: 'table-data-cell',
   templateUrl: './table-data-cell.component.html',
   styleUrls: ['./table-data-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [animateOpacityEnterLeave],
 })
 export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
@@ -106,6 +104,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public document: DocumentModel;
 
   @Input()
+  public resource: AttributesResource;
+
+  @Input()
   public view: View;
 
   @Input()
@@ -113,10 +114,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public canManageConfig: boolean;
-
-  @Input()
-  @HostBinding('class.selected')
-  public selected: boolean;
 
   @Input()
   public table: TableModel;
@@ -145,11 +142,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public affect = new EventEmitter();
 
-  @ViewChild(TableDataCellMenuComponent)
-  public menuComponent: TableDataCellMenuComponent;
-
-  @ViewChild(DocumentHintsComponent)
-  public suggestions: DocumentHintsComponent;
+  @Input()
+  @HostBinding('class.selected')
+  public selected: boolean;
 
   @HostBinding('class.affected')
   public affected: boolean;
@@ -166,7 +161,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @HostBinding('class.table-border-bottom')
   public tableBorderBottom = true;
 
+  @ViewChild(TableDataCellMenuComponent)
+  public menuComponent: TableDataCellMenuComponent;
+
+  @ViewChild(DocumentHintsComponent)
+  public suggestions: DocumentHintsComponent;
+
   public editing$ = new BehaviorSubject(false);
+  public mouseEntered$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
   public dataValue$: Observable<DataValue>;
 
@@ -376,8 +378,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private isAttributeEditable(attribute: Attribute): boolean {
-    const parentId = this.document?.collectionId || this.linkInstance?.linkTypeId;
-    return isAttributeEditableWithQuery(attribute, parentId, this.allowedPermissions, this.query);
+    return isAttributeEditable(this.resource, this.document || this.linkInstance, attribute, this.constraintData);
   }
 
   private startEditingAndClear() {
@@ -431,6 +432,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedSubscriptions.unsubscribe();
     this.affectedSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
+  }
+
+  @HostListener('mouseenter')
+  public onMouseEnter() {
+    this.mouseEntered$.next(true);
+  }
+
+  @HostListener('mouseleave')
+  public onMouseLeave() {
+    this.mouseEntered$.next(false);
   }
 
   @HostListener('click', ['$event'])

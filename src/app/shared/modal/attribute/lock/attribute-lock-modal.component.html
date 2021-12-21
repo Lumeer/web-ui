@@ -1,0 +1,35 @@
+<modal-wrapper class="d-block"
+               [dialogType]="'primary'"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="!data.attribute"
+               [customHeader]="true"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()"
+               data-test="attribute-type-dialog"
+               *ngIf="{collection: collection$ | async, linkType: linkType$ | async, attribute: attribute$ | async} as data">
+
+  <attribute-modal-header class="custom-header"
+                          [resource]="data.collection || data.linkType"
+                          [textColor]="data.collection?.color"
+                          [attribute]="data.attribute">
+  </attribute-modal-header>
+
+
+  <div class="body" *ngIf="data.attribute; else notFound">
+    <attribute-lock-content class="p-3 d-block"
+                            [resource]="data.collection || data.linkType"
+                            [attribute]="data.attribute"
+                            (lockChange)="onLockChange($event, data.attribute)">
+    </attribute-lock-content>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" data-test="attribute-type-save-button" i18n="@@button.save">Save</span>
+
+</modal-wrapper>
+
+<ng-template #notFound>
+  <div class="body p-4">
+    <h4 class="text-danger text-center my-2" i18n="@@resource.attribute.deleted">Such an attribute does not exist.</h4>
+  </div>
+</ng-template>

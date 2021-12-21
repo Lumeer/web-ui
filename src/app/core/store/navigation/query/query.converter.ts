@@ -19,16 +19,17 @@
 
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {QueryDto} from '../../../dto';
-import {
-  AttributeFilterDto,
-  CollectionAttributeFilterDto,
-  LinkAttributeFilterDto,
-  QueryStemDto,
-} from '../../../dto/query.dto';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {QueryStemDto} from '../../../dto/query.dto';
+import {Query, QueryStem} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
-import {AttributeFilter, ConditionType} from '@lumeer/data-filters';
+import {AttributeFilter} from '@lumeer/data-filters';
+import {
+  convertCollectionAttributeFilterDtoToModel,
+  convertCollectionAttributeFilterModelToDto,
+  convertLinkAttributeFilterModelToDto,
+  convertLinkAttributeFilterDtoToModel,
+} from '../../../dto/attribute-filter.dto';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return (
@@ -71,50 +72,6 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
     linkTypeIds: model.linkTypeIds,
     filters: model.filters?.map(filter => convertCollectionAttributeFilterModelToDto(filter)),
     linkFilters: model.linkFilters?.map(filter => convertLinkAttributeFilterModelToDto(filter)),
-  };
-}
-
-function convertCollectionAttributeFilterDtoToModel(dto: CollectionAttributeFilterDto): CollectionAttributeFilter {
-  return {
-    collectionId: dto.collectionId,
-    ...convertAttributeFilterDtoToModel(dto),
-  };
-}
-
-function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFilter {
-  return {
-    attributeId: dto.attributeId,
-    condition: conditionFromString(dto.condition),
-    conditionValues: (dto.conditionValues || []).map(item => ({value: item.value, type: item.type})),
-  };
-}
-
-function convertLinkAttributeFilterDtoToModel(dto: LinkAttributeFilterDto): LinkAttributeFilter {
-  return {
-    linkTypeId: dto.linkTypeId,
-    ...convertAttributeFilterDtoToModel(dto),
-  };
-}
-
-function convertCollectionAttributeFilterModelToDto(model: CollectionAttributeFilter): CollectionAttributeFilterDto {
-  return {
-    collectionId: model.collectionId,
-    ...convertAttributeFilterModelToDto(model),
-  };
-}
-
-function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
-  return {
-    attributeId: model.attributeId,
-    condition: model.condition,
-    conditionValues: (model.conditionValues || []).map(item => ({value: item.value, type: item.type})),
-  };
-}
-
-function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkAttributeFilterDto {
-  return {
-    linkTypeId: model.linkTypeId,
-    ...convertAttributeFilterModelToDto(model),
   };
 }
 
@@ -173,8 +130,4 @@ function normalizeFilter<T extends AttributeFilter>(filter: T): T {
     condition: filter.condition || null,
     conditionValues: (filter.conditionValues || []).map(v => ({value: v.value || null, type: v.type || null})),
   };
-}
-
-function conditionFromString(condition: string): ConditionType {
-  return condition as ConditionType;
 }

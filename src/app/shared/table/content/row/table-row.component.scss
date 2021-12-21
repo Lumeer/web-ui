@@ -35,7 +35,8 @@ td.focused {
     display: block;
   }
 
-  .detail-trigger {
+  .detail-trigger,
+  .lock-icon {
     background: lighten($success, 60%);
   }
 }
@@ -50,11 +51,26 @@ td.focused {
     background: white;
   }
 
+  &.has-lock {
+    right: 20px;
+  }
+
   display: flex;
   align-items: center;
   position: absolute;
   right: 0;
   top: 1px;
   height: calc(100% - 2px);
+  z-index: 3;
+}
+
+.lock-icon {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  top: 1px;
+  height: calc(100% - 2px);
+  right: 0;
+  padding: 0 0.35rem;
   z-index: 3;
 }

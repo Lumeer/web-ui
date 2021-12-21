@@ -1,9 +1,10 @@
 <ng-container
   *ngIf="{columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async} as data">
   <ng-container *ngFor="let column of columns; trackBy: trackByColumn; let index = index">
-    <td class="table-border"
+    <td class="table-border position-relative"
         *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.data || {} : row.document?.data || {})[column.attribute.id] | dataValue:column.attribute?.constraint:constraintData,
           editing: data.columnEditing === index, focused: data.columnFocused === index,
+          lockStats: (column.linkTypeId ? linkType : collection) | attributeLockStats :(column.linkTypeId ? row.linkInstance : row.document): column.attribute:constraintData,
           editable: column.linkTypeId ? linkEditable : documentEditable} as columnData"
         [style.width.px]="column.width"
         [class.focused]="columnData.focused"
@@ -12,15 +13,17 @@
       (row.document?.id === attributeEditing?.documentId) &&
       (column.collectionId && column.attribute.id === attributeEditing?.attributeId)"
         (click)="onDataInputFocus(index, $event)"
-        (dblclick)="onDataInputDblClick(index, $event)">
+        (dblclick)="onDataInputDblClick(index, $event)"
+        (mouseenter)="onMouseEnter(column?.id)"
+        (mouseleave)="onMouseLeave(column?.id)">
       <ng-container
-        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:(column.editable && columnData.editable):columnData.editing as dataInputInfo">
+        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:columnData.editable:columnData.editing:columnData.lockStats as dataInputInfo">
         <data-input *ngIf="column.linkTypeId"
                     [constraint]="column.attribute?.constraint"
                     [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id:viewId)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
-                    [editableInReadonly]="column.editable && columnData.editable"
+                    [editableInReadonly]="dataInputInfo.editable"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
                     [readonly]="dataInputInfo.readonly"
@@ -36,7 +39,7 @@
                     [cursor]="row.document && (row.document | dataCursor : column.attribute.id:viewId)"
                     [dataValue]="columnData.dataValue"
                     [focus]="true"
-                    [editableInReadonly]="column.editable && columnData.editable"
+                    [editableInReadonly]="dataInputInfo.editable"
                     [preventEventBubble]="preventEventBubble"
                     [configuration]="configuration"
                     [readonly]="dataInputInfo.readonly"
@@ -48,6 +51,20 @@
                     (clickOutside)="onDataInputCancel(index)"
                     (enterInvalid)="onEnterInvalid()">
         </data-input>
+
+        <div *ngIf="column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(column?.attribute | isAttributeEnabledByLockStats:columnData.lockStats)"
+             class="lock-icon cursor-pointer" @enterAnimation
+             [tooltip]="statsTooltip" containerClass="bigger-tooltip">
+          <i class="fas fa-sm fa-lock"></i>
+
+          <ng-template #statsTooltip>
+            <attribute-lock-filters-stats [lock]="column?.attribute?.lock"
+                                          [stats]="columnData.lockStats"
+                                          [constraintData]="constraintData"
+                                          [attributesMap]="(column.linkTypeId ? linkType : collection) | resourceAttributesMap">
+            </attribute-lock-filters-stats>
+          </ng-template>
+        </div>
       </ng-container>
     </td>
   </ng-container>
@@ -69,14 +86,14 @@
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"
-    [collectionId]="collectionId"
+    [collectionId]="collection?.id"
     [viewId]="viewId"
     [excludedDocumentIds]="row.document?.id ? [row.document.id] : []"
     [columns]="columns | documentHintsColumns"
     [offsetLeft]="columns | calculateHintsOffset"
     [linkedDocumentId]="documentId"
     [linkInstanceId]="row.linkInstance?.id"
-    [linkTypeId]="linkTypeId"
+    [linkTypeId]="linkType?.id"
     [constraintData]="constraintData"
     [origin]="element"
     (useHint)="onUseHint()"

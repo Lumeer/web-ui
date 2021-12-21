@@ -131,12 +131,10 @@ export class CalendarConverter {
   ): CalendarEvent[] {
     const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
 
-    const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
     const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
     const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
     const startResource = this.dataObjectAggregator.getResource(stemConfig.start);
 
-    const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
     const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
     const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
     const endResource = this.dataObjectAggregator.getResource(stemConfig.end);
@@ -158,6 +156,9 @@ export class CalendarConverter {
 
       const endDataResource = item.objectDataResources[DataObjectInfoKeyType.End];
       const end = stemConfig.end && endDataResource?.data[stemConfig.end.attributeId];
+
+      const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start, startDataResource);
+      const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end, endDataResource);
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
 
@@ -190,6 +191,18 @@ export class CalendarConverter {
           formattedGroups,
         };
 
+        const durationEditable =
+          interval.end &&
+          stemConfig.end &&
+          endEditable &&
+          userCanEditDataResource(
+            endDataResource,
+            endResource,
+            endPermission,
+            this.constraintData?.currentUser,
+            this.constraintData
+          );
+
         const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
         const eventGroupId = groupId(item);
         const event: CalendarEvent = {
@@ -203,6 +216,7 @@ export class CalendarConverter {
           allDay,
           startEditable:
             startEditable &&
+            durationEditable &&
             userCanEditDataResource(
               startDataResource,
               startResource,
@@ -210,17 +224,7 @@ export class CalendarConverter {
               this.constraintData?.currentUser,
               this.constraintData
             ),
-          durationEditable:
-            interval.end &&
-            stemConfig.end &&
-            endEditable &&
-            userCanEditDataResource(
-              endDataResource,
-              endResource,
-              endPermission,
-              this.constraintData?.currentUser,
-              this.constraintData
-            ),
+          durationEditable,
           extendedProps,
           resourceIds,
         };

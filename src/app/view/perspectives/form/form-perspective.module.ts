@@ -65,6 +65,7 @@ import {PresenterModule} from '../../../shared/presenter/presenter.module';
 import {LinkCollectionDisplayedAttributePipe} from './pipes/link-collection-displayed-attribute.pipe';
 import {FormDocumentsChooseComponent} from './content/view/choose/form-documents-choose.component';
 import {FormCellIsEditedPipe} from './pipes/form-cell-is-edited.pipe';
+import {FormCellLockStatsPipe} from './pipes/form-cell-lock-stats.pipe';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import {FormCellIsEditedPipe} from './pipes/form-cell-is-edited.pipe';
     LinkCollectionDisplayedAttributePipe,
     FormDocumentsChooseComponent,
     FormCellIsEditedPipe,
+    FormCellLockStatsPipe,
   ],
   imports: [
     CommonModule,

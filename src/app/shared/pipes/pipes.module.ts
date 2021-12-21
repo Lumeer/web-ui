@@ -19,11 +19,10 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {AttributeEditablePipe} from './attribute-editable.pipe';
 import {AttributesSelectItemsPipe} from './attributes-select-items.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {CanChangeRolesPipe} from './can-change-roles.pipe';
-import {ResourceAttributeEditablePipe} from './resource-attribute-editable.pipe';
+import {IsAttributeEditablePipe} from './is-attribute-editable.pipe';
 import {CollectionAttributePipe} from './collection-attribute.pipe';
 import {CollectionByIdPipe} from './collection-by-id.pipe';
 import {CollectionLinkTypesPipe} from './collection-link-types.pipe';
@@ -50,8 +49,6 @@ import {PageSlicePipe} from './page-slice.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
-import {ActionRoleIconPipe} from './action-role-icon.pipe';
-import {ActionRoleTitlePipe} from './action-role-title.pipe';
 import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 import {UserRolesInResourcePipe} from './user-roles-in-resource.pipe';
 import {WorkspaceDefaultUrlPipe} from './workspace-default-url.pipe';
@@ -109,6 +106,9 @@ import {ViewLinkPipe} from './view-link.pipe';
 import {DataResourcesPipesModule} from './data-resource/data-resources-pipes.module';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {IsProjectTypePipe} from './is-project-type.pipe';
+import {AttributeLockStatsPipe} from './attribute-lock-stats.pipe';
+import {IsAttributeEnabledByLockStatsPipe} from './is-attribute-enabled-by-lock-stats.pipe';
+import {ResourceAttributesMapPipe} from './resource-attributes-map.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, DataResourcesPipesModule, PermissionsPipesModule],
@@ -128,8 +128,6 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ActionRoleIconPipe,
-    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -147,8 +145,9 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     CollectionsSelectItemsPipe,
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
-    ResourceAttributeEditablePipe,
-    AttributeEditablePipe,
+    IsAttributeEditablePipe,
+    AttributeLockStatsPipe,
+    IsAttributeEnabledByLockStatsPipe,
     ConstraintTypeIconPipe,
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
@@ -176,6 +175,7 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
+    ResourceAttributesMapPipe,
     CleanQueryAttributePipe,
     QueryStemAttributesSelectItemsPipe,
     QueryStemResourcesSelectItemsPipe,
@@ -220,8 +220,6 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     WorkspaceSetPipe,
     HighlightTextPipe,
     SingleCollectionQueryPipe,
-    ActionRoleIconPipe,
-    ActionRoleTitlePipe,
     UserRolesInResourcePipe,
     IncludesPipe,
     CanActivatePagePipe,
@@ -239,8 +237,9 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     CollectionsSelectItemsPipe,
     CollectionByIdPipe,
     WorkspaceDefaultUrlPipe,
-    ResourceAttributeEditablePipe,
-    AttributeEditablePipe,
+    IsAttributeEditablePipe,
+    AttributeLockStatsPipe,
+    IsAttributeEnabledByLockStatsPipe,
     ConstraintTypeIconPipe,
     ConstraintTypeIconTitlePipe,
     FormatDatePipe,
@@ -268,6 +267,7 @@ import {IsProjectTypePipe} from './is-project-type.pipe';
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
+    ResourceAttributesMapPipe,
     CleanQueryAttributePipe,
     QueryStemAttributesSelectItemsPipe,
     QueryStemResourcesSelectItemsPipe,

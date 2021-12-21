@@ -21,11 +21,12 @@ import {Component, ChangeDetectionStrategy, Input, SimpleChanges, OnChanges, Out
 import {FormCell, FormRow} from '../../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {filterValidFormCells} from '../../../form-utils';
-import {DataValue} from '@lumeer/data-filters';
+import {ConstraintData, DataValue} from '@lumeer/data-filters';
 import {FormError} from '../validation/form-validation';
 import {FormLinkData, FormLinkSelectedData} from '../model/form-link-data';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {FormCoordinates} from '../model/form-coordinates';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'form-view-row',
@@ -53,7 +54,13 @@ export class FormViewRowComponent implements OnChanges {
   public documentId: string;
 
   @Input()
-  public editable: boolean;
+  public documentEditable: boolean;
+
+  @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
+  public originalDocument: DocumentModel;
 
   @Input()
   public editedCell: FormCoordinates;

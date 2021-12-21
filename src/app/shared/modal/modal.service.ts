@@ -19,8 +19,10 @@
 
 import {Injectable, TemplateRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
+import {NavigationExtras} from '@angular/router';
+
 import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
-import {AttributeTypeModalComponent} from './attribute-type/attribute-type-modal.component';
+import {AttributeTypeModalComponent} from './attribute/type/attribute-type-modal.component';
 import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {first, map, mergeMap, take} from 'rxjs/operators';
@@ -29,7 +31,7 @@ import {selectCurrentUser} from '../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
+import {AttributeFunctionModalComponent} from './attribute/function/attribute-function-modal.component';
 import {selectAllCollections, selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {LinkType} from '../../core/store/link-types/link.type';
@@ -42,7 +44,6 @@ import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-li
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
-import {NavigationExtras} from '@angular/router';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
 import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
@@ -50,7 +51,7 @@ import {OrganizationsAction} from '../../core/store/organizations/organizations.
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
-import {AttributeDescriptionModalComponent} from './attribute-description/attribute-description-modal.component';
+import {AttributeDescriptionModalComponent} from './attribute/description/attribute-description-modal.component';
 import {ModifyDocumentLinksModalComponent} from './modify-document-links/modify-document-links-modal.component';
 import {ViewSettingsModalComponent} from './view-modal/settings/view-settings-modal.component';
 import {Workspace} from '../../core/store/navigation/workspace';
@@ -58,6 +59,8 @@ import {DataResourcesDetailModalComponent} from './data-resources-detail/data-re
 import {userHasRoleInOrganization} from '../utils/permission.utils';
 import {RoleType} from '../../core/model/role-type';
 import {TabsSettingsModalComponent} from './tabs-settings/tabs-settings-modal.component';
+import {AttributeLockModalComponent} from './attribute/lock/attribute-lock-modal.component';
+import {AttributeLock} from '@lumeer/data-filters';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -207,6 +210,18 @@ export class ModalService {
     return this.showStaticDialog(initialState, AttributeTypeModalComponent);
   }
 
+  public showAttributeLock(
+    attributeId: string,
+    collectionId: string,
+    linkTypeId?: string,
+    handleSubmit = false,
+    overrideLock?: AttributeLock,
+    workspace?: Workspace
+  ): BsModalRef {
+    const initialState = {attributeId, collectionId, linkTypeId, workspace, overrideLock, handleSubmit};
+    return this.showStaticDialog(initialState, AttributeLockModalComponent, 'modal-lg');
+  }
+
   public showStaticDialog(
     initialState: any,
     content: string | TemplateRef<any> | any,
@@ -227,7 +242,7 @@ export class ModalService {
     collectionId: string,
     linkTypeId?: string,
     workspace?: Workspace
-  ) {
+  ): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId, workspace};
     return this.showStaticDialog(initialState, AttributeDescriptionModalComponent);
   }

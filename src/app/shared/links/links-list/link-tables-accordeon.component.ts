@@ -44,6 +44,8 @@ import {selectDocumentsByIds} from '../../../core/store/documents/documents.stat
 import {groupDocumentsByCollection} from '../../../core/store/documents/document.utils';
 import {map, switchMap} from 'rxjs/operators';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {ConstraintData} from '@lumeer/data-filters';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'link-tables-accordeon',
@@ -107,12 +109,14 @@ export class LinkTablesAccordeonComponent implements OnInit, OnChanges {
   public createLink = new EventEmitter<{linkInstance: LinkInstance}>();
 
   public collections$: Observable<Collection[]>;
+  public constraintData$: Observable<ConstraintData>;
   public documentByCollectionMap$: Observable<Record<string, DocumentModel>>;
   public query$: Observable<Query>;
 
   public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.query$ = this.store$.pipe(select(selectViewQuery));
   }
 

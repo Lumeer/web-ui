@@ -44,7 +44,6 @@ export interface TableColumn {
   color?: string;
   default?: boolean;
   hidden?: boolean;
-  editable: boolean;
   editableFilters: boolean;
   filters: AttributeFilter[];
   permissions: AllowedPermissions;

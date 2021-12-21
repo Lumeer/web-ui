@@ -113,11 +113,11 @@ export class MapDataConverter {
     const permissions = this.dataObjectAggregator.attributePermissions(attribute);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(attribute);
     const resourceIcons = this.dataObjectAggregator.getAttributeIcons(attribute);
-    const attributeEditable = this.dataObjectAggregator.isAttributeEditable(attribute);
     const resourceType = attribute.resourceType;
 
     return dataObjectsInfo.reduce<MapMarkerData[]>((data, item) => {
       const dataResource = item.objectDataResources[DataObjectInfoKeyType.Attribute];
+      const attributeEditable = this.dataObjectAggregator.isAttributeEditable(attribute, dataResource);
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const color = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources) || resourceColor;

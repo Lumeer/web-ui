@@ -27,7 +27,7 @@ import {selectPivotById} from '../../../core/store/pivots/pivots.state';
 import {PivotConfig} from '../../../core/store/pivots/pivot';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {checkOrTransformPivotConfig} from './util/pivot-util';
+import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivot-util';
 import {DataPerspectiveDirective} from '../data-perspective.directive';
 import {Observable} from 'rxjs';
 import {ViewConfig} from '../../../core/store/views/view';
@@ -73,5 +73,9 @@ export class PivotPerspectiveComponent extends DataPerspectiveDirective<PivotCon
 
   public getConfig(viewConfig: ViewConfig): PivotConfig {
     return viewConfig?.pivot;
+  }
+
+  protected getDefaultConfig(query: Query): PivotConfig {
+    return createDefaultPivotConfig(query);
   }
 }

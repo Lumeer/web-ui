@@ -1,11 +1,11 @@
 <ng-container *ngIf="{loading: loading$ | async, stats: stats$ | async} as data">
   <button class="btn btn-sm small text-truncate mx-1 text-nowrap"
-          *ngIf="{opacity: (!data.stats?.satisfy || data.loading) ? 0.5 : 1} as buttonData"
+          *ngIf="{opacity: (data.stats?.disabled || data.loading) ? 0.5 : 1} as buttonData"
           [style.background]="value?.config?.background"
-          [class.disabled]="!data.stats?.satisfy || data.loading"
+          [class.disabled]="data.stats?.disabled || data.loading"
           [tooltip]="statsTooltip"
           containerClass="bigger-tooltip"
-          [isDisabled]="data.stats?.satisfy || !(!!cursor?.documentId || !!cursor?.linkInstanceId)"
+          [isDisabled]="!data.stats?.disabled || !(!!cursor?.documentId || !!cursor?.linkInstanceId)"
           [style.color]="value?.config?.background | contrastColor:null:buttonData.opacity"
           (click)="onClick($event)">
     <span *ngIf="data.loading" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
@@ -15,7 +15,11 @@
   </button>
 
   <ng-template #statsTooltip>
-    <action-filters-tooltip [stats]="data.stats"></action-filters-tooltip>
+    <attribute-lock-filters-stats [lock]="data.stats?.lock"
+                                  [stats]="data.stats"
+                                  [constraintData]="data.stats?.constraintData"
+                                  [attributesMap]="data.stats?.attributesMap">
+    </attribute-lock-filters-stats>
   </ng-template>
 
 </ng-container>

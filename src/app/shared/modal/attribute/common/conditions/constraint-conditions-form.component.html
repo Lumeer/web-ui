@@ -1,0 +1,15 @@
+<label *ngIf="label">{{label}}</label>
+
+<div *ngFor="let group of filtersArray?.controls; let first = first; let index = index">
+  <constraint-condition-form class="d-block"
+                                    [class.mt-1]="!first"
+                                    [form]="group"
+                                    [selectOperator]="filtersArray.length > 1"
+                                    [attributes]="resource?.attributes"
+                                    [attributeSelectItems]="attributeSelectItems"
+                                    (remove)="onRemoveFilter(index)"
+                                    (operatorSelect)="onOperatorSelect($event)">
+  </constraint-condition-form>
+</div>
+
+<button class="btn btn-link px-0 small d-block" (click)="onAddFilter()"><i class="fas fa-plus-circle mr-2"></i><span>{{buttonLabel}}</span></button>

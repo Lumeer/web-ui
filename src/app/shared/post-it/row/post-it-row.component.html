@@ -30,8 +30,8 @@
   </data-input>
 </div>
 
-<div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center"
-     *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async) as dataInputInfo"
+<div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center data-input-wrapper"
+     *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async):lockStats as dataInputInfo"
      (click)="onValueFocus()"
      (clickOutside)="onDataInputCancel()"
      [clickOutsideEnabled]="(valueFocused$ | async) || (editing$ | async)"
@@ -51,18 +51,34 @@
               [cursor]="cursor"
               [focus]="true"
               [dataValue]="dataValue"
-              [editableInReadonly]="editable"
+              [editableInReadonly]="dataInputInfo.editable"
               [configuration]="configuration"
               [readonly]="dataInputInfo.readonly"
               (save)="onNewValue($event)"
               (cancel)="onDataInputCancel()"
               (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
               (valueChange)="onValueEdit($event)"
-              [class.editing]="(editing$ | async) && !row.attribute?.constraint?.isDirectlyEditable"
+              [class.editing]="dataInputInfo.editing"
               [class.value-focused]="valueFocused$ | async"
               [class.cursor-pointer]="!dataInputInfo.readonly"
               [class.read-only]="dataInputInfo.readonly">
   </data-input>
+
+  <div *ngIf="(mouseEntered$ | async) && dataInputInfo.showLockStats && !(row.attribute | isAttributeEnabledByLockStats:lockStats)"
+       @enterAnimation
+       class="lock-icon cursor-pointer mr-1"
+       [tooltip]="statsTooltip" containerClass="bigger-tooltip">
+    <i class="fas fa-sm fa-lock"></i>
+
+    <ng-template #statsTooltip>
+      <attribute-lock-filters-stats [lock]="row.attribute?.lock"
+                                    [stats]="lockStats"
+                                    [constraintData]="constraintData"
+                                    [collectionId]="cursor?.collectionId"
+                                    [linkTypeId]="cursor?.linkTypeId">
+      </attribute-lock-filters-stats>
+    </ng-template>
+  </div>
 </div>
 
 <div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center">

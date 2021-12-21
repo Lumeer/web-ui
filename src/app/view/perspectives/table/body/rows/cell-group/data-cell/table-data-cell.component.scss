@@ -12,10 +12,6 @@
     display: grid;
     align-items: center;
 
-    .table-data-input {
-      min-width: 0;
-    }
-
     &.selected {
       grid-template-rows: 0 auto;
     }
@@ -24,6 +20,18 @@
       overflow: hidden;
     }
   }
+}
+
+.lock-icon {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  height: calc(100% - 3px);
+  right: 2px;
+  padding-right: 0.25rem;
+  padding-left: 0.35rem;
+  background: white;
+  z-index: 10;
 }
 
 ::ng-deep p {
@@ -42,20 +50,11 @@
 }
 
 .data-input {
-  cursor: default;
+  max-height: 200px;
   min-height: 1px;
 
   &[contenteditable='true']:empty::before {
     content: none; // Firefox fix
-  }
-
-  &:not(.edited) {
-    color: transparent;
-    text-shadow: 0 0 0 $body-color;
-
-    &.uninitialized-record {
-      text-shadow: 0 0 0 $secondary;
-    }
   }
 }
 

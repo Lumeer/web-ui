@@ -1,0 +1,14 @@
+@import 'src/styles/variables';
+@import 'src/styles/bootstrap_var';
+
+i.help {
+  line-height: 2.25rem;
+}
+
+a.text-primary:hover i {
+  color: $primary-hover;
+}
+
+a.text-primary i {
+  transition: $transition-base;
+}

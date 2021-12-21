@@ -18,6 +18,7 @@
           [linkInstance]="cellData.linkInstance"
           [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
           [table]="table$ | async"
+          [resource]="data.resource"
           [allowedPermissions]="data.permissions"
           [linkAllowedPermissions]="data.linkTypePermissions"
           [dataPermissions]="(cellData.document || cellData.linkInstance) | dataResourcePermissions:data.resource:data.permissions:data.currentUser:data.constraintData"

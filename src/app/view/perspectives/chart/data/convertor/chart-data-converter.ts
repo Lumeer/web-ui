@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {ResourcesPermissions} from '../../../../../core/model/allowed-permissions';
-import {AttributesResourceType} from '../../../../../core/model/resource';
+import {AttributesResourceType, DataResource} from '../../../../../core/model/resource';
 import {
   ChartAxis,
   ChartAxisConfig,
@@ -405,10 +405,10 @@ export class ChartDataConverter {
     }
 
     const actualValues = new Set();
-    const canDragAxis = this.canDragAxis(yAxis);
     const constraint = this.constraintForAxis(definedAxis);
     const points: ChartPoint[] = [];
     let isNum = true;
+    let somePointIsDraggable = false;
 
     const dataResources = this.dataObjectAggregator.getDataResources(definedAxis);
     const resource = this.dataObjectAggregator.getResource(definedAxis);
@@ -422,7 +422,9 @@ export class ChartDataConverter {
       const xSort = sortAxis && dataObject.data?.[sortAxis.attributeId];
       const values = isArray(value) ? value : [value];
       const draggable =
-        canDragAxis && userCanEditDataResource(dataObject, resource, permissions, this.user, this.constraintData);
+        this.canDragAxis(yAxis, dataObject) &&
+        userCanEditDataResource(dataObject, resource, permissions, this.user, this.constraintData);
+      somePointIsDraggable = somePointIsDraggable || draggable;
       for (let i = 0; i < values.length; i++) {
         const formattedValue = this.formatChartAxisValue(values[i], definedAxis);
         if (isNullOrUndefined(formattedValue) || actualValues.has(formattedValue)) {
@@ -462,7 +464,7 @@ export class ChartDataConverter {
       points,
       yAxisType,
       name,
-      draggable: canDragAxis,
+      draggable: somePointIsDraggable,
       resourceType: definedAxis.resourceType,
       color: pointColor,
     };
@@ -564,7 +566,6 @@ export class ChartDataConverter {
     const setId = this.yAxisSetId(config, yAxisType);
     const isDataSetDefined = !!yAxisConfig?.name;
     const colorAxis = yAxisConfig?.color;
-    const canDragAxis = this.canDragAxis(yAxis);
     const permissions = this.dataObjectAggregator.attributePermissions(yAxis);
     const resource = this.dataObjectAggregator.getResource(yAxis);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(yAxis);
@@ -640,7 +641,7 @@ export class ChartDataConverter {
         let id = null;
         if (yDataResources.length === 1 && isValueAggregation(aggregation)) {
           id =
-            canDragAxis &&
+            this.canDragAxis(yAxis, yDataResources[0]) &&
             userCanEditDataResource(yDataResources[0], resource, permissions, this.user, this.constraintData) &&
             yDataResources[0].id;
         }
@@ -725,8 +726,8 @@ export class ChartDataConverter {
     return dataValue.momentDate?.format('YYYY-MM-DD HH:mm:SS.ss');
   }
 
-  private canDragAxis(yAxis: ChartAxis): boolean {
-    return this.dataObjectAggregator.isAttributeEditable(yAxis);
+  private canDragAxis(yAxis: ChartAxis, dataResource: DataResource): boolean {
+    return this.dataObjectAggregator.isAttributeEditable(yAxis, dataResource);
   }
 
   private attributeNameForAxis(axis: ChartAxis): string {

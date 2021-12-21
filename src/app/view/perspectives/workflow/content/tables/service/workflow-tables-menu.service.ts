@@ -33,6 +33,7 @@ export enum HeaderMenuId {
   Description = 'description',
   Hide = 'hide',
   Copy = 'copy',
+  Lock = 'lock',
   CopyName = 'copyName',
   CopyValues = 'copyValues',
   CopyValuesUnique = 'copyValuesUnique',
@@ -160,6 +161,13 @@ export class WorkflowTablesMenuService {
           group: 0,
         },
         {
+          id: HeaderMenuId.Lock,
+          title: this.translateHeaderMenuItem(HeaderMenuId.Lock),
+          disabled: !permissions?.roles?.AttributeEdit,
+          icons: ['fa fa-lock-open'],
+          group: 0,
+        },
+        {
           id: HeaderMenuId.Description,
           title: this.translateHeaderMenuItem(HeaderMenuId.Description),
           disabled: !permissions?.roles?.AttributeEdit,
@@ -261,6 +269,8 @@ export class WorkflowTablesMenuService {
         return $localize`:@@table.header.menu.editFunction:Edit function...`;
       case HeaderMenuId.Description:
         return $localize`:@@table.header.menu.editDescription:Edit description...`;
+      case HeaderMenuId.Lock:
+        return $localize`:@@table.header.menu.lockSettings:Locking...`;
       case HeaderMenuId.Rule:
         return $localize`:@@table.header.menu.editAutomation:Edit automation...`;
       case HeaderMenuId.Displayed:

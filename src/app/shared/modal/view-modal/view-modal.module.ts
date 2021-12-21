@@ -43,7 +43,7 @@ import {ViewUsersComponent} from './share/body/users/view-users.component';
 import {ViewTeamsComponent} from './share/body/teams/view-teams.component';
 import {UsersModule} from '../../users/users.module';
 import {TeamsModule} from '../../teams/teams.module';
-import {HintBoxModule} from '../../hint-box/hint-box.module';
+import {BoxModule} from '../../box/box.module';
 
 @NgModule({
   declarations: [
@@ -75,7 +75,7 @@ import {HintBoxModule} from '../../hint-box/hint-box.module';
     PickerModule,
     UsersModule,
     TeamsModule,
-    HintBoxModule,
+    BoxModule,
   ],
   exports: [ShareViewModalComponent, ViewSettingsModalComponent],
 })

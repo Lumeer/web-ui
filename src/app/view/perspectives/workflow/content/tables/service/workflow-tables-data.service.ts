@@ -25,7 +25,7 @@ import {ColumnFilter, TableColumn} from '../../../../../../shared/table/model/ta
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
-import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableRow, TableRowCellsMap} from '../../../../../../shared/table/model/table-row';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
@@ -49,12 +49,7 @@ import {
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
-import {
-  findAttribute,
-  getDefaultAttributeId,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../../../../core/store/collections/collection.util';
+import {findAttribute, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
 import {HeaderMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
@@ -103,14 +98,14 @@ import {
   computeTableHeight,
   createAggregatedLinkingDocumentsIds,
   createAggregatorAttributes,
-  createColumnIdsMap,
   createEmptyNewRow,
   createLinkingCollectionId,
   createLinkTypeData,
   createPendingColumnValuesByRow,
   createRowData,
   createRowObjectsFromAggregated,
-  createRowValues,
+  createTableRowCellsMapForAttribute,
+  createTableRowCellsMapForResource,
   isWorkflowStemConfigGroupedByResourceType,
   PendingRowUpdate,
   sortWorkflowTables,
@@ -361,8 +356,6 @@ export class WorkflowTablesDataService {
 
         const columns = [...linkColumns, ...collectionColumns];
         const columnsWidth = groupTableColumns(columns).reduce((width, group) => (width += group.width), 0);
-        const linkColumnIdsMap = createColumnIdsMap(linkColumns);
-        const columnIdsMap = createColumnIdsMap(collectionColumns);
         const stemTableSettings = config.tables?.filter(
           tab => queryStemsAreSame(tab.stem, stemConfig.stem) && tab.collectionId === collection.id
         );
@@ -371,7 +364,14 @@ export class WorkflowTablesDataService {
         const isGroupedByLink =
           attribute && isWorkflowStemConfigGroupedByResourceType(stemConfig, AttributesResourceType.LinkType);
         const linkingCollectionId = createLinkingCollectionId(stemConfig, collections, linkTypesMap);
-        const newRowData = this.createNewRowData(collection, linkType, columnIdsMap, linkColumnIdsMap);
+        const newRowCellsMap = this.createNewRowCellsMap(
+          collection,
+          linkType,
+          collectionColumns,
+          linkColumns,
+          query,
+          constraintData
+        );
 
         const tables = [];
         if (aggregatedData.items.length) {
@@ -394,8 +394,8 @@ export class WorkflowTablesDataService {
                   viewSettings,
                   constraintData
                 ),
-                linkColumnIdsMap,
-                columnIdsMap,
+                linkColumns,
+                collectionColumns,
                 linkPermissions,
                 collectionPermissions,
                 linkType,
@@ -403,10 +403,12 @@ export class WorkflowTablesDataService {
                 constraintData
               );
 
-              const newRowDataAggregated = {
-                ...newRowData,
-                ...createRowValues(isGroupedByCollection ? {[attribute.id]: title} : {}, columnIdsMap),
-                ...createRowValues(isGroupedByLink ? {[attribute.id]: title} : {}, linkColumnIdsMap),
+              const newRowCellsMapAggregated = {
+                ...newRowCellsMap,
+                ...(isGroupedByCollection
+                  ? createTableRowCellsMapForAttribute(attribute, title, collectionColumns)
+                  : {}),
+                ...(isGroupedByLink ? createTableRowCellsMapForAttribute(attribute, title, linkColumns) : {}),
               };
 
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
@@ -430,7 +432,7 @@ export class WorkflowTablesDataService {
                 height,
                 bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
                 width: columnsWidth + 1, // + 1 for border
-                newRow: newRow ? {...newRow, tableId, data: newRowDataAggregated} : undefined,
+                newRow: newRow ? {...newRow, tableId, cellsMap: newRowCellsMapAggregated} : undefined,
                 linkingDocumentIds:
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
                 linkingCollectionId,
@@ -445,8 +447,8 @@ export class WorkflowTablesDataService {
             tableId,
             tableByCollection?.rows || [],
             [],
-            linkColumnIdsMap,
-            columnIdsMap,
+            linkColumns,
+            collectionColumns,
             linkPermissions,
             collectionPermissions,
             linkType,
@@ -468,7 +470,7 @@ export class WorkflowTablesDataService {
             minHeight,
             height,
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow ? {...newRow, tableId, data: newRow.data || newRowData} : undefined,
+            newRow: newRow ? {...newRow, tableId, cellsMap: newRow.cellsMap || newRowCellsMap} : undefined,
             bottomToolbar: !!newRow || shouldShowToolbarWithoutNewRow(height, minHeight, maxHeight),
             linkingCollectionId,
           };
@@ -484,20 +486,25 @@ export class WorkflowTablesDataService {
     );
   }
 
-  private createNewRowData(
+  private createNewRowCellsMap(
     collection: Collection,
     linkType: LinkType,
-    collectionColumnsMap: Record<string, string>,
-    linkColumnsMap: Record<string, string>
-  ): Record<string, any> {
-    const query = this.stateService.query;
-    const constraintData = this.stateService.constraintData;
+    collectionsColumns: TableColumn[],
+    linkColumns: TableColumn[],
+    query: Query,
+    constraintData: ConstraintData
+  ): TableRowCellsMap {
     const documentData = generateDocumentDataByResourceQuery(collection, query, constraintData);
     const linkData = linkType ? generateDocumentDataByResourceQuery(linkType, query, constraintData) : {};
 
     return {
-      ...createRowValues(documentData, collectionColumnsMap),
-      ...createRowValues(linkData, linkColumnsMap),
+      ...createTableRowCellsMapForResource(
+        {id: null, data: documentData},
+        collectionsColumns,
+        collection,
+        constraintData
+      ),
+      ...createTableRowCellsMapForResource({id: null, data: linkData}, linkColumns, linkType, constraintData),
     };
   }
 
@@ -617,9 +624,6 @@ export class WorkflowTablesDataService {
       TableColumn[]
     >((columns, setting) => {
       const attribute = findAttribute(resource.attributes, setting.attributeId);
-      const editable = isCollection
-        ? isCollectionAttributeEditable(attribute.id, resource, permissions, query)
-        : isLinkTypeAttributeEditable(attribute.id, <LinkType>resource, permissions, query);
       const columnResourceId = (col: TableColumn) => (isCollection ? col.collectionId : col.linkTypeId);
       const columnByAttribute = currentColumns.find(
         col => columnResourceId(col) === resource.id && col.attribute?.id === attribute.id
@@ -636,7 +640,6 @@ export class WorkflowTablesDataService {
       const column: TableColumn = {
         id: currentColumn?.id || generateId(),
         attribute,
-        editable,
         editableFilters: this.editableFilters,
         width: columnSettings?.width || TABLE_COLUMN_WIDTH,
         collectionId: isCollection ? resource.id : null,
@@ -697,7 +700,6 @@ export class WorkflowTablesDataService {
         name: generateAttributeName(columnNames),
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
-        editable: true,
         editableFilters: this.editableFilters,
         filters: [],
         width: TABLE_COLUMN_WIDTH,
@@ -765,7 +767,6 @@ export class WorkflowTablesDataService {
         id: generateId(),
         name: generateAttributeName(columnNames),
         linkTypeId: linkType.id,
-        editable: true,
         editableFilters: this.editableFilters,
         permissions,
         width: TABLE_COLUMN_WIDTH,
@@ -783,8 +784,8 @@ export class WorkflowTablesDataService {
     tableId: string,
     currentRows: TableRow[],
     sortedData: {document: DocumentModel; linkInstance?: LinkInstance}[],
-    linkColumnIdsMap: Record<string, string>,
-    columnIdsMap: Record<string, string>,
+    linkColumns: TableColumn[],
+    collectionColumns: TableColumn[],
     linkPermissions: AllowedPermissions,
     collectionPermissions: AllowedPermissions,
     linkType: LinkType,
@@ -807,9 +808,21 @@ export class WorkflowTablesDataService {
         const objectId = object.linkInstance?.id || object.document.id;
         const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
         const currentRow = rowsMap[objectCorrelationId || objectId] || rowsMap[objectId];
-        const documentData = createRowValues(object.document.data, columnIdsMap);
-        const linkData = createRowValues(object.linkInstance?.data, linkColumnIdsMap);
         const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
+        const documentCells = createTableRowCellsMapForResource(
+          object.document,
+          collectionColumns,
+          collection,
+          constraintData,
+          pendingData
+        );
+        const linkCells = createTableRowCellsMapForResource(
+          object.linkInstance,
+          linkColumns,
+          linkType,
+          constraintData,
+          pendingData
+        );
         const id = currentRow?.id || objectCorrelationId || generateId();
         const documentPermissions = dataResourcePermissions(
           object.document,
@@ -828,7 +841,7 @@ export class WorkflowTablesDataService {
         const row: TableRow = {
           id,
           tableId,
-          data: {...documentData, ...linkData, ...pendingData},
+          cellsMap: {...documentCells, ...linkCells},
           documentId: object.document.id,
           linkInstanceId: object.linkInstance?.id,
           height: currentRow?.height || TABLE_ROW_HEIGHT,
@@ -1182,6 +1195,11 @@ export class WorkflowTablesDataService {
     this.modalService.showAttributeFunction(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 
+  public showAttributeLock(column: TableColumn) {
+    this.stateService.resetSelectedCell();
+    this.modalService.showAttributeLock(column.attribute.id, column.collectionId, column.linkTypeId);
+  }
+
   public renameAttribute(column: TableColumn, name: string) {
     if (column?.collectionId) {
       this.store$.dispatch(
@@ -1320,8 +1338,14 @@ export class WorkflowTablesDataService {
         );
       });
     } else {
-      const newRowData = {...row.data, ...this.mapDocumentData(table?.columns || [], document)};
-      this.stateService.startRowCreating(row, newRowData, document.id);
+      const documentCellsMap = createTableRowCellsMapForResource(
+        document,
+        table?.columns,
+        this.stateService.collectionsMap[table.collectionId],
+        this.stateService.constraintData
+      );
+      const newRowCellsMap: TableRowCellsMap = {...row.cellsMap, ...documentCellsMap};
+      this.stateService.startRowCreating(row, newRowCellsMap, document.id);
       const linkInstance: LinkInstance = {
         data: linkData,
         correlationId: row.correlationId,
@@ -1336,15 +1360,6 @@ export class WorkflowTablesDataService {
         })
       );
     }
-  }
-
-  private mapDocumentData(columns: TableColumn[], document: DocumentModel): Record<string, any> {
-    return columns.reduce((data, column) => {
-      if (column.collectionId && column.attribute) {
-        data[column.id] = document.data?.[column.attribute.id];
-      }
-      return data;
-    }, {});
   }
 
   private onRowCreated(row: TableRow, data: Record<string, any>, documentId: string, linkInstanceId?: string) {
@@ -1505,7 +1520,7 @@ export class WorkflowTablesDataService {
     const table = this.stateService.findTableByColumn(column);
     const constraint = column.attribute.constraint;
     const dataValues = table?.rows?.map(row =>
-      constraint.createDataValue(row.data?.[column.id], this.stateService.constraintData)
+      constraint.createDataValue(row.cellsMap?.[column.id]?.data, this.stateService.constraintData)
     );
     this.copyValueService.copyDataValues(dataValues, constraint, unique);
   }
@@ -1519,7 +1534,7 @@ export class WorkflowTablesDataService {
           this.copyValueService.copyLinkValue(row.linkInstanceId, column.linkTypeId, column.attribute.id);
         }
       } else {
-        const value = row.data?.[column.id];
+        const value = row.cellsMap?.[column.id]?.data;
         this.copyValueService.copy(value);
       }
     }
