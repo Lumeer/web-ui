@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ConstraintConditionValueItem, ConditionItem} from '../model/condition-item';
+import {ConditionItem, ConstraintConditionValueItem} from '../model/condition-item';
 import {BehaviorSubject} from 'rxjs';
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
@@ -209,9 +209,13 @@ export class FilterBuilderContentComponent implements OnChanges {
 
   public startEditing(index: number) {
     this.endFocus();
-    if (this.editable && this.editing$.value !== index) {
+    if (this.shouldEmitEditing() && this.editing$.value !== index) {
       setTimeout(() => this.editing$.next(index));
     }
+  }
+
+  private shouldEmitEditing(): boolean {
+    return this.editable && this.attribute?.constraint?.type !== ConstraintType.Boolean;
   }
 
   public onDataInputClick(event: MouseEvent, index: number) {
