@@ -25,6 +25,7 @@ import {
   HostBinding,
   HostListener,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -175,7 +176,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public attribute$: Observable<Attribute>;
   public row$: Observable<TableConfigRow>;
 
-  public editable: boolean;
+  public editableByPermissions: boolean;
   public editedValue: DataValue;
 
   public readonly constraintType = ConstraintType;
@@ -186,6 +187,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     action: {center: true},
   };
 
+  private hintWasUsed = false;
+  private attribute: Attribute;
   private selectedSubscriptions = new Subscription();
   private affectedSubscription = new Subscription();
   private subscriptions = new Subscription();
@@ -194,7 +197,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     private actions$: Actions,
     public element: ElementRef,
     private notificationService: NotificationService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private ngZone: NgZone
   ) {}
 
   public ngOnInit() {
@@ -228,12 +232,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.column || changes.document) && this.column && this.document) {
       this.attribute$ = this.store$.pipe(
-        select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
+        select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0])),
+        tap(attribute => (this.attribute = attribute))
       );
     }
     if ((changes.column || changes.linkInstance) && this.column && this.linkInstance && !this.document) {
       this.attribute$ = this.store$.pipe(
-        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
+        select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0])),
+        tap(attribute => (this.attribute = attribute))
       );
     }
     if (
@@ -278,19 +284,19 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   private checkIsEditable() {
     // is first collection or link
     if (this.cursor?.partIndex === 0 || this.cursor?.partIndex % 2 === 1) {
-      this.editable = this.isEditable();
+      this.editableByPermissions = this.isEditableByPermissions();
     } else if (this.cursor?.partIndex % 2 === 0) {
       if (this.document?.id) {
-        this.editable = this.dataPermissions?.edit || this.linkDataPermissions?.edit;
+        this.editableByPermissions = this.dataPermissions?.edit || this.linkDataPermissions?.edit;
       } else {
-        this.editable = this.linkDataPermissions?.create;
+        this.editableByPermissions = this.linkDataPermissions?.create;
       }
     } else {
-      this.editable = false;
+      this.editableByPermissions = false;
     }
   }
 
-  private isEditable(): boolean {
+  private isEditableByPermissions() {
     if (this.document?.id || this.linkInstance?.id) {
       return this.dataPermissions?.edit;
     } else {
@@ -298,13 +304,17 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  private isEditable(): boolean {
+    return this.isEditableByPermissions() && this.isAttributeEditable(this.attribute);
+  }
+
   private canSuggest(): boolean {
     // check if is linked collection
     if (this.cursor?.partIndex > 0 && this.cursor?.partIndex % 2 === 0) {
       if (this.document?.id) {
-        return this.linkDataPermissions?.edit;
+        return this.linkDataPermissions?.edit && this.isAttributeEditable(this.attribute);
       } else {
-        return this.linkDataPermissions?.create;
+        return this.linkDataPermissions?.create && this.isAttributeEditable(this.attribute);
       }
     }
     return false;
@@ -364,7 +374,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
         if (
-          this.editable &&
+          this.editableByPermissions &&
           this.isAttributeEditable(attribute) &&
           action.payload.correlationId === this.correlationId
         ) {
@@ -455,11 +465,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public onDoubleClick(event: MouseEvent) {
     if (!this.editing$.getValue()) {
       event.preventDefault();
-      this.attribute$.pipe(first()).subscribe(attribute => {
-        if (this.editable && this.isAttributeEditable(attribute)) {
-          this.editing$.next(true);
-        }
-      });
+      if (this.isEditable()) {
+        this.editing$.next(true);
+      }
     }
   }
 
@@ -822,7 +830,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onValueSave(dataValue: DataValue) {
-    if (!this.isEditable()) {
+    if (this.hintWasUsed || !this.isEditable()) {
       this.onCancelEditing();
       return false;
     }
@@ -878,7 +886,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onKeyDownInSelectionMode(event: KeyboardEvent) {
-    const writeWithView = this.editable;
+    const writeWithView = this.isEditable();
     event[EDITABLE_EVENT] = writeWithView;
 
     if (event.altKey && event.shiftKey && writeWithView) {
@@ -903,8 +911,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onUseDocumentHint() {
+    this.hintWasUsed = true;
     this.selected = false;
     this.editing$.next(false);
+
+    this.ngZone.runOutsideAngular(() => {
+      window.setTimeout(() => (this.hintWasUsed = false), 500);
+    });
   }
 
   public onEnterInvalid() {
