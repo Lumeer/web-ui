@@ -9,11 +9,11 @@
   </div>
 </div>
 
-<div class="alert alert-light mt-3 px-3" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
+<div class="text-muted my-4" *ngIf="lockedControl.value" i18n="@@resource.attribute.lock.info.locked">
   Attribute will be locked for everyone (even for users with access rights). You can add multiple exceptions to enable editing for certain users based on other values and conditions.
 </div>
 
-<div class="alert alert-light mt-3 px-3" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
+<div class="text-muted my-4" *ngIf="!lockedControl.value" i18n="@@resource.attribute.lock.info.editable">
   Attribute will be editable for everyone (with access rights). You can add multiple exceptions to disable editing for certain users based on other values and conditions.
 </div>
 
