@@ -15,7 +15,7 @@
   <ng-container
     *ngIf="{lockStats: (resource | attributeLockStats:(document || linkInstance):data.attribute:constraintData)} as dataInputData">
     <ng-container
-      *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editable: (editing$ | async):dataInputData.lockStats as dataInputInfo">
+      *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editableByPermissions: (editing$ | async):dataInputData.lockStats as dataInputInfo">
 
       <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
            [innerHTML]="data.dataValue | previewDataValue | safeHtml"
