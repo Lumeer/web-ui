@@ -4772,7 +4772,19 @@
 				<trans-unit datatype="html" id="resource.detail.organization.upgrade">
 					<source>Upgrade Plan</source>
 					<target>Frissítési terv</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="resource.status.line.users" datatype="html">
+        <source>Users</source><target state="new">Users</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.status.line.projects" datatype="html">
+        <source>Projects</source><target state="new">Projects</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
 				<trans-unit datatype="html" id="resource.detail.type">
 					<source>{VAR_SELECT, select, organization {Organization} project {Project} other {}}</source>
 					<target>{VAR_SELECT, select, organization {Szervezet} project {Projekt} other {} }</target>
