@@ -15,6 +15,7 @@
          [(ngModel)]="value"/>
   <div class="d-flex justify-content-between align-items-center">
     <toggle-checkbox label="Secured"
+                     i18n-label="@@resource.variables.secured.toggle"
                      [checked]="secured$ | async"
                      (checkedChange)="secured$.next($event)">
     </toggle-checkbox>
