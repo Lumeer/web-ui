@@ -4898,21 +4898,21 @@
           <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.variables.add.button" datatype="html">
-        <source>Create variable</source><target state="new">Create variable</target>
+      </trans-unit><trans-unit id="resource.variables.secured.toggle" datatype="html">
+        <source>Secured</source><target state="new">Secured</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.variables.validation.duplicate" datatype="html">
+      </trans-unit><trans-unit id="resource.variables.add.button" datatype="html">
+        <source>Create variable</source><target state="new">Create variable</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="resource.variables.validation.duplicate" datatype="html">
         <source> This variable name already exists.
 </source><target state="new"> This variable name already exists.
 </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
-          <context context-type="linenumber">31,33</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.variables.existing.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="projects.tab.variables.existing.title" datatype="html">
         <source>Existing variables</source><target state="new">Existing variables</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/variables/resource-variables.component.html</context>
@@ -5423,7 +5423,7 @@
 				<trans-unit datatype="html" id="table.data.cell.linked.row.uninitialized">
 					<source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source>
 					<target>Nem tudom a megadott értéket semmivel kapcsolni, először meg kell adnod egy értéket a táblázat előző részéhez.</target>
-				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">501</context></context-group></trans-unit>
+				<context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">509</context></context-group></trans-unit>
 				<trans-unit datatype="html" id="table.delete.column.dialog.message">
 					<source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source>
 					<target>Biztosan törlöd az oszlopot? Ezzel véglegesen eltávolítod a tulajdonságot és annak összes adatát.</target>

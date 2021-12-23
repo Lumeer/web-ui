@@ -1017,21 +1017,21 @@
           <context context-type="sourcefile">src/app/shared/resource/variables/table/row/resource-variable-row.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.variables.add.button" datatype="html">
-        <source>Create variable</source><target>Vytvořit proměnnou</target>
+      </trans-unit><trans-unit id="resource.variables.secured.toggle" datatype="html">
+        <source>Secured</source><target>Zabezpečit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="resource.variables.validation.duplicate" datatype="html">
+      </trans-unit><trans-unit id="resource.variables.add.button" datatype="html">
+        <source>Create variable</source><target>Vytvořit proměnnou</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="resource.variables.validation.duplicate" datatype="html">
         <source> This variable name already exists.
 </source><target> Proměnná s tímto názvem již existuje.
 </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context>
-          <context context-type="linenumber">31,33</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.variables.existing.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/resource/variables/header/resource-variable-header.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="projects.tab.variables.existing.title" datatype="html">
         <source>Existing variables</source><target>Existující proměnné</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource/variables/resource-variables.component.html</context>
@@ -6158,7 +6158,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/view-modal/settings/view-settings-modal.component.ts</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="table.data.cell.linked.row.uninitialized" datatype="html">
         <source>I cannot link the entered value to anything, you must enter a value to the previous part of the table first.</source><target>Nemám kam navázat zadanou hodnotu, musíte něco zadat do předchozí části tabulky.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">501</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/body/rows/cell-group/data-cell/table-data-cell.component.ts</context><context context-type="linenumber">509</context></context-group></trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
         <source>The view was changed. Do you want to save the changes?</source><target>Pohled se změnil. Uložte změny, nebo je zahoďte.</target>
 
 
