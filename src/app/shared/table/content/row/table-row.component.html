@@ -3,12 +3,12 @@
   <ng-container
     *ngIf="{dataValue: group.column && (row.cellsMap[group.column.id].data | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
-    cell: row.cellsMap[group.column.id],
+    cell: row.cellsMap[group.column?.id],
     editable: (group.column?.collectionId ? (row.documentEditable || row.canSuggest) : row.linkEditable),
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
-      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:data.editable:data.editing:data.cell.lockStats as dataInputInfo">
+      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:data.editable:data.editing:data.cell?.lockStats as dataInputInfo">
       <td class="table-cell position-relative"
           [style.width.px]="group.width"
           [style.height.px]="row.height"
@@ -47,7 +47,7 @@
         </div>
         <ng-container *ngIf="{
         showDetail: row.documentId && !dataInputInfo.editing && group.column && group.column.id === detailColumnId,
-        showLock: group.column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(group.column?.attribute | isAttributeEnabledByLockStats:data.cell.lockStats)
+        showLock: group.column?.id === (mouseHoverColumnId$ | async) && dataInputInfo.showLockStats && !(group.column?.attribute | isAttributeEnabledByLockStats:data.cell?.lockStats)
         } as hoverData">
           <div *ngIf="hoverData.showDetail" class="detail-trigger small pl-1 pr-1 cursor-pointer"
                [class.has-comments]="row.commentsCount"
@@ -64,7 +64,7 @@
 
             <ng-template #statsTooltip>
               <attribute-lock-filters-stats [lock]="group.column?.attribute?.lock"
-                                            [stats]="data.cell.lockStats"
+                                            [stats]="data.cell?.lockStats"
                                             [constraintData]="constraintData"
                                             [collectionId]="group.column?.collectionId"
                                             [linkTypeId]="group.column?.linkTypeId">
