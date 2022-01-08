@@ -116,10 +116,8 @@ export const defaultTablePerspectiveConfiguration: TablePerspectiveConfiguration
   additionalSpace: true,
 };
 
-export interface FormPerspectiveConfiguration {
-  additionalSpace?: boolean;
-}
+export interface FormPerspectiveConfiguration extends PerspectiveWithSidebarConfiguration {}
 
 export const defaultFormPerspectiveConfiguration: FormPerspectiveConfiguration = {
-  additionalSpace: true,
+  ...defaultPerspectiveWithSidebarConfiguration,
 };

@@ -1,6 +1,7 @@
 <ng-container *ngIf="{document: document$ | async, originalDocument: originalDocument$ | async, collection: collection$ | async, currentUser: currentUser$ | async, constraintData: constraintData$ | async} as data">
 
-  <form-documents-choose class="mb-4 d-block"
+  <form-documents-choose *ngIf="!config?.createOnly"
+                         class="mb-4 d-block"
                          [collection]="data.collection"
                          [document]="data.document"
                          [attributesSettings]="attributesSettings"
@@ -18,7 +19,8 @@
   <ng-container *ngIf="data.document">
 
     <form-view-section *ngFor="let section of config?.sections; trackBy: trackBySection; let index = index;"
-                       class="d-block card p-3 mt-4 shadow-light"
+                       class="d-block mt-4"
+                       [ngClass]="config.sections.length > 1 ? 'card shadow-light p-3' : ''"
                        [dataValues]="documentDataValues$ | async"
                        [linkValues]="linkData$ | async"
                        [section]="section"

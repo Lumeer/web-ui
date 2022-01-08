@@ -2,6 +2,7 @@
   <dashboard-tab-cell-content *ngFor="let cell of dashboardRow?.cells | filterValidCells; trackBy: trackByCell"
                               class="cell shadow-light"
                               [dashboardCell]="cell"
-                              [views]="views">
+                              [views]="views"
+                              [query]="query">
   </dashboard-tab-cell-content>
 </div>

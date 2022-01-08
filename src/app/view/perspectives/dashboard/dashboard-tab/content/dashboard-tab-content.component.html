@@ -1,6 +1,7 @@
-<ng-container *ngIf="{views: views$ | async} as data">
+<ng-container *ngIf="{views: views$ | async, query: query$ | async} as data">
   <dashboard-tab-row-content *ngFor="let row of dashboardTab?.rows; trackBy: trackByRow"
                              [dashboardRow]="row"
+                             [query]="data.query"
                              [views]="data.views">
   </dashboard-tab-row-content>
 </ng-container>

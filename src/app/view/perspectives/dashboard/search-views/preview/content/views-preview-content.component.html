@@ -16,9 +16,10 @@
                    (favoriteToggle)="onFavoriteToggle(view)">
       </view-detail>
       <div *ngIf="data.truncateContent && index >= maxViews - 2"
-           class="view-background"
+           class="view-background cursor-pointer"
            [class.last]="index === maxViews - 1"
-           [class.second-last]="index === maxViews - 2"></div>
+           [class.second-last]="index === maxViews - 2"
+           (click)="onShowAll(); $event.stopPropagation()"></div>
     </div>
     <div *ngIf="data.truncateContent" class="d-flex p-2">
       <i [ngClass]="currentSize | viewIconSize"

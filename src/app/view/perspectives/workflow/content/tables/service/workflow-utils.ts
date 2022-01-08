@@ -289,13 +289,16 @@ export function createTableRowCellsMapForAttribute(
   columns: TableColumn[]
 ): TableRowCellsMap {
   const column = columns.find(c => c.attribute.id === attribute.id);
-  return {
-    [column.id]: {
-      data,
-      lockStats: null,
-      editable: false,
-    },
-  };
+  return (
+    (column && {
+      [column.id]: {
+        data,
+        lockStats: null,
+        editable: false,
+      },
+    }) ||
+    {}
+  );
 }
 
 export function createPendingColumnValuesByRow(pendingValues: Record<string, PendingRowUpdate[]>): Record<string, any> {

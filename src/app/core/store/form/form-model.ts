@@ -31,13 +31,8 @@ export interface FormConfig {
   collectionId: string;
   sections: FormSection[];
   buttons: FormButtonsConfig;
-  mode: FormMode;
   tableHeight: number;
-}
-
-export enum FormMode {
-  Build = 'build',
-  CreateUpdate = 'createUpdate',
+  createOnly?: boolean;
 }
 
 export interface FormButtonsConfig {

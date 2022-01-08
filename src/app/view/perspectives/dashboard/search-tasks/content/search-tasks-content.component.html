@@ -48,9 +48,11 @@
           </ng-container>
         </div>
 
-        <div *ngIf="data.truncateContent && index >= maxDocuments - 2" class="document-background"
+        <div *ngIf="data.truncateContent && index >= maxDocuments - 2" class="document-background cursor-pointer"
              [class.last]="index === maxDocuments - 1"
-             [class.second-last]="index === maxDocuments - 2"></div>
+             [class.second-last]="index === maxDocuments - 2"
+             (click)="onShowAll(); $event.stopPropagation()">
+        </div>
 
       </search-task-wrapper>
 

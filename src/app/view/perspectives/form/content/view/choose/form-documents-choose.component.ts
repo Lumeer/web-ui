@@ -33,6 +33,7 @@ import {map, tap} from 'rxjs/operators';
 import {FormConfig} from '../../../../../../core/store/form/form-model';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'form-documents-choose',
@@ -81,7 +82,7 @@ export class FormDocumentsChooseComponent implements OnChanges {
   public documents$: Observable<DocumentModel[]>;
   public currentDocument$ = new BehaviorSubject<DocumentModel>(null);
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (objectChanged(changes.collection) || changes.query || changes.view || changes.createdDocuments) {
@@ -128,5 +129,9 @@ export class FormDocumentsChooseComponent implements OnChanges {
 
   public onTableHeightChange(tableHeight: number) {
     this.configChange.emit({...this.config, tableHeight});
+  }
+
+  public showDetailDocument(document: DocumentModel) {
+    this.modalService.showDocumentDetail(document.id, this.view?.id);
   }
 }

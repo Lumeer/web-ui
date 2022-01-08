@@ -28,7 +28,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {FormConfig, FormMode, FormSection} from '../../../../../core/store/form/form-model';
+import {FormConfig, FormSection} from '../../../../../core/store/form/form-model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ConstraintData, DataValue, UnknownConstraint} from '@lumeer/data-filters';
@@ -99,8 +99,6 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public configChange = new EventEmitter<FormConfig>();
 
-  public readonly modeType = FormMode;
-
   public documentDataValues$: Observable<Record<string, DataValue>>;
   public document$: Observable<DocumentModel>;
   public originalDocument$: Observable<DocumentModel>;
@@ -167,6 +165,16 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
     }
     if (changes.collectionLinkTypes) {
       this.linkTypes$.next(this.collectionLinkTypes || []);
+    }
+    if (changes.config || changes.query) {
+      this.checkCreateOnlyMode();
+    }
+  }
+
+  private checkCreateOnlyMode() {
+    const ids = this.selectedDocumentIds$.value;
+    if (this.config?.createOnly && !(ids.id || ids.correlationId)) {
+      this.onAddNewDocument();
     }
   }
 
@@ -392,14 +400,22 @@ export class FormViewComponent implements OnInit, OnChanges, OnDestroy {
         data,
         workspace: {viewId: this.view?.id},
         onSuccess: documentId => {
-          this.clearData();
           this.createdDocuments$.next([...this.createdDocuments$.value, documentId]);
-          this.selectedDocumentIds$.next({id: documentId});
+          this.onDocumentCreated(documentId);
           this.performingAction$.next(false);
         },
         onFailure: () => this.performingAction$.next(false),
       })
     );
+  }
+
+  private onDocumentCreated(documentId: string) {
+    if (this.config?.createOnly) {
+      this.onAddNewDocument();
+    } else {
+      this.clearData();
+      this.selectedDocumentIds$.next({id: documentId});
+    }
   }
 
   private updateDocument(document: DocumentModel, data: DocumentAdditionalDataRequest) {
