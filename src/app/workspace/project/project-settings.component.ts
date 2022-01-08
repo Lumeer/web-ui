@@ -276,8 +276,8 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
       const url = this.projectService.getUploadRawContentUrl(models.organization.id, models.project.id);
 
       if (!!url) {
-        this.fileApiService.postFileWithProgress(url, file.type, file).subscribe(
-          (event: HttpEvent<any>) => {
+        this.fileApiService.postFileWithProgress(url, file.type, file).subscribe({
+          next: (event: HttpEvent<any>) => {
             switch (event.type) {
               case HttpEventType.Response:
                 this.uploadProgress$.next(null);
@@ -289,12 +289,12 @@ export class ProjectSettingsComponent implements OnInit, OnDestroy {
                 return;
             }
           },
-          () => {
+          error: () => {
             const errorMessage = $localize`:@@project.settings.upload.error:I was not possible to upload and process this project file.`;
             this.uploadProgress$.next(null);
             this.notificationService.error(errorMessage);
-          }
-        );
+          },
+        });
       }
     });
   }
